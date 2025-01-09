@@ -47,7 +47,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
         List<Guid> oldRefreshTokenIds = oldRefreshTokens.Select(y => y.RefreshTokenId).ToList();
 
-        await RelationalQueryableExtensions.ExecuteUpdateAsync(
+        await EntityFrameworkQueryableExtensions.ExecuteUpdateAsync(
             _context.RefreshTokens.Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)),
             x => x.
             SetProperty(prop => prop.Status, false).
