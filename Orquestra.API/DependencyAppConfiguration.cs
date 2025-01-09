@@ -30,16 +30,16 @@ public static class DependencyAppConfiguration
 
     private static void AddSwagger(WebApplication app)
     {
-        app.UseSwagger();
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name);
-            c.DocExpansion(DocExpansion.None);
-        });
-
         if (app.Environment.IsDevelopment())
         {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name);
+                c.DocExpansion(DocExpansion.None);
+            });
+
             app.UseDeveloperExceptionPage();
         }
     }
