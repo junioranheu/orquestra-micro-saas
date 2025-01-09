@@ -4,6 +4,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
 using static junioranheu_utils_package.Fixtures.Get;
+
 namespace Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 
 public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTokenGenerator) : ICreateRefreshToken
