@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MySqlConnector;
-using System.Data.SqlClient;
 
 namespace Orquestra.Infrastructure.Factory;
 
@@ -14,11 +13,6 @@ public class ConnectionFactory(IConfiguration configuration) : IConnectionFactor
         string connectionString = _configuration.GetConnectionString(nomeConnectionString) ?? string.Empty;
 
         return connectionString;
-    }
-
-    public SqlConnection ObterSqlServerConnection()
-    {
-        return new SqlConnection(ObterStringConnection());
     }
 
     public MySqlConnection ObterMySqlConnection()

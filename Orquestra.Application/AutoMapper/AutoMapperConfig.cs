@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 
 namespace Orquestra.Application.AutoMapper;

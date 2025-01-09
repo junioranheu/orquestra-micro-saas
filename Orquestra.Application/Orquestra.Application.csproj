@@ -8,17 +8,14 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
-		<PackageReference Include="junioranheu-utils-package" Version="1.0.20" />
+		<PackageReference Include="junioranheu-utils-package" Version="1.0.22" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="UseCases\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\Orquestra.Domain\Orquestra.Domain.csproj" />
+	  <ProjectReference Include="..\Orquestra.Infrastructure\Orquestra.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

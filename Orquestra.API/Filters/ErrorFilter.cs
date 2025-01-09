@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Orquestra.API.Filters.Base;
+using Orquestra.Application.UseCases.Logs.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using static junioranheu_utils_package.Fixtures.Get;

@@ -1,4 +1,5 @@
-﻿using Orquestra.Infrastructure.Auth.Token;
+﻿using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
+using Orquestra.Infrastructure.Auth.Token;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Orquestra.API.Middlewares;

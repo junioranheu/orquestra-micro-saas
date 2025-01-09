@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orquestra.Application.AutoMapper;
+using Orquestra.Application.UseCases.Auth;
+using Orquestra.Application.UseCases.Logs;
+using Orquestra.Application.UseCases.Users;
 
 namespace Orquestra.Application;
 
