@@ -1,19 +1,16 @@
-var builder = WebApplication.CreateBuilder(args);
+using Orquestra.API;
+using Orquestra.Application;
+using Orquestra.Infrastructure;
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 {
-    app.MapOpenApi();
+    builder.Services.AddDependencyInjectionAPI();
+    builder.Services.AddDependencyInjectionApplication(builder);
+    builder.Services.AddDependencyInjectionInfrastructure(builder);
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+WebApplication app = builder.Build();
+{
+    app.UseAppConfigurationAsync(builder);
+    app.Run();
+}

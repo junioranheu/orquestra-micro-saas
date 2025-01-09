@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orquestra.API", "Orquestra.API\Orquestra.API.csproj", "{A5139D06-D60E-4453-9AA8-0FBB1C18990C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orquestra.Application", "Orquestra.Application\Orquestra.Application.csproj", "{89FE646D-F1AA-46BD-8868-2D5DC8F02B85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orquestra.Domain", "Orquestra.Domain\Orquestra.Domain.csproj", "{7DBF12CE-3CB5-4021-9EDD-7E73EAB2E159}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orquestra.Infrastructure", "Orquestra.Infrastructure\Orquestra.Infrastructure.csproj", "{756320F3-7F58-48C0-9498-F69638A932AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{A5139D06-D60E-4453-9AA8-0FBB1C18990C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5139D06-D60E-4453-9AA8-0FBB1C18990C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5139D06-D60E-4453-9AA8-0FBB1C18990C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89FE646D-F1AA-46BD-8868-2D5DC8F02B85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89FE646D-F1AA-46BD-8868-2D5DC8F02B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89FE646D-F1AA-46BD-8868-2D5DC8F02B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89FE646D-F1AA-46BD-8868-2D5DC8F02B85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DBF12CE-3CB5-4021-9EDD-7E73EAB2E159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DBF12CE-3CB5-4021-9EDD-7E73EAB2E159}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DBF12CE-3CB5-4021-9EDD-7E73EAB2E159}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBF12CE-3CB5-4021-9EDD-7E73EAB2E159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{756320F3-7F58-48C0-9498-F69638A932AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{756320F3-7F58-48C0-9498-F69638A932AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{756320F3-7F58-48C0-9498-F69638A932AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{756320F3-7F58-48C0-9498-F69638A932AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
