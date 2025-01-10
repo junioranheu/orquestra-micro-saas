@@ -4,12 +4,9 @@ namespace Orquestra.Domain.Enums;
 
 public enum UserRoleEnum
 {
-    [Description("Administrador")]
-    Administrador = 1,
-
     [Description("Usuário")]
-    Comum = 2,
+    Comum = 1,
 
     [Description("Suporte")]
-    Suporte = 9
+    Suporte = 999
 }
