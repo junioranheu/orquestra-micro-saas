@@ -49,12 +49,8 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
         User user = new()
         {
             FullName = input.FullName,
-            UserName = input.UserName,
             Email = input.Email,
             Password = EncryptPassword(input.Password),
-            IsVerified = false,
-            VerificationCode = GetRandomString(17, false),
-            VerificationCodeValidity = date.AddDays(7),
             ChangePasswordCode = GetRandomString(22, false),
             ChangePasswordCodeValidity = date.AddDays(7),
             Status = true,
@@ -73,7 +69,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
         {
             UserId = userId,
             Role = input.UserRole,
-            Date = GetDate()
+            CreatedDate = GetDate()
         };
 
         await _context.AddAsync(userRole);

@@ -12,7 +12,7 @@ public sealed class GetUserByUserNameOrEmail(Context context) : IGetUserByUserNa
     {
         var user = await _context.Users.
                    AsNoTracking().
-                   Where(x => (x.Email == login || x.UserName == login)).
+                   Where(x => x.Email == login).
                    Include(x => x.UserRoles).
                    FirstOrDefaultAsync();
 

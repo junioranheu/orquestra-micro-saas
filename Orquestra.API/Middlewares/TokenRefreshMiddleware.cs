@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Orquestra.API.Filters.Base;
-using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
-using Orquestra.Domain.Enums;
+﻿using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Infrastructure.Auth.Token;
 using System.IdentityModel.Tokens.Jwt;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Middlewares;
 

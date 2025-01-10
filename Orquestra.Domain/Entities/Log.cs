@@ -23,5 +23,5 @@ public sealed class Log
     [ForeignKey(nameof(UserId))]
     public User? Users { get; init; }
 
-    public DateTime Date { get; set; } = GetDate();
+    public DateTime CreatedDate { get; set; } = GetDate();
 }

@@ -51,7 +51,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
         ExecuteUpdateAsync(x => x.
             SetProperty(prop => prop.Status, false).
-            SetProperty(prop => prop.Revoked, GetDate())
+            SetProperty(prop => prop.RevokedDate, GetDate())
         );
     }
 
@@ -64,7 +64,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
                                                  x.UserId == userId &&
                                                  x.Status == true
                                               ).
-                                              OrderByDescending(x => x.Created).
+                                              OrderByDescending(x => x.CreatedDate).
                                               ToListAsync();
 
         // Se mustCheckForValidRefreshTokens for false, significa que deve ser retornado todos os registros, sem validações posteriores;
@@ -74,8 +74,8 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         }
 
         DateTime date = GetDate();
-        List<RefreshToken> validRefreshTokens = oldRefreshTokens.Where(x => x.Expires > date).ToList();
-        List<RefreshToken> invalidRefreshTokens = oldRefreshTokens.Where(x => x.Expires <= date).ToList();
+        List<RefreshToken> validRefreshTokens = oldRefreshTokens.Where(x => x.ExpiredDate > date).ToList();
+        List<RefreshToken> invalidRefreshTokens = oldRefreshTokens.Where(x => x.ExpiredDate <= date).ToList();
 
         if (validRefreshTokens is null || validRefreshTokens.Count == 0)
         {
@@ -100,7 +100,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
         if (!user.Status)
         {
-            throw new Exception($"O usuário {user.UserName} ({userId}) está desativado");
+            throw new Exception($"O usuário {user.Email} ({userId}) está desativado");
         }
 
         UserRole[] userRoles = user.UserRoles?.ToArray() ?? [];

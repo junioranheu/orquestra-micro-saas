@@ -16,5 +16,5 @@ public sealed class UserRole
 
     public UserRoleEnum Role { get; set; }
 
-    public DateTime Date { get; set; } = GetDate();
+    public DateTime CreatedDate { get; set; } = GetDate();
 }

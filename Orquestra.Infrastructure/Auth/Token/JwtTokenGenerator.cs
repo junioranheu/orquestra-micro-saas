@@ -76,8 +76,8 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
         {
             Token = token,
             UserId = userId,
-            Created = GetDateNormalized(),
-            Expires = GetDateNormalized().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
+            CreatedDate = GetDateNormalized(),
+            ExpiredDate = GetDateNormalized().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
             Status = true
         };
 

@@ -15,11 +15,11 @@ public sealed class RefreshToken
     [JsonIgnore]
     public User? Users { get; set; }
 
-    public DateTime? Expires { get; set; }
+    public DateTime? ExpiredDate { get; set; }
 
-    public DateTime Created { get; set; } = GetDate();
+    public DateTime CreatedDate { get; set; } = GetDate();
 
-    public DateTime? Revoked { get; set; }
+    public DateTime? RevokedDate { get; set; }
 
     public bool Status { get; set; } = true;
 }

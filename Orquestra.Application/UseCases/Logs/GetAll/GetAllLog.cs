@@ -16,7 +16,7 @@ public sealed class GetAllLog(Context context) : IGetAllLog
                     AsNoTracking().
                     Where(x =>
                        (userId == null || x.Users!.UserId == userId)
-                    ).OrderByDescending(x => x.Date);
+                    ).OrderByDescending(x => x.CreatedDate);
 
         (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
 
