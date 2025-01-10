@@ -19,10 +19,10 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
             throw new Exception($"Parâmetro {nameof(userId)} está vazio em {nameof(RefreshToken)}");
         }
 
-        (User user, UserRole[] userRoles) = await GetUser(userId);
+        User user = await GetUser(userId);
 
         // Gere novo JWT e refresh token;
-        (string newJwtToken, RefreshToken _) = _jwtTokenGenerator.GenerateToken(userId: user.UserId, name: user.FullName, email: user.Email, roles: userRoles);
+        (string newJwtToken, RefreshToken _) = _jwtTokenGenerator.GenerateToken(userId: user.UserId, name: user.FullName, email: user.Email, role: user.Role);
 
         // Revogue os antigos refresh tokens inválidos;
         await Update(userId, mustCheckForValidRefreshTokens: true);
@@ -85,10 +85,9 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         return invalidRefreshTokens;
     }
 
-    private async Task<(User user, UserRole[] userRoles)> GetUser(Guid userId)
+    private async Task<User> GetUser(Guid userId)
     {
         User? user = await _context.Users.
-                     Include(x => x.UserRoles).
                      AsNoTracking().
                      Where(x => x.UserId == userId).
                      FirstOrDefaultAsync();
@@ -103,9 +102,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
             throw new Exception($"O usuário {user.Email} ({userId}) está desativado");
         }
 
-        UserRole[] userRoles = user.UserRoles?.ToArray() ?? [];
-
-        return (user, userRoles);
+        return user;
     }
     #endregion
 }

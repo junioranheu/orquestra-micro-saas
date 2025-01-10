@@ -16,7 +16,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
     private const int thresholdTimeZoneInHours = 3;
 
-    public (string token, RefreshToken refreshToken) GenerateToken(Guid userId, string name, string email, UserRole[]? roles)
+    public (string token, RefreshToken refreshToken) GenerateToken(Guid userId, string name, string email, UserRoleEnum? role)
     {
         JwtSecurityTokenHandler tokenHandler = new();
 
@@ -27,18 +27,18 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
         List<Claim> claimList = [
             new(ClaimTypes.NameIdentifier, userId.ToString()),
-                new(ClaimTypes.Name, name),
-                new(ClaimTypes.Email, email)
+            new(ClaimTypes.Name, name),
+            new(ClaimTypes.Email, email)
         ];
 
-        if (roles is not null && roles.Length > 0)
+        if (role is not null && role.HasValue)
         {
-            IEnumerable<Claim> rolesClaim = roles.Select(x => new Claim(ClaimTypes.Role, x.Role.ToString()));
-            claimList.AddRange(rolesClaim);
+            Claim roleClaim = new(ClaimTypes.Role, role.Value.ToString());
+            claimList.Add(roleClaim);
 
-            bool alreadyHasComum = roles.Any(x => x.Role == UserRoleEnum.Common);
+            bool alreadyHasCommon = role == UserRoleEnum.Common;
 
-            if (!alreadyHasComum)
+            if (!alreadyHasCommon)
             {
                 Claim roleComum = new(ClaimTypes.Role, UserRoleEnum.Common.ToString());
                 claimList.Add(roleComum);

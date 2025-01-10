@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
-using Orquestra.Application.UseCases.Users.GetByUserNameOrEmail;
+using Orquestra.Application.UseCases.Users.GetByEmail;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
@@ -13,16 +13,16 @@ public sealed class CreateToken(
     IMapper map,
     IJwtTokenGenerator jwtTokenGenerator,
     ICreateRefreshToken createRefreshToken,
-    IGetUserByUserNameOrEmail getUserByUserNameOrEmail) : ICreateToken
+    IGetUserByEmail getUserByEmail) : ICreateToken
 {
     private readonly IMapper _map = map;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
-    private readonly IGetUserByUserNameOrEmail _getUserByUserNameOrEmail = getUserByUserNameOrEmail;
+    private readonly IGetUserByEmail _getUserByEmail = getUserByEmail;
 
     public async Task<UserOutput> Execute(AuthInput input)
     {
-        (User? user, string passwordEncrypted) = await _getUserByUserNameOrEmail.Execute(input.Login);
+        (User? user, string passwordEncrypted) = await _getUserByEmail.Execute(input.Email);
         UserOutput? output = _map.Map<UserOutput>(user);
 
         if (output is null)
@@ -40,7 +40,7 @@ public sealed class CreateToken(
             throw new Exception("Usuário desativado");
         }
 
-        (string token, RefreshToken refreshToken) = _jwtTokenGenerator.GenerateToken(userId: output.UserId, name: output.FullName, email: output.Email, roles: output.UserRoles?.ToArray());
+        (string token, RefreshToken refreshToken) = _jwtTokenGenerator.GenerateToken(userId: output.UserId, name: output.FullName, email: output.Email, role: output.Role);
 
         // Atualizar token no output;
         output.Token = token;

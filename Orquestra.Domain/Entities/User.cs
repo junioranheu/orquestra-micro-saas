@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -19,6 +20,8 @@ public sealed class User
     [MaxLength(100)]
     public string Password { get; set; } = string.Empty;
 
+    public UserRoleEnum Role { get; set; }
+
     [MaxLength(25)]
     public string? ChangePasswordCode { get; set; } = null;
 
@@ -27,6 +30,4 @@ public sealed class User
     public bool Status { get; set; } = true;
 
     public DateTime Date { get; set; } = GetDate();
-
-    public IEnumerable<UserRole>? UserRoles { get; init; }
 }

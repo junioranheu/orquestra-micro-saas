@@ -10,7 +10,6 @@ public class Context(DbContextOptions<Context> options) : DbContext(options)
     public DbSet<Log> Logs { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<UserRole> UserRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

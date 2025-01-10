@@ -60,7 +60,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
     {
         CompanyUser companyUser = new()
         {
-            CompanyUserId = input.CompanyId,
+            CompanyId = input.CompanyId,
             UserId = userId,
             CompanyUserRole = CompanyUserRoleEnum.Administrator,
             CreatedDate = GetDate()

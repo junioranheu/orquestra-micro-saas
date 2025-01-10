@@ -1,4 +1,4 @@
-﻿using Orquestra.Domain.Entities;
+﻿using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.Users.Shared;
 
@@ -10,11 +10,9 @@ public sealed class UserOutput
 
     public string Email { get; set; } = string.Empty;
 
-    public bool IsVerified { get; set; } = false;
+    public UserRoleEnum Role { get; set; }
 
     public bool Status { get; set; }
-
-    public IEnumerable<UserRole>? UserRoles { get; init; }
 
     // Extras;
     public string Token { get; set; } = string.Empty;

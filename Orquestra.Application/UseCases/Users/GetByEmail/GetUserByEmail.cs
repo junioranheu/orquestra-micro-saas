@@ -2,9 +2,9 @@
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
-namespace Orquestra.Application.UseCases.Users.GetByUserNameOrEmail;
+namespace Orquestra.Application.UseCases.Users.GetByEmail;
 
-public sealed class GetUserByUserNameOrEmail(Context context) : IGetUserByUserNameOrEmail
+public sealed class GetUserByEmail(Context context) : IGetUserByEmail
 {
     private readonly Context _context = context;
 
@@ -13,7 +13,6 @@ public sealed class GetUserByUserNameOrEmail(Context context) : IGetUserByUserNa
         var user = await _context.Users.
                    AsNoTracking().
                    Where(x => x.Email == login).
-                   Include(x => x.UserRoles).
                    FirstOrDefaultAsync();
 
         if (user is null)

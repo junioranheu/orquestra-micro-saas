@@ -1,24 +1,24 @@
 ﻿using AutoMapper;
-using Orquestra.Application.UseCases.Users.GetByUserNameOrEmail;
+using Orquestra.Application.UseCases.Users.GetByEmail;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.Encrypt;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Users.Create;
 
-public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameOrEmail getUserByUserNameOrEmail) : ICreateUser
+public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail getUserByEmail) : ICreateUser
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;
-    private readonly IGetUserByUserNameOrEmail _getUserByUserNameOrEmail = getUserByUserNameOrEmail;
+    private readonly IGetUserByEmail _getUserByEmail = getUserByEmail;
 
     public async Task<UserOutput> Execute(UserInput input)
     {
         await Validations(input);
         User user = await SaveUser(input);
-        await SaveUserRole(input, user.UserId);
 
         UserOutput? output = _map.Map<UserOutput>(user);
 
@@ -27,14 +27,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
 
     private async Task Validations(UserInput input)
     {
-        (User? checkUserByUserName, string _) = await _getUserByUserNameOrEmail.Execute(input.UserName);
-
-        if (checkUserByUserName is not null)
-        {
-            throw new Exception("Já existe um usuário com esse nome de usuário");
-        }
-
-        (User? checkUserByEmail, string _) = await _getUserByUserNameOrEmail.Execute(input.Email);
+        (User? checkUserByEmail, string _) = await _getUserByEmail.Execute(input.Email);
 
         if (checkUserByEmail is not null)
         {
@@ -52,6 +45,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
             FullName = input.FullName,
             Email = input.Email,
             Password = EncryptPassword(input.Password),
+            Role = UserRoleEnum.Common,
             ChangePasswordCode = GetRandomString(22, false),
             ChangePasswordCodeValidity = date.AddDays(codeValidityThreshold),
             Status = true,
@@ -62,18 +56,5 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
         await _context.SaveChangesAsync();
 
         return user;
-    }
-
-    private async Task SaveUserRole(UserInput input, Guid userId)
-    {
-        UserRole userRole = new()
-        {
-            UserId = userId,
-            Role = input.UserRole,
-            CreatedDate = GetDate()
-        };
-
-        await _context.AddAsync(userRole);
-        await _context.SaveChangesAsync();
     }
 }
