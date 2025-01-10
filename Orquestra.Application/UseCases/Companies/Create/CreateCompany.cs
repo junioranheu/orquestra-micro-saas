@@ -26,6 +26,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
         return output;
     }
 
+    #region extras
     private async Task<Company> SaveCompany(CompanyInput input)
     {
         Company company = _map.Map<Company>(input);
@@ -53,4 +54,5 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
 
         await _createRangeCompanyUser.Execute(companyUsers);
     }
+    #endregion
 }

@@ -17,7 +17,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail get
 
     public async Task<UserOutput> Execute(UserInput input)
     {
-        await Validate(input);
+        await Validate(input, isCreate: true);
         User user = await SaveUser(input);
 
         UserOutput? output = _map.Map<UserOutput>(user);
@@ -25,6 +25,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail get
         return output;
     }
 
+    #region extras
     private async Task<User> SaveUser(UserInput input)
     {
         DateTime date = GetDate();
@@ -45,4 +46,5 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail get
 
         return user;
     }
+    #endregion
 }
