@@ -5,10 +5,12 @@ namespace Orquestra.Infrastructure.Data;
 
 public class Context(DbContextOptions<Context> options) : DbContext(options)
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<UserRole> UsuariosRoles { get; set; }
+    public DbSet<Company> Companies { get; set; }
+    public DbSet<CompanyUser> CompanyUsers { get; set; }
     public DbSet<Log> Logs { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<UserRole> UsuariosRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

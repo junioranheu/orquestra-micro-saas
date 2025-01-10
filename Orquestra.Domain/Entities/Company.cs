@@ -61,5 +61,5 @@ public sealed class Company
 
     public DateTime CreatedDate { get; set; } = GetDate();
 
-    public IEnumerable<UserRole>? UserRoles { get; init; }
+    public IEnumerable<CompanyUser>? CompanyUsers { get; init; }
 }
