@@ -70,6 +70,6 @@ public static class DependencyInjection
         services.AddMemoryCache();
         services.AddResponseCaching();
 
-        services.AddHttpContextAccessor();
+        services.AddHttpContextAccessor(); // Serviço necessário para habilitar o IHttpContextAccessor em Infrastructure/Context;
     }
 }
