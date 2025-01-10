@@ -17,10 +17,11 @@ public abstract class BaseController<T> : Controller
         return User.Identity.IsAuthenticated;
     }
 
-    protected Guid? GetUserId()
+    protected Guid GetUserId(bool throwExceptionIfNotAuth = false)
     {
         if (!IsAuth())
         {
+            ThrowEx(throwExceptionIfNotAuth);
             return Guid.Empty;
         }
 
@@ -28,12 +29,23 @@ public abstract class BaseController<T> : Controller
 
         if (string.IsNullOrEmpty(id))
         {
-            return null;
+            ThrowEx(throwExceptionIfNotAuth);
+            return Guid.Empty;
         }
 
         Guid guid = Guid.Parse(id);
 
         return guid;
+
+        static void ThrowEx(bool throwExceptionIfNotAuth)
+        {
+            if (!throwExceptionIfNotAuth)
+            {
+                return;
+            }
+
+            throw new Exception("Usuário não autenticado");
+        }
     }
 
     protected string GetUserName()
