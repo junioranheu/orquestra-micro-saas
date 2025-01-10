@@ -20,9 +20,4 @@ public sealed class User : Audit
     public string Password { get; set; } = string.Empty;
 
     public UserRoleEnum Role { get; set; }
-
-    [MaxLength(25)]
-    public string? ChangePasswordCode { get; set; } = null;
-
-    public DateTime? ChangePasswordCodeValidity { get; set; }
 }

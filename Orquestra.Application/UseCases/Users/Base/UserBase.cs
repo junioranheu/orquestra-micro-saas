@@ -10,8 +10,9 @@ public partial class UserBase(IGetUserByEmail getUserByEmail)
 {
     private readonly IGetUserByEmail _getUserByEmail = getUserByEmail;
 
-    public async Task Validate(UserInput input, bool isCreate)
+    public async Task Validate(UserInput input, Guid userId, bool isCreate)
     {
+        #region email
         bool checkEmail = IsEmailValid(input.Email);
 
         if (!checkEmail)
@@ -19,7 +20,7 @@ public partial class UserBase(IGetUserByEmail getUserByEmail)
             throw new Exception("O e-mail não é válido. Insira um e-mail válido, por favor.");
         }
 
-        (User? checkUserByEmail, string _) = await _getUserByEmail.Execute(input.Email);
+        (User? checkUserByEmail, string _) = await _getUserByEmail.Execute(input.Email);      
 
         bool isEditAndSameEmail = !isCreate && input.Email == checkUserByEmail?.Email;
 
@@ -28,6 +29,21 @@ public partial class UserBase(IGetUserByEmail getUserByEmail)
             throw new Exception("Já existe um usuário com esse e-mail");
         }
 
+        if (!isCreate)
+        {
+            if (checkUserByEmail is null)
+            {
+                throw new Exception("O e-mail não existeaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            }
+        }
+
+        if (checkUserByEmail is not null && !isCreate && userId != checkUserByEmail?.UserId)
+        {
+            throw new Exception("Apenas o dono da conta pode alterar suas informações");
+        }
+        #endregion
+
+        #region name
         bool checkName = IsFullNameValid(input.FullName);
 
         if (!checkName)
@@ -36,13 +52,16 @@ public partial class UserBase(IGetUserByEmail getUserByEmail)
         }
 
         input.FullName = NormalizeToProperName(input.FullName);
+        #endregion
 
+        #region password
         bool checkPassword = IsPasswordValid(input.Password);
 
         if (!checkPassword)
         {
             throw new Exception("A senha não é válida. Insira uma senha com pelo menos 8 carácteres e um digito ou carácter especial, por favor.");
         }
+        #endregion
     }
 
     #region extras

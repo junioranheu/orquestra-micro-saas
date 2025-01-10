@@ -18,7 +18,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
     public async Task<CompanyOutput> Execute(Guid userId, CompanyInput input)
     {
         await Validate(input);
-        Company company = await SaveCompany(input);
+        Company company = await Save(input);
         await SaveCompanyUsers(userId, company);
 
         CompanyOutput? output = _map.Map<CompanyOutput>(company);
@@ -27,7 +27,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
     }
 
     #region extras
-    private async Task<Company> SaveCompany(CompanyInput input)
+    private async Task<Company> Save(CompanyInput input)
     {
         Company company = _map.Map<Company>(input);
 

@@ -6,7 +6,6 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Encrypt;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Users.Create;
 
@@ -17,8 +16,8 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail get
 
     public async Task<UserOutput> Execute(UserInput input)
     {
-        await Validate(input, isCreate: true);
-        User user = await SaveUser(input);
+        await Validate(input, userId: Guid.Empty, isCreate: true);
+        User user = await Save(input);
 
         UserOutput? output = _map.Map<UserOutput>(user);
 
@@ -26,19 +25,14 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail get
     }
 
     #region extras
-    private async Task<User> SaveUser(UserInput input)
+    private async Task<User> Save(UserInput input)
     {
-        DateTime date = GetDate();
-        const int codeValidityThreshold = 7;
-
         User user = new()
         {
             FullName = input.FullName,
             Email = input.Email,
             Password = EncryptPassword(input.Password),
-            Role = UserRoleEnum.Common,
-            ChangePasswordCode = GetRandomString(22, false),
-            ChangePasswordCodeValidity = date.AddDays(codeValidityThreshold)
+            Role = UserRoleEnum.Common
         };
 
         await _context.AddAsync(user);

@@ -42,7 +42,9 @@ public class TestController : BaseController<TestController>
     [HttpGet("GetAuth")]
     public ActionResult<string> GetAuth()
     {
-        return Ok(Ascii());
+        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+
+        return Ok($"{userId}\n");
     }
 
     private static string Ascii()
