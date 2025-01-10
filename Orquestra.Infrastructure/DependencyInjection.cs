@@ -13,7 +13,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Factory;
 using System.Text;
 using System.Text.Json;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure;
 
@@ -37,7 +37,7 @@ public static class DependencyInjection
         services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
     }
 
-    private static readonly string[] onChallengeError = ["Acesso negado. Você não tem autorização para acessar este recurso."];
+    private static readonly string[] onChallengeError = ["Acesso negado. Você não tem permissão para acessar este recurso ou não está autenticado."];
 
     private static void AddAuth(IServiceCollection services, WebApplicationBuilder builder)
     {
@@ -75,7 +75,7 @@ public static class DependencyInjection
                          var result = JsonSerializer.Serialize(new
                          {
                              Code = StatusCodes.Status401Unauthorized,
-                             Date = ObterDetalhesDataHora(),
+                             Date = GetDateDetails(),
                              context.HttpContext.Request.Path,
                              Messages = onChallengeError,
                              IsError = true

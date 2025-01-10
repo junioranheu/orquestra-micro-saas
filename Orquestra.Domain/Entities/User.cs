@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
@@ -34,7 +34,7 @@ public sealed class User
 
     public bool Status { get; set; } = true;
 
-    public DateTime Date { get; set; } = GerarHorarioBrasilia();
+    public DateTime Date { get; set; } = GetDate();
 
     public IEnumerable<UserRole>? UserRoles { get; init; }
 }

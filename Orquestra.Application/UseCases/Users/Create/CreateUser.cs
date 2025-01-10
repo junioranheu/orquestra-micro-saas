@@ -3,8 +3,8 @@ using Orquestra.Application.UseCases.Users.GetByUserNameOrEmail;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
-using static junioranheu_utils_package.Fixtures.Encrypt;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Users.Create;
 
@@ -44,18 +44,18 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
 
     private async Task<User> SaveUser(UserInput input)
     {
-        DateTime date = GerarHorarioBrasilia();
+        DateTime date = GetDate();
 
         User user = new()
         {
             FullName = input.FullName,
             UserName = input.UserName,
             Email = input.Email,
-            Password = Criptografar(input.Password),
+            Password = EncryptPassword(input.Password),
             IsVerified = false,
-            VerificationCode = GerarStringAleatoria(17, false),
+            VerificationCode = GetRandomString(17, false),
             VerificationCodeValidity = date.AddDays(7),
-            ChangePasswordCode = GerarStringAleatoria(22, false),
+            ChangePasswordCode = GetRandomString(22, false),
             ChangePasswordCodeValidity = date.AddDays(7),
             Status = true,
             Date = date
@@ -73,7 +73,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
         {
             UserId = userId,
             Role = input.UserRole,
-            Date = GerarHorarioBrasilia()
+            Date = GetDate()
         };
 
         await _context.AddAsync(userRole);

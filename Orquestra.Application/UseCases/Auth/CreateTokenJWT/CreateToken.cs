@@ -5,7 +5,7 @@ using Orquestra.Application.UseCases.Users.GetByUserNameOrEmail;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
-using static junioranheu_utils_package.Fixtures.Encrypt;
+using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 
@@ -30,7 +30,7 @@ public sealed class CreateToken(
             throw new Exception("Usuário não encontrado");
         }
 
-        if (!VerificarCriptografia(senha: input.Password, senhaCriptografada: passwordEncrypted))
+        if (!CheckPassword(password: input.Password, encryptedPassword: passwordEncrypted))
         {
             throw new Exception("Nome de usuário ou senha incorretos");
         }

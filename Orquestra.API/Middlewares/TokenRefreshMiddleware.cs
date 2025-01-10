@@ -1,6 +1,11 @@
-﻿using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
+﻿using Microsoft.AspNetCore.Mvc;
+using Orquestra.API.Filters.Base;
+using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Auth.Token;
 using System.IdentityModel.Tokens.Jwt;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Middlewares;
 
@@ -40,11 +45,19 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
                 using IServiceScope scope = _scopeFactory.CreateScope();
                 ICreateRefreshToken createRefreshToken = scope.ServiceProvider.GetRequiredService<ICreateRefreshToken>();
 
-                string newJwtToken = await createRefreshToken.RefreshToken(userId);
+                try
+                {
+                    string newJwtToken = await createRefreshToken.RefreshToken(userId);
 
-                // Atualizar contextos;
-                context.Response.Headers.Authorization = $"Bearer {newJwtToken}";
-                context.Request.Headers.Authorization = $"Bearer {newJwtToken}";
+                    // Atualizar contextos;
+                    context.Response.Headers.Authorization = $"Bearer {newJwtToken}";
+                    context.Request.Headers.Authorization = $"Bearer {newJwtToken}";
+                }
+                catch (Exception)
+                {
+                    context.Response.Headers.Authorization = string.Empty;
+                    context.Request.Headers.Authorization = string.Empty;
+                }
             }
         }
 

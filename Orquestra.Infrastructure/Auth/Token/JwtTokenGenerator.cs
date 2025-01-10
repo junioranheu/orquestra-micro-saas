@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure.Auth.Token;
 
@@ -47,7 +47,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
         ClaimsIdentity claims = new(claimList);
 
-        DateTime date = GetDate();
+        DateTime date = GetDateNormalized();
 
         SecurityTokenDescriptor tokenDescriptor = new()
         {
@@ -76,8 +76,8 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
         {
             Token = token,
             UserId = userId,
-            Created = GetDate(),
-            Expires = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
+            Created = GetDateNormalized(),
+            Expires = GetDateNormalized().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
             Status = true
         };
 
@@ -96,7 +96,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
     public (bool isTokenExpiringSoonOrHasAlreadyExpired, double differenceInMinutes) IsTokenExpiringSoonOrHasAlreadyExpired(JwtSecurityToken token, int thresholdInMinutes = 0)
     {
-        DateTime date = GetDate().AddHours(thresholdTimeZoneInHours); // A data de validade do Token é ToUniversalTime, portanto deliberadamente deve ser adicionado tempo extra aqui, sempre;
+        DateTime date = GetDateNormalized().AddHours(thresholdTimeZoneInHours); // A data de validade do Token é ToUniversalTime, portanto deliberadamente deve ser adicionado tempo extra aqui, sempre;
         DateTime dateThreshold = date.AddMinutes(thresholdInMinutes);
 
         double differenceInMinutes = (token.ValidTo - dateThreshold).TotalMinutes;
@@ -105,14 +105,14 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
         return (isTokenExpiringSoonOrHasAlreadyExpired, differenceInMinutes);
     }
 
-    private static DateTime GetDate()
+    private static DateTime GetDateNormalized()
     {
         // Prod: +3h;
-        DateTime date = GerarHorarioBrasilia().AddHours(thresholdTimeZoneInHours);
+        DateTime date = GetDate().AddHours(thresholdTimeZoneInHours);
 
 #if DEBUG
         // Dev;
-        date = GerarHorarioBrasilia();
+        date = GetDate();
 #endif
 
         return date;

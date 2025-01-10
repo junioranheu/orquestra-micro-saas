@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orquestra.Domain.Enums;
 using System.Security.Claims;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;
 
@@ -80,7 +80,7 @@ public abstract class BaseController<T> : Controller
             if (Enum.TryParse<UserRoleEnum>(role, true, out var userRole))
             {
                 roleEnums.Add(userRole);
-                roleEnumsStr.Add(ObterDescricaoEnum(userRole));
+                roleEnumsStr.Add(GetEnumDesc(userRole));
             }
         }
 

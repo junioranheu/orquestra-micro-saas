@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
@@ -17,7 +17,7 @@ public sealed class RefreshToken
 
     public DateTime? Expires { get; set; }
 
-    public DateTime Created { get; set; } = GerarHorarioBrasilia();
+    public DateTime Created { get; set; } = GetDate();
 
     public DateTime? Revoked { get; set; }
 

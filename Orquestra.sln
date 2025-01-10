@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orquestra.Domain", "Orquest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orquestra.Infrastructure", "Orquestra.Infrastructure\Orquestra.Infrastructure.csproj", "{756320F3-7F58-48C0-9498-F69638A932AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orquestra.Utils", "Orquestra.Utils\Orquestra.Utils.csproj", "{8A563403-7A32-47B4-AAE2-ABEBA584AB4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{756320F3-7F58-48C0-9498-F69638A932AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{756320F3-7F58-48C0-9498-F69638A932AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{756320F3-7F58-48C0-9498-F69638A932AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A563403-7A32-47B4-AAE2-ABEBA584AB4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A563403-7A32-47B4-AAE2-ABEBA584AB4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A563403-7A32-47B4-AAE2-ABEBA584AB4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A563403-7A32-47B4-AAE2-ABEBA584AB4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

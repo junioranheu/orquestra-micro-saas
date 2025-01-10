@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
@@ -23,5 +23,5 @@ public sealed class Log
     [ForeignKey(nameof(UserId))]
     public User? Users { get; init; }
 
-    public DateTime Date { get; set; } = GerarHorarioBrasilia();
+    public DateTime Date { get; set; } = GetDate();
 }

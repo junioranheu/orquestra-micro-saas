@@ -4,7 +4,7 @@ using Orquestra.API.Filters.Base;
 using Orquestra.Application.UseCases.Logs.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Filters;
 
@@ -16,13 +16,13 @@ public sealed class ErrorFilter(ILogger<ErrorFilter> logger, ICreateLog createLo
     public override async Task OnExceptionAsync(ExceptionContext context)
     {
         Exception ex = context.Exception;
-        string error = $"Ocorreu um erro ao processar sua requisição. Data: {ObterDetalhesDataHora()}. Caminho: {context.HttpContext.Request.Path}. {(!string.IsNullOrEmpty(ex.InnerException?.Message) ? $"Mais informações: {ex.InnerException.Message}" : $"Mais informações: {ex.Message}")}";
+        string error = $"Ocorreu um erro ao processar sua requisição. Data: {GetDateDetails()}. Caminho: {context.HttpContext.Request.Path}. {(!string.IsNullOrEmpty(ex.InnerException?.Message) ? $"Mais informações: {ex.InnerException.Message}" : $"Mais informações: {ex.Message}")}";
         string errorSimple = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
 
         var result = new BadRequestObjectResult(new
         {
             Code = StatusCodes.Status500InternalServerError,
-            Date = ObterDetalhesDataHora(),
+            Date = GetDateDetails(),
             context.HttpContext.Request.Path,
             Messages = new string[] { errorSimple },
             IsError = true

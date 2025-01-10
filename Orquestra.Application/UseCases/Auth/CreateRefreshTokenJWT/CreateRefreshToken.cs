@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 
@@ -47,11 +47,11 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
         List<Guid> oldRefreshTokenIds = oldRefreshTokens.Select(y => y.RefreshTokenId).ToList();
 
-        await EntityFrameworkQueryableExtensions.ExecuteUpdateAsync(
-            _context.RefreshTokens.Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)),
-            x => x.
+        await _context.RefreshTokens.
+        Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
+        ExecuteUpdateAsync(x => x.
             SetProperty(prop => prop.Status, false).
-            SetProperty(prop => prop.Revoked, GerarHorarioBrasilia())
+            SetProperty(prop => prop.Revoked, GetDate())
         );
     }
 
@@ -73,7 +73,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
             return oldRefreshTokens;
         }
 
-        DateTime date = GerarHorarioBrasilia();
+        DateTime date = GetDate();
         List<RefreshToken> validRefreshTokens = oldRefreshTokens.Where(x => x.Expires > date).ToList();
         List<RefreshToken> invalidRefreshTokens = oldRefreshTokens.Where(x => x.Expires <= date).ToList();
 

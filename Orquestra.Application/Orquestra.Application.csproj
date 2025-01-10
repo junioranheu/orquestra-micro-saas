@@ -1,21 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="13.0.1" />
-		<PackageReference Include="junioranheu-utils-package" Version="1.0.22" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="AutoMapper" Version="13.0.1" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Orquestra.Domain\Orquestra.Domain.csproj" />
 	  <ProjectReference Include="..\Orquestra.Infrastructure\Orquestra.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Orquestra.Utils\Orquestra.Utils.csproj" />
 	</ItemGroup>
 
 </Project>

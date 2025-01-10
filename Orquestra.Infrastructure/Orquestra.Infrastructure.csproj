@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="junioranheu-utils-package" Version="1.0.22" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
+	  <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+	  <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\Orquestra.Domain\Orquestra.Domain.csproj" />
+	  <ProjectReference Include="..\Orquestra.Utils\Orquestra.Utils.csproj" />
 	</ItemGroup>
 
 </Project>

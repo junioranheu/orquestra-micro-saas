@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Domain.Enums;
-using static junioranheu_utils_package.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;
 
@@ -47,6 +47,6 @@ public class TestController : BaseController<TestController>
 
     private static string Ascii()
     {
-        return $"{ascii}\n{GerarHorarioBrasilia()}";
+        return $"{ascii}\n{GetDate()}";
     }
 }
