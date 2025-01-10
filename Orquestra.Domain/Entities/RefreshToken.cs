@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
@@ -15,11 +14,11 @@ public sealed class RefreshToken
     [JsonIgnore]
     public User? Users { get; set; }
 
-    public DateTime? ExpiredDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-    public DateTime CreatedDate { get; set; } = GetDate();
+    public DateTime? ExpiredDate { get; set; }
 
     public DateTime? RevokedDate { get; set; }
 
-    public bool Status { get; set; } = true;
+    public bool Status { get; set; }
 }

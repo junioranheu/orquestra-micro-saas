@@ -47,9 +47,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail get
             Password = EncryptPassword(input.Password),
             Role = UserRoleEnum.Common,
             ChangePasswordCode = GetRandomString(22, false),
-            ChangePasswordCodeValidity = date.AddDays(codeValidityThreshold),
-            Status = true,
-            Date = date
+            ChangePasswordCodeValidity = date.AddDays(codeValidityThreshold)
         };
 
         await _context.AddAsync(user);

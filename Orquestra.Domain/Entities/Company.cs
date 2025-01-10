@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
 [Index(nameof(Email))]
-public sealed class Company
+public sealed class Company: Audit
 {
     [Key]
     public Guid CompanyId { get; set; }
@@ -26,7 +25,7 @@ public sealed class Company
 
     #region location
     [MaxLength(255)]
-    public string StreetAdress { get; set; } = string.Empty;
+    public string Adress { get; set; } = string.Empty;
 
     [MaxLength(100)]
     public string City { get; set; } = string.Empty;
@@ -49,16 +48,14 @@ public sealed class Company
     #endregion
 
     #region subscription
+    public CompanySituationEnum CompanySituation { get; set; }
+
     public PlanTypeEnum PlanType { get; set; }
 
     public DateTime PlanStartDate { get; set; }
 
     public DateTime PlanEndDate { get; set; }
     #endregion
-
-    public bool Status { get; set; } = true;
-
-    public DateTime CreatedDate { get; set; } = GetDate();
 
     public IEnumerable<CompanyUser>? CompanyUsers { get; init; }
 }

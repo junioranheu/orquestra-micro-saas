@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Orquestra.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20250110170244_AddAudit")]
+    partial class AddAudit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,10 +196,19 @@ namespace Orquestra.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("ExpiredDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("LastModificationBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("LastModificationDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("RevokedDate")

@@ -1,11 +1,10 @@
 ﻿using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
-public sealed class CompanyUser
+public sealed class CompanyUser : Audit
 {
     [Key]
     public Guid CompanyUserId { get; set; }
@@ -19,6 +18,4 @@ public sealed class CompanyUser
     public User? Users { get; set; }
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
-
-    public DateTime CreatedDate { get; set; } = GetDate();
 }

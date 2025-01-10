@@ -44,11 +44,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
 
     private async Task<Company> SaveCompany(CompanyInput input)
     {
-        DateTime date = GetDate();
-
         Company company = _map.Map<Company>(input);
-        company.Status = true;
-        company.CreatedDate = date;
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
@@ -62,8 +58,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
         {
             CompanyId = input.CompanyId,
             UserId = userId,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator,
-            CreatedDate = GetDate()
+            CompanyUserRole = CompanyUserRoleEnum.Administrator
         };
 
         List<CompanyUser> companyUsers = [companyUser];

@@ -4,7 +4,7 @@ namespace Orquestra.Domain.Enums;
 
 public enum PlanTypeEnum
 {
-    [Description("Basico")]
+    [Description("Básico")]
     Basico = 1,
 
     [Description("Premium")]

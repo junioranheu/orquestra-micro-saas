@@ -69,5 +69,7 @@ public static class DependencyInjection
     {
         services.AddMemoryCache();
         services.AddResponseCaching();
+
+        services.AddHttpContextAccessor();
     }
 }

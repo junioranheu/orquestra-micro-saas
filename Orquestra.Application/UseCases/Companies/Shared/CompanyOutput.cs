@@ -46,6 +46,8 @@ public sealed class CompanyOutput
     #endregion
 
     #region subscription
+    public CompanySituationEnum CompanySituation { get; set; }
+
     public PlanTypeEnum PlanType { get; set; }
 
     public DateTime PlanStartDate { get; set; }

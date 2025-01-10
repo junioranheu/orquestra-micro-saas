@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
 [Index(nameof(Email))]
-public sealed class User
+public sealed class User : Audit
 {
     [Key]
     public Guid UserId { get; set; }
@@ -26,8 +25,4 @@ public sealed class User
     public string? ChangePasswordCode { get; set; } = null;
 
     public DateTime? ChangePasswordCodeValidity { get; set; }
-
-    public bool Status { get; set; } = true;
-
-    public DateTime Date { get; set; } = GetDate();
 }
