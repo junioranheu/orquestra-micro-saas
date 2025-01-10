@@ -38,7 +38,7 @@ public class TestController : BaseController<TestController>
         return Ok(Ascii());
     }
 
-    [AuthorizeFilter(UserRoleEnum.Administrador, UserRoleEnum.Suporte)]
+    [AuthorizeFilter(UserRoleEnum.Common, UserRoleEnum.Maintainer)]
     [HttpGet("GetAuth")]
     public ActionResult<string> GetAuth()
     {

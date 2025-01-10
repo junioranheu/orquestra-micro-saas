@@ -36,11 +36,11 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
             IEnumerable<Claim> rolesClaim = roles.Select(x => new Claim(ClaimTypes.Role, x.Role.ToString()));
             claimList.AddRange(rolesClaim);
 
-            bool alreadyHasComum = roles.Any(x => x.Role == UserRoleEnum.Comum);
+            bool alreadyHasComum = roles.Any(x => x.Role == UserRoleEnum.Common);
 
             if (!alreadyHasComum)
             {
-                Claim roleComum = new(ClaimTypes.Role, UserRoleEnum.Comum.ToString());
+                Claim roleComum = new(ClaimTypes.Role, UserRoleEnum.Common.ToString());
                 claimList.Add(roleComum);
             }
         }
