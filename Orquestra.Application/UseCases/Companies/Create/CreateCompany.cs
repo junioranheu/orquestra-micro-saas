@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Domain.Entities;
@@ -8,7 +9,7 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
 
-public sealed class CreateCompany(Context context, IMapper map, ICreateRangeCompanyUser createRangeCompanyUser) : ICreateCompany
+public sealed class CreateCompany(Context context, IMapper map, ICreateRangeCompanyUser createRangeCompanyUser) : CompanyBase(context), ICreateCompany
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;
@@ -16,7 +17,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
 
     public async Task<CompanyOutput> Execute(Guid userId, CompanyInput input)
     {
-        await Validations(input);
+        await Validate(input);
         Company company = await SaveCompany(input);
         await SaveCompanyUsers(userId, company);
 
@@ -25,26 +26,13 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
         return output;
     }
 
-    private async Task Validations(CompanyInput input)
-    {
-        //(User? checkUserByUserName, string _) = await _getUserByUserNameOrEmail.Execute(input.UserName);
-
-        //if (checkUserByUserName is not null)
-        //{
-        //    throw new Exception("Já existe um usuário com esse nome de usuário");
-        //}
-
-        //(User? checkUserByEmail, string _) = await _getUserByUserNameOrEmail.Execute(input.Email);
-
-        //if (checkUserByEmail is not null)
-        //{
-        //    throw new Exception("Já existe um usuário com esse e-mail");
-        //}
-    }
-
     private async Task<Company> SaveCompany(CompanyInput input)
     {
         Company company = _map.Map<Company>(input);
+
+        company.CompanySituation = CompanySituationEnum.ApprovedButNotPaid;
+        company.PlanStartDate = GetDate();
+        company.PlanEndDate = GetDate().AddMonths(1);
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();

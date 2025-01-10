@@ -58,11 +58,13 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
                         entry.Entity.CreatedBy = CurrentUserId;
                         entry.Entity.Status = true;
                     }
+
                     break;
 
                 case EntityState.Modified:
                     entry.Entity.LastModificationDate = GetDate();
                     entry.Entity.LastModificationBy = CurrentUserId;
+
                     break;
             }
         }

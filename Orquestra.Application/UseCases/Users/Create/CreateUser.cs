@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Orquestra.Application.UseCases.Users.Base;
 using Orquestra.Application.UseCases.Users.GetByEmail;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
@@ -9,30 +10,19 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Users.Create;
 
-public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail getUserByEmail) : ICreateUser
+public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail getUserByEmail) : UserBase(getUserByEmail), ICreateUser
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;
-    private readonly IGetUserByEmail _getUserByEmail = getUserByEmail;
 
     public async Task<UserOutput> Execute(UserInput input)
     {
-        await Validations(input);
+        await Validate(input);
         User user = await SaveUser(input);
 
         UserOutput? output = _map.Map<UserOutput>(user);
 
         return output;
-    }
-
-    private async Task Validations(UserInput input)
-    {
-        (User? checkUserByEmail, string _) = await _getUserByEmail.Execute(input.Email);
-
-        if (checkUserByEmail is not null)
-        {
-            throw new Exception("Já existe um usuário com esse e-mail");
-        }
     }
 
     private async Task<User> SaveUser(UserInput input)
