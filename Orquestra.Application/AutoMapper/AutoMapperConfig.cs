@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 
@@ -8,6 +10,12 @@ public sealed class AutoMapperConfig : Profile
 {
     public AutoMapperConfig()
     {
+        CreateMap<UserInput, User>();
         CreateMap<User, UserOutput>();
+
+        CreateMap<CompanyInput, Company>();
+        CreateMap<Company, CompanyOutput>();
+
+        CreateMap<CompanyUser, CompanyUserOutput>();       
     }
 }

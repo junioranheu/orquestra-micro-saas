@@ -19,6 +19,7 @@ public sealed class User
     [MaxLength(100)]
     public string Password { get; set; } = string.Empty;
 
+    [MaxLength(25)]
     public string? ChangePasswordCode { get; set; } = null;
 
     public DateTime? ChangePasswordCodeValidity { get; set; }

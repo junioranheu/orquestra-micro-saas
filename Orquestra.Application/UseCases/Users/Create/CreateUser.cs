@@ -45,6 +45,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
     private async Task<User> SaveUser(UserInput input)
     {
         DateTime date = GetDate();
+        const int codeValidityThreshold = 7;
 
         User user = new()
         {
@@ -52,7 +53,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUserByUserNameO
             Email = input.Email,
             Password = EncryptPassword(input.Password),
             ChangePasswordCode = GetRandomString(22, false),
-            ChangePasswordCodeValidity = date.AddDays(7),
+            ChangePasswordCodeValidity = date.AddDays(codeValidityThreshold),
             Status = true,
             Date = date
         };
