@@ -54,7 +54,6 @@ public sealed class Company
     public DateTime PlanStartDate { get; set; }
 
     public DateTime PlanEndDate { get; set; }
-
     #endregion
 
     public bool Status { get; set; } = true;
