@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Orquestra.Application.UseCases.Users.Base;
-using Orquestra.Application.UseCases.Users.GetByEmail;
+using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -9,7 +9,7 @@ using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Users.Create;
 
-public sealed class CreateUser(Context context, IMapper map, IGetUserByEmail getUserByEmail) : UserBase(getUserByEmail), ICreateUser
+public sealed class CreateUser(Context context, IMapper map, IGetUser getUser) : UserBase(getUser), ICreateUser
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;

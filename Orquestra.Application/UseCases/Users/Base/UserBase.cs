@@ -1,4 +1,4 @@
-﻿using Orquestra.Application.UseCases.Users.GetByEmail;
+﻿using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 using System.Text.RegularExpressions;
@@ -6,56 +6,54 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Users.Base;
 
-public partial class UserBase(IGetUserByEmail getUserByEmail)
+public partial class UserBase(IGetUser getUser)
 {
-    private readonly IGetUserByEmail _getUserByEmail = getUserByEmail;
+    private readonly IGetUser _getUser = getUser;
 
     public async Task Validate(UserInput input, Guid userId, bool isCreate)
     {
         #region email
-        bool checkEmail = IsEmailValid(input.Email);
+        bool checkEmail = IsEmailValid(input.Email ?? string.Empty);
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail não é válido. Insira um e-mail válido, por favor.");
+            throw new Exception("O e-mail não é válido. Insira um e-mail válido, por favor");
         }
 
-        (User? checkUserByEmail, string _) = await _getUserByEmail.Execute(input.Email);      
-
-        bool isEditAndSameEmail = !isCreate && input.Email == checkUserByEmail?.Email;
-
-        if (checkUserByEmail is not null && !isEditAndSameEmail)
+        if (isCreate)
         {
-            throw new Exception("Já existe um usuário com esse e-mail");
+            (User? checkUserByEmail, string _) = await _getUser.Execute(new UserInput() { Email = input.Email });
+
+            if (checkUserByEmail is not null)
+            {
+                throw new Exception($"O e-mail {input.Email} já está cadastrado no sistema");
+            }
         }
 
         if (!isCreate)
         {
-            if (checkUserByEmail is null)
-            {
-                throw new Exception("O e-mail não existeaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            }
-        }
+            (User? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userId });
 
-        if (checkUserByEmail is not null && !isCreate && userId != checkUserByEmail?.UserId)
-        {
-            throw new Exception("Apenas o dono da conta pode alterar suas informações");
+            if (checkUserById is not null && userId != checkUserById?.UserId)
+            {
+                throw new Exception("Apenas o dono da conta pode alterar suas informações");
+            }
         }
         #endregion
 
         #region name
-        bool checkName = IsFullNameValid(input.FullName);
+        bool checkName = IsFullNameValid(input.FullName ?? string.Empty);
 
         if (!checkName)
         {
             throw new Exception("O nome não é válido. Insira seu nome completo, por favor.");
         }
 
-        input.FullName = NormalizeToProperName(input.FullName);
+        input.FullName = NormalizeToProperName(input.FullName ?? string.Empty);
         #endregion
 
         #region password
-        bool checkPassword = IsPasswordValid(input.Password);
+        bool checkPassword = IsPasswordValid(input.Password ?? string.Empty);
 
         if (!checkPassword)
         {

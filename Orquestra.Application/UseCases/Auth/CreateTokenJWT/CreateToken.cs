@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
-using Orquestra.Application.UseCases.Users.GetByEmail;
+using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
@@ -13,16 +13,16 @@ public sealed class CreateToken(
     IMapper map,
     IJwtTokenGenerator jwtTokenGenerator,
     ICreateRefreshToken createRefreshToken,
-    IGetUserByEmail getUserByEmail) : ICreateToken
+    IGetUser getUser) : ICreateToken
 {
     private readonly IMapper _map = map;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
-    private readonly IGetUserByEmail _getUserByEmail = getUserByEmail;
+    private readonly IGetUser _getUser = getUser;
 
     public async Task<UserOutput> Execute(AuthInput input)
     {
-        (User? user, string passwordEncrypted) = await _getUserByEmail.Execute(input.Email);
+        (User? user, string passwordEncrypted) = await _getUser.Execute(new UserInput() { Email = input.Email });
         UserOutput? output = _map.Map<UserOutput>(user);
 
         if (output is null)
@@ -32,7 +32,7 @@ public sealed class CreateToken(
 
         if (!CheckPassword(password: input.Password, encryptedPassword: passwordEncrypted))
         {
-            throw new Exception("Nome de usuário ou senha incorretos");
+            throw new Exception("E-mail ou senha incorretos");
         }
 
         if (!output.Status)
