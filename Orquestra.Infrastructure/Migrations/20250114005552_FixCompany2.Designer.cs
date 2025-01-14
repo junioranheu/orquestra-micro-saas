@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Orquestra.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20250114005552_FixCompany2")]
+    partial class FixCompany2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,55 +156,6 @@ namespace Orquestra.Infrastructure.Migrations
                     b.ToTable("CompanyUsers");
                 });
 
-            modelBuilder.Entity("Orquestra.Domain.Entities.LocationCity", b =>
-                {
-                    b.Property<int>("LocationCityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("LocationCityId"));
-
-                    b.Property<int>("LocationStateId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("LocationCityId");
-
-                    b.HasIndex("LocationStateId");
-
-                    b.ToTable("LocationCities");
-                });
-
-            modelBuilder.Entity("Orquestra.Domain.Entities.LocationState", b =>
-                {
-                    b.Property<int>("LocationStateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("LocationStateId"));
-
-                    b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("LocationStateId");
-
-                    b.ToTable("LocationStates");
-                });
-
             modelBuilder.Entity("Orquestra.Domain.Entities.Log", b =>
                 {
                     b.Property<Guid>("LogId")
@@ -331,17 +285,6 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Navigation("Companies");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Orquestra.Domain.Entities.LocationCity", b =>
-                {
-                    b.HasOne("Orquestra.Domain.Entities.LocationState", "LocationStates")
-                        .WithMany()
-                        .HasForeignKey("LocationStateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LocationStates");
                 });
 
             modelBuilder.Entity("Orquestra.Domain.Entities.Log", b =>

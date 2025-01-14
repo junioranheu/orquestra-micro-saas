@@ -12,6 +12,8 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
 
     public DbSet<Company> Companies { get; set; }
     public DbSet<CompanyUser> CompanyUsers { get; set; }
+    public DbSet<LocationCity> LocationCities { get; set; }
+    public DbSet<LocationState> LocationStates { get; set; }
     public DbSet<Log> Logs { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<User> Users { get; set; }
