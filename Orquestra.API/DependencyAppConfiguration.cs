@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Orquestra.API.Middlewares;
 using Orquestra.Domain.Consts;
+using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Seed;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Orquestra.API;
 
 public static class DependencyAppConfiguration
 {
-    public static WebApplication UseAppConfiguration(this WebApplication app, WebApplicationBuilder builder)
+    public static async Task<WebApplication> UseAppConfiguration(this WebApplication app, WebApplicationBuilder builder)
     {
         AddMiddleware(app);
         AddSwagger(app);
@@ -16,6 +18,7 @@ public static class DependencyAppConfiguration
         AddCompression(app);
         AddAuth(app);
         AddMisc(app);
+        await HandleDbInitialize(app);
 
         return app;
     }
@@ -101,5 +104,23 @@ public static class DependencyAppConfiguration
     private static void AddMisc(WebApplication app)
     {
         app.UseResponseCaching();
+    }
+
+    private static async Task HandleDbInitialize(WebApplication app)
+    {
+        bool isApplyMigrations = false;
+        bool isApplyReset = false;
+        bool isApplySeed = false;
+
+        if (!isApplyMigrations && !isApplyReset && !isApplySeed)
+        {
+            return;
+        }
+
+        using IServiceScope scope = app.Services.CreateScope();
+        IServiceProvider services = scope.ServiceProvider;
+        Context context = services.GetRequiredService<Context>();
+
+        await DbInitializer.Initialize(context, isApplyMigrations, isApplyReset, isApplySeed);
     }
 }

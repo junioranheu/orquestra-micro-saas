@@ -9,7 +9,7 @@ public sealed class SeedLocationStates
     public static async Task Seed(Context context)
     {
         #region seed
-        if (!await context.LocationStates.AnyAsync())
+        if (!await context.LocationStates.AsNoTracking().AnyAsync())
         {
             await context.LocationStates.AddAsync(new LocationState() { LocationStateId = 1, Name = "Acre", Abbreviation = "AC", Status = true });
             await context.LocationStates.AddAsync(new LocationState() { LocationStateId = 2, Name = "Alagoas", Abbreviation = "AL", Status = true });

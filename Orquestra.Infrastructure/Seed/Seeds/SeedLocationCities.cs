@@ -9,7 +9,7 @@ public sealed class SeedLocationCities
     public static async Task Seed(Context context)
     {
         #region seed
-        if (!await context.LocationCities.AnyAsync())
+        if (!await context.LocationCities.AsNoTracking().AnyAsync())
         {
             await context.LocationCities.AddAsync(new LocationCity() { LocationCityId = 1, Name = "Alta Floresta D´oeste", LocationStateId = 21, Status = true });
             await context.LocationCities.AddAsync(new LocationCity() { LocationCityId = 2, Name = "Ariquemes", LocationStateId = 21, Status = true });
