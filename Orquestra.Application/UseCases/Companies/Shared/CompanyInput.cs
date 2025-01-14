@@ -15,7 +15,7 @@ public sealed class CompanyInput
     #endregion
 
     #region location
-    public string StreetAdress { get; set; } = string.Empty;
+    public string Address { get; set; } = string.Empty;
 
     public string City { get; set; } = string.Empty;
 

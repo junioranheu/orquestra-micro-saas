@@ -81,6 +81,7 @@ public partial class UserBase(IGetUser getUser)
         return RegexPassword().IsMatch(password);
     }
 
+    // Regex;
     [GeneratedRegex(@"^(?=.*[A-Za-z]{3,})[A-Za-z ]{3,}$")]
     private static partial Regex RegexName();
 
