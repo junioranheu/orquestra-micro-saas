@@ -7,11 +7,8 @@ namespace Orquestra.API;
 
 public static class DependencyAppConfiguration
 {
-    public static WebApplication UseAppConfigurationAsync(this WebApplication app, WebApplicationBuilder builder)
+    public static WebApplication UseAppConfiguration(this WebApplication app, WebApplicationBuilder builder)
     {
-        using IServiceScope scope = app.Services.CreateScope();
-        IServiceProvider services = scope.ServiceProvider;
-
         AddMiddleware(app);
         AddSwagger(app);
         AddHttpsRedirection(app);
