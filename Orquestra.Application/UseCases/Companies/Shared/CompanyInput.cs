@@ -5,6 +5,8 @@ namespace Orquestra.Application.UseCases.Companies.Shared;
 public sealed class CompanyInput
 {
     #region basic
+    public Guid? CompanyId { get; set; } = Guid.Empty;
+
     public string Name { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;

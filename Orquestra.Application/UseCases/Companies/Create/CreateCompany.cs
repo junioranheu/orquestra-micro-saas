@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
+using Orquestra.Application.UseCases.CompanyUsers.Get;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -9,7 +10,7 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
 
-public sealed class CreateCompany(Context context, IMapper map, ICreateRangeCompanyUser createRangeCompanyUser) : CompanyBase(context), ICreateCompany
+public sealed class CreateCompany(Context context, IMapper map, ICreateRangeCompanyUser createRangeCompanyUser, IGetCompanyUser getCompanyUser) : CompanyBase(context, getCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;
@@ -17,7 +18,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
 
     public async Task<CompanyOutput> Execute(Guid userId, CompanyInput input)
     {
-        await Validate(input);
+        await Validate(input, userId, isCreate: true);
         Company company = await Save(input);
         await SaveCompanyUsers(userId, company);
 

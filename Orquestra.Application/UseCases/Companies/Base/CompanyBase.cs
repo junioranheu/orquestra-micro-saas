@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.Get;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -8,13 +8,25 @@ using System.Text.RegularExpressions;
 
 namespace Orquestra.Application.UseCases.Companies.Base;
 
-public partial class CompanyBase(Context context)
+public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser)
 {
     private readonly Context _context = context;
+    private readonly IGetCompanyUser _getCompanyUser = getCompanyUser;
 
-    public async Task Validate(CompanyInput input, bool isCreate)
+    public async Task Validate(CompanyInput input, Guid userId, bool isCreate)
     {
         #region basic
+        if (!isCreate)
+        {
+            List<CompanyUser>? companiesFromUser = await _getCompanyUser.Execute(companyId: Guid.Empty, userId: userId);
+            bool? isAdmin = companiesFromUser?.Any(x => x.Users?.UserId == userId && (x.CompanyUserRole == CompanyUserRoleEnum.Administrator || x.CompanyUserRole == CompanyUserRoleEnum.Owner));
+
+            if (input.CompanyId == Guid.Empty || companiesFromUser?.Count == 0 || !isAdmin.GetValueOrDefault())
+            {
+                throw new Exception("Apenas um administrador da empresa pode alterar suas informações");
+            }
+        }
+
         bool checkName = IsNameValid(input.Name);
 
         if (checkName)
@@ -22,7 +34,7 @@ public partial class CompanyBase(Context context)
             throw new Exception("O nome da empresa não é válido");
         }
 
-         checkName = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
+        checkName = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
 
         if (checkName)
         {
@@ -34,26 +46,6 @@ public partial class CompanyBase(Context context)
         if (!checkEmail)
         {
             throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor");
-        }
-
-        if (isCreate)
-        {
-            (User? checkUserByEmail, string _) = await _getUser.Execute(new UserInput() { Email = input.Email });
-
-            if (checkUserByEmail is not null)
-            {
-                throw new Exception($"O e-mail {input.Email} já está cadastrado no sistema");
-            }
-        }
-
-        if (!isCreate)
-        {
-            (User? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userId });
-
-            if (checkUserById is not null && userId != checkUserById?.UserId)
-            {
-                throw new Exception("Apenas o dono da conta pode alterar suas informações");
-            }
         }
 
         bool checkPhone = IsEmailValid(input.Phone);
