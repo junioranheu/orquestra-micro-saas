@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Text.RegularExpressions;
@@ -10,14 +12,117 @@ public partial class CompanyBase(Context context)
 {
     private readonly Context _context = context;
 
-    public async Task Validate(CompanyInput input)
+    public async Task Validate(CompanyInput input, bool isCreate)
     {
-        #region name
-        bool checkName = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
+        #region basic
+        bool checkName = IsNameValid(input.Name);
+
+        if (checkName)
+        {
+            throw new Exception("O nome da empresa não é válido");
+        }
+
+         checkName = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
 
         if (checkName)
         {
             throw new Exception("Já existe uma empresa registrada com esse nome");
+        }
+
+        bool checkEmail = IsEmailValid(input.Email);
+
+        if (!checkEmail)
+        {
+            throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor");
+        }
+
+        if (isCreate)
+        {
+            (User? checkUserByEmail, string _) = await _getUser.Execute(new UserInput() { Email = input.Email });
+
+            if (checkUserByEmail is not null)
+            {
+                throw new Exception($"O e-mail {input.Email} já está cadastrado no sistema");
+            }
+        }
+
+        if (!isCreate)
+        {
+            (User? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userId });
+
+            if (checkUserById is not null && userId != checkUserById?.UserId)
+            {
+                throw new Exception("Apenas o dono da conta pode alterar suas informações");
+            }
+        }
+
+        bool checkPhone = IsEmailValid(input.Phone);
+
+        if (!checkPhone)
+        {
+            throw new Exception("O número de telefone não é válido. Insira um número válido, por favor");
+        }
+
+        bool checkType = IsTypeValid(input.Type);
+
+        if (!checkType)
+        {
+            throw new Exception("O tipo da empresa não é válido. Insira um tipo válido, por favor");
+        }
+        #endregion
+
+        #region location
+        bool checkAddress = IsStreetAddressValid(input.Address);
+
+        if (!checkAddress)
+        {
+            throw new Exception("O endereço não é válido. Insira um endereço válido, por favor.");
+        }
+
+        bool checkCity = IsCityValid(input.City);
+
+        if (!checkCity)
+        {
+            throw new Exception("A cidade não é válida. Insira uma cidade válida, por favor.");
+        }
+
+        bool checkState = IsStateValid(input.State);
+
+        if (!checkState)
+        {
+            throw new Exception("O estado não é válido. Insira um estado válido, por favor.");
+        }
+
+        bool checkZipCode = IsZipCodeValid(input.ZipCode);
+
+        if (!checkZipCode)
+        {
+            throw new Exception("O CEP não é válido. Insira um CEP válido, por favor.");
+        }
+
+        bool checkCountry = IsCountryValid(input.Country);
+
+        if (!checkCountry)
+        {
+            throw new Exception("O país não é válido. Insira um país válido, por favor.");
+        }
+        #endregion
+
+        #region customization
+        bool checkLogoUrl = IsLogoUrlValid(input.LogoUrl);
+
+        if (!checkLogoUrl)
+        {
+            throw new Exception("A logo não é válida. Insira uma logo válida, por favor.");
+        }
+        #endregion
+
+        #region subscription
+        bool checkPlanType = IsPlanTypeValid(input.PlanType);
+
+        if (!checkPlanType)
+        {
+            throw new Exception("O tipo de plano não é válido. Insira um plano válido, por favor.");
         }
         #endregion
     }
