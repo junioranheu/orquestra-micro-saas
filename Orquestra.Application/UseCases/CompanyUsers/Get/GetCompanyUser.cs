@@ -10,15 +10,15 @@ public sealed class GetCompanyUser(Context context) : IGetCompanyUser
 
     public async Task<List<CompanyUser>?> Execute(Guid companyId, Guid userId)
     {
-        var companyUsers = await _context.CompanyUsers.
-                           Include(x => x.Users).
-                           AsNoTracking().
-                           Where(x =>
-                              (companyId == Guid.Empty || x.CompanyId == companyId) &&
-                              (userId == Guid.Empty || x.UserId == userId)
-                           ).
-                           ToListAsync();
+        var result = await _context.CompanyUsers.
+                     Include(x => x.Users).
+                     AsNoTracking().
+                     Where(x =>
+                        (companyId == Guid.Empty || x.CompanyId == companyId) &&
+                        (userId == Guid.Empty || x.UserId == userId)
+                     ).
+                     ToListAsync();
 
-        return companyUsers;
+        return result;
     }
 }

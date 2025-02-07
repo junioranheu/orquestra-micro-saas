@@ -44,8 +44,6 @@ public static class DependencyAppConfiguration
                     c.RoutePrefix = string.Empty;
                 }
             });
-
-            app.UseDeveloperExceptionPage();
         }
     }
 
@@ -109,6 +107,11 @@ public static class DependencyAppConfiguration
     private static void AddMisc(WebApplication app)
     {
         app.UseResponseCaching();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
     }
 
     private static async Task HandleDbInitialize(WebApplication app)

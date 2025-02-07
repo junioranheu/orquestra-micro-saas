@@ -6,6 +6,7 @@ using Orquestra.Application.AutoMapper;
 using Orquestra.Application.UseCases.Auth;
 using Orquestra.Application.UseCases.Companies;
 using Orquestra.Application.UseCases.CompanyUsers;
+using Orquestra.Application.UseCases.Locations;
 using Orquestra.Application.UseCases.Logs;
 using Orquestra.Application.UseCases.Users;
 
@@ -44,6 +45,7 @@ public static class DependencyInjection
     private static void AddUseCases(IServiceCollection services)
     {
         services.AddLogsApplication();
+        services.AddLocationsApplication();
         services.AddUsersApplication();
         services.AddAuthApplication();
         services.AddCompaniesApplication();

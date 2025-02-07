@@ -10,12 +10,12 @@ public sealed class GetCompany(Context context) : IGetCompany
 
     public async Task<Company?> Execute(Guid companyId)
     {
-        var company = await _context.Companies.
-                      Include(x => x.CompanyUsers).
-                      AsNoTracking().
-                      Where(x => x.CompanyId == companyId).
-                      FirstOrDefaultAsync();
+        var result = await _context.Companies.
+                     Include(x => x.CompanyUsers).
+                     AsNoTracking().
+                     Where(x => x.CompanyId == companyId).
+                     FirstOrDefaultAsync();
 
-        return company;
+        return result;
     }
 }

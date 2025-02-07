@@ -11,18 +11,22 @@ public sealed class GetUser(Context context) : IGetUser
 
     public async Task<(User? user, string passwordEncrypted)> Execute(UserInput input)
     {
-        var user = await _context.Users.
-                   AsNoTracking().
-                   Where(x =>
-                      (input.UserId == Guid.Empty || x.UserId == input.UserId) &&
-                      (string.IsNullOrEmpty(input.Email) || x.Email == input.Email)
-                   ).FirstOrDefaultAsync();
+        var result = await _context.Users.
+                     AsNoTracking().
+                     Where(x =>
+                        (input.UserId == Guid.Empty || x.UserId == input.UserId) &&
+                        (string.IsNullOrEmpty(input.Email) || x.Email == input.Email)
+                     ).
+                     FirstOrDefaultAsync();
 
-        if (user is null)
+        if (result is null)
         {
             return (null, string.Empty);
         }
 
-        return (user, user.Password);
+        string password = result.Password;
+        result.Password = string.Empty;
+
+        return (result, result.Password);
     }
 }

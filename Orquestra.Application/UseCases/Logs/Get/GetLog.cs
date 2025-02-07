@@ -3,9 +3,9 @@ using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
-namespace Orquestra.Application.UseCases.Logs.GetAll;
+namespace Orquestra.Application.UseCases.Logs.Get;
 
-public sealed class GetAllLog(Context context) : IGetAllLog
+public sealed class GetLog(Context context) : IGetLog
 {
     private readonly Context _context = context;
 
