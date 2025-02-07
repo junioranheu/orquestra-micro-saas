@@ -4,6 +4,6 @@ namespace Orquestra.Infrastructure.Factory;
 
 public interface IConnectionFactory
 {
-    MySqlConnection ObterMySqlConnection();
-    string ObterStringConnection();
+    string GetConnectionString();
+    MySqlConnection GetMySqlConnection();
 }

@@ -94,7 +94,7 @@ public static class DependencyInjection
 
     private static void AddContext(IServiceCollection services, WebApplicationBuilder builder)
     {
-        string con = new ConnectionFactory(builder.Configuration).ObterStringConnection();
+        string con = new ConnectionFactory(builder.Configuration).GetConnectionString();
 
         services.AddDbContextPool<Context>(x =>
         {

@@ -13,6 +13,7 @@ public sealed class GetCity(Context context) : IGetCity
         var result = await _context.LocationCities.
                      Include(x => x.LocationStates).
                      AsNoTracking().
+                     Where(x => x.Status == true).
                      ToListAsync();
 
         return result;

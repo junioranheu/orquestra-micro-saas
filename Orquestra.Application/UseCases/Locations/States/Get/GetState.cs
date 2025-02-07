@@ -11,7 +11,10 @@ public sealed class GetState(Context context) : IGetState
 
     public async Task<List<LocationState>?> Execute()
     {
-        var result = await _context.LocationStates.AsNoTracking().ToListAsync();
+        var result = await _context.LocationStates.
+                     Where(x => x.Status == true).
+                     AsNoTracking().
+                     ToListAsync();
 
         return result;
     }

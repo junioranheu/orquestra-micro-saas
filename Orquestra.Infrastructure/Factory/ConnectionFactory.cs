@@ -7,16 +7,21 @@ public class ConnectionFactory(IConfiguration configuration) : IConnectionFactor
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public string ObterStringConnection()
+    public string GetConnectionString()
     {
-        string nomeConnectionString = _configuration["SystemSettings:ConnectionStringName"] ?? string.Empty;
-        string connectionString = _configuration.GetConnectionString(nomeConnectionString) ?? string.Empty;
+        string connectionStringName = _configuration["SystemSettings:ConnectionStringName"] ?? string.Empty;
+        string connectionString = _configuration.GetConnectionString(connectionStringName) ?? string.Empty;
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new Exception("A connection string está nula");
+        }
 
         return connectionString;
     }
 
-    public MySqlConnection ObterMySqlConnection()
+    public MySqlConnection GetMySqlConnection()
     {
-        return new MySqlConnection(ObterStringConnection());
+        return new MySqlConnection(GetConnectionString());
     }
 }

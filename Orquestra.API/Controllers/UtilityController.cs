@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.Application.UseCases.Locations.Cities.Get;
 using Orquestra.Application.UseCases.Locations.States.Get;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 
 namespace Orquestra.API.Controllers;
@@ -13,6 +14,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     private readonly IGetState _getState = getState;
     private readonly IGetCity _getCity = getCity;
 
+    [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
     [AllowAnonymous]
     [HttpGet("getState")]
     public async Task<ActionResult<List<LocationState>?>> GetState()
@@ -21,6 +23,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return output;
     }
 
+    [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
     [AllowAnonymous]
     [HttpGet("getCity")]
     public async Task<ActionResult<List<LocationCity>?>> GetCity()
