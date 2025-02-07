@@ -36,8 +36,13 @@ public static class DependencyAppConfiguration
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name);
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name); 
                 c.DocExpansion(DocExpansion.None);
+
+                if (OperatingSystem.IsMacOS())
+                {
+                    c.RoutePrefix = string.Empty;
+                }
             });
 
             app.UseDeveloperExceptionPage();
