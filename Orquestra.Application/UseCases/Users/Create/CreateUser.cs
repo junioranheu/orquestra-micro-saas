@@ -27,6 +27,11 @@ public sealed class CreateUser(Context context, IMapper map, IGetUser getUser) :
     #region extras
     private async Task<User> Save(UserInput input)
     {
+        if (string.IsNullOrEmpty(input.FullName) || string.IsNullOrEmpty(input.Email) || string.IsNullOrEmpty(input.Password))
+        {
+            throw new Exception("Os dados do usuário não podem ser nulos");
+        }
+
         User user = new()
         {
             FullName = input.FullName,

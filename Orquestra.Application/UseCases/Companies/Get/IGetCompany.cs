@@ -1,8 +1,9 @@
-﻿using Orquestra.Domain.Entities;
+﻿using Orquestra.Application.UseCases.Companies.Shared;
 
 namespace Orquestra.Application.UseCases.Companies.Get;
 
 public interface IGetCompany
 {
-    Task<Company?> Execute(Guid companyId);
+    Task<CompanyOutput?> Execute(Guid companyId);
+    Task<List<CompanyOutput>?> Execute();
 }
