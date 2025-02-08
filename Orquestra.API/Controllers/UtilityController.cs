@@ -15,8 +15,8 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     private readonly IGetCity _getCity = getCity;
 
     [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
-    [AllowAnonymous]
-    [HttpGet("getState")]
+    [AllowAnonymous] 
+    [HttpGet("GetState")]
     public async Task<ActionResult<List<LocationState>?>> GetState()
     {
         var output = await _getState.Execute();
@@ -25,7 +25,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
 
     [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
     [AllowAnonymous]
-    [HttpGet("getCity")]
+    [HttpGet("GetCity")]
     public async Task<ActionResult<List<LocationCity>?>> GetCity()
     {
         var output = await _getCity.Execute();

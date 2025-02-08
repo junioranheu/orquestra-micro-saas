@@ -32,7 +32,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     }
 
     [AuthorizeFilter]
-    [HttpGet("getAll")]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<List<CompanyOutput>?>> GetAll()
     {
         List<CompanyOutput>? output = await _get.Execute();

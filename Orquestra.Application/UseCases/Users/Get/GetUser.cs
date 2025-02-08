@@ -27,6 +27,6 @@ public sealed class GetUser(Context context) : IGetUser
         string password = result.Password;
         result.Password = string.Empty;
 
-        return (result, result.Password);
+        return (result, password);
     }
 }
