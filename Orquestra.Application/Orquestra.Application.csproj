@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
@@ -11,28 +11,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="AutoMapper" Version="13.0.1" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+		<PackageReference Include="AutoMapper" Version="14.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Orquestra.Domain\Orquestra.Domain.csproj" />
-	  <ProjectReference Include="..\Orquestra.Infrastructure\Orquestra.Infrastructure.csproj" />
-	  <ProjectReference Include="..\Orquestra.Utils\Orquestra.Utils.csproj" />
+		<ProjectReference Include="..\Orquestra.Domain\Orquestra.Domain.csproj" />
+		<ProjectReference Include="..\Orquestra.Infrastructure\Orquestra.Infrastructure.csproj" />
+		<ProjectReference Include="..\Orquestra.Utils\Orquestra.Utils.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="UseCases\Locations\" />
-	  <None Remove="UseCases\Locations\Cities\" />
-	  <None Remove="UseCases\Locations\Cities\Get\" />
-	  <None Remove="UseCases\Locations\States\" />
-	  <None Remove="UseCases\Locations\States\Get\" />
+		<None Remove="UseCases\Locations\" />
+		<None Remove="UseCases\Locations\Cities\" />
+		<None Remove="UseCases\Locations\Cities\Get\" />
+		<None Remove="UseCases\Locations\States\" />
+		<None Remove="UseCases\Locations\States\Get\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="UseCases\Locations\" />
-	  <Folder Include="UseCases\Locations\Cities\" />
-	  <Folder Include="UseCases\Locations\Cities\Get\" />
-	  <Folder Include="UseCases\Locations\States\" />
-	  <Folder Include="UseCases\Locations\States\Get\" />
+		<Folder Include="UseCases\Locations\" />
+		<Folder Include="UseCases\Locations\Cities\" />
+		<Folder Include="UseCases\Locations\Cities\Get\" />
+		<Folder Include="UseCases\Locations\States\" />
+		<Folder Include="UseCases\Locations\States\Get\" />
 	</ItemGroup>
 </Project>

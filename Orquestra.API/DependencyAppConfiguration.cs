@@ -39,7 +39,7 @@ public static class DependencyAppConfiguration
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name); 
                 c.DocExpansion(DocExpansion.None);
 
-                if (OperatingSystem.IsMacOS())
+                if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows())
                 {
                     c.RoutePrefix = string.Empty;
                 }
