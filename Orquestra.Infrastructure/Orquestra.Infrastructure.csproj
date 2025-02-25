@@ -24,4 +24,8 @@
 		<ProjectReference Include="..\Orquestra.Utils\Orquestra.Utils.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
+
 </Project>

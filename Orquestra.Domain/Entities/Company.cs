@@ -5,13 +5,14 @@ using System.ComponentModel.DataAnnotations;
 namespace Orquestra.Domain.Entities;
 
 [Index(nameof(Email))]
+[Index(nameof(Name))]
 public sealed class Company: Audit
 {
     [Key]
     public Guid CompanyId { get; set; }
 
     #region basic
-    [MaxLength(255)]
+    [MaxLength(150)]
     public string Name { get; set; } = string.Empty;
 
     [MaxLength(150)]
@@ -58,4 +59,6 @@ public sealed class Company: Audit
     #endregion
 
     public IEnumerable<CompanyUser>? CompanyUsers { get; init; }
+
+    public IEnumerable<Schedule>? Schedules { get; init; }
 }

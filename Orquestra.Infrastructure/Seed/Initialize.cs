@@ -7,20 +7,20 @@ namespace Orquestra.Infrastructure.Seed;
 
 public static class DbInitializer
 {
-    public static async Task Initialize(Context context, bool isApplyMigrations, bool isApplyReset, bool isApplySeed)
+    public static async Task Initialize(Context context, bool isApplyReset, bool isApplyMigrations, bool isApplySeed)
     {
         context.Database.SetCommandTimeout(600);
         // string script = context.Database.GenerateCreateScript();
-
-        if (isApplyMigrations)
-        {
-            await context.Database.MigrateAsync();
-        }
 
         if (isApplyReset)
         {
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
+        }
+
+        if (isApplyMigrations)
+        {
+            await context.Database.MigrateAsync();
         }
 
         if (isApplySeed)

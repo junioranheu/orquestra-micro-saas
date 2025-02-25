@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Orquestra.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class AltSchedule1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,14 +20,14 @@ namespace Orquestra.Infrastructure.Migrations
                 columns: table => new
                 {
                     CompanyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    Name = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Phone = table.Column<string>(type: "varchar(12)", maxLength: 12, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    StreetAdress = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    Address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     City = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -40,15 +41,37 @@ namespace Orquestra.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Color = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    CompanySituation = table.Column<int>(type: "int", nullable: false),
                     PlanType = table.Column<int>(type: "int", nullable: false),
                     PlanStartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     PlanEndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModificationBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.CompanyId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "LocationStates",
+                columns: table => new
+                {
+                    LocationStateId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Abbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationStates", x => x.LocationStateId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -63,15 +86,39 @@ namespace Orquestra.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ChangePasswordCode = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ChangePasswordCodeValidity = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModificationBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "LocationCities",
+                columns: table => new
+                {
+                    LocationCityId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LocationStateId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationCities", x => x.LocationCityId);
+                    table.ForeignKey(
+                        name: "FK_LocationCities_LocationStates_LocationStateId",
+                        column: x => x.LocationStateId,
+                        principalTable: "LocationStates",
+                        principalColumn: "LocationStateId",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -83,7 +130,11 @@ namespace Orquestra.Infrastructure.Migrations
                     CompanyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     CompanyUserRole = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModificationBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,8 +191,8 @@ namespace Orquestra.Infrastructure.Migrations
                     Token = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    ExpiredDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ExpiredDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RevokedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
@@ -158,19 +209,32 @@ namespace Orquestra.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "UsuariosRoles",
+                name: "Schedules",
                 columns: table => new
                 {
-                    UserRoleId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ScheduleId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    PaymentType = table.Column<int>(type: "int", nullable: false),
+                    ScheduleStatus = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Role = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CompanyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModificationBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsuariosRoles", x => x.UserRoleId);
+                    table.PrimaryKey("PK_Schedules", x => x.ScheduleId);
                     table.ForeignKey(
-                        name: "FK_UsuariosRoles_Users_UserId",
+                        name: "FK_Schedules_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Schedules_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -184,6 +248,11 @@ namespace Orquestra.Infrastructure.Migrations
                 column: "Email");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Companies_Name",
+                table: "Companies",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CompanyUsers_CompanyId",
                 table: "CompanyUsers",
                 column: "CompanyId");
@@ -192,6 +261,11 @@ namespace Orquestra.Infrastructure.Migrations
                 name: "IX_CompanyUsers_UserId",
                 table: "CompanyUsers",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationCities_LocationStateId",
+                table: "LocationCities",
+                column: "LocationStateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Logs_UserId",
@@ -204,14 +278,19 @@ namespace Orquestra.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Schedules_CompanyId",
+                table: "Schedules",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedules_UserId",
+                table: "Schedules",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsuariosRoles_UserId",
-                table: "UsuariosRoles",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -221,13 +300,19 @@ namespace Orquestra.Infrastructure.Migrations
                 name: "CompanyUsers");
 
             migrationBuilder.DropTable(
+                name: "LocationCities");
+
+            migrationBuilder.DropTable(
                 name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "UsuariosRoles");
+                name: "Schedules");
+
+            migrationBuilder.DropTable(
+                name: "LocationStates");
 
             migrationBuilder.DropTable(
                 name: "Companies");

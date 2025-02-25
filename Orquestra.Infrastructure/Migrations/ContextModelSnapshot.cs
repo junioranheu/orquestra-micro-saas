@@ -17,7 +17,7 @@ namespace Orquestra.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -74,8 +74,8 @@ namespace Orquestra.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -110,6 +110,8 @@ namespace Orquestra.Infrastructure.Migrations
                     b.HasKey("CompanyId");
 
                     b.HasIndex("Email");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Companies");
                 });
@@ -268,6 +270,51 @@ namespace Orquestra.Infrastructure.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("Orquestra.Domain.Entities.Schedule", b =>
+                {
+                    b.Property<Guid>("ScheduleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("LastModificationBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("LastModificationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleStatus")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ScheduleId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Schedules");
+                });
+
             modelBuilder.Entity("Orquestra.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -365,9 +412,30 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("Orquestra.Domain.Entities.Schedule", b =>
+                {
+                    b.HasOne("Orquestra.Domain.Entities.Company", "Company")
+                        .WithMany("Schedules")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Orquestra.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Orquestra.Domain.Entities.Company", b =>
                 {
                     b.Navigation("CompanyUsers");
+
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }

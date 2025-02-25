@@ -36,7 +36,7 @@ public static class DependencyAppConfiguration
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name); 
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name);
                 c.DocExpansion(DocExpansion.None);
 
                 if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows())
@@ -116,11 +116,11 @@ public static class DependencyAppConfiguration
 
     private static async Task HandleDbInitialize(WebApplication app)
     {
-        bool isApplyMigrations = false;
         bool isApplyReset = false;
+        bool isApplyMigrations = false;
         bool isApplySeed = false;
 
-        if (!isApplyMigrations && !isApplyReset && !isApplySeed)
+        if (!isApplyReset && !isApplyMigrations && !isApplySeed)
         {
             return;
         }
@@ -129,6 +129,6 @@ public static class DependencyAppConfiguration
         IServiceProvider services = scope.ServiceProvider;
         Context context = services.GetRequiredService<Context>();
 
-        await DbInitializer.Initialize(context, isApplyMigrations, isApplyReset, isApplySeed);
+        await DbInitializer.Initialize(context, isApplyReset, isApplyMigrations, isApplySeed);
     }
 }
