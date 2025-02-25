@@ -17,6 +17,7 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
     public DbSet<Log> Logs { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Client> Clients { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
 
     #region extras

@@ -15,9 +15,9 @@ public sealed class Schedule : Audit
 
     public ScheduleStatusEnum ScheduleStatus { get; set; }
 
-    public Guid UserId { get; set; }
-    [ForeignKey(nameof(UserId))]
-    public User? User { get; set; }
+    public Guid ClientId { get; set; }
+    [ForeignKey(nameof(ClientId))]
+    public Client? Clients { get; set; }
 
     public Guid CompanyId { get; set; }
     [ForeignKey(nameof(CompanyId))]

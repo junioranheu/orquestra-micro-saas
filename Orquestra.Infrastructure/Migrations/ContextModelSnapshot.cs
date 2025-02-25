@@ -22,6 +22,64 @@ namespace Orquestra.Infrastructure.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("Orquestra.Domain.Entities.Client", b =>
+                {
+                    b.Property<Guid>("ClientId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(14)
+                        .HasColumnType("varchar(14)");
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("varchar(14)");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("LastModificationBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("LastModificationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("ClientId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Clients");
+                });
+
             modelBuilder.Entity("Orquestra.Domain.Entities.Company", b =>
                 {
                     b.Property<Guid>("CompanyId")
@@ -276,6 +334,9 @@ namespace Orquestra.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("char(36)");
+
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("char(36)");
 
@@ -303,14 +364,11 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("ScheduleId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("ClientId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("Schedules");
                 });
@@ -359,6 +417,17 @@ namespace Orquestra.Infrastructure.Migrations
                     b.HasIndex("Email");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Orquestra.Domain.Entities.Client", b =>
+                {
+                    b.HasOne("Orquestra.Domain.Entities.Company", "Companies")
+                        .WithMany("Clients")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Companies");
                 });
 
             modelBuilder.Entity("Orquestra.Domain.Entities.CompanyUser", b =>
@@ -414,25 +483,32 @@ namespace Orquestra.Infrastructure.Migrations
 
             modelBuilder.Entity("Orquestra.Domain.Entities.Schedule", b =>
                 {
+                    b.HasOne("Orquestra.Domain.Entities.Client", "Clients")
+                        .WithMany("Schedules")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Orquestra.Domain.Entities.Company", "Company")
                         .WithMany("Schedules")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Orquestra.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Clients");
 
                     b.Navigation("Company");
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("Orquestra.Domain.Entities.Client", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("Orquestra.Domain.Entities.Company", b =>
                 {
+                    b.Navigation("Clients");
+
                     b.Navigation("CompanyUsers");
 
                     b.Navigation("Schedules");
