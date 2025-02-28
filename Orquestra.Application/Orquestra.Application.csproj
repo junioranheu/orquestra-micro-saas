@@ -34,6 +34,5 @@
 		<Folder Include="UseCases\Locations\Cities\Get\" />
 		<Folder Include="UseCases\Locations\States\" />
 		<Folder Include="UseCases\Locations\States\Get\" />
-		<Folder Include="UseCases\Schedules\Update\" />
 	</ItemGroup>
 </Project>

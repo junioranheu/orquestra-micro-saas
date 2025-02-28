@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
+using Orquestra.Application.UseCases.CompanyUsers.Get;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Create;
-
-public sealed class CreateSchedule(Context context, IMapper map) : ScheduleBase(context), ICreateSchedule
+public sealed class CreateSchedule(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ScheduleBase(context, getCompanyUser), ICreateSchedule
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;

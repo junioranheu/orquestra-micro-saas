@@ -19,7 +19,7 @@ public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser
         if (!isCreate)
         {
             List<CompanyUser>? companiesFromUser = await _getCompanyUser.Execute(companyId: Guid.Empty, userId: userId);
-            bool? isAdmin = companiesFromUser?.Any(x => x.Users?.UserId == userId && (x.CompanyUserRole == CompanyUserRoleEnum.Administrator || x.CompanyUserRole == CompanyUserRoleEnum.Owner));
+            bool? isAdmin = companiesFromUser?.Any(x => x.Users?.UserId == userId && x.CompanyId == input.CompanyId && (x.CompanyUserRole == CompanyUserRoleEnum.Administrator || x.CompanyUserRole == CompanyUserRoleEnum.Owner));
 
             if (input.CompanyId == Guid.Empty || companiesFromUser?.Count == 0 || !isAdmin.GetValueOrDefault())
             {
