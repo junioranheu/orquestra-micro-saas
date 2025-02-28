@@ -6,7 +6,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Create;
-public sealed class CreateSchedule(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ScheduleBase(context, getCompanyUser), ICreateSchedule
+public sealed class CreateSchedule(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ScheduleBase(getCompanyUser), ICreateSchedule
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;

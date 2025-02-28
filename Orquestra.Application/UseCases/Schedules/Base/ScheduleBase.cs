@@ -2,14 +2,12 @@
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
-using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Base;
 
-public partial class ScheduleBase(Context context, IGetCompanyUser getCompanyUser)
+public partial class ScheduleBase(IGetCompanyUser getCompanyUser)
 {
-    private readonly Context _context = context;
     private readonly IGetCompanyUser _getCompanyUser = getCompanyUser;
 
     public async Task Validate(ScheduleInput input, Guid userId, bool isCreate)

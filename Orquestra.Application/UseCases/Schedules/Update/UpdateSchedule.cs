@@ -8,7 +8,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Update;
 
-public sealed class UpdateSchedule(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ScheduleBase(context, getCompanyUser), IUpdateSchedule
+public sealed class UpdateSchedule(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ScheduleBase(getCompanyUser), IUpdateSchedule
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;
