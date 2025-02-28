@@ -27,8 +27,8 @@ public class UserController(ICreateUser create, IUpdateUser update) : BaseContro
     public async Task<ActionResult<UserOutput>> Update([FromForm] UserInput input)
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-
         UserOutput output = await _update.Execute(userId, input);
+
         return output;
     }
 }

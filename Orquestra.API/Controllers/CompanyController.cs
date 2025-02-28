@@ -18,8 +18,8 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     public async Task<ActionResult<CompanyOutput>> Create([FromForm] CompanyInput input)
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-
         CompanyOutput output = await _create.Execute(userId, input);
+
         return output;
     }
 
