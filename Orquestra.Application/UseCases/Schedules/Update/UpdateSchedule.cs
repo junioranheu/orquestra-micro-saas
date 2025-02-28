@@ -16,7 +16,7 @@ public sealed class UpdateSchedule(Context context, IMapper map, IGetCompanyUser
     public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
     {
         await Validate(input, userId, isCreate: false);
-        Schedule schedule = await Update(userId, input);
+        Schedule schedule = await Update(input);
 
         ScheduleOutput? output = _map.Map<ScheduleOutput>(schedule);
 
@@ -24,9 +24,9 @@ public sealed class UpdateSchedule(Context context, IMapper map, IGetCompanyUser
     }
 
     #region extras
-    private async Task<Schedule> Update(Guid userId, ScheduleInput input)
+    private async Task<Schedule> Update(ScheduleInput input)
     {
-        Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == userId).FirstOrDefaultAsync() ?? throw new Exception("Agendamento não encontrado");
+        Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == input.ScheduleId).FirstOrDefaultAsync() ?? throw new Exception("Agendamento não encontrado");
 
         schedule.Date = input.Date;
         schedule.PaymentType = input.PaymentType;

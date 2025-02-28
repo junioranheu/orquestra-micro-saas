@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orquestra.Application.AutoMapper;
 using Orquestra.Application.UseCases.Auth;
+using Orquestra.Application.UseCases.Clients;
 using Orquestra.Application.UseCases.Companies;
 using Orquestra.Application.UseCases.CompanyUsers;
 using Orquestra.Application.UseCases.Locations;
@@ -52,6 +53,7 @@ public static class DependencyInjection
         services.AddCompaniesApplication();
         services.AddCompanyUsersApplication();
         services.AddSchedulesApplication();
+        services.AddClientsApplication();
     }
 
     private static void AddServices(IServiceCollection services)
