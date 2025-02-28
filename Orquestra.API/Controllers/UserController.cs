@@ -9,10 +9,10 @@ namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(ICreateUser create, IUpdateUser user) : BaseController<UserController>
+public class UserController(ICreateUser create, IUpdateUser update) : BaseController<UserController>
 {
     private readonly ICreateUser _create = create;
-    private readonly IUpdateUser _user = user;
+    private readonly IUpdateUser _update = update;
 
     [AllowAnonymous]
     [HttpPost]
@@ -28,7 +28,7 @@ public class UserController(ICreateUser create, IUpdateUser user) : BaseControll
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
 
-        UserOutput output = await _user.Execute(userId, input);
+        UserOutput output = await _update.Execute(userId, input);
         return output;
     }
 }

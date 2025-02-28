@@ -21,5 +21,5 @@ public sealed class Schedule : Audit
 
     public Guid CompanyId { get; set; }
     [ForeignKey(nameof(CompanyId))]
-    public Company? Company { get; set; }
+    public Company? Companies { get; set; }
 }

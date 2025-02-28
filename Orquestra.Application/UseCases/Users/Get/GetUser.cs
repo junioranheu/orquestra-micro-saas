@@ -14,6 +14,7 @@ public sealed class GetUser(Context context) : IGetUser
         var result = await _context.Users.
                      AsNoTracking().
                      Where(x =>
+                        x.Status == true &&
                         (input.UserId == Guid.Empty || x.UserId == input.UserId) &&
                         (string.IsNullOrEmpty(input.Email) || x.Email == input.Email)
                      ).

@@ -8,6 +8,7 @@ using Orquestra.Application.UseCases.Companies;
 using Orquestra.Application.UseCases.CompanyUsers;
 using Orquestra.Application.UseCases.Locations;
 using Orquestra.Application.UseCases.Logs;
+using Orquestra.Application.UseCases.Schedules;
 using Orquestra.Application.UseCases.Users;
 
 namespace Orquestra.Application;
@@ -50,6 +51,7 @@ public static class DependencyInjection
         services.AddAuthApplication();
         services.AddCompaniesApplication();
         services.AddCompanyUsersApplication();
+        services.AddSchedulesApplication();
     }
 
     private static void AddServices(IServiceCollection services)
