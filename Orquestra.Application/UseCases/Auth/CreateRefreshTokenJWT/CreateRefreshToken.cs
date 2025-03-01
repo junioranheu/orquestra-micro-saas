@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MySqlConnector;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
+using System.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
@@ -47,13 +49,26 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
         List<Guid> oldRefreshTokenIds = [.. oldRefreshTokens.Select(y => y.RefreshTokenId)];
 
-        await _context.RefreshTokens.
-        AsNoTracking().
-        Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
-        ExecuteUpdateAsync(x => x.
-            SetProperty(prop => prop.Status, false).
-            SetProperty(prop => prop.RevokedDate, GetDate())
-        );
+        string sql = "UPDATE RefreshTokens SET Status = @Status, RevokedDate = @RevokedDate WHERE RefreshTokenId IN (@OldRefreshTokenIds)";
+
+        var parameters = new[]
+        {
+            new MySqlParameter("@Status", MySqlDbType.Bit) { Value = false },
+            new MySqlParameter("@RevokedDate", MySqlDbType.DateTime) { Value = GetDate() },
+            new MySqlParameter("@OldRefreshTokenIds", MySqlDbType.String) { Value = string.Join(",", oldRefreshTokenIds) }
+        };
+
+        await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+
+        #region obsoleto_dotNet9
+        //await _context.RefreshTokens.
+        //AsNoTracking().
+        //Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
+        //ExecuteUpdateAsync(x => x.
+        //    SetProperty(prop => prop.Status, false).
+        //    SetProperty(prop => prop.RevokedDate, GetDate())
+        //);
+        #endregion
     }
 
     #region extras
