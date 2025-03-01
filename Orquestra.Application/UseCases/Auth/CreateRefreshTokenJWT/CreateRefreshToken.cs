@@ -45,7 +45,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
             return;
         }
 
-        List<Guid> oldRefreshTokenIds = oldRefreshTokens.Select(y => y.RefreshTokenId).ToList();
+        List<Guid> oldRefreshTokenIds = [.. oldRefreshTokens.Select(y => y.RefreshTokenId)];
 
         await _context.RefreshTokens.
         Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
@@ -74,8 +74,8 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         }
 
         DateTime date = GetDate();
-        List<RefreshToken> validRefreshTokens = oldRefreshTokens.Where(x => x.ExpiredDate > date).ToList();
-        List<RefreshToken> invalidRefreshTokens = oldRefreshTokens.Where(x => x.ExpiredDate <= date).ToList();
+        List<RefreshToken> validRefreshTokens = [.. oldRefreshTokens.Where(x => x.ExpiredDate > date)];
+        List<RefreshToken> invalidRefreshTokens = [.. oldRefreshTokens.Where(x => x.ExpiredDate <= date)];
 
         if (validRefreshTokens is null || validRefreshTokens.Count == 0)
         {
@@ -90,12 +90,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         User? user = await _context.Users.
                      AsNoTracking().
                      Where(x => x.UserId == userId).
-                     FirstOrDefaultAsync();
-
-        if (user is null)
-        {
-            throw new Exception($"Usuário {userId} não encontrado");
-        }
+                     FirstOrDefaultAsync() ?? throw new Exception($"Usuário {userId} não encontrado");
 
         if (!user.Status)
         {

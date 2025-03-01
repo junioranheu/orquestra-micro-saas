@@ -148,7 +148,7 @@ public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser
 
     private static bool IsTypeValid(CompanyTypeEnum type)
     {
-        return Enum.IsDefined(typeof(CompanyTypeEnum), type);
+        return Enum.IsDefined(type);
     }
 
     // Location;
@@ -196,7 +196,7 @@ public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser
     // Subscription;
     private static bool IsPlanTypeValid(PlanTypeEnum planType)
     {
-        return Enum.IsDefined(typeof(PlanTypeEnum), planType);
+        return Enum.IsDefined(planType);
     }
 
     // Regex;
