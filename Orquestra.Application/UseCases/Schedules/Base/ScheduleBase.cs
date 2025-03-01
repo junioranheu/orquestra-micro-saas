@@ -1,7 +1,5 @@
 ﻿using Orquestra.Application.UseCases.CompanyUsers.Get;
 using Orquestra.Application.UseCases.Schedules.Shared;
-using Orquestra.Domain.Entities;
-using Orquestra.Domain.Enums;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Base;
@@ -12,13 +10,7 @@ public partial class ScheduleBase(IGetCompanyUser getCompanyUser)
 
     public async Task Validate(ScheduleInput input, Guid userId, bool isCreate)
     {
-        List<CompanyUser>? companiesFromUser = await _getCompanyUser.Execute(companyId: Guid.Empty, userId: userId);
-        bool? isAdmin = companiesFromUser?.Any(x => x.Users?.UserId == userId && x.CompanyId == input.CompanyId && (x.CompanyUserRole == CompanyUserRoleEnum.Administrator || x.CompanyUserRole == CompanyUserRoleEnum.Owner));
-
-        if (input.CompanyId == Guid.Empty || companiesFromUser?.Count == 0 || !isAdmin.GetValueOrDefault())
-        {
-            throw new Exception("Apenas um administrador da empresa pode alterar suas informações");
-        }
+        await _getCompanyUser.CheckIfUserIsFromCompany(companyId: input.CompanyId, userId, isAdmin: true);
 
         if (input.Date < GetDate())
         {
