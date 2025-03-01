@@ -48,6 +48,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         List<Guid> oldRefreshTokenIds = [.. oldRefreshTokens.Select(y => y.RefreshTokenId)];
 
         await _context.RefreshTokens.
+        AsNoTracking().
         Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
         ExecuteUpdateAsync(x => x.
             SetProperty(prop => prop.Status, false).
