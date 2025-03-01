@@ -8,7 +8,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.Update;
 
-public sealed class UpdateClient(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ClientBase(getCompanyUser), IUpdateClient
+public sealed class UpdateClient(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ClientBase(context, getCompanyUser), IUpdateClient
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;

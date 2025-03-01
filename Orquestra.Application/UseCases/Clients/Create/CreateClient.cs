@@ -7,7 +7,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.Create;
 
-public sealed class CreateClient(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ClientBase(getCompanyUser), ICreateClient
+public sealed class CreateClient(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ClientBase(context, getCompanyUser), ICreateClient
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;
