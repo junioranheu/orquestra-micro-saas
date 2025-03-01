@@ -41,7 +41,7 @@ public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser
             throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor");
         }
 
-        bool checkPhone = IsEmailValid(input.Phone);
+        bool checkPhone = IsPhoneValid(input.Phone);
 
         if (!checkPhone)
         {
