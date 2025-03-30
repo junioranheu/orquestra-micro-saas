@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Fixtures.Mocks;
@@ -12,7 +13,10 @@ public static class CompanyMock
         var input = new CompanyInput
         {
             CompanyId = Guid.NewGuid(),
-            Name = GetRandomString(GetRandomNumber(5, 15), false)
+            Name = GetRandomString(GetRandomNumber(5, 15), false),
+            Email = $"{GetRandomString(GetRandomNumber(5, 15), false)}@gmail.com",
+            Phone = GetRandomString(GetRandomNumber(5, 15), false),
+            Type = CompanyTypeEnum.ClinicaOdontologia
         };
 
         return input;

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
@@ -75,15 +74,11 @@ public sealed class ScheduleTest
         Company company = CompanyMock.Create(_map);
         await Fixture.Save(context, company);
 
-        List<Schedule>? inputList = ScheduleMock.CreateList(_map, j: 10, client.ClientId, company.CompanyId);
+        List<Schedule>? inputList = ScheduleMock.CreateList(_map, j: 10, client, company);
 
         foreach (var item in inputList)
         {
             Schedule output = _map.Map<Schedule>(item);
-
-            output.Clients = client;
-            output.Companies = company;
-
             await Fixture.Save(context, output);
         }
 

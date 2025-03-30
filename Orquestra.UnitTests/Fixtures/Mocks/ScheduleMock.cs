@@ -23,13 +23,13 @@ public static class ScheduleMock
         return input;
     }
 
-    public static List<ScheduleInput> CreateList(int j, Guid clientId, Guid companyId)
+    public static List<ScheduleInput> CreateList(int j, Client client, Company company)
     {
         List<ScheduleInput> list = [];
 
         for (int i = 0; i < j; i++)
         {
-            list.Add(Create(clientId, companyId));
+            list.Add(Create(client.ClientId, company.CompanyId));
         }
 
         return list;
@@ -41,9 +41,16 @@ public static class ScheduleMock
         return output;
     }
 
-    public static List<Schedule> CreateList(IMapper _map, int j, Guid clientId, Guid companyId)
+    public static List<Schedule> CreateList(IMapper _map, int j, Client client, Company company)
     {
-        List<Schedule> output = _map.Map<List<Schedule>>(CreateList(j, clientId, companyId));
+        List<Schedule> output = _map.Map<List<Schedule>>(CreateList(j, client, company));
+
+        foreach (var item in output)
+        {
+            item.Clients = client;
+            item.Companies = company;
+        }
+
         return output;
     }
 }
