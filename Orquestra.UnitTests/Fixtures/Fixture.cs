@@ -21,6 +21,14 @@ public static class Fixture
         return context;
     }
 
+    public static async Task Save<T>(Context context, T obj) where T : class
+    {
+        DbSet<T> dbSet = context.Set<T>();
+
+        await dbSet.AddAsync(obj);
+        await context.SaveChangesAsync();
+    }
+
     public static IMapper CreateMapper()
     {
         MapperConfiguration mockMapper = new(x =>
@@ -33,7 +41,7 @@ public static class Fixture
         return map;
     }
 
-    public static void FakeAuth(ControllerBase controller)
+    public static void Auth(ControllerBase controller)
     {
         List<Claim> claims =
         [
