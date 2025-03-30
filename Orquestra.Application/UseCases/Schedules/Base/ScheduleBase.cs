@@ -12,7 +12,7 @@ public partial class ScheduleBase(IGetCompanyUser getCompanyUser)
     {
         await _getCompanyUser.CheckIfUserIsFromCompany(companyId: input.CompanyId, userId, isAdmin: true);
 
-        if (input.Date < GetDate())
+        if (input.Date <= GetDate())
         {
             throw new Exception("Você não pode agendar uma consulta com a data anterior a de hoje");
         }

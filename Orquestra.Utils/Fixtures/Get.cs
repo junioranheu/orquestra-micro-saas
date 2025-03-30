@@ -50,6 +50,18 @@ public static class Get
     }
 
     /// <summary>
+    /// Gera um número aleatório dentro de um intervalo definido.
+    /// </summary>
+    /// <param name="min">Valor mínimo.</param>
+    /// <param name="max">Valor máximo.</param>
+    /// <returns>Um número aleatório entre o intervalo especificado.</returns>
+    public static int GetRandomNumber(int min, int max)
+    {
+        Random random = new();
+        return random.Next(min, max + 1);
+    }
+
+    /// <summary>
     /// Normaliza um nome. "JuNioR ROBerto dE soUZA" = "Junior Roberto de Souza";
     /// </summary>
     public static string NormalizeToProperName(string fullName)
