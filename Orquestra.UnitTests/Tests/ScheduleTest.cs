@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
@@ -36,7 +37,14 @@ public sealed class ScheduleTest
         var service = new CreateSchedule(context, _map, _getCompanyUser, _getClient, _getCompany);
 
         var userId = Guid.NewGuid();
-        var input = ScheduleMock.Create();
+
+        Client client = ClientMock.Create(_map);
+        await Fixture.Save(context, client);
+
+        Company company = CompanyMock.Create(_map);
+        await Fixture.Save(context, company);
+
+        ScheduleInput input = ScheduleMock.Create(client.ClientId, company.CompanyId);
 
         // Act
         ScheduleOutput output = await service.Execute(userId, input);
@@ -60,21 +68,27 @@ public sealed class ScheduleTest
     {
         // Arrange
         using var context = Fixture.CreateContext();
-        var inputList = ScheduleMock.CreateList();
+
+        Client client = ClientMock.Create(_map);
+        await Fixture.Save(context, client);
+
+        Company company = CompanyMock.Create(_map);
+        await Fixture.Save(context, company);
+
+        List<Schedule>? inputList = ScheduleMock.CreateList(_map, j: 10, client.ClientId, company.CompanyId);
 
         foreach (var item in inputList)
         {
             Schedule output = _map.Map<Schedule>(item);
 
-            output.Clients = new Client();
-            output.Companies = new Company();
+            output.Clients = client;
+            output.Companies = company;
 
             await Fixture.Save(context, output);
         }
 
-        Guid? id = inputList is not null ? inputList.FirstOrDefault()?.ScheduleId : Guid.NewGuid();
-
         var service = new GetSchedule(context, _map);
+        Guid? id = inputList is not null ? inputList.FirstOrDefault()?.ScheduleId : Guid.NewGuid();
 
         // Act
         ScheduleOutput? result = await service.Execute(id.GetValueOrDefault());

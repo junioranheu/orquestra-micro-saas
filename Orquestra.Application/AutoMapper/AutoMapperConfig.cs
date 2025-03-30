@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.Schedules.Shared;
@@ -20,6 +21,9 @@ public sealed class AutoMapperConfig : Profile
         CreateMap<CompanyUser, CompanyUserOutput>();
 
         CreateMap<ScheduleInput, Schedule>();
-        CreateMap<Schedule, ScheduleOutput>(); 
+        CreateMap<Schedule, ScheduleOutput>();
+
+        CreateMap<ClientInput, Client>();
+        CreateMap<Client, ClientOutput>();
     }
 }
