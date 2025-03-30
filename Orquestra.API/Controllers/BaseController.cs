@@ -9,12 +9,19 @@ public abstract class BaseController<T> : Controller
 {
     protected bool IsAuth()
     {
-        if (User.Identity is null)
+        try
+        {
+            if (User.Identity is null)
+            {
+                return false;
+            }
+
+            return User.Identity.IsAuthenticated;
+        }
+        catch (Exception)
         {
             return false;
         }
-
-        return User.Identity.IsAuthenticated;
     }
 
     protected Guid GetUserId(bool throwExceptionIfNotAuth = false)

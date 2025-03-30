@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.AutoMapper;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using System.Security.Claims;
 
 namespace Orquestra.UnitTests.Fixtures;
 
@@ -28,5 +31,29 @@ public static class Fixture
         IMapper map = mockMapper.CreateMapper();
 
         return map;
+    }
+
+    public static void FakeAuth(ControllerBase controller)
+    {
+        List<Claim> claims =
+        [
+            new(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+            new(ClaimTypes.Name, "Mock"),
+            new(ClaimTypes.Email, "Mock@test.com") ,
+            new(ClaimTypes.Role, UserRoleEnum.Common.ToString())
+        ];
+
+        var identity = new ClaimsIdentity(claims, "TestAuthScheme");
+        var principal = new ClaimsPrincipal(identity);
+
+        var httpContext = new DefaultHttpContext
+        {
+            User = principal
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = httpContext
+        };
     }
 }
