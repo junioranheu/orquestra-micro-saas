@@ -29,10 +29,11 @@ public static class DependencyInjection
 
     private static void AddAutoMapper(IServiceCollection services)
     {
-        var mapperConfig = new MapperConfiguration(x =>
-        {
-            x.AddProfile(new AutoMapperConfig());
-        });
+        MapperConfigurationExpression cfgExp = new();
+        cfgExp.AddProfile(new AutoMapperConfig());
+
+        ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+        MapperConfiguration mapperConfig = new(cfgExp, loggerFactory);
 
         IMapper mapper = mapperConfig.CreateMapper();
         services.AddSingleton(mapper);

@@ -31,10 +31,10 @@ public static class Fixture
 
     public static IMapper CreateMapper()
     {
-        MapperConfiguration mockMapper = new(x =>
-        {
-            x.AddProfile(new AutoMapperConfig());
-        });
+        MapperConfigurationExpression cfgExp = new();
+        cfgExp.AddProfile(new AutoMapperConfig());
+
+        var mockMapper = new MapperConfiguration(cfgExp, loggerFactory: null);
 
         IMapper map = mockMapper.CreateMapper();
 

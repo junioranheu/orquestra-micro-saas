@@ -8,5 +8,8 @@ public enum UserRoleEnum
     Common = 1,
 
     [Description("Suporte")]
-    Maintainer = 999
+    Maintainer = 999,
+
+    [Description("Administrador")]
+    Admin = 1000
 }

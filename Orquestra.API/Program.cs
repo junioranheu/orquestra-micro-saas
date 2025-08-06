@@ -9,6 +9,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
     builder.Services.AddDependencyInjectionInfrastructure(builder);
 }
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Normalizar DateTime;
+
 WebApplication app = builder.Build();
 {
     await app.UseAppConfiguration(builder);

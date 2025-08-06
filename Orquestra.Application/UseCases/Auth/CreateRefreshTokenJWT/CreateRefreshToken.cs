@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MySqlConnector;
+using Npgsql;
+using NpgsqlTypes;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
@@ -53,9 +54,9 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
         var parameters = new[]
         {
-            new MySqlParameter("@Status", MySqlDbType.Bit) { Value = false },
-            new MySqlParameter("@RevokedDate", MySqlDbType.DateTime) { Value = GetDate() },
-            new MySqlParameter("@OldRefreshTokenIds", MySqlDbType.String) { Value = string.Join(",", oldRefreshTokenIds) }
+            new NpgsqlParameter("@Status", NpgsqlDbType.Boolean) { Value = false },
+            new NpgsqlParameter("@RevokedDate", NpgsqlDbType.Timestamp) { Value = GetDate() },
+            new NpgsqlParameter("@OldRefreshTokenIds", NpgsqlDbType.Text) { Value = string.Join(",", oldRefreshTokenIds) }
         };
 
         await _context.Database.ExecuteSqlRawAsync(sql, parameters);

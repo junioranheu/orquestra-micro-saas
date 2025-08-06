@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MySqlConnector;
+using Npgsql;
 
 namespace Orquestra.Infrastructure.Factory;
 
@@ -20,8 +20,8 @@ public class ConnectionFactory(IConfiguration configuration) : IConnectionFactor
         return connectionString;
     }
 
-    public MySqlConnection GetMySqlConnection()
+    public NpgsqlConnection GetMySqlConnection()
     {
-        return new MySqlConnection(GetConnectionString());
+        return new NpgsqlConnection(GetConnectionString());
     }
 }

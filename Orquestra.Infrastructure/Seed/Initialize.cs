@@ -29,10 +29,11 @@ public static class DbInitializer
         }
     }
 
-    public static async Task Seed(Context context, DateTime date)
+    public static async Task Seed(Context context, DateTime _)
     {
         await SeedLocationStates.Seed(context);
         await SeedLocationCities.Seed(context);
+        await SeedUsers.Seed(context);
 
         await context.SaveChangesAsync();
     }

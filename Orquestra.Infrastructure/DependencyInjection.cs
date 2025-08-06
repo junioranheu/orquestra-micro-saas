@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -98,7 +99,7 @@ public static class DependencyInjection
 
         services.AddDbContextPool<Context>(x =>
         {
-            x.UseMySql(con, ServerVersion.AutoDetect(con));
+            x.UseNpgsql(con); 
         });
     }
 
