@@ -50,26 +50,26 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
         List<Guid> oldRefreshTokenIds = [.. oldRefreshTokens.Select(y => y.RefreshTokenId)];
 
-        string sql = "UPDATE RefreshTokens SET Status = @Status, RevokedDate = @RevokedDate WHERE RefreshTokenId IN (@OldRefreshTokenIds)";
+        #region raw_sql
+        //string sql = "UPDATE RefreshTokens SET Status = @Status, RevokedDate = @RevokedDate WHERE RefreshTokenId IN (@OldRefreshTokenIds)";
 
-        var parameters = new[]
-        {
-            new NpgsqlParameter("@Status", NpgsqlDbType.Boolean) { Value = false },
-            new NpgsqlParameter("@RevokedDate", NpgsqlDbType.Timestamp) { Value = GetDate() },
-            new NpgsqlParameter("@OldRefreshTokenIds", NpgsqlDbType.Text) { Value = string.Join(",", oldRefreshTokenIds) }
-        };
+        //var parameters = new[]
+        //{
+        //    new NpgsqlParameter("@Status", NpgsqlDbType.Boolean) { Value = false },
+        //    new NpgsqlParameter("@RevokedDate", NpgsqlDbType.Timestamp) { Value = GetDate() },
+        //    new NpgsqlParameter("@OldRefreshTokenIds", NpgsqlDbType.Text) { Value = string.Join(",", oldRefreshTokenIds) }
+        //};
 
-        await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-
-        #region obsoleto_dotNet9
-        //await _context.RefreshTokens.
-        //AsNoTracking().
-        //Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
-        //ExecuteUpdateAsync(x => x.
-        //    SetProperty(prop => prop.Status, false).
-        //    SetProperty(prop => prop.RevokedDate, GetDate())
-        //);
+        //await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         #endregion
+
+        await _context.RefreshTokens.
+        AsNoTracking().
+        Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
+        ExecuteUpdateAsync(x => x.
+            SetProperty(prop => prop.Status, false).
+            SetProperty(prop => prop.RevokedDate, GetDate())
+        );
     }
 
     #region extras

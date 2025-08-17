@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Orquestra.Domain.Entities;
 using System.Security.Claims;
 using static Orquestra.Utils.Fixtures.Get;
@@ -9,6 +10,11 @@ namespace Orquestra.Infrastructure.Data;
 public class Context(DbContextOptions<Context> options, IHttpContextAccessor httpContextAccessor) : DbContext(options)
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+
+    static Context()
+    {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Normalizar DateTime para não utilizar o UTC como default;
+    }
 
     public DbSet<Company> Companies { get; set; }
     public DbSet<CompanyUser> CompanyUsers { get; set; }

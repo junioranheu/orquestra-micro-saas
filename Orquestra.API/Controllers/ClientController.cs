@@ -25,9 +25,9 @@ public class ClientController(IGetClient get, ICreateClient create) : BaseContro
 
     [AuthorizeFilter]
     [HttpGet]
-    public async Task<ActionResult<ClientOutput?>> Get(Guid ClientId)
+    public async Task<ActionResult<ClientOutput?>> Get(Guid clientId)
     {
-        ClientOutput? output = await _get.Execute(ClientId);
+        ClientOutput? output = await _get.Execute(clientId);
         return output;
     }
 

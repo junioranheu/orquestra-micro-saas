@@ -48,8 +48,9 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
                     context.Response.Headers.Authorization = $"Bearer {newJwtToken}";
                     context.Request.Headers.Authorization = $"Bearer {newJwtToken}";
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     context.Response.Headers.Authorization = string.Empty;
                     context.Request.Headers.Authorization = string.Empty;
                 }
