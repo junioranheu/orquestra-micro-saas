@@ -13,7 +13,7 @@ public sealed class GetCompany(Context context, IMapper map) : IGetCompany
     public async Task<CompanyOutput?> Execute(Guid companyId)
     {
         var result = await _context.Companies.
-                     Include(x => x.CompanyUsers).
+                     Include(x => x.CompanyUsers)!.ThenInclude(x => x.Users).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
                      FirstOrDefaultAsync();
@@ -26,7 +26,7 @@ public sealed class GetCompany(Context context, IMapper map) : IGetCompany
     public async Task<List<CompanyOutput>?> Execute()
     {
         var result = await _context.Companies.
-                     Include(x => x.CompanyUsers).
+                     Include(x => x.CompanyUsers)!.ThenInclude(x => x.Users).
                      AsNoTracking().
                      ToListAsync();
 

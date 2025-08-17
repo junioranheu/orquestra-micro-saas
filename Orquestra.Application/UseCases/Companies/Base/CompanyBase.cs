@@ -22,14 +22,14 @@ public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser
 
         bool checkName = IsNameValid(input.Name);
 
-        if (checkName)
+        if (!checkName)
         {
             throw new Exception("O nome da empresa não é válido");
         }
 
-        checkName = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
+        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
 
-        if (checkName)
+        if (checkNameAlreadyExist)
         {
             throw new Exception("Já existe uma empresa registrada com esse nome");
         }

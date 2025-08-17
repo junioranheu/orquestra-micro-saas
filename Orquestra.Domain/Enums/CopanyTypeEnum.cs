@@ -4,13 +4,13 @@ namespace Orquestra.Domain.Enums;
 
 public enum CompanyTypeEnum
 {
-    [Description("Clínica de Odontologia")]
+    [Description("Clínica de odontologia")]
     ClinicaOdontologia = 1,
 
-    [Description("Consultório Médico")]
+    [Description("Consultório médico")]
     ConsultorioMedico = 2,
 
-    [Description("Clínica de Estética")]
+    [Description("Clínica de estética")]
     ClinicaEstetica = 3,
 
     [Description("Psicólogo")]
@@ -22,18 +22,66 @@ public enum CompanyTypeEnum
     [Description("Academia")]
     Academia = 6,
 
-    [Description("Pet Shop/Clínica Veterinária")]
-    PetShopClinicaVeterinaria = 7,
+    [Description("Pet shop")]
+    PetShop = 7,
 
-    [Description("Salão de Beleza")]
-    SalaoBeleza = 8,
+    [Description("Clínica veterinária")]
+    ClinicaVeterinaria = 8,
 
-    [Description("Oficina Mecânica")]
-    OficinaMecanica = 9,
+    [Description("Salão de beleza")]
+    SalaoBeleza = 9,
 
-    [Description("Estúdio de Fotografia")]
-    EstudioFotografia = 10,
+    [Description("Barbearia")]
+    Barbearia = 10,
 
-    [Description("Consultório de Fisioterapia")]
-    ConsultorioFisioterapia = 11
+    [Description("Oficina mecânica")]
+    OficinaMecanica = 11,
+
+    [Description("Estúdio de fotografia")]
+    EstudioFotografia = 12,
+
+    [Description("Consultório de fisioterapia")]
+    ConsultorioFisioterapia = 13,
+
+    [Description("Nutricionista")]
+    Nutricionista = 14,
+
+    [Description("Fisioterapeuta esportivo")]
+    FisioterapeutaEsportivo = 15,
+
+    [Description("Coach")]
+    Coach = 16,
+
+    [Description("Mentor")]
+    Mentor = 17,
+
+    [Description("Consultor")]
+    Consultor = 18,
+
+    [Description("Massagista")]
+    Massagista = 19,
+
+    [Description("Advogado")]
+    Advogado = 210,
+
+    [Description("Contador")]
+    Contador = 21,
+
+    [Description("Instrutor de idiomas")]
+    InstrutorIdiomas = 22,
+
+    [Description("Professor particular")]
+    ProfessorParticular = 23,
+
+    [Description("Artista")]
+    Artista = 24,
+
+    [Description("Designer")]
+    Designer = 25,
+
+    [Description("Fotógrafo")]
+    Fotografo = 26,
+
+    [Description("Outro")]
+    Outro = 99
 }

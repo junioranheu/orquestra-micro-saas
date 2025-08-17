@@ -1,4 +1,5 @@
-﻿using Orquestra.Domain.Entities;
+﻿using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
@@ -59,5 +60,5 @@ public sealed class CompanyOutput
 
     public DateTime CreatedDate { get; set; }
 
-    public IEnumerable<CompanyUser>? CompanyUsers { get; init; }
+    public IEnumerable<CompanyUserOutput>? CompanyUsers { get; init; }
 }
