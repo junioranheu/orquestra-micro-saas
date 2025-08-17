@@ -17,7 +17,7 @@ public partial class UserBase(IGetUser getUser)
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail não é válido. Insira um e-mail válido, por favor");
+            throw new Exception("O e-mail não é válido. Insira um e-mail válido, por favor.");
         }
 
         if (isCreate)
@@ -26,7 +26,7 @@ public partial class UserBase(IGetUser getUser)
 
             if (checkUserByEmail is not null)
             {
-                throw new Exception($"O e-mail {input.Email} já está cadastrado no sistema");
+                throw new Exception($"O e-mail {input.Email} já está cadastrado no sistema.");
             }
         }
 
@@ -36,7 +36,7 @@ public partial class UserBase(IGetUser getUser)
 
             if (checkUserById is not null && userId != checkUserById?.UserId)
             {
-                throw new Exception("Apenas o dono da conta pode alterar suas informações");
+                throw new Exception("Apenas o dono da conta pode alterar suas informações.");
             }
         }
         #endregion

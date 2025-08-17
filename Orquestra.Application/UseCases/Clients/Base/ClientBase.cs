@@ -19,21 +19,21 @@ public partial class ClientBase(Context context, IGetCompanyUser getCompanyUser)
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor");
+            throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor.");
         }
 
         bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId);
 
         if (anyCPF)
         {
-            throw new Exception("Este CPF já está registrado nesta empresa para outro cliente");
+            throw new Exception("Este CPF já está registrado nesta empresa para outro cliente.");
         }
 
         bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.CompanyId == input.CompanyId && x.Email == input.Email);
 
         if (anyEmail)
         {
-            throw new Exception("Este e-mail já está registrado nesta empresa para outro cliente");
+            throw new Exception("Este e-mail já está registrado nesta empresa para outro cliente.");
         }
     }
 

@@ -18,7 +18,7 @@ public sealed class GetCompany(Context context, IMapper map) : IGetCompany
                      Where(x => x.CompanyId == companyId).
                      FirstOrDefaultAsync();
 
-        CompanyOutput? output = _map.Map<CompanyOutput>(result);
+        var output = _map.Map<CompanyOutput>(result);
 
         return output;
     }
@@ -30,7 +30,7 @@ public sealed class GetCompany(Context context, IMapper map) : IGetCompany
                      AsNoTracking().
                      ToListAsync();
 
-        List<CompanyOutput>? output = _map.Map<List<CompanyOutput>>(result);
+        var output = _map.Map<List<CompanyOutput>>(result);
 
         return output;
     }

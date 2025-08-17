@@ -21,7 +21,7 @@ public sealed class GetClient(Context context, IMapper map) : IGetClient
                      ).
                      FirstOrDefaultAsync();
 
-        ClientOutput? output = _map.Map<ClientOutput>(result);
+        var output = _map.Map<ClientOutput>(result);
 
         return output;
     }
@@ -34,7 +34,7 @@ public sealed class GetClient(Context context, IMapper map) : IGetClient
                      Where(x => x.Status == true).
                      ToListAsync();
 
-        List<ClientOutput>? output = _map.Map<List<ClientOutput>>(result);
+        var output = _map.Map<List<ClientOutput>>(result);
 
         return output;
     }

@@ -18,6 +18,7 @@ public sealed class AutoMapperConfig : Profile
         CreateMap<CompanyInput, Company>();
         CreateMap<Company, CompanyOutput>();
 
+        CreateMap<CompanyUserInput, CompanyUser>();
         CreateMap<CompanyUser, CompanyUserOutput>();
 
         CreateMap<ScheduleInput, Schedule>();

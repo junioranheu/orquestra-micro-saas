@@ -19,16 +19,16 @@ public partial class ScheduleBase(IGetCompanyUser getCompanyUser, IGetClient get
 
         if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
         {
-            throw new Exception("O status de uma consulta recém criada deve ser Marcado");
+            throw new Exception("O status de uma consulta recém criada deve ser Marcado.");
         }
 
         if (input.Date <= GetDate())
         {
-            throw new Exception("Você não pode agendar uma consulta com a data anterior a de hoje");
+            throw new Exception("Você não pode agendar uma consulta com a data anterior a de hoje.");
         }
 
-        _ = await _getClient.Execute(input.ClientId) ?? throw new Exception("Esse cliente não existe");
+        _ = await _getClient.Execute(input.ClientId) ?? throw new Exception("Esse cliente não existe.");
 
-        _ = await _getCompany.Execute(input.CompanyId) ?? throw new Exception("Essa empresa não existe");
+        _ = await _getCompany.Execute(input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
     }
 }

@@ -19,7 +19,7 @@ public sealed class UpdateUser(Context context, IMapper map, IGetUser getUser) :
         await Validate(input, userId, isCreate: false);
         User user = await Update(userId, input);
 
-        UserOutput? output = _map.Map<UserOutput>(user);
+        var output = _map.Map<UserOutput>(user);
 
         return output;
     }
@@ -27,12 +27,7 @@ public sealed class UpdateUser(Context context, IMapper map, IGetUser getUser) :
     #region extras
     private async Task<User> Update(Guid userId, UserInput input)
     {
-        User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == userId).FirstOrDefaultAsync();
-
-        if (user is null)
-        {
-            throw new Exception("Usuário não encontrado");
-        }
+        User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == userId).FirstOrDefaultAsync() ?? throw new Exception("Usuário não encontrado.");
 
         user.FullName = input.FullName ?? user.FullName;
         user.Email = input.Email ?? user.Email;

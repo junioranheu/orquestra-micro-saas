@@ -3,6 +3,7 @@ using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.Get;
+using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -22,7 +23,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
         Company company = await Save(input);
         await SaveCompanyUsers(userId, company);
 
-        CompanyOutput? output = _map.Map<CompanyOutput>(company);
+        var output = _map.Map<CompanyOutput>(company);
 
         return output;
     }
@@ -30,7 +31,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
     #region extras
     private async Task<Company> Save(CompanyInput input)
     {
-        Company company = _map.Map<Company>(input);
+        var company = _map.Map<Company>(input);
 
         company.CompanySituation = CompanySituationEnum.ApprovedButNotPaid;
         company.PlanStartDate = GetDate();
@@ -44,14 +45,14 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
 
     private async Task SaveCompanyUsers(Guid userId, Company input)
     {
-        CompanyUser companyUser = new()
+        CompanyUserInput companyUser = new()
         {
             CompanyId = input.CompanyId,
             UserId = userId,
             CompanyUserRole = CompanyUserRoleEnum.Administrator
         };
 
-        List<CompanyUser> companyUsers = [companyUser];
+        List<CompanyUserInput> companyUsers = [companyUser];
 
         await _createRangeCompanyUser.Execute(companyUsers);
     }

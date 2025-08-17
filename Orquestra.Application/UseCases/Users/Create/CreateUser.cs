@@ -19,7 +19,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUser getUser) :
         await Validate(input, userId: Guid.Empty, isCreate: true);
         User user = await Save(input);
 
-        UserOutput? output = _map.Map<UserOutput>(user);
+        var output = _map.Map<UserOutput>(user);
 
         return output;
     }
@@ -29,7 +29,7 @@ public sealed class CreateUser(Context context, IMapper map, IGetUser getUser) :
     {
         if (string.IsNullOrEmpty(input.FullName) || string.IsNullOrEmpty(input.Email) || string.IsNullOrEmpty(input.Password))
         {
-            throw new Exception("Os dados do usuário não podem ser nulos");
+            throw new Exception("Os dados do usuário não podem ser nulos.");
         }
 
         User user = new()

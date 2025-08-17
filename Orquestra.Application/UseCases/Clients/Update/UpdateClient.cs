@@ -18,7 +18,7 @@ public sealed class UpdateClient(Context context, IMapper map, IGetCompanyUser g
         await Validate(input, userId, isCreate: false);
         Client client = await Update(input);
 
-        ClientOutput? output = _map.Map<ClientOutput>(client);
+        var output = _map.Map<ClientOutput>(client);
 
         return output;
     }
@@ -26,7 +26,7 @@ public sealed class UpdateClient(Context context, IMapper map, IGetCompanyUser g
     #region extras
     private async Task<Client> Update(ClientInput input)
     {
-        Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId).FirstOrDefaultAsync() ?? throw new Exception("Cliente não encontrado");
+        Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId).FirstOrDefaultAsync() ?? throw new Exception("Cliente não encontrado.");
 
         client.FullName = input.FullName ?? client.FullName;
         client.Email = input.Email ?? client.Email;

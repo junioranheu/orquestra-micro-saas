@@ -18,7 +18,7 @@ public class AuthController(ICreateToken createToken) : BaseController<AuthContr
     {
         if (IsAuth())
         {
-            throw new Exception("Este usuário já está autenticado");
+            throw new Exception("Este usuário já está autenticado.");
         }
 
         UserOutput output = await _createToken.Execute(input);

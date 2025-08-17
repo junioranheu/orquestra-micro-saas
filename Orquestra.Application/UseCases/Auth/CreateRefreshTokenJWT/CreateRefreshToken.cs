@@ -17,7 +17,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
     {
         if (userId == Guid.Empty)
         {
-            throw new Exception($"Parâmetro {nameof(userId)} está vazio em {nameof(RefreshToken)}");
+            throw new Exception($"Parâmetro {nameof(userId)} está vazio em {nameof(RefreshToken)}.");
         }
 
         User user = await GetUser(userId);
@@ -104,11 +104,11 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         User? user = await _context.Users.
                      AsNoTracking().
                      Where(x => x.UserId == userId).
-                     FirstOrDefaultAsync() ?? throw new Exception($"Usuário {userId} não encontrado");
+                     FirstOrDefaultAsync() ?? throw new Exception($"Usuário {userId} não encontrado.");
 
         if (!user.Status)
         {
-            throw new Exception($"O usuário {user.Email} ({userId}) está desativado");
+            throw new Exception($"O usuário {user.Email} ({userId}) está desativado.");
         }
 
         return user;

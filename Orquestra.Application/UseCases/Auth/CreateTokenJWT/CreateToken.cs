@@ -23,21 +23,16 @@ public sealed class CreateToken(
     public async Task<UserOutput> Execute(AuthInput input)
     {
         (User? user, string passwordEncrypted) = await _getUser.Execute(new UserInput() { Email = input.Email });
-        UserOutput? output = _map.Map<UserOutput>(user);
-
-        if (output is null)
-        {
-            throw new Exception("Usuário não encontrado");
-        }
+        var output = _map.Map<UserOutput>(user) ?? throw new Exception("Usuário não encontrado.");
 
         if (!CheckPassword(password: input.Password, encryptedPassword: passwordEncrypted))
         {
-            throw new Exception("E-mail ou senha incorretos");
+            throw new Exception("E-mail ou senha incorretos.");
         }
 
         if (!output.Status)
         {
-            throw new Exception("Usuário desativado");
+            throw new Exception("Usuário desativado.");
         }
 
         (string token, RefreshToken refreshToken) = _jwtTokenGenerator.GenerateToken(userId: output.UserId, name: output.FullName, email: output.Email, role: output.Role);

@@ -17,7 +17,7 @@ public sealed class CreateClient(Context context, IMapper map, IGetCompanyUser g
         await Validate(input, userId, isCreate: true);
         Client client = await Save(input);
 
-        ClientOutput? output = _map.Map<ClientOutput>(client);
+        var output = _map.Map<ClientOutput>(client);
 
         return output;
     }
@@ -25,7 +25,7 @@ public sealed class CreateClient(Context context, IMapper map, IGetCompanyUser g
     #region extras
     private async Task<Client> Save(ClientInput input)
     {
-        Client client = _map.Map<Client>(input);
+        var client = _map.Map<Client>(input);
 
         await _context.AddAsync(client);
         await _context.SaveChangesAsync();

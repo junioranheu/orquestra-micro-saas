@@ -22,7 +22,7 @@ public sealed class GetSchedule(Context context, IMapper map) : IGetSchedule
                      ).
                      FirstOrDefaultAsync();
 
-        ScheduleOutput? output = _map.Map<ScheduleOutput>(result);
+        var output = _map.Map<ScheduleOutput>(result);
 
         return output;
     }
@@ -36,7 +36,7 @@ public sealed class GetSchedule(Context context, IMapper map) : IGetSchedule
                      Where(x => x.Status == true).
                      ToListAsync();
 
-        List<ScheduleOutput>? output = _map.Map<List<ScheduleOutput>>(result);
+        var output = _map.Map<List<ScheduleOutput>>(result);
 
         return output;
     }

@@ -44,7 +44,7 @@ public abstract class BaseController<T> : Controller
                 return;
             }
 
-            throw new Exception("Usuário não autenticado");
+            throw new Exception("Usuário não autenticado.");
         }
     }
 

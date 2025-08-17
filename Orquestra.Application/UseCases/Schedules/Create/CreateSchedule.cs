@@ -19,7 +19,7 @@ public sealed class CreateSchedule(Context context, IMapper map, IGetCompanyUser
         await Validate(input, userId);
         Schedule schedule = await Save(input);
 
-        ScheduleOutput? output = _map.Map<ScheduleOutput>(schedule);
+        var output = _map.Map<ScheduleOutput>(schedule);
 
         return output;
     }
@@ -27,7 +27,7 @@ public sealed class CreateSchedule(Context context, IMapper map, IGetCompanyUser
     #region extras
     private async Task<Schedule> Save(ScheduleInput input)
     {
-        Schedule schedule = _map.Map<Schedule>(input);
+        var schedule = _map.Map<Schedule>(input);
 
         await _context.AddAsync(schedule);
         await _context.SaveChangesAsync();

@@ -1,9 +1,9 @@
-﻿using Orquestra.Domain.Entities;
+﻿using Orquestra.Application.UseCases.CompanyUsers.Shared;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.Get;
 
 public interface IGetCompanyUser
 {
-    Task<List<CompanyUser>?> Execute(Guid companyId, Guid userId);
+    Task<List<CompanyUserOutput>?> Execute(Guid companyId, Guid? userId = null);
     Task<bool> CheckIfUserIsFromCompany(Guid? companyId, Guid? userId, bool isAdmin, bool throwError = true);
 }

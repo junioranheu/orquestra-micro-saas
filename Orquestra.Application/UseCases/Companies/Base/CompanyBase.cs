@@ -24,35 +24,35 @@ public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser
 
         if (!checkName)
         {
-            throw new Exception("O nome da empresa não é válido");
+            throw new Exception("O nome da empresa não é válido.");
         }
 
         bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
 
         if (checkNameAlreadyExist)
         {
-            throw new Exception("Já existe uma empresa registrada com esse nome");
+            throw new Exception("Já existe uma empresa registrada com esse nome.");
         }
 
         bool checkEmail = IsEmailValid(input.Email);
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor");
+            throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor.");
         }
 
         bool checkPhone = IsPhoneValid(input.Phone);
 
         if (!checkPhone)
         {
-            throw new Exception("O número de telefone não é válido. Insira um número válido, por favor");
+            throw new Exception("O número de telefone não é válido. Insira um número válido, por favor.");
         }
 
         bool checkType = IsTypeValid(input.Type);
 
         if (!checkType)
         {
-            throw new Exception("O tipo da empresa não é válido. Insira um tipo válido, por favor");
+            throw new Exception("O tipo da empresa não é válido. Insira um tipo válido, por favor.");
         }
         #endregion
 
