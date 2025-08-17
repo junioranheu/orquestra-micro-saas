@@ -30,21 +30,21 @@ public static class DependencyAppConfiguration
 
     private static void AddSwagger(WebApplication app)
     {
-        //if (app.Environment.IsDevelopment())
-        //{
-        app.UseSwagger();
-
-        app.UseSwaggerUI(c =>
+        if (app.Environment.IsDevelopment())
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name);
-            c.DocExpansion(DocExpansion.None);
+            app.UseSwagger();
 
-            if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows())
+            app.UseSwaggerUI(c =>
             {
-                c.RoutePrefix = string.Empty;
-            }
-        });
-        //}
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name);
+                c.DocExpansion(DocExpansion.None);
+
+                if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows())
+                {
+                    c.RoutePrefix = string.Empty;
+                }
+            });
+        }
     }
 
     private static void AddHttpsRedirection(WebApplication app)
