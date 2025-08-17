@@ -26,16 +26,16 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore .NET dependencies
-        run: dotnet restore Auth.API/Auth.API.csproj
+        run: dotnet restore Orquestra.API/Orquestra.API.csproj
 
       - name: Build .NET project
-        run: dotnet build Auth.API/Auth.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }}
+        run: dotnet build Orquestra.API/Orquestra.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }}
 
       - name: Run unit tests
-        run: dotnet test Auth.API/Auth.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
+        run: dotnet test Orquestra.API/Orquestra.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
 
       - name: Publish .NET project
-        run: dotnet publish Auth.API/Auth.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --output ${{ github.workspace }}/publish
+        run: dotnet publish Orquestra.API/Orquestra.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --output ${{ github.workspace }}/publish
 
       - name: List published files
         run: ls -R ${{ github.workspace }}/publish
