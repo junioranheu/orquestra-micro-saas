@@ -14,7 +14,6 @@ namespace Orquestra.Infrastructure.Auth.Token;
 public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTokenGenerator
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
-    private const int thresholdTimeZoneInHours = 3;
 
     public (string token, RefreshToken refreshToken) GenerateToken(Guid userId, string name, string email, UserRoleEnum? role)
     {
@@ -47,7 +46,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
         ClaimsIdentity claims = new(claimList);
 
-        DateTime date = GetDateNormalized();
+        DateTime date = GetDate();
 
         SecurityTokenDescriptor tokenDescriptor = new()
         {
@@ -76,8 +75,8 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
         {
             Token = token,
             UserId = userId,
-            CreatedDate = GetDateNormalized(),
-            ExpiredDate = GetDateNormalized().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
+            CreatedDate = GetDate(),
+            ExpiredDate = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
             Status = true
         };
 
@@ -96,26 +95,13 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
     public (bool isTokenExpiringSoonOrHasAlreadyExpired, double differenceInMinutes) IsTokenExpiringSoonOrHasAlreadyExpired(JwtSecurityToken token, int thresholdInMinutes = 0)
     {
-        DateTime date = GetDateNormalized().AddHours(thresholdTimeZoneInHours); // A data de validade do Token é ToUniversalTime, portanto deliberadamente deve ser adicionado tempo extra aqui, sempre;
+        DateTime date = GetDate(); // A data de validade do Token é ToUniversalTime, portanto deliberadamente deve ser adicionado tempo extra aqui, sempre;
         DateTime dateThreshold = date.AddMinutes(thresholdInMinutes);
 
         double differenceInMinutes = (token.ValidTo - dateThreshold).TotalMinutes;
         bool isTokenExpiringSoonOrHasAlreadyExpired = differenceInMinutes <= 0;
 
         return (isTokenExpiringSoonOrHasAlreadyExpired, differenceInMinutes);
-    }
-
-    private static DateTime GetDateNormalized()
-    {
-        // Prod: +3h;
-        DateTime date = GetDate().AddHours(thresholdTimeZoneInHours);
-
-#if DEBUG
-        // Dev;
-        date = GetDate();
-#endif
-
-        return date;
     }
     #endregion
 }
