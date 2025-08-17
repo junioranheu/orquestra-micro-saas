@@ -77,7 +77,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
             UserId = userId,
             CreatedDate = GetDate(),
             ExpiredDate = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
-            Status = true
+            RevokedDate = null
         };
 
         return refreshToken;
@@ -95,7 +95,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
     public (bool isTokenExpiringSoonOrHasAlreadyExpired, double differenceInMinutes) IsTokenExpiringSoonOrHasAlreadyExpired(JwtSecurityToken token, int thresholdInMinutes = 0)
     {
-        DateTime date = GetDate(); // A data de validade do Token é ToUniversalTime, portanto deliberadamente deve ser adicionado tempo extra aqui, sempre;
+        DateTime date = GetDate();
         DateTime dateThreshold = date.AddMinutes(thresholdInMinutes);
 
         double differenceInMinutes = (token.ValidTo - dateThreshold).TotalMinutes;

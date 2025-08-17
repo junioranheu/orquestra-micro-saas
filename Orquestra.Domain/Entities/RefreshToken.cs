@@ -19,6 +19,4 @@ public sealed class RefreshToken
     public DateTime? ExpiredDate { get; set; }
 
     public DateTime? RevokedDate { get; set; }
-
-    public bool Status { get; set; }
 }

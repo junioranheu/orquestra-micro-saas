@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
-using NpgsqlTypes;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
@@ -67,7 +65,6 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         AsNoTracking().
         Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
         ExecuteUpdateAsync(x => x.
-            SetProperty(prop => prop.Status, false).
             SetProperty(prop => prop.RevokedDate, GetDate())
         );
     }
@@ -79,7 +76,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
                                               AsNoTracking().
                                               Where(x =>
                                                  x.UserId == userId &&
-                                                 x.Status == true
+                                                 x.RevokedDate == null
                                               ).
                                               OrderByDescending(x => x.CreatedDate).
                                               ToListAsync();

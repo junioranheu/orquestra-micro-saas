@@ -60,7 +60,7 @@ public static class DependencyInjection
 #if DEBUG
                 x.JsonSerializerOptions.WriteIndented = true;
 #else
-            x.JsonSerializerOptions.WriteIndented = false;
+                x.JsonSerializerOptions.WriteIndented = false;
 #endif
             });
     }

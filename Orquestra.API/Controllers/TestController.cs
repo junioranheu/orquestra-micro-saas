@@ -44,7 +44,7 @@ public class TestController : BaseController<TestController>
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
 
-        return Ok($"{userId}\n");
+        return Ok($"Id: {userId}");
     }
 
     private static string Ascii()
