@@ -20,7 +20,7 @@ public class ClientController(IGetClient get, ICreateClient create) : BaseContro
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         ClientOutput output = await _create.Execute(userId, input);
 
-        return output;
+        return Ok(output);
     }
 
     [AuthorizeFilter]
@@ -28,14 +28,14 @@ public class ClientController(IGetClient get, ICreateClient create) : BaseContro
     public async Task<ActionResult<ClientOutput?>> Get(Guid clientId)
     {
         ClientOutput? output = await _get.Execute(clientId);
-        return output;
+        return Ok(output);
     }
 
     [AuthorizeFilter]
     [HttpGet("GetAll")]
-    public async Task<ActionResult<List<ClientOutput>?>> GetAll()
+    public async Task<ActionResult<List<ClientOutput>?>> GetAll(Guid companyId)
     {
-        List<ClientOutput>? output = await _get.Execute();
-        return output;
+        List<ClientOutput>? output = await _get.GetAll(companyId);
+        return Ok(output);
     }
 }

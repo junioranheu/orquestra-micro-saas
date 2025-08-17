@@ -20,7 +20,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     public async Task<ActionResult<List<LocationState>?>> GetState()
     {
         var output = await _getState.Execute();
-        return output;
+        return Ok(output);
     }
 
     [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
@@ -29,6 +29,6 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     public async Task<ActionResult<List<LocationCity>?>> GetCity()
     {
         var output = await _getCity.Execute();
-        return output;
+        return Ok(output);
     }
 }

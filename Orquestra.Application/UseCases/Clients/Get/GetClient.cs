@@ -26,12 +26,12 @@ public sealed class GetClient(Context context, IMapper map) : IGetClient
         return output;
     }
 
-    public async Task<List<ClientOutput>?> Execute()
+    public async Task<List<ClientOutput>?> GetAll(Guid companyId)
     {
         var result = await _context.Clients.
                      Include(x => x.Companies).
                      AsNoTracking().
-                     Where(x => x.Status == true).
+                     Where(x => x.CompanyId == companyId && x.Status == true).
                      ToListAsync();
 
         var output = _map.Map<List<ClientOutput>>(result);

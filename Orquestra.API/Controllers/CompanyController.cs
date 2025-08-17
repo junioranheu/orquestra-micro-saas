@@ -20,7 +20,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         CompanyOutput output = await _create.Execute(userId, input);
 
-        return output;
+        return Ok(output);
     }
 
     [AuthorizeFilter]
@@ -28,7 +28,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     public async Task<ActionResult<CompanyOutput?>> Get(Guid companyId)
     {
         CompanyOutput? output = await _get.Execute(companyId);
-        return output;
+        return Ok(output);
     }
 
     [AuthorizeFilter]
@@ -36,6 +36,6 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     public async Task<ActionResult<List<CompanyOutput>?>> GetAll()
     {
         List<CompanyOutput>? output = await _get.Execute();
-        return output;
+        return Ok(output);
     }
 }

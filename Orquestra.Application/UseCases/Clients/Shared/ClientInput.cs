@@ -2,7 +2,7 @@
 
 public sealed class ClientInput
 {
-    public Guid ClientId { get; set; }
+    public Guid? ClientId { get; set; }
 
     public string FullName { get; set; } = string.Empty;
 

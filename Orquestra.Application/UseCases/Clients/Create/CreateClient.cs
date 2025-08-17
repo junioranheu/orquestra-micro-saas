@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Orquestra.Application.UseCases.Clients.Base;
 using Orquestra.Application.UseCases.Clients.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.Create;
 
-public sealed class CreateClient(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ClientBase(context, getCompanyUser), ICreateClient
+public sealed class CreateClient(Context context, IMapper map, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : ClientBase(context, checkIfUserIsLinkedCompanyUser), ICreateClient
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;

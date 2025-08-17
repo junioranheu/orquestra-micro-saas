@@ -20,7 +20,7 @@ public class ScheduleController(IGetSchedule get, ICreateSchedule create) : Base
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         ScheduleOutput output = await _create.Execute(userId, input);
 
-        return output;
+        return Ok(output);
     }
 
     [AuthorizeFilter]
@@ -28,7 +28,7 @@ public class ScheduleController(IGetSchedule get, ICreateSchedule create) : Base
     public async Task<ActionResult<ScheduleOutput?>> Get(Guid scheduleId)
     {
         ScheduleOutput? output = await _get.Execute(scheduleId);
-        return output;
+        return Ok(output);
     }
 
     [AuthorizeFilter]
@@ -36,6 +36,6 @@ public class ScheduleController(IGetSchedule get, ICreateSchedule create) : Base
     public async Task<ActionResult<List<ScheduleOutput>?>> GetAll()
     {
         List<ScheduleOutput>? output = await _get.Execute();
-        return output;
+        return Ok(output);
     }
 }

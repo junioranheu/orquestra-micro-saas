@@ -1,25 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
 using Orquestra.Infrastructure.Data;
 using System.Text.RegularExpressions;
 
 namespace Orquestra.Application.UseCases.Clients.Base;
 
-public partial class ClientBase(Context context, IGetCompanyUser getCompanyUser)
+public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser)
 {
     private readonly Context _context = context;
-    private readonly IGetCompanyUser _getCompanyUser = getCompanyUser;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
     public async Task Validate(ClientInput input, Guid userId, bool isCreate)
     {
-        await _getCompanyUser.CheckIfUserIsFromCompany(companyId: input.CompanyId, userId, isAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, isAdmin: true);
 
         bool checkEmail = IsEmailValid(input.Email);
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor.");
+            throw new Exception("O e-mail do cliente não é válido. Insira um e-mail válido, por favor.");
         }
 
         bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId);

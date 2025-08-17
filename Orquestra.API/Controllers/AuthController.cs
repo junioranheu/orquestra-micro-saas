@@ -22,6 +22,6 @@ public class AuthController(ICreateToken createToken) : BaseController<AuthContr
         }
 
         UserOutput output = await _createToken.Execute(input);
-        return output;
+        return Ok(output);
     }
 }

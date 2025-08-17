@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.Get;
 
@@ -10,6 +11,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IGetCompanyUser, GetCompanyUser>();
         services.AddScoped<ICreateRangeCompanyUser, CreateRangeCompanyUser>();
+        services.AddScoped<ICheckIfUserIsLinkedCompanyUser, CheckIfUserIsLinkedCompanyUser>();
 
         return services;
     }

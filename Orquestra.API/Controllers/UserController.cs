@@ -19,7 +19,7 @@ public class UserController(ICreateUser create, IUpdateUser update) : BaseContro
     public async Task<ActionResult<UserOutput>> Create([FromForm] UserInput input)
     {
         UserOutput output = await _create.Execute(input);
-        return output;
+        return Ok(output);
     }
 
     [AuthorizeFilter]
@@ -29,6 +29,6 @@ public class UserController(ICreateUser create, IUpdateUser update) : BaseContro
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         UserOutput output = await _update.Execute(userId, input);
 
-        return output;
+        return Ok(output);
     }
 }

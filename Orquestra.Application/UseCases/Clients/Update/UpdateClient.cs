@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Base;
 using Orquestra.Application.UseCases.Clients.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.Update;
 
-public sealed class UpdateClient(Context context, IMapper map, IGetCompanyUser getCompanyUser) : ClientBase(context, getCompanyUser), IUpdateClient
+public sealed class UpdateClient(Context context, IMapper map, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : ClientBase(context, checkIfUserIsLinkedCompanyUser), IUpdateClient
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;

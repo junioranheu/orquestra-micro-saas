@@ -1,23 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Text.RegularExpressions;
 
 namespace Orquestra.Application.UseCases.Companies.Base;
 
-public partial class CompanyBase(Context context, IGetCompanyUser getCompanyUser)
+public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser)
 {
     private readonly Context _context = context;
-    private readonly IGetCompanyUser _getCompanyUser = getCompanyUser;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
     public async Task Validate(CompanyInput input, Guid userId, bool isCreate)
     {
         #region basic
         if (!isCreate)
         {
-            await _getCompanyUser.CheckIfUserIsFromCompany(companyId: input.CompanyId, userId, isAdmin: true);
+            await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, isAdmin: true);
         }
 
         bool checkName = IsNameValid(input.Name);

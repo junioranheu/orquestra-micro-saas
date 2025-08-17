@@ -1,4 +1,5 @@
 ﻿using Orquestra.Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace Orquestra.Application.UseCases.Clients.Shared;
 
@@ -19,5 +20,6 @@ public sealed class ClientOutput
     public string Notes { get; set; } = string.Empty;
 
     public Guid CompanyId { get; set; }
+    [JsonIgnore]
     public Company? Companies { get; set; }
 }

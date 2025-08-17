@@ -4,6 +4,6 @@ namespace Orquestra.Application.UseCases.Clients.Get;
 
 public interface IGetClient
 {
-    Task<List<ClientOutput>?> Execute();
     Task<ClientOutput?> Execute(Guid clientId);
+    Task<List<ClientOutput>?> GetAll(Guid companyId);
 }

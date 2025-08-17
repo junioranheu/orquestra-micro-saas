@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -11,7 +11,8 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
 
-public sealed class CreateCompany(Context context, IMapper map, ICreateRangeCompanyUser createRangeCompanyUser, IGetCompanyUser getCompanyUser) : CompanyBase(context, getCompanyUser), ICreateCompany
+public sealed class CreateCompany(Context context, IMapper map, ICreateRangeCompanyUser createRangeCompanyUser, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) :
+    CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
     private readonly IMapper _map = map;
