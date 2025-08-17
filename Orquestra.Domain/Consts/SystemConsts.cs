@@ -9,4 +9,6 @@ public static class SystemConsts
     public const int OneHourInSec = 3600;
     public const int OneDayInSec = 86400;
     public const int OneMonthInSec = 2629800;
+
+    public const string RefreshTokenJWTCustomHeader = "X-New-JWT";
 }

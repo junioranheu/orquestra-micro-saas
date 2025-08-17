@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -99,7 +98,7 @@ public static class DependencyInjection
 
         services.AddDbContextPool<Context>(x =>
         {
-            x.UseNpgsql(con); 
+            x.UseNpgsql(con);
         });
     }
 
@@ -139,10 +138,14 @@ public static class DependencyInjection
         services.AddCors(x =>
             x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
             {
+                // TO DO: SetIsOriginAllowed((host) => true) + AllowCredentials() é inseguro;
                 builder.AllowAnyHeader().
                         AllowAnyMethod().
                         SetIsOriginAllowed((host) => true).
-                        AllowCredentials();
+                        AllowCredentials().
+
+                        // Expõe o custom header para o front interceptar e atualizar o token;
+                        WithExposedHeaders(SystemConsts.RefreshTokenJWTCustomHeader);
             })
         );
     }
