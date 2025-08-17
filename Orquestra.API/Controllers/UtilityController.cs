@@ -15,11 +15,22 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     private readonly IGetCity _getCity = getCity;
 
     [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
-    [AllowAnonymous] 
+    [AllowAnonymous]
     [HttpGet("GetState")]
     public async Task<ActionResult<List<LocationState>?>> GetState()
     {
         var output = await _getState.Execute();
+
+        var aea = new LocationState()
+        {
+            LocationStateId = 999,
+            Name = "Perukistan",
+            Abbreviation = "PE",
+            Status = true
+        };
+
+        output.Add(aea);
+
         return output;
     }
 
