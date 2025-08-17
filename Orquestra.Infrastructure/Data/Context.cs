@@ -11,11 +11,6 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    static Context()
-    {
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Normalizar DateTime para não utilizar o UTC como default;
-    }
-
     public DbSet<Company> Companies { get; set; }
     public DbSet<CompanyUser> CompanyUsers { get; set; }
     public DbSet<LocationCity> LocationCities { get; set; }
@@ -29,10 +24,39 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
     #region extras
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        #region delete_behavior
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.Cascade;
         }
+        #endregion
+
+        #region postgreSQL_datetime_normalize_utc
+        var utcConverter = new ValueConverter<DateTime, DateTime>(
+           v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(), // Salva como UTC;
+           v => DateTime.SpecifyKind(v, DateTimeKind.Utc)             // Lê como UTC;
+        );
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTime))
+                {
+                    property.SetValueConverter(utcConverter);
+                }
+                else if (property.ClrType == typeof(DateTime?))
+                {
+                    property.SetValueConverter(
+                        new ValueConverter<DateTime?, DateTime?>(
+                            v => v.HasValue ? (v.Value.Kind == DateTimeKind.Utc ? v.Value : v.Value.ToUniversalTime()) : v,
+                            v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v
+                        )
+                    );
+                }
+            }
+        }
+        #endregion
     }
 
     public Guid CurrentUserId

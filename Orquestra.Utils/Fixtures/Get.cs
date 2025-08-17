@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-using TimeZoneConverter;
 
 namespace Orquestra.Utils.Fixtures;
 
@@ -13,8 +12,9 @@ public static class Get
     /// </summary>
     public static DateTime GetDate()
     {
-        TimeZoneInfo timeZone = TZConvert.GetTimeZoneInfo("E. South America Standard Time");
-        return TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZone);
+        // TimeZoneInfo timeZone = TZConvert.GetTimeZoneInfo("E. South America Standard Time");
+        // return TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZone);
+        return DateTime.UtcNow;
     }
 
     /// <summary>
