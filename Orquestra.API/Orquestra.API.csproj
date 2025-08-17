@@ -31,4 +31,8 @@
 		<ProjectReference Include="..\Orquestra.Utils\Orquestra.Utils.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Assets\Images\" />
+	</ItemGroup>
+
 </Project>

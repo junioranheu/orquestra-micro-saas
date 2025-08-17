@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Refresh Token API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-200 min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white shadow-2xl rounded-3xl p-8 w-full max-w-xl">
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Teste Refresh Token API</h1>
+
+        <div class="flex flex-col items-center gap-4 mb-6">
+            <button id="loginBtn"
+                class="px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition w-48 font-semibold">
+                Autenticar
+            </button>
+
+            <div class="flex gap-6 mt-4">
+                <div>
+                    <h3 class="text-gray-700 font-semibold text-center">Auth original</h3>
+                    <p id="timer1" class="text-lg font-mono text-center text-green-600">00:00</p>
+                </div>
+                <div>
+                    <h3 class="text-gray-700 font-semibold text-center">Auth refresh token</h3>
+                    <p id="timer3" class="text-lg font-mono text-center text-green-600">00:00</p>
+                </div>
+            </div>
+
+            <button id="getBtn"
+                class="px-8 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition w-48 mt-4 font-semibold">
+                GET Autenticado
+            </button>
+
+            <!-- Token atual em uso -->
+            <div class="mt-6 w-full">
+                <h3 class="text-gray-700 font-semibold mb-2">🔑 Token atual em uso:</h3>
+                <pre id="currentToken"
+                    class="bg-gray-100 p-3 rounded-xl overflow-auto text-xs text-gray-800 max-h-32"></pre>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="font-semibold text-gray-700 mb-2">Resposta da API:</h2>
+            <pre id="output" class="bg-gray-100 p-4 rounded-xl overflow-auto text-gray-800 max-h-64"></pre>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://orquestra-cbgkgtayftdeaxh2.brazilsouth-01.azurewebsites.net/api';
+        const JWT_HEADER = 'X-New-JWT';
+        let token = localStorage.getItem('jwtToken') || null;
+        let interval1 = null;
+        let interval3 = null;
+
+        const output = document.getElementById('output');
+        const currentTokenEl = document.getElementById('currentToken');
+        const timer1El = document.getElementById('timer1');
+        const timer3El = document.getElementById('timer3');
+
+        function startTimer(duration, element) {
+            let time = duration;
+            updateTimerColor(element, time);
+            element.textContent = formatTime(time);
+
+            const interval = setInterval(() => {
+                time--;
+                if (time < 0) {
+                    element.textContent = "00:00";
+                    clearInterval(interval);
+                    return;
+                }
+                element.textContent = formatTime(time);
+                updateTimerColor(element, time);
+            }, 1000);
+
+            return interval;
+        }
+
+        function updateTimerColor(element, time) {
+            if (time <= 10) element.className = "text-lg font-mono text-center text-red-600";
+            else if (time <= 30) element.className = "text-lg font-mono text-center text-yellow-500";
+            else element.className = "text-lg font-mono text-center text-green-600";
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        async function apiRequest(endpoint, options = {}) {
+            const savedToken = localStorage.getItem('jwtToken');
+            options.headers = {
+                ...options.headers,
+                'Authorization': savedToken ? `Bearer ${savedToken}` : '',
+                'Content-Type': 'application/json'
+            };
+
+            const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+            // intercepta o novo JWT
+            const newToken = response.headers.get(JWT_HEADER);
+            if (newToken) {
+                token = newToken;
+                localStorage.setItem('jwtToken', newToken);
+                currentTokenEl.textContent = newToken;
+                console.log("Novo JWT recebido:", newToken);
+            }
+
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                return response.text();
+            }
+        }
+
+        async function login() {
+            try {
+                const password = 'xxx';
+
+                if (password && password.length <= 3) {
+                    alert('Altere manualmente a senha: deve ter pelo menos 3 caracteres!');
+                    return;
+                }
+
+                const data = await apiRequest('/Auth/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: "junioranheu@gmail.com",
+                        password: password
+                    })
+                });
+
+                if (data.code === 500) {
+                    output.textContent = `❌ Falha no login!`;
+                    return;
+                }
+
+                token = data.token;
+                localStorage.setItem('jwtToken', token);
+                currentTokenEl.textContent = token;
+                output.textContent = `✅ Login feito! Token recebido.`;
+
+                if (interval1) clearInterval(interval1);
+                if (interval3) clearInterval(interval3);
+
+                interval1 = startTimer(60, timer1El);
+                interval3 = startTimer(120, timer3El);
+
+            } catch (err) {
+                output.textContent = `❌ Erro no login: ${err}`;
+            }
+        }
+
+        async function getAuthData() {
+            if (!token) {
+                output.textContent = "⚠️ Você precisa logar primeiro!";
+                return;
+            }
+
+            try {
+                const data = await apiRequest('/Test/GetAuth');
+                output.textContent = typeof data === 'string' ? `Você ainda está autenticado! (${data})` : JSON.stringify(data, null, 2);
+            } catch (err) {
+                output.textContent = `❌ Erro no GET: ${err}`;
+            }
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('getBtn').addEventListener('click', getAuthData);
+
+        // Inicializa token na interface se já existir
+        if (token) currentTokenEl.textContent = token;
+    </script>
+</body>
+
+</html>
