@@ -8,7 +8,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUser get) : ICheck
 {
     private readonly IGetCompanyUser _get = get;
 
-    public async Task<bool> Execute(Guid? companyId, Guid? userId, bool isAdmin, bool throwError = true)
+    public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needAdmin, bool throwError = true)
     {
         if ((companyId is null || companyId == Guid.Empty) || (userId is null || userId == Guid.Empty))
         {
@@ -21,7 +21,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUser get) : ICheck
         {
             if (throwError)
             {
-                ThrowError(isAdmin);
+                ThrowError(needAdmin);
             }
 
             return false;
@@ -29,13 +29,13 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUser get) : ICheck
 
         CompanyUserOutput? companyUser = result?.FirstOrDefault();
 
-        if (isAdmin)
+        if (needAdmin)
         {
-            bool checkIfIsAdmin = companyUser?.CompanyUserRole == CompanyUserRoleEnum.Administrator;
+            bool checkIfIsAdmin = companyUser?.CompanyUserRole == CompanyUserRoleEnum.Administrator || companyUser?.CompanyUserRole == CompanyUserRoleEnum.Owner;
 
             if (!checkIfIsAdmin && throwError)
             {
-                ThrowError(isAdmin);
+                ThrowError(needAdmin);
             }
 
             return checkIfIsAdmin;
@@ -43,9 +43,9 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUser get) : ICheck
 
         return true;
 
-        static void ThrowError(bool isAdmin)
+        static void ThrowError(bool needAdmin)
         {
-            string message = isAdmin ? "Apenas o administrador da empresa pode executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";
+            string message = needAdmin ? "Apenas o administrador da empresa pode executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";
             throw new Exception(message);
         }
     }

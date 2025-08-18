@@ -55,7 +55,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
 
         List<CompanyUserInput> companyUsers = [companyUser];
 
-        await _createRangeCompanyUser.Execute(companyUsers);
+        await _createRangeCompanyUser.Execute(userId, companyUsers);
     }
     #endregion
 }

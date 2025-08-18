@@ -18,9 +18,9 @@ public class ClientController(IGetClient get, ICreateClient create) : BaseContro
     public async Task<ActionResult<ClientOutput>> Create([FromForm] ClientInput input)
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        ClientOutput output = await _create.Execute(userId, input);
+        await _create.Execute(userId, input);
 
-        return Ok(output);
+        return Ok();
     }
 
     [AuthorizeFilter]

@@ -15,7 +15,7 @@ public partial class ScheduleBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsL
 
     public async Task Validate(ScheduleInput input, Guid userId)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, isAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needAdmin: true);
 
         if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
         {

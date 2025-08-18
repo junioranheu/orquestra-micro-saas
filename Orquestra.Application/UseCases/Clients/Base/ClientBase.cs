@@ -13,7 +13,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
     public async Task Validate(ClientInput input, Guid userId, bool isCreate)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, isAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needAdmin: true);
 
         bool checkEmail = IsEmailValid(input.Email);
 
@@ -22,18 +22,21 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
             throw new Exception("O e-mail do cliente não é válido. Insira um e-mail válido, por favor.");
         }
 
-        bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId);
-
-        if (anyCPF)
+        if (isCreate)
         {
-            throw new Exception("Este CPF já está registrado nesta empresa para outro cliente.");
-        }
+            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId && x.Status == true);
 
-        bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.CompanyId == input.CompanyId && x.Email == input.Email);
+            if (anyCPF)
+            {
+                throw new Exception("Este CPF já está registrado nesta empresa como cliente.");
+            }
 
-        if (anyEmail)
-        {
-            throw new Exception("Este e-mail já está registrado nesta empresa para outro cliente.");
+            bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.CompanyId == input.CompanyId && x.Email == input.Email);
+
+            if (anyEmail)
+            {
+                throw new Exception("Este e-mail já está registrado nesta empresa como cliente.");
+            }
         }
     }
 

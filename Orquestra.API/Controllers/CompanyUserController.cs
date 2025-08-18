@@ -22,7 +22,8 @@ public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompa
             throw new Exception($"A lista de usuários não pode estar vazia.");
         }
 
-        await _createRage.Execute(input);
+        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+        await _createRage.Execute(userId, input);
         return Ok();
     }
 
