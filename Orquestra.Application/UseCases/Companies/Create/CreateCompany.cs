@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Entities;

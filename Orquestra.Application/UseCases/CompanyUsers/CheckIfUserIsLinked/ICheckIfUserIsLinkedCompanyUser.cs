@@ -1,4 +1,4 @@
-﻿namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
+﻿namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 
 public interface ICheckIfUserIsLinkedCompanyUser
 {

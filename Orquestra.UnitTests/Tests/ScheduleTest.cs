@@ -2,6 +2,7 @@
 using Moq;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Get;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
@@ -15,7 +16,7 @@ namespace Orquestra.UnitTests.Tests;
 public sealed class ScheduleTest
 {
     private readonly IMapper _map;
-    private readonly IGetCompanyUser _getCompanyUser;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser;
     private readonly IGetClient _getClient;
     private readonly IGetCompany _getCompany;
 
@@ -23,7 +24,7 @@ public sealed class ScheduleTest
     {
         _map = Fixture.CreateMapper();
 
-        _getCompanyUser = new Mock<IGetCompanyUser>().Object;
+        _checkIfUserIsLinkedCompanyUser = new Mock<ICheckIfUserIsLinkedCompanyUser>().Object;
         _getClient = new Mock<IGetClient>().Object;
         _getCompany = new Mock<IGetCompany>().Object;
     }
@@ -33,7 +34,7 @@ public sealed class ScheduleTest
     {
         // Arrange
         using var context = Fixture.CreateContext();
-        var service = new CreateSchedule(context, _map, _getCompanyUser, _getClient, _getCompany);
+        var service = new CreateSchedule(context, _map, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
 
         var userId = Guid.NewGuid();
 

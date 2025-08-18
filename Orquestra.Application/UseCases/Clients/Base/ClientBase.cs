@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Infrastructure.Data;
 using System.Text.RegularExpressions;
 

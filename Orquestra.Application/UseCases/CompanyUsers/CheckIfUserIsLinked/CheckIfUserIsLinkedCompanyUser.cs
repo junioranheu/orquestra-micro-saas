@@ -2,7 +2,7 @@
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Enums;
 
-namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
+namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 
 public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUser get) : ICheckIfUserIsLinkedCompanyUser
 {

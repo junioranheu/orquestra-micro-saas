@@ -1,6 +1,6 @@
 ﻿using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
-using Orquestra.Application.UseCases.CompanyUsers.CheckIfUser;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Enums;
 using static Orquestra.Utils.Fixtures.Get;
