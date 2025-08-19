@@ -20,7 +20,7 @@ public sealed class CreateLog(Context context, ILogger<CreateLog> logger) : ICre
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Houve uma falha ao registrar um log na base de dados");
+            _logger.LogError(ex, "Houve uma falha ao registrar um log na base de dados.");
         }
     }
 }

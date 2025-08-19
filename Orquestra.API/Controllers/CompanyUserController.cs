@@ -3,6 +3,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
