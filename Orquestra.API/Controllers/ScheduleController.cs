@@ -2,15 +2,18 @@
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
+using Orquestra.Application.UseCases.Schedules.GetByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Shared;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ScheduleController(IGetSchedule get, ICreateSchedule create) : BaseController<ScheduleController>
+public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getScheduleByCompanyId, ICreateSchedule create) : 
+    BaseController<ScheduleController>
 {
     private readonly IGetSchedule _get = get;
+    private readonly IGetScheduleByCompanyId _getScheduleByCompanyId = getScheduleByCompanyId;
     private readonly ICreateSchedule _create = create;
 
     [AuthorizeFilter]
@@ -32,10 +35,10 @@ public class ScheduleController(IGetSchedule get, ICreateSchedule create) : Base
     }
 
     [AuthorizeFilter]
-    [HttpGet("GetAll")]
-    public async Task<ActionResult<List<ScheduleOutput>?>> GetAll()
+    [HttpGet("GetAllByCompanyId")]
+    public async Task<ActionResult<List<ScheduleOutput>?>> GetAllByCompanyId(Guid companyId)
     {
-        List<ScheduleOutput>? output = await _get.Execute();
+        List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(companyId);
         return Ok(output);
     }
 }

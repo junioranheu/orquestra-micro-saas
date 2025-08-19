@@ -25,18 +25,4 @@ public sealed class GetSchedule(Context context) : IGetSchedule
 
         return output;
     }
-
-    public async Task<List<ScheduleOutput>?> Execute()
-    {
-        var result = await _context.Schedules.
-                     Include(x => x.Clients).
-                     Include(x => x.Companies).
-                     AsNoTracking().
-                     Where(x => x.Status == true).
-                     ToListAsync();
-
-        var output = result.Adapt<List<ScheduleOutput>>();
-
-        return output;
-    }
 }

@@ -24,17 +24,4 @@ public sealed class GetClient(Context context) : IGetClient
 
         return output;
     }
-
-    public async Task<List<ClientOutput>?> GetAll(Guid companyId)
-    {
-        var result = await _context.Clients.
-                     Include(x => x.Companies).
-                     AsNoTracking().
-                     Where(x => x.CompanyId == companyId && x.Status == true).
-                     ToListAsync();
-
-        var output = result.Adapt<List<ClientOutput>>();
-
-        return output;
-    }
 }

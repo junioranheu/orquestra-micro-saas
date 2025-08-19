@@ -2,15 +2,18 @@
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Clients.Create;
 using Orquestra.Application.UseCases.Clients.Get;
+using Orquestra.Application.UseCases.Clients.GetByCompanyId;
 using Orquestra.Application.UseCases.Clients.Shared;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClientController(IGetClient get, ICreateClient create) : BaseController<ClientController>
+public class ClientController(IGetClient get, IGetClientByCompanyId getClientByCompanyId, ICreateClient create) :
+    BaseController<ClientController>
 {
     private readonly IGetClient _get = get;
+    private readonly IGetClientByCompanyId _getClientByCompanyId = getClientByCompanyId;
     private readonly ICreateClient _create = create;
 
     [AuthorizeFilter]
@@ -32,10 +35,10 @@ public class ClientController(IGetClient get, ICreateClient create) : BaseContro
     }
 
     [AuthorizeFilter]
-    [HttpGet("GetAll")]
-    public async Task<ActionResult<List<ClientOutput>?>> GetAll(Guid companyId)
+    [HttpGet("GetAllByCompanyId")]
+    public async Task<ActionResult<List<ClientOutput>?>> GetAllByCompanyId(Guid companyId)
     {
-        List<ClientOutput>? output = await _get.GetAll(companyId);
+        List<ClientOutput>? output = await _getClientByCompanyId.Execute(companyId);
         return Ok(output);
     }
 }
