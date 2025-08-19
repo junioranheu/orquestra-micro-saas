@@ -10,24 +10,38 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
 
     public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needAdmin, bool throwError = true)
     {
+        // #1 - Verificar se tem algum parâmetro super importante vazio;
         if ((companyId is null || companyId == Guid.Empty) || (userId is null || userId == Guid.Empty))
         {
             throw new Exception($"Os parâmetros {nameof(companyId)} e {nameof(userId)} devem ser preenchidos corretamente.");
         }
 
-        List<CompanyUserOutput>? result = await _getCompanyUserByCompanyId.Execute(companyId: companyId.GetValueOrDefault(), userId: userId.GetValueOrDefault());
+        // #2 - Verificar se o usuário em questão (userId) está registrado na empresa;
+        List<CompanyUserOutput>? checkUsersByCompanyAndUser = await _getCompanyUserByCompanyId.Execute(companyId: companyId.GetValueOrDefault(), userId: userId.GetValueOrDefault());
 
-        if (result?.Count == 0)
+        if (checkUsersByCompanyAndUser?.Count == 0)
         {
-            if (throwError)
+            // #2.2 - Verificação extra: verificar se a empresa em si tem algum funcionário;
+            // Se não tiver, não tem sentido executar o ThrowError, porque é uma empresa nova e está recebendo seu primeiro funcionário (Dono);
+            // Caso tenha mais de um usuário (Count > 0), aí sim deve-se executar o ThrowError;
+            List<CompanyUserOutput>? secondCheckUsersByCompanyOnly = await _getCompanyUserByCompanyId.Execute(companyId: companyId.GetValueOrDefault(), userId: null);
+
+            if (secondCheckUsersByCompanyOnly is not null && secondCheckUsersByCompanyOnly.Count > 0)
             {
-                ThrowError(needAdmin);
+                if (throwError)
+                {
+                    ThrowError(needAdmin);
+                }
+
+                return false;
             }
 
-            return false;
+            return true;
         }
 
-        CompanyUserOutput? companyUser = result?.FirstOrDefault();
+        // #3 - Verificar se a requisição em questão necessita de permissão de Administrador (ou Dono);
+        // Se sim, verificar se o usuário em questão é Administrador (ou Dono);
+        CompanyUserOutput? companyUser = checkUsersByCompanyAndUser?.FirstOrDefault();
 
         if (needAdmin)
         {
@@ -45,7 +59,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
 
         static void ThrowError(bool needAdmin)
         {
-            string message = needAdmin ? "Apenas o administrador da empresa pode executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";
+            string message = needAdmin ? "Apenas administradores da empresa podem executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";
             throw new Exception(message);
         }
     }

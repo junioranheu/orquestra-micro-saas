@@ -9,8 +9,6 @@ namespace Orquestra.Infrastructure.Data;
 
 public class Context(DbContextOptions<Context> options, IHttpContextAccessor httpContextAccessor) : DbContext(options)
 {
-    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-
     public DbSet<Company> Companies { get; set; }
     public DbSet<CompanyUser> CompanyUsers { get; set; }
     public DbSet<LocationCity> LocationCities { get; set; }
@@ -59,11 +57,11 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
         #endregion
     }
 
-    public Guid CurrentUserId
+    private Guid CurrentUserId
     {
         get
         {
-            var user = _httpContextAccessor.HttpContext?.User;
+            var user = httpContextAccessor.HttpContext?.User;
 
             if (user?.Identity?.IsAuthenticated ?? false)
             {
