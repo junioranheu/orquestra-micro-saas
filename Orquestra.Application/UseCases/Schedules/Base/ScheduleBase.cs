@@ -22,7 +22,7 @@ public partial class ScheduleBase(Context context, ICheckIfUserIsLinkedCompanyUs
 
         if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
         {
-            throw new Exception("O status de uma consulta recém criada deve ser Marcado.");
+            throw new Exception($"O status de uma consulta recém criada deve ser {GetStatusDesc(input.ScheduleStatus)}.");
         }
 
         if (input.Date <= GetDate())
@@ -81,10 +81,10 @@ public partial class ScheduleBase(Context context, ICheckIfUserIsLinkedCompanyUs
         }
 
         return observations;
+    }
 
-        static string GetStatusDesc(ScheduleStatusEnum status)
-        {
-            return GetEnumDesc(status).ToLowerInvariant();
-        }
+    private static string GetStatusDesc(ScheduleStatusEnum status)
+    {
+        return GetEnumDesc(status).ToLowerInvariant();
     }
 }
