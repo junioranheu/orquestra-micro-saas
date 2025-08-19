@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Text.RegularExpressions;
@@ -14,6 +15,8 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
 
     public async Task Validate(CompanyInput input, Guid userId, bool isCreate)
     {
+        string warn = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.Email}.";
+
         #region basic
         if (!isCreate)
         {
@@ -27,11 +30,18 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
             throw new Exception("O nome da empresa não é válido.");
         }
 
-        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
+        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name && x.Status == true);
 
         if (checkNameAlreadyExist)
         {
-            throw new Exception("Já existe uma empresa registrada com esse nome.");
+            throw new Exception($"Já existe uma empresa registrada com esse nome. {warn}");
+        }
+
+        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.Status == true);
+
+        if (checkEmailAlreadyExist)
+        {
+            throw new Exception($"Já existe uma empresa registrada com esse e-mail. {warn}");
         }
 
         bool checkEmail = IsEmailValid(input.Email);

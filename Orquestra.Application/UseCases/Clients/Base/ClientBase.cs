@@ -31,7 +31,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
                 throw new Exception("Este CPF já está registrado nesta empresa como cliente.");
             }
 
-            bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.CompanyId == input.CompanyId && x.Email == input.Email);
+            bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId && x.Status == true);
 
             if (anyEmail)
             {

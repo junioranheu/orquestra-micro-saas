@@ -80,7 +80,8 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
                            x.Date.Hour == schedule.Date.Hour && // Mesma hora;
                            x.Date.Minute == schedule.Date.Minute && // Mesmo minuto;
                            x.ScheduleStatus == ScheduleStatusEnum.Scheduled &&
-                           x.ScheduleId != schedule.ScheduleId // Ignora o próprio registro;
+                           x.ScheduleId != schedule.ScheduleId && // Ignora o próprio registro;
+                           x.Status == true
                         ).ToListAsync();
 
         if (conflicts.Count != 0)
