@@ -1,9 +1,11 @@
-﻿using Orquestra.Domain.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Orquestra.Domain.Entities;
 
+[Index(nameof(ClientId), nameof(CompanyId))]
 public sealed class Schedule : Audit
 {
     [Key]
@@ -22,4 +24,6 @@ public sealed class Schedule : Audit
     public Guid CompanyId { get; set; }
     [ForeignKey(nameof(CompanyId))]
     public Company? Companies { get; set; }
+
+    public Guid[]? Users { get; set; } = [];
 }

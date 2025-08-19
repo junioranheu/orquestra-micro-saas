@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Orquestra.Domain.Entities;
 
+[Index(nameof(Email))]
+[Index(nameof(CPF))]
 public sealed class Client : Audit
 {
     [Key]

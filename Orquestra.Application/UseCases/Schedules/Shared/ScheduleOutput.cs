@@ -15,11 +15,15 @@ public sealed class ScheduleOutput
     public ScheduleStatusEnum ScheduleStatus { get; set; }
 
     public Guid ClientId { get; set; }
-    public ClientOutput? Clients { get; set; }
+    public ClientOutput? Client { get; set; }
 
     public Guid CompanyId { get; set; }
     public CompanyOutput? Company { get; set; }
 
+    public Guid[]? Users { get; set; } = [];
+
     // Extras;
     public List<string>? Observations { get; set; }
+
+    public string[]? UsersString { get; set; } = [];
 }

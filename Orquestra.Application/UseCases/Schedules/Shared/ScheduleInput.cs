@@ -15,4 +15,6 @@ public sealed class ScheduleInput
     public Guid ClientId { get; set; }
 
     public Guid CompanyId { get; set; }
+
+    public Guid[]? Users { get; set; } = [];
 }

@@ -1,10 +1,12 @@
-﻿using Orquestra.Domain.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Orquestra.Domain.Entities;
 
+[Index(nameof(CompanyId), nameof(UserId))]
 public sealed class CompanyUser : Audit
 {
     [Key]
