@@ -3,6 +3,7 @@ using Moq;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.Shared;
@@ -30,7 +31,9 @@ public sealed class ScheduleTest
     {
         // Arrange
         using var context = Fixture.CreateContext();
-        var service = new CreateSchedule(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
+
+        ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
+        var service = new CreateSchedule(deps);
 
         var userId = Guid.NewGuid();
 
@@ -72,7 +75,7 @@ public sealed class ScheduleTest
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        List<Schedule>? inputList = ScheduleMock.CreateList( j: 10, client, company);
+        List<Schedule>? inputList = ScheduleMock.CreateList(j: 10, client, company);
 
         foreach (var item in inputList)
         {
@@ -80,14 +83,17 @@ public sealed class ScheduleTest
             await Fixture.Save(context, output);
         }
 
-        var service = new GetSchedule(context);
-        Guid? id = inputList is not null ? inputList.FirstOrDefault()?.ScheduleId : Guid.NewGuid();
+        ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
+        var service = new GetSchedule(deps);
+
+        Guid userId = Guid.NewGuid();
+        Guid? scheduleId = inputList is not null ? inputList.FirstOrDefault()?.ScheduleId : Guid.NewGuid();
 
         // Act
-        ScheduleOutput? result = await service.Execute(id.GetValueOrDefault());
+        ScheduleOutput? result = await service.Execute(userId: userId, scheduleId: scheduleId.GetValueOrDefault());
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(id, result.ScheduleId);
+        Assert.Equal(scheduleId, result.ScheduleId);
     }
 }

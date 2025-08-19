@@ -12,7 +12,7 @@ public sealed class LocationCity
 
     public int LocationStateId { get; set; }
     [ForeignKey(nameof(LocationStateId))]
-    public LocationState? LocationStates { get; set; }
+    public LocationState? LocationState { get; set; }
 
     public bool Status { get; set; } = true;
 }

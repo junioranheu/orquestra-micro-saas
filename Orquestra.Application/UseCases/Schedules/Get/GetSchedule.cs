@@ -15,8 +15,8 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
     public async Task<ScheduleOutput?> Execute(Guid userId, Guid scheduleId)
     {
         var result = await _context.Schedules.
-                     Include(x => x.Clients).
-                     Include(x => x.Companies).
+                     Include(x => x.Client).
+                     Include(x => x.Company).
                      AsNoTracking().
                      Where(x =>
                         x.Status == true &&

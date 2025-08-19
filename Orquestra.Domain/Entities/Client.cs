@@ -30,7 +30,7 @@ public sealed class Client : Audit
 
     public Guid CompanyId { get; set; }
     [ForeignKey(nameof(CompanyId))]
-    public Company? Companies { get; set; }
+    public Company? Company { get; set; }
 
     public IEnumerable<Schedule>? Schedules { get; init; }
 }

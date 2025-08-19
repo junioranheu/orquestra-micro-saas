@@ -21,5 +21,5 @@ public sealed class ClientOutput
 
     public Guid CompanyId { get; set; }
     [JsonIgnore]
-    public Company? Companies { get; set; }
+    public Company? Company { get; set; }
 }

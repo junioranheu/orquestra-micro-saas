@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -22,7 +21,7 @@ public sealed class Log
 
     public Guid? UserId { get; set; }
     [ForeignKey(nameof(UserId))]
-    public User? Users { get; init; }
+    public User? User { get; init; }
 
     public DateTime CreatedDate { get; set; } = GetDate();
 }

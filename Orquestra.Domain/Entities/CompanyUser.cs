@@ -15,12 +15,12 @@ public sealed class CompanyUser : Audit
     public Guid CompanyId { get; set; }
     [JsonIgnore]
     [ForeignKey(nameof(CompanyId))]
-    public Company? Companies { get; set; }
+    public Company? Company { get; set; }
 
     public Guid UserId { get; set; }
     [JsonIgnore]
     [ForeignKey(nameof(UserId))]
-    public User? Users { get; set; }
+    public User? User { get; set; }
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
 }

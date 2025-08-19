@@ -12,7 +12,7 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
     public async Task<List<CompanyUserOutput>?> Execute(Guid companyId, Guid? userId = null)
     {
         var result = await _context.CompanyUsers.
-                     Include(x => x.Users).
+                     Include(x => x.User).
                      AsNoTracking().
                      Where(x =>
                         (companyId == Guid.Empty || x.CompanyId == companyId) &&

@@ -11,7 +11,7 @@ public sealed class GetCity(Context context) : IGetCity
     public async Task<List<LocationCity>?> Execute()
     {
         var result = await _context.LocationCities.
-                     Include(x => x.LocationStates).
+                     Include(x => x.LocationState).
                      AsNoTracking().
                      Where(x => x.Status == true).
                      ToListAsync();

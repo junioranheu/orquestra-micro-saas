@@ -17,8 +17,8 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needAdmin: false);
 
         var result = await _context.Schedules.
-                     Include(x => x.Clients).
-                     Include(x => x.Companies).
+                     Include(x => x.Client).
+                     Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId && x.Status == true).
                      ToListAsync();

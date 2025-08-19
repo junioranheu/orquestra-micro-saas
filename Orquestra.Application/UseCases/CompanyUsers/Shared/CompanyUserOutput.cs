@@ -11,10 +11,10 @@ public sealed class CompanyUserOutput
 
     public Guid CompanyId { get; set; }
     [JsonIgnore]
-    public CompanyOutput? Companies { get; set; }
+    public CompanyOutput? Company { get; set; }
 
     public Guid UserId { get; set; }
-    public UserOutput? Users { get; set; }
+    public UserOutput? User { get; set; }
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
 

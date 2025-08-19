@@ -12,7 +12,7 @@ public sealed class GetClientByCompanyId(Context context) : IGetClientByCompanyI
     public async Task<List<ClientOutput>?> Execute(Guid companyId)
     {
         var result = await _context.Clients.
-                     Include(x => x.Companies).
+                     Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId && x.Status == true).
                      ToListAsync();

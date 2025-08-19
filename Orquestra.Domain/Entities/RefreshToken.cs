@@ -12,7 +12,7 @@ public sealed class RefreshToken
 
     public Guid UserId { get; set; }
     [JsonIgnore]
-    public User? Users { get; set; }
+    public User? User { get; set; }
 
     public DateTime CreatedDate { get; set; }
 

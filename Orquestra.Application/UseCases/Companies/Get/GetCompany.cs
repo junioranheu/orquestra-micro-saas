@@ -12,7 +12,7 @@ public sealed class GetCompany(Context context) : IGetCompany
     public async Task<CompanyOutput?> Execute(Guid companyId)
     {
         var result = await _context.Companies.
-                     Include(x => x.CompanyUsers)!.ThenInclude(x => x.Users).
+                     Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
                      FirstOrDefaultAsync();
@@ -25,7 +25,7 @@ public sealed class GetCompany(Context context) : IGetCompany
     public async Task<List<CompanyOutput>?> Execute()
     {
         var result = await _context.Companies.
-                     Include(x => x.CompanyUsers)!.ThenInclude(x => x.Users).
+                     Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
                      ToListAsync();
 

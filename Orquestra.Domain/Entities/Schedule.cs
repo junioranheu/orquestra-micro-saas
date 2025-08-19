@@ -19,11 +19,11 @@ public sealed class Schedule : Audit
 
     public Guid ClientId { get; set; }
     [ForeignKey(nameof(ClientId))]
-    public Client? Clients { get; set; }
+    public Client? Client { get; set; }
 
     public Guid CompanyId { get; set; }
     [ForeignKey(nameof(CompanyId))]
-    public Company? Companies { get; set; }
+    public Company? Company { get; set; }
 
     public Guid[]? Users { get; set; } = [];
 }
