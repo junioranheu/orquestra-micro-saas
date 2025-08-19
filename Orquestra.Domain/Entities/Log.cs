@@ -15,6 +15,8 @@ public sealed class Log
 
     public string? Parameters { get; set; } = string.Empty;
 
+    public string? Exception { get; set; } = string.Empty;
+
     public string? Description { get; set; } = string.Empty;
 
     public int Status { get; set; }

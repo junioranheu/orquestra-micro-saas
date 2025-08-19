@@ -16,7 +16,7 @@ public sealed class ErrorFilter(ILogger<ErrorFilter> logger, ICreateLog createLo
     public override async Task OnExceptionAsync(ExceptionContext context)
     {
         Exception ex = context.Exception;
-        string error = $"Ocorreu um erro ao processar sua requisição. Data: {GetDateDetails()}. Caminho: {context.HttpContext.Request.Path}. {(!string.IsNullOrEmpty(ex.InnerException?.Message) ? $"Mais informações: {ex.InnerException.Message}" : $"Mais informações: {ex.Message}")}";
+        string errorDetailed = $"Ocorreu um erro ao processar sua requisição. Data: {GetDateDetails()}. Caminho: {context.HttpContext.Request.Path}. {(!string.IsNullOrEmpty(ex.InnerException?.Message) ? $"Mais informações: {ex.InnerException.Message}" : $"Mais informações: {ex.Message}")}";
         string errorSimple = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
 
         var result = new BadRequestObjectResult(new
@@ -29,21 +29,22 @@ public sealed class ErrorFilter(ILogger<ErrorFilter> logger, ICreateLog createLo
         });
 
         (Guid? userId, string _, UserRoleEnum[] _) = new BaseFilter().GetUserInfo(context);
-        await CreateLog(context, error, userId);
-        Logger(ex, error);
+        await CreateLog(context, errorSimple, errorDetailed, userId);
+        Logger(ex, errorDetailed);
 
         context.Result = result;
         context.ExceptionHandled = true;
     }
 
-    private async Task CreateLog(ExceptionContext context, string error, Guid? userId)
+    private async Task CreateLog(ExceptionContext context, string errorSimple, string errorDetailed, Guid? userId)
     {
         Log log = new()
         {
             RequestType = context.HttpContext.Request.Method ?? string.Empty,
             Endpoint = context.HttpContext.Request.Path.ToString() ?? string.Empty,
             Parameters = string.Empty,
-            Description = error,
+            Exception = errorSimple,
+            Description = errorDetailed,
             Status = StatusCodes.Status500InternalServerError,
             UserId = userId is null || userId == Guid.Empty ? null : userId
         };

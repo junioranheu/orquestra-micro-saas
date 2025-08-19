@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orquestra.Domain.Consts;
@@ -11,6 +12,7 @@ using Orquestra.Infrastructure.Auth.Models;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Factory;
+using Orquestra.Infrastructure.Interceptors;
 using System.Text;
 using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
@@ -95,10 +97,11 @@ public static class DependencyInjection
     private static void AddContext(IServiceCollection services, WebApplicationBuilder builder)
     {
         string con = new ConnectionFactory(builder.Configuration).GetConnectionString();
+        ILoggerFactory loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-        services.AddDbContextPool<Context>(x =>
+        services.AddDbContextPool<Context>(options =>
         {
-            x.UseNpgsql(con);
+            options.UseNpgsql(con).AddInterceptors(new SlowQueryInterceptor(loggerFactory));
         });
     }
 
