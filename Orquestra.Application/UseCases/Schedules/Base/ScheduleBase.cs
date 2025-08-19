@@ -9,12 +9,19 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Base;
 
-public partial class ScheduleBase(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany)
+public record ScheduleBaseDependencies(
+    Context Context,
+    ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
+    IGetClient GetClient,
+    IGetCompany GetCompany
+);
+
+public partial class ScheduleBase(ScheduleBaseDependencies deps)
 {
-    private readonly Context _context = context;
-    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
-    private readonly IGetClient _getClient = getClient;
-    private readonly IGetCompany _getCompany = getCompany;
+    private readonly Context _context = deps.Context;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
+    private readonly IGetClient _getClient = deps.GetClient;
+    private readonly IGetCompany _getCompany = deps.GetCompany;
 
     public async Task Validate(ScheduleInput input, Guid userId)
     {

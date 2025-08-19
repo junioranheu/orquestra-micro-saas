@@ -1,8 +1,5 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Orquestra.Application.UseCases.Clients.Get;
-using Orquestra.Application.UseCases.Companies.Get;
-using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
@@ -10,10 +7,9 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Update;
 
-public sealed class UpdateSchedule(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) : 
-    ScheduleBase(context, checkIfUserIsLinkedCompanyUser, getClient, getCompany), IUpdateSchedule
+public sealed class UpdateSchedule(ScheduleBaseDependencies deps) :  ScheduleBase(deps), IUpdateSchedule
 {
-    private readonly Context _context = context;
+    private readonly Context _context = deps.Context;
 
     public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
     {

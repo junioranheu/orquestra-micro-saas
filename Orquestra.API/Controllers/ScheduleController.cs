@@ -9,8 +9,7 @@ namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getScheduleByCompanyId, ICreateSchedule create) : 
-    BaseController<ScheduleController>
+public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getScheduleByCompanyId, ICreateSchedule create) : BaseController<ScheduleController>
 {
     private readonly IGetSchedule _get = get;
     private readonly IGetScheduleByCompanyId _getScheduleByCompanyId = getScheduleByCompanyId;
