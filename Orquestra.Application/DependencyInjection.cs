@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orquestra.Application.AutoMapper;
 using Orquestra.Application.UseCases.Auth;
 using Orquestra.Application.UseCases.Clients;
 using Orquestra.Application.UseCases.Companies;
@@ -18,25 +16,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddDependencyInjectionApplication(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        AddAutoMapper(services);
         AddLogger(builder);
-
         AddUseCases(services);
         AddServices(services);
 
         return services;
-    }
-
-    private static void AddAutoMapper(IServiceCollection services)
-    {
-        MapperConfigurationExpression cfgExp = new();
-        cfgExp.AddProfile(new AutoMapperConfig());
-
-        ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-        MapperConfiguration mapperConfig = new(cfgExp, loggerFactory);
-
-        IMapper mapper = mapperConfig.CreateMapper();
-        services.AddSingleton(mapper);
     }
 
     private static void AddLogger(WebApplicationBuilder builder)

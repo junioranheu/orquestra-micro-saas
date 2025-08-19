@@ -62,7 +62,7 @@ public enum CompanyTypeEnum
     Massagista = 19,
 
     [Description("Advogado")]
-    Advogado = 210,
+    Advogado = 20,
 
     [Description("Contador")]
     Contador = 21,

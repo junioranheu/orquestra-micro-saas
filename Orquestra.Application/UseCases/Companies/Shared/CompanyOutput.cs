@@ -1,5 +1,4 @@
 ﻿using Orquestra.Application.UseCases.CompanyUsers.Shared;
-using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 

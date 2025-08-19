@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Orquestra.Application.AutoMapper;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Security.Claims;
@@ -27,18 +25,6 @@ public static class Fixture
 
         await dbSet.AddAsync(obj);
         await context.SaveChangesAsync();
-    }
-
-    public static IMapper CreateMapper()
-    {
-        MapperConfigurationExpression cfgExp = new();
-        cfgExp.AddProfile(new AutoMapperConfig());
-
-        var mockMapper = new MapperConfiguration(cfgExp, loggerFactory: null);
-
-        IMapper map = mockMapper.CreateMapper();
-
-        return map;
     }
 
     public static void Auth(ControllerBase controller)

@@ -10,7 +10,6 @@
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="15.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

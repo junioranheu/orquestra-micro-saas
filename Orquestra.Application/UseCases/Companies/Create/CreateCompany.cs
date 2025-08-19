@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
@@ -11,11 +11,10 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
 
-public sealed class CreateCompany(Context context, IMapper map, ICreateRangeCompanyUser createRangeCompanyUser, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) :
+public sealed class CreateCompany(Context context, ICreateRangeCompanyUser createRangeCompanyUser, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) :
     CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
     private readonly ICreateRangeCompanyUser _createRangeCompanyUser = createRangeCompanyUser;
 
     public async Task<CompanyOutput> Execute(Guid userId, CompanyInput input)
@@ -24,7 +23,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
         Company company = await Save(input);
         await SaveCompanyUsers(userId, company);
 
-        var output = _map.Map<CompanyOutput>(company);
+        var output = company.Adapt<CompanyOutput>();
 
         return output;
     }
@@ -32,7 +31,7 @@ public sealed class CreateCompany(Context context, IMapper map, ICreateRangeComp
     #region extras
     private async Task<Company> Save(CompanyInput input)
     {
-        var company = _map.Map<Company>(input);
+        var company = input.Adapt<Company>();
 
         company.CompanySituation = CompanySituationEnum.ApprovedButNotPaid;
         company.PlanStartDate = GetDate();

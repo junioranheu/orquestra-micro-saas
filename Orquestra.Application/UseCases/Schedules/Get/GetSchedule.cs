@@ -1,14 +1,13 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Get;
 
-public sealed class GetSchedule(Context context, IMapper map) : IGetSchedule
+public sealed class GetSchedule(Context context) : IGetSchedule
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<ScheduleOutput?> Execute(Guid scheduleId)
     {
@@ -22,7 +21,7 @@ public sealed class GetSchedule(Context context, IMapper map) : IGetSchedule
                      ).
                      FirstOrDefaultAsync();
 
-        var output = _map.Map<ScheduleOutput>(result);
+        var output = result.Adapt<ScheduleOutput>();
 
         return output;
     }
@@ -36,7 +35,7 @@ public sealed class GetSchedule(Context context, IMapper map) : IGetSchedule
                      Where(x => x.Status == true).
                      ToListAsync();
 
-        var output = _map.Map<List<ScheduleOutput>>(result);
+        var output = result.Adapt<List<ScheduleOutput>>();
 
         return output;
     }

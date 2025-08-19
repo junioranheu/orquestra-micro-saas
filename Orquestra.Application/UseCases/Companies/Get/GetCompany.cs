@@ -1,14 +1,13 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Companies.Get;
 
-public sealed class GetCompany(Context context, IMapper map) : IGetCompany
+public sealed class GetCompany(Context context) : IGetCompany
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<CompanyOutput?> Execute(Guid companyId)
     {
@@ -18,7 +17,7 @@ public sealed class GetCompany(Context context, IMapper map) : IGetCompany
                      Where(x => x.CompanyId == companyId).
                      FirstOrDefaultAsync();
 
-        var output = _map.Map<CompanyOutput>(result);
+        var output = result.Adapt<CompanyOutput>();
 
         return output;
     }
@@ -30,7 +29,7 @@ public sealed class GetCompany(Context context, IMapper map) : IGetCompany
                      AsNoTracking().
                      ToListAsync();
 
-        var output = _map.Map<List<CompanyOutput>>(result);
+        var output = result.Adapt<List<CompanyOutput>>();
 
         return output;
     }

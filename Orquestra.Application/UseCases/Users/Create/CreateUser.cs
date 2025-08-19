@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Orquestra.Application.UseCases.Users.Base;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
@@ -9,17 +9,16 @@ using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Users.Create;
 
-public sealed class CreateUser(Context context, IMapper map, IGetUser getUser) : UserBase(getUser), ICreateUser
+public sealed class CreateUser(Context context, IGetUser getUser) : UserBase(getUser), ICreateUser
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<UserOutput> Execute(UserInput input)
     {
         await Validate(input, userId: Guid.Empty, isCreate: true);
         User user = await Save(input);
 
-        var output = _map.Map<UserOutput>(user);
+        var output = user.Adapt<UserOutput>(); 
 
         return output;
     }

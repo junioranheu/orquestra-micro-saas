@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Users.Get;
@@ -9,13 +9,8 @@ using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 
-public sealed class CreateToken(
-    IMapper map,
-    IJwtTokenGenerator jwtTokenGenerator,
-    ICreateRefreshToken createRefreshToken,
-    IGetUser getUser) : ICreateToken
+public sealed class CreateToken( IJwtTokenGenerator jwtTokenGenerator, ICreateRefreshToken createRefreshToken,  IGetUser getUser) : ICreateToken
 {
-    private readonly IMapper _map = map;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
     private readonly IGetUser _getUser = getUser;
@@ -23,7 +18,7 @@ public sealed class CreateToken(
     public async Task<UserOutput> Execute(AuthInput input)
     {
         (User? user, string passwordEncrypted) = await _getUser.Execute(new UserInput() { Email = input.Email });
-        var output = _map.Map<UserOutput>(user) ?? throw new Exception("Usuário não encontrado.");
+        var output = user.Adapt<UserOutput>() ?? throw new Exception("Usuário não encontrado.");
 
         if (!CheckPassword(password: input.Password, encryptedPassword: passwordEncrypted))
         {

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Base;
 using Orquestra.Application.UseCases.Clients.Shared;
@@ -8,17 +8,16 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.Update;
 
-public sealed class UpdateClient(Context context, IMapper map, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : ClientBase(context, checkIfUserIsLinkedCompanyUser), IUpdateClient
+public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : ClientBase(context, checkIfUserIsLinkedCompanyUser), IUpdateClient
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<ClientOutput> Execute(Guid userId, ClientInput input)
     {
         await Validate(input, userId, isCreate: false);
         Client client = await Update(input);
 
-        var output = _map.Map<ClientOutput>(client);
+        var output = client.Adapt<ClientOutput>();
 
         return output;
     }

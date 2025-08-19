@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Users.Base;
 using Orquestra.Application.UseCases.Users.Get;
@@ -9,17 +9,16 @@ using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Users.Update;
 
-public sealed class UpdateUser(Context context, IMapper map, IGetUser getUser) : UserBase(getUser), IUpdateUser
+public sealed class UpdateUser(Context context,IGetUser getUser) : UserBase(getUser), IUpdateUser
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<UserOutput> Execute(Guid userId, UserInput input)
     {
         await Validate(input, userId, isCreate: false);
         User user = await Update(userId, input);
 
-        var output = _map.Map<UserOutput>(user);
+        var output = user.Adapt<UserOutput>();
 
         return output;
     }

@@ -1,9 +1,8 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Moq;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.Shared;
@@ -15,15 +14,12 @@ namespace Orquestra.UnitTests.Tests;
 
 public sealed class ScheduleTest
 {
-    private readonly IMapper _map;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser;
     private readonly IGetClient _getClient;
     private readonly IGetCompany _getCompany;
 
     public ScheduleTest()
     {
-        _map = Fixture.CreateMapper();
-
         _checkIfUserIsLinkedCompanyUser = new Mock<ICheckIfUserIsLinkedCompanyUser>().Object;
         _getClient = new Mock<IGetClient>().Object;
         _getCompany = new Mock<IGetCompany>().Object;
@@ -34,20 +30,21 @@ public sealed class ScheduleTest
     {
         // Arrange
         using var context = Fixture.CreateContext();
-        var service = new CreateSchedule(context, _map, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
+        var service = new CreateSchedule(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
 
         var userId = Guid.NewGuid();
 
-        Client client = ClientMock.Create(_map);
+        Client client = ClientMock.Create();
         await Fixture.Save(context, client);
 
-        Company company = CompanyMock.Create(_map);
+        Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        ScheduleInput input = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        Schedule input = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        var inputConvert = input.Adapt<ScheduleInput>();
 
         // Act
-        ScheduleOutput output = await service.Execute(userId, input);
+        ScheduleOutput output = await service.Execute(userId, inputConvert);
         Schedule? savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
 
         // Assert
@@ -69,21 +66,21 @@ public sealed class ScheduleTest
         // Arrange
         using var context = Fixture.CreateContext();
 
-        Client client = ClientMock.Create(_map);
+        Client client = ClientMock.Create();
         await Fixture.Save(context, client);
 
-        Company company = CompanyMock.Create(_map);
+        Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        List<Schedule>? inputList = ScheduleMock.CreateList(_map, j: 10, client, company);
+        List<Schedule>? inputList = ScheduleMock.CreateList( j: 10, client, company);
 
         foreach (var item in inputList)
         {
-            Schedule output = _map.Map<Schedule>(item);
+            var output = item.Adapt<Schedule>();
             await Fixture.Save(context, output);
         }
 
-        var service = new GetSchedule(context, _map);
+        var service = new GetSchedule(context);
         Guid? id = inputList is not null ? inputList.FirstOrDefault()?.ScheduleId : Guid.NewGuid();
 
         // Act

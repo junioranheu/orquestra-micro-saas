@@ -1,14 +1,13 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.Get;
 
-public sealed class GetCompanyUser(Context context, IMapper map) : IGetCompanyUser
+public sealed class GetCompanyUser(Context context) : IGetCompanyUser
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<List<CompanyUserOutput>?> Execute(Guid companyId, Guid? userId = null)
     {
@@ -21,7 +20,7 @@ public sealed class GetCompanyUser(Context context, IMapper map) : IGetCompanyUs
                      ).
                      ToListAsync();
 
-        var output = _map.Map<List<CompanyUserOutput>>(result);
+        var output = result.Adapt<List<CompanyUserOutput>>();
 
         return output;
     }

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Domain.Entities;
+﻿using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -8,9 +6,9 @@ namespace Orquestra.UnitTests.Fixtures.Mocks;
 
 public static class CompanyMock
 {
-    public static CompanyInput Create()
+    public static Company Create()
     {
-        var input = new CompanyInput
+        var input = new Company
         {
             CompanyId = Guid.NewGuid(),
             Name = GetRandomString(GetRandomNumber(5, 15), false),
@@ -22,9 +20,9 @@ public static class CompanyMock
         return input;
     }
 
-    public static List<CompanyInput> CreateList(int j)
+    public static List<Company> CreateList(int j)
     {
-        List<CompanyInput> list = [];
+        List<Company> list = [];
 
         for (int i = 0; i < j; i++)
         {
@@ -32,17 +30,5 @@ public static class CompanyMock
         }
 
         return list;
-    }
-
-    public static Company Create(IMapper _map)
-    {
-        Company output = _map.Map<Company>(Create());
-        return output;
-    }
-
-    public static List<Company> CreateList(IMapper _map, int j)
-    {
-        List<Company> output = _map.Map<List<Company>>(CreateList(j));
-        return output;
     }
 }

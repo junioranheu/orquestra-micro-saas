@@ -1,14 +1,13 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.Get;
 
-public sealed class GetClient(Context context, IMapper map) : IGetClient
+public sealed class GetClient(Context context) : IGetClient
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<ClientOutput?> Execute(Guid clientId)
     {
@@ -21,7 +20,7 @@ public sealed class GetClient(Context context, IMapper map) : IGetClient
                      ).
                      FirstOrDefaultAsync();
 
-        var output = _map.Map<ClientOutput>(result);
+        var output = result.Adapt<ClientOutput>();
 
         return output;
     }
@@ -34,7 +33,7 @@ public sealed class GetClient(Context context, IMapper map) : IGetClient
                      Where(x => x.CompanyId == companyId && x.Status == true).
                      ToListAsync();
 
-        var output = _map.Map<List<ClientOutput>>(result);
+        var output = result.Adapt<List<ClientOutput>>();
 
         return output;
     }

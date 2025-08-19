@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
@@ -9,18 +9,17 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Create;
 
-public sealed class CreateSchedule(Context context, IMapper map, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) :
+public sealed class CreateSchedule(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) :
     ScheduleBase(checkIfUserIsLinkedCompanyUser, getClient, getCompany), ICreateSchedule
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
     {
         await Validate(input, userId);
         Schedule schedule = await Save(input);
 
-        var output = _map.Map<ScheduleOutput>(schedule);
+        var output = schedule.Adapt<ScheduleOutput>();
 
         return output;
     }
@@ -28,7 +27,7 @@ public sealed class CreateSchedule(Context context, IMapper map, ICheckIfUserIsL
     #region extras
     private async Task<Schedule> Save(ScheduleInput input)
     {
-        var schedule = _map.Map<Schedule>(input);
+        var schedule = input.Adapt<Schedule>();
 
         await _context.AddAsync(schedule);
         await _context.SaveChangesAsync();

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
@@ -10,18 +10,17 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Update;
 
-public sealed class UpdateSchedule(Context context, IMapper map, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) : 
+public sealed class UpdateSchedule(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) : 
     ScheduleBase(checkIfUserIsLinkedCompanyUser, getClient, getCompany), IUpdateSchedule
 {
     private readonly Context _context = context;
-    private readonly IMapper _map = map;
 
     public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
     {
         await Validate(input, userId);
         Schedule schedule = await Update(input);
 
-        var output = _map.Map<ScheduleOutput>(schedule);
+        var output = schedule.Adapt<ScheduleOutput>();
 
         return output;
     }
