@@ -11,7 +11,7 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Application.UseCases.Schedules.Update;
 
 public sealed class UpdateSchedule(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) : 
-    ScheduleBase(checkIfUserIsLinkedCompanyUser, getClient, getCompany), IUpdateSchedule
+    ScheduleBase(context, checkIfUserIsLinkedCompanyUser, getClient, getCompany), IUpdateSchedule
 {
     private readonly Context _context = context;
 

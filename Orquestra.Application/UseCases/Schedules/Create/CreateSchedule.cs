@@ -10,7 +10,7 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Application.UseCases.Schedules.Create;
 
 public sealed class CreateSchedule(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) :
-    ScheduleBase(checkIfUserIsLinkedCompanyUser, getClient, getCompany), ICreateSchedule
+    ScheduleBase(context,checkIfUserIsLinkedCompanyUser, getClient, getCompany), ICreateSchedule
 {
     private readonly Context _context = context;
 

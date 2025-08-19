@@ -14,5 +14,5 @@ public enum ScheduleStatusEnum
     Completed = 3,
 
     [Description("Cancelado")]
-    Cancelled = 4
+    Canceled = 4
 }

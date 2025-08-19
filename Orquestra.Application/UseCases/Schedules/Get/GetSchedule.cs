@@ -1,12 +1,16 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.Clients.Get;
+using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Get;
 
-public sealed class GetSchedule(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IGetSchedule
+public sealed class GetSchedule(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser, IGetClient getClient, IGetCompany getCompany) :
+    ScheduleBase(context,checkIfUserIsLinkedCompanyUser, getClient, getCompany), IGetSchedule
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
@@ -27,8 +31,7 @@ public sealed class GetSchedule(Context context, ICheckIfUserIsLinkedCompanyUser
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needAdmin: false);
 
         var output = result.Adapt<ScheduleOutput>();
-
-        // TO DO: OBTER OBSERVAÇÕES;
+        output.Observations = await CheckForObservations(output);
 
         return output;
     }
