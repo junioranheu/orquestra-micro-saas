@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
+using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 
 namespace Orquestra.Application.UseCases.CompanyUsers;
 

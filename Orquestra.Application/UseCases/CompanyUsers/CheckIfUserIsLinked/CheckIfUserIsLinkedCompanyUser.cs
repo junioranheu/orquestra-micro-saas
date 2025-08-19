@@ -1,12 +1,12 @@
-﻿using Orquestra.Application.UseCases.CompanyUsers.Get;
+﻿using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 
-public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId get) : ICheckIfUserIsLinkedCompanyUser
+public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId getCompanyUserByCompanyId) : ICheckIfUserIsLinkedCompanyUser
 {
-    private readonly IGetCompanyUserByCompanyId _get = get;
+    private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
 
     public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needAdmin, bool throwError = true)
     {
@@ -15,7 +15,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
             throw new Exception($"Os parâmetros {nameof(companyId)} e {nameof(userId)} devem ser preenchidos corretamente.");
         }
 
-        List<CompanyUserOutput>? result = await _get.Execute(companyId.GetValueOrDefault(), userId.GetValueOrDefault());
+        List<CompanyUserOutput>? result = await _getCompanyUserByCompanyId.Execute(companyId: companyId.GetValueOrDefault(), userId: userId.GetValueOrDefault());
 
         if (result?.Count == 0)
         {

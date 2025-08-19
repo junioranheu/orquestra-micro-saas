@@ -30,7 +30,9 @@ public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getSch
     [HttpGet]
     public async Task<ActionResult<ScheduleOutput?>> Get(Guid scheduleId)
     {
-        ScheduleOutput? output = await _get.Execute(scheduleId);
+        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+        ScheduleOutput? output = await _get.Execute(userId, scheduleId);
+
         return Ok(output);
     }
 
@@ -38,7 +40,9 @@ public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getSch
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult<List<ScheduleOutput>?>> GetAllByCompanyId(Guid companyId)
     {
-        List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(companyId);
+        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+        List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(userId, companyId);
+
         return Ok(output);
     }
 }

@@ -16,8 +16,11 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
                      AsNoTracking().
                      Where(x =>
                         (companyId == Guid.Empty || x.CompanyId == companyId) &&
-                        ((userId == Guid.Empty || userId == null) || x.UserId == userId)
+                        ((userId == Guid.Empty || userId == null) || x.UserId == userId) &&
+                        x.Status == true
                      ).
+                     GroupBy(x => new { x.CompanyId, x.UserId, x.CompanyUserRole }).
+                     Select(g => g.FirstOrDefault()).
                      ToListAsync();
 
         var output = result.Adapt<List<CompanyUserOutput>>();

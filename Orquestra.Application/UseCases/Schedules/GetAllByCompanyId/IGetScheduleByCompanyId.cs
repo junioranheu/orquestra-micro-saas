@@ -4,5 +4,5 @@ namespace Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 
 public interface IGetScheduleByCompanyId
 {
-    Task<List<ScheduleOutput>?> Execute(Guid companyId);
+    Task<List<ScheduleOutput>?> Execute(Guid userId, Guid companyId);
 }

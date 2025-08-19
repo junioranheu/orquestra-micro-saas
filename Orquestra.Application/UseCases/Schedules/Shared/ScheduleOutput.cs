@@ -19,4 +19,7 @@ public sealed class ScheduleOutput
 
     public Guid CompanyId { get; set; }
     public CompanyOutput? Company { get; set; }
+
+    // Extras;
+    public List<string>? Observations { get; set; }
 }
