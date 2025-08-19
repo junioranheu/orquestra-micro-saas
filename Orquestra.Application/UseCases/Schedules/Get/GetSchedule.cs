@@ -29,6 +29,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
 
         var output = result.Adapt<ScheduleOutput>();
         output.Observations = await CheckForObservations(output);
+        output.UsersOutput = await GetUsers(output.Users);
 
         return output;
     }

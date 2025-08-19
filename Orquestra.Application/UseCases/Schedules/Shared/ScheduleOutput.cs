@@ -1,5 +1,6 @@
 ﻿using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.Schedules.Shared;
@@ -25,5 +26,5 @@ public sealed class ScheduleOutput
     // Extras;
     public List<string>? Observations { get; set; }
 
-    public string[]? UsersString { get; set; } = [];
+    public UserOutput[]? UsersOutput { get; set; } = [];
 }

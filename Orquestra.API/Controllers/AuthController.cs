@@ -14,7 +14,7 @@ public class AuthController(ICreateToken createToken) : BaseController<AuthContr
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<ActionResult<UserOutput>> Auth(AuthInput input)
+    public async Task<ActionResult> Auth(AuthInput input)
     {
         if (IsAuth())
         {

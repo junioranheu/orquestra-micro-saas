@@ -16,7 +16,7 @@ public class UserController(ICreateUser create, IUpdateUser update) : BaseContro
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<ActionResult<UserOutput>> Create([FromForm] UserInput input)
+    public async Task<ActionResult> Create([FromForm] UserInput input)
     {
         UserOutput output = await _create.Execute(input);
         return Ok(output);
@@ -24,7 +24,7 @@ public class UserController(ICreateUser create, IUpdateUser update) : BaseContro
 
     [AuthorizeFilter]
     [HttpPut]
-    public async Task<ActionResult<UserOutput>> Update([FromForm] UserInput input)
+    public async Task<ActionResult> Update([FromForm] UserInput input)
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         UserOutput output = await _update.Execute(userId, input);

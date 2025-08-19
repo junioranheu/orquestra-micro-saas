@@ -16,7 +16,7 @@ public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompa
 
     [AuthorizeFilter]
     [HttpPost("CreateRange")]
-    public async Task<ActionResult<CompanyUserOutput>> CreateRange([FromBody] List<CompanyUserInput> input)
+    public async Task<ActionResult> CreateRange([FromBody] List<CompanyUserInput> input)
     {
         if (input.Count == 0)
         {
@@ -30,7 +30,7 @@ public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompa
 
     [AuthorizeFilter]
     [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult<List<CompanyUserOutput>?>> GetAllByCompanyId(Guid companyId)
+    public async Task<ActionResult> GetAllByCompanyId(Guid companyId)
     {
         if (companyId == Guid.Empty)
         {

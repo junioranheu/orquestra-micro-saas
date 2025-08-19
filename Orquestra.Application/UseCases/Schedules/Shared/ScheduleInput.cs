@@ -4,7 +4,7 @@ namespace Orquestra.Application.UseCases.Schedules.Shared;
 
 public sealed class ScheduleInput
 {
-    public Guid ScheduleId { get; set; }
+    public Guid? ScheduleId { get; set; }
 
     public DateTime Date { get; set; }
 

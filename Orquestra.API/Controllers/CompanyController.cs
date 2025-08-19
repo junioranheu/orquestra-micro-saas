@@ -15,7 +15,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
 
     [AuthorizeFilter]
     [HttpPost]
-    public async Task<ActionResult<CompanyOutput>> Create([FromForm] CompanyInput input)
+    public async Task<ActionResult> Create([FromForm] CompanyInput input)
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         CompanyOutput output = await _create.Execute(userId, input);
@@ -25,7 +25,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
 
     [AuthorizeFilter]
     [HttpGet]
-    public async Task<ActionResult<CompanyOutput?>> Get(Guid companyId)
+    public async Task<ActionResult> Get(Guid companyId)
     {
         CompanyOutput? output = await _get.Execute(companyId);
         return Ok(output);
@@ -33,7 +33,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
 
     [AuthorizeFilter]
     [HttpGet("GetAll")]
-    public async Task<ActionResult<List<CompanyOutput>?>> GetAll()
+    public async Task<ActionResult> GetAll()
     {
         List<CompanyOutput>? output = await _get.Execute();
         return Ok(output);

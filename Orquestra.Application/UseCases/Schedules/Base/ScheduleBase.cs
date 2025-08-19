@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Shared;
+using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
@@ -25,11 +27,11 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
     public async Task Validate(ScheduleInput input, Guid userId)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needAdmin: false);
 
         if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
         {
-            throw new Exception($"O status de uma consulta recém criada deve ser {GetStatusDesc(input.ScheduleStatus)}.");
+            throw new Exception($"O status de uma consulta recém criada deve ser {GetStatusDesc(ScheduleStatusEnum.Scheduled)}.");
         }
 
         if (input.Date <= GetDate())
@@ -58,17 +60,17 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         if (schedule.ScheduleStatus == ScheduleStatusEnum.Scheduled && schedule.Date < GetDate())
         {
-            observations.Add($"Agendamento consta como {GetStatusDesc(schedule.ScheduleStatus)}, mas já passou da data prevista.");
+            observations.Add($"Agendamento consta como {GetStatusDesc(ScheduleStatusEnum.Scheduled)}, mas já passou da data prevista.");
         }
 
         if (schedule.ScheduleStatus == ScheduleStatusEnum.Canceled && schedule.Date < GetDate())
         {
-            observations.Add($"Agendamento consta como {GetStatusDesc(schedule.ScheduleStatus)} após a data prevista.");
+            observations.Add($"Agendamento consta como {GetStatusDesc(ScheduleStatusEnum.Canceled)} após a data prevista.");
         }
 
         if (schedule.ScheduleStatus == ScheduleStatusEnum.Completed && schedule.Date > GetDate())
         {
-            observations.Add($"Agendamento consta {GetStatusDesc(schedule.ScheduleStatus)}, mas a data ainda não ocorreu.");
+            observations.Add($"Agendamento consta {GetStatusDesc(ScheduleStatusEnum.Completed)}, mas a data ainda não ocorreu.");
         }
 
         var conflicts = await _context.Schedules.AsNoTracking().
@@ -90,8 +92,29 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         return observations;
     }
 
+    public async Task<UserOutput[]> GetUsers(Guid[]? users)
+    {
+        if (users is null || users?.Length == 0)
+        {
+            return [];
+        }
+
+        var result = await _context.Users.AsNoTracking().Where(x => users!.Contains(x.UserId)).ToListAsync();
+
+        if (result?.Count == 0)
+        {
+            return [];
+        }
+
+        var output = result.Adapt<List<UserOutput>>();
+
+        return [.. output];
+    }
+
+    #region extras
     private static string GetStatusDesc(ScheduleStatusEnum status)
     {
         return GetEnumDesc(status).ToLowerInvariant();
     }
+    #endregion
 }

@@ -18,7 +18,7 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
 
     [AuthorizeFilter]
     [HttpPost]
-    public async Task<ActionResult<ClientOutput>> Create([FromForm] ClientInput input)
+    public async Task<ActionResult> Create([FromForm] ClientInput input)
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         await _create.Execute(userId, input);
@@ -28,7 +28,7 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
 
     [AuthorizeFilter]
     [HttpGet]
-    public async Task<ActionResult<ClientOutput?>> Get(Guid clientId)
+    public async Task<ActionResult> Get(Guid clientId)
     {
         ClientOutput? output = await _get.Execute(clientId);
         return Ok(output);
@@ -36,7 +36,7 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
 
     [AuthorizeFilter]
     [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult<List<ClientOutput>?>> GetAllByCompanyId(Guid companyId)
+    public async Task<ActionResult> GetAllByCompanyId(Guid companyId)
     {
         List<ClientOutput>? output = await _getClientByCompanyId.Execute(companyId);
         return Ok(output);

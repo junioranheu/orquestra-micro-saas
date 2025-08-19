@@ -33,14 +33,14 @@ public class TestController : BaseController<TestController>
 
     [AllowAnonymous]
     [HttpGet("GetAnonymous")]
-    public ActionResult<string> GetAnonymous()
+    public ActionResult GetAnonymous()
     {
         return Ok(Ascii());
     }
 
     [AuthorizeFilter(UserRoleEnum.Common, UserRoleEnum.Maintainer)]
     [HttpGet("GetAuth")]
-    public ActionResult<string> GetAuth()
+    public ActionResult GetAuth()
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
 
