@@ -32,17 +32,17 @@ public sealed class CompanyOutput
     public string State { get; set; } = string.Empty;
 
     [MaxLength(9)]
-    public string ZipCode { get; set; } = string.Empty;
+    public string? ZipCode { get; set; } = string.Empty;
 
     [MaxLength(100)]
     public string Country { get; set; } = string.Empty;
     #endregion
 
     #region customization
-    public string LogoUrl { get; set; } = string.Empty;
+    public string? LogoUrl { get; set; } = string.Empty;
 
     [MaxLength(20)]
-    public string Color { get; set; } = string.Empty;
+    public string? Color { get; set; } = string.Empty;
     #endregion
 
     #region subscription

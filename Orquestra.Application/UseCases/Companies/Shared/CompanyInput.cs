@@ -23,15 +23,15 @@ public sealed class CompanyInput
 
     public string State { get; set; } = string.Empty;
 
-    public string ZipCode { get; set; } = string.Empty;
+    public string? ZipCode { get; set; } = string.Empty;
 
     public string Country { get; set; } = string.Empty;
     #endregion
 
     #region customization
-    public string LogoUrl { get; set; } = string.Empty;
+    public string? LogoUrl { get; set; } = string.Empty;
 
-    public string Color { get; set; } = string.Empty;
+    public string? Color { get; set; } = string.Empty;
     #endregion
 
     #region subscription

@@ -160,7 +160,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
         return !string.IsNullOrWhiteSpace(state);
     }
 
-    private static bool IsZipCodeValid(string zipCode)
+    private static bool IsZipCodeValid(string? zipCode)
     {
         if (string.IsNullOrWhiteSpace(zipCode))
         {
@@ -176,7 +176,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
     }
 
     // Customization;
-    private static bool IsLogoUrlValid(string logoUrl)
+    private static bool IsLogoUrlValid(string? logoUrl)
     {
         if (string.IsNullOrWhiteSpace(logoUrl))
         {
