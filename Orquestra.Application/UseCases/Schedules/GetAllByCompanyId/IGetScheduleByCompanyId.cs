@@ -1,6 +1,6 @@
 ﻿using Orquestra.Application.UseCases.Schedules.Shared;
 
-namespace Orquestra.Application.UseCases.Schedules.GetByCompanyId;
+namespace Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 
 public interface IGetScheduleByCompanyId
 {

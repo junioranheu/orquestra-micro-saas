@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Infrastructure.Data;
 
-namespace Orquestra.Application.UseCases.Clients.GetByCompanyId;
+namespace Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 
 public sealed class GetClientByCompanyId(Context context) : IGetClientByCompanyId
 {

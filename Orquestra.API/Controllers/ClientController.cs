@@ -2,7 +2,7 @@
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Clients.Create;
 using Orquestra.Application.UseCases.Clients.Get;
-using Orquestra.Application.UseCases.Clients.GetByCompanyId;
+using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Shared;
 
 namespace Orquestra.API.Controllers;

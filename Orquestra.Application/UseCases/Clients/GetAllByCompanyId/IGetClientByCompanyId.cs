@@ -1,6 +1,6 @@
 ﻿using Orquestra.Application.UseCases.Clients.Shared;
 
-namespace Orquestra.Application.UseCases.Clients.GetByCompanyId;
+namespace Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 
 public interface IGetClientByCompanyId
 {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Infrastructure.Data;
 
-namespace Orquestra.Application.UseCases.Schedules.GetByCompanyId;
+namespace Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 
 public sealed class GetScheduleByCompanyId(Context context) : IGetScheduleByCompanyId
 {

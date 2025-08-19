@@ -4,9 +4,9 @@ using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 
-public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUser get) : ICheckIfUserIsLinkedCompanyUser
+public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId get) : ICheckIfUserIsLinkedCompanyUser
 {
-    private readonly IGetCompanyUser _get = get;
+    private readonly IGetCompanyUserByCompanyId _get = get;
 
     public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needAdmin, bool throwError = true)
     {

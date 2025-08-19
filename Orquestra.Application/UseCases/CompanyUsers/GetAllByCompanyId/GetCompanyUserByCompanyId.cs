@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Infrastructure.Data;
 
-namespace Orquestra.Application.UseCases.CompanyUsers.Get;
+namespace Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 
-public sealed class GetCompanyUser(Context context) : IGetCompanyUser
+public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUserByCompanyId
 {
     private readonly Context _context = context;
 

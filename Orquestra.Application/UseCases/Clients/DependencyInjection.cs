@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.Clients.Create;
 using Orquestra.Application.UseCases.Clients.Get;
-using Orquestra.Application.UseCases.Clients.GetByCompanyId;
+using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Update;
 
 namespace Orquestra.Application.UseCases.Clients;

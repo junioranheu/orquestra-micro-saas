@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
-using Orquestra.Application.UseCases.CompanyUsers.Get;
+using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompanyUser get) : BaseController<CompanyUserController>
+public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompanyUserByCompanyId getCompanyUserByCompanyId) :
+    BaseController<CompanyUserController>
 {
     private readonly ICreateRangeCompanyUser _createRage = createRage;
-    private readonly IGetCompanyUser _get = get;
+    private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
 
     [AuthorizeFilter]
     [HttpPost("CreateRange")]
@@ -28,15 +29,15 @@ public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompa
     }
 
     [AuthorizeFilter]
-    [HttpGet]
-    public async Task<ActionResult<List<CompanyUserOutput>?>> Get(Guid companyId)
+    [HttpGet("GetAllByCompanyId")]
+    public async Task<ActionResult<List<CompanyUserOutput>?>> GetAllByCompanyId(Guid companyId)
     {
         if (companyId == Guid.Empty)
         {
             throw new Exception($"O parâmetro {nameof(companyId)} não pode estar vazio.");
         }
 
-        List<CompanyUserOutput>? output = await _get.Execute(companyId);
+        List<CompanyUserOutput>? output = await _getCompanyUserByCompanyId.Execute(companyId);
         return Ok(output);
     }
 }

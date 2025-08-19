@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
-using Orquestra.Application.UseCases.Schedules.GetByCompanyId;
+using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Update;
 
 namespace Orquestra.Application.UseCases.Schedules;

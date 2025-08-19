@@ -9,7 +9,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCompanyUsersApplication(this IServiceCollection services)
     {
-        services.AddScoped<IGetCompanyUser, GetCompanyUser>();
+        services.AddScoped<IGetCompanyUserByCompanyId, GetCompanyUserByCompanyId>();
         services.AddScoped<ICreateRangeCompanyUser, CreateRangeCompanyUser>();
         services.AddScoped<ICheckIfUserIsLinkedCompanyUser, CheckIfUserIsLinkedCompanyUser>();
 
