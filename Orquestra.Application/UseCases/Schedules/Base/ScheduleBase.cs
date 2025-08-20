@@ -25,13 +25,16 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
     private readonly IGetClient _getClient = deps.GetClient;
     private readonly IGetCompany _getCompany = deps.GetCompany;
 
-    public async Task Validate(ScheduleInput input, Guid userId)
+    public async Task Validate(ScheduleInput input, Guid userId, bool isCreate)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: false);
 
-        if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
+        if (isCreate)
         {
-            throw new Exception($"O status de uma consulta recém criada deve ser {GetStatusDesc(ScheduleStatusEnum.Scheduled)}.");
+            if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
+            {
+                throw new Exception($"O status de uma consulta recém criada deve ser {GetStatusDesc(ScheduleStatusEnum.Scheduled)}.");
+            }
         }
 
         if (input.Date <= GetDate())

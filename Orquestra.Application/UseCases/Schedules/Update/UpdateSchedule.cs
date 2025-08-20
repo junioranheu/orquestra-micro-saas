@@ -7,13 +7,13 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Update;
 
-public sealed class UpdateSchedule(ScheduleBaseDependencies deps) :  ScheduleBase(deps), IUpdateSchedule
+public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase(deps), IUpdateSchedule
 {
     private readonly Context _context = deps.Context;
 
     public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
     {
-        await Validate(input, userId);
+        await Validate(input, userId, isCreate: false);
         Schedule schedule = await Update(input);
 
         var output = schedule.Adapt<ScheduleOutput>();

@@ -12,7 +12,7 @@ public sealed class CreateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
 
     public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
     {
-        await Validate(input, userId);
+        await Validate(input, userId, isCreate: true);
         Schedule schedule = await Save(input);
 
         var output = schedule.Adapt<ScheduleOutput>();
