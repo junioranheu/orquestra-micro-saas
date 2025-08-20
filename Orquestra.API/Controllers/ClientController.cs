@@ -30,7 +30,9 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
     [HttpGet]
     public async Task<ActionResult> Get(Guid clientId)
     {
-        ClientOutput? output = await _get.Execute(clientId);
+        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+        ClientOutput? output = await _get.Execute(userId, clientId);
+
         return Ok(output);
     }
 
@@ -38,7 +40,9 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId(Guid companyId)
     {
-        List<ClientOutput>? output = await _getClientByCompanyId.Execute(companyId);
+        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+        List<ClientOutput>? output = await _getClientByCompanyId.Execute(userId, companyId);
+
         return Ok(output);
     }
 }

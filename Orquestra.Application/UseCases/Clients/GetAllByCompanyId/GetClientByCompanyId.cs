@@ -1,16 +1,20 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 
-public sealed class GetClientByCompanyId(Context context) : IGetClientByCompanyId
+public sealed class GetClientByCompanyId(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IGetClientByCompanyId
 {
     private readonly Context _context = context;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<List<ClientOutput>?> Execute(Guid companyId)
+    public async Task<List<ClientOutput>?> Execute(Guid userId, Guid companyId)
     {
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needCompanyAdmin: false);
+
         var result = await _context.Clients.
                      Include(x => x.Company).
                      AsNoTracking().

@@ -42,7 +42,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             throw new Exception("Você não pode agendar uma consulta com a data anterior a de hoje.");
         }
 
-        _ = await _getClient.Execute(input.ClientId) ?? throw new Exception("Esse cliente não existe.");
+        _ = await _getClient.Execute(userId: userId, input.ClientId) ?? throw new Exception("Esse cliente não existe.");
 
         _ = await _getCompany.Execute(userId: userId, companyId: input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
 
