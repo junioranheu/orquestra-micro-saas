@@ -4,6 +4,6 @@ namespace Orquestra.Application.UseCases.Companies.Get;
 
 public interface IGetCompany
 {
-    Task<CompanyOutput?> Execute(Guid companyId);
+    Task<CompanyOutput?> Execute(Guid userId, Guid companyId);
     Task<List<CompanyOutput>?> Execute();
 }

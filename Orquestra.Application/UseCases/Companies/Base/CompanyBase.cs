@@ -20,7 +20,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
         #region basic
         if (!isCreate)
         {
-            await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needAdmin: true);
+            await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: true);
         }
 
         bool checkName = IsNameValid(input.Name);

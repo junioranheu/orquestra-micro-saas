@@ -3,6 +3,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
@@ -27,11 +28,12 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     [HttpGet]
     public async Task<ActionResult> Get(Guid companyId)
     {
-        CompanyOutput? output = await _get.Execute(companyId);
+        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+        CompanyOutput? output = await _get.Execute(userId, companyId);
         return Ok(output);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(UserRoleEnum.Admin, UserRoleEnum.Maintainer)]
     [HttpGet("GetAll")]
     public async Task<ActionResult> GetAll()
     {

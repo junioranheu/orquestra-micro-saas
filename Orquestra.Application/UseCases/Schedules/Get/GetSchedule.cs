@@ -25,7 +25,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
                      FirstOrDefaultAsync() ?? throw new Exception($"Não foi possível localizar este horário agendado. ({scheduleId})");
 
         Guid companyId = result.CompanyId;
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needCompanyAdmin: false);
 
         var output = result.Adapt<ScheduleOutput>();
         output.Observations = await CheckForObservations(output);

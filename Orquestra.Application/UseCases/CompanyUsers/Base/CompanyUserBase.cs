@@ -13,7 +13,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
 
     public async Task Validate(CompanyUserInput input, Guid userId, bool isCreate)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: true);
 
         if (isCreate)
         {

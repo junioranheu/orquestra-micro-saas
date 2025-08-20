@@ -82,7 +82,7 @@ public partial class UserBase(IGetUser getUser)
     }
 
     // Regex;
-    [GeneratedRegex(@"^(?=.*[A-Za-z]{3,})[A-Za-z ]{3,}$")]
+    [GeneratedRegex(@"^(?i)[A-Za-zÀ-ÿ]{3,}(?:\s+(?:de|da|dos|das))?\s+[A-Za-zÀ-ÿ]{3,}$")]
     private static partial Regex RegexName();
 
     [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]

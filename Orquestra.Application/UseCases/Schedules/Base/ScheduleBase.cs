@@ -27,7 +27,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
     public async Task Validate(ScheduleInput input, Guid userId)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: false);
 
         if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
         {
@@ -41,7 +41,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         _ = await _getClient.Execute(input.ClientId) ?? throw new Exception("Esse cliente não existe.");
 
-        _ = await _getCompany.Execute(input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
+        _ = await _getCompany.Execute(userId: userId, companyId: input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
     }
 
     public async Task<List<string>> CheckForObservations(ScheduleOutput? schedule)

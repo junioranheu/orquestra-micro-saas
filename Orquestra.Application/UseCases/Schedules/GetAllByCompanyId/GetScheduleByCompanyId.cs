@@ -14,7 +14,7 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
 
     public async Task<List<ScheduleOutput>?> Execute(Guid userId, Guid companyId)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needCompanyAdmin: false);
 
         var result = await _context.Schedules.
                      Include(x => x.Client).

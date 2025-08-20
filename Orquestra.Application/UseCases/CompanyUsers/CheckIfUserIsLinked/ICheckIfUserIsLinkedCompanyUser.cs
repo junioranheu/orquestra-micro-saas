@@ -2,5 +2,5 @@
 
 public interface ICheckIfUserIsLinkedCompanyUser
 {
-    Task<bool> Execute(Guid? companyId, Guid? userId, bool needAdmin, bool throwError = true);
+    Task<bool> Execute(Guid? companyId, Guid? userId, bool needCompanyAdmin, bool throwError = true);
 }
