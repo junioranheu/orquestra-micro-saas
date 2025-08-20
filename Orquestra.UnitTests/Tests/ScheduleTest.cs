@@ -12,59 +12,41 @@ using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 using Orquestra.UnitTests.Fixtures;
 using Orquestra.UnitTests.Fixtures.Mocks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Orquestra.UnitTests.Tests;
 
 public sealed class ScheduleTest
 {
-    private IGetCompanyUserByCompanyId? _getCompanyUserByCompanyId;
-    private ICheckIfUserIsLinkedCompanyUser? _checkIfUserIsLinkedCompanyUser;
-    private IGetClient? _getClient;
-    private IGetCompany? _getCompany;
-
-    private static async Task<User> CreateUser(Context context)
-    {
-        var user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        return user;
-    }
-
-    private static async Task<(Client client, Company company)> CreateClientAndCompany(Context context)
-    {
-        var client = ClientMock.Create();
-        var company = CompanyMock.Create();
-
-        await Fixture.Save(context, client);
-        await Fixture.Save(context, company);
-
-        return (client, company);
-    }
-
-    #region tests
     [Fact]
     public async Task Execute_ShouldCreateSchedule_WhenInputIsValid()
     {
         // Arrange
-        using var context = Fixture.CreateContext();
+        using Context context = Fixture.CreateContext();
 
-        var user = await CreateUser(context);
-        var (client, company) = await CreateClientAndCompany(context);
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
 
-        var scheduleInput = ScheduleMock.Create(client.ClientId, company.CompanyId).Adapt<ScheduleInput>();
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        ScheduleInput scheduleInput = ScheduleMock.Create(client.ClientId, company.CompanyId).Adapt<ScheduleInput>();
 
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        _getCompanyUserByCompanyId = new GetCompanyUserByCompanyId(context);
-        _checkIfUserIsLinkedCompanyUser = new CheckIfUserIsLinkedCompanyUser(_getCompanyUserByCompanyId, httpContextAccessor);
-        _getClient = new GetClient(context, _checkIfUserIsLinkedCompanyUser);
-        _getCompany = new GetCompany(context, _checkIfUserIsLinkedCompanyUser);
+        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+        GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
+        GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
-        var deps = new ScheduleBaseDependencies(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
-        var service = new CreateSchedule(deps);
+        ScheduleBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, getClient, getCompany);
+        CreateSchedule service = new(deps);
 
         // Act
-        var output = await service.Execute(user.UserId, scheduleInput);
-        var savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
+        ScheduleOutput output = await service.Execute(user.UserId, scheduleInput);
+        Schedule? savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
 
         // Assert
         Assert.NotNull(output);
@@ -80,9 +62,17 @@ public sealed class ScheduleTest
     public async Task Execute_ShouldReturnExistingSchedule_WhenScheduleExists()
     {
         // Arrange
-        using var context = Fixture.CreateContext();
+        using Context context = Fixture.CreateContext();
 
-        var (client, company) = await CreateClientAndCompany(context);
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
         var schedules = ScheduleMock.CreateList(10, client, company);
 
         foreach (var schedule in schedules)
@@ -90,18 +80,17 @@ public sealed class ScheduleTest
             await Fixture.Save(context, schedule);
         }
 
-        var user = await CreateUser(context);
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        _getCompanyUserByCompanyId = new GetCompanyUserByCompanyId(context);
-        _checkIfUserIsLinkedCompanyUser = new CheckIfUserIsLinkedCompanyUser(_getCompanyUserByCompanyId, httpContextAccessor);
-        _getClient = new GetClient(context, _checkIfUserIsLinkedCompanyUser);
-        _getCompany = new GetCompany(context, _checkIfUserIsLinkedCompanyUser);
+        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+        GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
+        GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
-        var deps = new ScheduleBaseDependencies(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
-        var service = new GetSchedule(deps);
+        ScheduleBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, getClient, getCompany);
+        GetSchedule service = new(deps);
 
-        var userId = Guid.NewGuid();
-        var scheduleId = schedules.First().ScheduleId;
+        Guid userId = Guid.NewGuid();
+        Guid scheduleId = schedules.First().ScheduleId;
 
         // Act
         var result = await service.Execute(userId, scheduleId);
@@ -112,5 +101,40 @@ public sealed class ScheduleTest
         Assert.Equal(client.ClientId, result.ClientId);
         Assert.Equal(company.CompanyId, result.CompanyId);
     }
-    #endregion
+
+    [Theory]
+    [MemberData(nameof(ScheduleMock.GetUsersClientsCompanies), MemberType = typeof(ScheduleMock))]
+    [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows", Justification = "<Pendente>")]
+    [SuppressMessage("CodeQuality", "IDE0079:Remover a supressão desnecessária", Justification = "<Pendente>")]
+    public async Task Execute_ShouldCreateScheduleForDifferentUsers(User user, Client client, Company company)
+    {
+        // Arrange
+        using Context context = Fixture.CreateContext();
+
+        await Fixture.Save(context, user);
+        await Fixture.Save(context, client); // Por algum motivo, esse client já salva automaticamente o company também;
+
+        ScheduleInput scheduleInput = ScheduleMock.Create(client.ClientId, company.CompanyId).Adapt<ScheduleInput>();
+
+        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
+        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+        GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
+        GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
+
+        ScheduleBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, getClient, getCompany);
+        CreateSchedule service = new(deps);
+
+        // Act
+        ScheduleOutput output = await service.Execute(user.UserId, scheduleInput);
+        Schedule? savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
+
+        // Assert
+        Assert.NotNull(output);
+        Assert.Equal(scheduleInput.ClientId, output.ClientId);
+        Assert.Equal(scheduleInput.CompanyId, output.CompanyId);
+        Assert.Equal(scheduleInput.Date, output.Date);
+        Assert.NotNull(savedSchedule);
+        Assert.Equal(output.ScheduleId, savedSchedule.ScheduleId);
+    }
 }

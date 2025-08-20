@@ -32,4 +32,14 @@ public static class ScheduleMock
 
         return list;
     }
+    public static IEnumerable<object[]> GetUsersClientsCompanies()
+    {
+        for (int i = 0; i < 24; i++)
+        {
+            User user = UserMock.Create($"User{i} weon", $"user{i}@test.com", UserRoleEnum.Common);
+            Client client = ClientMock.Create();
+
+            yield return new object[] { user, client, client.Company ?? new Company() };
+        }
+    }
 }

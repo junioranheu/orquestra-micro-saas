@@ -21,6 +21,18 @@ public static class UserMock
         return input;
     }
 
+    public static User Create(string fullName, string email, UserRoleEnum role)
+    {
+        return new User
+        {
+            UserId = Guid.NewGuid(),
+            FullName = fullName,
+            Email = email,
+            Password = EncryptPassword(GetRandomString(11, false)),
+            Role = role
+        };
+    }
+
     public static List<User> CreateList(int amount)
     {
         List<User> list = [];

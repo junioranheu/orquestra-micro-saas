@@ -96,4 +96,21 @@ public static class Get
 
         return result.ToString();
     }
+
+    /// <summary>
+    /// Gera um valor booleano aleatório representando "Sim" ou "Não";
+    /// </summary>
+    /// <param name="hitChanceForTrue">
+    /// A porcentagem de chance de retornar <c>true</c> (Sim). 
+    /// O valor padrão é 50, ou seja, 50% de chance.
+    /// </param>
+    /// <returns><c>true</c> para "Sim" ou <c>false</c> para "Não".</returns>
+    public static bool GenerateTrueOrFalse(int hitChanceForTrue = 50)
+    {
+        Random random = new();
+        int value = random.Next(0, 100);
+        bool hitTrue = value < hitChanceForTrue;
+
+        return hitTrue;
+    }
 }
