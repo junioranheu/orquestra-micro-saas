@@ -21,11 +21,11 @@ public static class ScheduleMock
         return input;
     }
 
-    public static List<Schedule> CreateList(int j, Client client, Company company)
+    public static List<Schedule> CreateList(int amount, Client client, Company company)
     {
         List<Schedule> list = [];
 
-        for (int i = 0; i < j; i++)
+        for (int i = 0; i < amount; i++)
         {
             list.Add(Create(client.ClientId, company.CompanyId));
         }

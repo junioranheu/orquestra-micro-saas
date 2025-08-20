@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
@@ -35,7 +36,8 @@ public sealed class ScheduleTest
         ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
         var service = new CreateSchedule(deps);
 
-        var userId = Guid.NewGuid();
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
 
         Client client = ClientMock.Create();
         await Fixture.Save(context, client);
@@ -46,8 +48,10 @@ public sealed class ScheduleTest
         Schedule input = ScheduleMock.Create(client.ClientId, company.CompanyId);
         var inputConvert = input.Adapt<ScheduleInput>();
 
+        var testeeeeeeeeeeeeeeeeeeee = await context.Clients.FirstOrDefaultAsync(x => x.ClientId == client.ClientId);
+
         // Act
-        ScheduleOutput output = await service.Execute(userId, inputConvert);
+        ScheduleOutput output = await service.Execute(user.UserId, inputConvert);
         Schedule? savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
 
         // Assert
@@ -75,7 +79,7 @@ public sealed class ScheduleTest
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        List<Schedule>? inputList = ScheduleMock.CreateList(j: 10, client, company);
+        List<Schedule>? inputList = ScheduleMock.CreateList(amount: 10, client, company);
 
         foreach (var item in inputList)
         {

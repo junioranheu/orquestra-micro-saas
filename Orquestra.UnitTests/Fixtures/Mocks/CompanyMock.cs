@@ -20,11 +20,11 @@ public static class CompanyMock
         return input;
     }
 
-    public static List<Company> CreateList(int j)
+    public static List<Company> CreateList(int amount)
     {
         List<Company> list = [];
 
-        for (int i = 0; i < j; i++)
+        for (int i = 0; i < amount; i++)
         {
             list.Add(Create());
         }
