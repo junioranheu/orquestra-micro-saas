@@ -45,6 +45,7 @@ public sealed class ScheduleTest
         var inputConvert = input.Adapt<ScheduleInput>();
 
         _getClient = new GetClient(context, _checkIfUserIsLinkedCompanyUser);
+        _getCompany = new GetCompany(context, _checkIfUserIsLinkedCompanyUser);
 
         ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
         var service = new CreateSchedule(deps);
