@@ -16,8 +16,8 @@ namespace Orquestra.UnitTests.Tests;
 public sealed class ScheduleTest
 {
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser;
-    private readonly IGetClient _getClient;
-    private readonly IGetCompany _getCompany;
+    private IGetClient _getClient;
+    private IGetCompany _getCompany;
 
     public ScheduleTest()
     {
@@ -43,6 +43,8 @@ public sealed class ScheduleTest
 
         Schedule input = ScheduleMock.Create(client.ClientId, company.CompanyId);
         var inputConvert = input.Adapt<ScheduleInput>();
+
+        _getClient = new GetClient(context, _checkIfUserIsLinkedCompanyUser);
 
         ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
         var service = new CreateSchedule(deps);

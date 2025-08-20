@@ -7,6 +7,8 @@ public static class ClientMock
 {
     public static Client Create()
     {
+        Company company = CompanyMock.Create();
+
         var input = new Client
         {
             ClientId = Guid.NewGuid(),
@@ -15,7 +17,8 @@ public static class ClientMock
             CPF = GetRandomString(11, false),
             Address = GetRandomString(GetRandomNumber(5, 30), false),
             DateOfBirth = GetDate().AddYears(-(GetDate().Year - 1997)),
-            CompanyId = Guid.NewGuid()
+            CompanyId = company.CompanyId,
+            Company = company
         };
 
         return input;

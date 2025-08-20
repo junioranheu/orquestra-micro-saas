@@ -8,16 +8,26 @@ public static class CompanyMock
 {
     public static Company Create()
     {
-        var input = new Company
+        return new Company
         {
             CompanyId = Guid.NewGuid(),
             Name = GetRandomString(GetRandomNumber(5, 15), false),
             Email = $"{GetRandomString(GetRandomNumber(5, 15), false)}@gmail.com",
             Phone = GetRandomString(GetRandomNumber(5, 15), false),
-            Type = CompanyTypeEnum.ClinicaOdontologia
+            Type = CompanyTypeEnum.ClinicaOdontologia,
+            Address = GetRandomString(GetRandomNumber(5, 15), false),
+            City = GetRandomString(GetRandomNumber(5, 15), false),
+            State = GetRandomString(GetRandomNumber(5, 15), false),
+            ZipCode = string.Empty,
+            Country = "Brasil",
+            LogoUrl = "https://placehold.co/200x200",
+            Color = "#FFFFFF",
+            CompanySituation = CompanySituationEnum.Approved,
+            PlanType = PlanTypeEnum.Basic,
+            PlanStartDate = GetDate(),
+            PlanEndDate = GetDate().AddDays(7),
+            IsAccountVerified = true
         };
-
-        return input;
     }
 
     public static List<Company> CreateList(int amount)
