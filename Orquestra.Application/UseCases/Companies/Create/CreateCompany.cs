@@ -21,7 +21,7 @@ public sealed class CreateCompany(Context context, ICreateRangeCompanyUser creat
     {
         await Validate(input, userId, isCreate: true);
         Company company = await Save(input);
-        await SaveCompanyUsers(userId, company);
+        await SaveCompanyOwner(userId, company);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -35,7 +35,8 @@ public sealed class CreateCompany(Context context, ICreateRangeCompanyUser creat
 
         company.CompanySituation = CompanySituationEnum.ApprovedButNotPaid;
         company.PlanStartDate = GetDate();
-        company.PlanEndDate = GetDate().AddMonths(1);
+        company.PlanEndDate = GetDate().AddDays(7);
+        company.IsAccountVerified = false;
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
@@ -43,18 +44,18 @@ public sealed class CreateCompany(Context context, ICreateRangeCompanyUser creat
         return company;
     }
 
-    private async Task SaveCompanyUsers(Guid userId, Company input)
+    private async Task SaveCompanyOwner(Guid userId, Company input)
     {
         CompanyUserInput companyUser = new()
         {
             CompanyId = input.CompanyId,
             UserId = userId,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator
+            CompanyUserRole = CompanyUserRoleEnum.Owner
         };
 
         List<CompanyUserInput> companyUsers = [companyUser];
 
-        await _createRangeCompanyUser.Execute(userId, companyUsers);
+        _ = await _createRangeCompanyUser.Execute(userId, companyUsers);
     }
     #endregion
 }

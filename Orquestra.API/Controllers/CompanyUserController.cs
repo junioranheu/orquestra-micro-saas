@@ -8,10 +8,10 @@ namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompanyUserByCompanyId getCompanyUserByCompanyId) :
+public class CompanyUserController(ICreateRangeCompanyUser createRange, IGetCompanyUserByCompanyId getCompanyUserByCompanyId) :
     BaseController<CompanyUserController>
 {
-    private readonly ICreateRangeCompanyUser _createRage = createRage;
+    private readonly ICreateRangeCompanyUser _createRange = createRange;
     private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
 
     [AuthorizeFilter]
@@ -24,8 +24,10 @@ public class CompanyUserController(ICreateRangeCompanyUser createRage, IGetCompa
         }
 
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        await _createRage.Execute(userId, input);
-        return Ok();
+        List<CompanyUserOutput> output = await _createRange.Execute(userId, input);
+        // TO DO: Enviar e-mail para cada um dos usuários para eles aceitarem e mudar o status do IsAccountVerified;
+
+        return Ok(output);
     }
 
     [AuthorizeFilter]

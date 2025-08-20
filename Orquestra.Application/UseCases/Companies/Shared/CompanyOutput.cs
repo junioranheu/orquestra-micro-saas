@@ -55,9 +55,15 @@ public sealed class CompanyOutput
     public DateTime PlanEndDate { get; set; }
     #endregion
 
+    #region status
+    public bool IsAccountVerified { get; set; } = false;
+    #endregion
+
+    #region extras
     public bool Status { get; set; } = true;
 
     public DateTime CreatedDate { get; set; }
 
     public IEnumerable<CompanyUserOutput>? CompanyUsers { get; init; }
+    #endregion
 }

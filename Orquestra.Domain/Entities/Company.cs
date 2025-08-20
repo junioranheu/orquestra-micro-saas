@@ -58,6 +58,10 @@ public sealed class Company: Audit
     public DateTime PlanEndDate { get; set; }
     #endregion
 
+    #region status
+    public bool IsAccountVerified { get; set; } = false;
+    #endregion
+
     public IEnumerable<CompanyUser>? CompanyUsers { get; init; }
 
     public IEnumerable<Schedule>? Schedules { get; init; }

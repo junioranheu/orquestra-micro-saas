@@ -37,4 +37,8 @@ public sealed class CompanyInput
     #region subscription
     public PlanTypeEnum PlanType { get; set; }
     #endregion
+
+    #region status
+    public bool IsAccountVerified { get; set; } = false;
+    #endregion
 }

@@ -7,11 +7,11 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 
-public sealed class CreateRangeCompanyUser(Context context,ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : CompanyUserBase(context, checkIfUserIsLinkedCompanyUser), ICreateRangeCompanyUser
+public sealed class CreateRangeCompanyUser(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : CompanyUserBase(context, checkIfUserIsLinkedCompanyUser), ICreateRangeCompanyUser
 {
     private readonly Context _context = context;
 
-    public async Task Execute(Guid userId, List<CompanyUserInput> input)
+    public async Task<List<CompanyUserOutput>> Execute(Guid userId, List<CompanyUserInput> input)
     {
         foreach (var item in input)
         {
@@ -22,5 +22,9 @@ public sealed class CreateRangeCompanyUser(Context context,ICheckIfUserIsLinkedC
 
         await _context.AddRangeAsync(companyUsers);
         await _context.SaveChangesAsync();
+
+        var output = companyUsers.Adapt<List<CompanyUserOutput>>();
+
+        return output;
     }
 }

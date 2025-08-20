@@ -14,4 +14,7 @@ public static class SystemConsts
     public const int OneMonthInSec = 2629800;
 
     public const string RefreshTokenJWTCustomHeader = "X-New-JWT";
+
+    public const string Warn_VerificarEmpresa = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
+    public const string Warn_VerificarUsuario = "Antes de prosseguir com qualquer alteração, por favor, verifique a atenticidade desse usuário seguindo as instruções enviadas por e-mail. Caso você não seja o usuário em questão, solicite a seu funcionário para realizar essa validação.";
 }

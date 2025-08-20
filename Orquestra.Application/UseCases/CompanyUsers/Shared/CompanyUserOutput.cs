@@ -18,9 +18,9 @@ public sealed class CompanyUserOutput
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
 
-    public bool IsAccountVerified { get; set; } 
+    public bool IsAccountVerified { get; set; } = false;
 
-    public bool IsCurrentMainCompanyUser { get; set; } 
+    public bool IsCurrentMainCompanyUser { get; set; } = false;
 
     public DateTime CreatedDate { get; set; }
 }

@@ -20,6 +20,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     {
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
         CompanyOutput output = await _create.Execute(userId, input);
+        // TO DO: Enviar e-mail para o owner (especialmente para dar boas-vindas e falar sobre o plano);
 
         return Ok(output);
     }

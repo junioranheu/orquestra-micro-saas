@@ -120,6 +120,16 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
             throw new Exception("O tipo de plano não é válido. Insira um plano válido, por favor.");
         }
         #endregion
+
+        #region status
+        if (!isCreate)
+        {
+            if (!input.IsAccountVerified)
+            {
+                throw new Exception(SystemConsts.Warn_VerificarEmpresa);
+            }
+        }
+        #endregion
     }
 
     #region extras
