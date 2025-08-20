@@ -2,7 +2,7 @@
 using Orquestra.Domain.Enums;
 using static Orquestra.Utils.Fixtures.Get;
 
-namespace Orquestra.UnitTests.Fixtures.Mocks;
+namespace Orquestra.IntegrationTests.Fixtures.Mocks;
 
 public static class ScheduleMock
 {

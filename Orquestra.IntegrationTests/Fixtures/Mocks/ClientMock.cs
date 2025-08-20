@@ -1,7 +1,7 @@
 ﻿using Orquestra.Domain.Entities;
 using static Orquestra.Utils.Fixtures.Get;
 
-namespace Orquestra.UnitTests.Fixtures.Mocks;
+namespace Orquestra.IntegrationTests.Fixtures.Mocks;
 
 public static class ClientMock
 {

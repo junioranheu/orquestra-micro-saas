@@ -10,11 +10,11 @@ using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
-using Orquestra.UnitTests.Fixtures;
-using Orquestra.UnitTests.Fixtures.Mocks;
+using Orquestra.IntegrationTests.Fixtures;
+using Orquestra.IntegrationTests.Fixtures.Mocks;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Orquestra.UnitTests.Tests;
+namespace Orquestra.IntegrationTests.Tests;
 
 public sealed class ScheduleTest
 {

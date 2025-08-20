@@ -7,7 +7,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Security.Claims;
 
-namespace Orquestra.UnitTests.Fixtures;
+namespace Orquestra.IntegrationTests.Fixtures;
 
 public static class Fixture
 {

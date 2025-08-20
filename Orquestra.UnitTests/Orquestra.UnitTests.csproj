@@ -33,6 +33,7 @@
 	  <ProjectReference Include="..\Orquestra.API\Orquestra.API.csproj" />
 	  <ProjectReference Include="..\Orquestra.Application\Orquestra.Application.csproj" />
 	  <ProjectReference Include="..\Orquestra.Infrastructure\Orquestra.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Orquestra.IntegrationTests\Orquestra.IntegrationTests.csproj" />
 	</ItemGroup>
 
 </Project>
