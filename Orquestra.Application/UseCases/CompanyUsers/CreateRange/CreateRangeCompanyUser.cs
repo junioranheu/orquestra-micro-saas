@@ -3,6 +3,7 @@ using Orquestra.Application.UseCases.CompanyUsers.Base;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.CreateRange;
@@ -20,6 +21,8 @@ public sealed class CreateRangeCompanyUser(Context context, ICheckIfUserIsLinked
 
         var companyUsers = input.Adapt<List<CompanyUser>>();
 
+        NormalizeOwnerProps(companyUsers);
+
         await _context.AddRangeAsync(companyUsers);
         await _context.SaveChangesAsync();
 
@@ -27,4 +30,22 @@ public sealed class CreateRangeCompanyUser(Context context, ICheckIfUserIsLinked
 
         return output;
     }
+
+    #region extras
+    private static void NormalizeOwnerProps(List<CompanyUser> companyUsers)
+    {
+        if (companyUsers.Count != 1)
+        {
+            return;
+        }
+
+        CompanyUser? first = companyUsers.FirstOrDefault();
+
+        if (first?.CompanyUserRole == CompanyUserRoleEnum.Owner)
+        {
+            first.IsAccountVerified = true;
+            first.IsCurrentMainCompanyUser = true;
+        }
+    }
+    #endregion
 }

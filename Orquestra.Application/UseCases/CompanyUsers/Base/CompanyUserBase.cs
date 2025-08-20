@@ -52,11 +52,6 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
                 throw new Exception("O usuário não está cadastrado nessa empresa.");
             }
 
-            if (!companyUser.IsAccountVerified)
-            {
-                throw new Exception(SystemConsts.Warn_VerificarUsuario);
-            }
-
             return;
         }
     }
