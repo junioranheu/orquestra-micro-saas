@@ -1,8 +1,9 @@
 ﻿using Mapster;
-using Moq;
+using Microsoft.AspNetCore.Http;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
@@ -16,15 +17,10 @@ namespace Orquestra.UnitTests.Tests;
 
 public sealed class ScheduleTest
 {
-    private readonly Mock<ICheckIfUserIsLinkedCompanyUser> _mockCheckUser;
+    private IGetCompanyUserByCompanyId? _getCompanyUserByCompanyId;
+    private ICheckIfUserIsLinkedCompanyUser? _checkIfUserIsLinkedCompanyUser;
     private IGetClient? _getClient;
     private IGetCompany? _getCompany;
-
-    public ScheduleTest()
-    {
-        _mockCheckUser = new Mock<ICheckIfUserIsLinkedCompanyUser>();
-        _mockCheckUser.Setup(x => x.Execute(It.IsAny<Guid?>(), It.IsAny<Guid?>(), It.IsAny<bool>(), It.IsAny<bool>())).ReturnsAsync(true);
-    }
 
     private static async Task<User> CreateUser(Context context)
     {
@@ -57,10 +53,13 @@ public sealed class ScheduleTest
 
         var scheduleInput = ScheduleMock.Create(client.ClientId, company.CompanyId).Adapt<ScheduleInput>();
 
-        _getClient = new GetClient(context, _mockCheckUser.Object);
-        _getCompany = new GetCompany(context, _mockCheckUser.Object);
+        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
+        _getCompanyUserByCompanyId = new GetCompanyUserByCompanyId(context);
+        _checkIfUserIsLinkedCompanyUser = new CheckIfUserIsLinkedCompanyUser(_getCompanyUserByCompanyId, httpContextAccessor);
+        _getClient = new GetClient(context, _checkIfUserIsLinkedCompanyUser);
+        _getCompany = new GetCompany(context, _checkIfUserIsLinkedCompanyUser);
 
-        var deps = new ScheduleBaseDependencies(context, _mockCheckUser.Object, _getClient, _getCompany);
+        var deps = new ScheduleBaseDependencies(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
         var service = new CreateSchedule(deps);
 
         // Act
@@ -91,10 +90,14 @@ public sealed class ScheduleTest
             await Fixture.Save(context, schedule);
         }
 
-        _getClient = new GetClient(context, _mockCheckUser.Object);
-        _getCompany = new GetCompany(context, _mockCheckUser.Object);
+        var user = await CreateUser(context);
+        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
+        _getCompanyUserByCompanyId = new GetCompanyUserByCompanyId(context);
+        _checkIfUserIsLinkedCompanyUser = new CheckIfUserIsLinkedCompanyUser(_getCompanyUserByCompanyId, httpContextAccessor);
+        _getClient = new GetClient(context, _checkIfUserIsLinkedCompanyUser);
+        _getCompany = new GetCompany(context, _checkIfUserIsLinkedCompanyUser);
 
-        var deps = new ScheduleBaseDependencies(context, _mockCheckUser.Object, _getClient, _getCompany);
+        var deps = new ScheduleBaseDependencies(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
         var service = new GetSchedule(deps);
 
         var userId = Guid.NewGuid();

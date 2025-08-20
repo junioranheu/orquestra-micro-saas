@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Security.Claims;
@@ -17,6 +19,27 @@ public static class Fixture
         Context? context = new(mockContext, mockHttpContextAccessor);
 
         return context;
+    }
+
+    public static IHttpContextAccessor CreateIHttpContextAccessor(User user)
+    {
+        var context = new DefaultHttpContext();
+
+        var claimList = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new(ClaimTypes.Name, user.FullName),
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Role, user.Role.ToString())
+        };
+
+        var identity = new ClaimsIdentity(claimList, "mock");
+        context.User = new ClaimsPrincipal(identity);
+
+        Mock<IHttpContextAccessor> mockAccessor = new();
+        mockAccessor.Setup(x => x.HttpContext).Returns(context);
+
+        return mockAccessor.Object;
     }
 
     public static async Task Save<T>(Context context, T obj) where T : class
