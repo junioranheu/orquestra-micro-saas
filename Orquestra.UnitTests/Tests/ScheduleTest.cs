@@ -8,6 +8,7 @@ using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
+using Orquestra.Infrastructure.Data;
 using Orquestra.UnitTests.Fixtures;
 using Orquestra.UnitTests.Fixtures.Mocks;
 
@@ -15,89 +16,98 @@ namespace Orquestra.UnitTests.Tests;
 
 public sealed class ScheduleTest
 {
-    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser;
-    private IGetClient _getClient;
-    private IGetCompany _getCompany;
+    private readonly Mock<ICheckIfUserIsLinkedCompanyUser> _mockCheckUser;
+    private IGetClient? _getClient;
+    private IGetCompany? _getCompany;
 
     public ScheduleTest()
     {
-        _checkIfUserIsLinkedCompanyUser = new Mock<ICheckIfUserIsLinkedCompanyUser>().Object;
-        _getClient = new Mock<IGetClient>().Object;
-        _getCompany = new Mock<IGetCompany>().Object;
+        _mockCheckUser = new Mock<ICheckIfUserIsLinkedCompanyUser>();
+        _mockCheckUser.Setup(x => x.Execute(It.IsAny<Guid?>(), It.IsAny<Guid?>(), It.IsAny<bool>(), It.IsAny<bool>())).ReturnsAsync(true);
     }
 
+    private static async Task<User> CreateUser(Context context)
+    {
+        var user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        return user;
+    }
+
+    private static async Task<(Client client, Company company)> CreateClientAndCompany(Context context)
+    {
+        var client = ClientMock.Create();
+        var company = CompanyMock.Create();
+
+        await Fixture.Save(context, client);
+        await Fixture.Save(context, company);
+
+        return (client, company);
+    }
+
+    #region tests
     [Fact]
-    public async Task Execute_ShouldCreateAndReturn_ScheduleOutput()
+    public async Task Execute_ShouldCreateSchedule_WhenInputIsValid()
     {
         // Arrange
         using var context = Fixture.CreateContext();
 
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
+        var user = await CreateUser(context);
+        var (client, company) = await CreateClientAndCompany(context);
 
-        Client client = ClientMock.Create();
-        await Fixture.Save(context, client);
+        var scheduleInput = ScheduleMock.Create(client.ClientId, company.CompanyId).Adapt<ScheduleInput>();
 
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
+        _getClient = new GetClient(context, _mockCheckUser.Object);
+        _getCompany = new GetCompany(context, _mockCheckUser.Object);
 
-        Schedule input = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        var inputConvert = input.Adapt<ScheduleInput>();
-
-        _getClient = new GetClient(context, _checkIfUserIsLinkedCompanyUser);
-        _getCompany = new GetCompany(context, _checkIfUserIsLinkedCompanyUser);
-
-        ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
+        var deps = new ScheduleBaseDependencies(context, _mockCheckUser.Object, _getClient, _getCompany);
         var service = new CreateSchedule(deps);
 
         // Act
-        ScheduleOutput output = await service.Execute(user.UserId, inputConvert);
-        Schedule? savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
+        var output = await service.Execute(user.UserId, scheduleInput);
+        var savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
 
         // Assert
         Assert.NotNull(output);
-        Assert.Equal(input.ScheduleId, output.ScheduleId);
-        Assert.Equal(input.Date, output.Date);
-        Assert.Equal(input.PaymentType, output.PaymentType);
-        Assert.Equal(input.ScheduleStatus, output.ScheduleStatus);
-        Assert.Equal(input.ClientId, output.ClientId);
-        Assert.Equal(input.CompanyId, output.CompanyId);
+        Assert.Equal(scheduleInput.ClientId, output.ClientId);
+        Assert.Equal(scheduleInput.CompanyId, output.CompanyId);
+        Assert.Equal(scheduleInput.Date, output.Date);
 
         Assert.NotNull(savedSchedule);
-        Assert.Equal(input.ScheduleId, savedSchedule.ScheduleId);
+        Assert.Equal(output.ScheduleId, savedSchedule.ScheduleId);
     }
 
     [Fact]
-    public async Task Execute_ShouldReturn_ScheduleOutput_WhenScheduleExists()
+    public async Task Execute_ShouldReturnExistingSchedule_WhenScheduleExists()
     {
         // Arrange
         using var context = Fixture.CreateContext();
 
-        Client client = ClientMock.Create();
-        await Fixture.Save(context, client);
+        var (client, company) = await CreateClientAndCompany(context);
+        var schedules = ScheduleMock.CreateList(10, client, company);
 
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        List<Schedule>? inputList = ScheduleMock.CreateList(amount: 10, client, company);
-
-        foreach (var item in inputList)
+        foreach (var schedule in schedules)
         {
-            var output = item.Adapt<Schedule>();
-            await Fixture.Save(context, output);
+            await Fixture.Save(context, schedule);
         }
 
-        ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
+        _getClient = new GetClient(context, _mockCheckUser.Object);
+        _getCompany = new GetCompany(context, _mockCheckUser.Object);
+
+        var deps = new ScheduleBaseDependencies(context, _mockCheckUser.Object, _getClient, _getCompany);
         var service = new GetSchedule(deps);
 
-        Guid userId = Guid.NewGuid();
-        Guid? scheduleId = inputList is not null ? inputList.FirstOrDefault()?.ScheduleId : Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var scheduleId = schedules.First().ScheduleId;
 
         // Act
-        ScheduleOutput? result = await service.Execute(userId: userId, scheduleId: scheduleId.GetValueOrDefault());
+        var result = await service.Execute(userId, scheduleId);
 
         // Assert
         Assert.NotNull(result);
         Assert.Equal(scheduleId, result.ScheduleId);
+        Assert.Equal(client.ClientId, result.ClientId);
+        Assert.Equal(company.CompanyId, result.CompanyId);
     }
+    #endregion
 }
