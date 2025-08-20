@@ -25,5 +25,20 @@ public sealed class Schedule : Audit
     [ForeignKey(nameof(CompanyId))]
     public Company? Company { get; set; }
 
-    public Guid[]? Users { get; set; } = [];
+    public Guid[]? UsersIds { get; set; } = []; // Não altere a ordem entre UsersIds e IsRestrictForSpecificUsers;
+
+    private bool _isRestrictForSpecificUsers = false;
+    public bool IsRestrictForSpecificUsers
+    {
+        get => _isRestrictForSpecificUsers;
+        set
+        {
+            if (value && (UsersIds is null || UsersIds.Length == 0))
+            {
+                throw new InvalidOperationException("Não é possível restringir o agendamento se não houver usuários definidos.");
+            }
+
+            _isRestrictForSpecificUsers = value;
+        }
+    }
 }

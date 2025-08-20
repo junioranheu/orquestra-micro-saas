@@ -45,6 +45,8 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         _ = await _getClient.Execute(input.ClientId) ?? throw new Exception("Esse cliente não existe.");
 
         _ = await _getCompany.Execute(userId: userId, companyId: input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
+
+        await ValidateUsersAndRemoveNotLinkedOnes(input);
     }
 
     public async Task<List<string>> CheckForObservations(ScheduleOutput? schedule)
@@ -119,6 +121,39 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
     private static string GetStatusDesc(ScheduleStatusEnum status)
     {
         return GetEnumDesc(status).ToLowerInvariant();
+    }
+
+    private async Task ValidateUsersAndRemoveNotLinkedOnes(ScheduleInput input)
+    {
+        Guid[]? usersIds = input.UsersIds;
+
+        if (usersIds is null || usersIds.Length == 0)
+        {
+            return;
+        }
+
+        List<Guid> validUsers = [];
+
+        foreach (var item in usersIds)
+        {
+            bool existAndIsLinkedToCompany = await _context.CompanyUsers.
+                                             AnyAsync(x => x.CompanyId == input.CompanyId && x.UserId == item && x.Status == true);
+
+            if (existAndIsLinkedToCompany)
+            {
+                validUsers.Add(item);
+            }
+        }
+
+        if (validUsers is null || validUsers.Count == 0)
+        {
+            string msg = usersIds.Length == 1 ? "O usuário que você referenciou para o agendamento não é válido ou não está vinculado à empresa." :
+                $"Os {usersIds.Length} usuários que você referenciou para o agendamento não são válidos ou não estão vinculados à empresa.";
+
+            throw new Exception(msg);
+        }
+
+        input.UsersIds = [.. validUsers];
     }
     #endregion
 }

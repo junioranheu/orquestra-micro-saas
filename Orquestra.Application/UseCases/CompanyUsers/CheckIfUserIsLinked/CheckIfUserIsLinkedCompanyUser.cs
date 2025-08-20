@@ -82,11 +82,13 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
         }
 
         return true;
-
-        static void ThrowError(bool needAdmin)
-        {
-            string message = needAdmin ? "Apenas administradores da empresa podem executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";
-            throw new Exception(message);
-        }
     }
+
+    #region extras
+    private static void ThrowError(bool needAdmin)
+    {
+        string message = needAdmin ? "Apenas administradores da empresa podem executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";
+        throw new Exception(message);
+    }
+    #endregion
 }

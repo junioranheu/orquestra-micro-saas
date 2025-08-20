@@ -21,7 +21,9 @@ public sealed class ScheduleOutput
     public Guid CompanyId { get; set; }
     public CompanyOutput? Company { get; set; }
 
-    public Guid[]? Users { get; set; } = [];
+    public Guid[]? UsersIds { get; set; } = [];
+
+    public bool IsRestrictForSpecificUsers { get; set; }
 
     // Extras;
     public List<string>? Observations { get; set; }
