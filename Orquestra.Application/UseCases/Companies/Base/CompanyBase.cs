@@ -126,7 +126,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
         {
             if (!input.IsAccountVerified)
             {
-                throw new Exception(SystemConsts.Warn_VerificarEmpresa);
+                throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
             }
         }
         #endregion

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using System.Security.Claims;
 using static Orquestra.Utils.Fixtures.Get;
@@ -44,7 +45,7 @@ public abstract class BaseController<T> : Controller
                 return;
             }
 
-            throw new Exception("Usuário não autenticado.");
+            throw new Exception(SystemConsts.Warn_Simple_UserNotAuth);
         }
     }
 

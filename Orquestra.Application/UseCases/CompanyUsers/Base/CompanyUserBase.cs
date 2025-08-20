@@ -25,7 +25,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
 
             if (!company.IsAccountVerified)
             {
-                throw new Exception(SystemConsts.Warn_VerificarEmpresa);
+                throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
             }
         }
 

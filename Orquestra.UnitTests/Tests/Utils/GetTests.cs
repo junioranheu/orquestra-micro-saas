@@ -1,5 +1,5 @@
-﻿using Orquestra.Utils.Fixtures;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Tests.Utils;
 
@@ -12,7 +12,7 @@ public sealed class GetTests
         DateTime before = DateTime.UtcNow;
 
         // Act
-        DateTime result = Get.GetDate();
+        DateTime result = GetDate();
 
         // Assert
         DateTime after = DateTime.UtcNow;
@@ -23,17 +23,17 @@ public sealed class GetTests
     public void GetEnumDesc_ShouldReturn_EnumDescription()
     {
         // Act
-        string desc = Get.GetEnumDesc(TestEnum.First);
+        string desc = GetEnumDesc(TestEnum.First);
 
         // Assert
-        Assert.Equal("Primeiro Valor", desc);
+        Assert.Equal("Primeiro valor", desc);
     }
 
     [Fact]
     public void GetDateDetails_ShouldReturn_FormattedDate()
     {
         // Act
-        string result = Get.GetDateDetails();
+        string result = GetDateDetails();
 
         // Assert
         Assert.Contains(" às ", result);
@@ -46,7 +46,7 @@ public sealed class GetTests
     public void GetRandomString_ShouldReturn_CorrectLength(int length, bool onlyUpper)
     {
         // Act
-        string result = Get.GetRandomString(length, onlyUpper);
+        string result = GetRandomString(length, onlyUpper);
 
         // Assert
         Assert.Equal(length, result.Length);
@@ -63,7 +63,7 @@ public sealed class GetTests
     public void GetRandomNumber_ShouldReturnWithinRange(int min, int max)
     {
         // Act
-        int result = Get.GetRandomNumber(min, max);
+        int result = GetRandomNumber(min, max);
 
         // Assert
         Assert.InRange(result, min, max);
@@ -75,7 +75,7 @@ public sealed class GetTests
     public void NormalizeToProperName_ShouldReturn_ProperCase(string input, string expected)
     {
         // Act
-        string result = Get.NormalizeToProperName(input);
+        string result = NormalizeToProperName(input);
 
         // Assert
         Assert.Equal(expected, result);
@@ -85,7 +85,7 @@ public sealed class GetTests
     public void GenerateTrueOrFalse_ShouldReturn_Bool()
     {
         // Act
-        bool result = Get.GenerateTrueOrFalse();
+        bool result = GenerateTrueOrFalse();
 
         // Assert
         Assert.IsType<bool>(result);
@@ -95,8 +95,8 @@ public sealed class GetTests
     public void GenerateTrueOrFalse_ShouldRespect_HitChance()
     {
         // Act
-        bool alwaysTrue = Get.GenerateTrueOrFalse(100);
-        bool alwaysFalse = Get.GenerateTrueOrFalse(0);
+        bool alwaysTrue = GenerateTrueOrFalse(100);
+        bool alwaysFalse = GenerateTrueOrFalse(0);
 
         // Assert
         Assert.True(alwaysTrue);
@@ -106,10 +106,10 @@ public sealed class GetTests
     #region helpers
     private enum TestEnum
     {
-        [Description("Primeiro Valor")]
+        [Description("Primeiro valor")]
         First,
 
-        [Description("Segundo Valor")]
+        [Description("Segundo valor")]
         Second
     }
     #endregion

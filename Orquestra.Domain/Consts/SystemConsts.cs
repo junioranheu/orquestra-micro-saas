@@ -15,5 +15,6 @@ public static class SystemConsts
 
     public const string RefreshTokenJWTCustomHeader = "X-New-JWT";
 
-    public const string Warn_VerificarEmpresa = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
+    public const string Warn_Simple_UserNotAuth = "Usuário não autenticado.";
+    public const string Warn_NeedToVerifyCompany = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
 }
