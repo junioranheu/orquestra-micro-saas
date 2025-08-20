@@ -12,8 +12,8 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250819193854_FixCompany")]
-    partial class FixCompany
+    [Migration("20250820144612_RestartMigrations")]
+    partial class RestartMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,8 +112,8 @@ namespace Orquestra.Infrastructure.Migrations
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(56)
+                        .HasColumnType("character varying(56)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uuid");
@@ -166,7 +166,6 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("ZipCode")
-                        .IsRequired()
                         .HasMaxLength(9)
                         .HasColumnType("character varying(9)");
 
@@ -196,6 +195,12 @@ namespace Orquestra.Infrastructure.Migrations
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsAccountVerified")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsCurrentMainCompanyUser")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid?>("LastModificationBy")
                         .HasColumnType("uuid");
@@ -282,6 +287,9 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<string>("Endpoint")
                         .HasColumnType("text");
 
+                    b.Property<string>("Exception")
+                        .HasColumnType("text");
+
                     b.Property<string>("Parameters")
                         .HasColumnType("text");
 
@@ -351,6 +359,9 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsRestrictForSpecificUsers")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid?>("LastModificationBy")
                         .HasColumnType("uuid");
 
@@ -366,7 +377,7 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
-                    b.PrimitiveCollection<Guid[]>("Users")
+                    b.PrimitiveCollection<Guid[]>("UsersIds")
                         .HasColumnType("uuid[]");
 
                     b.HasKey("ScheduleId");

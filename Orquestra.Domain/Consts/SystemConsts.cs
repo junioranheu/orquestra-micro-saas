@@ -14,4 +14,5 @@ public static class SystemConsts
     public const int OneMonthInSec = 2629800;
 
     public const string RefreshTokenJWTCustomHeader = "X-New-JWT";
+    public const string TenantIdCustomHeader = "X-TenantIt";
 }

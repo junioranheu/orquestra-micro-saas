@@ -193,6 +193,12 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsAccountVerified")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsCurrentMainCompanyUser")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid?>("LastModificationBy")
                         .HasColumnType("uuid");
 

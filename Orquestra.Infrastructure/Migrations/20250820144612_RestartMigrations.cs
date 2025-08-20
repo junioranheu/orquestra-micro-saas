@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Orquestra.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class MigratePostgreSQL : Migration
+    public partial class RestartMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,10 +24,10 @@ namespace Orquestra.Infrastructure.Migrations
                     Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     State = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ZipCode = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: false),
-                    Country = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    LogoUrl = table.Column<string>(type: "text", nullable: false),
-                    Color = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    ZipCode = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: true),
+                    Country = table.Column<string>(type: "character varying(56)", maxLength: 56, nullable: false),
+                    LogoUrl = table.Column<string>(type: "text", nullable: true),
+                    Color = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     CompanySituation = table.Column<int>(type: "integer", nullable: false),
                     PlanType = table.Column<int>(type: "integer", nullable: false),
                     PlanStartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -136,6 +136,8 @@ namespace Orquestra.Infrastructure.Migrations
                     CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CompanyUserRole = table.Column<int>(type: "integer", nullable: false),
+                    IsAccountVerified = table.Column<bool>(type: "boolean", nullable: false),
+                    IsCurrentMainCompanyUser = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
                     LastModificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -167,6 +169,7 @@ namespace Orquestra.Infrastructure.Migrations
                     RequestType = table.Column<string>(type: "text", nullable: true),
                     Endpoint = table.Column<string>(type: "text", nullable: true),
                     Parameters = table.Column<string>(type: "text", nullable: true),
+                    Exception = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: true),
@@ -192,8 +195,7 @@ namespace Orquestra.Infrastructure.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ExpiredDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    RevokedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Status = table.Column<bool>(type: "boolean", nullable: false)
+                    RevokedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -216,6 +218,8 @@ namespace Orquestra.Infrastructure.Migrations
                     ScheduleStatus = table.Column<int>(type: "integer", nullable: false),
                     ClientId = table.Column<Guid>(type: "uuid", nullable: false),
                     CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UsersIds = table.Column<Guid[]>(type: "uuid[]", nullable: true),
+                    IsRestrictForSpecificUsers = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
                     LastModificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -245,6 +249,16 @@ namespace Orquestra.Infrastructure.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Clients_CPF",
+                table: "Clients",
+                column: "CPF");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_Email",
+                table: "Clients",
+                column: "Email");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Companies_Email",
                 table: "Companies",
                 column: "Email");
@@ -255,9 +269,9 @@ namespace Orquestra.Infrastructure.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompanyUsers_CompanyId",
+                name: "IX_CompanyUsers_CompanyId_UserId",
                 table: "CompanyUsers",
-                column: "CompanyId");
+                columns: new[] { "CompanyId", "UserId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CompanyUsers_UserId",
@@ -280,9 +294,9 @@ namespace Orquestra.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_ClientId",
+                name: "IX_Schedules_ClientId_CompanyId",
                 table: "Schedules",
-                column: "ClientId");
+                columns: new[] { "ClientId", "CompanyId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_CompanyId",

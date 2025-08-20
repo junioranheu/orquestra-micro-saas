@@ -23,4 +23,8 @@ public sealed class CompanyUser : Audit
     public User? User { get; set; }
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
+
+    public bool IsAccountVerified { get; set; } = false;
+
+    public bool IsCurrentMainCompanyUser { get; set; } = false;
 }

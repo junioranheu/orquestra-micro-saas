@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Primitives;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using System.Security.Claims;
 using static Orquestra.Utils.Fixtures.Get;
@@ -54,6 +56,16 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
                 }
             }
         }
+        #endregion
+
+        #region multi_tenancy
+        StringValues? tenantIdHeader = httpContextAccessor.HttpContext?.Request.Headers[SystemConsts.TenantIdCustomHeader];
+        Guid tenantId = tenantIdHeader.HasValue && !string.IsNullOrEmpty(tenantIdHeader.Value) ? Guid.Parse(tenantIdHeader.Value!) : Guid.Empty;
+
+        modelBuilder.Entity<Company>().HasQueryFilter(x => x.CompanyId == tenantId);
+        modelBuilder.Entity<CompanyUser>().HasQueryFilter(x => x.CompanyId == tenantId);
+        modelBuilder.Entity<Client>().HasQueryFilter(x => x.CompanyId == tenantId);
+        modelBuilder.Entity<Schedule>().HasQueryFilter(x => x.CompanyId == tenantId);
         #endregion
     }
 
