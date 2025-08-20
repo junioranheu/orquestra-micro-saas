@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
@@ -33,9 +32,6 @@ public sealed class ScheduleTest
         // Arrange
         using var context = Fixture.CreateContext();
 
-        ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
-        var service = new CreateSchedule(deps);
-
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -48,7 +44,8 @@ public sealed class ScheduleTest
         Schedule input = ScheduleMock.Create(client.ClientId, company.CompanyId);
         var inputConvert = input.Adapt<ScheduleInput>();
 
-        var testeeeeeeeeeeeeeeeeeeee = await context.Clients.FirstOrDefaultAsync(x => x.ClientId == client.ClientId);
+        ScheduleBaseDependencies deps = new(context, _checkIfUserIsLinkedCompanyUser, _getClient, _getCompany);
+        var service = new CreateSchedule(deps);
 
         // Act
         ScheduleOutput output = await service.Execute(user.UserId, inputConvert);
