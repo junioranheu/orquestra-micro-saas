@@ -14,12 +14,14 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
     private readonly bool _isDevelopment = env.IsDevelopment();
     private readonly bool _DO_NOT_SEND_EMAIL_IF_ENV_DEV = true;
 
+    #region settings
     const string _smtpHost = "smtp-relay.brevo.com";
     const int _smtpPort = 587;
     const string _senderName = "Orquestra";
     const string _senderEmail = SystemConsts.Email;
     const string _username = "953807001@smtp-brevo.com";
     const bool _enableSsl = true;
+    #endregion
 
     public async Task SendEmail(string to, string subject, string body, bool isHtml = true, IEnumerable<string>? cc = null)
     {
@@ -69,7 +71,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
     /// Dictionary<string, string> values = new()
     /// {
     ///    { "[UserName]", "Junior" },
-    ///    { "[CompanyName]", "Orquestra Inc." },
+    ///    { "[CompanyName]", "Orquestra" },
     ///    { "[ConfirmLink]", "orquestra.com/confirm?token=123" }
     /// };
     /// </summary>

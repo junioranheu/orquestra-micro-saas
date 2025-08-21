@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
@@ -17,6 +19,10 @@ public sealed class EmailServiceTests
         EmailSettings emailSettingsMock = new() { Password = "xxx" };
         services.AddSingleton(emailSettingsMock);
         services.AddTransient<IEmailService, EmailService>();
+
+        Mock<IWebHostEnvironment> envMock = new();
+        envMock.SetupGet(x => x.ContentRootPath).Returns(AppContext.BaseDirectory); 
+        services.AddSingleton(envMock.Object);
 
         ServiceProvider provider = services.BuildServiceProvider();
         _emailService = provider.GetRequiredService<IEmailService>();
