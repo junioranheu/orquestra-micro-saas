@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;
 
@@ -39,5 +42,23 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     {
         List<CompanyOutput>? output = await _get.Execute();
         return Ok(output);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("verify/{token}")]
+    public async Task<IActionResult> VerifyCompany(Guid token)
+    {
+        //var company = await _db.Companies.FirstOrDefaultAsync(c => c.VerificationToken == token);
+
+        //if (company == null || company.VerificationExpiresAt < DateTime.UtcNow)
+        //    return BadRequest("Token inválido ou expirado.");
+
+        //company.Verified = true;
+        //company.VerificationToken = null; // opcional
+        //await _db.SaveChangesAsync();
+
+        (string _, string urlFront) = GetUrls();
+
+        return Redirect($"{urlFront}/{SystemConsts.ScreenCompanyHasBeenVerified}");
     }
 }

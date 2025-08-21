@@ -12,7 +12,6 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 {
     private readonly EmailSettings _settings = settings;
     private readonly bool _isDevelopment = env.IsDevelopment();
-    private readonly bool _DO_NOT_SEND_EMAIL_IF_ENV_DEV = true;
 
     #region settings
     const string _smtpHost = "smtp-relay.brevo.com";
@@ -58,7 +57,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 
         mailMessage.HeadersEncoding = Encoding.UTF8;
 
-        if (_isDevelopment && _DO_NOT_SEND_EMAIL_IF_ENV_DEV)
+        if (_isDevelopment && SystemConsts.DO_NOT_SEND_EMAIL_IF_ENV_DEV)
         {
             return;
         }

@@ -49,6 +49,7 @@ public sealed class CreateCompany(
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(7);
         company.IsAccountVerified = false;
+        company.VerifyToken = GetRandomString(32, false);
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
@@ -76,13 +77,16 @@ public sealed class CreateCompany(
                      AsNoTracking().
                      Where(x => x.UserId == userId && x.Status == true).
                      FirstOrDefaultAsync() ?? throw new Exception("Houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
-        
+
+        (string urlBack, string _) = GetUrls();
+        string verifyUrl = $"{urlBack}/Company/verify/{company.VerifyToken}";
+
         Dictionary<string, string> values = new()
         {
             { "[NameApp]", SystemConsts.NameApp },
             { "[UserName]", user.FullName },
             { "[CompanyName]", company.Name },
-            { "[ConfirmLink]", $"{SystemConsts.EmailVerifyCompany}?id=aea" }
+            { "[ConfirmLink]", verifyUrl }
         };
 
         string bodyHtml = _emailService.RenderTemplate("EmailVerifyCompany.html", values);

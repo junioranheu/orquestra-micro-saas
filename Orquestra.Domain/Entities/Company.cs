@@ -60,6 +60,8 @@ public sealed class Company: Audit
 
     #region status
     public bool IsAccountVerified { get; set; } = false;
+
+    public string VerifyToken { get; set; } = string.Empty;
     #endregion
 
     public IEnumerable<CompanyUser>? CompanyUsers { get; init; }

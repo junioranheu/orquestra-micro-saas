@@ -40,7 +40,7 @@ public sealed class EmailServiceTests
             { "[NameApp]", SystemConsts.NameApp },
             { "[UserName]", userName },
             { "[CompanyName]", "Anheu" },
-            { "[ConfirmLink]", $"{SystemConsts.EmailVerifyCompany}?id=aea" }
+            { "[ConfirmLink]", "https://anheu.vercel.app/" }
         };
 
         // Act
