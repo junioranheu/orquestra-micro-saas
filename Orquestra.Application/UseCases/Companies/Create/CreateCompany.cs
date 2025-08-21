@@ -80,7 +80,7 @@ public sealed class CreateCompany(
                      FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
 
         (string urlBack, string _) = GetUrls();
-        string verifyUrl = $"{urlBack}/Company/verify/{company.VerifyToken}";
+        string verifyUrl = $"{urlBack}/Company/Verify/{company.VerifyToken}";
 
         Dictionary<string, string> values = new()
         {

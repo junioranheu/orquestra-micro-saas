@@ -64,7 +64,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get, IVerifyCo
     }
 
     [AllowAnonymous]
-    [HttpGet("verify/{token}")]
+    [HttpGet("Verify/{token}")]
     public async Task<IActionResult> VerifyCompany(string token)
     {
         await _verify.Execute(token);

@@ -108,7 +108,7 @@ public sealed class CreateRangeCompanyUser(
         }
 
         (string urlBack, string _) = GetUrls();
-        string verifyUrl = $"{urlBack}/CompanyUser/verify/{companyUser.VerifyToken}";
+        string verifyUrl = $"{urlBack}/CompanyUser/Verify/{companyUser.VerifyToken}";
 
         Dictionary<string, string> values = new()
         {
