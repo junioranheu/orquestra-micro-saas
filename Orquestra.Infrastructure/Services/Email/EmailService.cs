@@ -25,6 +25,10 @@ public class EmailService(EmailSettings settings) : IEmailService
             EnableSsl = _enableSsl
         };
 
+#if DEBUG
+        subject = $"[DEBUG] {subject}";
+#endif
+
         MailMessage mailMessage = new()
         {
             From = new MailAddress(address: _senderEmail, displayName: _senderName),
@@ -65,7 +69,6 @@ public class EmailService(EmailSettings settings) : IEmailService
     /// <returns>Retorna uma string com o conteúdo do template já com os placeholders substituídos pelos valores.</returns>
     public string RenderTemplate(string templateName, Dictionary<string, string> values)
     {
-        // Caminho base da pasta de templates (Infrastructure/Services/Email/Templates);
         string basePath = Path.Combine(AppContext.BaseDirectory, "Services", "Email", "Templates");
         string templatePath = Path.Combine(basePath, templateName);
 
