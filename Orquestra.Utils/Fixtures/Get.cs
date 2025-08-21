@@ -127,4 +127,23 @@ public static class Get
     return ("https://orquestra-cbgkgtayftdeaxh2.brazilsouth-01.azurewebsites.net/api", "https://orquestra.vercel.app");
 #endif
     }
+
+    /// <summary>
+    /// Retorna a primeira parte de uma string, separada por um delimitador específico.
+    /// </summary>
+    /// <param name="input">A string de entrada que será dividida.</param>
+    /// <param name="delimiter">O delimitador usado para separar a string. O padrão é espaço.</param>
+    /// <returns>A primeira parte da string antes do delimitador. Se <paramref name="input"/> for <c>null</c> ou vazio, retorna string vazia.</returns>
+    public static string GetFirstWord(string? input, char delimiter = ' ')
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return string.Empty;
+        }
+
+        string[] parts = input.Split([delimiter], 2, StringSplitOptions.RemoveEmptyEntries);
+        string firstPart = parts.Length > 0 ? parts[0] : string.Empty;
+
+        return firstPart;
+    }
 }

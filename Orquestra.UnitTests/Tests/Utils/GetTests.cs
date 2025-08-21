@@ -103,6 +103,61 @@ public sealed class GetTests
         Assert.False(alwaysFalse);
     }
 
+    [Fact]
+    public void GetFirstPart_ShouldReturn_FirstWord_WhenStringHasMultipleWords()
+    {
+        // Arrange
+        string input = "Junior de Souza";
+
+        // Act
+        string result = GetFirstWord(input);
+
+        // Assert
+        Assert.Equal("Junior", result);
+    }
+
+    [Fact]
+    public void GetFirstPart_ShouldReturn_WholeString_WhenNoDelimiterFound()
+    {
+        // Arrange
+        string input = "Orquestra";
+
+        // Act
+        string result = GetFirstWord(input);
+
+        // Assert
+        Assert.Equal("Orquestra", result);
+    }
+
+    [Fact]
+    public void GetFirstPart_ShouldReturn_Empty_WhenInputIsNullOrEmpty()
+    {
+        // Arrange
+        string? nullInput = null;
+        string emptyInput = "";
+
+        // Act
+        string resultNull = GetFirstWord(nullInput);
+        string resultEmpty = GetFirstWord(emptyInput);
+
+        // Assert
+        Assert.Equal(string.Empty, resultNull);
+        Assert.Equal(string.Empty, resultEmpty);
+    }
+
+    [Fact]
+    public void GetFirstPart_ShouldRespect_CustomDelimiter()
+    {
+        // Arrange
+        string input = "part1|part2|part3";
+
+        // Act
+        string result = GetFirstWord(input, '|');
+
+        // Assert
+        Assert.Equal("part1", result);
+    }
+
     #region helpers
     private enum TestEnum
     {

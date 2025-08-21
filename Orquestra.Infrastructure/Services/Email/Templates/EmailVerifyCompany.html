@@ -3,28 +3,52 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta charset="UTF-8">
-    <title>Bem-vindo ao [NameApp]</title>
+    <title>[CompanyName], sejam bem-vindos ao [NameApp]</title>
 </head>
-<body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+<body style="margin:0; padding:0; font-family: 'Segoe UI', Arial, sans-serif; background-color:#f4f6f8; color:#333333;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:40px 0;">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+                <!-- Card principal -->
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+                    <!-- Header -->
                     <tr>
-                        <td style="background-color: #4CAF50; color: #ffffff; text-align: center; padding: 20px 0; font-size: 24px; font-weight: bold;"> [NameApp] </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 30px; color: #333333; font-size: 16px; line-height: 1.5;">
-                            <p>Olá, <strong>[UserName]</strong>,</p>
-                            <p>Você foi adicionado à empresa <strong>[CompanyName]</strong> no <strong>[NameApp]</strong>.</p>
-                            <p>Para ativar sua conta e começar a usar a plataforma, clique no link abaixo:</p>
-                            <p style="text-align: center; margin: 30px 0;"> <a href="[ConfirmLink]" style="background-color: #4CAF50; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">Confirmar Conta</a> </p>           
-                            <p>Se você não esperava esse e-mail, pode ignorar com segurança.</p>
-                            <p>Bem-vindo ao [NameApp]!</p>
+                        <td style="background-color:#f9fff6; text-align:center; padding:30px;">
+                            <h1 style="margin:0; font-size:24px; font-weight:700; color:#222222; font-family:'Segoe UI', Arial, sans-serif;">
+                                [CompanyName],<br/>sejam bem-vindos ao <strong>[NameApp]</strong>
+                            </h1>
                         </td>
                     </tr>
+
+                    <!-- Conteúdo -->
                     <tr>
-                        <td style="background-color: #f4f4f4; text-align: center; color: #777777; font-size: 12px; padding: 15px;"> &copy; [NameApp] - Todos os direitos reservados </td>
+                        <td style="padding:40px 30px; font-size:16px; line-height:1.6; color:#444444;">
+                            <p style="margin:0 0 15px 0;">Olá, <strong>[UserName]</strong>,</p>
+                            <p style="margin:0 0 15px 0;">
+                                Nós, da equipe <strong>[NameApp]</strong>, estamos felizes em receber a empresa <strong>[CompanyName]</strong> na plataforma.
+                                Para garantir o acesso completo aos recursos e a segurança de sua conta, é necessário concluir a verificação da empresa.
+                            </p>
+                            <p style="margin:0 0 25px 0;">Para confirmar a veracidade da sua empresa e ativar os recursos da plataforma, clique no botão abaixo:</p>
+
+                            <!-- Botão -->
+                            <div style="text-align:center; margin:35px 0;">
+                                <a href="[VerifyUrl]"
+                                   style="background-color:#222222; color:#ffffff; text-decoration:none; padding:14px 32px; border-radius:6px; font-size:16px; font-weight:600; display:inline-block;">
+                                    Verificar empresa
+                                </a>
+                            </div>
+
+                            <p style="margin:0 0 10px 0;">Este passo é essencial para garantir a segurança e autenticidade da sua organização dentro da plataforma.</p>
+                            <p style="margin:0;">Caso você não tenha solicitado essa verificação, pode ignorar este e-mail.</p>
+                        </td>
+                    </tr>
+
+                    <!-- Rodapé -->
+                    <tr>
+                        <td style="background-color:#f9fff6; text-align:center; color:#666666; font-size:12px; padding:20px;">
+                            © [NameApp] - Todos os direitos reservados
+                        </td>
                     </tr>
                 </table>
             </td>

@@ -46,7 +46,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
 
     [AllowAnonymous]
     [HttpGet("verify/{token}")]
-    public async Task<IActionResult> VerifyCompany(Guid token)
+    public async Task<IActionResult> VerifyCompany(string token)
     {
         //var company = await _db.Companies.FirstOrDefaultAsync(c => c.VerificationToken == token);
 

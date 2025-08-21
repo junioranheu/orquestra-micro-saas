@@ -84,9 +84,9 @@ public sealed class CreateCompany(
         Dictionary<string, string> values = new()
         {
             { "[NameApp]", SystemConsts.NameApp },
-            { "[UserName]", user.FullName },
             { "[CompanyName]", company.Name },
-            { "[ConfirmLink]", verifyUrl }
+            { "[UserName]", GetFirstWord(user.FullName) },
+            { "[VerifyUrl]", verifyUrl }
         };
 
         string bodyHtml = _emailService.RenderTemplate("EmailVerifyCompany.html", values);
