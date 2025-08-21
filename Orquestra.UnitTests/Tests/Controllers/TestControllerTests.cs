@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Orquestra.API.Controllers;
 using Orquestra.Domain.Consts;
+using Orquestra.Infrastructure.Services.Email;
 using System.Security.Claims;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -13,7 +15,8 @@ public sealed class TestControllerTests
     public void GetAnonymous_ShouldReturn_OkWithAscii()
     {
         // Arrange
-        TestController controller = new();
+        Mock<IEmailService> emailServiceMock = new();
+        TestController controller = new(emailServiceMock.Object);
 
         // Act
         ActionResult result = controller.GetAnonymous();
@@ -32,13 +35,15 @@ public sealed class TestControllerTests
         // Arrange
         Guid userId = Guid.NewGuid();
 
+        Mock<IEmailService> emailServiceMock = new();
+
         // Mock do HttpContext.User
         ClaimsPrincipal claims = new(new ClaimsIdentity(
         [
             new Claim(ClaimTypes.NameIdentifier, userId.ToString())
         ], "mock"));
 
-        TestController controller = new()
+        TestController controller = new(emailServiceMock.Object)
         {
             ControllerContext = new ControllerContext
             {
@@ -59,7 +64,9 @@ public sealed class TestControllerTests
     public void GetAuth_ShouldThrow_WhenUserNotAuthenticated()
     {
         // Arrange
-        TestController controller = new()
+        Mock<IEmailService> emailServiceMock = new();
+
+        TestController controller = new(emailServiceMock.Object)
         {
             ControllerContext = new ControllerContext
             {
