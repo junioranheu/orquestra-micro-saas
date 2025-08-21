@@ -76,7 +76,7 @@ public sealed class CreateCompany(
         User? user = await _context.Users.
                      AsNoTracking().
                      Where(x => x.UserId == userId && x.Status == true).
-                     FirstOrDefaultAsync() ?? throw new Exception("Houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
+                     FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
 
         (string urlBack, string _) = GetUrls();
         string verifyUrl = $"{urlBack}/Company/verify/{company.VerifyToken}";

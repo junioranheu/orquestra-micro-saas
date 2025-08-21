@@ -26,5 +26,7 @@ public sealed class CompanyUser : Audit
 
     public bool IsAccountVerified { get; set; } = false;
 
+    public string VerifyToken { get; set; } = string.Empty;
+
     public bool IsCurrentMainCompanyUser { get; set; } = false;
 }
