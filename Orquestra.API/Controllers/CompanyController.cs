@@ -21,8 +21,8 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     [HttpPost]
     public async Task<ActionResult> Create([FromForm] CompanyInput input)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        CompanyOutput output = await _create.Execute(userId, input);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        CompanyOutput output = await _create.Execute(userIdAuth, input);
 
         return Ok(output);
     }
@@ -31,8 +31,9 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     [HttpGet]
     public async Task<ActionResult> Get(Guid companyId)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        CompanyOutput? output = await _get.Execute(userId, companyId);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        CompanyOutput? output = await _get.Execute(userIdAuth, companyId);
+
         return Ok(output);
     }
 
@@ -41,6 +42,22 @@ public class CompanyController(ICreateCompany create, IGetCompany get) : BaseCon
     public async Task<ActionResult> GetAll()
     {
         List<CompanyOutput>? output = await _get.Execute();
+        return Ok(output);
+    }
+
+    [AuthorizeFilter]
+    [HttpGet("GetAllByUserId")]
+    public async Task<ActionResult> GetAllByUserId(Guid userId)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        (UserRoleEnum[] userRolesEnum, string[] _) = GetUserRolesAuth();
+
+        if (userIdAuth != userId && !(userRolesEnum.Contains(UserRoleEnum.Admin) || userRolesEnum.Contains(UserRoleEnum.Maintainer)))
+        {
+            throw new Exception("Você só pode visualizar a sua relação de empresas.");
+        }
+
+        List<CompanyOutput>? output = await _get.Execute(userId);
         return Ok(output);
     }
 

@@ -16,9 +16,9 @@ public class AuthController(ICreateToken createToken) : BaseController<AuthContr
     [HttpPost]
     public async Task<ActionResult> Auth(AuthInput input)
     {
-        if (IsAuth())
+        if (IsUserAuth())
         {
-            throw new Exception($"Usuário já está autenticado ({GetUserEmail()}). Realize o logoff no sistema e tente novamente mais tarde.");
+            throw new Exception($"Usuário já está autenticado ({GetUserEmailAuth()}). Realize o logoff no sistema e tente novamente mais tarde.");
         }
 
         UserOutput output = await _createToken.Execute(input);

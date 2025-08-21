@@ -13,14 +13,14 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task Validate(CompanyInput input, Guid userId, bool isCreate)
+    public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate)
     {
         string warn = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.Email}.";
 
         #region basic
         if (!isCreate)
         {
-            await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: true);
+            await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
         }
 
         bool checkName = IsNameValid(input.Name);

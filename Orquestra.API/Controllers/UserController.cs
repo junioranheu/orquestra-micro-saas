@@ -38,8 +38,8 @@ public class UserController(IGetUser get, ICreateUser create, IUpdateUser update
     [HttpPut]
     public async Task<ActionResult> Update([FromForm] UserInput input)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        UserOutput output = await _update.Execute(userId, input);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        UserOutput output = await _update.Execute(userIdAuth, input);
 
         return Ok(output);
     }

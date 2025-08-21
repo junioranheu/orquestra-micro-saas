@@ -49,9 +49,9 @@ public class TestController(IEmailService emailService) : BaseController<TestCon
     [HttpGet("GetAuth")]
     public ActionResult GetAuth()
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
 
-        return Ok($"Id: {userId}");
+        return Ok($"Id: {userIdAuth}");
     }
 
     [Authorize]

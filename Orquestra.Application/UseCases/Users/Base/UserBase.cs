@@ -10,7 +10,7 @@ public partial class UserBase(IGetUser getUser)
 {
     private readonly IGetUser _getUser = getUser;
 
-    public async Task Validate(UserInput input, Guid userId, bool isCreate)
+    public async Task Validate(UserInput input, Guid userIdAuth, bool isCreate)
     {
         #region email
         bool checkEmail = IsEmailValid(input.Email ?? string.Empty);
@@ -32,9 +32,9 @@ public partial class UserBase(IGetUser getUser)
 
         if (!isCreate)
         {
-            (User? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userId });
+            (User? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userIdAuth });
 
-            if (checkUserById is not null && userId != checkUserById?.UserId)
+            if (checkUserById is not null && userIdAuth != checkUserById?.UserId)
             {
                 throw new Exception("Apenas o dono da conta pode alterar suas informações.");
             }

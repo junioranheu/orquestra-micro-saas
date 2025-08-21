@@ -11,9 +11,9 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
 {
     private readonly Context _context = deps.Context;
 
-    public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
+    public async Task<ScheduleOutput> Execute(Guid userIdAuth, ScheduleInput input)
     {
-        await Validate(input, userId, isCreate: false);
+        await Validate(input, userIdAuth, isCreate: false);
         Schedule schedule = await Update(input);
 
         var output = schedule.Adapt<ScheduleOutput>();

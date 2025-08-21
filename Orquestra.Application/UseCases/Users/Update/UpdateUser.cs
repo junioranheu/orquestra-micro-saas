@@ -13,10 +13,10 @@ public sealed class UpdateUser(Context context,IGetUser getUser) : UserBase(getU
 {
     private readonly Context _context = context;
 
-    public async Task<UserOutput> Execute(Guid userId, UserInput input)
+    public async Task<UserOutput> Execute(Guid userIdAuth, UserInput input)
     {
-        await Validate(input, userId, isCreate: false);
-        User user = await Update(userId, input);
+        await Validate(input, userIdAuth, isCreate: false);
+        User user = await Update(userIdAuth, input);
 
         var output = user.Adapt<UserOutput>();
 
@@ -24,9 +24,9 @@ public sealed class UpdateUser(Context context,IGetUser getUser) : UserBase(getU
     }
 
     #region extras
-    private async Task<User> Update(Guid userId, UserInput input)
+    private async Task<User> Update(Guid userIdAuth, UserInput input)
     {
-        User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == userId).FirstOrDefaultAsync() ?? throw new Exception("Usuário não encontrado.");
+        User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == userIdAuth && x.Status == true).FirstOrDefaultAsync() ?? throw new Exception("Usuário não encontrado ou não está mais ativo na base de dados.");
 
         user.FullName = input.FullName ?? user.FullName;
         user.Email = input.Email ?? user.Email;

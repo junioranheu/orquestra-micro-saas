@@ -36,14 +36,14 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
                     throw new InvalidOperationException($"Falha ao gerar novo Token. O parâmetro userIdClaim ({userIdClaim}) está inválido");
                 }
 
-                Guid userId = Guid.Parse(userIdClaim);
+                Guid userIdAuth = Guid.Parse(userIdClaim);
 
                 using IServiceScope scope = _scopeFactory.CreateScope();
                 ICreateRefreshToken createRefreshToken = scope.ServiceProvider.GetRequiredService<ICreateRefreshToken>();
 
                 try
                 {
-                    string newJwtToken = await createRefreshToken.RefreshToken(userId);
+                    string newJwtToken = await createRefreshToken.RefreshToken(userIdAuth);
 
                     // Atualizar contextos (para a requisição atual);
                     context.Response.Headers.Authorization = $"Bearer {newJwtToken}";

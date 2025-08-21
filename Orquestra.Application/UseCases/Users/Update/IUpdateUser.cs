@@ -4,5 +4,5 @@ namespace Orquestra.Application.UseCases.Users.Update;
 
 public interface IUpdateUser
 {
-    Task<UserOutput> Execute(Guid userId, UserInput input);
+    Task<UserOutput> Execute(Guid userIdAuth, UserInput input);
 }

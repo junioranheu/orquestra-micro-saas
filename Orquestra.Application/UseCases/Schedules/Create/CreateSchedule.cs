@@ -10,9 +10,9 @@ public sealed class CreateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
 {
     private readonly Context _context = deps.Context;
 
-    public async Task<ScheduleOutput> Execute(Guid userId, ScheduleInput input)
+    public async Task<ScheduleOutput> Execute(Guid userIdAuth, ScheduleInput input)
     {
-        await Validate(input, userId, isCreate: true);
+        await Validate(input, userIdAuth, isCreate: true);
         Schedule schedule = await Save(input);
 
         var output = schedule.Adapt<ScheduleOutput>();

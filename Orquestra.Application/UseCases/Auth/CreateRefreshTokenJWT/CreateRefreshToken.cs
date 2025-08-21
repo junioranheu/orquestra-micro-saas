@@ -13,20 +13,20 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
     private readonly Context _context = context;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
 
-    public async Task<string> RefreshToken(Guid userId)
+    public async Task<string> RefreshToken(Guid userIdAuth)
     {
-        if (userId == Guid.Empty)
+        if (userIdAuth == Guid.Empty)
         {
-            throw new Exception($"Parâmetro {nameof(userId)} está vazio em {nameof(RefreshToken)}.");
+            throw new Exception($"Parâmetro {nameof(userIdAuth)} está vazio em {nameof(RefreshToken)}.");
         }
 
-        User user = await GetUser(userId);
+        User user = await GetUser(userIdAuth);
 
         // Gere novo JWT e refresh token;
-        (string newJwtToken, RefreshToken _) = _jwtTokenGenerator.GenerateToken(userId: user.UserId, name: user.FullName, email: user.Email, role: user.Role);
+        (string newJwtToken, RefreshToken _) = _jwtTokenGenerator.GenerateToken(userIdAuth: user.UserId, name: user.FullName, email: user.Email, role: user.Role);
 
         // Revogue os antigos refresh tokens inválidos;
-        await Update(userId, mustCheckForValidRefreshTokens: true);
+        await Update(userIdAuth, mustCheckForValidRefreshTokens: true);
 
         return newJwtToken;
     }
@@ -37,9 +37,9 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         await _context.SaveChangesAsync();
     }
 
-    public async Task Update(Guid userId, bool mustCheckForValidRefreshTokens)
+    public async Task Update(Guid userIdAuth, bool mustCheckForValidRefreshTokens)
     {
-        List<RefreshToken> oldRefreshTokens = await GetOldRefreshTokensAndCheckIfRefreshTokenIsValid(userId, mustCheckForValidRefreshTokens);
+        List<RefreshToken> oldRefreshTokens = await GetOldRefreshTokensAndCheckIfRefreshTokenIsValid(userIdAuth, mustCheckForValidRefreshTokens);
 
         if (oldRefreshTokens.Count == 0)
         {
@@ -70,12 +70,12 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
     }
 
     #region extras
-    private async Task<List<RefreshToken>> GetOldRefreshTokensAndCheckIfRefreshTokenIsValid(Guid userId, bool mustCheckForValidRefreshTokens)
+    private async Task<List<RefreshToken>> GetOldRefreshTokensAndCheckIfRefreshTokenIsValid(Guid userIdAuth, bool mustCheckForValidRefreshTokens)
     {
         List<RefreshToken> oldRefreshTokens = await _context.RefreshTokens.
                                               AsNoTracking().
                                               Where(x =>
-                                                 x.UserId == userId &&
+                                                 x.UserId == userIdAuth &&
                                                  x.RevokedDate == null
                                               ).
                                               OrderByDescending(x => x.CreatedDate).
@@ -99,16 +99,16 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         return invalidRefreshTokens;
     }
 
-    private async Task<User> GetUser(Guid userId)
+    private async Task<User> GetUser(Guid userIdAuth)
     {
         User? user = await _context.Users.
                      AsNoTracking().
-                     Where(x => x.UserId == userId).
-                     FirstOrDefaultAsync() ?? throw new Exception($"Usuário {userId} não encontrado.");
+                     Where(x => x.UserId == userIdAuth).
+                     FirstOrDefaultAsync() ?? throw new Exception($"Usuário do id {userIdAuth} não foi encontrado na base de dados.");
 
         if (!user.Status)
         {
-            throw new Exception($"O usuário {user.Email} ({userId}) está desativado.");
+            throw new Exception($"O usuário {user.Email} ({userIdAuth}) está desativado.");
         }
 
         return user;

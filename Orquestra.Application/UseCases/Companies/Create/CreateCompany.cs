@@ -25,15 +25,15 @@ public sealed class CreateCompany(
     private readonly ICreateRangeCompanyUser _createRangeCompanyUser = createRangeCompanyUser;
     private readonly IEmailService _emailService = emailService;
 
-    public async Task<CompanyOutput> Execute(Guid userId, CompanyInput input)
+    public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
     {
-        await Validate(input, userId, isCreate: true);
+        await Validate(input, userIdAuth, isCreate: true);
 
         Company company = await Save(input);
 
-        await SaveCompanyOwner(userId, company);
+        await SaveCompanyOwner(userIdAuth, company);
 
-        await SendEmail(userId, company);
+        await SendEmail(userIdAuth, company);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -57,25 +57,25 @@ public sealed class CreateCompany(
         return company;
     }
 
-    private async Task SaveCompanyOwner(Guid userId, Company input)
+    private async Task SaveCompanyOwner(Guid userIdAuth, Company input)
     {
         CompanyUserInput companyUser = new()
         {
             CompanyId = input.CompanyId,
-            UserId = userId,
+            UserId = userIdAuth,
             CompanyUserRole = CompanyUserRoleEnum.Owner
         };
 
         List<CompanyUserInput> companyUsers = [companyUser];
 
-        _ = await _createRangeCompanyUser.Execute(userId, companyUsers);
+        _ = await _createRangeCompanyUser.Execute(userIdAuth, companyUsers);
     }
 
-    private async Task SendEmail(Guid userId, Company company)
+    private async Task SendEmail(Guid userIdAuth, Company company)
     {
         User? user = await _context.Users.
                      AsNoTracking().
-                     Where(x => x.UserId == userId && x.Status == true).
+                     Where(x => x.UserId == userIdAuth && x.Status == true).
                      FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
 
         (string urlBack, string _) = GetUrls();

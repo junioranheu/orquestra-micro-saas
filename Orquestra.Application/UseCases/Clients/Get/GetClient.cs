@@ -11,7 +11,7 @@ public sealed class GetClient(Context context, ICheckIfUserIsLinkedCompanyUser c
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<ClientOutput?> Execute(Guid userId, Guid clientId)
+    public async Task<ClientOutput?> Execute(Guid userIdAuth, Guid clientId)
     {
         var result = await _context.Clients.
                      Include(x => x.Company).
@@ -23,7 +23,7 @@ public sealed class GetClient(Context context, ICheckIfUserIsLinkedCompanyUser c
                      FirstOrDefaultAsync() ?? throw new Exception($"Não foi possível localizar este cliente. ({clientId})");
 
         Guid companyId = result.CompanyId;
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needCompanyAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         var output = result.Adapt<ClientOutput>();
 

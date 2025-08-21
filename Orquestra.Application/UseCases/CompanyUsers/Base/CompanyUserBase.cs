@@ -12,9 +12,9 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task Validate(CompanyUserInput input, Guid userId, bool isCreate)
+    public async Task Validate(CompanyUserInput input, Guid userIdAuth, bool isCreate)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         if (!isCreate)
         {

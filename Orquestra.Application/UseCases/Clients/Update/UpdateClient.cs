@@ -12,9 +12,9 @@ public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUse
 {
     private readonly Context _context = context;
 
-    public async Task<ClientOutput> Execute(Guid userId, ClientInput input)
+    public async Task<ClientOutput> Execute(Guid userIdAuth, ClientInput input)
     {
-        await Validate(input, userId, isCreate: false);
+        await Validate(input, userIdAuth, isCreate: false);
         Client client = await Update(input);
 
         var output = client.Adapt<ClientOutput>();

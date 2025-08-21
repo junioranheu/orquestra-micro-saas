@@ -8,7 +8,7 @@ namespace Orquestra.API.Controllers;
 
 public abstract class BaseController<T> : Controller
 {
-    protected bool IsAuth()
+    protected bool IsUserAuth()
     {
         if (User is null || User.Identity is null)
         {
@@ -18,9 +18,9 @@ public abstract class BaseController<T> : Controller
         return User.Identity.IsAuthenticated;
     }
 
-    protected Guid GetUserId(bool throwExceptionIfNotAuth = false)
+    protected Guid GetUserIdAuth(bool throwExceptionIfNotAuth = false)
     {
-        if (!IsAuth())
+        if (!IsUserAuth())
         {
             ThrowEx(throwExceptionIfNotAuth);
             return Guid.Empty;
@@ -49,9 +49,9 @@ public abstract class BaseController<T> : Controller
         }
     }
 
-    protected string GetUserName()
+    protected string GetUserNameAuth()
     {
-        if (!IsAuth())
+        if (!IsUserAuth())
         {
             return string.Empty;
         }
@@ -60,9 +60,9 @@ public abstract class BaseController<T> : Controller
         return name;
     }
 
-    protected string GetUserEmail()
+    protected string GetUserEmailAuth()
     {
-        if (!IsAuth())
+        if (!IsUserAuth())
         {
             return string.Empty;
         }
@@ -71,9 +71,9 @@ public abstract class BaseController<T> : Controller
         return email;
     }
 
-    protected (UserRoleEnum[] userRolesEnum, string[] userRolesStr) GetUserRoles()
+    protected (UserRoleEnum[] userRolesEnum, string[] userRolesStr) GetUserRolesAuth()
     {
-        if (!IsAuth())
+        if (!IsUserAuth())
         {
             return ([], []);
         }

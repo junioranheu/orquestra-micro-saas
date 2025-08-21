@@ -4,5 +4,5 @@ namespace Orquestra.Application.UseCases.Companies.Create;
 
 public interface ICreateCompany
 {
-    Task<CompanyOutput> Execute(Guid userId, CompanyInput input);
+    Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input);
 }

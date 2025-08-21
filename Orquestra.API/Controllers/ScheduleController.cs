@@ -19,8 +19,8 @@ public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getSch
     [HttpPost]
     public async Task<ActionResult> Create([FromForm] ScheduleInput input)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        ScheduleOutput output = await _create.Execute(userId, input);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        ScheduleOutput output = await _create.Execute(userIdAuth, input);
 
         return Ok(output);
     }
@@ -29,8 +29,8 @@ public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getSch
     [HttpGet]
     public async Task<ActionResult> Get(Guid scheduleId)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        ScheduleOutput? output = await _get.Execute(userId, scheduleId);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        ScheduleOutput? output = await _get.Execute(userIdAuth, scheduleId);
 
         return Ok(output);
     }
@@ -39,8 +39,8 @@ public class ScheduleController(IGetSchedule get, IGetScheduleByCompanyId getSch
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId(Guid companyId)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(userId, companyId);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(userIdAuth, companyId);
 
         return Ok(output);
     }

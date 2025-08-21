@@ -11,9 +11,9 @@ public sealed class CreateClient(Context context, ICheckIfUserIsLinkedCompanyUse
 {
     private readonly Context _context = context;
 
-    public async Task Execute(Guid userId, ClientInput input)
+    public async Task Execute(Guid userIdAuth, ClientInput input)
     {
-        await Validate(input, userId, isCreate: true);
+        await Validate(input, userIdAuth, isCreate: true);
         var client = input.Adapt<Client>();
 
         await _context.AddAsync(client);

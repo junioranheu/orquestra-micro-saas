@@ -23,8 +23,8 @@ public class CompanyUserController(ICreateRangeCompanyUser createRange, IGetComp
             throw new Exception($"A lista de usuários não pode estar vazia.");
         }
 
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        List<CompanyUserOutput> output = await _createRange.Execute(userId, input);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        List<CompanyUserOutput> output = await _createRange.Execute(userIdAuth, input);
         // TO DO: Enviar e-mail para cada um dos usuários para eles aceitarem e mudar o status do IsAccountVerified;
 
         return Ok(output);

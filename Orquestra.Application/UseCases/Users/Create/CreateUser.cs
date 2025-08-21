@@ -15,7 +15,7 @@ public sealed class CreateUser(Context context, IGetUser getUser) : UserBase(get
 
     public async Task<UserOutput> Execute(UserInput input)
     {
-        await Validate(input, userId: Guid.Empty, isCreate: true);
+        await Validate(input, userIdAuth: Guid.Empty, isCreate: true);
         User user = await Save(input);
 
         var output = user.Adapt<UserOutput>(); 

@@ -21,12 +21,12 @@ public sealed class CreateRangeCompanyUser(
     private readonly Context _context = context;
     private readonly IEmailService _emailService = emailService;
 
-    public async Task<List<CompanyUserOutput>> Execute(Guid userId, List<CompanyUserInput> input)
+    public async Task<List<CompanyUserOutput>> Execute(Guid userIdAuth, List<CompanyUserInput> input)
     {
         // Validate;
         foreach (var item in input)
         {
-            await Validate(input: item, userId, isCreate: true);
+            await Validate(input: item, userIdAuth, isCreate: true);
         }
 
         var companyUsers = input.Adapt<List<CompanyUser>>();

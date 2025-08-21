@@ -30,13 +30,13 @@ public sealed class CreateToken( IJwtTokenGenerator jwtTokenGenerator, ICreateRe
             throw new Exception("Usuário desativado.");
         }
 
-        (string token, RefreshToken refreshToken) = _jwtTokenGenerator.GenerateToken(userId: output.UserId, name: output.FullName, email: output.Email, role: output.Role);
+        (string token, RefreshToken refreshToken) = _jwtTokenGenerator.GenerateToken(userIdAuth: output.UserId, name: output.FullName, email: output.Email, role: output.Role);
 
         // Atualizar token no output;
         output.Token = token;
 
         // Revogar todos os refresh tokens antigos, caso existam;
-        await _createRefreshToken.Update(userId: output.UserId, mustCheckForValidRefreshTokens: false);
+        await _createRefreshToken.Update(userIdAuth: output.UserId, mustCheckForValidRefreshTokens: false);
 
         // Salvar o refresh token no banco;
         await _createRefreshToken.Save(refreshToken);

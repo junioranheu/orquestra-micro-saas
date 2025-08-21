@@ -57,19 +57,19 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
         #endregion
     }
 
-    private Guid CurrentUserId
+    private Guid UserIdAuth
     {
         get
         {
-            var user = httpContextAccessor.HttpContext?.User;
+            ClaimsPrincipal? user = httpContextAccessor.HttpContext?.User;
 
             if (user?.Identity?.IsAuthenticated ?? false)
             {
                 string? userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if (Guid.TryParse(userIdClaim, out Guid userId))
+                if (Guid.TryParse(userIdClaim, out Guid userIdAuth))
                 {
-                    return userId;
+                    return userIdAuth;
                 }
             }
 
@@ -87,7 +87,7 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
                     if (entry.Entity.CreatedDate is null)
                     {
                         entry.Entity.CreatedDate = GetDate();
-                        entry.Entity.CreatedBy = CurrentUserId;
+                        entry.Entity.CreatedBy = UserIdAuth;
                         entry.Entity.Status = true;
                     }
 
@@ -95,7 +95,7 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
 
                 case EntityState.Modified:
                     entry.Entity.LastModificationDate = GetDate();
-                    entry.Entity.LastModificationBy = CurrentUserId;
+                    entry.Entity.LastModificationBy = UserIdAuth;
 
                     break;
             }

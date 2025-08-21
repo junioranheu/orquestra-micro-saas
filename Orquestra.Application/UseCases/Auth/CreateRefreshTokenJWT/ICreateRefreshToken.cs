@@ -4,7 +4,7 @@ namespace Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 
 public interface ICreateRefreshToken
 {
-    Task<string> RefreshToken(Guid userId);
+    Task<string> RefreshToken(Guid userIdAuth);
     Task Save(RefreshToken newRefreshToken);
-    Task Update(Guid userId, bool mustCheckForValidRefreshTokens);
+    Task Update(Guid userIdAuth, bool mustCheckForValidRefreshTokens);
 }

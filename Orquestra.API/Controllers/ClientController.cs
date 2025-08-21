@@ -20,8 +20,8 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
     [HttpPost]
     public async Task<ActionResult> Create([FromForm] ClientInput input)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        await _create.Execute(userId, input);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _create.Execute(userIdAuth, input);
 
         return Ok();
     }
@@ -30,8 +30,8 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
     [HttpGet]
     public async Task<ActionResult> Get(Guid clientId)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        ClientOutput? output = await _get.Execute(userId, clientId);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        ClientOutput? output = await _get.Execute(userIdAuth, clientId);
 
         return Ok(output);
     }
@@ -40,8 +40,8 @@ public class ClientController(IGetClient get, IGetClientByCompanyId getClientByC
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId(Guid companyId)
     {
-        Guid userId = GetUserId(throwExceptionIfNotAuth: true);
-        List<ClientOutput>? output = await _getClientByCompanyId.Execute(userId, companyId);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        List<ClientOutput>? output = await _getClientByCompanyId.Execute(userIdAuth, companyId);
 
         return Ok(output);
     }

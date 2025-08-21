@@ -17,7 +17,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
     private readonly string _secret = config["JwtSettings:Secret"] ?? throw new InvalidOperationException("JWT Secret não foi configurada no servidor!");
 
-    public (string token, RefreshToken refreshToken) GenerateToken(Guid userId, string name, string email, UserRoleEnum? role)
+    public (string token, RefreshToken refreshToken) GenerateToken(Guid userIdAuth, string name, string email, UserRoleEnum? role)
     {
         JwtSecurityTokenHandler tokenHandler = new();
 
@@ -27,7 +27,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
         );
 
         List<Claim> claimList = [
-            new(ClaimTypes.NameIdentifier, userId.ToString()),
+            new(ClaimTypes.NameIdentifier, userIdAuth.ToString()),
             new(ClaimTypes.Name, name),
             new(ClaimTypes.Email, email)
         ];
@@ -63,20 +63,20 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
 
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         string jwt = tokenHandler.WriteToken(token);
-        RefreshToken refreshToken = GenerateRefreshToken(userId);
+        RefreshToken refreshToken = GenerateRefreshToken(userIdAuth);
 
         return (jwt, refreshToken);
     }
 
     #region extras
-    private RefreshToken GenerateRefreshToken(Guid userId)
+    private RefreshToken GenerateRefreshToken(Guid userIdAuth)
     {
         string token = GenerateRefreshTokenStr();
 
         RefreshToken refreshToken = new()
         {
             Token = token,
-            UserId = userId,
+            UserId = userIdAuth,
             CreatedDate = GetDate(),
             ExpiredDate = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
             RevokedDate = null

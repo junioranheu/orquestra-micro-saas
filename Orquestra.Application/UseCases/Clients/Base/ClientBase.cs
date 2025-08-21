@@ -11,9 +11,9 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task Validate(ClientInput input, Guid userId, bool isCreate)
+    public async Task Validate(ClientInput input, Guid userIdAuth, bool isCreate)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         bool checkEmail = IsEmailValid(input.Email);
 

@@ -12,7 +12,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
     private readonly Context _context = deps.Context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
 
-    public async Task<ScheduleOutput?> Execute(Guid userId, Guid scheduleId)
+    public async Task<ScheduleOutput?> Execute(Guid userIdAuth, Guid scheduleId)
     {
         var result = await _context.Schedules.
                      Include(x => x.Client).
@@ -25,7 +25,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
                      FirstOrDefaultAsync() ?? throw new Exception($"Não foi possível localizar este horário agendado. ({scheduleId})");
 
         Guid companyId = result.CompanyId;
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needCompanyAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         var output = result.Adapt<ScheduleOutput>();
         output.Observations = await CheckForObservations(output);

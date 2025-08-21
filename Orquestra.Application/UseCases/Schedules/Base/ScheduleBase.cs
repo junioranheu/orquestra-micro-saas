@@ -25,9 +25,9 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
     private readonly IGetClient _getClient = deps.GetClient;
     private readonly IGetCompany _getCompany = deps.GetCompany;
 
-    public async Task Validate(ScheduleInput input, Guid userId, bool isCreate)
+    public async Task Validate(ScheduleInput input, Guid userIdAuth, bool isCreate)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId, needCompanyAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: false);
 
         if (isCreate)
         {
@@ -42,9 +42,9 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             throw new Exception("Você não pode agendar uma consulta com a data anterior a de hoje.");
         }
 
-        _ = await _getClient.Execute(userId: userId, clientId: input.ClientId) ?? throw new Exception("Esse cliente não existe.");
+        _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new Exception("Esse cliente não existe.");
 
-        _ = await _getCompany.Execute(userId: userId, companyId: input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
+        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
 
         await ValidateUsersAndRemoveNotLinkedOnes(input);
     }
