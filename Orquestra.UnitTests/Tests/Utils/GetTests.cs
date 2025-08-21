@@ -179,6 +179,36 @@ public sealed class GetTests
         Assert.Equal("part1", result);
     }
 
+    [Fact]
+    public void GenerateSafeToken32_ShouldReturnNonNullBase64String()
+    {
+        // Act
+        string token = GenerateSafeToken32Bytes();
+
+        // Assert
+        Assert.False(string.IsNullOrWhiteSpace(token));
+
+        // Base64 de 32 bytes gera geralmente 44 caracteres
+        Assert.Equal(44, token.Length);
+
+        // Verifica se é Base64 válido
+        Span<byte> buffer = new(new byte[32]);
+        bool isBase64 = Convert.TryFromBase64String(token, buffer, out _);
+
+        Assert.True(isBase64);
+    }
+
+    [Fact]
+    public void GenerateSafeToken32_ShouldGenerateUniqueTokens()
+    {
+        // Act
+        string token1 = GenerateSafeToken32Bytes();
+        string token2 = GenerateSafeToken32Bytes();
+
+        // Assert
+        Assert.NotEqual(token1, token2);
+    }
+
     #region helpers
     private enum TestEnum
     {

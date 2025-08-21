@@ -71,7 +71,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
     #region extras
     private RefreshToken GenerateRefreshToken(Guid userIdAuth)
     {
-        string token = GenerateRefreshTokenStr();
+        string token = GenerateSafeToken32Bytes();
 
         RefreshToken refreshToken = new()
         {
@@ -81,16 +81,6 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
             ExpiredDate = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
             RevokedDate = null
         };
-
-        return refreshToken;
-    }
-
-    private static string GenerateRefreshTokenStr()
-    {
-        var random = new byte[32];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(random);
-        var refreshToken = Convert.ToBase64String(random);
 
         return refreshToken;
     }

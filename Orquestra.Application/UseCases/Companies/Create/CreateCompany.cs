@@ -49,7 +49,7 @@ public sealed class CreateCompany(
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(7);
         company.IsAccountVerified = false;
-        company.VerifyToken = GetRandomString(32, false);
+        company.VerifyToken = GenerateSafeToken32Bytes();
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();

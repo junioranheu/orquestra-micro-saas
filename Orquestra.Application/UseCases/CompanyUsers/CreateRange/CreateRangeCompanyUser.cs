@@ -31,10 +31,10 @@ public sealed class CreateRangeCompanyUser(
 
         var companyUsers = input.Adapt<List<CompanyUser>>();
 
-        // Normalizar dados;;
+        // Normalizar dados;
         foreach (var item in companyUsers)
         {
-            item.VerifyToken = GetRandomString(32, false);
+            item.VerifyToken = GenerateSafeToken32Bytes();
         }
 
         bool isOwner = CheckIfUserIsOwnerAndNormalizePropsIfIndeedIsOwner(companyUsers);

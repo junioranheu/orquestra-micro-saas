@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Orquestra.Utils.Fixtures;
@@ -145,5 +146,21 @@ public static class Get
         string firstPart = parts.Length > 0 ? parts[0] : string.Empty;
 
         return firstPart;
+    }
+
+    /// <summary>
+    /// Gera um token seguro aleatório de 32 bytes codificado em Base64.
+    /// Ideal para uso em verificação de conta, redefinição de senha ou tokens temporários.
+    /// </summary>
+    /// <returns>Uma string Base64 representando o token gerado.</returns>
+    public static string GenerateSafeToken32Bytes()
+    {
+        byte[] random = new byte[32];
+        using RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        rng.GetBytes(random);
+
+        string token = Convert.ToBase64String(random);
+
+        return token;
     }
 }
