@@ -31,7 +31,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Assets\Images\" />
+		<None Update="Assets\**">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

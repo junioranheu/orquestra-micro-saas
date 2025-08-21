@@ -85,8 +85,8 @@ public sealed class CreateCompany(
             { "[ConfirmLink]", $"{SystemConsts.EmailVerifyCompany}?id=aea" }
         };
 
-        string bodyHtml = _emailService.RenderTemplate("CompanyUserWelcomeAndVerify.html", values);
-        await _emailService.SendEmail(to: company.Email, subject: "Bem-vindo à ORQUESTRA!", body: bodyHtml, cc: [user.Email]);
+        string bodyHtml = _emailService.RenderTemplate("EmailVerifyCompany.html", values);
+        await _emailService.SendEmail(to: company.Email, subject: $"Bem-vindo ao {SystemConsts.NameApp} — Verifique sua empresa!", body: bodyHtml, cc: [user.Email]);
     }
     #endregion
 }

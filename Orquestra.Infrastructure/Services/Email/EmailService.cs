@@ -26,7 +26,7 @@ public class EmailService(EmailSettings settings) : IEmailService
 
         MailMessage mailMessage = new()
         {
-            From = new MailAddress(_senderName, _senderEmail),
+            From = new MailAddress(address: _senderEmail, displayName: _senderName),
             Subject = subject,
             Body = body,
             IsBodyHtml = isHtml

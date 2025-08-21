@@ -19,5 +19,5 @@ public static class SystemConsts
     public const string Warn_Simple_UserNotAuth = "Usuário não autenticado.";
     public const string Warn_NeedToVerifyCompany = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
     
-    public const string EmailVerifyCompany = "https://aea.com.br";   
+    public const string EmailVerifyCompany = "https://anheu.vercel.app/";   
 }
