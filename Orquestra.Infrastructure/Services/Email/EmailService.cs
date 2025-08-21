@@ -2,6 +2,7 @@
 using Orquestra.Domain.Entities;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 
 namespace Orquestra.Infrastructure.Services.Email;
 
@@ -29,7 +30,9 @@ public class EmailService(EmailSettings settings) : IEmailService
             From = new MailAddress(address: _senderEmail, displayName: _senderName),
             Subject = subject,
             Body = body,
-            IsBodyHtml = isHtml
+            IsBodyHtml = isHtml,
+            BodyEncoding = Encoding.UTF8,
+            SubjectEncoding = Encoding.UTF8
         };
 
         mailMessage.To.Add(to);
@@ -41,6 +44,8 @@ public class EmailService(EmailSettings settings) : IEmailService
                 mailMessage.CC.Add(c);
             }
         }
+
+        mailMessage.HeadersEncoding = Encoding.UTF8;
 
         await client.SendMailAsync(mailMessage);
     }
