@@ -23,7 +23,7 @@ public sealed class CreateRangeCompanyUser(
 
     public async Task<List<CompanyUserOutput>> Execute(Guid userIdAuth, List<CompanyUserInput> input)
     {
-        // Validate;
+        // Validar;
         foreach (var item in input)
         {
             await Validate(input: item, userIdAuth, isCreate: true);
@@ -31,31 +31,35 @@ public sealed class CreateRangeCompanyUser(
 
         var companyUsers = input.Adapt<List<CompanyUser>>();
 
-        // Normalize;
+        // Normalizar dados;;
         foreach (var item in companyUsers)
         {
             item.VerifyToken = GetRandomString(32, false);
         }
 
-        NormalizeOwnerProps(companyUsers);
+        bool isOwner = CheckIfUserIsOwnerAndNormalizePropsIfIndeedIsOwner(companyUsers);
 
-        // Save;
+        // Salvar;
         await _context.AddRangeAsync(companyUsers);
         await _context.SaveChangesAsync();
 
-        // Email;
-        Guid? companyId = input.FirstOrDefault()?.CompanyId;
-
-        if (companyId is not null && companyId != Guid.Empty)
+        // Enviar e-mail para cada um dos funcionários;
+        // Não é necessário enviar e-mail para o Dono;
+        if (!isOwner)
         {
-            Company? company = await _context.Companies.
-                               AsNoTracking().
-                               Where(x => x.CompanyId == companyId && x.Status == true).
-                               FirstOrDefaultAsync();
+            Guid? companyId = input.FirstOrDefault()?.CompanyId;
 
-            foreach (var item in companyUsers)
+            if (companyId is not null && companyId != Guid.Empty)
             {
-                await SendEmail(item, company);
+                Company? company = await _context.Companies.
+                                   AsNoTracking().
+                                   Where(x => x.CompanyId == companyId && x.Status == true).
+                                   FirstOrDefaultAsync();
+
+                foreach (var item in companyUsers)
+                {
+                    await SendEmail(item, company);
+                }
             }
         }
 
@@ -66,20 +70,29 @@ public sealed class CreateRangeCompanyUser(
     }
 
     #region extras
-    private static void NormalizeOwnerProps(List<CompanyUser> companyUsers)
+    private static bool CheckIfUserIsOwnerAndNormalizePropsIfIndeedIsOwner(List<CompanyUser> companyUsers)
     {
         if (companyUsers.Count != 1)
         {
-            return;
+            return false;
         }
 
         CompanyUser? first = companyUsers.FirstOrDefault();
 
-        if (first?.CompanyUserRole == CompanyUserRoleEnum.Owner)
+        if (first is null)
         {
-            first.IsAccountVerified = true;
-            first.IsCurrentMainCompanyUser = true;
+            return false;
         }
+
+        bool isOwner = first?.CompanyUserRole == CompanyUserRoleEnum.Owner;
+
+        if (isOwner)
+        {
+            first!.IsAccountVerified = true;
+            first!.IsCurrentMainCompanyUser = true;
+        }
+
+        return isOwner;
     }
 
     private async Task SendEmail(CompanyUser companyUser, Company? company)
