@@ -1,4 +1,5 @@
-﻿using Orquestra.Domain.Entities;
+﻿using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using System.Net;
 using System.Net.Mail;
 
@@ -7,10 +8,11 @@ namespace Orquestra.Infrastructure.Services.Email;
 public class EmailService(EmailSettings settings) : IEmailService
 {
     private readonly EmailSettings _settings = settings;
+
     const string _smtpHost = "smtp-relay.brevo.com";
     const int _smtpPort = 587;
     const string _senderName = "Orquestra";
-    const string _senderEmail = "orquestra.saas@gmail.com";
+    const string _senderEmail = SystemConsts.Email;
     const string _username = "953807001@smtp-brevo.com";
     const bool _enableSsl = true;
 
@@ -41,5 +43,40 @@ public class EmailService(EmailSettings settings) : IEmailService
         }
 
         await client.SendMailAsync(mailMessage);
+    }
+
+    /// <summary>
+    /// Carrega um arquivo de template HTML e substitui os placeholders pelos valores fornecidos.
+    /// Dictionary<string, string> values = new()
+    /// {
+    ///    { "[UserName]", "Junior" },
+    ///    { "[CompanyName]", "Orquestra Inc." },
+    ///    { "[ConfirmLink]", "orquestra.com/confirm?token=123" }
+    /// };
+    /// </summary>
+    /// <param name="templatePath">Caminho completo do arquivo HTML do template.</param>
+    /// <param name="values">Dicionário contendo os placeholders e seus respectivos valores. 
+    /// Cada chave deve corresponder a um placeholder no template, por exemplo [Name].</param>
+    /// <returns>Retorna uma string com o conteúdo do template já com os placeholders substituídos pelos valores.</returns>
+    public string RenderTemplate(string templateName, Dictionary<string, string> values)
+    {
+        // Caminho base da pasta de templates (Infrastructure/Services/Email/Templates);
+        string basePath = Path.Combine(AppContext.BaseDirectory, "Services", "Email", "Templates");
+        string templatePath = Path.Combine(basePath, templateName);
+
+        if (!File.Exists(templatePath))
+        {
+            throw new FileNotFoundException($"Template não encontrado: {templatePath}");
+        }
+
+        string template = File.ReadAllText(templatePath);
+
+        // Substitui os placeholders;
+        foreach (var kv in values)
+        {
+            template = template.Replace(kv.Key, kv.Value);
+        }
+
+        return template;
     }
 }

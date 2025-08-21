@@ -36,7 +36,7 @@ public static class DependencyAppConfiguration
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.Name);
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.NameApi);
                 c.DocExpansion(DocExpansion.None);
 
                 if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows())

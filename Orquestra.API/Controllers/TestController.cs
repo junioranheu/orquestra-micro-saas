@@ -51,8 +51,8 @@ public class TestController(IEmailService emailService) : BaseController<TestCon
     }
 
     [Authorize]
-    [HttpGet("SendEmail")]
-    public async Task<ActionResult> SendEmail()
+    [HttpPost("SendEmailTest")]
+    public async Task<ActionResult> SendEmailTest()
     {
         string ascii = Ascii();
         await _emailService.SendEmail(to: "junioranheu@gmail.com", subject:"Assunto Teste", body: $"<b>{ascii}</b>", cc: ["mscalzaretto53@email.com"]);

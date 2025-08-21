@@ -2,8 +2,9 @@
 
 public static class SystemConsts
 {
-    public const string Name = "Orquestra.API";
-    public const string Email = "orquestra@gmail.com";
+    public const string NameApi = "Orquestra.API™";
+    public const string NameApp = "Orquestra";
+    public const string Email = "orquestra.saas@gmail.com";
     public const string Author = "@junioranheu";
     public const string Slogan = "Orquestra: harmonia na gestão do seu negócio";
 
@@ -17,4 +18,6 @@ public static class SystemConsts
 
     public const string Warn_Simple_UserNotAuth = "Usuário não autenticado.";
     public const string Warn_NeedToVerifyCompany = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
+    
+    public const string EmailVerifyCompany = "https://aea.com.br";   
 }

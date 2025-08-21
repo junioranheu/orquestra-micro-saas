@@ -124,7 +124,7 @@ public static class DependencyInjection
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new() { Title = SystemConsts.Name, Version = "v1" });
+            c.SwaggerDoc("v1", new() { Title = SystemConsts.NameApi, Version = "v1" });
 
             OpenApiSecurityScheme jwtSecurityScheme = new()
             {
