@@ -36,7 +36,7 @@ public partial class UserBase(IGetUser getUser)
 
             if (checkUserById is not null && userIdAuth != checkUserById?.UserId)
             {
-                throw new Exception("Apenas o dono da conta pode alterar suas informações.");
+                throw new Exception("Apenas o proprietário da conta pode alterar suas informações.");
             }
         }
         #endregion

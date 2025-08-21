@@ -3,7 +3,9 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.Base;
 
@@ -15,6 +17,16 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
     public async Task Validate(CompanyUserInput input, Guid userIdAuth, bool isCreate)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
+
+        if (input.CompanyUserRole == CompanyUserRoleEnum.Owner)
+        {
+            bool hasOtherOwner = await _context.CompanyUsers.AsNoTracking().AnyAsync(x => x.CompanyId == input.CompanyId && x.CompanyUserRole == CompanyUserRoleEnum.Owner && x.Status == true);
+
+            if (hasOtherOwner)
+            {
+                throw new Exception($"Essa empresa atualmente está em nome de outro {GetEnumDesc(CompanyUserRoleEnum.Owner)}. O proprietário deve, diretamente de sua conta, transferir a posse da empresa.");
+            }
+        }
 
         if (!isCreate)
         {

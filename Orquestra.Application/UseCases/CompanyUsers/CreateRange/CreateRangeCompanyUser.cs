@@ -44,7 +44,7 @@ public sealed class CreateRangeCompanyUser(
         await _context.SaveChangesAsync();
 
         // Enviar e-mail para cada um dos funcionários;
-        // Não é necessário enviar e-mail para o Dono;
+        // Não é necessário enviar e-mail para o Owner;
         if (!isOwner)
         {
             Guid? companyId = input.FirstOrDefault()?.CompanyId;
