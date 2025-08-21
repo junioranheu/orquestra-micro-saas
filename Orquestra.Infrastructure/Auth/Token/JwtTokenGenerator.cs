@@ -6,7 +6,6 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Auth.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using static Orquestra.Utils.Fixtures.Get;
 
