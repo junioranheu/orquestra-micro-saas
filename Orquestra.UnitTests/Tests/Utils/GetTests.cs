@@ -183,15 +183,15 @@ public sealed class GetTests
     public void GenerateSafeToken32_ShouldReturnNonNullBase64String()
     {
         // Act
-        string token = GenerateSafeToken32Bytes();
+        string token = GenerateSafeToken32Bytes(urlSafe: false);
 
         // Assert
         Assert.False(string.IsNullOrWhiteSpace(token));
 
-        // Base64 de 32 bytes gera geralmente 44 caracteres
+        // Base64 de 32 bytes gera geralmente 44 caracteres;
         Assert.Equal(44, token.Length);
 
-        // Verifica se é Base64 válido
+        // Verifica se é Base64 válido;
         Span<byte> buffer = new(new byte[32]);
         bool isBase64 = Convert.TryFromBase64String(token, buffer, out _);
 
@@ -199,11 +199,26 @@ public sealed class GetTests
     }
 
     [Fact]
+    public void GenerateSafeToken32_UrlSafe_ShouldReturnNonNullStringWithoutIllegalChars()
+    {
+        // Act
+        string token = GenerateSafeToken32Bytes(urlSafe: true);
+
+        // Assert
+        Assert.False(string.IsNullOrWhiteSpace(token));
+
+        // Não deve conter caracteres problemáticos para URL;
+        Assert.DoesNotContain('+', token);
+        Assert.DoesNotContain('/', token);
+        Assert.DoesNotContain('=', token);
+    }
+
+    [Fact]
     public void GenerateSafeToken32_ShouldGenerateUniqueTokens()
     {
         // Act
-        string token1 = GenerateSafeToken32Bytes();
-        string token2 = GenerateSafeToken32Bytes();
+        string token1 = GenerateSafeToken32Bytes(urlSafe: true);
+        string token2 = GenerateSafeToken32Bytes(urlSafe: true);
 
         // Assert
         Assert.NotEqual(token1, token2);

@@ -71,7 +71,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
     #region extras
     private RefreshToken GenerateRefreshToken(Guid userIdAuth)
     {
-        string token = GenerateSafeToken32Bytes();
+        string token = GenerateSafeToken32Bytes(urlSafe: false);
 
         RefreshToken refreshToken = new()
         {

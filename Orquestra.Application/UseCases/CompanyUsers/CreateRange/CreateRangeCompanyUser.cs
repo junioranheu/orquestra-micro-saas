@@ -34,7 +34,7 @@ public sealed class CreateRangeCompanyUser(
         // Normalizar dados;
         foreach (var item in companyUsers)
         {
-            item.VerifyToken = GenerateSafeToken32Bytes();
+            item.VerifyToken = GenerateSafeToken32Bytes(urlSafe: true);
         }
 
         bool isOwner = CheckIfUserIsOwnerAndNormalizePropsIfIndeedIsOwner(companyUsers);

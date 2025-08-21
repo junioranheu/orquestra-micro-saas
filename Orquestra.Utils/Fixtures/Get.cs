@@ -149,17 +149,23 @@ public static class Get
     }
 
     /// <summary>
-    /// Gera um token seguro aleatório de 32 bytes codificado em Base64.
-    /// Ideal para uso em verificação de conta, redefinição de senha ou tokens temporários.
+    /// Gera um token seguro aleatório de 32 bytes codificado em Base64 URL-safe.
+    /// Ideal para verificação de conta, redefinição de senha ou tokens temporários.
+    /// Pode ser usado diretamente em URLs sem quebrar a query string.
     /// </summary>
-    /// <returns>Uma string Base64 representando o token gerado.</returns>
-    public static string GenerateSafeToken32Bytes()
+    /// <returns>Uma string Base64 URL-safe representando o token gerado.</returns>
+    public static string GenerateSafeToken32Bytes(bool urlSafe)
     {
         byte[] random = new byte[32];
-        using RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(random);
 
         string token = Convert.ToBase64String(random);
+
+        if (urlSafe)
+        {
+            token = token.Replace('+', '-').Replace('/', '_').TrimEnd('=');
+        }
 
         return token;
     }

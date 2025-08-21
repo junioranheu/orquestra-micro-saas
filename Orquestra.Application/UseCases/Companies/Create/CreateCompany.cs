@@ -10,6 +10,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using System.Runtime.CompilerServices;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
@@ -49,7 +50,7 @@ public sealed class CreateCompany(
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(7);
         company.IsAccountVerified = false;
-        company.VerifyToken = GenerateSafeToken32Bytes();
+        company.VerifyToken = GenerateSafeToken32Bytes(urlSafe: true);
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
