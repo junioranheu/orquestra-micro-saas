@@ -14,6 +14,8 @@ public static class SystemConsts
     public const int OneDayInSec = 86400;
     public const int OneMonthInSec = 2629800;
 
+    public const string PolicyRateLimiting = "_policyRateLimiting";
+
     public const string RefreshTokenJWTCustomHeader = "X-New-JWT";
 
     public const string Warn_Simple_UserNotAuth = "Usuário não autenticado.";

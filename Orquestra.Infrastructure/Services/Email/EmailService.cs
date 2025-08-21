@@ -1,5 +1,5 @@
 ﻿using Orquestra.Domain.Consts;
-using Orquestra.Domain.Entities;
+using Orquestra.Infrastructure.Services.Email.Models;
 using System.Net;
 using System.Net.Mail;
 using System.Text;

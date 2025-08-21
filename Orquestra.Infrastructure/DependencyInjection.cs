@@ -16,6 +16,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Interceptors;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Utils.Fixtures;
 using System.Text;
 using System.Text.Json;

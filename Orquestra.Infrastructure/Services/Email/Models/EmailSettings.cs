@@ -1,12 +1,15 @@
-﻿namespace Orquestra.Domain.Entities;
+﻿namespace Orquestra.Infrastructure.Services.Email.Models;
 
 public sealed class EmailSettings
 {
+    #region obsoleto
     // public required string SmtpHost { get; set; } 
     // public int SmtpPort { get; set; }
     // public required string SenderName { get; set; }
     // public required string SenderEmail { get; set; } 
     // public required string Username { get; set; }
-    public required string Password { get; set; }
+    // public required string Password { get; set; }
     // public bool EnableSsl { get; set; }
+    #endregion
+    public required string Password { get; set; }
 }

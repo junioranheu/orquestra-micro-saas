@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Orquestra.API.Filters;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Services.Email;
 using static Orquestra.Utils.Fixtures.Get;
@@ -35,6 +37,7 @@ public class TestController(IEmailService emailService) : BaseController<TestCon
     #endregion
 
     [AllowAnonymous]
+    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("GetAnonymous")]
     public ActionResult GetAnonymous()
     {
@@ -42,6 +45,7 @@ public class TestController(IEmailService emailService) : BaseController<TestCon
     }
 
     [AuthorizeFilter(UserRoleEnum.Common, UserRoleEnum.Maintainer)]
+    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("GetAuth")]
     public ActionResult GetAuth()
     {
@@ -51,6 +55,7 @@ public class TestController(IEmailService emailService) : BaseController<TestCon
     }
 
     [Authorize]
+    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpPost("SendEmailTest")]
     public async Task<ActionResult> SendEmailTest()
     {

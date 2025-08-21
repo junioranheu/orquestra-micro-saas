@@ -107,6 +107,7 @@ public static class DependencyAppConfiguration
     private static void AddMisc(WebApplication app)
     {
         app.UseResponseCaching();
+        app.UseRateLimiter();
 
         if (app.Environment.IsDevelopment())
         {

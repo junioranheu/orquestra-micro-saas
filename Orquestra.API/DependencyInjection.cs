@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Orquestra.API.Extensions;
 using Orquestra.API.Filters;
 using System.IO.Compression;
 using System.Text.Json.Serialization;
@@ -12,7 +13,7 @@ public static class DependencyInjection
     {
         IWebHostEnvironment env = builder.Environment;
 
-        AddKestrel(services);
+        // AddKestrel(services);
         AddCompression(services);
         AddControllers(services, env);
         AddMisc(services);
@@ -68,5 +69,7 @@ public static class DependencyInjection
         services.AddResponseCaching();
 
         services.AddHttpContextAccessor(); // Serviço necessário para habilitar o IHttpContextAccessor em Infrastructure/Context;
+
+        services.AddUserRateLimiting();
     }
 }
