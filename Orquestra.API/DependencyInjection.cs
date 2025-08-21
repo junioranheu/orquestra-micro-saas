@@ -8,11 +8,13 @@ namespace Orquestra.API;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddDependencyInjectionAPI(this IServiceCollection services)
+    public static IServiceCollection AddDependencyInjectionAPI(this IServiceCollection services, WebApplicationBuilder builder)
     {
+        IWebHostEnvironment env = builder.Environment;
+
         AddKestrel(services);
         AddCompression(services);
-        AddControllers(services);
+        AddControllers(services, env);
         AddMisc(services);
 
         return services;
@@ -46,7 +48,7 @@ public static class DependencyInjection
         });
     }
 
-    private static void AddControllers(IServiceCollection services)
+    private static void AddControllers(IServiceCollection services, IWebHostEnvironment env)
     {
         services.AddControllers(x =>
         {
@@ -56,12 +58,7 @@ public static class DependencyInjection
             {
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-
-#if DEBUG
-                x.JsonSerializerOptions.WriteIndented = true;
-#else
-                x.JsonSerializerOptions.WriteIndented = false;
-#endif
+                x.JsonSerializerOptions.WriteIndented = env.IsDevelopment();
             });
     }
 

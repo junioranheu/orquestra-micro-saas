@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -97,9 +98,12 @@ public static class DependencyInjection
     {
         string con = new ConnectionFactory(builder.Configuration).GetConnectionString();
 
-        services.AddDbContextPool<Context>(options =>
+        services.AddDbContextPool<Context>((serviceProvider, options) =>
         {
-            options.UseNpgsql(con).AddInterceptors(new SlowQueryDebugInterceptor());
+            IWebHostEnvironment env = serviceProvider.GetRequiredService<IWebHostEnvironment>();
+            SlowQueryDebugInterceptor interceptor = new(env);
+
+            options.UseNpgsql(con).AddInterceptors(interceptor);
         });
     }
 

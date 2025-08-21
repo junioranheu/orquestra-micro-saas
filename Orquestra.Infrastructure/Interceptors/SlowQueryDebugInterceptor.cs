@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Hosting;
 using System.Data.Common;
 
 namespace Orquestra.Infrastructure.Interceptors;
 
-public class SlowQueryDebugInterceptor : DbCommandInterceptor
+public class SlowQueryDebugInterceptor(IWebHostEnvironment env) : DbCommandInterceptor
 {
+    private readonly bool _isDevelopment = env.IsDevelopment();
+
     public override async ValueTask<DbDataReader> ReaderExecutedAsync(DbCommand command, CommandExecutedEventData eventData, DbDataReader result, CancellationToken cancellationToken = default)
     {
         LogIfSlow(command, eventData);
@@ -18,11 +22,12 @@ public class SlowQueryDebugInterceptor : DbCommandInterceptor
     }
 
     #region extras
-    private static void LogIfSlow(DbCommand command, CommandExecutedEventData eventData)
+    private void LogIfSlow(DbCommand command, CommandExecutedEventData eventData)
     {
-#if !DEBUG
-        return;
-#endif
+        if (!_isDevelopment)
+        {
+            return;
+        }
 
         int threshold = GetThreshold(command);
 
