@@ -1,4 +1,6 @@
-﻿using Orquestra.Domain.Consts;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Email.Models;
 using System.Net;
 using System.Net.Mail;
@@ -6,9 +8,11 @@ using System.Text;
 
 namespace Orquestra.Infrastructure.Services.Email;
 
-public class EmailService(EmailSettings settings) : IEmailService
+public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEmailService
 {
     private readonly EmailSettings _settings = settings;
+    private readonly bool _isDevelopment = env.IsDevelopment();
+    private readonly bool _DO_NOT_SEND_EMAIL_IF_ENV_DEV = true;
 
     const string _smtpHost = "smtp-relay.brevo.com";
     const int _smtpPort = 587;
@@ -25,9 +29,10 @@ public class EmailService(EmailSettings settings) : IEmailService
             EnableSsl = _enableSsl
         };
 
-#if DEBUG
-        subject = $"[DEBUG] {subject}";
-#endif
+        if (_isDevelopment)
+        {
+            subject = $"[DEBUG] {subject}";
+        }
 
         MailMessage mailMessage = new()
         {
@@ -50,6 +55,11 @@ public class EmailService(EmailSettings settings) : IEmailService
         }
 
         mailMessage.HeadersEncoding = Encoding.UTF8;
+
+        if (_isDevelopment && _DO_NOT_SEND_EMAIL_IF_ENV_DEV)
+        {
+            return;
+        }
 
         await client.SendMailAsync(mailMessage);
     }

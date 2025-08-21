@@ -49,7 +49,9 @@ public static class DependencyInjection
         services.AddSingleton<IEmailService>(x =>
         {
             EmailSettings settings = x.GetRequiredService<IOptions<EmailSettings>>().Value;
-            return new EmailService(settings);
+            IWebHostEnvironment env = builder.Environment;
+
+            return new EmailService(settings, env);
         });
     }
 
