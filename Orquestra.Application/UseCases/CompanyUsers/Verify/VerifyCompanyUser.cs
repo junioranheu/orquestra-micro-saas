@@ -1,27 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Infrastructure.Data;
 
-namespace Orquestra.Application.UseCases.Companies.Verify;
+namespace Orquestra.Application.UseCases.CompanyUsers.Verify;
 
-public sealed class VerifyCompany(Context context) : IVerifyCompany
+public sealed class VerifyCompanyUser(Context context) : IVerifyCompanyUser
 {
     private readonly Context _context = context;
 
     public async Task Execute(string token)
     {
-        var result = await _context.Companies.
+        var result = await _context.CompanyUsers.
                      AsNoTracking().
                      Where(x => x.VerifyToken == token).
-                     FirstOrDefaultAsync() ?? throw new Exception($"O token {token} não pertence a nenhuma empresa.");
+                     FirstOrDefaultAsync() ?? throw new Exception($"O token {token} não pertence a nenhum usuário.");
 
         if (!result.Status)
         {
-            throw new Exception("Este token pertence a uma empresa desativada na base de dados.");
+            throw new Exception("Este token pertence a um um usuário desativado na base de dados.");
         }
 
         if (result.IsAccountVerified)
         {
-            throw new Exception($"A empresa {result.Name} já foi verificada.");
+            throw new Exception("O usuário já foi verificado.");
         }
 
         result.IsAccountVerified = true;

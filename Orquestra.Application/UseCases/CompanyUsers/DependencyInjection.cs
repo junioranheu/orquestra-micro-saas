@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
+using Orquestra.Application.UseCases.CompanyUsers.Verify;
 
 namespace Orquestra.Application.UseCases.CompanyUsers;
 
@@ -12,6 +13,7 @@ public static class DependencyInjection
         services.AddScoped<IGetCompanyUserByCompanyId, GetCompanyUserByCompanyId>();
         services.AddScoped<ICreateRangeCompanyUser, CreateRangeCompanyUser>();
         services.AddScoped<ICheckIfUserIsLinkedCompanyUser, CheckIfUserIsLinkedCompanyUser>();
+        services.AddScoped<IVerifyCompanyUser, VerifyCompanyUser>();
 
         return services;
     }
