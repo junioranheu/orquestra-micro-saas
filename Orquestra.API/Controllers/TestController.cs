@@ -2,14 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Domain.Enums;
+using Orquestra.Infrastructure.Services.Email;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TestController : BaseController<TestController>
+public class TestController(IEmailService emailService) : BaseController<TestController>
 {
+    private readonly IEmailService _emailService = emailService;
+
     #region ascii
     private const string ascii = @"
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠴⠒⠒⠲⠤⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -45,6 +48,16 @@ public class TestController : BaseController<TestController>
         Guid userId = GetUserId(throwExceptionIfNotAuth: true);
 
         return Ok($"Id: {userId}");
+    }
+
+    [Authorize]
+    [HttpGet("SendEmail")]
+    public async Task<ActionResult> SendEmail()
+    {
+        string ascii = Ascii();
+        await _emailService.SendEmail(to: "junioranheu@gmail.com", subject:"Assunto Teste", body: $"<b>{ascii}</b>", cc: ["mscalzaretto53@email.com"]);
+
+        return Ok(ascii);
     }
 
     private static string Ascii()

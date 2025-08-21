@@ -2,7 +2,6 @@
 
 public sealed class JwtSettings
 {
-    public const string SectionName = "JwtSettings";
     public string? Secret { get; init; } = null;
     public int TokenExpiryMinutes { get; init; }
     public int RefreshTokenExpiryMinutes { get; init; }

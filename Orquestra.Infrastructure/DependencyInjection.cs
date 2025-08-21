@@ -5,14 +5,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Models;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Interceptors;
+using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Utils.Fixtures;
 using System.Text;
 using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
@@ -35,8 +39,17 @@ public static class DependencyInjection
 
     private static void AddServices(IServiceCollection services, WebApplicationBuilder builder)
     {
+        // JWT;
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
+        services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+        // E-mail;
+        services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+        services.AddSingleton<IEmailService>(x =>
+        {
+            EmailSettings settings = x.GetRequiredService<IOptions<EmailSettings>>().Value;
+            return new EmailService(settings);
+        });
     }
 
     private static readonly string[] onChallengeError = ["Acesso negado. Você não tem permissão para acessar este recurso ou não está autenticado."];
