@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Orquestra.Domain.Consts;
+using System.ComponentModel;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Tests.Utils;
@@ -104,6 +105,26 @@ public sealed class GetTests
     }
 
     [Fact]
+    public void GetUrls_ShouldReturnValidUrls()
+    {
+        // Act
+        (string urlBack, string urlFront) = GetUrls();
+
+#if DEBUG
+        // No debug, deve apontar pro localhost;
+        Assert.Contains("localhost", urlBack);
+        Assert.Contains("localhost", urlFront);
+#else
+        // Em release, deve conter "orquestra" e não conter "localhost";
+        Assert.DoesNotContain("localhost", urlBack);
+        Assert.DoesNotContain("localhost", urlFront);
+
+        Assert.Contains("orquestra", urlBack.ToLower());
+        Assert.Contains("orquestra", urlFront.ToLower());
+#endif
+    }
+
+    [Fact]
     public void GetFirstPart_ShouldReturn_FirstWord_WhenStringHasMultipleWords()
     {
         // Arrange
@@ -120,13 +141,13 @@ public sealed class GetTests
     public void GetFirstPart_ShouldReturn_WholeString_WhenNoDelimiterFound()
     {
         // Arrange
-        string input = "Orquestra";
+        string input = SystemConsts.NameApp;
 
         // Act
         string result = GetFirstWord(input);
 
         // Assert
-        Assert.Equal("Orquestra", result);
+        Assert.Equal(SystemConsts.NameApp, result);
     }
 
     [Fact]
