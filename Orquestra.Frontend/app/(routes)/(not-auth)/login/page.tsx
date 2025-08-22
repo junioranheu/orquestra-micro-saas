@@ -1,5 +1,5 @@
 'use client';
-import iAuthInput, { CONSTS_AUTH } from '@/app/api/consts/auth';
+import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import ImgLoading from '@/app/assets/gif/loading.gif';
 import ImgLogo from '@/app/assets/png/logo.png';
@@ -66,7 +66,7 @@ export default function Login() {
         const user = {
             email: formData.email,
             password: formData.password
-        } as iAuthInput;
+        } as iLoginForm;
 
         const result = await Fetch.post(CONSTS_AUTH.auth, user);
         console.log(result);

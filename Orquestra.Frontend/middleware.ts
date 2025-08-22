@@ -1,13 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import ROUTES from './app/consts/routes';
 
 export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     // console.log(`Um ${request.method} foi realizado em ${pathname} às ${handleGetHour()}`);
 
-    if (pathname === ROUTES.INDEX) {
-        return NextResponse.redirect(new URL(ROUTES.LOGIN, request.url))
-    }
+    // if (pathname === ROUTES.INDEX) {
+    //     return NextResponse.redirect(new URL(ROUTES.LOGIN, request.url))
+    // }
 
     return NextResponse.next();
 }
