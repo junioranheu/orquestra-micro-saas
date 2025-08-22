@@ -1,5 +1,5 @@
+import ImgLogo from '@/app/assets/png/logo.png';
 import ImgHamburguer from '@/app/assets/svg/hamburguer.svg';
-import ImgLogo from '@/app/assets/svg/logo-navbar.svg';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useUserContext from '@/app/hooks/contexts/useUserContext';

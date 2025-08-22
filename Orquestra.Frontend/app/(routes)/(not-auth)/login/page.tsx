@@ -2,7 +2,7 @@
 import iUsuario, { CONSTS_USUARIO } from '@/app/api/consts/usuario';
 import { Fetch } from '@/app/api/fetch';
 import ImgLoading from '@/app/assets/gif/loading.gif';
-import ImgLogo from '@/app/assets/svg/logo-login.svg';
+import ImgLogo from '@/app/assets/png/logo.png';
 import Button from '@/app/components/input/button/button';
 import InputMask from '@/app/components/input/text/input.mask';
 import ROUTES from '@/app/consts/routes';
@@ -58,6 +58,8 @@ export default function Login() {
     }, [router, auth?.isAuth]);
 
     async function handleLogin() {
+        console.log(formData);
+
         if (!formData.email || !formData.password) {
             swal({ str: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
             return;
@@ -99,7 +101,7 @@ export default function Login() {
         <section className={styles.main}>
             <div className={styles.form}>
                 <picture className={styles.icon} title={SYSTEM.NAME}>
-                    <Image src={ImgLogo} alt={SYSTEM.NAME} priority={true} />
+                    <Image src={ImgLogo} alt={SYSTEM.NAME} priority={true} width={120} height={120} />
                 </picture>
 
                 <div className={styles.welcome}>
@@ -126,8 +128,6 @@ export default function Login() {
                         label={'Entrar'}
                         handleFunction={() => handleLogin()}
                         isDisabled={btnLoginDisabled}
-                        style={{ backgroundColor: '#0067b8', borderRadius: 0, width: '100%' }}
-                        refBtn={refButton}
                     />
                 </div>
             </div>

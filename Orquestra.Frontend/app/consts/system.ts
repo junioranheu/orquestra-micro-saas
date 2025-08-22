@@ -2,7 +2,7 @@ const SYSTEM = {
     NAME: 'Orquestra',
     DESCRIPTION: 'Harmonia na gestão do seu negócio',
     AUTHOR: '@junioranheu',
-    COLOR: '#2596be',
+    COLOR: '#f0fcdc',
 
     ANIMATE: 'animate__animated animate__fadeIn',
     ANIMATE_SLOW: 'animate__animated animate__fadeIn animate__slow',

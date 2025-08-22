@@ -1,6 +1,6 @@
 import Image, { StaticImageData } from 'next/image';
 import { ChangeEvent, FocusEventHandler, KeyboardEventHandler, ReactNode, RefObject, cloneElement, useEffect, useState } from 'react';
-import InputMask, { ReactInputMask } from 'react-input-mask';
+import { IMaskInput } from 'react-imask';
 import styles from './input.mask.module.scss';
 
 interface iParametros {
@@ -15,7 +15,7 @@ interface iParametros {
     showIcon?: boolean;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
-    refInput?: RefObject<ReactInputMask> | null;
+    refInput?: RefObject<HTMLInputElement> | null;
 
     handleChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     handleExtraValidation?: () => boolean | null;
@@ -91,20 +91,23 @@ export default function InputMaskCustom({
                 {svg_component && cloneElement(svg_component, svgDefaultProps)}
                 {svg_staticImageData && <Image src={svg_staticImageData} alt='' />}
 
-                <InputMask
+                <IMaskInput
+                    mask={mask}
                     type={type}
                     className={classes}
                     placeholder={placeholder}
                     name={prop_formData}
                     readOnly={isDisabled}
                     disabled={isDisabled}
-                    mask={mask}
                     value={value_formData}
-                    autoComplete='new-password'
-                    onChange={handleChange}
+                    onAccept={(value: string) => {
+                        if (handleChange) {
+                            handleChange({ target: { value, name: prop_formData } } as ChangeEvent<HTMLInputElement>);
+                        }
+                    }}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    ref={refInput}
+                    inputRef={refInput}
                 />
             </div>
         </div>
