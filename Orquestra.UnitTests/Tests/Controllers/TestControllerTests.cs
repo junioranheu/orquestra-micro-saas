@@ -14,13 +14,13 @@ public sealed class TestControllerTests
     [Fact]
     public void GetAnonymous_ShouldReturn_OkWithAscii()
     {
-        // Arrange
+        // Arrange;
         TestController controller = new();
 
-        // Act
+        // Act;
         ActionResult result = controller.GetAnonymous();
 
-        // Assert
+        // Assert;
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
         string content = Assert.IsType<string>(okResult.Value);
         string day = GetDate().Day.ToString();
@@ -31,10 +31,10 @@ public sealed class TestControllerTests
     [Fact]
     public void GetAuth_ShouldReturn_OkWithUserId()
     {
-        // Arrange
+        // Arrange;
         Guid userId = Guid.NewGuid();
 
-        // Mock do HttpContext.User
+        // Mock do HttpContext.User;
         ClaimsPrincipal claims = new(new ClaimsIdentity(
         [
             new Claim(ClaimTypes.NameIdentifier, userId.ToString())
@@ -48,10 +48,10 @@ public sealed class TestControllerTests
             }
         };
 
-        // Act
+        // Act;
         ActionResult result = controller.GetAuth();
 
-        // Assert
+        // Assert;
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
         string content = Assert.IsType<string>(okResult.Value);
         Assert.Contains(userId.ToString(), content);
@@ -60,7 +60,7 @@ public sealed class TestControllerTests
     [Fact]
     public void GetAuth_ShouldThrow_WhenUserNotAuthenticated()
     {
-        // Arrange
+        // Arrange;
         TestController controller = new()
         {
             ControllerContext = new ControllerContext
@@ -69,7 +69,7 @@ public sealed class TestControllerTests
             }
         };
 
-        // Act & Assert
+        // Act & Assert;
         Exception ex = Assert.Throws<Exception>(() => controller.GetAuth());
         Assert.Equal(SystemConsts.Warn_Simple_UserNotAuth, ex.Message);
     }

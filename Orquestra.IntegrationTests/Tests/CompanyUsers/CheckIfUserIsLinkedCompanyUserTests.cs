@@ -14,59 +14,19 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
     [Fact]
     public async Task Execute_ShouldReturnTrue_WhenUserIsLinkedToCompany()
     {
-        // Arrange
-        using Context context = Fixture.CreateContext();
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync();
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        CompanyUser companyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Member
-        };
-
-        await Fixture.Save(context, companyUser);
-
-        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser sut = new(getCompanyUserByCompanyId, httpContextAccessor);
-
-        // Act
         bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false);
 
-        // Assert
         Assert.True(result);
     }
 
     [Fact]
     public async Task Execute_ShouldReturnFalse_WhenUserNotLinkedAndThrowErrorFalse()
     {
-        using Context context = Fixture.CreateContext();
-
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        // Adiciona outro usuário na empresa (não o testado);
-        CompanyUser anotherUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = Guid.NewGuid(),
-            CompanyUserRole = CompanyUserRoleEnum.Member
-        };
-
-        await Fixture.Save(context, anotherUser);
-
-        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser sut = new(getCompanyUserByCompanyId, httpContextAccessor);
+        (Context context, User user, Company company) = await ArrangeCompanyWithOtherUserAsync();
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
         bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false, throwError: false);
 
@@ -76,7 +36,7 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
     [Fact]
     public async Task Execute_ShouldReturnTrue_WhenCompanyIsEmptyAndUserNotLinked()
     {
-        using Context context = Fixture.CreateContext();
+        Context context = Fixture.CreateContext();
 
         User user = UserMock.Create();
         await Fixture.Save(context, user);
@@ -84,67 +44,27 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        // Nenhum usuário na empresa ainda;
-
-        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser sut = new(getCompanyUserByCompanyId, httpContextAccessor);
+        var sut = CreateSut(context, user);
 
         bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false);
 
-        Assert.True(result); // Empresa nova sempre permite;
+        Assert.True(result);
     }
 
     [Fact]
     public async Task Execute_ShouldThrow_WhenUserLinkedButNotAdminAndNeedAdmin()
     {
-        using Context context = Fixture.CreateContext();
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync();
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        CompanyUser companyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Member
-        };
-
-        await Fixture.Save(context, companyUser);
-
-        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser sut = new(getCompanyUserByCompanyId, httpContextAccessor);
-
-        await Assert.ThrowsAsync<Exception>(() => sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true));
+        await Assert.ThrowsAsync<Exception>(() =>  sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true));
     }
 
     [Fact]
     public async Task Execute_ShouldReturnTrue_WhenUserIsOwner()
     {
-        using Context context = Fixture.CreateContext();
-
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        CompanyUser companyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Owner
-        };
-
-        await Fixture.Save(context, companyUser);
-
-        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser sut = new(getCompanyUserByCompanyId, httpContextAccessor);
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync(CompanyUserRoleEnum.Owner);
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
         bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true);
 
@@ -154,7 +74,7 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
     [Fact]
     public async Task Execute_ShouldReturnTrue_WhenUserIsSystemAdmin()
     {
-        using Context context = Fixture.CreateContext();
+        Context context = Fixture.CreateContext();
 
         User adminUser = UserMock.Create();
         adminUser.Role = UserRoleEnum.Admin;
@@ -163,12 +83,64 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(adminUser);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser sut = new(getCompanyUserByCompanyId, httpContextAccessor);
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, adminUser);
 
         bool result = await sut.Execute(company.CompanyId, adminUser.UserId, needCompanyAdmin: true);
 
         Assert.True(result);
     }
+
+    #region helpers
+    private static async Task<(Context context, User user, Company company)> ArrangeCompanyWithUserAsync(CompanyUserRoleEnum role = CompanyUserRoleEnum.Member)
+    {
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = user.UserId,
+            CompanyUserRole = role
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        return (context, user, company);
+    }
+
+    private static async Task<(Context context, User user, Company company)> ArrangeCompanyWithOtherUserAsync()
+    {
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        // Outro usuário já vinculado;
+        CompanyUser anotherUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = Guid.NewGuid(),
+            CompanyUserRole = CompanyUserRoleEnum.Member
+        };
+
+        await Fixture.Save(context, anotherUser);
+
+        return (context, user, company);
+    }
+
+    private static CheckIfUserIsLinkedCompanyUser CreateSut(Context context, User user)
+    {
+        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
+        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        return new CheckIfUserIsLinkedCompanyUser(getCompanyUserByCompanyId, httpContextAccessor);
+    }
+    #endregion
 }

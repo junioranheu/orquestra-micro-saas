@@ -31,7 +31,7 @@ public sealed class EmailServiceTests
     [Fact]
     public void RenderTemplate_ShouldReplacePlaceholders_Correctly()
     {
-        // Arrange
+        // Arrange;
         string templateName = "EmailVerifyCompany.html";
         const string userName = "Junior Souza";
 
@@ -43,21 +43,21 @@ public sealed class EmailServiceTests
             { "[ConfirmLink]", "https://anheu.vercel.app/" }
         };
 
-        // Act
+        // Act;
         string result = _emailService.RenderTemplate(templateName, values);
 
-        // Assert
+        // Assert;
         Assert.Contains(userName, result);
     }
 
     [Fact]
     public void RenderTemplate_ShouldThrow_FileNotFoundException_WhenTemplateMissing()
     {
-        // Arrange
+        // Arrange;
         string templateName = "AEA.html";
         Dictionary<string, string> values = [];
 
-        // Act & Assert
+        // Act & Assert;
         Assert.Throws<FileNotFoundException>(() => _emailService.RenderTemplate(templateName, values));
     }
 }

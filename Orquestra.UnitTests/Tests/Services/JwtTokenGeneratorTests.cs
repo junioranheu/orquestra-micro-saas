@@ -14,7 +14,7 @@ public sealed class JwtTokenGeneratorTests
     [Fact]
     public void GenerateToken_ShouldReturnTokenAndRefreshToken_WithCorrectClaims()
     {
-        // Arrange
+        // Arrange;
         var jwtSettings = new JwtSettings
         {
             Issuer = "testIssuer",
@@ -40,10 +40,10 @@ public sealed class JwtTokenGeneratorTests
         string email = "junior@gmail.com";
         UserRoleEnum role = UserRoleEnum.Admin;
 
-        // Act
+        // Act;
         (string token, RefreshToken refreshToken) = generator.GenerateToken(userIdAuth, name, email, role);
 
-        // Assert
+        // Assert;
         Assert.False(string.IsNullOrWhiteSpace(token));
         Assert.NotNull(refreshToken);
         Assert.Equal(userIdAuth, refreshToken.UserId);

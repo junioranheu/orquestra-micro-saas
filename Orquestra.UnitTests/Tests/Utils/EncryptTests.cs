@@ -7,13 +7,13 @@ public sealed class EncryptTests
     [Fact]
     public void EncryptPassword_DeveRetornarHashDiferenteDaSenhaOriginal()
     {
-        // Arrange
+        // Arrange;
         string password = "MinhaSenha123";
 
-        // Act
+        // Act;
         string hash = EncryptPassword(password);
 
-        // Assert
+        // Assert;
         Assert.NotEqual(password, hash);
         Assert.False(string.IsNullOrEmpty(hash));
     }
@@ -21,36 +21,36 @@ public sealed class EncryptTests
     [Fact]
     public void CheckPassword_DeveRetornarTrue_QuandoSenhaCorreta()
     {
-        // Arrange
+        // Arrange;
         string password = "SenhaSegura";
         string hash = EncryptPassword(password);
 
-        // Act
+        // Act;
         bool result = CheckPassword(password, hash);
 
-        // Assert
+        // Assert;
         Assert.True(result);
     }
 
     [Fact]
     public void CheckPassword_DeveRetornarFalse_QuandoSenhaIncorreta()
     {
-        // Arrange
+        // Arrange;
         string password = "SenhaOriginal";
         string wrongPassword = "OutraSenha";
         string hash = EncryptPassword(password);
 
-        // Act
+        // Act;
         bool result = CheckPassword(wrongPassword, hash);
 
-        // Assert
+        // Assert;
         Assert.False(result);
     }
 
     [Fact]
     public void EncryptPassword_DeveLancarExcecao_QuandoSenhaNula()
     {
-        // Act + Assert
+        // Act + Assert;
         Assert.Throws<ArgumentNullException>(() => EncryptPassword(null!));
     }
 }
