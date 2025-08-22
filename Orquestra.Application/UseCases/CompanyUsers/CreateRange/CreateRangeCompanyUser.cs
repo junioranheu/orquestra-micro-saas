@@ -26,7 +26,7 @@ public sealed class CreateRangeCompanyUser(
         // Validar;
         if (input is null || input.Count == 0)
         {
-            throw new Exception("A lista de usuários está vazia.");
+            throw new ArgumentException("A lista de usuários está vazia.");
         }
 
         foreach (var item in input)

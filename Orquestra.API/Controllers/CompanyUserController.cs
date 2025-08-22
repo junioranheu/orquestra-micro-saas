@@ -28,7 +28,7 @@ public class CompanyUserController(
     {
         if (input.Count == 0)
         {
-            throw new Exception($"A lista de usuários não pode estar vazia.");
+            throw new ArgumentException($"A lista de usuários não pode estar vazia.");
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);

@@ -25,7 +25,7 @@ public sealed class CreateRangeTests
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        // Auth user como SYSTEM ADMIN (passa em qualquer validação de admin);
+        // Auth user como sys admin (passa em qualquer validação de admin);
         User authUser = UserMock.Create();
         authUser.Role = UserRoleEnum.Administrator;
         await Fixture.Save(context, authUser);
@@ -72,7 +72,7 @@ public sealed class CreateRangeTests
         await Fixture.Save(context, company);
 
         User authUser = UserMock.Create();
-        authUser.Role = UserRoleEnum.Administrator; // System admin;
+        authUser.Role = UserRoleEnum.Administrator; // Sys admin;
         await Fixture.Save(context, authUser);
 
         User memberUser = UserMock.Create();
@@ -173,6 +173,162 @@ public sealed class CreateRangeTests
         Assert.False(createdMember.IsAccountVerified);
         Assert.False(createdMember.IsCurrentMainCompanyUser);
         Assert.False(string.IsNullOrWhiteSpace(createdMember.VerifyToken));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenUserAlreadyLinked()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        User linkedUser = UserMock.Create();
+        await Fixture.Save(context, linkedUser);
+
+        // Já vinculado na empresa;
+        CompanyUser existing = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = linkedUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member
+        };
+
+        await Fixture.Save(context, existing);
+
+        Mock<IEmailService> emailServiceMock = new();
+        CreateRangeCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        List<CompanyUserInput> input =
+        [
+            new()
+            {
+                CompanyId = company.CompanyId,
+                UserId = linkedUser.UserId,
+                CompanyUserRole = CompanyUserRoleEnum.Administrator
+            }
+        ];
+
+        // Act + Assert;
+        await Assert.ThrowsAsync<Exception>(() => sut.Execute(authUser.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenAuthUserNotAuthorized()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Common; // Não é sys admin;
+        await Fixture.Save(context, authUser);
+
+        User targetUser = UserMock.Create();
+        await Fixture.Save(context, targetUser);
+
+        Mock<IEmailService> emailServiceMock = new();
+        CreateRangeCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        List<CompanyUserInput> input =
+        [
+            new()
+            {
+                CompanyId = company.CompanyId,
+                UserId = targetUser.UserId,
+                CompanyUserRole = CompanyUserRoleEnum.Member
+            }
+        ];
+
+        // Act + Assert;
+        await sut.Execute(targetUser.UserId, input); // Criar primeiro administrador;
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(authUser.UserId, input)); // Testar com usuário não linkado à empresa;
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenInputIsEmpty()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        Mock<IEmailService> emailServiceMock = new();
+        CreateRangeCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        List<CompanyUserInput> input = [];
+
+        // Act + Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(authUser.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldNormalizeFlags_WhenFirstAdminExistsButNotVerified()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        User existingAdmin = UserMock.Create();
+        await Fixture.Save(context, existingAdmin);
+
+        // Admin já existe, mas não verificado;
+        CompanyUser existing = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = existingAdmin.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator,
+            IsAccountVerified = false,
+            IsCurrentMainCompanyUser = false
+        };
+
+        await Fixture.Save(context, existing);
+
+        User newAdmin = UserMock.Create();
+        await Fixture.Save(context, newAdmin);
+
+        Mock<IEmailService> emailServiceMock = new();
+        CreateRangeCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        List<CompanyUserInput> input =
+        [
+            new()
+            {
+                CompanyId = company.CompanyId,
+                UserId = newAdmin.UserId,
+                CompanyUserRole = CompanyUserRoleEnum.Administrator
+            }
+        ];
+
+        // Act;
+        List<CompanyUserOutput> output = await sut.Execute(authUser.UserId, input);
+
+        // Assert;
+        Assert.Single(output);
+
+        CompanyUser? created = await context.CompanyUsers.AsNoTracking().FirstOrDefaultAsync(x => x.CompanyId == company.CompanyId && x.UserId == newAdmin.UserId);
+
+        Assert.NotNull(created);
+        Assert.Equal(CompanyUserRoleEnum.Administrator, created!.CompanyUserRole);
+        Assert.False(created.IsCurrentMainCompanyUser);
     }
 
     #region helpers

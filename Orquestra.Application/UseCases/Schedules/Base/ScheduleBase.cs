@@ -150,7 +150,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             string msg = usersIds.Length == 1 ? "O usuário que você referenciou para o agendamento não é válido ou não está vinculado à empresa." :
                 $"Os {usersIds.Length} usuários que você referenciou para o agendamento não são válidos ou não estão vinculados à empresa.";
 
-            throw new Exception(msg);
+            throw new UnauthorizedAccessException(msg);
         }
 
         input.UsersIds = [.. validUsers];

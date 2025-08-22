@@ -113,7 +113,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
     private static void ThrowError(bool needAdmin)
     {
         string message = needAdmin ? "Apenas administradores da empresa podem executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";
-        throw new Exception(message);
+        throw new UnauthorizedAccessException(message);
     }
     #endregion
 }
