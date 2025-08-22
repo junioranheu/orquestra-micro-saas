@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Orquestra.API.Extensions;
 using Orquestra.API.Filters;
+using Orquestra.Infrastructure.Serialization;
 using System.IO.Compression;
 using System.Text.Json.Serialization;
 
@@ -48,9 +48,10 @@ public static class DependencyInjection
         }).
            AddJsonOptions(x =>
            {
-              x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-              x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-              x.JsonSerializerOptions.WriteIndented = env.IsDevelopment();
+               x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+               x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+               x.JsonSerializerOptions.WriteIndented = env.IsDevelopment();
+               x.JsonSerializerOptions.Converters.Add(new BrasiliaDateTimeConverter());
            });
     }
 
