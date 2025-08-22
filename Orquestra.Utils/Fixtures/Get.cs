@@ -9,6 +9,20 @@ namespace Orquestra.Utils.Fixtures;
 public static class Get
 {
     /// <summary>
+    /// Retorna as URLs base da aplicação (API e Front-end) de acordo com o ambiente.
+    /// - Em modo DEBUG, retorna os endereços locais.
+    /// - Em modo RELEASE, retorna os endereços publicados.
+    /// </summary>
+    public static (string urlBack, string urlFront) GetUrls()
+    {
+#if DEBUG
+        return ("http://localhost:5035/api", "http://localhost:3000");
+#else
+    return ("https://orquestra-cbgkgtayftdeaxh2.brazilsouth-01.azurewebsites.net/api", "https://orquestra.vercel.app");
+#endif
+    }
+
+    /// <summary>
     /// Obtém o horário atual, forçando ao horário de Brasilia;
     /// </summary>
     public static DateTime GetDate()
@@ -113,20 +127,6 @@ public static class Get
         bool hitTrue = value < hitChanceForTrue;
 
         return hitTrue;
-    }
-
-    /// <summary>
-    /// Retorna as URLs base da aplicação (API e Front-end) de acordo com o ambiente.
-    /// - Em modo DEBUG, retorna os endereços locais.
-    /// - Em modo RELEASE, retorna os endereços publicados.
-    /// </summary>
-    public static (string urlBack, string urlFront) GetUrls()
-    {
-#if DEBUG
-        return ("http://localhost:5035/api", "http://localhost:5173");
-#else
-    return ("https://orquestra-cbgkgtayftdeaxh2.brazilsouth-01.azurewebsites.net/api", "https://orquestra.vercel.app");
-#endif
     }
 
     /// <summary>

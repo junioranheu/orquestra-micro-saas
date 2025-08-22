@@ -1,4 +1,4 @@
-import iUsuario from '@/app/api/consts/usuario';
+import iUsuario from '@/app/api/consts/user';
 import { UserContext } from '@/app/contexts/user.context';
 import { Dispatch, SetStateAction, useContext } from 'react';
 

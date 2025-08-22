@@ -2,9 +2,10 @@ import { BASE } from '@/app/api/fetch';
 
 const controller = 'api/User';
 
-export const CONSTS_USUARIO = {
-    getAll: `${BASE}/${controller}/GetAll`,
-    auth: `${BASE}/${controller}/Auth`,
+export const CONSTS_USER = {
+    get: `${BASE}/${controller}`,
+    create: `${BASE}/${controller}`,
+    put: `${BASE}/${controller}`
 };
 
 export default interface iUsuario {

@@ -24,7 +24,7 @@ public class UserController(
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet]
-    public async Task<ActionResult> Create([FromQuery] PaginationInput paginationInput)
+    public async Task<ActionResult> Get([FromQuery] PaginationInput paginationInput)
     {
         (IEnumerable<UserOutput> output, int count) = await _get.Execute(paginationInput);
 

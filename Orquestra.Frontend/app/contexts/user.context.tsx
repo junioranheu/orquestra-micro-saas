@@ -1,4 +1,4 @@
-import iUsuario from '@/app/api/consts/usuario';
+import iUsuario from '@/app/api/consts/user';
 import { Dispatch, JSX, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
 interface iContext {

@@ -1,5 +1,5 @@
 'use client';
-import iUsuario, { CONSTS_USUARIO } from '@/app/api/consts/usuario';
+import iAuthInput, { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import ImgLoading from '@/app/assets/gif/loading.gif';
 import ImgLogo from '@/app/assets/png/logo.png';
@@ -58,8 +58,6 @@ export default function Login() {
     }, [router, auth?.isAuth]);
 
     async function handleLogin() {
-        console.log(formData);
-
         if (!formData.email || !formData.password) {
             swal({ str: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
             return;
@@ -68,14 +66,14 @@ export default function Login() {
         const user = {
             email: formData.email,
             password: formData.password
-        } as unknown as iUsuario;
+        } as iAuthInput;
 
-        const result = await Fetch.post(`${CONSTS_USUARIO.auth}`, user);
-        // console.log(result);
+        const result = await Fetch.post(CONSTS_AUTH.auth, user);
+        console.log(result);
 
         if (result) {
-            Auth.set(user);
-            setAuth(user);
+            Auth.set(result);
+            setAuth(result);
 
             setTimeout(() => {
                 router.push(ROUTES.DASHBOARD);

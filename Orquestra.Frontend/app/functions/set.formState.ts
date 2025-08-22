@@ -4,7 +4,6 @@ import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 // Helpers para inputs (texto);
 export function handleInputFormStateChange(e: ChangeEvent<HTMLInputElement>, setForm: Dispatch<SetStateAction<any>>, isGetWithoutMask: boolean = false): void {
     const { name, value, type, checked } = e.target;
-    console.log(e.target);
     setForm((prevState: any) => ({ ...prevState, [name]: type === 'checkbox' ? checked : (isGetWithoutMask ? handleGetValueWithoutMask(e) : value) }));
 }
 
