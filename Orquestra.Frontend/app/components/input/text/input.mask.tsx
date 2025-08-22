@@ -1,5 +1,5 @@
 import Image, { StaticImageData } from 'next/image';
-import { ChangeEvent, FocusEventHandler, KeyboardEventHandler, ReactNode, RefObject, cloneElement, useEffect, useState } from 'react';
+import { ChangeEvent, FocusEventHandler, KeyboardEventHandler, ReactNode, cloneElement, useEffect, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import styles from './input.mask.module.scss';
 
@@ -15,7 +15,6 @@ interface iParametros {
     showIcon?: boolean;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
-    refInput?: RefObject<HTMLInputElement> | null;
 
     handleChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     handleExtraValidation?: () => boolean | null;
@@ -24,7 +23,9 @@ interface iParametros {
 }
 
 export default function InputMaskCustom({
-    objectFormData, title = '', type = 'text', classes = '', placeholder, isDisabled = false, minChar = 0, mask = '', showIcon = false, svg_component = null, svg_staticImageData = null, refInput = null,
+    objectFormData, title = '', type = 'text', classes = '', placeholder,
+    isDisabled = false, minChar = 0, mask = '', showIcon = false, svg_component = null,
+    svg_staticImageData = null,
     handleChange, handleExtraValidation = () => null, handleKeyDown = () => null, handleBlur = () => null
 }: iParametros) {
 
@@ -100,14 +101,22 @@ export default function InputMaskCustom({
                     readOnly={isDisabled}
                     disabled={isDisabled}
                     value={value_formData}
-                    onAccept={(value: string) => {
-                        if (handleChange) {
-                            handleChange({ target: { value, name: prop_formData } } as ChangeEvent<HTMLInputElement>);
-                        }
-                    }}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    inputRef={refInput}
+                    inputRef={(input) => {
+                        if (!input) {
+                            return;
+                        }
+
+                        input.oninput = (e: Event) => {
+                            const target = e.target as HTMLInputElement;
+                            // console.log('onChange real', target.value);
+
+                            if (handleChange) {
+                                handleChange({ target } as ChangeEvent<HTMLInputElement>);
+                            }
+                        };
+                    }}
                 />
             </div>
         </div>
