@@ -7,5 +7,5 @@ namespace Orquestra.Application.UseCases.Users.Get;
 public interface IGetUser
 {
     Task<(User? user, string passwordEncrypted)> Execute(UserInput input);
-    Task<(IEnumerable<UserOutput> linq, int count)> Execute(PaginationInput pagination);
+    Task<(IEnumerable<UserOutput> output, int count)> Execute(PaginationInput pagination);
 }

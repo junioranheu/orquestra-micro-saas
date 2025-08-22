@@ -17,7 +17,8 @@ public class LogController(IGetLog get) : Controller
     [HttpGet]
     public async Task<ActionResult> Create([FromQuery] PaginationInput paginationInput, [FromQuery] Guid? userId)
     {
-        (IEnumerable<Log> linq, int count) = await _get.Execute(paginationInput, userId);
-        return Ok(new { linq, count });
+        (IEnumerable<Log> output, int count) = await _get.Execute(paginationInput, userId);
+
+        return Ok(new { output, count });
     }
 }

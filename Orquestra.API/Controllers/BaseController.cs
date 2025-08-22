@@ -57,6 +57,7 @@ public abstract class BaseController<T> : Controller
         }
 
         string name = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
+
         return name;
     }
 
@@ -68,6 +69,7 @@ public abstract class BaseController<T> : Controller
         }
 
         string email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+
         return email;
     }
 

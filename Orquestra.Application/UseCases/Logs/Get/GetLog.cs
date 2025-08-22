@@ -9,7 +9,7 @@ public sealed class GetLog(Context context) : IGetLog
 {
     private readonly Context _context = context;
 
-    public async Task<(IEnumerable<Log> linq, int count)> Execute(PaginationInput pagination, Guid? userId)
+    public async Task<(IEnumerable<Log> output, int count)> Execute(PaginationInput pagination, Guid? userId)
     {
         var query = _context.Logs.
                     Include(x => x.User).
@@ -19,8 +19,8 @@ public sealed class GetLog(Context context) : IGetLog
                     ).
                     OrderByDescending(x => x.CreatedDate);
 
-        (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
+        (IEnumerable<Log> output, int count) = await PagedQuery.Execute(query, pagination);
 
-        return (linq, count);
+        return (output, count);
     }
 }

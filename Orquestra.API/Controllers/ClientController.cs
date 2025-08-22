@@ -9,8 +9,11 @@ namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClientController(IGetClient get, IGetClientByCompanyId getClientByCompanyId, ICreateClient create) :
-    BaseController<ClientController>
+public class ClientController(
+        IGetClient get,
+        IGetClientByCompanyId getClientByCompanyId,
+        ICreateClient create
+    ) : BaseController<ClientController>
 {
     private readonly IGetClient _get = get;
     private readonly IGetClientByCompanyId _getClientByCompanyId = getClientByCompanyId;

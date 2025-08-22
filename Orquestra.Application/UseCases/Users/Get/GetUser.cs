@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Entities;
@@ -34,7 +33,7 @@ public sealed class GetUser(Context context) : IGetUser
         return (result, password);
     }
 
-    public async Task<(IEnumerable<UserOutput> linq, int count)> Execute(PaginationInput pagination)
+    public async Task<(IEnumerable<UserOutput> output, int count)> Execute(PaginationInput pagination)
     {
         var query = _context.Users.
                     AsNoTracking().

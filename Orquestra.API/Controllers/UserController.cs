@@ -12,7 +12,11 @@ namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(IGetUser get, ICreateUser create, IUpdateUser update) : BaseController<UserController>
+public class UserController(
+        IGetUser get,
+        ICreateUser create,
+        IUpdateUser update
+    ) : BaseController<UserController>
 {
     private readonly IGetUser _get = get;
     private readonly ICreateUser _create = create;
@@ -22,7 +26,8 @@ public class UserController(IGetUser get, ICreateUser create, IUpdateUser update
     [HttpGet]
     public async Task<ActionResult> Create([FromQuery] PaginationInput paginationInput)
     {
-        (IEnumerable<UserOutput> linq, int count) = await _get.Execute(paginationInput);
+        (IEnumerable<UserOutput> output, int count) = await _get.Execute(paginationInput);
+
         return Ok(new { linq, count });
     }
 
@@ -31,6 +36,7 @@ public class UserController(IGetUser get, ICreateUser create, IUpdateUser update
     public async Task<ActionResult> Create([FromForm] UserInput input)
     {
         UserOutput output = await _create.Execute(input);
+
         return Ok(output);
     }
 

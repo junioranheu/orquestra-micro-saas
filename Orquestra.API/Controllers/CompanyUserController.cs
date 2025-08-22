@@ -33,7 +33,6 @@ public class CompanyUserController(
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         List<CompanyUserOutput> output = await _createRange.Execute(userIdAuth, input);
-        // TO DO: Enviar e-mail para cada um dos usuários para eles aceitarem e mudar o status do IsAccountVerified;
 
         return Ok(output);
     }
@@ -48,6 +47,7 @@ public class CompanyUserController(
         }
 
         List<CompanyUserOutput>? output = await _getCompanyUserByCompanyId.Execute(companyId);
+
         return Ok(output);
     }
 

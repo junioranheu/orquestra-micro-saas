@@ -13,7 +13,11 @@ namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CompanyController(ICreateCompany create, IGetCompany get, IVerifyCompany verify) : BaseController<CompanyController>
+public class CompanyController(
+        ICreateCompany create,
+        IGetCompany get,
+        IVerifyCompany verify
+    ) : BaseController<CompanyController>
 {
     private readonly ICreateCompany _create = create;
     private readonly IGetCompany _get = get;
@@ -44,6 +48,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get, IVerifyCo
     public async Task<ActionResult> GetAll()
     {
         List<CompanyOutput>? output = await _get.Execute();
+
         return Ok(output);
     }
 
@@ -60,6 +65,7 @@ public class CompanyController(ICreateCompany create, IGetCompany get, IVerifyCo
         }
 
         List<CompanyOutput>? output = await _get.Execute(userId);
+
         return Ok(output);
     }
 

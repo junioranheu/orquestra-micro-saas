@@ -5,6 +5,6 @@ namespace Orquestra.Application.UseCases.Logs.Get
 {
     public interface IGetLog
     {
-        Task<(IEnumerable<Log> linq, int count)> Execute(PaginationInput pagination, Guid? userId);
+        Task<(IEnumerable<Log> output, int count)> Execute(PaginationInput pagination, Guid? userId);
     }
 }
