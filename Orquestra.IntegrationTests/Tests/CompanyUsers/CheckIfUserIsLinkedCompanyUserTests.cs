@@ -61,9 +61,9 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
     }
 
     [Fact]
-    public async Task Execute_ShouldReturnTrue_WhenUserIsOwner()
+    public async Task Execute_ShouldReturnTrue_WhenUserIsAdmin()
     {
-        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync(CompanyUserRoleEnum.Owner);
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync(CompanyUserRoleEnum.Administrator);
         CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
         bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true);
@@ -77,7 +77,7 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
         Context context = Fixture.CreateContext();
 
         User adminUser = UserMock.Create();
-        adminUser.Role = UserRoleEnum.Admin;
+        adminUser.Role = UserRoleEnum.Administrator;
         await Fixture.Save(context, adminUser);
 
         Company company = CompanyMock.Create();

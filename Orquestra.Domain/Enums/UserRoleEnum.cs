@@ -11,5 +11,5 @@ public enum UserRoleEnum
     Maintainer = 999,
 
     [Description("Administrador do sistema")]
-    Admin = 1000
+    Administrator = 1000
 }

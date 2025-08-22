@@ -13,7 +13,7 @@ public class LogController(IGetLog get) : Controller
 {
     private readonly IGetLog _get = get;
 
-    [AuthorizeFilter(UserRoleEnum.Admin, UserRoleEnum.Maintainer)]
+    [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet]
     public async Task<ActionResult> Create([FromQuery] PaginationInput paginationInput, [FromQuery] Guid? userId)
     {

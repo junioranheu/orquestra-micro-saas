@@ -38,7 +38,7 @@ public sealed class JwtTokenGeneratorTests
         Guid userIdAuth = Guid.NewGuid();
         string name = "Junior";
         string email = "junior@gmail.com";
-        UserRoleEnum role = UserRoleEnum.Admin;
+        UserRoleEnum role = UserRoleEnum.Administrator;
 
         // Act;
         (string token, RefreshToken refreshToken) = generator.GenerateToken(userIdAuth, name, email, role);
@@ -56,7 +56,7 @@ public sealed class JwtTokenGeneratorTests
         Assert.Contains(jwtToken.Claims, c => c.Type == "email" && c.Value == email);
 
         // Role deve ter Admin e Common;
-        Assert.Contains(jwtToken.Claims, c => c.Type == "role" && c.Value == "Admin");
+        Assert.Contains(jwtToken.Claims, c => c.Type == "role" && c.Value == "Administrator");
         Assert.Contains(jwtToken.Claims, c => c.Type == "role" && c.Value == "Common");
     }
 }

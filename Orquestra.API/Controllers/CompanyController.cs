@@ -43,7 +43,7 @@ public class CompanyController(
         return Ok(output);
     }
 
-    [AuthorizeFilter(UserRoleEnum.Admin, UserRoleEnum.Maintainer)]
+    [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet("GetAll")]
     public async Task<ActionResult> GetAll()
     {
@@ -59,7 +59,7 @@ public class CompanyController(
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         (UserRoleEnum[] userRolesEnum, string[] _) = GetUserRolesAuth();
 
-        if (userIdAuth != userId && !(userRolesEnum.Contains(UserRoleEnum.Admin) || userRolesEnum.Contains(UserRoleEnum.Maintainer)))
+        if (userIdAuth != userId && !(userRolesEnum.Contains(UserRoleEnum.Administrator) || userRolesEnum.Contains(UserRoleEnum.Maintainer)))
         {
             throw new Exception("Você só pode visualizar a sua relação de empresas.");
         }

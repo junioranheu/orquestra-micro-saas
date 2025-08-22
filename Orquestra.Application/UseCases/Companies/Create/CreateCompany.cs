@@ -10,7 +10,6 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
-using System.Runtime.CompilerServices;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
@@ -32,7 +31,7 @@ public sealed class CreateCompany(
 
         Company company = await Save(input);
 
-        await SaveCompanyOwner(userIdAuth, company);
+        await SaveCompanyFirstAdministrator(userIdAuth, company);
 
         await SendEmail(userIdAuth, company);
 
@@ -58,13 +57,13 @@ public sealed class CreateCompany(
         return company;
     }
 
-    private async Task SaveCompanyOwner(Guid userIdAuth, Company input)
+    private async Task SaveCompanyFirstAdministrator(Guid userIdAuth, Company input)
     {
         CompanyUserInput companyUser = new()
         {
             CompanyId = input.CompanyId,
             UserId = userIdAuth,
-            CompanyUserRole = CompanyUserRoleEnum.Owner
+            CompanyUserRole = CompanyUserRoleEnum.Administrator
         };
 
         List<CompanyUserInput> companyUsers = [companyUser];

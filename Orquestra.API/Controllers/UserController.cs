@@ -22,7 +22,7 @@ public class UserController(
     private readonly ICreateUser _create = create;
     private readonly IUpdateUser _update = update;
 
-    [AuthorizeFilter(UserRoleEnum.Admin, UserRoleEnum.Maintainer)]
+    [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet]
     public async Task<ActionResult> Create([FromQuery] PaginationInput paginationInput)
     {

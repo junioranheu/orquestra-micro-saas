@@ -34,7 +34,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
     /// Lançada quando:
     /// - Os parâmetros <paramref name="companyId"/> ou <paramref name="userId"/> não forem válidos;
     /// - O usuário não estiver vinculado à empresa e <paramref name="throwError"/> for verdadeiro;
-    /// - O usuário não possuir permissão de administrador/owner quando exigido.
+    /// - O usuário não possuir permissão de administrador quando exigido.
     /// </exception>
     public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needCompanyAdmin, bool throwError = true)
     {
@@ -48,7 +48,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
             if (user is not null)
             {
                 List<UserRoleEnum> roles = [.. user.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => Enum.Parse<UserRoleEnum>(x.Value))];
-                isSystemAdmin = roles.Contains(UserRoleEnum.Admin) || roles.Contains(UserRoleEnum.Maintainer);
+                isSystemAdmin = roles.Contains(UserRoleEnum.Administrator) || roles.Contains(UserRoleEnum.Maintainer);
             }
         }
         catch
@@ -68,7 +68,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
         if (checkUsersByCompanyAndUser?.Count == 0)
         {
             // #2.2 - Verificação extra: verificar se a empresa em si tem algum funcionário;
-            // Se não tiver, não tem sentido executar o ThrowError, porque é uma empresa nova e está recebendo seu primeiro funcionário (Owner);
+            // Se não tiver, não tem sentido executar o ThrowError, porque é uma empresa nova e está recebendo seu primeiro funcionário (primerio administrador);
             // Caso tenha mais de um usuário (Count > 0), aí sim deve-se executar o ThrowError;
             List<CompanyUserOutput>? secondCheckUsersByCompanyOnly = await _getCompanyUserByCompanyId.Execute(companyId: companyId.GetValueOrDefault(), userId: null);
 
@@ -90,13 +90,13 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
             return true;
         }
 
-        // #4 - Verificar se a requisição em questão necessita de permissão de Administrador (ou Owner) da EMPRESA (NÃO DO SISTEMA!);
-        // Se sim, verificar se o usuário em questão é Administrador (ou Owner);
+        // #4 - Verificar se a requisição em questão necessita de permissão de Administrador da EMPRESA (NÃO DO SISTEMA!);
+        // Se sim, verificar se o usuário em questão é Administrador;
         CompanyUserOutput? companyUser = checkUsersByCompanyAndUser?.FirstOrDefault();
 
         if (needCompanyAdmin)
         {
-            bool checkIfIsAdmin = companyUser?.CompanyUserRole == CompanyUserRoleEnum.Administrator || companyUser?.CompanyUserRole == CompanyUserRoleEnum.Owner;
+            bool checkIfIsAdmin = companyUser?.CompanyUserRole == CompanyUserRoleEnum.Administrator;
 
             if (!checkIfIsAdmin && throwError)
             {

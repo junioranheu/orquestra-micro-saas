@@ -5,7 +5,6 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using static Orquestra.Utils.Fixtures.Get;
@@ -37,15 +36,15 @@ public sealed class CreateRangeCompanyUser(
             item.VerifyToken = GenerateSafeToken32Bytes(urlSafe: true);
         }
 
-        bool isOwner = CheckIfUserIsOwnerAndNormalizePropsIfIndeedIsOwner(companyUsers);
+        bool isFirstAdministrator = CheckIfUserIsFirstAdministratorndNormalizePropsIfIndeedItIs(companyUsers);
 
         // Salvar;
         await _context.AddRangeAsync(companyUsers);
         await _context.SaveChangesAsync();
 
         // Enviar e-mail para cada um dos funcionários;
-        // Não é necessário enviar e-mail para o Owner;
-        if (!isOwner)
+        // Não é necessário enviar e-mail para o primeiro administador;
+        if (!isFirstAdministrator)
         {
             Guid? companyId = input.FirstOrDefault()?.CompanyId;
 
@@ -70,29 +69,18 @@ public sealed class CreateRangeCompanyUser(
     }
 
     #region extras
-    private static bool CheckIfUserIsOwnerAndNormalizePropsIfIndeedIsOwner(List<CompanyUser> companyUsers)
+    private static bool CheckIfUserIsFirstAdministratorndNormalizePropsIfIndeedItIs(List<CompanyUser> companyUsers)
     {
-        if (companyUsers.Count != 1)
+        if (companyUsers.Count > 1)
         {
             return false;
         }
 
-        CompanyUser? first = companyUsers.FirstOrDefault();
+        CompanyUser first = companyUsers.First();
+        first.IsAccountVerified = true;
+        first.IsCurrentMainCompanyUser = true;
 
-        if (first is null)
-        {
-            return false;
-        }
-
-        bool isOwner = first?.CompanyUserRole == CompanyUserRoleEnum.Owner;
-
-        if (isOwner)
-        {
-            first!.IsAccountVerified = true;
-            first!.IsCurrentMainCompanyUser = true;
-        }
-
-        return isOwner;
+        return true;
     }
 
     private async Task SendEmail(CompanyUser companyUser, Company? company)
