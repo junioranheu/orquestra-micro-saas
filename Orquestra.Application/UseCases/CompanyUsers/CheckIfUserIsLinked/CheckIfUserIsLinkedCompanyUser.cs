@@ -6,11 +6,36 @@ using System.Security.Claims;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 
+/// <summary>
+/// Caso de uso responsável por verificar se um usuário está vinculado a uma empresa,
+/// considerando permissões de nível de sistema (Admin/Maintainer) e permissões de nível de empresa (Admin).
+/// </summary>
 public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId getCompanyUserByCompanyId, IHttpContextAccessor httpContextAccessor) : ICheckIfUserIsLinkedCompanyUser
 {
     private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
+    /// <summary>
+    /// Executa a verificação de vínculo entre um usuário e uma empresa.
+    /// </summary>
+    /// <param name="companyId">Identificador da empresa alvo da verificação.</param>
+    /// <param name="userId">Identificador do usuário a ser validado.</param>
+    /// <param name="needCompanyAdmin">
+    /// Define se a verificação deve garantir que o usuário é administrador da empresa.
+    /// </param>
+    /// <param name="throwError">
+    /// Indica se uma exceção deve ser lançada em caso de falha na validação (padrão = true).
+    /// </param>
+    /// <returns>
+    /// Retorna <c>true</c> se o usuário estiver corretamente vinculado (e com a permissão necessária, caso exigida);
+    /// caso contrário, retorna <c>false</c> (ou lança exceção se <paramref name="throwError"/> for verdadeiro).
+    /// </returns>
+    /// <exception cref="Exception">
+    /// Lançada quando:
+    /// - Os parâmetros <paramref name="companyId"/> ou <paramref name="userId"/> não forem válidos;
+    /// - O usuário não estiver vinculado à empresa e <paramref name="throwError"/> for verdadeiro;
+    /// - O usuário não possuir permissão de administrador/owner quando exigido.
+    /// </exception>
     public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needCompanyAdmin, bool throwError = true)
     {
         // #1 - Checar se o usuário autenticado é Administrador ou Suporte do SISTEMA (NÃO DA EMPRESA!);

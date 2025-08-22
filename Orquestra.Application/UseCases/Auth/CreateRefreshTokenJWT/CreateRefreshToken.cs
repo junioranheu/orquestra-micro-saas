@@ -48,7 +48,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
         List<Guid> oldRefreshTokenIds = [.. oldRefreshTokens.Select(y => y.RefreshTokenId)];
 
-        #region raw_sql
+        #region obsoleto_raw_sql
         //string sql = "UPDATE RefreshTokens SET Status = @Status, RevokedDate = @RevokedDate WHERE RefreshTokenId IN (@OldRefreshTokenIds)";
 
         //var parameters = new[]
