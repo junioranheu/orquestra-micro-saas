@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using static Orquestra.Utils.Fixtures.Get;
@@ -91,6 +92,12 @@ public sealed class CreateRangeCompanyUser(
         }
 
         CompanyUser first = input.First();
+
+        if (first.CompanyUserRole != CompanyUserRoleEnum.Administrator)
+        {
+            return false;
+        }
+
         first.IsAccountVerified = true;
         first.IsCurrentMainCompanyUser = true;
 

@@ -36,4 +36,8 @@
 	  <ProjectReference Include="..\Orquestra.IntegrationTests\Orquestra.IntegrationTests.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Tests\Bases\" />
+	</ItemGroup>
+
 </Project>
