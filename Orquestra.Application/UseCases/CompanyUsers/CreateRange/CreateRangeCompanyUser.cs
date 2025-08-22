@@ -23,6 +23,11 @@ public sealed class CreateRangeCompanyUser(
     public async Task<List<CompanyUserOutput>> Execute(Guid userIdAuth, List<CompanyUserInput> input)
     {
         // Validar;
+        if (input is null || input.Count == 0)
+        {
+            throw new Exception("A lista de usuários está vazia.");
+        }
+
         foreach (var item in input)
         {
             await Validate(input: item, userIdAuth, isCreate: true);
@@ -36,7 +41,8 @@ public sealed class CreateRangeCompanyUser(
             item.VerifyToken = GenerateSafeToken32Bytes(urlSafe: true);
         }
 
-        bool isFirstAdministrator = CheckIfUserIsFirstAdministratorndNormalizePropsIfIndeedItIs(companyUsers);
+        Guid companyId = input.First().CompanyId;
+        bool isFirstAdministrator = await CheckIfUserIsFirstAdministratorAndNormalizePropsIfIndeedItIs(companyUsers, companyId);
 
         // Salvar;
         await _context.AddRangeAsync(companyUsers);
@@ -46,9 +52,7 @@ public sealed class CreateRangeCompanyUser(
         // Não é necessário enviar e-mail para o primeiro administador;
         if (!isFirstAdministrator)
         {
-            Guid? companyId = input.FirstOrDefault()?.CompanyId;
-
-            if (companyId is not null && companyId != Guid.Empty)
+            if (companyId != Guid.Empty)
             {
                 Company? company = await _context.Companies.
                                    AsNoTracking().
@@ -69,14 +73,24 @@ public sealed class CreateRangeCompanyUser(
     }
 
     #region extras
-    private static bool CheckIfUserIsFirstAdministratorndNormalizePropsIfIndeedItIs(List<CompanyUser> companyUsers)
+    private async Task<bool> CheckIfUserIsFirstAdministratorAndNormalizePropsIfIndeedItIs(List<CompanyUser> input, Guid companyId)
     {
-        if (companyUsers.Count > 1)
+        if (input.Count > 1)
         {
             return false;
         }
 
-        CompanyUser first = companyUsers.First();
+        List<CompanyUser> companyUsers = await _context.CompanyUsers.
+                                         AsNoTracking().
+                                         Where(x => x.CompanyId == companyId && x.Status == true).
+                                         ToListAsync();
+
+        if (companyUsers.Count > 0)
+        {
+            return false;
+        }
+
+        CompanyUser first = input.First();
         first.IsAccountVerified = true;
         first.IsCurrentMainCompanyUser = true;
 
@@ -103,7 +117,8 @@ public sealed class CreateRangeCompanyUser(
             { "[NameApp]", SystemConsts.NameApp },
             { "[CompanyName]", company.Name },
             { "[UserName]", GetFirstWord(user.FullName) },
-            { "[VerifyUrl]", verifyUrl }
+            { "[CompanyUserRole]", GetEnumDesc(companyUser.CompanyUserRole).ToLowerInvariant() },
+            { "[VerifyUrl]", verifyUrl },
         };
 
         string bodyHtml = _emailService.RenderTemplate("EmailVerifyCompanyUser.html", values);
