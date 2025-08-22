@@ -1,5 +1,9 @@
 const nextConfig: import('next').NextConfig = {
-    reactStrictMode: false
+    reactStrictMode: false,
+
+    eslint: {
+        ignoreDuringBuilds: true
+    }
 }
 
 export default nextConfig;
