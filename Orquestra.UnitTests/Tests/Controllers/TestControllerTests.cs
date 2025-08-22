@@ -15,8 +15,7 @@ public sealed class TestControllerTests
     public void GetAnonymous_ShouldReturn_OkWithAscii()
     {
         // Arrange
-        Mock<IEmailService> emailServiceMock = new();
-        TestController controller = new(emailServiceMock.Object);
+        TestController controller = new();
 
         // Act
         ActionResult result = controller.GetAnonymous();
@@ -35,15 +34,13 @@ public sealed class TestControllerTests
         // Arrange
         Guid userId = Guid.NewGuid();
 
-        Mock<IEmailService> emailServiceMock = new();
-
         // Mock do HttpContext.User
         ClaimsPrincipal claims = new(new ClaimsIdentity(
         [
             new Claim(ClaimTypes.NameIdentifier, userId.ToString())
         ], "mock"));
 
-        TestController controller = new(emailServiceMock.Object)
+        TestController controller = new()
         {
             ControllerContext = new ControllerContext
             {
@@ -64,9 +61,7 @@ public sealed class TestControllerTests
     public void GetAuth_ShouldThrow_WhenUserNotAuthenticated()
     {
         // Arrange
-        Mock<IEmailService> emailServiceMock = new();
-
-        TestController controller = new(emailServiceMock.Object)
+        TestController controller = new()
         {
             ControllerContext = new ControllerContext
             {

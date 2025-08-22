@@ -10,6 +10,6 @@ public enum CompanyUserRoleEnum
     [Description("Administrador")]
     Administrator = 2,
 
-    [Description("Comum")]
-    Common = 3
+    [Description("Membro")]
+    Member = 3
 }
