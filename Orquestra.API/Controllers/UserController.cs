@@ -28,7 +28,7 @@ public class UserController(
     {
         (IEnumerable<UserOutput> output, int count) = await _get.Execute(paginationInput);
 
-        return Ok(new { linq, count });
+        return Ok(new { output, count });
     }
 
     [AllowAnonymous]

@@ -13,20 +13,11 @@ public static class DependencyInjection
     {
         IWebHostEnvironment env = builder.Environment;
 
-        // AddKestrel(services);
         AddCompression(services);
         AddControllers(services, env);
         AddMisc(services);
 
         return services;
-    }
-
-    private static void AddKestrel(IServiceCollection services)
-    {
-        services.Configure<KestrelServerOptions>(options =>
-        {
-            options.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(30);
-        });
     }
 
     private static void AddCompression(IServiceCollection services)
@@ -55,12 +46,12 @@ public static class DependencyInjection
         {
             x.Filters.Add<ErrorFilter>();
         }).
-            AddJsonOptions(x =>
-            {
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                x.JsonSerializerOptions.WriteIndented = env.IsDevelopment();
-            });
+           AddJsonOptions(x =>
+           {
+              x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+              x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+              x.JsonSerializerOptions.WriteIndented = env.IsDevelopment();
+           });
     }
 
     private static void AddMisc(IServiceCollection services)
