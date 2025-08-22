@@ -13,6 +13,7 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
     {
         var result = await _context.CompanyUsers.
                      Include(x => x.User).
+                     Include(x => x.InviterUser).
                      AsNoTracking().
                      Where(x =>
                         (companyId == Guid.Empty || x.CompanyId == companyId) &&
@@ -23,7 +24,22 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
                      Select(g => g.FirstOrDefault()).
                      ToListAsync();
 
+        if (result is null || result.Count == 0)
+        {
+            return [];
+        }
+
         var output = result.Adapt<List<CompanyUserOutput>>();
+
+        foreach (var item in output)
+        {
+            if (item is null)
+            {
+                continue;
+            }
+
+            item.IsOwner = item?.InviterUserId is null;
+        }
 
         return output;
     }

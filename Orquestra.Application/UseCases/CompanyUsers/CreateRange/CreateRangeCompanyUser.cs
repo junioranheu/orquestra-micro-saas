@@ -40,6 +40,9 @@ public sealed class CreateRangeCompanyUser(
         foreach (var item in companyUsers)
         {
             item.VerifyToken = GenerateSafeToken32Bytes(urlSafe: true);
+
+            bool isSameUser = item.UserId == userIdAuth;
+            item.InviterUserId = isSameUser ? null : userIdAuth;
         }
 
         Guid companyId = input.First().CompanyId;

@@ -29,4 +29,8 @@ public sealed class CompanyUser : Audit
     public string VerifyToken { get; set; } = string.Empty;
 
     public bool IsCurrentMainCompanyUser { get; set; } = false;
+
+    public Guid? InviterUserId { get; set; }
+    [ForeignKey(nameof(InviterUserId))]
+    public User? InviterUser { get; init; }
 }

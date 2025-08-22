@@ -57,7 +57,7 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
         (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync();
         CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
-        await Assert.ThrowsAsync<Exception>(() =>  sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true));
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true));
     }
 
     [Fact]

@@ -1,5 +1,6 @@
 ﻿using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using System.Text.Json.Serialization;
 
@@ -23,4 +24,10 @@ public sealed class CompanyUserOutput
     public bool IsCurrentMainCompanyUser { get; set; } = false;
 
     public DateTime CreatedDate { get; set; }
+
+    public Guid? InviterUserId { get; set; }
+    public UserOutput? InviterUser { get; init; }
+
+    // Extras;
+    public bool IsOwner { get; set; } = false;
 }

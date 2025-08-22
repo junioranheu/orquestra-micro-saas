@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Create;
@@ -39,9 +40,22 @@ public sealed class CreateScheduleTests
     }
 
     [Fact]
+    public async Task Execute_ShouldThrow_WhenCoworkersAreNotValid()
+    {
+        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
+        input.UsersIds = [Guid.NewGuid()]; // Usuário aleatório, não linkado à empresa;
+
+        await AddCompanyUserAsync(context, company, user);
+
+        CreateSchedule service = CreateScheduleService(context, user);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.Execute(user.UserId, input));
+    }
+
+    [Fact]
     public async Task Execute_ShouldThrow_WhenUserNotLinkedToCompany()
     {
-        (Context context, User user, Client client, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
+        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
 
         // Empresa já tem outro usuário, mas não o usuário do teste;
         CompanyUser anotherUser = new()
@@ -55,13 +69,13 @@ public sealed class CreateScheduleTests
 
         CreateSchedule service = CreateScheduleService(context, user);
 
-        await Assert.ThrowsAsync<Exception>(() => service.Execute(user.UserId, input));
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.Execute(user.UserId, input));
     }
 
     [Fact]
     public async Task Execute_ShouldThrow_WhenScheduleDateIsBeforeToday()
     {
-        var (context, user, client, company, input) = await ArrangeValidScheduleAsync();
+        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
         await AddCompanyUserAsync(context, company, user);
 
         input.Date = GetDate().AddDays(-1);
