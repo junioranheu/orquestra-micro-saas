@@ -1,0 +1,114 @@
+.main {
+    // background-color: orange !important;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .top {
+            // background-color: orange;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+
+            .left {
+                display: flex;
+                gap: 1rem;
+                overflow-x: auto;
+
+                .title {
+                    font-weight: 600;
+                    font-size: 1.2rem;
+                }
+            }
+
+            .right {
+                // background-color: orange;
+                display: flex;
+                gap: 1rem;
+                overflow-x: auto;
+
+                &::-webkit-scrollbar {
+                    height: 0.5rem;
+                }
+
+                .extraItem {
+                    // background-color: orange;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-start;
+
+                    .title {
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                    }
+
+                    .label {
+                        font-size: 0.75rem;
+                    }
+                }
+            }
+        }
+
+        // .bottom {
+        //     background-color: orange;
+        // }  
+    }
+
+    .column_actions {
+        // background-color: orange !important;
+        display: flex;
+        gap: 1rem;
+
+        button {
+            // background-color: purple !important;
+            font-size: 0.65rem;
+            height: 2rem;
+            padding: 0.5rem;
+        }
+
+        span {
+            // background-color: orange !important;
+            display: flex;
+            cursor: pointer;
+
+            img {
+                // background-color: purple !important;
+                width: 1.25rem;
+                height: auto;
+                filter: brightness(25%);
+            }
+        }
+    }
+}
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {
+    .main {
+        // background-color: orange !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        border-radius: 0 !important;
+        padding-right: 1.5rem !important;
+        width: 100vw !important;
+    }
+}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}

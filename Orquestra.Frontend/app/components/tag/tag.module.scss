@@ -1,0 +1,22 @@
+.tag {
+    // background-color: orange;
+    width: fit-content;
+    border-radius: 1.5rem;
+    border: 1px solid var(--gray);
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    letter-spacing: normal;
+
+    display: flex;
+    gap: 0.5rem;
+
+    .x {
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+            color: var(--main-dark);
+            transition: 0.3s;
+        }
+    }
+}

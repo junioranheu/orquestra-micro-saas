@@ -6,7 +6,7 @@ public static class SystemConsts
     public const string NameApp = "Orquestra";
     public const string Email = "orquestra.saas@gmail.com";
     public const string Author = "@junioranheu";
-    public const string Slogan = "Orquestra: harmonia na gestão do seu negócio";
+    public const string Slogan = "Harmonia na gestão do seu negócio";
     public const string MainColor = "#f9fff6";
 
     public const int OneMinuteInSec = 60;

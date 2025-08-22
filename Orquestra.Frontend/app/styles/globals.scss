@@ -1,0 +1,296 @@
+:root {
+    --main: #2596be; // #f9fff6
+    --main-light: #3abdfa;
+    --main-dark: #0091c0;
+    --main-alt: #0a67fc;
+    --black: #15171A;
+    --white: #FFFFFF;
+    --white-alt: #dbedf3;
+    --gray: lightgray;
+    --gray-light: #f5f5f5;
+    --gray-dark: #787e83;
+    --border-radius: 0.35rem;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05), 0 6px 20px rgba(0, 0, 0, 0.05);
+    --azure-bg-color: linear-gradient(120deg, #e5e5e5, #f8f1f7, #d7e2d7, #eee7ce);
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #f7f9fc;
+    color: var(--black);
+
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    letter-spacing: 0.03em;
+    font-size: 1rem;
+}
+
+// Misc
+img {
+    pointer-events: none;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+::selection {
+    background: var(--main);
+    color: var(--white);
+}
+
+.notAllowed {
+    cursor: not-allowed !important;
+}
+
+// Scroll
+::-webkit-scrollbar {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--white);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gray);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--main);
+}
+
+// Modal
+.modal-layout-grid {
+    // background-color: orange;
+    min-width: 20rem;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 1rem;
+    row-gap: 1rem;
+}
+
+.modal-layout-flex {
+    // background-color: orange;
+    min-width: 20rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+// Inputs
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='password'] {
+    font-size: 0.9rem;
+    font-weight: 500;
+    height: 2.5rem;
+
+    background-color: transparent;
+    color: var(--black) !important;
+    opacity: 0.9;
+
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid var(--gray-dark);
+    padding: 0 0.5rem;
+    transition: 0.3s;
+    width: 100%;
+
+    &::placeholder {
+        color: #999999;
+        font-size: 0.75rem;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    &:focus {
+        outline: none;
+        border-bottom: solid 1px var(--main);
+        transition: 0.3s;
+
+        &::placeholder {
+            font-size: 0.65rem;
+            transition: 0.3s;
+        }
+    }
+
+    &:disabled {
+        background-color: var(--gray);
+        border: 1px solid var(--gray);
+        border-radius: var(--border-radius);
+        cursor: not-allowed;
+    }
+}
+
+// Sonner (toast)
+.toastSonner {
+    div {
+        // background-color: orange !important;
+        font-weight: 600 !important;
+    }
+
+    button {
+        background-color: var(--main) !important;
+        transition: 0.3s !important;
+
+        &:hover {
+            background-color: var(--main-dark) !important;
+        }
+    }
+}
+
+// Tables (rc-table, rc-pagination)
+.rc-table {
+    overflow-x: auto !important;
+
+    td,
+    th {
+        // white-space: nowrap !important;
+        word-break: keep-all !important;
+    }
+
+    th {
+        background-color: var(--main-dark) !important;
+        color: var(--white) !important;
+        text-align: left !important;
+
+        &:first-of-type {
+            // background-color: orange !important;
+            border-top-left-radius: var(--border-radius) !important;
+            border-bottom-left-radius: var(--border-radius) !important;
+        }
+
+        &:last-of-type {
+            // background-color: orange !important;
+            border-top-right-radius: var(--border-radius) !important;
+            border-bottom-right-radius: var(--border-radius) !important;
+        }
+    }
+
+    .rc-table-content,
+    .rc-table-cell {
+        border: none;
+    }
+
+    .rc-table-cell-row-hover {
+        background-color: rgba(37, 150, 190, 0.1) !important;
+    }
+}
+
+.rc-pagination {
+    // background-color: orange !important;
+    margin-top: 1rem !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    li,
+    button {
+        border-radius: 50% !important;
+    }
+}
+
+// swal
+.swal2-popup {
+    // background-color: orange !important;
+    padding: 2.5rem 2rem !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1) !important;
+
+    .swal2-html-container {
+        // background-color: purple !important;
+        font-weight: 400 !important;
+        font-size: 1rem !important;
+        font-family: inherit !important;
+        // text-align: left !important;
+        color: var(--black) !important;
+    }
+
+    button {
+        background-color: var(--main) !important;
+        font-weight: 600 !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 1px !important;
+        padding: 0.75rem 1rem !important;
+        color: var(--white) !important;
+        min-width: 10rem !important;
+        border-radius: var(--border-radius) !important;
+        box-shadow: none !important;
+    }
+
+    .swal2-cancel {
+        background-color: transparent !important;
+        border: 1px solid var(--gray-dark) !important;
+        color: var(--black) !important;
+    }
+
+    .swal2-title {
+        font-size: 1.35rem !important;
+        color: var(--black) !important;
+    }
+
+    .swal2-input {
+        // box-shadow: none !important;
+
+        &::-webkit-input-placeholder {
+            font-size: 1.05rem;
+        }
+    }
+
+    .swal2-image {
+        // background-color: orange !important;
+        border-radius: var(--border-radius) !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .swal2-loader {
+        border-bottom-color: var(--main) !important;
+        border-top-color: var(--main) !important;
+    }
+
+    .swal2-icon {
+        font-size: 0.65rem !important;
+    }
+}
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {
+
+    .modal-layout-grid,
+    .modal-layout-flex {
+        // background-color: orange;
+        width: 80vw;
+    }
+}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}

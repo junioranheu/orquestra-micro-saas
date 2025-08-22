@@ -1,0 +1,44 @@
+.main {
+    // background-color: orange;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .title {
+        // background-color: purple;
+        font-weight: 600;
+        color: var(--gray-dark);
+    }
+
+    .items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 1rem;
+
+        .item {
+            // background-color: orange;
+            display: flex;
+            flex: 1 0 25%;
+            flex-direction: column;
+            box-sizing: border-box;
+            max-width: 25%;
+
+            .subtitle {
+                // background-color: tomato;
+                font-weight: 500;
+                font-size: 0.8rem;
+            }
+
+            .content {
+                // background-color: tomato;
+                font-weight: 400;
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    .marginTop {
+        margin-top: 1rem;
+    }
+}

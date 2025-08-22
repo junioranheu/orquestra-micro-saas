@@ -1,0 +1,91 @@
+.nav {
+    background-color: var(--main);
+    height: 3rem;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    .inner {
+        // background-color: orange !important;
+        width: 100%;
+        padding-right: 1rem;
+        margin: auto;
+
+        font-size: 0.8rem;
+        color: var(--white-alt);
+        white-space: nowrap;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+
+        .left {
+            // background-color: orange;
+            // width: 50%;
+            width: auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1rem;
+
+            .hamburguer {
+                background-color: var(--main-light);
+                height: 3rem;
+                width: 3rem;
+            }
+
+            picture {
+                // background-color: purple;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
+        }
+
+        .right {
+            // background-color: purple;
+            // width: 50%;
+            width: auto;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+
+            .separator {
+                display: inline-block;
+                vertical-align: middle;
+                width: 1px;
+                height: 1.5rem;
+                background: var(--white-alt);
+                margin: 0rem;
+            }
+        }
+    }
+}
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {
+    .nav {
+        // background-color: orange !important;
+
+        .hideMobile {
+            display: none !important;
+        }
+    }
+}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}

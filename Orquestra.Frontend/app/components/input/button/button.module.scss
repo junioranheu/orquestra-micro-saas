@@ -1,0 +1,53 @@
+.button {
+    position: relative;
+    overflow: hidden;
+    height: 2.5rem;
+    padding: 1rem;
+    min-width: 5rem;
+    border: none;
+    margin: 0;
+    background: var(--main);
+    color: var(--white);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1;
+    white-space: nowrap;
+    outline: none;
+    place-content: center;
+    place-items: center;
+    -webkit-transition: opacity .2s;
+    transition: opacity .2s;
+    user-select: none;
+
+    display: flex;
+    gap: 0.25rem;
+
+    img,
+    svg {
+        // background-color: orange;
+        filter: brightness(0) invert(1);
+        margin-right: 0.1rem;
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &:disabled {
+        background-color: var(--main);
+        color: var(--white);
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &.btnSimple {
+        // background-color: purple !important;
+        background-color: transparent;
+        border: 1px solid var(--gray-dark);
+        color: var(--black);
+        filter: brightness(0%);
+    }
+}
