@@ -1,4 +1,4 @@
-import SYSTEM from '@/app/_consts/system';
+import SYSTEM from '@/app/consts/system';
 
 export interface iChartOptions {
     plotOptions: {

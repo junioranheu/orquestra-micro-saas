@@ -1,4 +1,4 @@
-import ImgLoading from '@/app/_assets/gif/loading.gif';
+import ImgLoading from '@/app/assets/gif/loading.gif';
 import { useGlobalContextIsLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import Image from 'next/image';

@@ -1,4 +1,4 @@
-import { handleCheckHasPermission } from '@/app/_functions/check.permission';
+import { handleCheckHasPermission } from '@/app/functions/check.permission';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useUserContext from '../contexts/useUserContext';

@@ -103,7 +103,7 @@ export default function Login() {
                 </picture>
 
                 <div className={styles.welcome}>
-                    <span>{t('pages.not_auth.login.welcome')}</span>
+                    <span>Bem-vindo ao {SYSTEM.NAME}</span>
                 </div>
 
                 <div className={styles.flex}>

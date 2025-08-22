@@ -1,6 +1,5 @@
 const nextConfig: import('next').NextConfig = {
-    reactStrictMode: false,
-    swcMinify: true
+    reactStrictMode: false
 }
 
 export default nextConfig;

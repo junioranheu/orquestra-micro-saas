@@ -11,7 +11,7 @@ interface iParams {
     handleFunction?: any | null;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
-    refBtn?: RefObject<HTMLButtonElement>;
+    refBtn?: RefObject<HTMLButtonElement | null>;
     isDisabled?: boolean;
     isStyleSimple?: boolean;
     classes?: string;
