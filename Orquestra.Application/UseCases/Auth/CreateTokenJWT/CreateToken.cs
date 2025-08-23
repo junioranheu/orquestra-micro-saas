@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Users.Get;
@@ -15,7 +16,7 @@ public sealed class CreateToken( IJwtTokenGenerator jwtTokenGenerator, ICreateRe
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
     private readonly IGetUser _getUser = getUser;
 
-    public async Task<UserOutput> Execute(AuthInput input)
+    public async Task<(UserOutput output, string token, CookieOptions cookieOptions)> Execute(AuthInput input)
     {
         (User? user, string passwordEncrypted) = await _getUser.Execute(new UserInput() { Email = input.Email });
         var output = user.Adapt<UserOutput>() ?? throw new Exception("Usuário não encontrado.");
@@ -30,10 +31,7 @@ public sealed class CreateToken( IJwtTokenGenerator jwtTokenGenerator, ICreateRe
             throw new Exception("Usuário desativado.");
         }
 
-        (string token, RefreshToken refreshToken) = _jwtTokenGenerator.GenerateToken(userIdAuth: output.UserId, name: output.FullName, email: output.Email, role: output.Role);
-
-        // Atualizar token no output;
-        output.Token = token;
+        (string token, RefreshToken refreshToken, CookieOptions cookieOptions) = _jwtTokenGenerator.GenerateToken(userIdAuth: output.UserId, name: output.FullName, email: output.Email, role: output.Role);
 
         // Revogar todos os refresh tokens antigos, caso existam;
         await _createRefreshToken.Update(userIdAuth: output.UserId, mustCheckForValidRefreshTokens: false);
@@ -41,6 +39,6 @@ public sealed class CreateToken( IJwtTokenGenerator jwtTokenGenerator, ICreateRe
         // Salvar o refresh token no banco;
         await _createRefreshToken.Save(refreshToken);
 
-        return output;
+        return (output, token, cookieOptions);
     }
 }

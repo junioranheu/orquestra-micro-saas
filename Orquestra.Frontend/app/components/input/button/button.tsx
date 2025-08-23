@@ -43,7 +43,11 @@ export default function Button({
 
         if (!url) {
             if (handleFuncao) {
-                await handleFuncao(e);
+                try {
+                    await handleFuncao(e);
+                } catch {
+                    setIsDisabledInternal(false);
+                }
             }
 
             if (!isDisabled) {

@@ -7,9 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Orquestra.Domain.Consts;
-using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Models;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
@@ -17,7 +15,6 @@ using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Interceptors;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
-using Orquestra.Utils.Fixtures;
 using System.Text;
 using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
@@ -63,8 +60,8 @@ public static class DependencyInjection
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-             .AddJwtBearer(x =>
+        }).
+             AddJwtBearer(x =>
              {
                  x.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
                  x.SaveToken = true;
@@ -83,14 +80,47 @@ public static class DependencyInjection
 
                  x.Events = new JwtBearerEvents
                  {
+                     // Lidar com requisições em geral, tendo token ou não;
+                     OnMessageReceived = context =>
+                     {
+                         // Se o middleware renovou o token (e agora tem um refresh token), use-o nesta mesma request;
+                         if (context.HttpContext.Items.TryGetValue(SystemConsts.CookieRefreshedTokenName, out object? refreshed) && refreshed is string refreshedToken && !string.IsNullOrEmpty(refreshedToken))
+                         {
+                             context.Token = refreshedToken;
+                             return Task.CompletedTask;
+                         }
+
+                         // Se não tem um refresh token, ou seja, tem apenas um token original, use-o;
+                         if (context.Request.Cookies.ContainsKey(SystemConsts.CookieName))
+                         {
+                             context.Token = context.Request.Cookies[SystemConsts.CookieName];
+                             return Task.CompletedTask;
+                         }
+
+                         return Task.CompletedTask;
+                     },
+
+                     // Lidar com requisições com token inválido ou expirado;
+                     OnAuthenticationFailed = context =>
+                     {
+                         context.NoResult();
+
+                         if (!context.Response.HasStarted)
+                         {
+                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                         }
+
+                         return Task.CompletedTask;
+                     },
+
+                     // Lidar com requisições sem autenticação ou que deram erro;
                      OnChallenge = context =>
                      {
                          context.HandleResponse();
-
                          context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                          context.Response.ContentType = "application/json";
 
-                         var result = JsonSerializer.Serialize(new
+                         string result = JsonSerializer.Serialize(new
                          {
                              Code = StatusCodes.Status401Unauthorized,
                              Date = GetDateDetails(),
@@ -127,29 +157,10 @@ public static class DependencyInjection
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new() { Title = SystemConsts.NameApi, Version = "v1" });
-
-            OpenApiSecurityScheme jwtSecurityScheme = new()
+            c.SwaggerDoc("v1", new()
             {
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                Name = "JWT Authentication",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Description = "Coloque **_apenas_** o token (JWT Bearer) abaixo!",
-
-                Reference = new OpenApiReference
-                {
-                    Id = JwtBearerDefaults.AuthenticationScheme,
-                    Type = ReferenceType.SecurityScheme
-                }
-            };
-
-            c.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                { jwtSecurityScheme, Array.Empty<string>() }
+                Title = SystemConsts.NameApi,
+                Version = "v1"
             });
         });
     }
@@ -159,14 +170,10 @@ public static class DependencyInjection
         services.AddCors(x =>
             x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
             {
-                // TO DO: SetIsOriginAllowed((host) => true) + AllowCredentials() é inseguro;
-                builder.AllowAnyHeader().
+                builder.WithOrigins(SystemConsts.UrlFrontendLocal, SystemConsts.UrlFrontendProd).
+                        AllowAnyHeader().
                         AllowAnyMethod().
-                        SetIsOriginAllowed((host) => true).
-                        AllowCredentials().
-
-                        // Expõe o custom header para o front interceptar e atualizar o token;
-                        WithExposedHeaders(SystemConsts.RefreshTokenJWTCustomHeader);
+                        AllowCredentials();
             })
         );
     }

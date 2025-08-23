@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Orquestra.Domain.Entities;
@@ -16,7 +17,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
     private readonly string _secret = config["JwtSettings:Secret"] ?? throw new InvalidOperationException("JWT Secret não foi configurada no servidor!");
 
-    public (string token, RefreshToken refreshToken) GenerateToken(Guid userIdAuth, string name, string email, UserRoleEnum? role)
+    public (string token, RefreshToken refreshToken, CookieOptions cookieOptions) GenerateToken(Guid userIdAuth, string name, string email, UserRoleEnum? role)
     {
         JwtSecurityTokenHandler tokenHandler = new();
 
@@ -64,7 +65,9 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
         string jwt = tokenHandler.WriteToken(token);
         RefreshToken refreshToken = GenerateRefreshToken(userIdAuth);
 
-        return (jwt, refreshToken);
+        CookieOptions cookieOptions = GetCookieOptions();
+
+        return (jwt, refreshToken, cookieOptions);
     }
 
     #region extras
@@ -84,15 +87,26 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
         return refreshToken;
     }
 
-    public (bool isTokenExpiringSoonOrHasAlreadyExpired, double differenceInMinutes) IsTokenExpiringSoonOrHasAlreadyExpired(JwtSecurityToken token, int thresholdInMinutes = 0)
+    private CookieOptions GetCookieOptions()
+    {
+        return new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes)
+        };
+    }
+
+    public (bool isTokenExpiringSoonOrHasAlreadyExpired, double differenceInSeconds) IsTokenExpiringSoonOrHasAlreadyExpired(JwtSecurityToken token, int thresholdInMinutes = 0)
     {
         DateTime date = GetDate();
         DateTime dateThreshold = date.AddMinutes(thresholdInMinutes);
 
-        double differenceInMinutes = (token.ValidTo - dateThreshold).TotalMinutes;
-        bool isTokenExpiringSoonOrHasAlreadyExpired = differenceInMinutes <= 0;
+        double differenceInSeconds = (token.ValidTo - dateThreshold).TotalSeconds;
+        bool isTokenExpiringSoonOrHasAlreadyExpired = differenceInSeconds <= 0;
 
-        return (isTokenExpiringSoonOrHasAlreadyExpired, differenceInMinutes);
+        return (isTokenExpiringSoonOrHasAlreadyExpired, differenceInSeconds);
     }
     #endregion
 }

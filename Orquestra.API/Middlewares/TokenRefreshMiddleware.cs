@@ -13,52 +13,60 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (!context.Request.Headers.ContainsKey("Authorization"))
+        if (!context.Request.Cookies.TryGetValue(SystemConsts.CookieName, out string? token) || string.IsNullOrEmpty(token))
         {
             await _next(context);
             return;
         }
 
-        string token = context.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+        JwtSecurityToken jwtToken;
 
-        if (!string.IsNullOrEmpty(token))
+        try
         {
-            JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        }
+        catch
+        {
+            // Cookie inválido -> limpa e segue;
+            context.Response.Cookies.Delete(SystemConsts.CookieName);
+            await _next(context);
+            return;
+        }
 
-            (bool isTokenExpiringSoonOrHasAlreadyExpired, double _) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
+        (bool isExpiringSoon, _) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
 
-            if (isTokenExpiringSoonOrHasAlreadyExpired)
-            {
-                string userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value ?? string.Empty;
+        if (!isExpiringSoon)
+        {
+            await _next(context);
+            return;
+        }
 
-                if (string.IsNullOrEmpty(userIdClaim))
-                {
-                    throw new InvalidOperationException($"Falha ao gerar novo Token. O parâmetro userIdClaim ({userIdClaim}) está inválido");
-                }
+        string? userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
 
-                Guid userIdAuth = Guid.Parse(userIdClaim);
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            context.Response.Cookies.Delete(SystemConsts.CookieName);
+            await _next(context);
+            return;
+        }
 
-                using IServiceScope scope = _scopeFactory.CreateScope();
-                ICreateRefreshToken createRefreshToken = scope.ServiceProvider.GetRequiredService<ICreateRefreshToken>();
+        Guid userIdAuth = Guid.Parse(userIdClaim);
+        using IServiceScope scope = _scopeFactory.CreateScope();
+        ICreateRefreshToken createRefreshToken = scope.ServiceProvider.GetRequiredService<ICreateRefreshToken>();
 
-                try
-                {
-                    string newJwtToken = await createRefreshToken.RefreshToken(userIdAuth);
+        try
+        {
+            (string newJwtToken, CookieOptions cookieOptions) = await createRefreshToken.RefreshToken(userIdAuth);
 
-                    // Atualizar contextos (para a requisição atual);
-                    context.Response.Headers.Authorization = $"Bearer {newJwtToken}";
-                    context.Request.Headers.Authorization = $"Bearer {newJwtToken}";
+            // Escreve cookie pra próxima requisição do browser com o novo refresh token;
+            context.Response.Cookies.Append(SystemConsts.CookieName, newJwtToken, cookieOptions);
 
-                    // Enviar novo JWT no custom header da resposta para que o front possa interceptar e atualizar o token salvo;
-                    context.Response.Headers.Append(SystemConsts.RefreshTokenJWTCustomHeader, newJwtToken);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    context.Response.Headers.Authorization = string.Empty;
-                    context.Request.Headers.Authorization = string.Empty;
-                }
-            }
+            // Guarda o token renovado no Items (expira depois dessa request) para o JwtBearer usar nesta mesma request;
+            context.Items[SystemConsts.CookieRefreshedTokenName] = newJwtToken;
+        }
+        catch (Exception)
+        {
+            context.Response.Cookies.Delete(SystemConsts.CookieName);
         }
 
         await _next(context);

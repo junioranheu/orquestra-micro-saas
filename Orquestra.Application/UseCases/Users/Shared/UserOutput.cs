@@ -15,7 +15,4 @@ public sealed class UserOutput
     public bool Status { get; set; }
 
     public DateTime CreatedDate { get; set; }
-
-    // Extras;
-    public string Token { get; set; } = string.Empty;
 }

@@ -78,11 +78,11 @@ public static class DependencyAppConfiguration
 
             if (endpoint is RouteEndpoint routeEndpoint)
             {
-                ControllerActionDescriptor? acao = routeEndpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
+                ControllerActionDescriptor? action = routeEndpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
 
-                if (acao is not null)
+                if (action is not null)
                 {
-                    Type? tipo = acao.MethodInfo.ReturnType;
+                    Type? tipo = action.MethodInfo.ReturnType;
 
                     if (tipo.IsGenericType && tipo.GetGenericTypeDefinition() == typeof(IAsyncEnumerable<>))
                     {

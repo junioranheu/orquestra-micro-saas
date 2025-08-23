@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
@@ -13,7 +14,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
     private readonly Context _context = context;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
 
-    public async Task<string> RefreshToken(Guid userIdAuth)
+    public async Task<(string newJwtToken, CookieOptions cookieOptions)> RefreshToken(Guid userIdAuth)
     {
         if (userIdAuth == Guid.Empty)
         {
@@ -23,12 +24,12 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         User user = await GetUser(userIdAuth);
 
         // Gere novo JWT e refresh token;
-        (string newJwtToken, RefreshToken _) = _jwtTokenGenerator.GenerateToken(userIdAuth: user.UserId, name: user.FullName, email: user.Email, role: user.Role);
+        (string newJwtToken, RefreshToken refreshToken, CookieOptions cookieOptions) = _jwtTokenGenerator.GenerateToken(userIdAuth: user.UserId, name: user.FullName, email: user.Email, role: user.Role);
 
         // Revogue os antigos refresh tokens inválidos;
         await Update(userIdAuth, mustCheckForValidRefreshTokens: true);
 
-        return newJwtToken;
+        return (newJwtToken, cookieOptions);
     }
 
     public async Task Save(RefreshToken newRefreshToken)

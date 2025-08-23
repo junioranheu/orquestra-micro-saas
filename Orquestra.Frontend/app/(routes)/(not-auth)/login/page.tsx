@@ -7,7 +7,6 @@ import Button from '@/app/components/input/button/button';
 import InputMask from '@/app/components/input/text/input.mask';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import { Auth } from '@/app/contexts/user.context';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
@@ -71,19 +70,25 @@ export default function Login() {
         const result = await Fetch.post(CONSTS_AUTH.auth, user);
         console.log(result);
 
-        if (result) {
-            Auth.set(result);
-            setAuth(result);
+        // if (result) {
+        //     Auth.set(result);
+        //     setAuth(result);
 
-            setTimeout(() => {
-                router.push(ROUTES.DASHBOARD);
-            }, 250);
+        //     setTimeout(() => {
+        //         router.push(ROUTES.DASHBOARD);
+        //     }, 250);
 
-            return;
-        }
+        //     return;
+        // }
 
-        swal({ str: 'E-mail ou senha incorretos.', icon: 'error' });
-        setFormData(x => ({ ...x, password: '' }));
+        // swal({ str: 'E-mail ou senha incorretos.', icon: 'error' });
+        // setFormData(x => ({ ...x, password: '' }));
+    }
+
+    async function handleXD() {
+        console.clear();
+        const result = await Fetch.get(CONSTS_AUTH.test);
+        console.log(CONSTS_AUTH.test, result);
     }
 
     if (auth?.isAuth) {
@@ -125,6 +130,12 @@ export default function Login() {
                     <Button
                         label={'Entrar'}
                         handleFunction={() => handleLogin()}
+                        isDisabled={btnLoginDisabled}
+                    />
+
+                    <Button
+                        label={'XD'}
+                        handleFunction={() => handleXD()}
                         isDisabled={btnLoginDisabled}
                     />
                 </div>

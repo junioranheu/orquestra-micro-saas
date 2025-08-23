@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Consts;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(ICreateToken createToken) : BaseController<AuthController>
+public class AuthController(ICreateToken createToken, ICreateRefreshToken createRefreshToken) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
+    private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
 
     [AllowAnonymous]
     [HttpPost]
@@ -18,20 +21,37 @@ public class AuthController(ICreateToken createToken) : BaseController<AuthContr
     {
         if (IsUserAuth())
         {
-            throw new Exception($"Usuário já está autenticado ({GetUserEmailAuth()}). Realize o logoff no sistema e tente novamente mais tarde.");
+            throw new Exception($"Usuário já está autenticado ({GetUserEmailAuth()}).");
         }
 
-        UserOutput output = await _createToken.Execute(input);
+        (UserOutput output, string token, CookieOptions cookieOptions) = await _createToken.Execute(input);
+        HttpContext.Response.Cookies.Append(SystemConsts.CookieName, token, cookieOptions);
 
         return Ok(output);
     }
 
     [AllowAnonymous]
-    [HttpGet("/Me")]
+    [HttpGet]
     public ActionResult IsAuth()
     {
         bool isAuth = IsUserAuth();
 
         return Ok(isAuth);
+    }
+
+    [AllowAnonymous]
+    [HttpDelete]
+    public async Task<ActionResult> Logout()
+    {
+        if (!IsUserAuth())
+        {
+            return BadRequest("Usuário não está autenticado.");
+        }
+
+        HttpContext.Response.Cookies.Delete(SystemConsts.CookieName);
+
+        await _createRefreshToken.Update(userIdAuth: GetUserIdAuth(), mustCheckForValidRefreshTokens: true);
+
+        return Ok();
     }
 }

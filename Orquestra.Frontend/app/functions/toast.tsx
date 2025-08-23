@@ -23,7 +23,7 @@ export default function toast(props: iProps) {
     } as CSSProperties;
 
     ToastSonner(title, {
-        description: `<div>${content}</div>`,
+        description: content,
         duration: ms,
         position: isSmallScreen ? 'top-center' : 'bottom-right',
         style: style,
