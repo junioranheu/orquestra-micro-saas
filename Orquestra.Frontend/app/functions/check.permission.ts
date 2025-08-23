@@ -1,6 +1,5 @@
 import ROUTES from '@/app/consts/routes';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { Auth } from '../contexts/user.context';
 
 export const ROLES = {
     AUDITOR: 'Auditor',
@@ -10,8 +9,7 @@ export const ROLES = {
 
 // Verificar se o usuário tem o acesso, com base no tipo de usuário, para acessar à página;
 export function handleCheckHasPermission(router: AppRouterInstance, rolesRequired: string[]): boolean {
-    // WORKAROUND: Em 24/06/2025 foi pedido para que o MVP não tenha uma autenticação real...
-    const auth = Auth.get();
+    const auth = true; // TO DO: Requisição pro back, simplesmente ao IsAuth();
     // console.log(auth);
 
     if (!auth) {
@@ -20,7 +18,7 @@ export function handleCheckHasPermission(router: AppRouterInstance, rolesRequire
     }
 
     // console.log('userRoles', userRoles, 'rolesRequired', rolesRequired);
-    const roles = [] as string[] | undefined;
+    const roles = [] as string[] | undefined; // TO DO: Requisição pro back, simplesmente ao GetUserRolesAuth();
 
     return true;
 
@@ -52,15 +50,14 @@ export function handleCheckHasPermission(router: AppRouterInstance, rolesRequire
 
 // Verificar se o usuário tem o acesso, com base no tipo de usuário, para visualizar um elemento;
 export function handleCheckShowElement(rolesRequired: string[]): boolean {
-    // WORKAROUND: Em 24/06/2025 foi pedido para que o MVP não tenha uma autenticação real...
-    const auth = Auth.get();
+    const auth = true; // TO DO: Requisição pro back, simplesmente ao IsAuth();
     // console.log(auth);
 
     if (!auth) {
         return false;
     }
 
-    const roles = [] as string[] | undefined;
+    const roles = [] as string[] | undefined; // TO DO: Requisição pro back, simplesmente ao GetUserRolesAuth();
 
     return true;
 

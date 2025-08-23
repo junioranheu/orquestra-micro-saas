@@ -13,7 +13,7 @@ export function UserProvider({ children }: { children: ReactNode }): JSX.Element
     const [auth, setAuth] = useState<iUsuario | null>(null);
 
     useEffect(() => {
-        setAuth(Auth?.get() ?? null);
+        setAuth(null);
     }, []);
 
     return (
@@ -23,37 +23,4 @@ export function UserProvider({ children }: { children: ReactNode }): JSX.Element
             {children}
         </UserContext.Provider>
     );
-}
-
-export const Auth = {
-    set(data: iUsuario): void {
-        const user = {
-            userId: data.userId,
-            fullName: data.fullName,
-            email: data.email,
-            isAuth: true
-        } as iUsuario;
-
-        const parsedData = JSON.stringify(user);
-        localStorage.setItem(_item, parsedData);
-    },
-
-    get(): iUsuario | null {
-        if (typeof window !== 'undefined') {
-            const data = localStorage.getItem(_item);
-
-            if (!data) {
-                return null;
-            }
-
-            const dataJson = JSON.parse(data);
-            return dataJson;
-        }
-
-        return null;
-    },
-
-    delete(): void {
-        localStorage.removeItem(_item);
-    }
 }

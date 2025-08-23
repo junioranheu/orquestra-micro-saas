@@ -67,22 +67,23 @@ export default function Login() {
             password: formData.password
         } as iLoginForm;
 
-        const result = await Fetch.post(CONSTS_AUTH.auth, user);
-        console.log(result);
+        try {
+            const result = await Fetch.post(CONSTS_AUTH.auth, user);
+            console.log(result);
 
-        // if (result) {
-        //     Auth.set(result);
-        //     setAuth(result);
+            setTimeout(() => {
+                router.push(ROUTES.DASHBOARD);
+                setAuth(result);
 
-        //     setTimeout(() => {
-        //         router.push(ROUTES.DASHBOARD);
-        //     }, 250);
-
-        //     return;
-        // }
-
-        // swal({ str: 'E-mail ou senha incorretos.', icon: 'error' });
-        // setFormData(x => ({ ...x, password: '' }));
+                // setTimeout(() => {
+                //     router.push(ROUTES.DASHBOARD);
+                // }, 250);
+            }, 250);
+        } catch {
+            swal({ str: 'E-mail ou senha incorretos.', icon: 'error' });
+            setFormData(x => ({ ...x, password: '' }));
+            return;
+        }
     }
 
     async function handleXD() {

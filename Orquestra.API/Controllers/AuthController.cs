@@ -21,7 +21,7 @@ public class AuthController(ICreateToken createToken, ICreateRefreshToken create
     {
         if (IsUserAuth())
         {
-            throw new Exception($"Usuário já está autenticado ({GetUserEmailAuth()}).");
+            throw new Exception($"Você já está autenticado.");
         }
 
         UserOutput output = await _createToken.Execute(input);
@@ -44,7 +44,7 @@ public class AuthController(ICreateToken createToken, ICreateRefreshToken create
     {
         if (!IsUserAuth())
         {
-            return BadRequest("Usuário não está autenticado.");
+            return BadRequest("Você não está autenticado.");
         }
 
         HttpContext.Response.Cookies.Delete(SystemConsts.CookieName);

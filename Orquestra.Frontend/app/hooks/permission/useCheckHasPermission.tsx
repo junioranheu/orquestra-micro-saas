@@ -1,7 +1,7 @@
 import { handleCheckHasPermission } from '@/app/functions/check.permission';
+import useUserContext from '@/app/hooks/contexts/useUserContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import useUserContext from '../contexts/useUserContext';
 
 export default function useCheckHasPermission(rolesRequired: string[]): boolean {
 

@@ -65,7 +65,7 @@ export const Fetch = {
 
             if (signal.aborted) return undefined;
 
-            // Blob download
+            // Blob download;
             if (blobExportName) {
                 const blob = await response.blob();
                 if (!blob.size) throw new Error('Null blob');
@@ -79,13 +79,13 @@ export const Fetch = {
                 return blob;
             }
 
-            // 400/500 errors
+            // 400/500 errors;
             if (response.status === 400 || response.status === 500) {
                 const resError = await response.json();
                 throw new Error(resError?.messages?.[0] ?? response.statusText);
             }
 
-            // 204 No Content
+            // 204 No Content;
             if (response.status === 204) return;
 
             const responseJson = await response.json();

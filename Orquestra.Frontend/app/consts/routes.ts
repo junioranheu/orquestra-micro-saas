@@ -1,6 +1,7 @@
 const ROUTES = {
-    LOGIN: '/login',
-    LOGOUT: '/logout',
+    ENTRAR: '/entrar',
+    CRIAR_CONTA: '/criar-conta',
+    SAIR: '/logout',
     DASHBOARD: '/dashboard',
     ERRO_403: '/erro/403'
 };

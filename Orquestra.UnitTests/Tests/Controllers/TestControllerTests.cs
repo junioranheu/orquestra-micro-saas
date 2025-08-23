@@ -4,7 +4,9 @@ using Moq;
 using Orquestra.API.Controllers;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Email;
+using System.Reflection;
 using System.Security.Claims;
+using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Tests.Controllers;
@@ -53,8 +55,12 @@ public sealed class TestControllerTests
 
         // Assert;
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
-        string content = Assert.IsType<string>(okResult.Value);
-        Assert.Contains(userId.ToString(), content);
+        object? content = okResult.Value;
+
+        // Reflection
+        PropertyInfo? idProp = content?.GetType().GetProperty("Id");
+        object? idValue = idProp?.GetValue(content);
+        Assert.Equal(userId, (Guid)idValue!);
     }
 
     [Fact]
