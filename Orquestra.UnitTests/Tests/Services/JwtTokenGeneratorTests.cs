@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -41,7 +42,7 @@ public sealed class JwtTokenGeneratorTests
         UserRoleEnum role = UserRoleEnum.Administrator;
 
         // Act;
-        (string token, RefreshToken refreshToken) = generator.GenerateToken(userIdAuth, name, email, role);
+        (string token, RefreshToken refreshToken, CookieOptions cookieOptions) = generator.GenerateToken(userIdAuth, name, email, role);
 
         // Assert;
         Assert.False(string.IsNullOrWhiteSpace(token));

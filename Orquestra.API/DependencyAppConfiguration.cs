@@ -25,7 +25,7 @@ public static class DependencyAppConfiguration
 
     private static void AddMiddleware(WebApplication app)
     {
-        app.UseMiddleware<TokenRefreshMiddleware>();
+        app.UseMiddleware<TokenRefreshMiddleware>(); // Esse middleware deve obrigatoriamente vir antes de AddAuth();
     }
 
     private static void AddSwagger(WebApplication app)
