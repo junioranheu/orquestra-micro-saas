@@ -41,7 +41,7 @@ public static class DependencyInjection
         services.AddClientsApplication();
     }
 
-    private static void AddServices(IServiceCollection services)
+    private static void AddServices(IServiceCollection _)
     {
 
     }

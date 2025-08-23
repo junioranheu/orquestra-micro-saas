@@ -47,8 +47,17 @@ public class TestController() : BaseController<TestController>
     public ActionResult GetAuth()
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        string name = GetUserNameAuth();
+        (UserRoleEnum[] _, string[] userRolesStr) = GetUserRolesAuth();
 
-        return Ok($"Id: {userIdAuth}");
+        var result = new
+        {
+            Id = userIdAuth,
+            Name = name,
+            Roles = userRolesStr
+        };
+
+        return Ok(result); 
     }
 
     private static string Ascii()

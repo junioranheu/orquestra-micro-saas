@@ -4,19 +4,26 @@ using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 
-public sealed class CreateToken( IJwtTokenGenerator jwtTokenGenerator, ICreateRefreshToken createRefreshToken,  IGetUser getUser) : ICreateToken
+public sealed class CreateToken(
+        IJwtTokenGenerator jwtTokenGenerator,
+        ICreateRefreshToken createRefreshToken,
+        IGetUser getUser,
+        IHttpContextAccessor httpContextAccessor
+    ) : ICreateToken
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
     private readonly IGetUser _getUser = getUser;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public async Task<(UserOutput output, string token, CookieOptions cookieOptions)> Execute(AuthInput input)
+    public async Task<UserOutput> Execute(AuthInput input)
     {
         (User? user, string passwordEncrypted) = await _getUser.Execute(new UserInput() { Email = input.Email });
         var output = user.Adapt<UserOutput>() ?? throw new Exception("Usuário não encontrado.");
@@ -39,6 +46,9 @@ public sealed class CreateToken( IJwtTokenGenerator jwtTokenGenerator, ICreateRe
         // Salvar o refresh token no banco;
         await _createRefreshToken.Save(refreshToken);
 
-        return (output, token, cookieOptions);
+        // Escrever cookie;
+        _httpContextAccessor?.HttpContext?.Response.Cookies.Append(SystemConsts.CookieName, token, cookieOptions);
+
+        return output;
     }
 }

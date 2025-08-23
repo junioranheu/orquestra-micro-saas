@@ -24,8 +24,7 @@ public class AuthController(ICreateToken createToken, ICreateRefreshToken create
             throw new Exception($"Usuário já está autenticado ({GetUserEmailAuth()}).");
         }
 
-        (UserOutput output, string token, CookieOptions cookieOptions) = await _createToken.Execute(input);
-        HttpContext.Response.Cookies.Append(SystemConsts.CookieName, token, cookieOptions);
+        UserOutput output = await _createToken.Execute(input);
 
         return Ok(output);
     }

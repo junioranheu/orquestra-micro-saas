@@ -6,5 +6,5 @@ namespace Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 
 public interface ICreateToken
 {
-    Task<(UserOutput output, string token, CookieOptions cookieOptions)> Execute(AuthInput input);
+    Task<UserOutput> Execute(AuthInput input);
 }
