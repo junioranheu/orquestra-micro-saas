@@ -12,6 +12,7 @@ export default interface iUsuario {
     userId: string;
     fullName: string;
     email: string;
+    token: string;
     isAuth: boolean;
 }
 

@@ -1,9 +1,8 @@
 const ROUTES = {
     LOGIN: '/login',
     LOGOUT: '/logout',
-    INDEX: '/',
-    ERRO_403: '/erro/403',
-    DASHBOARD: '/dashboard'
+    DASHBOARD: '/dashboard',
+    ERRO_403: '/erro/403'
 };
 
 export default ROUTES;

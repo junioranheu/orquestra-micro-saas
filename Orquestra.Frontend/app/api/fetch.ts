@@ -2,6 +2,7 @@ import handleGetDateBrazil from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import toast from '@/app/functions/toast';
+import { Auth } from '../contexts/user.context';
 
 interface iFetchError {
     url: string;
@@ -20,28 +21,28 @@ const HTTP = {
 export const BASE = process.env.NEXT_PUBLIC_API_URL_BASE as string;
 
 export const Fetch = {
-    async get(url: string, customToken: string = '', blobExportName: string = '') {
-        return await this.handleRequestAPI(url, HTTP.GET, null, customToken, blobExportName);
+    async get(url: string, blobExportName: string = '') {
+        return await this.handleRequestAPI(url, HTTP.GET, null, blobExportName);
     },
 
-    async post(url: string, body: any = null, customToken: string = '') {
-        return await this.handleRequestAPI(url, HTTP.POST, body, customToken);
+    async post(url: string, body: any = null) {
+        return await this.handleRequestAPI(url, HTTP.POST, body);
     },
 
-    async put(url: string, body: any = null, customToken: string = '') {
-        return await this.handleRequestAPI(url, HTTP.PUT, body, customToken);
+    async put(url: string, body: any = null) {
+        return await this.handleRequestAPI(url, HTTP.PUT, body);
     },
 
-    async delete(url: string, body: any = null, customToken: string = '') {
-        return await this.handleRequestAPI(url, HTTP.DELETE, body, customToken);
+    async delete(url: string, body: any = null) {
+        return await this.handleRequestAPI(url, HTTP.DELETE, body);
     },
 
-    async handleRequestAPI(url: string, method: typeof HTTP[keyof typeof HTTP], body: any | null = null, customToken: string | null, blobExportName: string = '') {
+    async handleRequestAPI(url: string, method: typeof HTTP[keyof typeof HTTP], body: any | null = null, blobExportName: string = '') {
         if (!url) {
             return;
         }
 
-        const token = ''; // TO DO;
+        const token = Auth?.get()?.token ?? '';
 
         const headers = {
             'Accept': 'application/json',
@@ -131,7 +132,7 @@ export const Fetch = {
             return;
         }
 
-        const token = ''; // WORKAROUND: Em 24/06/2025 foi pedido para que o MVP não tenha uma autenticação real...
+        const token = Auth?.get()?.token ?? '';
 
         const headers = {
             'Accept': 'application/json',

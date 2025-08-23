@@ -1,19 +1,15 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import ROUTES from './app/consts/routes';
 
 export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
-    // console.log(`Um ${request.method} foi realizado em ${pathname} às ${handleGetHour()}`);
+    // console.log(`Um ${request.method} foi realizado em ${pathname}`);
 
-    // if (pathname === ROUTES.INDEX) {
-    //     return NextResponse.redirect(new URL(ROUTES.LOGIN, request.url))
-    // }
+    if (pathname == '/') {
+        return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.url));
+    }
 
     return NextResponse.next();
-}
-
-function handleGetHour() {
-    const date = new Date();
-    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 }
 
 export const config = {

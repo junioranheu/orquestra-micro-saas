@@ -25,4 +25,13 @@ public class AuthController(ICreateToken createToken) : BaseController<AuthContr
 
         return Ok(output);
     }
+
+    [AllowAnonymous]
+    [HttpGet("/Me")]
+    public ActionResult IsAuth()
+    {
+        bool isAuth = IsUserAuth();
+
+        return Ok(isAuth);
+    }
 }
