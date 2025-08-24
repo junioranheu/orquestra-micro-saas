@@ -71,7 +71,6 @@ export default function Login() {
             const result = await Fetch.post(CONSTS_AUTH.auth, user);
 
             setTimeout(() => {
-                console.log('push');
                 setAuth(result);
                 router.push(ROUTES.DASHBOARD);
             }, 250);
