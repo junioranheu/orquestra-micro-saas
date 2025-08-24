@@ -16,20 +16,23 @@ public sealed class UpdateCurrentMainCompanyUser(Context context, ICheckIfUserIs
 
         List<CompanyUser> listCompanyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                             Where(x => x.UserId == userIdAuth).
-                                            ToListAsync() ?? throw new Exception("Você não faz parte dessa empresa.");
+                                            ToListAsync() ?? throw new Exception("^Você não faz parte de nenhuma empresa.");
 
         CompanyUser companyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                   Where(x => x.CompanyId == companyId && x.UserId == userIdAuth && x.Status == true).
                                   FirstOrDefaultAsync() ?? throw new Exception("Você não faz parte dessa empresa.");
 
-        // Atualizar o IsCurrentMainCompanyUser em questão;
-        companyUser.IsCurrentMainCompanyUser = true;
+        if (!companyUser.IsCurrentMainCompanyUser)
+        {
+            // Atualizar o IsCurrentMainCompanyUser em questão;
+            companyUser.IsCurrentMainCompanyUser = true;
 
-        _context.Update(companyUser);
-        await _context.SaveChangesAsync();
+            _context.Update(companyUser);
+            await _context.SaveChangesAsync();
+        }
 
         // Certificar-se que todos os OUTROS IsCurrentMainCompanyUser estão como false;
-        List<CompanyUser> restCompanies = [.. listCompanyUser.Except([companyUser])];
+        List<CompanyUser> restCompanies = [.. listCompanyUser.Where(x => x.IsCurrentMainCompanyUser == true).Except([companyUser])];
 
         if (restCompanies is null || restCompanies.Count == 0)
         {
