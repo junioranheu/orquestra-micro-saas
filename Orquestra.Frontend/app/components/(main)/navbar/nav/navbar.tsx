@@ -15,7 +15,7 @@ export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
     function handleRedirect() {
-        router.push(auth?.isAuth ? ROUTES.DASHBOARD : ROUTES.LOGIN);
+        router.push(auth?.isAuth ? ROUTES.DASHBOARD : ROUTES.ENTRAR);
     }
 
     return (

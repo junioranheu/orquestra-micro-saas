@@ -76,7 +76,7 @@ public sealed class TestControllerTests
         };
 
         // Act & Assert;
-        Exception ex = Assert.Throws<Exception>(() => controller.GetAuth());
+        Exception ex = Assert.Throws<UnauthorizedAccessException>(() => controller.GetAuth());
         Assert.Equal(SystemConsts.Warn_Simple_UserNotAuth, ex.Message);
     }
 }

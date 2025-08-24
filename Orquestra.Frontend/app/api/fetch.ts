@@ -89,6 +89,8 @@ export const Fetch = {
                     window.location.href = ROUTES.ENTRAR;
                 });
 
+                // swalUnauthorized();
+
                 return;
             }
 
