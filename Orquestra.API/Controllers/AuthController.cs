@@ -15,6 +15,28 @@ public class AuthController(ICreateToken createToken, ICreateRefreshToken create
     private readonly ICreateToken _createToken = createToken;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
 
+#if DEBUG
+    [AllowAnonymous]
+    [HttpPost("AuthTeste")]
+    public async Task<ActionResult> AuthTeste()
+    {
+        if (IsUserAuth())
+        {
+            throw new Exception($"Você já está autenticado.");
+        }
+
+        AuthInput input = new()
+        {
+            Email = "junioranheu@gmail.com",
+            Password = "Junior30@@"
+        };
+
+        UserOutput output = await _createToken.Execute(input);
+
+        return Ok(output);
+    }
+#endif
+
     [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult> Auth(AuthInput input)

@@ -100,14 +100,15 @@ public static class DependencyInjection
                          return Task.CompletedTask;
                      },
 
-                     // Lidar com requisições com token inválido ou expirado;
+                     // Lidar com requisições sem autenticação (token ausente);
+                     // ou propagar o status de falha definido em OnAuthenticationFailed;
                      OnAuthenticationFailed = context =>
                      {
                          context.NoResult();
 
                          if (!context.Response.HasStarted)
                          {
-                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                             context.Response.StatusCode = StatusCodes.Status419AuthenticationTimeout;
                          }
 
                          return Task.CompletedTask;
@@ -116,13 +117,19 @@ public static class DependencyInjection
                      // Lidar com requisições sem autenticação ou que deram erro;
                      OnChallenge = context =>
                      {
+                         int statusCodeJar = context.Response.StatusCode;
+
                          context.HandleResponse();
                          context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                          context.Response.ContentType = "application/json";
 
+                         // Mantém o 419 se o erro tiver sido configurado no OnAuthenticationFailed,
+                         // caso contrário retorna 401 como padrão;
+                         int statusCode = statusCodeJar == StatusCodes.Status419AuthenticationTimeout ? StatusCodes.Status419AuthenticationTimeout : StatusCodes.Status401Unauthorized;
+
                          string result = JsonSerializer.Serialize(new
                          {
-                             Code = StatusCodes.Status401Unauthorized,
+                             Code = statusCode,
                              Date = GetDateDetails(),
                              context.HttpContext.Request.Path,
                              Messages = onChallengeError,

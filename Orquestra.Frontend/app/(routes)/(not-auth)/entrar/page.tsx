@@ -33,6 +33,7 @@ export default function Login() {
     const refButton = useRef<HTMLButtonElement>(null);
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+        console.log('xd');
         if (e.key === 'Enter') {
             refButton.current?.click();
         }
@@ -86,12 +87,6 @@ export default function Login() {
         }
     }
 
-    async function handleXD() {
-        console.clear();
-        const result = await Fetch.get(CONSTS_AUTH.test);
-        console.log(CONSTS_AUTH.test, result);
-    }
-
     if (auth?.isAuth) {
         return (
             <section className={styles.loading}>
@@ -132,12 +127,7 @@ export default function Login() {
                         label={'Entrar'}
                         handleFunction={() => handleLogin()}
                         isDisabled={btnLoginDisabled}
-                    />
-
-                    <Button
-                        label={'XD'}
-                        handleFunction={() => handleXD()}
-                        isDisabled={btnLoginDisabled}
+                        refBtn={refButton}
                     />
                 </div>
             </div>
