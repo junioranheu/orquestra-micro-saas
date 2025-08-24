@@ -97,7 +97,7 @@ public class AuthController(
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
         UserOutput userOutput = await _getUser.Execute(userId: userIdAuth);
         List<CompanyOutput>? companyOutput = await _getCompany.Execute(userId: userIdAuth);
-        CompanyOutput? currentMainCompany = companyOutput?.FirstOrDefault(x => x.CompanyUsers!.Any(y => y.IsCurrentMainCompanyUser));
+        CompanyOutput? currentMainCompany = companyOutput?.FirstOrDefault(x => x.CompanyUsers!.Any(y => y.UserId == userIdAuth && y.IsCurrentMainCompanyUser == true));
 
         MeOutput output = new()
         {
