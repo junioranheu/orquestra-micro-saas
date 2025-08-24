@@ -15,6 +15,11 @@ public class EnvService(IWebHostEnvironment env, IConfiguration configuration) :
         return _isDevelopment;
     }
 
+    public bool IsProduction()
+    {
+        return !_isDevelopment;
+    }
+
     public EnvOutput GetUrls()
     {
         string sectionName = _isDevelopment ? "Development" : "Production";

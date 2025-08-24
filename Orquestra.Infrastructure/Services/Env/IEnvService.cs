@@ -5,5 +5,6 @@ namespace Orquestra.Infrastructure.Services.Env;
 public interface IEnvService
 {
     bool IsDevelopment();
+    bool IsProduction();
     EnvOutput GetUrls();
 }
