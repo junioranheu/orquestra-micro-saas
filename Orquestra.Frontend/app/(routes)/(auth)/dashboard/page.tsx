@@ -2,6 +2,7 @@
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button/button';
+import ROUTES from '@/app/consts/routes';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
@@ -24,11 +25,24 @@ export default function Dashboard() {
         setAea(result.userName);
     }
 
+    async function handleLogout() {
+        console.clear();
+
+        try {
+            await Fetch.delete(CONSTS_AUTH.logout);
+        } catch {
+            router.push(ROUTES.ENTRAR);
+        }
+    }
+
     return (
         <section className={styles.main}>
             <h1>Olá... {aea}</h1>
 
-            <Button label={'XD'} handleFunction={() => handleXD()} />
+            <br />
+            <Button label={'/me'} handleFunction={() => handleXD()} />
+            <br />
+            <Button label={'Logout'} handleFunction={() => handleLogout()} />
         </section>
     )
 }
