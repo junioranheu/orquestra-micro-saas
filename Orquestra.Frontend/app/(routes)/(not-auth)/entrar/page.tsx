@@ -69,15 +69,11 @@ export default function Login() {
 
         try {
             const result = await Fetch.post(CONSTS_AUTH.auth, user);
-            console.log(result);
 
             setTimeout(() => {
-                router.push(ROUTES.DASHBOARD);
+                console.log('push');
                 setAuth(result);
-
-                // setTimeout(() => {
-                //     router.push(ROUTES.DASHBOARD);
-                // }, 250);
+                router.push(ROUTES.DASHBOARD);
             }, 250);
         } catch {
             swal({ str: 'E-mail ou senha incorretos.', icon: 'error' });
