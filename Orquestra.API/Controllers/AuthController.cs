@@ -64,12 +64,27 @@ public class AuthController(
     }
 
     [AllowAnonymous]
-    [HttpGet]
-    public ActionResult IsAuth()
+    [HttpGet("Me/Basic")]
+    public ActionResult MeSimple()
     {
         bool isAuth = IsUserAuth();
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: false);
+        string nameAuth = GetUserNameAuth();
+        (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
-        return Ok(isAuth);
+        MeOutput output = new()
+        {
+            IsAuth = isAuth,
+            UserId = userIdAuth,
+            UserName = nameAuth,
+            Roles = userRoles,
+            RolesStr = userRolesStr,
+            User = null,
+            CurrentMainCompany = null,
+            Companies = null
+        };
+
+        return Ok(output);
     }
 
     [AuthorizeFilter]
@@ -79,7 +94,7 @@ public class AuthController(
         bool isAuth = IsUserAuth();
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         string nameAuth = GetUserNameAuth();
-        (UserRoleEnum[] _, string[] userRolesStr) = GetUserRolesAuth();
+        (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
         UserOutput userOutput = await _getUser.Execute(userId: userIdAuth);
         List<CompanyOutput>? companyOutput = await _getCompany.Execute(userId: userIdAuth);
         CompanyOutput? currentMainCompany = companyOutput?.FirstOrDefault(x => x.CompanyUsers!.Any(y => y.IsCurrentMainCompanyUser));
@@ -89,10 +104,11 @@ public class AuthController(
             IsAuth = isAuth,
             UserId = userIdAuth,
             UserName = nameAuth,
-            Roles = userRolesStr,
+            Roles = userRoles,
+            RolesStr = userRolesStr,
             User = userOutput,
-            Companies = companyOutput,
-            CurrentMainCompany = currentMainCompany
+            CurrentMainCompany = currentMainCompany,
+            Companies = companyOutput
         };
 
         return Ok(output);

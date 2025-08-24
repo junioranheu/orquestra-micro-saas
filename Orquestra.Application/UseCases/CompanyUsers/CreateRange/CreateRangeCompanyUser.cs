@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.Base;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -18,11 +19,13 @@ public sealed class CreateRangeCompanyUser(
         Context context,
         IEnvService env,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
+        IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
         IEmailService emailService
     ) : CompanyUserBase(context, checkIfUserIsLinkedCompanyUser), ICreateRangeCompanyUser
 {
     private readonly Context _context = context;
     private readonly IEnvService _env = env;
+    private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
     private readonly IEmailService _emailService = emailService;
 
     public async Task<List<CompanyUserOutput>> Execute(Guid userIdAuth, List<CompanyUserInput> input)
@@ -55,6 +58,12 @@ public sealed class CreateRangeCompanyUser(
         // Salvar;
         await _context.AddRangeAsync(companyUsers);
         await _context.SaveChangesAsync();
+
+        // Se é o primeiro administrador, force novamente settar o IsCurrentMainCompanyUser como true e atualize os registros antigos para false;
+        if (isFirstAdministrator)
+        {
+            await _updateCurrentMainCompanyUser.Execute(input.First().UserId, companyId);
+        }
 
         // Enviar e-mail para cada um dos funcionários;
         // Não é necessário enviar e-mail para o primeiro administador;

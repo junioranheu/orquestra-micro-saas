@@ -6,6 +6,7 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -345,15 +346,17 @@ public sealed class CreateRangeTests
         mockEnv.Setup(e => e.IsDevelopment()).Returns(true); // se precisar de retorno
         mockEnv.Setup(s => s.GetUrls()).Returns(new EnvOutput { UrlBackend = "http://localhost:5035/api", UrlFrontend = "http://localhost:3000" });
 
-        // Dependência real ou mockada;
+        // Outras dependências;
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        var checkIfUserIsLinked = new CheckIfUserIsLinkedCompanyUser(getCompanyUserByCompanyId, httpContextAccessor);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
+        UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinked);
 
         // Cria a sut;
         return new CreateRangeCompanyUser(
             context,
             mockEnv.Object,
             checkIfUserIsLinked,
+            updateCurrentMainCompanyUser,
             emailService
         );
     }

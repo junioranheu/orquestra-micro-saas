@@ -4,6 +4,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Env;
@@ -17,13 +18,15 @@ public class CompanyUserController(
         IEnvService env,
         ICreateRangeCompanyUser createRange,
         IGetCompanyUserByCompanyId getCompanyUserByCompanyId,
-        IVerifyCompanyUser verify
+        IVerifyCompanyUser verify,
+        IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser
     ) : BaseController<CompanyUserController>
 {
     private readonly IEnvService _env = env;
     private readonly ICreateRangeCompanyUser _createRange = createRange;
     private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
     private readonly IVerifyCompanyUser _verify = verify;
+    private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
 
     [AuthorizeFilter]
     [HttpPost("CreateRange")]
@@ -65,4 +68,15 @@ public class CompanyUserController(
 
         return Redirect(url);
     }
+
+    [AuthorizeFilter]
+    [HttpPut("UpdateCurrentMainCompanyUser")]
+    public async Task<ActionResult> UpdateCurrentMainCompanyUser(Guid companyId)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _updateCurrentMainCompanyUser.Execute(userIdAuth, companyId);
+
+        return Ok();
+    }
 }
+
