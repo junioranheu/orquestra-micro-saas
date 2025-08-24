@@ -47,13 +47,13 @@ public class TestController() : BaseController<TestController>
     public ActionResult GetAuth()
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        string name = GetUserNameAuth();
+        string nameAuth = GetUserNameAuth();
         (UserRoleEnum[] _, string[] userRolesStr) = GetUserRolesAuth();
 
         var result = new
         {
             Id = userIdAuth,
-            Name = name,
+            Name = nameAuth,
             Roles = userRolesStr
         };
 

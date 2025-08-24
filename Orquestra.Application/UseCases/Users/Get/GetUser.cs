@@ -16,11 +16,10 @@ public sealed class GetUser(Context context) : IGetUser
         var result = await _context.Users.
                      AsNoTracking().
                      Where(x =>
-                        x.Status == true &&
                         (input.UserId == Guid.Empty || x.UserId == input.UserId) &&
-                        (string.IsNullOrEmpty(input.Email) || x.Email == input.Email)
-                     ).
-                     FirstOrDefaultAsync();
+                        (string.IsNullOrEmpty(input.Email) || x.Email == input.Email) &&
+                        x.Status == true 
+                     ).FirstOrDefaultAsync();
 
         if (result is null)
         {
@@ -31,6 +30,23 @@ public sealed class GetUser(Context context) : IGetUser
         result.Password = string.Empty;
 
         return (result, password);
+    }
+
+    public async Task<UserOutput> Execute(Guid userId)
+    {
+        var result = await _context.Users.
+                     AsNoTracking().
+                     Where(x => x.UserId == userId && x.Status == true).
+                     FirstOrDefaultAsync();
+
+        if (result is null)
+        {
+            return new();
+        }
+
+        var output = result.Adapt<UserOutput>();
+
+        return output;
     }
 
     public async Task<(IEnumerable<UserOutput> output, int count)> Execute(PaginationInput pagination)
