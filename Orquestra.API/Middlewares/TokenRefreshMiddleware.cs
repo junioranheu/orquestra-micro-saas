@@ -27,7 +27,7 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
         }
         catch
         {
-            // Cookie inválido -> limpa e segue;
+            // Cookie inválido: limpa e segue;
             context.Response.Cookies.Delete(SystemConsts.CookieName);
             await _next(context);
             return;
@@ -59,7 +59,7 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
             (string newJwtToken, CookieOptions cookieOptions) = await createRefreshToken.RefreshToken(userIdAuth);
 
             // Escreve cookie pra próxima requisição do browser com o novo refresh token;
-            context.Response.Cookies.Append(SystemConsts.CookieName, newJwtToken, cookieOptions);
+            context.Response.Cookies.Append(key: SystemConsts.CookieName, value: newJwtToken, cookieOptions);
 
             // Guarda o token renovado no Items (expira depois dessa request) para o JwtBearer usar nesta mesma request;
             context.Items[SystemConsts.CookieRefreshedTokenName] = newJwtToken;
