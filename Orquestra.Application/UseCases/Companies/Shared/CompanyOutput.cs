@@ -67,3 +67,24 @@ public sealed class CompanyOutput
     public IEnumerable<CompanyUserOutput>? CompanyUsers { get; init; }
     #endregion
 }
+
+public sealed class CompanySimpleOutput
+{
+    public Guid CompanyId { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
+
+    public CompanyTypeEnum Type { get; set; }
+
+    public CompanySituationEnum CompanySituation { get; set; }
+
+    public PlanTypeEnum PlanType { get; set; }
+
+    public DateTime PlanStartDate { get; set; }
+
+    public DateTime PlanEndDate { get; set; }
+
+    public bool IsAccountVerified { get; set; } = false;
+}

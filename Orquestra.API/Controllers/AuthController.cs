@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
@@ -64,7 +65,7 @@ public class AuthController(
     }
 
     [AllowAnonymous]
-    [HttpGet("Me/Basic")]
+    [HttpGet("Me/Simple")]
     public ActionResult MeSimple()
     {
         bool isAuth = IsUserAuth();
@@ -72,16 +73,13 @@ public class AuthController(
         string nameAuth = GetUserNameAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
-        MeOutput output = new()
+        MeSimpleOutput output = new()
         {
             IsAuth = isAuth,
             UserId = userIdAuth,
             UserName = nameAuth,
             Roles = userRoles,
-            RolesStr = userRolesStr,
-            User = null,
-            CurrentMainCompany = null,
-            Companies = null
+            RolesStr = userRolesStr
         };
 
         return Ok(output);
@@ -91,13 +89,22 @@ public class AuthController(
     [HttpGet("Me")]
     public async Task<ActionResult> Me()
     {
-        bool isAuth = IsUserAuth();
+        const bool isAuth = true;
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         string nameAuth = GetUserNameAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
+
         UserOutput userOutput = await _getUser.Execute(userId: userIdAuth);
+
         List<CompanyOutput>? companyOutput = await _getCompany.Execute(userId: userIdAuth);
-        CompanyOutput? currentMainCompany = companyOutput?.FirstOrDefault(x => x.CompanyUsers!.Any(y => y.UserId == userIdAuth && y.IsCurrentMainCompanyUser == true));
+        List<CompanySimpleOutput> companySimpleOutput = companyOutput.Adapt<List<CompanySimpleOutput>>();
+
+        CompanyOutput? currentMainCompany = companyOutput?.
+                                            Where(x => x.CompanyUsers!.Any(
+                                                y => y.UserId == userIdAuth && y.IsCurrentMainCompanyUser == true && x.IsAccountVerified == true
+                                            )).FirstOrDefault();
+
+        CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
 
         MeOutput output = new()
         {
@@ -107,8 +114,8 @@ public class AuthController(
             Roles = userRoles,
             RolesStr = userRolesStr,
             User = userOutput,
-            CurrentMainCompany = currentMainCompany,
-            Companies = companyOutput
+            CurrentMainCompany = currentMainCompanySimple,
+            Companies = companySimpleOutput
         };
 
         return Ok(output);

@@ -18,15 +18,15 @@ export default function Dashboard() {
 
     async function handleXD() {
         console.clear();
-        const result = await Fetch.get(CONSTS_AUTH.test);
-        console.log(CONSTS_AUTH.test, result);
+        const result = await Fetch.get(CONSTS_AUTH.me);
+        console.log(CONSTS_AUTH.me, result);
 
-        setAea(result.name);
+        setAea(result.userName);
     }
 
     return (
         <section className={styles.main}>
-            <h1>Olá, mundo... {aea}</h1>
+            <h1>Olá... {aea}</h1>
 
             <Button label={'XD'} handleFunction={() => handleXD()} />
         </section>

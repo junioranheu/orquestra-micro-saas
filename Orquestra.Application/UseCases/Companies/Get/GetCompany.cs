@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Companies.Get;
@@ -50,22 +52,22 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
     public async Task<List<CompanyOutput>?> Execute(Guid userId)
     {
-        var companyUsers = await _context.CompanyUsers.
-                           Where(x => x.UserId == userId && x.Status == true).
+        var companiesIds = await _context.CompanyUsers.
                            AsNoTracking().
+                           Where(x => x.UserId == userId && x.Status == true).
+                           Select(x => x.CompanyId).
+                           Distinct().
                            ToListAsync();
 
-        if (companyUsers.Count == 0)
+        if (companiesIds.Count == 0)
         {
             return [];
         }
 
-        List<Guid> companiesIds = [.. companyUsers.Select(x => x.CompanyId).Distinct()];
-
         var result = await _context.Companies.
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
-                     Where(x => companiesIds.Contains(x.CompanyId) && x.Status == true).
                      AsNoTracking().
+                     Where(x => companiesIds.Contains(x.CompanyId) && x.Status == true).
                      ToListAsync();
 
         var output = result.Adapt<List<CompanyOutput>>();

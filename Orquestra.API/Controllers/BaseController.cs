@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -8,6 +9,7 @@ namespace Orquestra.API.Controllers;
 
 public abstract class BaseController<T> : Controller
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected bool IsUserAuth()
     {
         if (User is null || User.Identity is null)
@@ -18,35 +20,22 @@ public abstract class BaseController<T> : Controller
         return User.Identity.IsAuthenticated;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected Guid GetUserIdAuth(bool throwExceptionIfNotAuth = false)
     {
-        if (!IsUserAuth())
+        string? id = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(id) || !Guid.TryParse(id.AsSpan(), out Guid guid))
         {
-            ThrowEx(throwExceptionIfNotAuth);
-            return Guid.Empty;
-        }
-
-        string id = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-
-        if (string.IsNullOrEmpty(id))
-        {
-            ThrowEx(throwExceptionIfNotAuth);
-            return Guid.Empty;
-        }
-
-        Guid guid = Guid.Parse(id);
-
-        return guid;
-
-        static void ThrowEx(bool throwExceptionIfNotAuth)
-        {
-            if (!throwExceptionIfNotAuth)
+            if (throwExceptionIfNotAuth)
             {
-                return;
+                throw new UnauthorizedAccessException(SystemConsts.Warn_Simple_UserNotAuth);
             }
 
-            throw new Exception(SystemConsts.Warn_Simple_UserNotAuth);
+            return Guid.Empty;
         }
+
+        return guid;
     }
 
     protected string GetUserNameAuth()
@@ -77,28 +66,21 @@ public abstract class BaseController<T> : Controller
     {
         if (!IsUserAuth())
         {
-            return ([], []);
+            return (Array.Empty<UserRoleEnum>(), Array.Empty<string>());
         }
 
-        string[]? roleClaims = User.FindAll(ClaimTypes.Role)?.Select(c => c.Value).ToArray();
+        List<UserRoleEnum> enums = [];
+        List<string> names = [];
 
-        if (roleClaims?.Length < 1 || roleClaims is null)
+        foreach (var claim in User.FindAll(ClaimTypes.Role))
         {
-            return ([], []);
-        }
-
-        List<UserRoleEnum> roleEnums = [];
-        List<string> roleEnumsStr = [];
-
-        foreach (var role in roleClaims)
-        {
-            if (Enum.TryParse<UserRoleEnum>(role, true, out var userRole))
+            if (Enum.TryParse(claim.Value, true, out UserRoleEnum userRole))
             {
-                roleEnums.Add(userRole);
-                roleEnumsStr.Add(GetEnumDesc(userRole));
+                enums.Add(userRole);
+                names.Add(GetEnumDesc(userRole));
             }
         }
 
-        return ([.. roleEnums], [.. roleEnumsStr]);
+        return (enums.ToArray(), names.ToArray());
     }
 }

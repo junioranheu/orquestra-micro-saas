@@ -2,7 +2,7 @@
 
 public static class SystemConsts
 {
-    public const string NameApi = "Orquestra.API™";
+    public const string NameApi = "Orquestra.API";
     public const string NameApp = "Orquestra";
     public const string Email = "orquestra.saas@gmail.com";
     public const string Author = "@junioranheu";
