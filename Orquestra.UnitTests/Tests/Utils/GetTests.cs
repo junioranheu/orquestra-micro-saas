@@ -104,30 +104,6 @@ public sealed class GetTests
         Assert.False(alwaysFalse);
     }
 
-    [Theory]
-    [InlineData(false)]  // Simula Development;
-    [InlineData(true)] // Simula Release;
-    public void GetUrls_ShouldReturnValidUrls(bool isProd)
-    {
-        // Act
-        (string urlBack, string urlFront) = GetUrls(isProd);
-
-
-        if (isProd)
-        {
-            Assert.DoesNotContain("localhost", urlBack);
-            Assert.DoesNotContain("localhost", urlFront);
-
-            Assert.Contains("orquestra", urlBack.ToLower());
-            Assert.Contains("orquestra", urlFront.ToLower());
-        }
-        else
-        {
-            Assert.Contains("localhost", urlBack);
-            Assert.Contains("localhost", urlFront);
-        }
-    }
-
     [Fact]
     public void GetFirstPart_ShouldReturn_FirstWord_WhenStringHasMultipleWords()
     {

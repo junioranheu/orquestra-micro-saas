@@ -10,6 +10,8 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Env.Models;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 
@@ -335,12 +337,25 @@ public sealed class CreateRangeTests
     #region helpers
     private static CreateRangeCompanyUser CreateSut(Context context, User authUser, IEmailService emailService)
     {
+        // Mock do HttpContextAccessor;
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(authUser);
-        IHostEnvironment env = Fixture.CreateIHostEnvironment();
+
+        // Mock do IEnvService;
+        Mock<IEnvService> mockEnv = new();
+        mockEnv.Setup(e => e.IsDevelopment()).Returns(true); // se precisar de retorno
+        mockEnv.Setup(s => s.GetUrls()).Returns(new EnvOutput { UrlBackend = "http://localhost:5035/api", UrlFrontend = "http://localhost:3000" });
+
+        // Dependência real ou mockada;
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         var checkIfUserIsLinked = new CheckIfUserIsLinkedCompanyUser(getCompanyUserByCompanyId, httpContextAccessor);
 
-        return new CreateRangeCompanyUser(context, env, checkIfUserIsLinked, emailService);
+        // Cria a sut;
+        return new CreateRangeCompanyUser(
+            context,
+            mockEnv.Object,
+            checkIfUserIsLinked,
+            emailService
+        );
     }
     #endregion
 }

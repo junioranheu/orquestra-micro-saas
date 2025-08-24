@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Orquestra.Application.UseCases.CompanyUsers.Base;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
@@ -9,19 +8,21 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 
 public sealed class CreateRangeCompanyUser(
         Context context,
-        IHostEnvironment env,
+        IEnvService env,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IEmailService emailService
     ) : CompanyUserBase(context, checkIfUserIsLinkedCompanyUser), ICreateRangeCompanyUser
 {
     private readonly Context _context = context;
-    private readonly IHostEnvironment _env = env;
+    private readonly IEnvService _env = env;
     private readonly IEmailService _emailService = emailService;
 
     public async Task<List<CompanyUserOutput>> Execute(Guid userIdAuth, List<CompanyUserInput> input)
@@ -122,8 +123,8 @@ public sealed class CreateRangeCompanyUser(
             return;
         }
 
-        (string urlBack, string _) = GetUrls(isProd: _env.IsProduction());
-        string verifyUrl = $"{urlBack}/CompanyUser/Verify/{companyUser.VerifyToken}";
+        EnvOutput env = _env.GetUrls();
+        string verifyUrl = $"{env.UrlBackend}/CompanyUser/Verify/{companyUser.VerifyToken}";
 
         Dictionary<string, string> values = new()
         {

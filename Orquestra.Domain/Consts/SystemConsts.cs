@@ -25,9 +25,6 @@ public static class SystemConsts
 
     public const bool DO_NOT_SEND_EMAIL_IF_ENV_DEV = false;
 
-    public const string UrlFrontendLocal = "http://localhost:3000";
-    public const string UrlFrontendProd = "https://orquestra.vercel.app";
-
     public const string ScreenCompanyHasBeenVerified = "empresa/verificada";
     public const string ScreenCompanyUserHasBeenVerified = "usuario/verificada";
 }

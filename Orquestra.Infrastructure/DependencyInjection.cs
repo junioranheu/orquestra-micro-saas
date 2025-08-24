@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -15,6 +16,7 @@ using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Interceptors;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
+using Orquestra.Infrastructure.Services.Env;
 using System.Text;
 using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
@@ -49,6 +51,15 @@ public static class DependencyInjection
             IWebHostEnvironment env = builder.Environment;
 
             return new EmailService(settings, env);
+        });
+
+        // Env;
+        services.AddSingleton<IEnvService>(x =>
+        {
+            IWebHostEnvironment env = builder.Environment;
+            IConfiguration config = builder.Configuration;
+
+            return new EnvService(env, config);
         });
     }
 
@@ -176,10 +187,20 @@ public static class DependencyInjection
 
     private static void AddCors(IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.AddCors(x =>
-            x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
+        string?[] frontendUrls =
+        [
+            builder.Configuration["Urls:Development:Frontend"],
+            builder.Configuration["Urls:Production:Frontend"]
+        ];
+
+        if (frontendUrls is null || frontendUrls.Any(x => string.IsNullOrEmpty(x)))
+        {
+            throw new Exception("Erro interno crítico: um ou mais URLs de Frontend não estão configurados no appsettings.json.");
+        }
+
+        services.AddCors(x => x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
             {
-                builder.WithOrigins(SystemConsts.UrlFrontendLocal, SystemConsts.UrlFrontendProd).
+                builder.WithOrigins(frontendUrls!).
                         AllowAnyHeader().
                         AllowAnyMethod().
                         AllowCredentials();

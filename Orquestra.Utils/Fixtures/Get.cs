@@ -9,21 +9,6 @@ namespace Orquestra.Utils.Fixtures;
 public static class Get
 {
     /// <summary>
-    /// Retorna as URLs base da aplicação (API e Front-end) de acordo com o ambiente.
-    /// - Em modo DEBUG, retorna os endereços locais.
-    /// - Em modo RELEASE, retorna os endereços publicados.
-    /// </summary>
-    public static (string urlBack, string urlFront) GetUrls(bool isProd)
-    {
-        if (isProd)
-        {
-            return ("https://orquestra-cbgkgtayftdeaxh2.brazilsouth-01.azurewebsites.net/api", "https://orquestra.vercel.app");
-        }
-
-        return ("http://localhost:5035/api", "http://localhost:3000");
-    }
-
-    /// <summary>
     /// Obtém o horário atual, forçando ao horário de Brasilia;
     /// </summary>
     public static DateTime GetDate()

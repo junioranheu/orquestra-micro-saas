@@ -7,20 +7,21 @@ using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
-using static Orquestra.Utils.Fixtures.Get;
+using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Env.Models;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class CompanyController(
-        IHostEnvironment env,
+        IEnvService env,
         ICreateCompany create,
         IGetCompany get,
         IVerifyCompany verify
     ) : BaseController<CompanyController>
 {
-    private readonly IHostEnvironment _env = env;
+    private readonly IEnvService _env = env;
     private readonly ICreateCompany _create = create;
     private readonly IGetCompany _get = get;
     private readonly IVerifyCompany _verify = verify;
@@ -77,8 +78,8 @@ public class CompanyController(
     {
         await _verify.Execute(token);
 
-        (string _, string urlFront) = GetUrls(isProd: _env.IsProduction());
-        string url = $"{urlFront}/{SystemConsts.ScreenCompanyHasBeenVerified}";
+        EnvOutput env = _env.GetUrls();
+        string url = $"{env.UrlFrontend}/{SystemConsts.ScreenCompanyHasBeenVerified}";
 
         return Redirect(url);
     }

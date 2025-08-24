@@ -11,20 +11,22 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
 
 public sealed class CreateCompany(
         Context context,
-        IHostEnvironment env,
+        IEnvService env,
         ICreateRangeCompanyUser createRangeCompanyUser,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IEmailService emailService
     ) : CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
-    private readonly IHostEnvironment _env = env;
+    private readonly IEnvService _env = env;
     private readonly ICreateRangeCompanyUser _createRangeCompanyUser = createRangeCompanyUser;
     private readonly IEmailService _emailService = emailService;
 
@@ -81,8 +83,8 @@ public sealed class CreateCompany(
                      Where(x => x.UserId == userIdAuth && x.Status == true).
                      FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
 
-        (string urlBack, string _) = GetUrls(isProd: _env.IsProduction());
-        string verifyUrl = $"{urlBack}/Company/Verify/{company.VerifyToken}";
+        EnvOutput env = _env.GetUrls();
+        string verifyUrl = $"{env.UrlBackend}/Company/Verify/{company.VerifyToken}";
 
         Dictionary<string, string> values = new()
         {
