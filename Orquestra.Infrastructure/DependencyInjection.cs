@@ -121,8 +121,8 @@ public static class DependencyInjection
                          int statusCodeJar = context.Response.StatusCode;
                          context.HandleResponse();
 
-                         // Mantém o 419 se o erro tiver sido configurado no OnAuthenticationFailed,
-                         // caso contrário retorna 401 como padrão;
+                         // Mantém o Status419AuthenticationTimeout se o erro tiver sido configurado no OnAuthenticationFailed,
+                         // caso contrário retorna Status401Unauthorized como padrão;
                          int statusCode = statusCodeJar == StatusCodes.Status419AuthenticationTimeout ? StatusCodes.Status419AuthenticationTimeout : StatusCodes.Status401Unauthorized;
                          string[] message = statusCodeJar == StatusCodes.Status419AuthenticationTimeout ? OnAuthenticationFailed : onChallengeError;
 

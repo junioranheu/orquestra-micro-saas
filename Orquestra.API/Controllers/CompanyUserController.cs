@@ -13,11 +13,13 @@ namespace Orquestra.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class CompanyUserController(
+        IHostEnvironment env,
         ICreateRangeCompanyUser createRange,
         IGetCompanyUserByCompanyId getCompanyUserByCompanyId,
         IVerifyCompanyUser verify
     ) : BaseController<CompanyUserController>
 {
+    private readonly IHostEnvironment _env = env;
     private readonly ICreateRangeCompanyUser _createRange = createRange;
     private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
     private readonly IVerifyCompanyUser _verify = verify;
@@ -57,7 +59,7 @@ public class CompanyUserController(
     {
         await _verify.Execute(token);
 
-        (string _, string urlFront) = GetUrls();
+        (string _, string urlFront) = GetUrls(isProd: _env.IsProduction());
         string url = $"{urlFront}/{SystemConsts.ScreenCompanyUserHasBeenVerified}";
 
         return Redirect(url);

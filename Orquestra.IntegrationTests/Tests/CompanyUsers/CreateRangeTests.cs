@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
@@ -335,10 +336,11 @@ public sealed class CreateRangeTests
     private static CreateRangeCompanyUser CreateSut(Context context, User authUser, IEmailService emailService)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(authUser);
+        IHostEnvironment env = Fixture.CreateIHostEnvironment();
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         var checkIfUserIsLinked = new CheckIfUserIsLinkedCompanyUser(getCompanyUserByCompanyId, httpContextAccessor);
 
-        return new CreateRangeCompanyUser(context, checkIfUserIsLinked, emailService);
+        return new CreateRangeCompanyUser(context, env, checkIfUserIsLinked, emailService);
     }
     #endregion
 }

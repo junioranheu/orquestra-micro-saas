@@ -13,13 +13,14 @@ public static class Get
     /// - Em modo DEBUG, retorna os endereços locais.
     /// - Em modo RELEASE, retorna os endereços publicados.
     /// </summary>
-    public static (string urlBack, string urlFront) GetUrls()
+    public static (string urlBack, string urlFront) GetUrls(bool isProd)
     {
-#if DEBUG
+        if (isProd)
+        {
+            return ("https://orquestra-cbgkgtayftdeaxh2.brazilsouth-01.azurewebsites.net/api", "https://orquestra.vercel.app");
+        }
+
         return ("http://localhost:5035/api", "http://localhost:3000");
-#else
-    return ("https://orquestra-cbgkgtayftdeaxh2.brazilsouth-01.azurewebsites.net/api", "https://orquestra.vercel.app");
-#endif
     }
 
     /// <summary>
@@ -57,7 +58,7 @@ public static class Get
     {
         Random random = new();
         string chars = (onlyUpper ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-        string? randomStr = new(Enumerable.Repeat(chars, charLength).Select(s => s[random.Next(s.Length)]).ToArray());
+        string? randomStr = new([.. Enumerable.Repeat(chars, charLength).Select(s => s[random.Next(s.Length)])]);
 
         return randomStr;
     }
@@ -83,7 +84,7 @@ public static class Get
         StringBuilder result = new();
 
         // Lista de palavras que devem ficar em minúsculas, exceto se forem a primeira palavra;
-        string[] lowercaseExceptions = { "de", "da", "do", "dos", "das", "e" };
+        string[] lowercaseExceptions = ["de", "da", "do", "dos", "das", "e"];
 
         string[] words = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 

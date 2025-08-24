@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -40,6 +41,15 @@ public static class Fixture
         mockAccessor.Setup(x => x.HttpContext).Returns(context);
 
         return mockAccessor.Object;
+    }
+
+    public static IHostEnvironment CreateIHostEnvironment(string? environmentName = "Development")
+    {
+        Mock<IHostEnvironment> mockEnv = new();
+
+        mockEnv.Setup(e => e.EnvironmentName).Returns(environmentName ?? "Production");
+
+        return mockEnv.Object;
     }
 
     public static async Task Save<T>(Context context, T obj) where T : class

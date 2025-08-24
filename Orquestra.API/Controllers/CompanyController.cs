@@ -14,11 +14,13 @@ namespace Orquestra.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class CompanyController(
+        IHostEnvironment env,
         ICreateCompany create,
         IGetCompany get,
         IVerifyCompany verify
     ) : BaseController<CompanyController>
 {
+    private readonly IHostEnvironment _env = env;
     private readonly ICreateCompany _create = create;
     private readonly IGetCompany _get = get;
     private readonly IVerifyCompany _verify = verify;
@@ -75,7 +77,7 @@ public class CompanyController(
     {
         await _verify.Execute(token);
 
-        (string _, string urlFront) = GetUrls();
+        (string _, string urlFront) = GetUrls(isProd: _env.IsProduction());
         string url = $"{urlFront}/{SystemConsts.ScreenCompanyHasBeenVerified}";
 
         return Redirect(url);

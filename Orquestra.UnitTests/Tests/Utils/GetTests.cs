@@ -104,24 +104,28 @@ public sealed class GetTests
         Assert.False(alwaysFalse);
     }
 
-    [Fact]
-    public void GetUrls_ShouldReturnValidUrls()
+    [Theory]
+    [InlineData(false)]  // Simula Development;
+    [InlineData(true)] // Simula Release;
+    public void GetUrls_ShouldReturnValidUrls(bool isProd)
     {
         // Act
-        (string urlBack, string urlFront) = GetUrls();
+        (string urlBack, string urlFront) = GetUrls(isProd);
 
-#if DEBUG
-        // No debug, deve apontar pro localhost;
-        Assert.Contains("localhost", urlBack);
-        Assert.Contains("localhost", urlFront);
-#else
-        // Em release, deve conter "orquestra" e não conter "localhost";
-        Assert.DoesNotContain("localhost", urlBack);
-        Assert.DoesNotContain("localhost", urlFront);
 
-        Assert.Contains("orquestra", urlBack.ToLower());
-        Assert.Contains("orquestra", urlFront.ToLower());
-#endif
+        if (isProd)
+        {
+            Assert.DoesNotContain("localhost", urlBack);
+            Assert.DoesNotContain("localhost", urlFront);
+
+            Assert.Contains("orquestra", urlBack.ToLower());
+            Assert.Contains("orquestra", urlFront.ToLower());
+        }
+        else
+        {
+            Assert.Contains("localhost", urlBack);
+            Assert.Contains("localhost", urlFront);
+        }
     }
 
     [Fact]

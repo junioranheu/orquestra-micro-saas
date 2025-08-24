@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
@@ -16,12 +17,14 @@ namespace Orquestra.Application.UseCases.Companies.Create;
 
 public sealed class CreateCompany(
         Context context,
+        IHostEnvironment env,
         ICreateRangeCompanyUser createRangeCompanyUser,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IEmailService emailService
     ) : CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
+    private readonly IHostEnvironment _env = env;
     private readonly ICreateRangeCompanyUser _createRangeCompanyUser = createRangeCompanyUser;
     private readonly IEmailService _emailService = emailService;
 
@@ -78,7 +81,7 @@ public sealed class CreateCompany(
                      Where(x => x.UserId == userIdAuth && x.Status == true).
                      FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
 
-        (string urlBack, string _) = GetUrls();
+        (string urlBack, string _) = GetUrls(isProd: _env.IsProduction());
         string verifyUrl = $"{urlBack}/Company/Verify/{company.VerifyToken}";
 
         Dictionary<string, string> values = new()
