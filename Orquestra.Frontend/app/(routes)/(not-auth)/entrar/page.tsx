@@ -33,7 +33,6 @@ export default function Login() {
     const refButton = useRef<HTMLButtonElement>(null);
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-        console.log('xd');
         if (e.key === 'Enter') {
             refButton.current?.click();
         }

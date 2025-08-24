@@ -52,7 +52,8 @@ public static class DependencyInjection
         });
     }
 
-    private static readonly string[] onChallengeError = ["Acesso negado. Você não tem permissão para acessar este recurso ou não está autenticado."];
+    private static readonly string[] OnAuthenticationFailed = ["Sua sessão expirou. Por favor, realize o login novamente para continuar."];
+    private static readonly string[] onChallengeError = ["Acesso negado. É necessário estar autenticado para acessar este recurso."];
 
     private static void AddAuth(IServiceCollection services, WebApplicationBuilder builder)
     {
@@ -118,21 +119,22 @@ public static class DependencyInjection
                      OnChallenge = context =>
                      {
                          int statusCodeJar = context.Response.StatusCode;
-
                          context.HandleResponse();
-                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                         context.Response.ContentType = "application/json";
 
                          // Mantém o 419 se o erro tiver sido configurado no OnAuthenticationFailed,
                          // caso contrário retorna 401 como padrão;
                          int statusCode = statusCodeJar == StatusCodes.Status419AuthenticationTimeout ? StatusCodes.Status419AuthenticationTimeout : StatusCodes.Status401Unauthorized;
+                         string[] message = statusCodeJar == StatusCodes.Status419AuthenticationTimeout ? OnAuthenticationFailed : onChallengeError;
+
+                         context.Response.StatusCode = statusCode;
+                         context.Response.ContentType = "application/json";
 
                          string result = JsonSerializer.Serialize(new
                          {
                              Code = statusCode,
                              Date = GetDateDetails(),
                              context.HttpContext.Request.Path,
-                             Messages = onChallengeError,
+                             Messages = message,
                              IsError = true
                          });
 

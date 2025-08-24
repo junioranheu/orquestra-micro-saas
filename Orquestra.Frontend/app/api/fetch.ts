@@ -1,3 +1,4 @@
+import ROUTES from '@/app/consts/routes';
 import handleGetDateBrazil from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
@@ -79,6 +80,18 @@ export const Fetch = {
                 return blob;
             }
 
+            // Sessão expirada (419)
+            if (response.status === 419) {
+                const resError = await response.json();
+                console.log(resError);
+
+                swal({ str: resError?.Messages?.[0], icon: 'warning' }).then(() => {
+                    window.location.href = ROUTES.ENTRAR;
+                });
+
+                return;
+            }
+
             // 400/500 errors;
             if (response.status === 400 || response.status === 500) {
                 const resError = await response.json();
@@ -105,6 +118,7 @@ export const Fetch = {
 
             console.table(errorData);
             swal({ str: error, icon: 'error' });
+
             throw new Error(error?.message ?? error?.statusText);
         } finally {
             abortController.abort();
@@ -113,8 +127,12 @@ export const Fetch = {
 };
 
 export function handleCheckApiError(result: any): [boolean, string] {
-    if (!result || result?.status === 200 || result?.code === 200) return [false, ''];
+    if (!result || result?.status === 200 || result?.code === 200) {
+        return [false, ''];
+    }
+
     const isError = (result?.error || result?.status !== 200 || result?.code !== 200) as boolean;
     const msg = result?.messages?.[0] || result?.error;
+
     return [isError, msg];
 }
