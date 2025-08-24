@@ -10,22 +10,27 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
+      # 1️⃣ Puxa o código
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18'  # compatível com Next.js + Turbopack
 
+      # 3️⃣ Instala dependências
       - name: Install dependencies
         working-directory: Orquestra.Frontend
         run: npm install
 
-      - name: Build
+      # 4️⃣ Build Turbopack
+      - name: Build Next.js with Turbopack
         working-directory: Orquestra.Frontend
-        run: npm run build
+        run: npm run build -- --turbopack
 
+      # 5️⃣ Deploy para Azure Static Web Apps
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -33,4 +38,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "Orquestra.Frontend"
-          output_location: "Orquestra.Frontend/.next"
+          api_location: "Orquestra.Frontend/api"   # necessário pra SSR
+          output_location: "Orquestra.Frontend"   # root da app, não precisa ser .next ou out
