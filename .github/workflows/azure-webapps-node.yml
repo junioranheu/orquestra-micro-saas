@@ -8,7 +8,7 @@ on:
 
 env:
   WEBAPP_NAME: "orquestra-web"
-  APPLICATION_PUBLISH_PROFILE: ${{ secrets.APP_PUBLISH_PROFILE }}
+  APPLICATION_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
 
 jobs:
   build-and-deploy:
