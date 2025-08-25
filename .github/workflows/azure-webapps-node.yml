@@ -10,36 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout do código
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js
+      # Não precisamos instalar node_modules aqui
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # 3️⃣ Cache de node_modules
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        with:
-          path: Orquestra.Frontend/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('Orquestra.Frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      # 4️⃣ Instala dependências
-      - name: Install dependencies
-        working-directory: Orquestra.Frontend
-        run: npm install
-
-      # 5️⃣ Build Next.js com Turbopack
-      - name: Build Next.js with Turbopack
-        working-directory: Orquestra.Frontend
-        run: npm run build -- --turbopack
-
-      # 6️⃣ Deploy para Azure App Service
+      # Deploy só do código + package.json + next.config.js + public/.next se houver
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
