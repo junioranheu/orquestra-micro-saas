@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js 
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,17 +25,22 @@ jobs:
         working-directory: Orquestra.Frontend
         run: npm install
 
-      # 4️⃣ Build Next.js com Turbopack
+      # 4️⃣ Limpa build anterior
+      - name: Clean .next
+        working-directory: Orquestra.Frontend
+        run: rm -rf .next
+
+      # 5️⃣ Build Next.js com Turbopack
       - name: Build Next.js
         working-directory: Orquestra.Frontend
         run: npm run build
 
-      # 5️⃣ Remove devDependencies (opcional)
+      # 6️⃣ Remove devDependencies (opcional)
       - name: Prune dev dependencies
         working-directory: Orquestra.Frontend
         run: npm prune --production
 
-      # 6️⃣ Criar ZIP com os arquivos certos para o App Service
+      # 7️⃣ Cria ZIP com os arquivos corretos
       - name: Create release.zip
         working-directory: Orquestra.Frontend
         run: |
@@ -47,7 +52,7 @@ jobs:
             next.config.js \
             public
 
-      # 7️⃣ Deploy para Azure App Service
+      # 8️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
@@ -56,5 +61,5 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
           package: 'Orquestra.Frontend/release.zip'
 
-      # 8️⃣ Startup Command no App Service (Azure Portal ou Settings)
-      # npm start -p $PORT
+# ⚠️ Depois, no Azure App Service configure o startup command:
+# npm start -p $PORT
