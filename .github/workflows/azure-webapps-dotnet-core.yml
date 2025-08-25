@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Orquestra.API/**'             
+      - 'Orquestra.Application/**'      
+      - 'Orquestra.Domain/**'           
+      - 'Orquestra.Infrastructure/**'   
+      - 'Orquestra.IntegrationTests/**'
+      - 'Orquestra.UnitTests/**'
+      - 'Orquestra.Utils/**'
+      - 'Orquestra.sln'                
+      - '.github/workflows/azure-webapps-dotnet-core.yml' 
   workflow_dispatch:
 
 env:
@@ -17,32 +27,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout do código
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup .NET SDK
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      # 3️⃣ Restore dependências
       - name: Restore dependencies
         run: dotnet restore Orquestra.sln
 
+      # 4️⃣ Build da solução
       - name: Build solution
         run: dotnet build Orquestra.sln --configuration ${{ env.BUILD_CONFIGURATION }}
 
+      # 5️⃣ Testes unitários
       - name: Run unit tests
         run: dotnet test Orquestra.UnitTests/Orquestra.UnitTests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
 
+      # 6️⃣ Testes de integração
       - name: Run integration tests
         run: dotnet test Orquestra.IntegrationTests/Orquestra.IntegrationTests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
 
+      # 7️⃣ Publica projeto API
       - name: Publish API project
         run: dotnet publish Orquestra.API/Orquestra.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --output ${{ github.workspace }}/publish
 
+      # 8️⃣ Lista arquivos publicados
       - name: List published files
         run: ls -R ${{ github.workspace }}/publish
 
+      # 9️⃣ Upload do artifact para deploy
       - name: Upload artifact for deploy
         uses: actions/upload-artifact@v4
         with:
@@ -54,15 +73,18 @@ jobs:
     needs: build-and-test
 
     steps:
+      # 🔟 Download artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: dotnet-api
           path: download/
 
+      # 1️⃣1️⃣ Lista arquivos do artifact
       - name: List files in artifact
         run: ls -R download/
 
+      # 1️⃣2️⃣ Deploy na Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:

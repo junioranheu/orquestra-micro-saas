@@ -190,7 +190,8 @@ public static class DependencyInjection
         string?[] frontendUrls =
         [
             builder.Configuration["Urls:Development:Frontend"],
-            builder.Configuration["Urls:Production:Frontend"]
+            builder.Configuration["Urls:Production:Frontend"],
+            "https://orquestra-web.vercel.app"
         ];
 
         if (frontendUrls is null || frontendUrls.Any(x => string.IsNullOrEmpty(x)))
