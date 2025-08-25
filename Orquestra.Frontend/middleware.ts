@@ -8,10 +8,6 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get('auth')?.value;
     // console.log(`cookies.value ${token}`);
 
-    console.log('middleware url:', request.url);
-    console.log('raw cookie header:', request.headers.get('cookie')); // >>> key
-    console.log('request.cookies.get(auth):', request.cookies.get('auth'));
-
     // Redireciona '/' para dashboard;
     if (pathname === '/') {
         return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.url));

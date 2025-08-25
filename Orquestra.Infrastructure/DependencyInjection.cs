@@ -187,11 +187,11 @@ public static class DependencyInjection
 
     private static void AddCors(IServiceCollection services, WebApplicationBuilder builder)
     {
-        string?[] frontendUrls =
+        string[] frontendUrls =
         [
-            builder.Configuration["Urls:Development:Frontend"],
-            builder.Configuration["Urls:Production:Frontend"],
-            "https://orquestra-web.azurewebsites.net/"
+            builder.Configuration["Urls:Development:Frontend"] ?? string.Empty,
+            builder.Configuration["Urls:Production:Frontend"] ?? string.Empty,
+            builder.Configuration["Urls:Production:Frontend_2"] ?? string.Empty
         ];
 
         if (frontendUrls is null || frontendUrls.Any(x => string.IsNullOrEmpty(x)))
@@ -202,15 +202,17 @@ public static class DependencyInjection
         services.AddCors(x =>
             x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
             {
-                //builder.WithOrigins(frontendUrls!).
-                //        AllowAnyHeader().
+                #region obsoleto
+                //builder.AllowAnyHeader().
                 //        AllowAnyMethod().
+                //        SetIsOriginAllowed((host) => true).
                 //        AllowCredentials();
+                #endregion
 
-                builder.AllowAnyHeader().
-                   AllowAnyMethod().
-                   SetIsOriginAllowed((host) => true).
-                   AllowCredentials();
+                builder.WithOrigins(frontendUrls).
+                        AllowAnyHeader().
+                        AllowAnyMethod().
+                        AllowCredentials();
             })
         );
     }
