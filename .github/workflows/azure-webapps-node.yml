@@ -3,7 +3,9 @@ name: Deploy Orquestra.Frontend to Azure App Service
 on:
   push:
     branches:
-      - main
+      - main  # branch de deploy
+    paths:
+      - Orquestra.Frontend/**
 
 jobs:
   build-and-deploy:
@@ -14,34 +16,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js 22
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # 3️⃣ Instala dependências
-      - name: Install dependencies
+      # 3️⃣ Instala dependências e build
+      - name: Install dependencies and build Next.js
         working-directory: Orquestra.Frontend
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
-      # 4️⃣ Build Next.js (Turbopack)
-      - name: Build Next.js
-        working-directory: Orquestra.Frontend
-        run: npm run build
-
-      # 5️⃣ Remove devDependencies (produção)
-      - name: Prune dev deps
+      # 4️⃣ Remove devDependencies (produção)
+      - name: Prune dev dependencies
         working-directory: Orquestra.Frontend
         run: npm prune --production
 
-      # 6️⃣ Cria ZIP com os artefatos completos
+      # 5️⃣ Cria ZIP com os artefatos completos
       - name: Create release.zip
         working-directory: Orquestra.Frontend
         run: |
           zip -r release.zip .next public node_modules package.json next.config.js package-lock.json || true
 
-      # 7️⃣ Deploy para Azure App Service
+      # 6️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
