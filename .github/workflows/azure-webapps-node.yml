@@ -3,7 +3,7 @@ name: Deploy Orquestra.Frontend to Azure App Service
 on:
   push:
     branches:
-      - main  # branch de deploy
+      - main  
     paths:
       - Orquestra.Frontend/**
 
