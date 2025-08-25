@@ -34,6 +34,8 @@ jobs:
       - name: Build Next.js
         working-directory: Orquestra.Frontend
         run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL_BASE: ${{ secrets.NEXT_PUBLIC_API_URL_BASE }}
 
       # 6️⃣ Remove devDependencies (opcional)
       - name: Prune dev dependencies
