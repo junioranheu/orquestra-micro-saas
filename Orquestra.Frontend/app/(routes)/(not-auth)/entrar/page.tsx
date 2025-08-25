@@ -75,7 +75,6 @@ export default function Login() {
                 router.push(ROUTES.DASHBOARD);
             }, 250);
         } catch {
-            swal({ str: 'E-mail ou senha incorretos.', icon: 'error' });
             setFormData(x => ({ ...x, password: '' }));
             return;
         }
