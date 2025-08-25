@@ -1,5 +1,4 @@
 ﻿using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.Auth.Shared;
@@ -15,7 +14,6 @@ public class MeSimpleOutput
 
 public sealed class MeOutput : MeSimpleOutput
 {
-    public UserOutput? User { get; set; }
     public CompanySimpleOutput? CurrentMainCompany { get; set; }
     public List<CompanySimpleOutput>? Companies { get; set; }
 }

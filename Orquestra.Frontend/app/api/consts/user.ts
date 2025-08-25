@@ -8,15 +8,14 @@ export const CONSTS_USER = {
     put: `${BASE}/${controller}`
 };
 
-export default interface iUsuario {
+export default interface iUser {
     userId: string;
     fullName: string;
     email: string;
-    token: string;
     isAuth: boolean;
 }
 
-export interface iUsuarioResponse {
-    linq: iUsuario[];
+export interface iUserResponse {
+    linq: iUser[];
     count: number;
 }

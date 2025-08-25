@@ -7,7 +7,6 @@ using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
@@ -19,13 +18,11 @@ namespace Orquestra.API.Controllers;
 public class AuthController(
         ICreateToken createToken,
         ICreateRefreshToken createRefreshToken,
-        IGetUser getUser,
         IGetCompany getCompany
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
-    private readonly IGetUser _getUser = getUser;
     private readonly IGetCompany _getCompany = getCompany;
 
 #if DEBUG
@@ -94,8 +91,6 @@ public class AuthController(
         string nameAuth = GetUserNameAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
-        UserOutput userOutput = await _getUser.Execute(userId: userIdAuth);
-
         List<CompanyOutput>? companyOutput = await _getCompany.Execute(userId: userIdAuth);
         List<CompanySimpleOutput> companySimpleOutput = companyOutput.Adapt<List<CompanySimpleOutput>>();
 
@@ -113,7 +108,6 @@ public class AuthController(
             UserName = nameAuth,
             Roles = userRoles,
             RolesStr = userRolesStr,
-            User = userOutput,
             CurrentMainCompany = currentMainCompanySimple,
             Companies = companySimpleOutput
         };
