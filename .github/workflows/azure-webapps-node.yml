@@ -1,16 +1,16 @@
-name: Azure Static Web Apps CI/CD
+name: Deploy Orquestra.Frontend to Azure App Service
 
 on:
   push:
     branches:
-      - main
+      - main  # branch de deploy
 
 jobs:
-  build_and_deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
+
     steps:
-      # 1️⃣ Puxa o código
+      # 1️⃣ Checkout do código
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -25,18 +25,16 @@ jobs:
         working-directory: Orquestra.Frontend
         run: npm install
 
-      # 4️⃣ Build Turbopack
+      # 4️⃣ Build Next.js com Turbopack
       - name: Build Next.js with Turbopack
         working-directory: Orquestra.Frontend
         run: npm run build -- --turbopack
 
-      # 5️⃣ Deploy para Azure Static Web Apps
-      - name: Deploy to Azure Static Web Apps
-        uses: Azure/static-web-apps-deploy@v1
+      # 5️⃣ Deploy para Azure App Service
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "Orquestra.Frontend"
-          api_location: "Orquestra.Frontend/api"   # necessário pra SSR
-          output_location: "Orquestra.Frontend"   # root da app, não precisa ser .next ou out
+          app-name: 'orquestra-web'  
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
+          package: 'Orquestra.Frontend'
