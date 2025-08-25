@@ -3,7 +3,7 @@ name: Deploy Orquestra.Frontend to Azure App Service
 on:
   push:
     branches:
-      - main  # branch de deploy
+      - main
 
 jobs:
   build-and-deploy:
@@ -18,23 +18,32 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'  # compatível com Next.js + Turbopack
+          node-version: '22'
 
-      # 3️⃣ Instala dependências
+      # 3️⃣ Cache de node_modules
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: Orquestra.Frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('Orquestra.Frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 4️⃣ Instala dependências
       - name: Install dependencies
         working-directory: Orquestra.Frontend
         run: npm install
 
-      # 4️⃣ Build Next.js com Turbopack
+      # 5️⃣ Build Next.js com Turbopack
       - name: Build Next.js with Turbopack
         working-directory: Orquestra.Frontend
         run: npm run build -- --turbopack
 
-      # 5️⃣ Deploy para Azure App Service
+      # 6️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'orquestra-web'  
+          app-name: 'orquestra-web'       
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
           package: 'Orquestra.Frontend'
