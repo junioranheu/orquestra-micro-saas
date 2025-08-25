@@ -5,7 +5,6 @@ import ImgLoading from '@/app/assets/gif/loading.gif';
 import ImgLogo from '@/app/assets/png/logo.png';
 import Button from '@/app/components/input/button/button';
 import InputMask from '@/app/components/input/text/input.mask';
-import Token from '@/app/components/token/token';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
@@ -131,8 +130,6 @@ export default function Login() {
                     />
 
                     <Button label={'/me'} handleFunction={() => handleXD()} />
-
-                    <Token />
                 </div>
             </div>
         </section>

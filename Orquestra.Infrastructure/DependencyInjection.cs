@@ -191,7 +191,7 @@ public static class DependencyInjection
         [
             builder.Configuration["Urls:Development:Frontend"],
             builder.Configuration["Urls:Production:Frontend"],
-            "https://orquestra-web.vercel.app"
+            "https://orquestra-web.azurewebsites.net/"
         ];
 
         if (frontendUrls is null || frontendUrls.Any(x => string.IsNullOrEmpty(x)))
@@ -199,7 +199,8 @@ public static class DependencyInjection
             throw new Exception("Erro interno crítico: um ou mais URLs de Frontend não estão configurados no appsettings.json.");
         }
 
-        services.AddCors(x => x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
+        services.AddCors(x => 
+            x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
             {
                 builder.WithOrigins(frontendUrls!).
                         AllowAnyHeader().

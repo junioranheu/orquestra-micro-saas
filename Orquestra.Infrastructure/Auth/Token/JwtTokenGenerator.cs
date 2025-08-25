@@ -91,8 +91,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
     {
         return new CookieOptions
         {
-            // HttpOnly = true,
-            HttpOnly = false,
+            HttpOnly = true,
             Secure = true,
             // SameSite = SameSiteMode.Strict, // Mesmo domínio, apenas;
             SameSite = SameSiteMode.None, // Cross-site (Azure e Vercel);

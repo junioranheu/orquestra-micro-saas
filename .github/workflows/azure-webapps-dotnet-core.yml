@@ -1,4 +1,4 @@
-name: Build, Test and Deploy .NET API to Azure Web App
+name: Back-end | Build, test and deploy .NET API to Azure Web App
 
 on:
   push:

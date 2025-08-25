@@ -10,7 +10,6 @@
     },
     "dependencies": {
         "animate.css": "^4.1.1",
-        "js-cookie": "^3.0.5",
         "next": "15.5.0",
         "rc-pagination": "^5.1.0",
         "rc-table": "^7.51.1",
@@ -25,7 +24,6 @@
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
-        "@types/js-cookie": "^3.0.6",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",

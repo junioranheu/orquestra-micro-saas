@@ -1,4 +1,4 @@
-name: Front-end | Build & Deploy Orquestra.Frontend to Azure App Service
+name: Front-end | Build & deploy Orquestra.Frontend to Azure App Service
 
 on:
   push:
