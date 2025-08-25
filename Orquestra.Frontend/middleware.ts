@@ -6,6 +6,8 @@ const PUBLIC_PATHS = [ROUTES.ENTRAR, ROUTES.CRIAR_CONTA, '/public'];
 export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     const token = request.cookies.get('auth')?.value;
+    console.log('request.cookies.get', request.cookies.get('auth'));
+    console.log(`cookies.value ${token}`);
 
     // Redireciona '/' para dashboard;
     if (pathname === '/') {
