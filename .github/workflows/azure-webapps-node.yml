@@ -20,23 +20,28 @@ jobs:
         with:
           node-version: '22'
 
-      # 3️⃣ Instala dependências completas
+      # 3️⃣ Instala dependências
       - name: Install dependencies
         working-directory: Orquestra.Frontend
         run: npm install
 
-      # 4️⃣ Build com Turbopack
-      - name: Build Next.js with Turbopack
+      # 4️⃣ Build Next.js (Turbopack)
+      - name: Build Next.js
         working-directory: Orquestra.Frontend
-        run: npx turbo run build
+        run: npm run build
 
-      # 5️⃣ Cria ZIP completo para deploy
+      # 5️⃣ Remove devDependencies (produção)
+      - name: Prune dev deps
+        working-directory: Orquestra.Frontend
+        run: npm prune --production
+
+      # 6️⃣ Cria ZIP com os artefatos completos
       - name: Create release.zip
         working-directory: Orquestra.Frontend
         run: |
-          zip -r release.zip .  # inclui .next, node_modules completos, package.json
+          zip -r release.zip .next public node_modules package.json next.config.js package-lock.json || true
 
-      # 6️⃣ Deploy para Azure App Service
+      # 7️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
