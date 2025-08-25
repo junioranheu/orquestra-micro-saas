@@ -2,7 +2,7 @@ name: Build & Deploy Next.js -> Azure Web App
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] # ajuste se necessário
 
 env:
   WEBAPP_NAME: orquestra-web
@@ -12,43 +12,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout no diretório 'app' para evitar path duplicado
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          path: app
 
-      # 2️⃣ Setup Node 22
       - name: Use Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # 3️⃣ Instala dependências (mesmo sem package-lock.json)
       - name: Install dependencies
         run: npm install
-        working-directory: app
 
-      # 4️⃣ Build do Next.js (Turbopack via script)
       - name: Build (Turbopack)
         run: npm run build
-        working-directory: app
 
-      # 5️⃣ Remove devDependencies
       - name: Prune dev deps (produção)
         run: npm prune --production
-        working-directory: app
 
-      # 6️⃣ Cria o ZIP com os artefatos necessários
       - name: Create release.zip
         run: |
           zip -r release.zip .next public node_modules package.json next.config.js package-lock.json || true
-        working-directory: app
 
-      # 7️⃣ Deploy usando o publish-profile
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
-          package: app/release.zip
+          package: release.zip
