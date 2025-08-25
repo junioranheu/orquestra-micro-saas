@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - Orquestra.Frontend/**
 
 jobs:
   build-and-deploy:
@@ -14,38 +16,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js 22
+      # 2️⃣ Setup Node.js 18
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '18'
 
-      # 3️⃣ Instala dependências
-      - name: Install dependencies
+      # 3️⃣ Instala dependências e build
+      - name: Install dependencies and build
         working-directory: Orquestra.Frontend
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
-      # 4️⃣ Build Next.js (Turbopack)
-      - name: Build Next.js with Turbopack
-        working-directory: Orquestra.Frontend
-        run: npm run build
-
-      # 5️⃣ Remove devDependencies
-      - name: Prune dev deps
+      # 4️⃣ Remove devDependencies (produção)
+      - name: Prune dev dependencies
         working-directory: Orquestra.Frontend
         run: npm prune --production
 
-      # 6️⃣ Cria ZIP com os artefatos
+      # 5️⃣ Cria ZIP com os artefatos completos
       - name: Create release.zip
         working-directory: Orquestra.Frontend
         run: |
-          zip -r release.zip .next public node_modules package.json next.config.js package-lock.json || true
+          cd ..
+          zip -r release.zip Orquestra.Frontend/.next Orquestra.Frontend/public Orquestra.Frontend/node_modules Orquestra.Frontend/package.json Orquestra.Frontend/next.config.js Orquestra.Frontend/package-lock.json
 
-      # 7️⃣ Deploy para Azure App Service
+      # 6️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'orquestra-web'
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
-          package: 'Orquestra.Frontend/release.zip'
+          package: 'release.zip'
