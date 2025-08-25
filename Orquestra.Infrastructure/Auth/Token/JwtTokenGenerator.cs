@@ -96,6 +96,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
             // SameSite = SameSiteMode.Strict, // Mesmo domínio, apenas;
             SameSite = SameSiteMode.None, // Cross-site (Azure e Vercel);
             Expires = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
+            Domain = ".azurewebsites.net",
             Path = "/"
         };
     }
