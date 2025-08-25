@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '22'
 
-      # 3️⃣ Instala dependências
+      # 3️⃣ Instala dependências (completo, sem prune)
       - name: Install dependencies
         working-directory: Orquestra.Frontend
         run: npm install
@@ -30,18 +30,13 @@ jobs:
         working-directory: Orquestra.Frontend
         run: npm run build
 
-      # 5️⃣ Remove devDependencies
-      - name: Prune dev deps
-        working-directory: Orquestra.Frontend
-        run: npm prune --production
-
-      # 6️⃣ Cria ZIP com os artefatos
+      # 5️⃣ Cria ZIP completo (toda a pasta frontend)
       - name: Create release.zip
         working-directory: Orquestra.Frontend
         run: |
-          zip -r release.zip .next public node_modules package.json next.config.js package-lock.json || true
+          zip -r release.zip .  # inclui node_modules completos, .next, scripts internos
 
-      # 7️⃣ Deploy para Azure App Service
+      # 6️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
