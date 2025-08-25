@@ -62,4 +62,4 @@ jobs:
           package: 'Orquestra.Frontend/release.zip'
 
 # ⚠️ Depois, no Azure App Service configure o startup command:
-# npm start -p $PORT
+# node node_modules/next/dist/bin/next start -p $PORT
