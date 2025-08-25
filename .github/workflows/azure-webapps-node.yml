@@ -1,4 +1,4 @@
-name: Deploy Orquestra.Frontend to Azure App Service
+name: Build & Deploy Next.js to Azure
 
 on:
   push:
@@ -6,54 +6,58 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  WEBAPP_NAME: "orquestra-web"
+  APPLICATION_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
-      - name: Checkout code
+      # 1. Checkout do código
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 2. Setup Node
+      # 2. Setup Node 22
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
           cache: 'npm'
 
-      # 3. Cache Turbo / node_modules
-      - name: Cache Turbo & node_modules
+      # 3. Cache node_modules + Turbo
+      - name: Cache dependencies
         uses: actions/cache@v3
         with:
           path: |
-            .turbo
             node_modules
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}
+            .turbo
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-turbo-
+            ${{ runner.os }}-npm-
 
-      # 4. Install dependencies
+      # 4. Instala dependências
       - name: Install dependencies
         run: npm install
 
-      # 5. Build Next.js with Turbo
+      # 5. Build Next.js com Turbo (standalone)
       - name: Build Next.js
         run: npx turbo run build --filter=./...
 
-      # 6. Zip build output
+      # 6. Prepara artefato para deploy (standalone)
       - name: Prepare artifact
         run: |
           mkdir -p build-zip
-          cp -r .next build-zip/
+          cp -r .next/standalone/* build-zip/
           cd build-zip
           zip -r ../build.zip .
           cd ..
 
-      # 7. Deploy to Azure Web App
+      # 7. Deploy no Azure Web App
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'orquestra-web'
-          publish-profile: ${{ env.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
+          app-name: ${{ env.WEBAPP_NAME }}
+          publish-profile: ${{ env.APPLICATION_PUBLISH_PROFILE }}
           package: ./build.zip
