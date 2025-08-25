@@ -1,12 +1,13 @@
-name: Deploy Orquestra.Frontend to Azure App Service
+name: Build and Deploy Orquestra.Frontend to Azure App Service
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,24 +15,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js 22 (igual ao App Service)
+      # 2️⃣ Setup Node.js 22
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # 3️⃣ Instala dependências e build standalone
-      - name: Install & Build Standalone Next.js
+      # 3️⃣ Cache de node_modules
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: Orquestra.Frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('Orquestra.Frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 4️⃣ Instalar dependências e build standalone
+      - name: Install and Build Standalone Next.js
         working-directory: Orquestra.Frontend
         run: |
           npm install
           npm run build
+          # Move o build para standalone (Next 13+ com output: 'standalone' já inclui tudo)
+          mv ./build ./build/standalone
 
-      # 4️⃣ Deploy pro Azure App Service
+      # 5️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'orquestra-web'             # seu App Service
+          app-name: 'orquestra-web'                         # seu App Service
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
-          package: 'Orquestra.Frontend/build'   # só envia a pasta standalone
+          package: 'Orquestra.Frontend/build/standalone'     # envia apenas o standalone build
