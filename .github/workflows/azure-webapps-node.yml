@@ -8,7 +8,7 @@ on:
 
 env:
   WEBAPP_NAME: "orquestra-web"
-  APPLICATION_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
+  APPLICATION_PUBLISH_PROFILE: ${{ secrets.APP_PUBLISH_PROFILE }}
 
 jobs:
   build-and-deploy:
@@ -24,28 +24,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
-          cache: 'npm'
 
-      # 3. Cache node_modules + Turbo
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            .turbo
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-
-      # 4. Instala dependências
+      # 3. Instala dependências
       - name: Install dependencies
         run: npm install
 
-      # 5. Build Next.js com Turbo (standalone)
+      # 4. Build Next.js com Turbo (standalone)
       - name: Build Next.js
         run: npx turbo run build --filter=./...
 
-      # 6. Prepara artefato para deploy (standalone)
+      # 5. Prepara artefato para deploy (standalone)
       - name: Prepare artifact
         run: |
           mkdir -p build-zip
@@ -54,7 +42,7 @@ jobs:
           zip -r ../build.zip .
           cd ..
 
-      # 7. Deploy no Azure Web App
+      # 6. Deploy no Azure Web App
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
