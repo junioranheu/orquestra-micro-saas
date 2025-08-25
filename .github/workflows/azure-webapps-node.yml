@@ -25,29 +25,20 @@ jobs:
         with:
           node-version: 22
 
-      # 3. Instala dependências (Orquestra.Frontend)
+      # 3. Instala dependências
       - name: Install dependencies
         run: npm install
         working-directory: Orquestra.Frontend
 
-      # 4. Build Next.js com Turbo (standalone)
+      # 4. Build Next.js
       - name: Build Next.js
-        run: npx turbo run build --filter=./...
+        run: npm run build
         working-directory: Orquestra.Frontend
 
-      # 5. Prepara artefato para deploy (standalone)
-      - name: Prepare artifact
-        run: |
-          mkdir -p build-zip
-          cp -r Orquestra.Frontend/.next/standalone/* build-zip/
-          cd build-zip
-          zip -r ../build.zip .
-          cd ..
-
-      # 6. Deploy no Azure Web App
+      # 5. Deploy no Azure Web App
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.WEBAPP_NAME }}
           publish-profile: ${{ env.APPLICATION_PUBLISH_PROFILE }}
-          package: ./build.zip
+          package: Orquestra.Frontend/.next
