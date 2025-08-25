@@ -199,13 +199,18 @@ public static class DependencyInjection
             throw new Exception("Erro interno crítico: um ou mais URLs de Frontend não estão configurados no appsettings.json.");
         }
 
-        services.AddCors(x => 
+        services.AddCors(x =>
             x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
             {
-                builder.WithOrigins(frontendUrls!).
-                        AllowAnyHeader().
-                        AllowAnyMethod().
-                        AllowCredentials();
+                //builder.WithOrigins(frontendUrls!).
+                //        AllowAnyHeader().
+                //        AllowAnyMethod().
+                //        AllowCredentials();
+
+                builder.AllowAnyHeader().
+                   AllowAnyMethod().
+                   SetIsOriginAllowed((host) => true).
+                   AllowCredentials();
             })
         );
     }
