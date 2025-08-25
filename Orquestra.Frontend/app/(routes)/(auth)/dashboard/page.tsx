@@ -2,6 +2,7 @@
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button/button';
+import Token from '@/app/components/token/token';
 import ROUTES from '@/app/consts/routes';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
@@ -43,6 +44,8 @@ export default function Dashboard() {
             <Button label={'/me'} handleFunction={() => handleXD()} />
             <br />
             <Button label={'Logout'} handleFunction={() => handleLogout()} />
+            <br />
+            <Token />
         </section>
     )
 }
