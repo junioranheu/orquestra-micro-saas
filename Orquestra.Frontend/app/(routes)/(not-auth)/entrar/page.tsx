@@ -81,6 +81,12 @@ export default function Login() {
         }
     }
 
+    async function handleXD() {
+        console.clear();
+        const result = await Fetch.get(CONSTS_AUTH.me);
+        console.log(CONSTS_AUTH.me, result);
+    }
+
     if (auth?.isAuth) {
         return (
             <section className={styles.loading}>
@@ -123,6 +129,8 @@ export default function Login() {
                         isDisabled={btnLoginDisabled}
                         refBtn={refButton}
                     />
+
+                    <Button label={'/me'} handleFunction={() => handleXD()} />
                 </div>
             </div>
         </section>
