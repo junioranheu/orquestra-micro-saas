@@ -1,4 +1,103 @@
-name: Front-end | Build & Deploy Orquestra.Frontend to Azure App Service
+# name: Front-end | Build & Deploy Orquestra.Frontend to Azure App Service
+
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'Orquestra.Frontend/**'
+#       - '.github/workflows/azure-webapps-node.yml' 
+#   workflow_dispatch: 
+
+# env:
+#   NODE_VERSION: '22'
+#   FRONTEND_DIR: 'Orquestra.Frontend'
+#   NEXT_PUBLIC_API_URL_BASE: ${{ secrets.NEXT_PUBLIC_API_URL_BASE }}
+#   AZURE_WEBAPP_NAME: 'orquestra-web'
+#   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
+
+# jobs:
+#   build:
+#     name: 🏗️ Build Front-end
+#     runs-on: ubuntu-latest
+#     steps:
+#       # 1️⃣ Checkout do código
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       # 2️⃣ Setup Node.js
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: ${{ env.NODE_VERSION }}
+
+#       # 3️⃣ Instala dependências
+#       - name: Install dependencies
+#         working-directory: ${{ env.FRONTEND_DIR }}
+#         run: npm install
+
+#       # 4️⃣ Limpa build anterior
+#       - name: Clean .next
+#         working-directory: ${{ env.FRONTEND_DIR }}
+#         run: rm -rf .next
+
+#       # 5️⃣ Build Next.js
+#       - name: Build Next.js
+#         working-directory: ${{ env.FRONTEND_DIR }}
+#         run: npm run build
+#         env:
+#           NEXT_PUBLIC_API_URL_BASE: ${{ env.NEXT_PUBLIC_API_URL_BASE }}
+
+#       # 6️⃣ Remove devDependencies (opcional)
+#       - name: Prune dev dependencies
+#         working-directory: ${{ env.FRONTEND_DIR }}
+#         run: npm prune --production
+
+#       # 7️⃣ Cria ZIP com os arquivos corretos
+#       - name: Create release.zip
+#         working-directory: ${{ env.FRONTEND_DIR }}
+#         run: |
+#           rm -f release.zip
+#           zip -r release.zip \
+#             .next \
+#             node_modules \
+#             package.json \
+#             next.config.js \
+#             public
+
+#       # 8️⃣ Upload artifact para deploy
+#       - name: Upload artifact for deploy
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: nextjs-frontend
+#           path: ${{ env.FRONTEND_DIR }}/release.zip
+
+#   deploy:
+#     name: 🚀 Deploy Front-end
+#     runs-on: ubuntu-latest
+#     needs: build
+#     steps:
+#       # 1️⃣ Download artifact
+#       - name: Download artifact from build job
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: nextjs-frontend
+#           path: download/
+
+#       # 2️⃣ Lista arquivos do artifact (opcional)
+#       - name: List files in artifact
+#         run: ls -R download/
+
+#       # 3️⃣ Deploy para Azure App Service
+#       - name: Deploy to Azure Web App
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#           slot-name: 'production'
+#           publish-profile: ${{ env.AZURE_WEBAPP_PUBLISH_PROFILE }}
+#           package: download/
+
+name: Deploy Orquestra.Frontend to Azure App Service
 
 on:
   push:
@@ -17,9 +116,10 @@ env:
   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
 
 jobs:
-  build:
-    name: 🏗️ Build Front-end
+  build-and-deploy:
+    name: 🏗️ Build and deploy front-end
     runs-on: ubuntu-latest
+
     steps:
       # 1️⃣ Checkout do código
       - name: Checkout
@@ -41,11 +141,11 @@ jobs:
         working-directory: ${{ env.FRONTEND_DIR }}
         run: rm -rf .next
 
-      # 5️⃣ Build Next.js
+      # 5️⃣ Build Next.js com Turbopack
       - name: Build Next.js
         working-directory: ${{ env.FRONTEND_DIR }}
         run: npm run build
-        env:
+        env: 
           NEXT_PUBLIC_API_URL_BASE: ${{ env.NEXT_PUBLIC_API_URL_BASE }}
 
       # 6️⃣ Remove devDependencies (opcional)
@@ -65,34 +165,14 @@ jobs:
             next.config.js \
             public
 
-      # 8️⃣ Upload artifact para deploy
-      - name: Upload artifact for deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: nextjs-frontend
-          path: ${{ env.FRONTEND_DIR }}/release.zip
-
-  deploy:
-    name: 🚀 Deploy Front-end
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      # 1️⃣ Download artifact
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: nextjs-frontend
-          path: download/
-
-      # 2️⃣ Lista arquivos do artifact (opcional)
-      - name: List files in artifact
-        run: ls -R download/
-
-      # 3️⃣ Deploy para Azure App Service
+      # 8️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'production'
           publish-profile: ${{ env.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: download/
+          package: '${{ env.FRONTEND_DIR }}/release.zip'
+
+# ⚠️ Depois, no Azure App Service configure o startup command:
+# node node_modules/next/dist/bin/next start -p $PORT
