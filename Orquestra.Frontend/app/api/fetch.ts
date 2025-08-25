@@ -61,7 +61,7 @@ export const Fetch = {
                 headers,
                 body: isFormData ? body : body ? JSON.stringify(body) : undefined,
                 signal,
-                credentials: 'include' // Cookies HttpOnly
+                credentials: 'include' // Cookies HttpOnly;
             });
 
             if (signal.aborted) return undefined;
