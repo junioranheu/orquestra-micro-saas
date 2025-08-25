@@ -67,11 +67,11 @@ jobs:
 
       # 2️⃣ Testes unitários
       - name: Run unit tests
-        run: dotnet test Orquestra.UnitTests/Orquestra.UnitTests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
+        run: dotnet test Orquestra.UnitTests/Orquestra.UnitTests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal
 
       # 3️⃣ Testes de integração
       - name: Run integration tests
-        run: dotnet test Orquestra.IntegrationTests/Orquestra.IntegrationTests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
+        run: dotnet test Orquestra.IntegrationTests/Orquestra.IntegrationTests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal
 
   deploy:
     name: 🚀 Deploy Back-end
