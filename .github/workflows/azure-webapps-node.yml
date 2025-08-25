@@ -25,19 +25,21 @@ jobs:
         with:
           node-version: 22
 
-      # 3. Instala dependências
+      # 3. Instala dependências (Orquestra.Frontend)
       - name: Install dependencies
         run: npm install
+        working-directory: Orquestra.Frontend
 
       # 4. Build Next.js com Turbo (standalone)
       - name: Build Next.js
         run: npx turbo run build --filter=./...
+        working-directory: Orquestra.Frontend
 
       # 5. Prepara artefato para deploy (standalone)
       - name: Prepare artifact
         run: |
           mkdir -p build-zip
-          cp -r .next/standalone/* build-zip/
+          cp -r Orquestra.Frontend/.next/standalone/* build-zip/
           cd build-zip
           zip -r ../build.zip .
           cd ..
