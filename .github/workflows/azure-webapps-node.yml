@@ -1,41 +1,51 @@
-name: Build & Deploy Next.js -> Azure Web App
+name: Deploy Orquestra.Frontend to Azure App Service
 
 on:
   push:
-    branches: [ "main" ] # ajuste se necessário
-
-env:
-  WEBAPP_NAME: orquestra-web
+    branches:
+      - main
 
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout do código
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node 22
+      # 2️⃣ Setup Node.js 22
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
+      # 3️⃣ Instala dependências
       - name: Install dependencies
+        working-directory: Orquestra.Frontend
         run: npm install
 
-      - name: Build (Turbopack)
+      # 4️⃣ Build Next.js (Turbopack)
+      - name: Build Next.js with Turbopack
+        working-directory: Orquestra.Frontend
         run: npm run build
 
-      - name: Prune dev deps (produção)
+      # 5️⃣ Remove devDependencies
+      - name: Prune dev deps
+        working-directory: Orquestra.Frontend
         run: npm prune --production
 
+      # 6️⃣ Cria ZIP com os artefatos
       - name: Create release.zip
+        working-directory: Orquestra.Frontend
         run: |
           zip -r release.zip .next public node_modules package.json next.config.js package-lock.json || true
 
+      # 7️⃣ Deploy para Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.WEBAPP_NAME }}
+          app-name: 'orquestra-web'
+          slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
-          package: release.zip
+          package: 'Orquestra.Frontend/release.zip'
