@@ -1,6 +1,7 @@
 'use client';
 import Head from '@/app/(routes)/head';
 import Navbar from '@/app/components/(main)/navbar/nav/navbar';
+import Loading from '@/app/components/loading/loading';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                         </header>
 
                         <main>
+                            <Loading typeMessage='long' />
                             {children}
                         </main>
                     </body>

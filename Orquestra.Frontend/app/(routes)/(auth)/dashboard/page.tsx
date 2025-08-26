@@ -31,13 +31,10 @@ export default function Dashboard() {
     }
 
     async function handleLog() {
-        setIsRequestLoading(true);
-
         setTimeout(async () => {
             console.clear();
             const result = await Fetch.get(CONSTS_LOG.get);
             console.log(CONSTS_LOG.get, result);
-            setIsRequestLoading(false);
         }, 1500);
     }
 
