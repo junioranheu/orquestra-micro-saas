@@ -13,7 +13,7 @@ export default function useCheckHasPermission(rolesRequired: string[]): boolean 
 
     useEffect(() => {
         setLoading(false);
-    }, [auth?.isAuth]);
+    }, [auth]);
 
     useEffect(() => {
         if (!loading) {
