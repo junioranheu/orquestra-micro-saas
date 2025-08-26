@@ -93,8 +93,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
         {
             HttpOnly = true,
             Secure = true,
-            // SameSite = SameSiteMode.Strict, // Mesmo domínio, apenas;
-            SameSite = SameSiteMode.None, // Cross-site (Azure e Vercel);
+            SameSite = SameSiteMode.None, 
             Expires = GetDate().AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes),
             Path = "/"
         };

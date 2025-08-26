@@ -8,7 +8,7 @@ import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import styles from './page.module.scss';
 
 export default function Dashboard() {
@@ -17,18 +17,12 @@ export default function Dashboard() {
 
     const router = useRouter();
     const [auth, setAuth] = useUserContext();
-    const [aea, setAea] = useState<string>('');
 
-    async function handleXD() {
-        console.clear();
-        const result = await Fetch.get(CONSTS_AUTH.me);
-        console.log(CONSTS_AUTH.me, result);
-
-        setAea(result.userName);
-    }
+    useEffect(() => {
+        console.log(auth);
+    }, [auth]);
 
     async function handleLogout() {
-        console.clear();
         await Fetch.delete(CONSTS_AUTH.logout);
         Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
         setAuth(null);
@@ -37,10 +31,8 @@ export default function Dashboard() {
 
     return (
         <section className={styles.main}>
-            <h1>Olá... {aea}</h1>
+            <h1>Olá... {auth?.fullName}</h1>
 
-            <br />
-            <Button label={'/me'} handleFunction={() => handleXD()} />
             <br />
             <Button label={'Logout'} handleFunction={() => handleLogout()} />
         </section>

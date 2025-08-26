@@ -28,7 +28,7 @@ export default function Login() {
     useTitle('Login');
 
     const router = useRouter();
-    const [auth, setAuth] = useUserContext();
+    const [_, setAuth] = useUserContext();
 
     const refButton = useRef<HTMLButtonElement>(null);
 
@@ -55,25 +55,18 @@ export default function Login() {
 
         try {
             const result = await Fetch.post(CONSTS_AUTH.auth, user) as iUser;
-            console.log(result);
 
             if (!result) {
                 return;
             }
 
-            Cookies.set(SYSTEM.COOKIE_NAME, result.userId, { path: '/' });
             setAuth(result);
+            Cookies.set(SYSTEM.COOKIE_NAME, JSON.stringify(result), { expires: new Date(result.tokenExpirationDate), path: '/' });
             router.push(ROUTES.DASHBOARD);
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             return;
         }
-    }
-
-    async function handleXD() {
-        console.clear();
-        const result = await Fetch.get(CONSTS_AUTH.me);
-        console.log(CONSTS_AUTH.me, result);
     }
 
     return (
@@ -108,8 +101,6 @@ export default function Login() {
                         handleFunction={() => handleLogin()}
                         refBtn={refButton}
                     />
-
-                    <Button label={'/me'} handleFunction={() => handleXD()} />
                 </div>
             </div>
         </section>

@@ -15,4 +15,7 @@ public sealed class UserOutput
     public bool Status { get; set; }
 
     public DateTime CreatedDate { get; set; }
+
+    // Extra;
+    public DateTimeOffset? TokenExpirationDate { get; set; }
 }

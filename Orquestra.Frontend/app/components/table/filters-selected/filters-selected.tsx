@@ -65,7 +65,7 @@ export default function FiltersSelected({ modalFilterformData, setModalFilterFor
 
         // Remover filtro programaticamente;
         if (modalFilterformData) {
-            console.clear();
+            // console.clear();
             const propertyName = filterClickedToRemove.name;
 
             // console.log('Clicked:', filterClickedToRemove);

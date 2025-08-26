@@ -1,24 +1,33 @@
 import iUser from '@/app/api/consts/user';
-import { Dispatch, JSX, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
+import SYSTEM from '@/app/consts/system';
+import Cookies from 'js-cookie';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 
-interface iContext {
-    authContext: [auth: iUser | null, setAuth: Dispatch<SetStateAction<iUser | null>>];
-}
+type UserContextType = {
+    auth: iUser | null;
+    setAuth: React.Dispatch<React.SetStateAction<iUser | null>>;
+};
 
-export const UserContext = createContext<iContext | null>(null);
+export const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export function UserProvider({ children }: { children: ReactNode }): JSX.Element {
-
+export function UserProvider({ children }: { children: ReactNode }) {
     const [auth, setAuth] = useState<iUser | null>(null);
 
     useEffect(() => {
-        setAuth(null);
+        const cookieAuth = Cookies.get(SYSTEM.COOKIE_NAME);
+
+        if (cookieAuth) {
+            try {
+                setAuth(JSON.parse(cookieAuth));
+            } catch (err) {
+                console.error('Erro ao parsear cookie auth', err);
+                setAuth(null);
+            }
+        }
     }, []);
 
     return (
-        <UserContext.Provider value={{
-            authContext: [auth, setAuth]
-        }}>
+        <UserContext.Provider value={{ auth, setAuth }}>
             {children}
         </UserContext.Provider>
     );

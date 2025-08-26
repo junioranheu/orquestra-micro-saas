@@ -1,9 +1,12 @@
 import { GlobalContext } from '@/app/contexts/global.context';
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { useContext } from 'react';
 
-export function useGlobalContextIsLoading(): [boolean, Dispatch<SetStateAction<boolean>>] {
+export default function useGlobalContext() {
     const context = useContext(GlobalContext);
-    const [isRequestLoading, setIsRequestLoading] = [context?.isLoadingContext[0], context?.isLoadingContext[1]] as [boolean, Dispatch<SetStateAction<boolean>>];
 
-    return [isRequestLoading, setIsRequestLoading];
+    if (!context) {
+        throw new Error('useGlobalContext');
+    }
+
+    return [context.isRequestLoading, context.setIsRequestLoading] as const;
 }

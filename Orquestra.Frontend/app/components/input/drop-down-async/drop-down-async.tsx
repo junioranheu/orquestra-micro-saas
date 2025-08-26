@@ -28,7 +28,7 @@ export default function DropdownAsync({
     const [inputValue, setInputValue] = useState<string>('');
 
     async function handleLoadOptions(input: string): Promise<iDropdownOption[]> {
-        console.clear();
+        // console.clear();
 
         if (!input) {
             return [];

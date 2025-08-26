@@ -1,10 +1,12 @@
-import iUser from '@/app/api/consts/user';
 import { UserContext } from '@/app/contexts/user.context';
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { useContext } from 'react';
 
-export default function useUserContext(): [iUser | null, Dispatch<SetStateAction<iUser | null>>] {
+export default function useUserContext() {
     const context = useContext(UserContext);
-    const [auth, setAuth] = [context?.authContext[0], context?.authContext[1]] as [iUser | null, Dispatch<SetStateAction<iUser | null>>];
 
-    return [auth, setAuth];
+    if (!context) {
+        throw new Error('useUserContext');
+    }
+
+    return [context.auth, context.setAuth] as const;
 }

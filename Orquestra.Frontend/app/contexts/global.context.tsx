@@ -1,21 +1,18 @@
-import { Dispatch, JSX, ReactNode, SetStateAction, createContext, useState } from 'react';
+import { createContext, Dispatch, ReactNode, useState } from 'react';
 
-interface iContext {
-    isLoadingContext: [isRequestLoading: boolean, setIsRequestLoading: Dispatch<SetStateAction<boolean>>];
-}
+type GlobalContextType = {
+    isRequestLoading: boolean;
+    setIsRequestLoading: Dispatch<React.SetStateAction<boolean>>;
+};
 
-export const GlobalContext = createContext<iContext | null>(null);
+export const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
-export function GlobalContextProvider({ children }: { children: ReactNode }): JSX.Element {
-
-    const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
-
+export function GlobalContextProvider({ children }: { children: ReactNode }) {
+    const [isRequestLoading, setIsRequestLoading] = useState(false);
 
     return (
-        <GlobalContext.Provider value={{
-            isLoadingContext: [isRequestLoading, setIsRequestLoading]
-        }}>
+        <GlobalContext.Provider value={{ isRequestLoading, setIsRequestLoading }}>
             {children}
         </GlobalContext.Provider>
-    )
+    );
 }

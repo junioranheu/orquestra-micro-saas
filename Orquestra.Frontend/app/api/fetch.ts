@@ -80,10 +80,9 @@ export const Fetch = {
                 return blob;
             }
 
-            // Sessão expirada (419)
+            // Sessão expirada (419);
             if (response.status === 419) {
                 const resError = await response.json();
-                console.log(resError);
 
                 swal({ str: resError?.Messages?.[0], icon: 'warning' }).then(() => {
                     window.location.href = ROUTES.ENTRAR;
@@ -101,7 +100,9 @@ export const Fetch = {
             }
 
             // 204 No Content;
-            if (response.status === 204) return;
+            if (response.status === 204) {
+                return;
+            }
 
             const responseJson = await response.json();
 
