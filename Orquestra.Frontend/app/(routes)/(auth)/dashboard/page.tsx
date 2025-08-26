@@ -2,9 +2,10 @@
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button/button';
-import ROUTES from '@/app/consts/routes';
+import SYSTEM from '@/app/consts/system';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from './page.module.scss';
@@ -31,7 +32,7 @@ export default function Dashboard() {
         try {
             await Fetch.delete(CONSTS_AUTH.logout);
         } catch {
-            router.push(ROUTES.ENTRAR);
+            Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
         }
     }
 
