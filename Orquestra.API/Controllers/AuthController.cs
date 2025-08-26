@@ -41,9 +41,9 @@ public class AuthController(
             Password = "Junior30@@"
         };
 
-        UserOutput output = await _createToken.Execute(input);
+        string token = await _createToken.Execute(input);
 
-        return Ok(output);
+        return Ok(token);
     }
 #endif
 
@@ -56,9 +56,9 @@ public class AuthController(
             throw new Exception($"Você já está autenticado.");
         }
 
-        UserOutput output = await _createToken.Execute(input);
+        string token = await _createToken.Execute(input);
 
-        return Ok(output);
+        return Ok(token);
     }
 
     [AllowAnonymous]

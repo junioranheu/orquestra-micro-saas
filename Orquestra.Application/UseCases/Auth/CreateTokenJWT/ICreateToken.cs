@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Orquestra.Application.UseCases.Auth.Shared;
-using Orquestra.Application.UseCases.Users.Shared;
+﻿using Orquestra.Application.UseCases.Auth.Shared;
 
 namespace Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 
 public interface ICreateToken
 {
-    Task<UserOutput> Execute(AuthInput input);
+    Task<string> Execute(AuthInput input);
 }

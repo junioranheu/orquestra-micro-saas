@@ -12,6 +12,7 @@ import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
+import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -69,6 +70,8 @@ export default function Login() {
 
         try {
             const result = await Fetch.post(CONSTS_AUTH.auth, user);
+            console.log('result', result);
+            Cookies.set(SYSTEM.COOKIE_NAME, result, { path: '/' });
 
             setTimeout(() => {
                 setAuth(result);

@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import ROUTES from './app/consts/routes';
+import SYSTEM from './app/consts/system';
 
 const PUBLIC_PATHS = [ROUTES.ENTRAR, ROUTES.CRIAR_CONTA, '/public'];
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('auth')?.value;
+    const token = request.cookies.get(SYSTEM.COOKIE_NAME)?.value;
     const pathname = request.nextUrl.pathname;
     const isPublicPath = PUBLIC_PATHS.some(path => pathname.startsWith(path));
 
