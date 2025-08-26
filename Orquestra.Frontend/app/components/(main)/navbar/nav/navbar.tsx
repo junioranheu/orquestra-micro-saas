@@ -15,7 +15,7 @@ export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
     function handleRedirect() {
-        router.push(auth?.isAuth ? ROUTES.DASHBOARD : ROUTES.ENTRAR);
+        router.push(auth ? ROUTES.DASHBOARD : ROUTES.ENTRAR);
     }
 
     return (
@@ -36,7 +36,7 @@ export default function Navbar() {
                         <span className={styles.hideMobile}>{SYSTEM.NAME}</span>
 
                         {
-                            auth?.isAuth && (
+                            auth && (
                                 <Fragment>
                                     <span>a</span>
                                     <span className={`${styles.separator} ${styles.hideMobile}`}></span>

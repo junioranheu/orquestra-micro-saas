@@ -1,10 +1,14 @@
+import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
 
 const PUBLIC_PATHS = [ROUTES.ENTRAR, ROUTES.CRIAR_CONTA, '/public'];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+    const cookieStore = await cookies();
+    console.log('cookieStore', cookieStore);
+
     const token = request.cookies.get(SYSTEM.COOKIE_NAME)?.value;
     const pathname = request.nextUrl.pathname;
     const isPublicPath = PUBLIC_PATHS.some(path => pathname.startsWith(path));
