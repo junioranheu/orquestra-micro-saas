@@ -1,11 +1,11 @@
 import iUser from '@/app/api/consts/user';
 import SYSTEM from '@/app/consts/system';
 import Cookies from 'js-cookie';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 
 type UserContextType = {
     auth: iUser | null;
-    setAuth: React.Dispatch<React.SetStateAction<iUser | null>>;
+    setAuth: Dispatch<SetStateAction<iUser | null>>;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);

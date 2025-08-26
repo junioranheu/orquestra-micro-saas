@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                         </header>
 
                         <main>
-                            <Loading typeMessage='long' />
+                            <Loading typeMessage='normal' />
                             {children}
                         </main>
                     </body>

@@ -54,7 +54,7 @@ export default function Login() {
         } as iLoginForm;
 
         try {
-            const result = await Fetch.post(CONSTS_AUTH.auth, user) as iUser;
+            const result = await Fetch.post({ url: CONSTS_AUTH.auth, body: user }) as iUser;
 
             if (!result) {
                 return;

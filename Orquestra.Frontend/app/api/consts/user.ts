@@ -16,7 +16,7 @@ export default interface iUser {
     role: UserRoleEnum;
     status: boolean;
     createdDate: Date;
-    tokenExpirationDate: string;
+    refreshTokenExpirationDate: string;
 }
 
 export interface iUserResponse {

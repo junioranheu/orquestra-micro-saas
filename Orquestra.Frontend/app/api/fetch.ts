@@ -2,12 +2,21 @@ import handleGetDateBrazil from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import toast from '@/app/functions/toast';
+import { Dispatch, SetStateAction } from 'react';
 
 interface iFetchError {
     url: string;
     body: any;
     error: string;
     date: Date;
+}
+
+interface IFetchParams {
+    url: string;
+    body?: any;
+    blobExportName?: string;
+    isFormData?: boolean;
+    setIsRequestLoading?: Dispatch<SetStateAction<boolean>>;
 }
 
 const HTTP = {
@@ -20,33 +29,34 @@ const HTTP = {
 export const BASE = process.env.NEXT_PUBLIC_API_URL_BASE as string;
 
 export const Fetch = {
-    async get(url: string, blobExportName: string = '') {
-        return this.handleRequestAPI(url, HTTP.GET, null, blobExportName);
+    async get({ url, blobExportName = '', setIsRequestLoading }: IFetchParams) {
+        return this.handleRequestAPI({ url, method: HTTP.GET, body: null, blobExportName, isFormData: false, setIsRequestLoading });
     },
 
-    async post(url: string, body: any = null) {
-        return this.handleRequestAPI(url, HTTP.POST, body);
+    async post({ url, body = null, setIsRequestLoading }: IFetchParams) {
+        return this.handleRequestAPI({ url, method: HTTP.POST, body, blobExportName: '', isFormData: false, setIsRequestLoading });
     },
 
-    async put(url: string, body: any = null) {
-        return this.handleRequestAPI(url, HTTP.PUT, body);
+    async put({ url, body = null, setIsRequestLoading }: IFetchParams) {
+        return this.handleRequestAPI({ url, method: HTTP.PUT, body, blobExportName: '', isFormData: false, setIsRequestLoading });
     },
 
-    async delete(url: string, body: any = null) {
-        return this.handleRequestAPI(url, HTTP.DELETE, body);
+    async delete({ url, body = null, setIsRequestLoading }: IFetchParams) {
+        return this.handleRequestAPI({ url, method: HTTP.DELETE, body, blobExportName: '', isFormData: false, setIsRequestLoading });
     },
 
-    async postIFormFile(url: string, body: FormData) {
-        return this.handleRequestAPI(url, HTTP.POST, body, '', true);
+    async postIFormFile({ url, body, setIsRequestLoading }: IFetchParams & { body: FormData }) {
+        return this.handleRequestAPI({ url, method: HTTP.POST, body, blobExportName: '', isFormData: true, setIsRequestLoading });
     },
 
-    async handleRequestAPI<T = any>(
-        url: string,
-        method: typeof HTTP[keyof typeof HTTP],
-        body: any | null = null,
-        blobExportName: string = '',
-        isFormData: boolean = false
-    ): Promise<T | Blob | undefined> {
+    async handleRequestAPI<T = any>({
+        url,
+        method,
+        body = null,
+        blobExportName = '',
+        isFormData = false,
+        setIsRequestLoading
+    }: IFetchParams & { method: typeof HTTP[keyof typeof HTTP] }): Promise<T | Blob | undefined> {
         if (!url) {
             return;
         }
@@ -61,6 +71,10 @@ export const Fetch = {
         const { signal } = abortController;
 
         try {
+            if (setIsRequestLoading) {
+                setIsRequestLoading(true);
+            }
+
             const response = await fetch(url, {
                 method,
                 headers,
@@ -68,6 +82,10 @@ export const Fetch = {
                 signal,
                 credentials: 'include' // Cookies HttpOnly;
             });
+
+            if (setIsRequestLoading) {
+                setIsRequestLoading(false);
+            }
 
             if (signal.aborted) {
                 return undefined;
@@ -118,6 +136,10 @@ export const Fetch = {
 
             return responseJson;
         } catch (error: any) {
+            if (setIsRequestLoading) {
+                setIsRequestLoading(false);
+            }
+
             const errorData: iFetchError = {
                 url,
                 body,
@@ -133,7 +155,7 @@ export const Fetch = {
             abortController.abort();
         }
     }
-}
+};
 
 export function handleCheckApiError(result: any): [boolean, string] {
     if (!result || result?.status === 200 || result?.code === 200) {

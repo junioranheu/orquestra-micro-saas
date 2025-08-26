@@ -1,8 +1,8 @@
-import { createContext, Dispatch, ReactNode, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useState } from 'react';
 
 type GlobalContextType = {
     isRequestLoading: boolean;
-    setIsRequestLoading: Dispatch<React.SetStateAction<boolean>>;
+    setIsRequestLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(undefined);

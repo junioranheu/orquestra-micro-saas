@@ -50,7 +50,7 @@ public sealed class CreateToken(
         _httpContextAccessor?.HttpContext?.Response.Cookies.Append(key: SystemConsts.CookieName, value: token, cookieOptions);
 
         // Normalizar propriedade extra;
-        output.TokenExpirationDate = cookieOptions.Expires;
+        output.RefreshTokenExpirationDate = cookieOptions.Expires;
 
         return output;
     }

@@ -18,7 +18,7 @@ export default async function handleFileCSVExport(params: iParams): Promise<bool
     try {
         setIsRequestLoading(true);
         const csv = `${fileName}-${handleFormatDate(handleGetDateBrazil(), DATE_STYLE.DIA_MES_ANO_HORA_MINUTO_SEGUNDO)}.csv`;
-        await Fetch.get(apiUrl, csv);
+        await Fetch.get({ url: apiUrl, blobExportName: csv });
     } catch (error: unknown) {
         setIsRequestLoading(false);
 

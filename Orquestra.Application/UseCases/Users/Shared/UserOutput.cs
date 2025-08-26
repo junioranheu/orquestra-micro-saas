@@ -17,5 +17,5 @@ public sealed class UserOutput
     public DateTime CreatedDate { get; set; }
 
     // Extra;
-    public DateTimeOffset? TokenExpirationDate { get; set; }
+    public DateTimeOffset? RefreshTokenExpirationDate { get; set; }
 }

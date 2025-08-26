@@ -36,9 +36,9 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iParams<T>)
                 const paginationInput = (hasPaginationInput ? `${separator}index=${(index - 1)}&limit=${limit}&isSelectAll=${isSelectAll}` : '')
                 const url = `${apiUrlRequest}${paginationInput}`;
 
-                const blobExportName = '';
+                const blobExportName = ''; // TO DO (?);
+                const result = await Fetch.get({ url: url, blobExportName: blobExportName }) as T;
 
-                const result = await Fetch.get(url, blobExportName) as T;
                 // console.clear();
                 // console.log(url, result);
 

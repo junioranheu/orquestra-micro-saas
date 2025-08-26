@@ -4,6 +4,7 @@ import { CONSTS_LOG } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button/button';
 import ROUTES from '@/app/consts/routes';
+import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
@@ -23,24 +24,21 @@ export default function Dashboard() {
     }
 
     async function handleXD() {
-        setIsRequestLoading(true);
         console.clear();
-        const result = await Fetch.get(CONSTS_AUTH.me);
+        const result = await Fetch.get({ url: CONSTS_AUTH.me, setIsRequestLoading: setIsRequestLoading });
         console.log(CONSTS_AUTH.me, result);
-        setIsRequestLoading(false);
     }
 
     async function handleLog() {
-        setTimeout(async () => {
-            console.clear();
-            const result = await Fetch.get(CONSTS_LOG.get);
-            console.log(CONSTS_LOG.get, result);
-        }, 1500);
+        console.clear();
+        const result = await Fetch.get({ url: CONSTS_LOG.get, setIsRequestLoading: setIsRequestLoading });
+        console.log(CONSTS_LOG.get, result);
     }
 
     return (
         <section className={styles.main}>
             <h1>Olá... {auth?.fullName}</h1>
+            {auth && <h2>Refresh token válido até {handleFormatDate(auth?.refreshTokenExpirationDate, DATE_STYLE.DETALHADO)}</h2>}
 
             <br />
             <Button label={'/me'} handleFunction={() => handleXD()} />

@@ -35,7 +35,7 @@ export default function DropdownAsync({
         }
 
         try {
-            const response = await Fetch.get(apiUrl) as iDropdownOption[];
+            const response = await Fetch.get({ url: apiUrl }) as iDropdownOption[];
             // console.log(response);
 
             return response;

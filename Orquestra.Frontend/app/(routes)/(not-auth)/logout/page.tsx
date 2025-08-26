@@ -17,7 +17,7 @@ export default function Logout() {
     const [_, setAuth] = useUserContext();
 
     async function handleLogout() {
-        await Fetch.delete(CONSTS_AUTH.logout);
+        await Fetch.delete({ url: CONSTS_AUTH.logout });
         Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
         setAuth(null);
         router.push(ROUTES.LOGIN);
