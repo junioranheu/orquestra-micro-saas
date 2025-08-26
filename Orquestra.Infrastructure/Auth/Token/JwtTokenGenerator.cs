@@ -87,7 +87,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
         return refreshToken;
     }
 
-    private CookieOptions GetCookieOptions()
+    public CookieOptions GetCookieOptions()
     {
         return new CookieOptions
         {

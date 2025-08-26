@@ -5,7 +5,6 @@ interface iContext {
     authContext: [auth: iUser | null, setAuth: Dispatch<SetStateAction<iUser | null>>];
 }
 
-const _item = '_auth';
 export const UserContext = createContext<iContext | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }): JSX.Element {

@@ -1,4 +1,5 @@
 import { BASE } from '@/app/api/fetch';
+import { UserRoleEnum } from '@/app/enums/userRoleEnum';
 
 const controller = 'api/User';
 
@@ -12,7 +13,9 @@ export default interface iUser {
     userId: string;
     fullName: string;
     email: string;
-    isAuth: boolean;
+    role: UserRoleEnum;
+    status: boolean;
+    createdDate: Date;
 }
 
 export interface iUserResponse {

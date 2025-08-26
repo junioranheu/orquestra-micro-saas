@@ -1,7 +1,7 @@
 'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
+import iUser from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
-import ImgLoading from '@/app/assets/gif/loading.gif';
 import ImgLogo from '@/app/assets/png/logo.png';
 import Button from '@/app/components/input/button/button';
 import InputMask from '@/app/components/input/text/input.mask';
@@ -15,7 +15,7 @@ import useTitle from '@/app/hooks/useTitle';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import styles from './page.module.scss';
 
 interface iLoginForm {
@@ -29,7 +29,6 @@ export default function Login() {
 
     const router = useRouter();
     const [auth, setAuth] = useUserContext();
-    const [btnLoginDisabled, setBtnLoginDisabled] = useState<boolean>(true);
 
     const refButton = useRef<HTMLButtonElement>(null);
 
@@ -43,20 +42,6 @@ export default function Login() {
         email: '', password: ''
     });
 
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setBtnLoginDisabled(false);
-        }, 1500);
-
-        // console.log(isAuthenticated);
-
-        if (auth?.isAuth) {
-            router.push(ROUTES.DASHBOARD);
-        }
-
-        return () => clearTimeout(timeoutId);
-    }, [router, auth?.isAuth]);
-
     async function handleLogin() {
         if (!formData.email || !formData.password) {
             swal({ str: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
@@ -69,20 +54,16 @@ export default function Login() {
         } as iLoginForm;
 
         try {
-            const result = await Fetch.post(CONSTS_AUTH.auth, user);
+            const result = await Fetch.post(CONSTS_AUTH.auth, user) as iUser;
+            console.log(result);
 
             if (!result) {
-                console.log('NÃO');
                 return;
             }
 
-            console.log('SIM', result);
-            Cookies.set(SYSTEM.COOKIE_NAME, result, { path: '/' });
-
-            setTimeout(() => {
-                setAuth(result);
-                router.push(ROUTES.DASHBOARD);
-            }, 250);
+            Cookies.set(SYSTEM.COOKIE_NAME, result.userId, { path: '/' });
+            setAuth(result);
+            router.push(ROUTES.DASHBOARD);
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             return;
@@ -93,15 +74,6 @@ export default function Login() {
         console.clear();
         const result = await Fetch.get(CONSTS_AUTH.me);
         console.log(CONSTS_AUTH.me, result);
-    }
-
-    if (auth?.isAuth) {
-        return (
-            <section className={styles.loading}>
-                <h3 dangerouslySetInnerHTML={{ __html: 'Carregando' }} />
-                <Image src={ImgLoading} alt={SYSTEM.NAME} width={50} priority={true} unoptimized={true} />
-            </section>
-        )
     }
 
     return (
@@ -134,7 +106,6 @@ export default function Login() {
                     <Button
                         label={'Entrar'}
                         handleFunction={() => handleLogin()}
-                        isDisabled={btnLoginDisabled}
                         refBtn={refButton}
                     />
 

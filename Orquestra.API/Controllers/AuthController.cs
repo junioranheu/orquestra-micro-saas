@@ -10,6 +10,7 @@ using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
+using Orquestra.Infrastructure.Auth.Token;
 
 namespace Orquestra.API.Controllers;
 
@@ -18,11 +19,13 @@ namespace Orquestra.API.Controllers;
 public class AuthController(
         ICreateToken createToken,
         ICreateRefreshToken createRefreshToken,
+        IJwtTokenGenerator jwtTokenGenerator,
         IGetCompany getCompany
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IGetCompany _getCompany = getCompany;
 
 #if DEBUG
@@ -41,9 +44,9 @@ public class AuthController(
             Password = "Junior30@@"
         };
 
-        string token = await _createToken.Execute(input);
+        UserOutput output = await _createToken.Execute(input);
 
-        return Ok(token);
+        return Ok(output);
     }
 #endif
 
@@ -56,9 +59,9 @@ public class AuthController(
             throw new Exception($"Você já está autenticado.");
         }
 
-        string token = await _createToken.Execute(input);
+        UserOutput output = await _createToken.Execute(input);
 
-        return Ok(token);
+        return Ok(output);
     }
 
     [AllowAnonymous]
@@ -124,7 +127,8 @@ public class AuthController(
             return BadRequest("Você não está autenticado.");
         }
 
-        HttpContext.Response.Cookies.Delete(SystemConsts.CookieName);
+        CookieOptions cookieOptions = _jwtTokenGenerator.GetCookieOptions();
+        HttpContext.Response.Cookies.Delete(SystemConsts.CookieName, cookieOptions);
         await _createRefreshToken.Update(userIdAuth: GetUserIdAuth(), mustCheckForValidRefreshTokens: true);
 
         return NoContent();

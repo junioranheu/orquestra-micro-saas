@@ -23,7 +23,7 @@ public sealed class CreateToken(
     private readonly IGetUser _getUser = getUser;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public async Task<string> Execute(AuthInput input)
+    public async Task<UserOutput> Execute(AuthInput input)
     {
         (User? user, string passwordEncrypted) = await _getUser.Execute(new UserInput() { Email = input.Email });
         var output = user.Adapt<UserOutput>() ?? throw new Exception("Usuário não encontrado.");
@@ -49,6 +49,6 @@ public sealed class CreateToken(
         // Escrever cookie;
         _httpContextAccessor?.HttpContext?.Response.Cookies.Append(key: SystemConsts.CookieName, value: token, cookieOptions);
 
-        return token;
+        return output;
     }
 }
