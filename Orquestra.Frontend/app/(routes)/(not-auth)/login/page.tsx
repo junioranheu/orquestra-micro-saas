@@ -61,7 +61,7 @@ export default function Login() {
             }
 
             setAuth(result);
-            Cookies.set(SYSTEM.COOKIE_NAME, JSON.stringify(result), { expires: new Date(result.tokenExpirationDate), path: '/' });
+            Cookies.set(SYSTEM.COOKIE_NAME, JSON.stringify(result), { expires: new Date(result.refreshTokenExpirationDate), path: '/' });
             router.push(ROUTES.DASHBOARD);
         } catch {
             setFormData(x => ({ ...x, password: '' }));
