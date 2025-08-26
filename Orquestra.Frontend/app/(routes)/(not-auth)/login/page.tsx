@@ -25,7 +25,7 @@ interface iLoginForm {
 
 export default function Login() {
 
-    useTitle(`Iniciar sessão no ${SYSTEM.NAME}`);
+    useTitle('Iniciar sessão');
 
     const router = useRouter();
     const [_, setAuth] = useUserContext();

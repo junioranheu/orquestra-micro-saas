@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 
 export default function Logout() {
 
-    useTitle('Encerrando sessão');
+    useTitle('Encerrando sessão...');
 
     const router = useRouter();
     const [_, setAuth] = useUserContext();
