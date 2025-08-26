@@ -131,8 +131,8 @@ input[type='password'] {
     }
 
     &:disabled {
-        background-color: var(--gray);
-        border: 1px solid var(--gray);
+        background-color: var(--gray-light);
+        border: 1px solid var(--gray-light);
         border-radius: var(--border-radius);
         cursor: not-allowed;
     }

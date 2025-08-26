@@ -11,11 +11,12 @@ import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
+import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './page.module.scss';
 
 interface iLoginForm {
@@ -29,6 +30,7 @@ export default function Login() {
 
     const router = useRouter();
     const [_, setAuth] = useUserContext();
+    const isIncognito = useIsIncognito();
 
     const refButton = useRef<HTMLButtonElement>(null);
 
@@ -69,6 +71,32 @@ export default function Login() {
         }
     }
 
+    useEffect(() => {
+        if (isIncognito) {
+            swal({
+                // title: 'Aviso',
+                str: `Não é possível acessar o ${SYSTEM.NAME} em modo anônimo.`,
+                confirmBtnText: 'OK',
+                cancelBtnText: 'Saiba mais',
+                confirmFunction: () => {
+
+                },
+                cancelFunction: () => {
+                    swal({
+                        title: 'Por que não é permitido o modo anônimo?',
+                        str: 'O sistema não pode ser usado em modo anônimo ou privado porque, nesse modo, os cookies e dados de autenticação não são salvos permanentemente. ' +
+                            'Isso significa que sua sessão pode ser perdida a qualquer momento, e você não conseguiria acessar suas informações de forma segura. ' +
+                            '<b>Para garantir que tudo funcione corretamente, use o navegador no modo normal.</b>',
+                        confirmBtnText: 'OK',
+                        icon: 'info'
+                    });
+                },
+                icon: 'error',
+                allowOutsideClick: false
+            });
+        }
+    }, [isIncognito]);
+
     return (
         <section className={styles.main}>
             <div className={styles.form}>
@@ -84,6 +112,7 @@ export default function Login() {
                     <InputMask
                         title={'E-mail'}
                         objectFormData={handleGetPropName(formData, x => x.email)}
+                        isDisabled={isIncognito}
                         handleChange={(e) => handleInputFormStateChange(e, setFormData)}
                         handleKeyDown={(e) => handleKeyDown(e)}
                     />
@@ -91,8 +120,9 @@ export default function Login() {
                     <InputMask
                         title={'Senha'}
                         objectFormData={handleGetPropName(formData, x => x.password)}
-                        handleChange={(e) => handleInputFormStateChange(e, setFormData)}
                         type='password'
+                        isDisabled={isIncognito}
+                        handleChange={(e) => handleInputFormStateChange(e, setFormData)}
                         handleKeyDown={(e) => handleKeyDown(e)}
                     />
 
@@ -100,6 +130,7 @@ export default function Login() {
                         label={'Entrar'}
                         handleFunction={() => handleLogin()}
                         refBtn={refButton}
+                        isDisabled={isIncognito}
                     />
                 </div>
             </div>
