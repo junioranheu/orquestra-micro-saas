@@ -127,6 +127,6 @@ public class AuthController(
         HttpContext.Response.Cookies.Delete(SystemConsts.CookieName);
         await _createRefreshToken.Update(userIdAuth: GetUserIdAuth(), mustCheckForValidRefreshTokens: true);
 
-        return Ok();
+        return NoContent();
     }
 }
