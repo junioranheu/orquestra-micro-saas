@@ -4,6 +4,7 @@ import { CONSTS_LOG } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button/button';
 import ROUTES from '@/app/consts/routes';
+import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
@@ -14,22 +15,30 @@ export default function Dashboard() {
     useTitle('Dashboard');
 
     const router = useRouter();
-    const [auth, _] = useUserContext();
+    const [auth, setAuth] = useUserContext();
+    const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
 
     async function handleLogout() {
         router.push(ROUTES.LOGOUT);
     }
 
     async function handleXD() {
+        setIsRequestLoading(true);
         console.clear();
         const result = await Fetch.get(CONSTS_AUTH.me);
         console.log(CONSTS_AUTH.me, result);
+        setIsRequestLoading(false);
     }
 
     async function handleLog() {
-        console.clear();
-        const result = await Fetch.get(CONSTS_LOG.get);
-        console.log(CONSTS_LOG.get, result);
+        setIsRequestLoading(true);
+
+        setTimeout(async () => {
+            console.clear();
+            const result = await Fetch.get(CONSTS_LOG.get);
+            console.log(CONSTS_LOG.get, result);
+            setIsRequestLoading(false);
+        }, 1500);
     }
 
     return (
