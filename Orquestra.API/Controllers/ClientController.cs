@@ -26,7 +26,7 @@ public class ClientController(
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _create.Execute(userIdAuth, input);
 
-        return Ok();
+        return NoContent();
     }
 
     [AuthorizeFilter]

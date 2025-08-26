@@ -2,6 +2,7 @@
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button/button';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
@@ -29,11 +30,9 @@ export default function Dashboard() {
     async function handleLogout() {
         console.clear();
 
-        try {
-            await Fetch.delete(CONSTS_AUTH.logout);
-        } catch {
-            Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
-        }
+        await Fetch.delete(CONSTS_AUTH.logout);
+        Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
+        router.push(ROUTES.ENTRAR);
     }
 
     return (

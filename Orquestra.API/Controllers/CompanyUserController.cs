@@ -76,7 +76,7 @@ public class CompanyUserController(
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _updateCurrentMainCompanyUser.Execute(userIdAuth, companyId);
 
-        return Ok();
+        return NoContent();
     }
 }
 
