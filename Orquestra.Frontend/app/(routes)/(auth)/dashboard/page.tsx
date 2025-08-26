@@ -29,10 +29,13 @@ export default function Dashboard() {
 
     async function handleLogout() {
         console.clear();
-
         await Fetch.delete(CONSTS_AUTH.logout);
-        Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
-        router.push(ROUTES.ENTRAR);
+
+        setTimeout(() => {
+            Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
+            setAuth(null);
+            router.push(ROUTES.ENTRAR);
+        }, 250);
     }
 
     return (

@@ -70,7 +70,13 @@ export default function Login() {
 
         try {
             const result = await Fetch.post(CONSTS_AUTH.auth, user);
-            console.log('result', result);
+
+            if (!result) {
+                console.log('NÃO');
+                return;
+            }
+
+            console.log('SIM', result);
             Cookies.set(SYSTEM.COOKIE_NAME, result, { path: '/' });
 
             setTimeout(() => {
