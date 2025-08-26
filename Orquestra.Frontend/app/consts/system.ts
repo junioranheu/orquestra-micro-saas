@@ -4,7 +4,7 @@ const SYSTEM = {
     AUTHOR: '@junioranheu',
     COLOR: '#f0fcdc',
 
-    COOKIE_NAME: 'auth',
+    COOKIE_NAME: 'auth_front',
 
     ANIMATE: 'animate__animated animate__fadeIn',
     ANIMATE_SLOW: 'animate__animated animate__fadeIn animate__slow',
