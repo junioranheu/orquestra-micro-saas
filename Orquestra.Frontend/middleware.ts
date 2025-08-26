@@ -2,16 +2,16 @@ import { NextResponse, type NextRequest } from 'next/server';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
 
-const PUBLIC_PATHS = [ROUTES.ENTRAR, ROUTES.CRIAR_CONTA, '/public'];
+const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [ROUTES.LOGIN, ROUTES.CRIAR_CONTA];
 
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get(SYSTEM.COOKIE_NAME)?.value;
     const pathname = request.nextUrl.pathname;
-    const isPublicPath = PUBLIC_PATHS.some(path => pathname.startsWith(path));
+    const isPublicPath = PUBLIC_PATHS_BLOCKED_WITH_TOKEN.some(path => pathname.startsWith(path));
 
     // Sem token: só permite rotas públicas;
     if (!token) {
-        return isPublicPath ? NextResponse.next() : NextResponse.redirect(new URL(ROUTES.ENTRAR, request.url));
+        return isPublicPath ? NextResponse.next() : NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
     }
 
     // Com token: redireciona home ('/') e rotas públicas para dashboard;

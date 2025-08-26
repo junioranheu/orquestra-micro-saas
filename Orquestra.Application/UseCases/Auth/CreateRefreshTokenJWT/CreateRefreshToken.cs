@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
@@ -9,10 +10,11 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 
-public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTokenGenerator) : ICreateRefreshToken
+public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTokenGenerator, IGetRefreshToken getRefreshToken) : ICreateRefreshToken
 {
     private readonly Context _context = context;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+    private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
 
     public async Task<(string newJwtToken, CookieOptions cookieOptions)> RefreshToken(Guid userIdAuth)
     {
@@ -73,14 +75,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
     #region extras
     private async Task<List<RefreshToken>> GetOldRefreshTokensAndCheckIfRefreshTokenIsValid(Guid userIdAuth, bool mustCheckForValidRefreshTokens)
     {
-        List<RefreshToken> oldRefreshTokens = await _context.RefreshTokens.
-                                              AsNoTracking().
-                                              Where(x =>
-                                                 x.UserId == userIdAuth &&
-                                                 x.RevokedDate == null
-                                              ).
-                                              OrderByDescending(x => x.CreatedDate).
-                                              ToListAsync();
+        List<RefreshToken> oldRefreshTokens = await _getRefreshToken.GetAllNotRevokedTokens(userIdAuth);
 
         // Se mustCheckForValidRefreshTokens for false, significa que deve ser retornado todos os registros, sem validações posteriores;
         if (!mustCheckForValidRefreshTokens)

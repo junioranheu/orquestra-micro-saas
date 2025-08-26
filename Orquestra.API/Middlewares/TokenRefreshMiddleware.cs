@@ -33,7 +33,7 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
             return;
         }
 
-        (bool isExpiringSoon, _) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
+        (bool isExpiringSoon, _, _) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
 
         if (!isExpiringSoon)
         {

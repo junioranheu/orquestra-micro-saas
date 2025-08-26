@@ -99,7 +99,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
         };
     }
 
-    public (bool isTokenExpiringSoonOrHasAlreadyExpired, double differenceInSeconds) IsTokenExpiringSoonOrHasAlreadyExpired(JwtSecurityToken token, int thresholdInMinutes = 0)
+    public (bool isTokenExpiringSoonOrHasAlreadyExpired, double differenceInSeconds, DateTime validTo) IsTokenExpiringSoonOrHasAlreadyExpired(JwtSecurityToken token, int thresholdInMinutes = 0)
     {
         DateTime date = GetDate();
         DateTime dateThreshold = date.AddMinutes(thresholdInMinutes);
@@ -107,7 +107,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IConfigu
         double differenceInSeconds = (token.ValidTo - dateThreshold).TotalSeconds;
         bool isTokenExpiringSoonOrHasAlreadyExpired = differenceInSeconds <= 0;
 
-        return (isTokenExpiringSoonOrHasAlreadyExpired, differenceInSeconds);
+        return (isTokenExpiringSoonOrHasAlreadyExpired, differenceInSeconds, token.ValidTo);
     }
     #endregion
 }

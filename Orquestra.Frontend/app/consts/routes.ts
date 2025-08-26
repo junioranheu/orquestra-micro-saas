@@ -1,5 +1,5 @@
 const ROUTES = {
-    ENTRAR: '/entrar',
+    LOGIN: '/login',
     CRIAR_CONTA: '/criar-conta',
     LOGOUT: '/logout',
     DASHBOARD: '/dashboard',

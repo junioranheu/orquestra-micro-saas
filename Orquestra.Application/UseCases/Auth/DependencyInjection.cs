@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
+using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
 
 namespace Orquestra.Application.UseCases.Auth;
 
@@ -10,6 +11,7 @@ public static class DependencyInjection
     {
         services.AddScoped<ICreateToken, CreateToken>();
         services.AddScoped<ICreateRefreshToken, CreateRefreshToken>();
+        services.AddScoped<IGetRefreshToken, GetRefreshToken>();
 
         return services;
     }
