@@ -2,6 +2,7 @@
 import Head from '@/app/(routes)/head';
 import Navbar from '@/app/components/(main)/navbar/nav/navbar';
 import Loading from '@/app/components/loading/loading';
+import SYSTEM from '@/app/consts/system';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
@@ -24,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                             <Navbar />
                         </header>
 
-                        <main>
+                        <main className={SYSTEM.ANIMATE}>
                             <Loading typeMessage='normal' />
                             {children}
                         </main>

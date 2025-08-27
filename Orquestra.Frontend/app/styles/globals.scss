@@ -232,12 +232,23 @@ input[type='password'] {
         min-width: 10rem !important;
         border-radius: var(--border-radius) !important;
         box-shadow: none !important;
+        transition: 0.3s !important;
+
+        &:hover {
+            background-color: var(--main) !important;
+        }
     }
 
     .swal2-cancel {
         background-color: transparent !important;
         border: 1px solid var(--gray-dark) !important;
         color: var(--black) !important;
+        transition: 0.3s !important;
+
+        &:hover {
+            background-color: inherit !important;
+            border: 1px solid var(--gray) !important;
+        }
     }
 
     .swal2-title {
@@ -289,7 +300,20 @@ input[type='password'] {
 }
 
 // portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
-@media (max-width:600px) {}
+@media (max-width:600px) {
+    .swal2-popup {
+        // background-color: orange !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: auto !important;
+        border-radius: 0 !important;
+
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+}
 
 // smartphones, Android phones, landscape iPhone
 @media (max-width:480px) {}

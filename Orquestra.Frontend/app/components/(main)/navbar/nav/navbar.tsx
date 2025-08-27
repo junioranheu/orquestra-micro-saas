@@ -23,12 +23,14 @@ export default function Navbar() {
             <nav className={styles.nav}>
                 <div className={styles.inner}>
                     <div className={styles.left}>
+                        <h1>XD</h1>
+
                         <picture title='Menu' className={styles.hamburguer} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                            <Image src={ImgHamburguer} alt={SYSTEM.NAME} priority={true} />
+                            <Image src={ImgHamburguer} alt={SYSTEM.NAME} priority={true} width={50} />
                         </picture>
 
                         <picture title='Dashboard' onClick={() => handleRedirect()}>
-                            <Image src={ImgLogo} alt={SYSTEM.NAME} priority={true} />
+                            <Image src={ImgLogo} alt={SYSTEM.NAME} priority={true} width={50} />
                         </picture>
                     </div>
 
