@@ -7,6 +7,13 @@
 		<UserSecretsId>bcdd9c92-41ac-4408-9b02-ac7e0b902aa7</UserSecretsId>
 	</PropertyGroup>
 
+	<!-- Versão da build, auto-incremento -->
+	<PropertyGroup>
+		<AssemblyVersion>1.0.0.*</AssemblyVersion>
+		<FileVersion>1.0.0.*</FileVersion>
+		<Deterministic>false</Deterministic>
+	</PropertyGroup>
+
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
 	<ItemGroup>
