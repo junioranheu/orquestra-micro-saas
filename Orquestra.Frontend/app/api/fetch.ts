@@ -110,6 +110,12 @@ export const Fetch = {
                 return blob;
             }
 
+            // Too many requests (429);
+            if (response.status === 429) {
+                swal({ str: 'O sistema recebeu muitas solicitações em um curto período de tempo. Aguarde alguns instantes antes de tentar novamente.', icon: 'error' });
+                return;
+            }
+
             // Sessão expirada (419) ou Unauthorized (401);
             if (response.status === 419 || response.status === 401) {
                 const resError = await response.json();

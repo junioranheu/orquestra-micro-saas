@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
@@ -23,8 +24,8 @@ public class AuthController(
         ICreateToken createToken,
         ICreateRefreshToken createRefreshToken,
         IJwtTokenGenerator jwtTokenGenerator,
-       IGetRefreshToken getRefreshToken,
-IGetCompany getCompany
+        IGetRefreshToken getRefreshToken,
+        IGetCompany getCompany
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
@@ -56,6 +57,7 @@ IGetCompany getCompany
 #endif
 
     [AllowAnonymous]
+    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpPost]
     public async Task<ActionResult> Auth(AuthInput input)
     {
@@ -91,6 +93,7 @@ IGetCompany getCompany
     }
 
     [AuthorizeFilter]
+    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("Me")]
     public async Task<ActionResult> Me()
     {

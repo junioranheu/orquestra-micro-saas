@@ -42,7 +42,6 @@ public class TestController() : BaseController<TestController>
     }
 
     [AuthorizeFilter(UserRoleEnum.Common, UserRoleEnum.Maintainer)]
-    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("GetAuth")]
     public ActionResult GetAuth()
     {
