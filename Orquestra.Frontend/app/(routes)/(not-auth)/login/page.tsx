@@ -10,6 +10,7 @@ import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
@@ -28,6 +29,7 @@ export default function Login() {
 
     useTitle('Iniciar sessão');
 
+    const versionBuild = useApiGetBuildVersion();
     const router = useRouter();
     const [_, setAuth] = useUserContext();
     const isIncognito = useIsIncognito();
@@ -133,6 +135,11 @@ export default function Login() {
                         isDisabled={isIncognito}
                     />
                 </div>
+            </div>
+
+            <div className={styles.bottom}>
+                <code>{versionBuild?.buildVersion ? `Build ${versionBuild?.buildVersion}` : ''}</code>
+                <code>{versionBuild?.configuration}</code>
             </div>
         </section>
     )

@@ -4,7 +4,7 @@ const controller = 'api/Auth';
 
 export const CONSTS_AUTH = {
     auth: `${BASE}/${controller}`,
-    meSimple: `${BASE}/${controller}/me/simple`,
-    me: `${BASE}/${controller}/me`,
+    meSimple: `${BASE}/${controller}/Me/Simple`,
+    me: `${BASE}/${controller}/Me`,
     logout: `${BASE}/${controller}`
 };
