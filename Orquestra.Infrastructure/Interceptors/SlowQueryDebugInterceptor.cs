@@ -9,7 +9,7 @@ namespace Orquestra.Infrastructure.Interceptors;
 
 public class SlowQueryDebugInterceptor(ILogger<SlowQueryDebugInterceptor> logger, IWebHostEnvironment env) : DbCommandInterceptor
 {
-    private readonly ILogger<SlowQueryDebugInterceptor> _logger= logger;
+    private readonly ILogger<SlowQueryDebugInterceptor> _logger = logger;
     private readonly bool _isDevelopment = env.IsDevelopment();
 
     public override async ValueTask<DbDataReader> ReaderExecutedAsync(DbCommand command, CommandExecutedEventData eventData, DbDataReader result, CancellationToken cancellationToken = default)

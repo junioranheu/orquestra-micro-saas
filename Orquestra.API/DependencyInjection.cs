@@ -20,7 +20,9 @@ public static class DependencyInjection
         AddCompression(services);
         AddControllers(services, env);
         AddObservability(services);
-        AddMisc(services);
+        AddCaching(services);
+        AddHttpContextAccessor(services);
+        AddRateLimiting(services);
 
         return services;
     }
@@ -63,9 +65,9 @@ public static class DependencyInjection
     private static void AddObservability(IServiceCollection services)
     {
         /// Foi necessário instalar estas seguintes dependências:
-        /// OpenTelemetry
-        /// OpenTelemetry.Extensions.Hosting
-        /// OpenTelemetry.Instrumentation.AspNetCore
+        /// OpenTelemetry;
+        /// OpenTelemetry.Extensions.Hosting;
+        /// OpenTelemetry.Instrumentation.AspNetCore;
         services.AddOpenTelemetry().
             ConfigureResource(resource => resource.AddService(SystemConsts.NameApi)).
             WithTracing(tracing => tracing.
@@ -73,13 +75,19 @@ public static class DependencyInjection
             );
     }
 
-    private static void AddMisc(IServiceCollection services)
+    private static void AddCaching(IServiceCollection services)
     {
         services.AddMemoryCache();
         services.AddResponseCaching();
+    }
 
+    private static void AddHttpContextAccessor(IServiceCollection services)
+    {
         services.AddHttpContextAccessor(); // Serviço necessário para habilitar o IHttpContextAccessor em Infrastructure/Context;
+    }
 
+    private static void AddRateLimiting(IServiceCollection services)
+    {
         services.AddUserRateLimiting();
     }
 }

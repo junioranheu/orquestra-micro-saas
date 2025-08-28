@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
-using OpenTelemetry.Trace;
 using Orquestra.API.Middlewares;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Data;
@@ -20,7 +19,8 @@ public static class DependencyAppConfiguration
         AddCompression(app);
         AddAuth(app);
         AddObservability(app);
-        AddMisc(app);
+        AddCaching(app);
+        AddDeveloperExceptionPage(app);
         await HandleDbInitialize(app);
 
         return app;
@@ -119,7 +119,7 @@ public static class DependencyAppConfiguration
             Sample = (ref ActivityCreationOptions<ActivityContext> options) => ActivitySamplingResult.AllDataAndRecorded,
             ActivityStopped = activity =>
             {
-                // Filtra métodos irrelevantes
+                // Filtra métodos irrelevantes;
                 string? method = activity.Tags.FirstOrDefault(t => t.Key == "http.request.method").Value?.ToString();
                 string? path = activity.Tags.FirstOrDefault(t => t.Key == "http.route").Value?.ToString();
 
@@ -141,11 +141,14 @@ public static class DependencyAppConfiguration
         ActivitySource.AddActivityListener(listener);
     }
 
-    private static void AddMisc(WebApplication app)
+    private static void AddCaching(WebApplication app)
     {
         app.UseResponseCaching();
         app.UseRateLimiter();
+    }
 
+    private static void AddDeveloperExceptionPage(WebApplication app)
+    {
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
