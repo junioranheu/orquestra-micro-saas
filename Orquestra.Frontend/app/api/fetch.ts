@@ -96,7 +96,8 @@ export const Fetch = {
                 const blob = await response.blob();
 
                 if (!blob.size) {
-                    throw new Error('Null blob');
+                    swal({ str: 'Não foi possível gerar o arquivo.', icon: 'error' });
+                    throw new Error('Null blob.');
                 }
 
                 const urlObj = window.URL.createObjectURL(blob);
@@ -126,7 +127,8 @@ export const Fetch = {
             // Bad request (400) ou Internal error (500) ou Forbidden (403);
             if (response.status === 400 || response.status === 500 || response.status === 403) {
                 const resError = await response.json();
-                throw new Error(resError?.messages?.[0] ?? resError ?? response.statusText);
+                const resErrorStr = resError?.messages?.[0] ?? resError ?? response.statusText;
+                swal({ str: resErrorStr, icon: 'error' });
             }
 
             // No Content (204);
@@ -146,10 +148,23 @@ export const Fetch = {
                 setIsRequestLoading(false);
             }
 
+            const isApiOffline = error instanceof TypeError || (typeof error?.message === "string" && error.message.includes("Failed to fetch")) || (typeof error?.code === "string" && error.code === "ECONNREFUSED");
+
+            if (isApiOffline) {
+                swal({
+                    str: 'Não foi possível conectar ao servidor. Tente novamente mais tarde.',
+                    confirmFunction: () => location.reload(),
+                    allowOutsideClick: false,
+                    icon: 'error'
+                });
+
+                return;
+            }
+
             const errorData: iFetchError = {
                 url,
                 body,
-                error: error?.message,
+                error: error?.message ?? '-',
                 date: handleGetDateBrazil()
             };
 
