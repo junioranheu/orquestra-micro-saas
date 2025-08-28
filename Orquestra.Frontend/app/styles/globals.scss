@@ -282,6 +282,78 @@ input[type='password'] {
     }
 }
 
+// Cookie consent
+.cookie_widget_container {
+    background: var(--white) !important;
+    border: none !important;
+    min-width: 25rem !important;
+    font-family: inherit !important;
+
+    .cookie_widget_shape_2 {
+        // background-color: rgba(16, 94, 170, 0.25);
+        background-color: var(--main-light);
+        opacity: 0.25;
+    }
+
+    .cookie_widget_title {
+        // background-color: orange;
+        min-height: 3rem;
+        font-size: 1.5rem;
+        color: var(--black) !important;
+
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .cookie_widget_subtitle {
+        margin-top: 1.25rem !important;
+
+        color: var(--black) !important;
+        opacity: 0.9;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .cookie_widget_text {
+        // background-color: orange !important;
+        color: var(--black) !important;
+        opacity: 0.8 !important;
+        font-weight: 400;
+        text-align: left;
+    }
+
+    .cookie_widget_footer {
+        // background-color: orange;
+
+        .cookie_widget_button_reject {
+            // background-color: orange;
+            color: var(--black) !important;
+        }
+
+        .cookie_widget_button_accept {
+            // background-color: orange;
+            color: var(--black) !important;
+        }
+
+        .cookie_widget_button_reject,
+        .cookie_widget_button_accept {
+            opacity: 0.9;
+            font-family: inherit !important;
+            transition: 0.2s;
+
+            &:hover {
+
+                background-color: var(--main-light);
+                opacity: 0.8;
+
+                color: var(--black) !important;
+                transition: 0.2s;
+            }
+        }
+    }
+}
+
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1281px) {}

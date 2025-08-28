@@ -18,6 +18,7 @@ import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { CookieWidget } from 'react-cookie-gpdr';
 import styles from './page.module.scss';
 
 interface iLoginForm {
@@ -141,6 +142,22 @@ export default function Login() {
                 <code>{versionBuild?.buildVersion ? `Build ${versionBuild?.buildVersion}` : ''}</code>
                 <code>{versionBuild?.configuration}</code>
             </div>
+
+            <CookieWidget
+                location='right'
+                color='var(--main)'
+                policyLink=''
+                policyLinkText=''
+                title='Cookies 🍪'
+                subtitle=''
+                text={`A plataforma ${SYSTEM.NAME} utiliza cookies para oferecer uma melhor experiência. Ao continuar navegando, você concorda com o uso de cookies.`}
+                cookieSecurity={true}
+                hideOnScrollDown={false}
+                rejectButtonText='Aceitar apenas os obrigatórios'
+                acceptButtonText='Aceitar todos os cookies'
+                onAccept={() => null}
+                onReject={() => null}
+            />
         </section>
     )
 }
