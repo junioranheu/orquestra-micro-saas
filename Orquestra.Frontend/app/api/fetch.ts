@@ -111,6 +111,12 @@ export const Fetch = {
                 return blob;
             }
 
+            // Forbidden;
+            if (response.status === 403) {
+                swal({ str: 'Você não tem permissão para acessar este recurso.', icon: 'error' });
+                return;
+            }
+
             // Too many requests (429);
             if (response.status === 429) {
                 swal({ str: 'O sistema recebeu muitas solicitações em um curto período de tempo. Aguarde alguns instantes antes de tentar novamente.', icon: 'error' });
@@ -149,10 +155,11 @@ export const Fetch = {
             }
 
             const isApiOffline = error instanceof TypeError || (typeof error?.message === "string" && error.message.includes("Failed to fetch")) || (typeof error?.code === "string" && error.code === "ECONNREFUSED");
+            // console.log(isApiOffline);
 
             if (isApiOffline) {
                 swal({
-                    str: 'Não foi possível conectar ao servidor. Tente novamente mais tarde.',
+                    str: 'Não foi possível conectar ao servidor. Aparentemente a API está indisponível. Tente novamente mais tarde.',
                     confirmFunction: () => location.reload(),
                     allowOutsideClick: false,
                     icon: 'error'

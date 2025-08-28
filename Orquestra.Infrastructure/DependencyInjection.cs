@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Orquestra.Domain.Consts;
@@ -166,8 +167,9 @@ public static class DependencyInjection
 
         services.AddDbContextPool<Context>((serviceProvider, options) =>
         {
+            ILogger<SlowQueryDebugInterceptor> logger = serviceProvider.GetRequiredService<ILogger<SlowQueryDebugInterceptor>>();
             IWebHostEnvironment env = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            SlowQueryDebugInterceptor interceptor = new(env);
+            SlowQueryDebugInterceptor interceptor = new(logger, env);
 
             options.UseNpgsql(con).AddInterceptors(interceptor);
         });

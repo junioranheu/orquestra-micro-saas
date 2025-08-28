@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Data.Common;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure.Interceptors;
 
-public class SlowQueryDebugInterceptor(IWebHostEnvironment env) : DbCommandInterceptor
+public class SlowQueryDebugInterceptor(ILogger<SlowQueryDebugInterceptor> logger, IWebHostEnvironment env) : DbCommandInterceptor
 {
+    private readonly ILogger<SlowQueryDebugInterceptor> _logger= logger;
     private readonly bool _isDevelopment = env.IsDevelopment();
 
     public override async ValueTask<DbDataReader> ReaderExecutedAsync(DbCommand command, CommandExecutedEventData eventData, DbDataReader result, CancellationToken cancellationToken = default)
@@ -33,13 +36,10 @@ public class SlowQueryDebugInterceptor(IWebHostEnvironment env) : DbCommandInter
 
         if (eventData.Duration.TotalMilliseconds > threshold)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("DB");
-            Console.ResetColor();
-            Console.Write($": [{DateTime.Now:HH:mm:ss}]");
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine($" Query longa detectada, {eventData.Duration.Milliseconds}ms gastos: {command?.CommandText ?? "-"}");
-            Console.ResetColor();
+            _logger.LogInformation("[Slow query] [date, {Date}], [duration, {Duration}ms]: {CommandText}",
+                GetDate().ToString("HH:mm:ss"),
+                eventData.Duration.Milliseconds,
+                command?.CommandText ?? "-");
         }
     }
 

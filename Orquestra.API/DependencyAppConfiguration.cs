@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using OpenTelemetry.Trace;
 using Orquestra.API.Middlewares;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Data;
@@ -127,10 +128,12 @@ public static class DependencyAppConfiguration
                     return;
                 }
 
-                logger.LogInformation("[{DisplayName}] {Duration}ms | {Tags}",
-                     activity.DisplayName,
-                     activity.Duration.TotalMilliseconds,
-                     string.Join(", ", activity.Tags.Where(x => x.Key.StartsWith("http") || x.Key == "server.address"))
+                string? statusCodeStr = activity.GetTagItem("http.response.status_code")?.ToString();
+
+                logger.LogInformation("[Observability] {Tags}, [duration, {Duration}ms], [status, {Status}]",
+                    string.Join(", ", activity.Tags.Where(x => x.Key.StartsWith("http") || x.Key == "server.address")),
+                    activity.Duration.TotalMilliseconds,
+                    statusCodeStr
                 );
             }
         };
