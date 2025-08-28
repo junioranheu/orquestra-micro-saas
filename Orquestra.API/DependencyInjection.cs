@@ -17,6 +17,8 @@ public static class DependencyInjection
     {
         IWebHostEnvironment env = builder.Environment;
 
+        AddSwagger(services);
+        AddCors(services, builder);
         AddCompression(services);
         AddControllers(services, env);
         AddObservability(services);
@@ -25,6 +27,50 @@ public static class DependencyInjection
         AddRateLimiting(services);
 
         return services;
+    }
+
+    private static void AddSwagger(IServiceCollection services)
+    {
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new()
+            {
+                Title = SystemConsts.NameApi,
+                Version = "v1"
+            });
+        });
+    }
+
+    private static void AddCors(IServiceCollection services, WebApplicationBuilder builder)
+    {
+        string[] frontendUrls =
+        [
+            builder.Configuration["Urls:Development:Frontend"] ?? string.Empty,
+            builder.Configuration["Urls:Production:Frontend"] ?? string.Empty,
+            builder.Configuration["Urls:Production:Frontend_2"] ?? string.Empty
+        ];
+
+        if (frontendUrls is null || frontendUrls.Any(x => string.IsNullOrEmpty(x)))
+        {
+            throw new Exception("Erro interno crítico: um ou mais URLs de Frontend não estão configurados no appsettings.json.");
+        }
+
+        services.AddCors(x =>
+            x.AddPolicy(name: builder.Configuration["CORSSettings:Cors"] ?? string.Empty, builder =>
+            {
+                #region obsoleto
+                //builder.AllowAnyHeader().
+                //        AllowAnyMethod().
+                //        SetIsOriginAllowed((host) => true).
+                //        AllowCredentials();
+                #endregion
+
+                builder.WithOrigins(frontendUrls).
+                        AllowAnyHeader().
+                        AllowAnyMethod().
+                        AllowCredentials();
+            })
+        );
     }
 
     private static void AddCompression(IServiceCollection services)
