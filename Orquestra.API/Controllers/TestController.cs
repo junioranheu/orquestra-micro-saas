@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Orquestra.API.Filters;
 using Orquestra.Domain.Consts;
-using Orquestra.Domain.Enums;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;
 
@@ -38,29 +36,14 @@ public class TestController() : BaseController<TestController>
     [HttpGet("GetAnonymous")]
     public ActionResult GetAnonymous()
     {
-        return Ok(Ascii());
+        return Ok(ascii);
     }
 
-    [AuthorizeFilter(UserRoleEnum.Common, UserRoleEnum.Maintainer)]
+    [AuthorizeFilter]
+    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("GetAuth")]
     public ActionResult GetAuth()
     {
-        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        string nameAuth = GetUserNameAuth();
-        (UserRoleEnum[] _, string[] userRolesStr) = GetUserRolesAuth();
-
-        var result = new
-        {
-            Id = userIdAuth,
-            Name = nameAuth,
-            Roles = userRolesStr
-        };
-
-        return Ok(result); 
-    }
-
-    private static string Ascii()
-    {
-        return $"{ascii}\n{GetDate()}";
+        return Ok(ascii); 
     }
 }
