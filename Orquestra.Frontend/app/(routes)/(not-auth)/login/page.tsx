@@ -3,6 +3,7 @@ import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import iUser from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import ImgLogo from '@/app/assets/png/logo.png';
+import CookieWidget from '@/app/components/cookie/cookie-consent';
 import Button from '@/app/components/input/button/button';
 import InputMask from '@/app/components/input/text/input.mask';
 import ROUTES from '@/app/consts/routes';
@@ -18,7 +19,6 @@ import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { CookieWidget } from 'react-cookie-gpdr';
 import styles from './page.module.scss';
 
 interface iLoginForm {
@@ -153,7 +153,7 @@ export default function Login() {
                 text={`A plataforma ${SYSTEM.NAME} utiliza cookies para oferecer uma melhor experiência. Ao continuar navegando, você concorda com o uso de cookies.`}
                 cookieSecurity={true}
                 hideOnScrollDown={false}
-                rejectButtonText='Aceitar apenas os obrigatórios'
+                rejectButtonText='Aceitar obrigatórios'
                 acceptButtonText='Aceitar todos os cookies'
                 onAccept={() => null}
                 onReject={() => null}
