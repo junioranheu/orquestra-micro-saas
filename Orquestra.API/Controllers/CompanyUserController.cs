@@ -28,6 +28,21 @@ public class CompanyUserController(
     private readonly IVerifyCompanyUser _verify = verify;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
 
+    //[AuthorizeFilter]
+    //[HttpPost("InviteUser")]
+    //public async Task<ActionResult> InviteUser(string email)
+    //{
+    //    if (string.IsNullOrEmpty(email))
+    //    {
+    //        throw new ArgumentException("O e-mail não pode ser vazio");
+    //    }
+
+    //    Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+    //    List<CompanyUserOutput> output = await _createRange.Execute(userIdAuth, input);
+
+    //    return Ok(output);
+    //}
+
     [AuthorizeFilter]
     [HttpPost("CreateRange")]
     public async Task<ActionResult> CreateRange([FromBody] List<CompanyUserInput> input)

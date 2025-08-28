@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.CompanyUsers.Base;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
+using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -18,12 +19,14 @@ namespace Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 public sealed class CreateRangeCompanyUser(
         Context context,
         IEnvService env,
+        ICreateVerification createVerification,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
         IEmailService emailService
     ) : CompanyUserBase(context, checkIfUserIsLinkedCompanyUser), ICreateRangeCompanyUser
 {
     private readonly Context _context = context;
+    private readonly ICreateVerification _createVerification = createVerification;
     private readonly IEnvService _env = env;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
     private readonly IEmailService _emailService = emailService;
@@ -46,8 +49,6 @@ public sealed class CreateRangeCompanyUser(
         // Normalizar dados;
         foreach (var item in companyUsers)
         {
-            item.VerifyToken = GenerateSafeToken32Bytes(urlSafe: true);
-
             bool isSameUser = item.UserId == userIdAuth;
             item.InviterUserId = isSameUser ? null : userIdAuth;
         }
@@ -65,20 +66,21 @@ public sealed class CreateRangeCompanyUser(
             await _updateCurrentMainCompanyUser.Execute(input.First().UserId, companyId);
         }
 
-        // Enviar e-mail para cada um dos funcionários;
+        // Gerar token e enviar e-mail para cada um dos funcionários;
         // Não é necessário enviar e-mail para o primeiro administador;
         if (!isFirstAdministrator)
         {
             if (companyId != Guid.Empty)
             {
-                Company? company = await _context.Companies.
-                                   AsNoTracking().
-                                   Where(x => x.CompanyId == companyId && x.Status == true).
-                                   FirstOrDefaultAsync();
+                var company = await _context.Companies.
+                              AsNoTracking().
+                              Where(x => x.CompanyId == companyId && x.Status == true).
+                              FirstOrDefaultAsync();
 
                 foreach (var item in companyUsers)
                 {
-                    await SendEmail(item, company);
+                    Verification verification = await SaveVerification(item);
+                    await SendEmail(companyUser: item, company, verification);
                 }
             }
         }
@@ -97,10 +99,10 @@ public sealed class CreateRangeCompanyUser(
             return false;
         }
 
-        List<CompanyUser> companyUsers = await _context.CompanyUsers.
-                                         AsNoTracking().
-                                         Where(x => x.CompanyId == companyId && x.Status == true).
-                                         ToListAsync();
+        var companyUsers = await _context.CompanyUsers.
+                           AsNoTracking().
+                           Where(x => x.CompanyId == companyId && x.Status == true).
+                           ToListAsync();
 
         if (companyUsers.Count > 0)
         {
@@ -120,12 +122,19 @@ public sealed class CreateRangeCompanyUser(
         return true;
     }
 
-    private async Task SendEmail(CompanyUser companyUser, Company? company)
+    private async Task<Verification> SaveVerification(CompanyUser input)
     {
-        User? user = await _context.Users.
-                     AsNoTracking().
-                     Where(x => x.UserId == companyUser.UserId && x.Status == true).
-                     FirstOrDefaultAsync();
+        Verification verification = await _createVerification.Execute<CompanyUser>(entityId: input.CompanyUserId, verificationType: VerificationTypeEnum.CompanyUser);
+
+        return verification;
+    }
+
+    private async Task SendEmail(CompanyUser companyUser, Company? company, Verification verification)
+    {
+        var user = await _context.Users.
+                   AsNoTracking().
+                   Where(x => x.UserId == companyUser.UserId && x.Status == true).
+                   FirstOrDefaultAsync();
 
         if (user is null || company is null)
         {
@@ -133,7 +142,7 @@ public sealed class CreateRangeCompanyUser(
         }
 
         EnvOutput env = _env.GetUrls();
-        string verifyUrl = $"{env.UrlBackend}/CompanyUser/Verify/{companyUser.VerifyToken}";
+        string verifyUrl = $"{env.UrlBackend}/CompanyUser/Verify/{verification.Token}";
 
         Dictionary<string, string> values = new()
         {

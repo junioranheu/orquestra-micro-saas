@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
+using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -63,7 +63,6 @@ public sealed class CreateRangeTests
         Assert.Equal(CompanyUserRoleEnum.Administrator, created!.CompanyUserRole);
         Assert.True(created.IsAccountVerified);
         Assert.True(created.IsCurrentMainCompanyUser);
-        Assert.False(string.IsNullOrWhiteSpace(created.VerifyToken));
     }
 
     [Fact]
@@ -107,7 +106,6 @@ public sealed class CreateRangeTests
         Assert.Equal(CompanyUserRoleEnum.Member, created.CompanyUserRole);
         Assert.False(created.IsAccountVerified);
         Assert.False(created.IsCurrentMainCompanyUser);
-        Assert.False(string.IsNullOrWhiteSpace(created.VerifyToken));
     }
 
     [Fact]
@@ -171,12 +169,10 @@ public sealed class CreateRangeTests
         Assert.Equal(CompanyUserRoleEnum.Administrator, createdAdmin.CompanyUserRole);
         Assert.False(createdAdmin.IsAccountVerified);
         Assert.False(createdAdmin.IsCurrentMainCompanyUser);
-        Assert.False(string.IsNullOrWhiteSpace(createdAdmin.VerifyToken));
 
         Assert.Equal(CompanyUserRoleEnum.Member, createdMember.CompanyUserRole);
         Assert.False(createdMember.IsAccountVerified);
         Assert.False(createdMember.IsCurrentMainCompanyUser);
-        Assert.False(string.IsNullOrWhiteSpace(createdMember.VerifyToken));
     }
 
     [Fact]
@@ -343,11 +339,12 @@ public sealed class CreateRangeTests
 
         // Mock do IEnvService;
         Mock<IEnvService> mockEnv = new();
-        mockEnv.Setup(e => e.IsDevelopment()).Returns(true); // se precisar de retorno
+        mockEnv.Setup(e => e.IsDevelopment()).Returns(true);
         mockEnv.Setup(s => s.GetUrls()).Returns(new EnvOutput { UrlBackend = "http://localhost:5035/api", UrlFrontend = "http://localhost:3000" });
 
         // Outras dependências;
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        CreateVerification createVerification = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinked);
 
@@ -355,6 +352,7 @@ public sealed class CreateRangeTests
         return new CreateRangeCompanyUser(
             context,
             mockEnv.Object,
+            createVerification,
             checkIfUserIsLinked,
             updateCurrentMainCompanyUser,
             emailService

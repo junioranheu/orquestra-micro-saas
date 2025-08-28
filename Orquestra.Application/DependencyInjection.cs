@@ -9,6 +9,7 @@ using Orquestra.Application.UseCases.Locations;
 using Orquestra.Application.UseCases.Logs;
 using Orquestra.Application.UseCases.Schedules;
 using Orquestra.Application.UseCases.Users;
+using Orquestra.Application.UseCases.Verifications;
 
 namespace Orquestra.Application;
 
@@ -40,6 +41,7 @@ public static class DependencyInjection
         services.AddCompanyUsersApplication();
         services.AddSchedulesApplication();
         services.AddClientsApplication();
+        services.AddVerificationsApplication();
     }
 
     private static void AddServices(IServiceCollection _)

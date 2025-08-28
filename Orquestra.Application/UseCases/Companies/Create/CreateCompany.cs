@@ -1,11 +1,11 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -21,12 +21,14 @@ public sealed class CreateCompany(
         Context context,
         IEnvService env,
         ICreateRangeCompanyUser createRangeCompanyUser,
+        ICreateVerification createVerification,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IEmailService emailService
     ) : CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
     private readonly IEnvService _env = env;
+    private readonly ICreateVerification _createVerification = createVerification;
     private readonly ICreateRangeCompanyUser _createRangeCompanyUser = createRangeCompanyUser;
     private readonly IEmailService _emailService = emailService;
 
@@ -35,10 +37,11 @@ public sealed class CreateCompany(
         await Validate(input, userIdAuth, isCreate: true);
 
         Company company = await Save(input);
+        Verification verification = await SaveVerification(company);
 
         await SaveCompanyFirstAdministrator(userIdAuth, company);
 
-        await SendEmail(userIdAuth, company);
+        await SendEmail(userIdAuth, company, verification);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -54,12 +57,18 @@ public sealed class CreateCompany(
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(7);
         company.IsAccountVerified = false;
-        company.VerifyToken = GenerateSafeToken32Bytes(urlSafe: true);
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
 
         return company;
+    }
+
+    private async Task<Verification> SaveVerification(Company input)
+    {
+        Verification verification = await _createVerification.Execute<Company>(entityId: input.CompanyId, verificationType: VerificationTypeEnum.Company);
+
+        return verification;
     }
 
     private async Task SaveCompanyFirstAdministrator(Guid userIdAuth, Company input)
@@ -76,15 +85,15 @@ public sealed class CreateCompany(
         _ = await _createRangeCompanyUser.Execute(userIdAuth, companyUsers);
     }
 
-    private async Task SendEmail(Guid userIdAuth, Company company)
+    private async Task SendEmail(Guid userIdAuth, Company company, Verification verification)
     {
-        User? user = await _context.Users.
-                     AsNoTracking().
-                     Where(x => x.UserId == userIdAuth && x.Status == true).
-                     FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
+        var user = await _context.Users.
+                   AsNoTracking().
+                   Where(x => x.UserId == userIdAuth && x.Status == true).
+                   FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
 
         EnvOutput env = _env.GetUrls();
-        string verifyUrl = $"{env.UrlBackend}/Company/Verify/{company.VerifyToken}";
+        string verifyUrl = $"{env.UrlBackend}/Company/Verify/{verification.Token}";
 
         Dictionary<string, string> values = new()
         {

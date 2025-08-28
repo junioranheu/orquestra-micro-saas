@@ -16,10 +16,10 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        Company? company = await _context.Companies.
-                           AsNoTracking().
-                           Where(x => x.CompanyId == input.CompanyId && x.Status == true).
-                           FirstOrDefaultAsync() ?? throw new Exception("A empresa não foi contrada na base de dados.");
+        var company = await _context.Companies.
+                      AsNoTracking().
+                      Where(x => x.CompanyId == input.CompanyId && x.Status == true).
+                      FirstOrDefaultAsync() ?? throw new Exception("A empresa não foi contrada na base de dados.");
 
         List<CompanyUser> companyUsers = await _context.CompanyUsers.AsNoTracking().Where(x => x.CompanyId == input.CompanyId && x.Status == true).ToListAsync();
         bool isFirstAdministrator = CheckIfIsFirstAdministratorBeforeCreatingIt(companyUsers);
@@ -32,10 +32,10 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
             }
         }
 
-        CompanyUser? companyUser = await _context.CompanyUsers.
-                                   AsNoTracking().
-                                   Where(x => x.CompanyId == input.CompanyId && x.UserId == input.UserId && x.Status == true).
-                                   FirstOrDefaultAsync();
+        var companyUser = await _context.CompanyUsers.
+                          AsNoTracking().
+                          Where(x => x.CompanyId == input.CompanyId && x.UserId == input.UserId && x.Status == true).
+                          FirstOrDefaultAsync();
 
         if (isCreate)
         {
