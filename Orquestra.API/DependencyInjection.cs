@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.ResponseCompression;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Orquestra.API.Extensions;
 using Orquestra.API.Filters;
+using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Serialization;
 using System.IO.Compression;
 using System.Text.Json.Serialization;
@@ -15,6 +19,7 @@ public static class DependencyInjection
 
         AddCompression(services);
         AddControllers(services, env);
+        AddObservability(services);
         AddMisc(services);
 
         return services;
@@ -53,6 +58,19 @@ public static class DependencyInjection
                x.JsonSerializerOptions.WriteIndented = env.IsDevelopment();
                x.JsonSerializerOptions.Converters.Add(new BrasiliaDateTimeConverter());
            });
+    }
+
+    private static void AddObservability(IServiceCollection services)
+    {
+        /// Foi necessário instalar estas seguintes dependências:
+        /// OpenTelemetry
+        /// OpenTelemetry.Extensions.Hosting
+        /// OpenTelemetry.Instrumentation.AspNetCore
+        services.AddOpenTelemetry().
+            ConfigureResource(resource => resource.AddService(SystemConsts.NameApi)).
+            WithTracing(tracing => tracing.
+                AddAspNetCoreInstrumentation()
+            );
     }
 
     private static void AddMisc(IServiceCollection services)

@@ -4,6 +4,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Seed;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Diagnostics;
 
 namespace Orquestra.API;
 
@@ -17,6 +18,7 @@ public static class DependencyAppConfiguration
         AddCors(app, builder);
         AddCompression(app);
         AddAuth(app);
+        AddObservability(app);
         AddMisc(app);
         await HandleDbInitialize(app);
 
@@ -102,6 +104,38 @@ public static class DependencyAppConfiguration
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+    }
+
+    private static void AddObservability(WebApplication app)
+    {
+        ActivitySource activitySource = new(SystemConsts.NameApi);
+
+        ILogger<Program> logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+        ActivityListener listener = new()
+        {
+            ShouldListenTo = source => source.Name == "Microsoft.AspNetCore" || source.Name == SystemConsts.NameApi,
+            Sample = (ref ActivityCreationOptions<ActivityContext> options) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = activity =>
+            {
+                // Filtra métodos irrelevantes
+                string? method = activity.Tags.FirstOrDefault(t => t.Key == "http.request.method").Value?.ToString();
+                string? path = activity.Tags.FirstOrDefault(t => t.Key == "http.route").Value?.ToString();
+
+                if (method == "OPTIONS" || string.IsNullOrEmpty(path) || path.Contains("favicon") || path.Contains("health"))
+                {
+                    return;
+                }
+
+                logger.LogInformation("[{DisplayName}] {Duration}ms | {Tags}",
+                     activity.DisplayName,
+                     activity.Duration.TotalMilliseconds,
+                     string.Join(", ", activity.Tags.Where(x => x.Key.StartsWith("http") || x.Key == "server.address"))
+                );
+            }
+        };
+
+        ActivitySource.AddActivityListener(listener);
     }
 
     private static void AddMisc(WebApplication app)
