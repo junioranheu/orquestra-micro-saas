@@ -14,14 +14,19 @@ public class ConnectionFactory(IConfiguration configuration) : IConnectionFactor
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new Exception("A connection string está nula.");
+            throw new InvalidOperationException("Erro interno: a connection string está nula.");
         }
 
         return connectionString;
     }
 
-    public NpgsqlConnection GetMySqlConnection()
+    public NpgsqlConnection GetConnection()
     {
         return new NpgsqlConnection(GetConnectionString());
+    }
+
+    public string GetConnectionTypeName()
+    {
+        return nameof(NpgsqlConnection);
     }
 }

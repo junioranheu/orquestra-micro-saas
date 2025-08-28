@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Npgsql;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Orquestra.API.Extensions;
 using Orquestra.API.Filters;
 using Orquestra.Domain.Consts;
+using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Serialization;
+using System;
 using System.IO.Compression;
 using System.Text.Json.Serialization;
 
@@ -25,6 +29,7 @@ public static class DependencyInjection
         AddCaching(services);
         AddHttpContextAccessor(services);
         AddRateLimiting(services);
+        AddHealthCheck(services, builder);
 
         return services;
     }
@@ -135,5 +140,46 @@ public static class DependencyInjection
     private static void AddRateLimiting(IServiceCollection services)
     {
         services.AddUserRateLimiting();
+    }
+
+    private static void AddHealthCheck(IServiceCollection services, WebApplicationBuilder builder)
+    {
+        ConnectionFactory connection = new(builder.Configuration);
+        string con = connection.GetConnectionString();
+        string type = connection.GetConnectionTypeName();
+
+        string front = builder.Configuration["Urls:Production:Frontend"] ?? string.Empty;
+        Uri frontUri = new(front);
+        string domain = frontUri.Host;
+
+        services.AddHealthChecks().
+            AddCheck($"Banco de dados {type}", () =>
+            {
+                try
+                {
+                    using NpgsqlConnection connection = new(con);
+                    connection.Open();
+
+                    return HealthCheckResult.Healthy("Banco de dados conectado com sucesso.");
+                }
+                catch (Exception ex)
+                {
+                    return HealthCheckResult.Unhealthy($"Falha ao conectar ao banco de dados: {ex.Message}");
+                }
+            }).
+            AddCheck($"Front-end {domain}", () =>
+            {
+                try
+                {
+                    using HttpClient client = new();
+                    HttpResponseMessage response = client.GetAsync(front).Result;
+
+                    return response.IsSuccessStatusCode ? HealthCheckResult.Healthy("Front-end conectado com sucesso.") : HealthCheckResult.Unhealthy("Front-end indisponível");
+                }
+                catch (Exception ex)
+                {
+                    return HealthCheckResult.Unhealthy($"Erro ao acessar front-end: {ex.Message}");
+                }
+            });
     }
 }

@@ -5,5 +5,6 @@ namespace Orquestra.Infrastructure.Factory;
 public interface IConnectionFactory
 {
     string GetConnectionString();
-    NpgsqlConnection GetMySqlConnection();
+    NpgsqlConnection GetConnection();
+    string GetConnectionTypeName();
 }

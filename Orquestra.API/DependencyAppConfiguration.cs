@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Orquestra.API.Middlewares;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Seed;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace Orquestra.API;
 
@@ -22,6 +24,7 @@ public static class DependencyAppConfiguration
         AddCaching(app);
         AddRateLimiting(app);
         AddDeveloperExceptionPage(app);
+        AddHealthCheck(app);
         await HandleDbInitialize(app);
 
         return app;
@@ -158,6 +161,29 @@ public static class DependencyAppConfiguration
         {
             app.UseDeveloperExceptionPage();
         }
+    }
+
+    private static void AddHealthCheck(WebApplication app)
+    {
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = async (context, report) =>
+            {
+                context.Response.ContentType = "application/json";
+
+                string result = JsonSerializer.Serialize(new
+                {
+                    status = report.Status.ToString(),
+                    checks = report.Entries.Select(x => new {
+                        name = x.Key,
+                        status = x.Value.Status.ToString(),
+                        description = x.Value.Description
+                    })
+                });
+
+                await context.Response.WriteAsync(result);
+            }
+        });
     }
 
     private static async Task HandleDbInitialize(WebApplication app)
