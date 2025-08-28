@@ -1,51 +1,105 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Npgsql;
 using Orquestra.Infrastructure.Factory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Orquestra.UnitTests.Tests.Factory;
 
 public sealed class ConnectionFactoryTests
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _config;
 
     public ConnectionFactoryTests()
     {
-        _configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory()) // precisa apontar pra pasta onde tá o appsettings.json
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddEnvironmentVariables()
-            .Build();
+        Dictionary<string, string> inMemorySettings = new()
+        {
+            { "SystemSettings:ConnectionStringName", "Default" },
+            { "ConnectionStrings:Default", "Server=127.0.0.1;Database=test;User Id=test;Password=123;" }
+        };
+
+        _config = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings!).Build();
     }
 
     [Fact]
-    public void Should_GetConnectionString_FromAppSettings()
+    public void GetConnectionString_ShouldReturnConnectionFromAppSettings()
     {
-        // Arrange
-        var factory = new ConnectionFactory(_configuration);
+        // Arrange;
+        Dictionary<string, string> inMemorySettings = new()
+        {
+            { "SystemSettings:ConnectionStringName", "Default" },
+            { "ConnectionStrings:Default", "Server=127.0.0.1;Database=test;User Id=test;Password=123;" }
+        };
 
-        // Act
-        var connectionString = factory.GetConnectionString();
+        IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings!).Build();
+        ConnectionFactory factory = new(config);
 
-        // Assert
-        Assert.False(string.IsNullOrWhiteSpace(connectionString));
+        // Act;
+        string connStr = factory.GetConnectionString();
+
+        // Assert;
+        Assert.Equal("Server=127.0.0.1;Database=test;User Id=test;Password=123;", connStr);
     }
 
     [Fact]
-    public void Should_CreateRealConnection()
+    public void GetConnectionString_ShouldReturnConnectionFromUserSecrets()
     {
         // Arrange
-        var factory = new ConnectionFactory(_configuration);
+        Dictionary<string, string> inMemorySettings = new()
+        {
+            { "SystemSettings:ConnectionStringName", "SecretsConn" },
+            { "ConnectionStrings:SecretsConn", "Server=127.0.0.1;Database=secrets;User Id=secret;Password=321;" }
+        };
 
-        // Act
-        using var conn = factory.GetConnection();
-        conn.Open();
+        IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings!).Build();
+        ConnectionFactory factory = new(config);
 
-        // Assert
-        Assert.Equal("NpgsqlConnection", factory.GetConnectionTypeName());
-        Assert.Equal(System.Data.ConnectionState.Open, conn.State);
+        // Act;
+        string connStr = factory.GetConnectionString();
+
+        // Assert;
+        Assert.Equal("Server=127.0.0.1;Database=secrets;User Id=secret;Password=321;", connStr);
+    }
+
+    [Fact]
+    public void GetConnectionString_ShouldThrow_WhenConnectionStringIsMissing()
+    {
+        // Arrange;
+        Dictionary<string, string> inMemorySettings = new()
+        {
+            { "SystemSettings:ConnectionStringName", "MissingConn" }
+        };
+
+        IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings!).Build();
+        ConnectionFactory factory = new(config);
+
+        // Act & Assert;
+        Assert.Throws<InvalidOperationException>(() => factory.GetConnectionString());
+    }
+
+    [Fact]
+    public void GetConnection_ShouldReturnNpgsqlConnection()
+    {
+        // Arrange;
+        ConnectionFactory factory = new(_config);
+
+        // Act;
+        NpgsqlConnection connection = factory.GetConnection();
+
+        // Assert;
+        Assert.NotNull(connection);
+        Assert.IsType<NpgsqlConnection>(connection);
+        Assert.Equal(_config.GetConnectionString("Default"), connection.ConnectionString);
+    }
+
+    [Fact]
+    public void GetConnectionTypeName_ShouldReturnNpgsqlConnectionName()
+    {
+        // Arrange;
+        ConnectionFactory factory = new(_config);
+
+        // Act;
+        string typeName = factory.GetConnectionTypeName();
+
+        // Assert;
+        Assert.Equal(nameof(NpgsqlConnection), typeName);
     }
 }
