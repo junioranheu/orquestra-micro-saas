@@ -9,7 +9,6 @@ using Orquestra.API.Filters;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Serialization;
-using System;
 using System.IO.Compression;
 using System.Text.Json.Serialization;
 

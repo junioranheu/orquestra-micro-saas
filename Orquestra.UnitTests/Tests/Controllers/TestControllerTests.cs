@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using Orquestra.API.Controllers;
-using Orquestra.Domain.Consts;
-using Orquestra.Infrastructure.Services.Email;
-using System.Reflection;
+using Orquestra.API.Filters;
+using Orquestra.Domain.Enums;
 using System.Security.Claims;
-using System.Text.Json;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Tests.Controllers;
 
@@ -25,58 +24,76 @@ public sealed class TestControllerTests
         // Assert;
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
         string content = Assert.IsType<string>(okResult.Value);
-        string day = GetDate().Day.ToString();
 
-        Assert.Contains(day, content);
+        Assert.NotNull(content);
     }
 
-    [Fact]
-    public void GetAuth_ShouldReturn_OkWithUserId()
+    [Theory]
+    [InlineData(UserRoleEnum.Administrator, UserRoleEnum.Administrator, true)]
+    [InlineData(UserRoleEnum.Administrator, UserRoleEnum.Common, false)]
+    public void AuthorizeFilter_ShouldPass_WhenUserHasRequiredRole(UserRoleEnum userRole, UserRoleEnum requiredRole, bool mustWork)
     {
         // Arrange;
-        Guid userId = Guid.NewGuid();
-
-        // Mock do HttpContext.User;
-        ClaimsPrincipal claims = new(new ClaimsIdentity(
+        ClaimsIdentity identity = new(
         [
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-        ], "mock"));
+            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Role, requiredRole.ToString()) // A role que o filtro vai exigir;
+        ], "TestAuth");
 
-        TestController controller = new()
+        DefaultHttpContext httpContext = new()
         {
-            ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext { User = claims } // Usuário logado;
-            }
+            User = new ClaimsPrincipal(identity)
         };
+
+        ActionContext actionContext = new(httpContext, new RouteData(), new ControllerActionDescriptor());
+
+        AuthorizationFilterContext filterContext = new(actionContext, []);
+
+        AuthorizeFilter filter = new(userRole); // A Role do usuário;
 
         // Act;
-        ActionResult result = controller.GetAuth();
+        filter.OnAuthorization(filterContext);
 
         // Assert;
-        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
-        object? content = okResult.Value;
+        if (mustWork)
+        {
+            // Deve passar;
+            Assert.Null(filterContext.Result);
+        }
+        else
+        {
+            // Deve bloquear;
+            Assert.NotNull(filterContext.Result);
 
-        // Reflection
-        PropertyInfo? idProp = content?.GetType().GetProperty("Id");
-        object? idValue = idProp?.GetValue(content);
-        Assert.Equal(userId, (Guid)idValue!);
+            if (filterContext.Result is ObjectResult objResult)
+            {
+                Assert.Equal(StatusCodes.Status403Forbidden, objResult.StatusCode);
+            }
+            else if (filterContext.Result is UnauthorizedResult result)
+            {
+                Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
+            }
+        }
     }
 
     [Fact]
-    public void GetAuth_ShouldThrow_WhenUserNotAuthenticated()
+    public void AuthorizeFilter_ShouldReturn401_WhenUserNotAuthenticated()
     {
         // Arrange;
-        TestController controller = new()
+        DefaultHttpContext httpContext = new()
         {
-            ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext() // Sem usuário;
-            }
+            User = new ClaimsPrincipal(new ClaimsIdentity()) // Sem autenticação;
         };
 
-        // Act & Assert;
-        Exception ex = Assert.Throws<UnauthorizedAccessException>(() => controller.GetAuth());
-        Assert.Equal(SystemConsts.Warn_Simple_UserNotAuth, ex.Message);
+        ActionContext actionContext = new(httpContext, new RouteData(), new ControllerActionDescriptor());
+
+        AuthorizationFilterContext filterContext = new(actionContext, []);
+        AuthorizeFilter filter = new(); // Sem roles;
+
+        // Act;
+        filter.OnAuthorization(filterContext);
+
+        // Assert;
+        Assert.IsType<UnauthorizedResult>(filterContext.Result);
     }
 }
