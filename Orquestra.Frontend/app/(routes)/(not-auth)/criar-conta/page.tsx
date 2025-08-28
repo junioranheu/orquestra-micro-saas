@@ -4,16 +4,16 @@ import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.scss';
 
-export default function Erro403() {
+export default function CriarConta() {
 
-    useTitle('Sem acesso');
+    useTitle('Criar conta');
 
     const router = useRouter();
     const [auth, setAuth] = useUserContext();
 
     return (
         <section className={styles.main}>
-            <h1>Sem acesso</h1>
+            <h1>Criar conta</h1>
         </section>
     )
 }

@@ -46,6 +46,66 @@ export default function Dashboard() {
             <Button label={'/log'} handleFunction={() => handleLog()} />
             <br />
             <Button label={'Logout'} handleFunction={() => handleLogout()} />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
+            <h1>a</h1>
+            <br />
         </section>
     )
 }

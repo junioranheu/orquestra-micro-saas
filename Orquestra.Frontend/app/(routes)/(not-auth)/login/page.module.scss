@@ -74,26 +74,6 @@
     }
 }
 
-.loading {
-    // background-color: orange !important;
-    background-color: #e5e5e5;
-    background-image: var(--azure-bg-color);
-    height: 100vh;
-    overflow: hidden;
-    text-align: center;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-
-    h3 {
-        // background-color: orange;
-        line-height: 1.75rem;
-    }
-}
-
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1281px) {}
