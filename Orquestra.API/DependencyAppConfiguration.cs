@@ -20,6 +20,7 @@ public static class DependencyAppConfiguration
         AddAuth(app);
         AddObservability(app);
         AddCaching(app);
+        AddRateLimiting(app);
         AddDeveloperExceptionPage(app);
         await HandleDbInitialize(app);
 
@@ -144,6 +145,10 @@ public static class DependencyAppConfiguration
     private static void AddCaching(WebApplication app)
     {
         app.UseResponseCaching();
+    }
+
+    private static void AddRateLimiting(WebApplication app)
+    {
         app.UseRateLimiter();
     }
 
