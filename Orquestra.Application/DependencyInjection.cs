@@ -27,6 +27,7 @@ public static class DependencyInjection
     {
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
+        builder.Logging.AddAzureWebAppDiagnostics();
     }
 
     private static void AddUseCases(IServiceCollection services)

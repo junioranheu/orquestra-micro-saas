@@ -153,7 +153,7 @@ export default function Login() {
                 text={`A plataforma ${SYSTEM.NAME} utiliza cookies para oferecer uma melhor experiência. Ao continuar navegando, você concorda com o uso de cookies.`}
                 cookieSecurity={true}
                 hideOnScrollDown={false}
-                rejectButtonText='Aceitar obrigatórios'
+                rejectButtonText='Aceitar cookies obrigatórios'
                 acceptButtonText='Aceitar todos os cookies'
                 onAccept={() => null}
                 onReject={() => null}
