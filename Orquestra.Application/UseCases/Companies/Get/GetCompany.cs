@@ -11,7 +11,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<CompanyOutput?> Execute(Guid userIdAuth, Guid companyId)
+    public async Task<CompanyOutput> Execute(Guid userIdAuth, Guid companyId)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
@@ -19,12 +19,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
-                     FirstOrDefaultAsync();
-
-        if (result is null)
-        {
-            return new();
-        }
+                     FirstOrDefaultAsync() ?? throw new Exception("A empresa não foi encontrada na base de dados.");
 
         if (!result.Status)
         {

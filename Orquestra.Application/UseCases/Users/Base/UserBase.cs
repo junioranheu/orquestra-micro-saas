@@ -1,6 +1,5 @@
 ﻿using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
-using Orquestra.Domain.Entities;
 using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -24,7 +23,7 @@ public partial class UserBase(IGetUser getUser)
 
         if (isCreate)
         {
-            (User? checkUserByEmail, string _) = await _getUser.Execute(new UserInput() { Email = input.Email });
+            (UserOutput? checkUserByEmail, string _) = await _getUser.Execute(new UserInput() { Email = input.Email });
 
             if (checkUserByEmail is not null)
             {
@@ -34,7 +33,7 @@ public partial class UserBase(IGetUser getUser)
 
         if (!isCreate)
         {
-            (User? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userIdAuth });
+            (UserOutput? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userIdAuth });
 
             if (checkUserById is not null && userIdAuth != checkUserById?.UserId)
             {

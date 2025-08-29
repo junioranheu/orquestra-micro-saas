@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
@@ -11,7 +12,7 @@ public sealed class GetUser(Context context) : IGetUser
 {
     private readonly Context _context = context;
 
-    public async Task<(User? user, string passwordEncrypted)> Execute(UserInput input)
+    public async Task<(UserOutput? output, string passwordEncrypted)> Execute(UserInput input)
     {
         input.Email = input.Email?.Trim().ToLowerInvariant();
 
@@ -29,25 +30,37 @@ public sealed class GetUser(Context context) : IGetUser
 
         if (!result.Status)
         {
-            throw new UnauthorizedAccessException("A conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.");
+            throw new UnauthorizedAccessException(SystemConsts.Warn_NeedToVerifyUser);
         }
 
         string password = result.Password;
-        result.Password = string.Empty;
+        var output = result.Adapt<UserOutput>();
 
-        return (result, password);
+        return (output, password);
     }
 
-    public async Task<UserOutput> Execute(Guid userId, string email)
+    public async Task<UserOutput> Execute(Guid? userId, string? email = "", bool throwIfStatusFalse)
     {
+        if (!string.IsNullOrEmpty(email))
+        {
+            email = email.Trim().ToLowerInvariant();
+        }
+
         var result = await _context.Users.
                      AsNoTracking().
-                     Where(x => x.UserId == userId && x.Status == true).
-                     FirstOrDefaultAsync();
+                     Where(x => 
+                        (x.UserId == Guid.Empty || x.UserId == userId) &&
+                        (string.IsNullOrEmpty(x.Email) || x.Email == email)
+                     ).FirstOrDefaultAsync();
 
         if (result is null)
         {
             return new();
+        }
+
+        if (throwIfStatusFalse && !result.Status)
+        {
+            throw new UnauthorizedAccessException(SystemConsts.Warn_NeedToVerifyUser);
         }
 
         var output = result.Adapt<UserOutput>();

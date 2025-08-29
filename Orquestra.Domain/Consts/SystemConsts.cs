@@ -1,4 +1,6 @@
-﻿namespace Orquestra.Domain.Consts;
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Orquestra.Domain.Consts;
 
 public static class SystemConsts
 {
@@ -21,6 +23,7 @@ public static class SystemConsts
     public const string CookieRefreshedTokenName = "auth_refreshedToken";
 
     public const string Warn_Simple_UserNotAuth = "Usuário não autenticado.";
+    public const string Warn_NeedToVerifyUser = "A conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.";
     public const string Warn_NeedToVerifyCompany = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
     public const string Warn_VerifyTokenInvalid = "Código de verificação inválido ou inexistente.";
 

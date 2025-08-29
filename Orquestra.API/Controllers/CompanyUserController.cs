@@ -30,27 +30,12 @@ public class CompanyUserController(
 
     [AuthorizeFilter]
     [HttpPost("InviteUser")]
-    public async Task<ActionResult> InviteUser(string email)
+    public async Task<ActionResult> InviteUser(Guid companyId, string email)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        CompanyUserOutput output = await _invite.Execute(userIdAuth, email);
+        await _invite.Execute(userIdAuth, companyId, email);
 
-        return Ok(output);
-    }
-
-    [AuthorizeFilter]
-    [HttpPost("CreateRange")]
-    public async Task<ActionResult> CreateRange([FromBody] List<CompanyUserInput> input)
-    {
-        if (input.Count == 0)
-        {
-            throw new ArgumentException($"A lista de usuários não pode estar vazia.");
-        }
-
-        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        List<CompanyUserOutput> output = await _createRange.Execute(userIdAuth, input);
-
-        return Ok(output);
+        return NoContent();
     }
 
     [AuthorizeFilter]
