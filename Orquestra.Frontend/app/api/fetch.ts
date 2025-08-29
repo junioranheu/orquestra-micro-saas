@@ -133,8 +133,18 @@ export const Fetch = {
             // Bad request (400) ou Internal error (500) ou Forbidden (403);
             if (response.status === 400 || response.status === 500 || response.status === 403) {
                 const resError = await response.json();
-                const resErrorStr = resError?.messages?.[0] ?? resError ?? response.statusText;
+                let resErrorStr;
+
+                if (resError?.messages?.length) {
+                    resErrorStr = resError.messages[0];
+                } else if (typeof resError === 'string') {
+                    resErrorStr = resError;
+                } else {
+                    resErrorStr = JSON.stringify(resError) || response.statusText;
+                }
+
                 swal({ str: resErrorStr, icon: 'error' });
+                return;
             }
 
             // No Content (204);
@@ -146,6 +156,7 @@ export const Fetch = {
 
             if (!response.ok) {
                 toast({ content: responseJson.Messages, ms: 7500 });
+                return;
             }
 
             return responseJson;
@@ -154,8 +165,8 @@ export const Fetch = {
                 setIsRequestLoading(false);
             }
 
-            const isApiOffline = error instanceof TypeError || (typeof error?.message === "string" && error.message.includes("Failed to fetch")) || (typeof error?.code === "string" && error.code === "ECONNREFUSED");
-            // console.log(isApiOffline);
+            const isApiOffline = error instanceof TypeError || (typeof error?.code === 'string' && error.code === 'ECONNREFUSED');
+            // console.log(isApiOffline, error);
 
             if (isApiOffline) {
                 swal({

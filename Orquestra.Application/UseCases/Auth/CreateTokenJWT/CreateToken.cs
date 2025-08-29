@@ -31,9 +31,9 @@ public sealed class CreateToken(
             throw new Exception("Usuário não encontrado.");
         }
 
-        if (!CheckPassword(password: input.Password, encryptedPassword: passwordEncrypted))
+        if (!CheckPassword(password: input.Password, passwordEncrypted: passwordEncrypted))
         {
-            throw new Exception("E-mail ou senha incorretos.");
+            throw new UnauthorizedAccessException("E-mail ou senha incorretos.");
         }
 
         (string token, RefreshToken refreshToken, CookieOptions cookieOptions) = _jwtTokenGenerator.GenerateToken(userIdAuth: user.UserId, name: user.FullName, email: user.Email, role: user.Role);

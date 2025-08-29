@@ -13,9 +13,9 @@ public static class Encrypt
     /// <summary>
     /// Verifica a senha;
     /// </summary>
-    public static bool CheckPassword(string password, string encryptedPassword)
+    public static bool CheckPassword(string password, string passwordEncrypted)
     {
-        if (!BCrypt.Net.BCrypt.Verify(password, encryptedPassword))
+        if (!BCrypt.Net.BCrypt.Verify(password, passwordEncrypted))
         {
             return false;
         }
