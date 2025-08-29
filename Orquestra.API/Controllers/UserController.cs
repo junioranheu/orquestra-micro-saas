@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
-using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Application.UseCases.Users.Create;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Application.UseCases.Users.Update;
+using Orquestra.Application.UseCases.Users.Verify;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Services.Env;
@@ -21,14 +21,14 @@ public class UserController(
         IGetUser get,
         ICreateUser create,
         IUpdateUser update,
-        IVerifyCompany verify
+        IVerifyUser verify
     ) : BaseController<UserController>
 {
     private readonly IEnvService _env = env;
     private readonly IGetUser _get = get;
     private readonly ICreateUser _create = create;
     private readonly IUpdateUser _update = update;
-    private readonly IVerifyCompany _verify = verify;
+    private readonly IVerifyUser _verify = verify;
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet]

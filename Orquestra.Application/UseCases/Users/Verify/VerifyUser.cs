@@ -25,11 +25,6 @@ public sealed class VerifyUser(
                      Where(x => x.UserId == verification.EntityId).
                      FirstOrDefaultAsync() ?? throw new Exception($"O token {token} não pertence a nenhum usuário.");
 
-        if (!result.Status)
-        {
-            throw new Exception("Este token pertence a um usuário desativado na base de dados.");
-        }
-
         // Salvar alteração;
         result.Status = true;
 
