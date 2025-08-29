@@ -78,7 +78,8 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             observations.Add($"Agendamento consta {GetStatusDesc(ScheduleStatusEnum.Completed)}, mas a data ainda não ocorreu.");
         }
 
-        var conflicts = await _context.Schedules.AsNoTracking().
+        var conflicts = await _context.Schedules.
+                        AsNoTracking().
                         Where(x =>
                            x.CompanyId == schedule.CompanyId &&
                            x.Date.Date == schedule.Date.Date && // Mesma data;
@@ -105,7 +106,10 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             return [];
         }
 
-        var result = await _context.Users.AsNoTracking().Where(x => users!.Contains(x.UserId)).ToListAsync();
+        var result = await _context.Users.
+                     AsNoTracking().
+                     Where(x => users!.Contains(x.UserId) && x.Status == true).
+                     ToListAsync();
 
         if (result?.Count == 0)
         {
@@ -137,6 +141,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         foreach (var item in usersIds)
         {
             bool existAndIsLinkedToCompany = await _context.CompanyUsers.
+                                             AsNoTracking().
                                              AnyAsync(x => x.CompanyId == input.CompanyId && x.UserId == item && x.Status == true);
 
             if (existAndIsLinkedToCompany)

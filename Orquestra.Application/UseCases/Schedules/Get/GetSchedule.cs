@@ -18,10 +18,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
                      Include(x => x.Client).
                      Include(x => x.Company).
                      AsNoTracking().
-                     Where(x =>
-                        x.Status == true &&
-                        x.ScheduleId == scheduleId
-                     ).
+                     Where(x => x.ScheduleId == scheduleId && x.Status == true).
                      FirstOrDefaultAsync() ?? throw new Exception($"Não foi possível localizar este horário agendado. ({scheduleId})");
 
         Guid companyId = result.CompanyId;

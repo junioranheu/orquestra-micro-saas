@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
-using Orquestra.Application.UseCases.Users.Shared;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Companies.Get;
@@ -43,6 +41,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         var result = await _context.Companies.
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
+                     Where(x => x.Status == true).
                      ToListAsync();
 
         var output = result.Adapt<List<CompanyOutput>>();

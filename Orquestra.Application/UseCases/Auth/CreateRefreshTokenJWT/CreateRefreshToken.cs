@@ -97,10 +97,10 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
 
     private async Task<User> GetUser(Guid userIdAuth)
     {
-        User? user = await _context.Users.
-                     AsNoTracking().
-                     Where(x => x.UserId == userIdAuth).
-                     FirstOrDefaultAsync() ?? throw new Exception($"Usuário do id {userIdAuth} não foi encontrado na base de dados.");
+        var user = await _context.Users.
+                   AsNoTracking().
+                   Where(x => x.UserId == userIdAuth).
+                   FirstOrDefaultAsync() ?? throw new Exception($"Usuário do id {userIdAuth} não foi encontrado na base de dados.");
 
         if (!user.Status)
         {
