@@ -110,7 +110,7 @@ public class AuthController(
         // Current main company;
         CompanyOutput? currentMainCompany = companyOutput?.
                                             Where(x => x.CompanyUsers!.Any(
-                                                y => y.UserId == userIdAuth && y.IsCurrentMainCompanyUser == true && x.IsAccountVerified == true
+                                                y => y.UserId == userIdAuth && y.IsCurrentMainCompanyUser == true && x.Status == true
                                             )).FirstOrDefault();
 
         CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();

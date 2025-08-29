@@ -39,7 +39,7 @@ public sealed class GetUser(Context context) : IGetUser
         return (output, password);
     }
 
-    public async Task<UserOutput> Execute(Guid? userId, string? email = "", bool throwIfStatusFalse)
+    public async Task<UserOutput> Execute(Guid? userId, string? email = "", bool throwIfStatusFalse = true)
     {
         if (!string.IsNullOrEmpty(email))
         {

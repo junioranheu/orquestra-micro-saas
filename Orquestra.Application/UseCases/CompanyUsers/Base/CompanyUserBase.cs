@@ -3,6 +3,7 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.Base;
@@ -18,8 +19,10 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
 
         var company = await _context.Companies.
                       AsNoTracking().
-                      Where(x => x.CompanyId == input.CompanyId && x.Status == true).
-                      FirstOrDefaultAsync() ?? throw new Exception("A empresa não foi contrada na base de dados.");
+                      Where(x =>
+                        x.CompanyId == input.CompanyId &&
+                        (input.CompanyUserRole == CompanyUserRoleEnum.Administrator || x.Status == true)
+                      ).FirstOrDefaultAsync() ?? throw new Exception("A empresa não foi contrada na base de dados.");
 
         List<CompanyUser> companyUsers = await _context.CompanyUsers.AsNoTracking().Where(x => x.CompanyId == input.CompanyId && x.Status == true).ToListAsync();
         bool isFirstAdministrator = CheckIfIsFirstAdministratorBeforeCreatingIt(companyUsers);
