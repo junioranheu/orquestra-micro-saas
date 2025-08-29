@@ -30,13 +30,8 @@ public sealed class VerifyCompanyUser(
             throw new Exception("Este token pertence a um um usuário desativado na base de dados.");
         }
 
-        if (result.IsAccountVerified)
-        {
-            throw new Exception("O usuário já foi verificado.");
-        }
-
         // Salvar alteração;
-        result.IsAccountVerified = true;
+        result.Status = true;
 
         _context.Update(result);
         await _context.SaveChangesAsync();

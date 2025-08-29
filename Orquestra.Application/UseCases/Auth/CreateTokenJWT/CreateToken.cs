@@ -33,11 +33,6 @@ public sealed class CreateToken(
             throw new Exception("E-mail ou senha incorretos.");
         }
 
-        if (!output.Status)
-        {
-            throw new Exception("Usuário desativado.");
-        }
-
         (string token, RefreshToken refreshToken, CookieOptions cookieOptions) = _jwtTokenGenerator.GenerateToken(userIdAuth: output.UserId, name: output.FullName, email: output.Email, role: output.Role);
 
         // Revogar todos os refresh tokens antigos, caso existam;

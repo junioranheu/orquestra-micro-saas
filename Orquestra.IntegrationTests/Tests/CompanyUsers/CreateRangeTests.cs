@@ -61,7 +61,7 @@ public sealed class CreateRangeTests
 
         Assert.NotNull(created);
         Assert.Equal(CompanyUserRoleEnum.Administrator, created!.CompanyUserRole);
-        Assert.True(created.IsAccountVerified);
+        Assert.True(created.Status);
         Assert.True(created.IsCurrentMainCompanyUser);
     }
 
@@ -104,7 +104,7 @@ public sealed class CreateRangeTests
 
         Assert.NotNull(created);
         Assert.Equal(CompanyUserRoleEnum.Member, created.CompanyUserRole);
-        Assert.False(created.IsAccountVerified);
+        Assert.False(created.Status);
         Assert.False(created.IsCurrentMainCompanyUser);
     }
 
@@ -167,11 +167,11 @@ public sealed class CreateRangeTests
 
         // Como foi batch, o admin NÃO recebe auto-verificação/flag de main;
         Assert.Equal(CompanyUserRoleEnum.Administrator, createdAdmin.CompanyUserRole);
-        Assert.False(createdAdmin.IsAccountVerified);
+        Assert.False(createdAdmin.Status);
         Assert.False(createdAdmin.IsCurrentMainCompanyUser);
 
         Assert.Equal(CompanyUserRoleEnum.Member, createdMember.CompanyUserRole);
-        Assert.False(createdMember.IsAccountVerified);
+        Assert.False(createdMember.Status);
         Assert.False(createdMember.IsCurrentMainCompanyUser);
     }
 
@@ -296,7 +296,7 @@ public sealed class CreateRangeTests
             CompanyId = company.CompanyId,
             UserId = existingAdmin.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Administrator,
-            IsAccountVerified = false,
+            Status = false,
             IsCurrentMainCompanyUser = false
         };
 

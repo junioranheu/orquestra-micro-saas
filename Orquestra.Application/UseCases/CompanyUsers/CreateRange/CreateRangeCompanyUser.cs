@@ -60,6 +60,19 @@ public sealed class CreateRangeCompanyUser(
         await _context.AddRangeAsync(companyUsers);
         await _context.SaveChangesAsync();
 
+        // Se não fose adm (porque ele já tem que ser verificado)...
+        // Forçar a atualização para o false (burlar o Context/SaveChangesAsync);
+        if (!isFirstAdministrator)
+        {
+            foreach (var item in companyUsers)
+            {
+                item.Status = false;
+            }
+
+            _context.UpdateRange(companyUsers);
+            await _context.SaveChangesAsync();
+        }
+
         // Se é o primeiro administrador, force novamente settar o IsCurrentMainCompanyUser como true e atualize os registros antigos para false;
         if (isFirstAdministrator)
         {
@@ -116,7 +129,7 @@ public sealed class CreateRangeCompanyUser(
             return false;
         }
 
-        first.IsAccountVerified = true;
+        first.Status = true;
         first.IsCurrentMainCompanyUser = true;
 
         return true;

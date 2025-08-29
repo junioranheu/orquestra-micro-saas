@@ -9,7 +9,7 @@ public sealed class CreateVerification(Context context) : ICreateVerification
 {
     private readonly Context _context = context;
 
-    public async Task<Verification> Execute<T>( Guid entityId, VerificationTypeEnum verificationType, string? reference = "")
+    public async Task<Verification> Execute<T>(Guid entityId, VerificationTypeEnum verificationType, string? reference = "")
     {
         Verification verification = new()
         {

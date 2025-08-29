@@ -11,8 +11,10 @@ public partial class UserBase(IGetUser getUser)
     private readonly IGetUser _getUser = getUser;
 
     public async Task Validate(UserInput input, Guid userIdAuth, bool isCreate)
-    {
+    {                               
         #region email
+        input.Email = input.Email?.Trim().ToLowerInvariant();
+
         bool checkEmail = IsEmailValid(input.Email ?? string.Empty);
 
         if (!checkEmail)

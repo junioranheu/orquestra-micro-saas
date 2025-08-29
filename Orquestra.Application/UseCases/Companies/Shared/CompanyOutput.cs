@@ -60,7 +60,7 @@ public sealed class CompanyOutput
     #endregion
 
     #region extras
-    public bool Status { get; set; } = true;
+    public bool Status { get; set; } 
 
     public DateTime CreatedDate { get; set; }
 
@@ -85,6 +85,4 @@ public sealed class CompanySimpleOutput
     public DateTime PlanStartDate { get; set; }
 
     public DateTime PlanEndDate { get; set; }
-
-    public bool IsAccountVerified { get; set; } = false;
 }

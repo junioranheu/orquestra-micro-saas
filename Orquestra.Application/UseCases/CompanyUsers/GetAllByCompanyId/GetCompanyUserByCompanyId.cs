@@ -17,8 +17,8 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
                      AsNoTracking().
                      Where(x =>
                         (companyId == Guid.Empty || x.CompanyId == companyId) &&
-                        ((userId == Guid.Empty || userId == null) || x.UserId == userId) &&
-                        x.Status == true
+                        ((userId == Guid.Empty || userId == null) || x.UserId == userId) 
+                        // x.Status == true // Essa query NÃO deve buscar por Status true, porque senão pode cagar tudo;
                      ).
                      GroupBy(x => new { x.CompanyId, x.UserId, x.CompanyUserRole }).
                      Select(g => g.FirstOrDefault()).

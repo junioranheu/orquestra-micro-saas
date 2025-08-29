@@ -37,6 +37,7 @@ public sealed class CreateCompany(
         await Validate(input, userIdAuth, isCreate: true);
 
         Company company = await Save(input);
+
         Verification verification = await SaveVerification(company);
 
         await SaveCompanyFirstAdministrator(userIdAuth, company);
@@ -56,9 +57,13 @@ public sealed class CreateCompany(
         company.CompanySituation = CompanySituationEnum.ApprovedButNotPaid;
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(7);
-        company.IsAccountVerified = false;
 
         await _context.AddAsync(company);
+        await _context.SaveChangesAsync();
+
+        // Forçar a atualização para o false (burlar o Context/SaveChangesAsync);
+        company.Status = false;
+        _context.Update(company);
         await _context.SaveChangesAsync();
 
         return company;

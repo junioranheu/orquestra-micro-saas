@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.Users.Create;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Update;
+using Orquestra.Application.UseCases.Users.Verify;
 
 namespace Orquestra.Application.UseCases.Users;
 
@@ -12,6 +13,7 @@ public static class DependencyInjection
         services.AddScoped<IGetUser, GetUser>();
         services.AddScoped<ICreateUser, CreateUser>();
         services.AddScoped<IUpdateUser, UpdateUser>();
+        services.AddScoped<IVerifyUser, VerifyUser>();
 
         return services;
     }

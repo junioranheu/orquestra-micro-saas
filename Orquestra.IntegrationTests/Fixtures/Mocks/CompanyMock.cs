@@ -26,7 +26,7 @@ public static class CompanyMock
             PlanType = PlanTypeEnum.Basic,
             PlanStartDate = GetDate(),
             PlanEndDate = GetDate().AddDays(7),
-            IsAccountVerified = true
+            Status = true
         };
     }
 

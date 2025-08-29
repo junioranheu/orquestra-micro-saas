@@ -13,6 +13,8 @@ public sealed class GetUser(Context context) : IGetUser
 
     public async Task<(User? user, string passwordEncrypted)> Execute(UserInput input)
     {
+        input.Email = input.Email?.Trim().ToLowerInvariant();
+
         var result = await _context.Users.
                      AsNoTracking().
                      Where(x =>
@@ -24,6 +26,11 @@ public sealed class GetUser(Context context) : IGetUser
         if (result is null)
         {
             return (null, string.Empty);
+        }
+
+        if (!result.Status)
+        {
+            throw new UnauthorizedAccessException("A conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.");
         }
 
         string password = result.Password;

@@ -1,8 +1,9 @@
-﻿using Orquestra.Domain.Enums;
+﻿using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.Companies.Shared;
 
-public sealed class CompanyInput
+public sealed class CompanyInput : Audit
 {
     #region basic
     public Guid? CompanyId { get; set; } = Guid.Empty;
@@ -36,9 +37,5 @@ public sealed class CompanyInput
 
     #region subscription
     public PlanTypeEnum PlanType { get; set; }
-    #endregion
-
-    #region status
-    public bool IsAccountVerified { get; set; } = false;
     #endregion
 }

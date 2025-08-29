@@ -1,6 +1,5 @@
 ﻿using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
-using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using System.Text.Json.Serialization;
 
@@ -18,8 +17,6 @@ public sealed class CompanyUserOutput
     public UserOutput? User { get; set; }
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
-
-    public bool IsAccountVerified { get; set; } = false;
 
     public bool IsCurrentMainCompanyUser { get; set; } = false;
 

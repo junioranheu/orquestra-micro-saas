@@ -26,7 +26,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
 
         if (!isFirstAdministrator)
         {
-            if (!company.IsAccountVerified)
+            if (!company.Status)
             {
                 throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
             }
