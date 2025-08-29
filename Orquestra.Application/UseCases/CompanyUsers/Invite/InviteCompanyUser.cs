@@ -49,7 +49,7 @@ public sealed class InviteCompanyUser(
         CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId);
         UserOutput user = await _getUser.Execute(userId: Guid.Empty, email: email, throwIfStatusFalse: false);
 
-        if (user is null)
+        if (user is null || user.UserId == Guid.Empty)
         {
             await InviteUserWhoDoesntHaveAccount(userIdAuth, company, email);
             return;
@@ -102,20 +102,22 @@ public sealed class InviteCompanyUser(
 
     private async Task SendEmail(CompanyOutput company, UserOutput user, CompanyUserRoleEnum companyUserRole, Verification verification)
     {
+        bool userHasAccount = !string.IsNullOrWhiteSpace(user.FullName);
+
         EnvOutput env = _env.GetUrls();
-        string verifyUrl = $"{env.UrlBackend}/CompanyUser/Verify/{verification.Token}";
+        string verifyUrl = userHasAccount ? $"{env.UrlBackend}/CompanyUser/Verify/{verification.Token}" : $"{env.UrlFrontend}/criar-conta?token={verification.Token}";
 
         Dictionary<string, string> values = new()
         {
             { "[NameApp]", SystemConsts.NameApp },
             { "[CompanyName]", company.Name },
-            { "[UserName]", GetFirstWord(user.FullName) ?? user.Email },
+            { "[UserName]", userHasAccount ? GetFirstWord(user.FullName) : user.Email },
             { "[CompanyUserRole]", GetEnumDesc(companyUserRole).ToLowerInvariant() },
             { "[VerifyUrl]", verifyUrl },
         };
 
         string bodyHtml = _emailService.RenderTemplate("EmailVerifyCompanyUser.html", values);
-        await _emailService.SendEmail(to: user.Email, subject: $"{company.Name} - Bem-vindo ao {SystemConsts.NameApp} — Verifique sua conta!", body: bodyHtml);
+        await _emailService.SendEmail(to: user.Email, subject: $"{company.Name} — Bem-vindo ao {SystemConsts.NameApp} — Verifique sua conta!", body: bodyHtml);
     }
     #endregion
 }

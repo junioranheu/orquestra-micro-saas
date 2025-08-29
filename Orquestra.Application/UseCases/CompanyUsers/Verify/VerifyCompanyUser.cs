@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Verifications.Get;
 using Orquestra.Application.UseCases.Verifications.Update;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
@@ -18,17 +19,12 @@ public sealed class VerifyCompanyUser(
 
     public async Task Execute(string token)
     {
-        var verification = await _getVerification.Execute(token, verificationType: VerificationTypeEnum.CompanyUser);
+        Verification verification = await _getVerification.Execute(token, verificationType: VerificationTypeEnum.CompanyUser);
 
         var result = await _context.CompanyUsers.
                      AsNoTracking().
                      Where(x => x.CompanyUserId == verification.EntityId).
                      FirstOrDefaultAsync() ?? throw new Exception($"O token {token} não pertence a nenhum usuário.");
-
-        if (!result.Status)
-        {
-            throw new Exception("Este token pertence a um um usuário desativado na base de dados.");
-        }
 
         // Salvar alteração;
         result.Status = true;

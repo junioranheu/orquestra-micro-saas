@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Verifications.Get;
 using Orquestra.Application.UseCases.Verifications.Update;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
@@ -18,7 +19,7 @@ public sealed class VerifyUser(
 
     public async Task Execute(string token)
     {
-        var verification = await _getVerification.Execute(token, verificationType: VerificationTypeEnum.User);
+        Verification verification = await _getVerification.Execute(token, verificationType: VerificationTypeEnum.User);
 
         var result = await _context.Users.
                      AsNoTracking().

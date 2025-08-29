@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Companies.Get;
@@ -19,7 +20,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
-                     FirstOrDefaultAsync() ?? throw new Exception("A empresa não foi encontrada na base de dados.");
+                     FirstOrDefaultAsync() ?? throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
 
         if (!result.Status)
         {

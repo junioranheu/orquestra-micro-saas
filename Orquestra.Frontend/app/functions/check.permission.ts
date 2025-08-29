@@ -1,5 +1,6 @@
 import ROUTES from '@/app/consts/routes';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import swalUnauthorized from './swal.unauthorized';
 
 export const ROLES = {
     AUDITOR: 'Auditor',
@@ -13,7 +14,7 @@ export function handleCheckHasPermission(router: AppRouterInstance, rolesRequire
     // console.log(auth);
 
     if (!auth) {
-        router.push(ROUTES.ERRO_403);
+        swalUnauthorized();
         return false;
     }
 
@@ -23,7 +24,7 @@ export function handleCheckHasPermission(router: AppRouterInstance, rolesRequire
     return true;
 
     if (!roles?.length) {
-        router.push(ROUTES.ERRO_403);
+        swalUnauthorized();
         return false;
     }
 
@@ -41,7 +42,7 @@ export function handleCheckHasPermission(router: AppRouterInstance, rolesRequire
     });
 
     if (!userHasPermission) {
-        router.push(ROUTES.ERRO_403);
+        swalUnauthorized();
         return false;
     }
 

@@ -1,7 +1,7 @@
 import ROUTES from '@/app/consts/routes';
 import Swal, { SweetAlertResult } from 'sweetalert2';
 
-export default function swalUnauthorized(msg: string): Promise<any> {
+export default function swalUnauthorized(msg?: string): Promise<any> {
     return new Promise((resolve) => {
         const finalMsg = msg ?? 'Sua sessão expirou ou você não tem acesso para realizar esta ação.';
 
