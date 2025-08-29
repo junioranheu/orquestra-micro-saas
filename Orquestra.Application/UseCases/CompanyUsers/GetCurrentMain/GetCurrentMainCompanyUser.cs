@@ -11,27 +11,11 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
 
     public async Task<CompanyOutput?> Execute(Guid userId)
     {
-        var companyUser = await _context.CompanyUsers.
-                          AsNoTracking().
-                          Where(x => 
-                             x.UserId == userId && 
-                             x.IsCurrentMainCompanyUser == true &&
-                             x.Status == true
-                          ).FirstOrDefaultAsync();
-
-        if (companyUser is null)
-        {
-            return null;
-        }
-
-        var company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyUser.CompanyId).FirstOrDefaultAsync();
-
-        if (company is null)
-        {
-            return null;
-        }
-
-        var output = company.Adapt<CompanyOutput>();
+        var output = await _context.CompanyUsers.
+                     AsNoTracking().
+                     Where(x => x.UserId == userId && x.IsCurrentMainCompanyUser && x.Status).
+                     Select(x => x.Company.Adapt<CompanyOutput>()).
+                     FirstOrDefaultAsync();
 
         return output;
     }
