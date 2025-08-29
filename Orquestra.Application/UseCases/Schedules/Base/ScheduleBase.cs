@@ -44,7 +44,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new Exception("Esse cliente não existe.");
 
-        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId) ?? throw new Exception("Essa empresa não existe.");
+        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new Exception("Essa empresa não existe.");
 
         await ValidateUsersAndRemoveNotLinkedOnes(input);
     }

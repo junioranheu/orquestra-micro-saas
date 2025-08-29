@@ -12,7 +12,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<CompanyOutput> Execute(Guid userIdAuth, Guid companyId)
+    public async Task<CompanyOutput> Execute(Guid userIdAuth, Guid companyId, bool throwIfStatusFalse = true)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
@@ -22,7 +22,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
                      Where(x => x.CompanyId == companyId).
                      FirstOrDefaultAsync() ?? throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
 
-        if (!result.Status)
+        if (throwIfStatusFalse && !result.Status)
         {
             throw new Exception($"A empresa {result.Name} está desativada.");
         }

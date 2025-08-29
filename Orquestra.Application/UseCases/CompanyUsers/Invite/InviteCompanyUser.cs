@@ -36,7 +36,7 @@ public sealed class InviteCompanyUser(
     private readonly IGetCompany _getCompany = getCompany;
     private readonly IEmailService _emailService = emailService;
 
-    public async Task Execute(Guid userIdAuth, Guid companyId, string email)
+    public async Task Execute(Guid userIdAuth, Guid companyId, string email, bool isFirstAdministrator)
     {
         // Validar;
         if (string.IsNullOrEmpty(email))
@@ -46,16 +46,16 @@ public sealed class InviteCompanyUser(
 
         email = GetNormalizedLowerStr(email);
 
-        CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId);
+        CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId, throwIfStatusFalse: !isFirstAdministrator);
         UserOutput user = await _getUser.Execute(userId: Guid.Empty, email: email, throwIfStatusFalse: false);
 
-        if (user is null || user.UserId == Guid.Empty)
+        if (!isFirstAdministrator && (user is null || user.UserId == Guid.Empty))
         {
             await InviteUserWhoDoesntHaveAccount(userIdAuth, company, email);
             return;
         }
 
-        await InviteUserWhoAlreadyHaveAccount(userIdAuth, company, user);
+        await InviteUserWhoAlreadyHaveAccount(userIdAuth, company, user, isFirstAdministrator);
     }
 
     #region extras
@@ -69,13 +69,13 @@ public sealed class InviteCompanyUser(
         await SendEmail(company, user, companyUserRole: CompanyUserRoleEnum.Member, verification);
     }
 
-    private async Task InviteUserWhoAlreadyHaveAccount(Guid userIdAuth, CompanyOutput company, UserOutput user)
+    private async Task InviteUserWhoAlreadyHaveAccount(Guid userIdAuth, CompanyOutput company, UserOutput user, bool isFirstAdministrator)
     {
         CompanyUserInput input = new()
         {
             CompanyId = company.CompanyId,
-            UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Member
+            UserId = isFirstAdministrator ? userIdAuth : user.UserId,
+            CompanyUserRole = isFirstAdministrator ? CompanyUserRoleEnum.Administrator : CompanyUserRoleEnum.Member,  
         };
 
         await Validate(input: input, userIdAuth, isCreate: true);
@@ -83,11 +83,17 @@ public sealed class InviteCompanyUser(
         var companyUser = input.Adapt<CompanyUser>();
 
         // Normalizar dados;
-        companyUser.InviterUserId = userIdAuth;
+        companyUser.InviterUserId = isFirstAdministrator ? null : userIdAuth;
+        companyUser.IsCurrentMainCompanyUser = isFirstAdministrator;
 
         // Salvar;
         await _context.AddAsync(companyUser);
         await _context.SaveChangesAsync();
+
+        if (isFirstAdministrator)
+        {
+            return;
+        }
 
         Verification verification = await SaveVerification(companyUserId: companyUser.CompanyUserId);
         await SendEmail(company, user, companyUserRole: companyUser.CompanyUserRole, verification);

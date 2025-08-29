@@ -25,6 +25,8 @@ public sealed class CompanyUserOutput
     public Guid? InviterUserId { get; set; }
     public UserOutput? InviterUser { get; init; }
 
+    public bool Status { get; set; }
+
     // Extras;
     public bool IsOwner { get; set; } = false;
 }

@@ -1,9 +1,11 @@
 ﻿using Orquestra.Domain.Enums;
+using System.Text.Json.Serialization;
 
 namespace Orquestra.Application.UseCases.Schedules.Shared;
 
 public sealed class ScheduleInput
 {
+    [JsonIgnore]
     public Guid? ScheduleId { get; set; }
 
     public DateTime Date { get; set; }

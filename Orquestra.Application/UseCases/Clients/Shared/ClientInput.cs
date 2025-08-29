@@ -1,7 +1,10 @@
-﻿namespace Orquestra.Application.UseCases.Clients.Shared;
+﻿using System.Text.Json.Serialization;
+
+namespace Orquestra.Application.UseCases.Clients.Shared;
 
 public sealed class ClientInput
 {
+    [JsonIgnore]
     public Guid? ClientId { get; set; }
 
     public string FullName { get; set; } = string.Empty;

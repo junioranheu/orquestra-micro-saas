@@ -34,28 +34,6 @@ public class AuthController(
     private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
     private readonly IGetCompany _getCompany = getCompany;
 
-#if DEBUG
-    [AllowAnonymous]
-    [HttpPost("AuthTeste")]
-    public async Task<ActionResult> AuthTeste()
-    {
-        if (IsUserAuth())
-        {
-            throw new Exception($"Você já está autenticado.");
-        }
-
-        AuthInput input = new()
-        {
-            Email = "junioranheu@gmail.com",
-            Password = "Junior30@@"
-        };
-
-        UserOutput output = await _createToken.Execute(input);
-
-        return Ok(output);
-    }
-#endif
-
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpPost]

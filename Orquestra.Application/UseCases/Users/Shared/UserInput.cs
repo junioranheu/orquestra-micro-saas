@@ -1,7 +1,10 @@
-﻿namespace Orquestra.Application.UseCases.Users.Shared;
+﻿using System.Text.Json.Serialization;
+
+namespace Orquestra.Application.UseCases.Users.Shared;
 
 public sealed class UserInput
 {
+    [JsonIgnore]
     public Guid? UserId { get; set; } = Guid.Empty;
 
     public string? FullName { get; set; } = string.Empty;

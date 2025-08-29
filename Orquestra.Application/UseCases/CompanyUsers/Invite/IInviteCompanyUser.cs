@@ -2,5 +2,5 @@
 
 public interface IInviteCompanyUser
 {
-    Task Execute(Guid userIdAuth, Guid companyId, string email);
+    Task Execute(Guid userIdAuth, Guid companyId, string email, bool isFirstAdministrator);
 }

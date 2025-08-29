@@ -30,14 +30,14 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
             throw new Exception("O nome da empresa não é válido.");
         }
 
-        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name && x.Status == true);
+        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name == input.Name);
 
         if (checkNameAlreadyExist)
         {
             throw new Exception($"Já existe uma empresa registrada com esse nome. {warn}");
         }
 
-        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.Status == true);
+        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email == input.Email);
 
         if (checkEmailAlreadyExist)
         {
@@ -109,15 +109,6 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
         if (!checkLogoUrl)
         {
             throw new Exception("A logo não é válida. Insira uma logo válida, por favor.");
-        }
-        #endregion
-
-        #region subscription
-        bool checkPlanType = IsPlanTypeValid(input.PlanType);
-
-        if (!checkPlanType)
-        {
-            throw new Exception("O tipo de plano não é válido. Insira um plano válido, por favor.");
         }
         #endregion
 
@@ -204,12 +195,6 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
         }
 
         return RegexLogoUrl().IsMatch(logoUrl);
-    }
-
-    // Subscription;
-    private static bool IsPlanTypeValid(PlanTypeEnum planType)
-    {
-        return Enum.IsDefined(planType);
     }
 
     // Regex;

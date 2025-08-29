@@ -1,10 +1,12 @@
 ﻿using Orquestra.Domain.Enums;
+using System.Text.Json.Serialization;
 
 namespace Orquestra.Application.UseCases.Companies.Shared;
 
 public sealed class CompanyInput
 {
     #region basic
+    [JsonIgnore]
     public Guid? CompanyId { get; set; } = Guid.Empty;
 
     public string Name { get; set; } = string.Empty;
@@ -32,10 +34,6 @@ public sealed class CompanyInput
     public string? LogoUrl { get; set; } = string.Empty;
 
     public string? Color { get; set; } = string.Empty;
-    #endregion
-
-    #region subscription
-    public PlanTypeEnum PlanType { get; set; }
     #endregion
 
     public bool Status { get; set; }

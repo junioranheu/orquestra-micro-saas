@@ -33,7 +33,7 @@ public class CompanyUserController(
     public async Task<ActionResult> InviteUser(Guid companyId, string email)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        await _invite.Execute(userIdAuth, companyId, email);
+        await _invite.Execute(userIdAuth, companyId, email, isFirstAdministrator: false);
 
         return NoContent();
     }

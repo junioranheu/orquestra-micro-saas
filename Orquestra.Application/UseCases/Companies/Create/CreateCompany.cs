@@ -1,10 +1,11 @@
 ﻿using Mapster;
-using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
-using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
-using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.Invite;
+using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
+using Orquestra.Application.UseCases.Users.Get;
+using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
@@ -13,6 +14,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
+using System.ComponentModel.Design;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
@@ -20,16 +22,20 @@ namespace Orquestra.Application.UseCases.Companies.Create;
 public sealed class CreateCompany(
         Context context,
         IEnvService env,
-        ICreateRangeCompanyUser createRangeCompanyUser,
         ICreateVerification createVerification,
-        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
-        IEmailService emailService
+        IInviteCompanyUser inviteCompanyUser,
+        IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
+        IGetUser getUser,
+        IEmailService emailService,
+        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser
     ) : CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
     private readonly IEnvService _env = env;
     private readonly ICreateVerification _createVerification = createVerification;
-    private readonly ICreateRangeCompanyUser _createRangeCompanyUser = createRangeCompanyUser;
+    private readonly IInviteCompanyUser _inviteCompanyUser = inviteCompanyUser;
+    private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
+    private readonly IGetUser _getUser = getUser;
     private readonly IEmailService _emailService = emailService;
 
     public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
@@ -40,9 +46,11 @@ public sealed class CreateCompany(
 
         Verification verification = await SaveVerification(company);
 
-        await SaveCompanyFirstAdministrator(userIdAuth, company);
+        UserOutput user = await _getUser.Execute(userId: userIdAuth, throwIfStatusFalse: true);
 
-        await SendEmail(userIdAuth, company, verification);
+        await SaveCompanyFirstAdministrator(userIdAuth, company, user);
+
+        await SendEmail(company, verification, user);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -54,6 +62,7 @@ public sealed class CreateCompany(
     {
         var company = input.Adapt<Company>();
 
+        company.PlanType = PlanTypeEnum.Basic;
         company.CompanySituation = CompanySituationEnum.ApprovedButNotPaid;
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(7);
@@ -76,27 +85,14 @@ public sealed class CreateCompany(
         return verification;
     }
 
-    private async Task SaveCompanyFirstAdministrator(Guid userIdAuth, Company input)
+    private async Task SaveCompanyFirstAdministrator(Guid userIdAuth, Company input, UserOutput user)
     {
-        CompanyUserInput companyUser = new()
-        {
-            CompanyId = input.CompanyId,
-            UserId = userIdAuth,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator
-        };
-
-        List<CompanyUserInput> companyUsers = [companyUser];
-
-        _ = await _createRangeCompanyUser.Execute(userIdAuth, companyUsers);
+        await _inviteCompanyUser.Execute(userIdAuth, companyId: input.CompanyId, email: user.Email, isFirstAdministrator: true);
+        await _updateCurrentMainCompanyUser.Execute(userIdAuth, companyId: input.CompanyId);
     }
 
-    private async Task SendEmail(Guid userIdAuth, Company company, Verification verification)
+    private async Task SendEmail(Company company, Verification verification, UserOutput user)
     {
-        var user = await _context.Users.
-                   AsNoTracking().
-                   Where(x => x.UserId == userIdAuth && x.Status == true).
-                   FirstOrDefaultAsync() ?? throw new Exception("Sua empresa foi criada na plataforma, mas houve uma falha em disparar o e-mail de verificação porque as informações do usuário não foram encontradas.");
-
         EnvOutput env = _env.GetUrls();
         string verifyUrl = $"{env.UrlBackend}/Company/Verify/{verification.Token}";
 

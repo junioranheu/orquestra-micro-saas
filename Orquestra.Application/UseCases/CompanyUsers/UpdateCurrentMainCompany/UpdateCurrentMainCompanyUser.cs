@@ -16,7 +16,7 @@ public sealed class UpdateCurrentMainCompanyUser(Context context, ICheckIfUserIs
 
         List<CompanyUser> listCompanyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                             Where(x => x.UserId == userIdAuth).
-                                            ToListAsync() ?? throw new Exception("^Você não faz parte de nenhuma empresa.");
+                                            ToListAsync() ?? throw new Exception("Você não faz parte de nenhuma empresa.");
 
         CompanyUser companyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                   Where(x => x.CompanyId == companyId && x.UserId == userIdAuth && x.Status == true).
