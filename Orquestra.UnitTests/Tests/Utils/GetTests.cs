@@ -204,6 +204,22 @@ public sealed class GetTests
         Assert.NotEqual(token1, token2);
     }
 
+    [Theory]
+    [InlineData(null, "")]
+    [InlineData("", "")]
+    [InlineData("   ", "")]
+    [InlineData(" Hello ", "hello")]
+    [InlineData("HELLO", "hello")]
+    [InlineData(" HeLLo WoRLd ", "hello world")]
+    public void ToNormalizedLower_ShouldReturnExpectedResult(string? input, string expected)
+    {
+        // Act;
+        var result = GetNormalizedLowerStr(input);
+
+        // Assert;
+        Assert.Equal(expected, result);
+    }
+
     #region helpers
     private enum TestEnum
     {

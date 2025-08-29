@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Users.Get;
 
@@ -14,7 +15,7 @@ public sealed class GetUser(Context context) : IGetUser
 
     public async Task<(UserOutput? output, string passwordEncrypted)> Execute(UserInput input)
     {
-        input.Email = input.Email?.Trim().ToLowerInvariant();
+        input.Email = GetNormalizedLowerStr(input.Email);
 
         var result = await _context.Users.
                      AsNoTracking().
@@ -41,10 +42,7 @@ public sealed class GetUser(Context context) : IGetUser
 
     public async Task<UserOutput> Execute(Guid? userId, string? email = "", bool throwIfStatusFalse = true)
     {
-        if (!string.IsNullOrEmpty(email))
-        {
-            email = email.Trim().ToLowerInvariant();
-        }
+        email = GetNormalizedLowerStr(email);
 
         var result = await _context.Users.
                      AsNoTracking().

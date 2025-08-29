@@ -44,6 +44,8 @@ public sealed class InviteCompanyUser(
             throw new ArgumentException("O e-mail não pode ser vazio.");
         }
 
+        email = GetNormalizedLowerStr(email);
+
         CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId);
         UserOutput user = await _getUser.Execute(userId: Guid.Empty, email: email, throwIfStatusFalse: false);
 

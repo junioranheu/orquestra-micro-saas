@@ -153,4 +153,23 @@ public static class Get
 
         return token;
     }
+
+    /// <summary>
+    /// Normaliza uma string, removendo espaços extras nas extremidades
+    /// e convertendo todo o conteúdo para minúsculas.
+    /// </summary>
+    /// <param name="str">Texto de entrada que pode ser nulo ou vazio.</param>
+    /// <returns>
+    /// A string normalizada em minúsculas sem espaços nas extremidades,
+    /// ou <see cref="string.Empty"/> caso o valor seja nulo ou vazio.
+    /// </returns>
+    public static string GetNormalizedLowerStr(string? str)
+    {
+        if (string.IsNullOrEmpty(str))
+        {
+            return string.Empty;
+        }
+
+        return str.Trim().ToLowerInvariant();
+    }
 }
