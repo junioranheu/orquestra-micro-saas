@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
-using Orquestra.Application.UseCases.CompanyUsers.CreateRange;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
+using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
@@ -16,32 +16,27 @@ namespace Orquestra.API.Controllers;
 [Route("api/[controller]")]
 public class CompanyUserController(
         IEnvService env,
-        ICreateRangeCompanyUser createRange,
+        IInviteCompanyUser invite,
         IGetCompanyUserByCompanyId getCompanyUserByCompanyId,
         IVerifyCompanyUser verify,
         IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser
     ) : BaseController<CompanyUserController>
 {
     private readonly IEnvService _env = env;
-    private readonly ICreateRangeCompanyUser _createRange = createRange;
+    private readonly IInviteCompanyUser _invite = invite;
     private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
     private readonly IVerifyCompanyUser _verify = verify;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
 
-    //[AuthorizeFilter]
-    //[HttpPost("InviteUser")]
-    //public async Task<ActionResult> InviteUser(string email)
-    //{
-    //    if (string.IsNullOrEmpty(email))
-    //    {
-    //        throw new ArgumentException("O e-mail não pode ser vazio");
-    //    }
+    [AuthorizeFilter]
+    [HttpPost("InviteUser")]
+    public async Task<ActionResult> InviteUser(string email)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        CompanyUserOutput output = await _invite.Execute(userIdAuth, email);
 
-    //    Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-    //    List<CompanyUserOutput> output = await _createRange.Execute(userIdAuth, input);
-
-    //    return Ok(output);
-    //}
+        return Ok(output);
+    }
 
     [AuthorizeFilter]
     [HttpPost("CreateRange")]

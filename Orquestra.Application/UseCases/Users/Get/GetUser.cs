@@ -38,7 +38,7 @@ public sealed class GetUser(Context context) : IGetUser
         return (result, password);
     }
 
-    public async Task<UserOutput> Execute(Guid userId)
+    public async Task<UserOutput> Execute(Guid userId, string email)
     {
         var result = await _context.Users.
                      AsNoTracking().
