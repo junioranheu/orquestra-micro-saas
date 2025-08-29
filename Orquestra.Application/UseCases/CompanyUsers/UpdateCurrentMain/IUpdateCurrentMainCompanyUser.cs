@@ -1,4 +1,4 @@
-﻿namespace Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
+﻿namespace Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 
 public interface IUpdateCurrentMainCompanyUser
 {

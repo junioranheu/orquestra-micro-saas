@@ -4,7 +4,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
+using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Env;

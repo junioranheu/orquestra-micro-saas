@@ -58,7 +58,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
             throw new Exception("O número de telefone não é válido. Insira um número válido, por favor.");
         }
 
-        bool checkType = IsTypeValid(input.Type);
+        bool checkType = IsTypeValid(input.CompanyType);
 
         if (!checkType)
         {

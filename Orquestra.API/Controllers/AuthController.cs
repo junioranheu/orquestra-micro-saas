@@ -7,8 +7,8 @@ using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
-using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
@@ -25,14 +25,14 @@ public class AuthController(
         ICreateRefreshToken createRefreshToken,
         IJwtTokenGenerator jwtTokenGenerator,
         IGetRefreshToken getRefreshToken,
-        IGetCompany getCompany
+        IGetCurrentMainCompanyUser getCurrentMainCompanyUser
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
     private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
-    private readonly IGetCompany _getCompany = getCompany;
+    private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
 
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
@@ -81,15 +81,8 @@ public class AuthController(
         string nameAuth = GetUserNameAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
-        // Companies;
-        List<CompanyOutput>? companyOutput = await _getCompany.Execute(userId: userIdAuth);
-        List<CompanySimpleOutput> companySimpleOutput = companyOutput.Adapt<List<CompanySimpleOutput>>();
-
         // Current main company;
-        CompanyOutput? currentMainCompany = companyOutput?.
-                                            Where(x => x.CompanyUsers!.Any(
-                                                y => y.UserId == userIdAuth && y.IsCurrentMainCompanyUser == true && x.Status == true
-                                            )).FirstOrDefault();
+        CompanyOutput? currentMainCompany = await _getCurrentMainCompanyUser.Execute(userIdAuth); 
 
         CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
 
@@ -110,7 +103,6 @@ public class AuthController(
             Roles = userRoles,
             RolesStr = userRolesStr,
             CurrentMainCompany = currentMainCompanySimple,
-            Companies = companySimpleOutput,
             TokenExpirationDate = validTo,
             RefreshTokenExpirationDate = refreshToken?.ExpiredDate.GetValueOrDefault() ?? DateTime.MinValue
         };

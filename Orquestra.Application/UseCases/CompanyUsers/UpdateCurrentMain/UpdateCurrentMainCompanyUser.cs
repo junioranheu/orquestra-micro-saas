@@ -3,7 +3,7 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
-namespace Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMainCompany;
+namespace Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 
 public sealed class UpdateCurrentMainCompanyUser(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IUpdateCurrentMainCompanyUser
 {

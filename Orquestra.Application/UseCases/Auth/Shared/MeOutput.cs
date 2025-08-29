@@ -15,7 +15,6 @@ public class MeSimpleOutput
 public sealed class MeOutput : MeSimpleOutput
 {
     public CompanySimpleOutput? CurrentMainCompany { get; set; }
-    public List<CompanySimpleOutput>? Companies { get; set; }
     public DateTime TokenExpirationDate { get; set; }
     public DateTime RefreshTokenExpirationDate { get; set; }
 }

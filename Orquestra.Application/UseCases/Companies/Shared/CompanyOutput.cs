@@ -18,7 +18,7 @@ public sealed class CompanyOutput
     [MaxLength(12)]
     public string Phone { get; set; } = string.Empty;
 
-    public CompanyTypeEnum Type { get; set; }
+    public CompanyTypeEnum CompanyType { get; set; }
     #endregion
 
     #region location
@@ -72,7 +72,7 @@ public sealed class CompanySimpleOutput
 
     public string Email { get; set; } = string.Empty;
 
-    public CompanyTypeEnum Type { get; set; }
+    public CompanyTypeEnum CompanyType { get; set; }
 
     public CompanySituationEnum CompanySituation { get; set; }
 

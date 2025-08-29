@@ -1,5 +1,5 @@
 'use client';
-import { CONSTS_AUTH } from '@/app/api/consts/auth';
+import iMe, { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { CONSTS_LOG } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button/button';
@@ -25,7 +25,7 @@ export default function Dashboard() {
 
     async function handleXD() {
         console.clear();
-        const result = await Fetch.get({ url: CONSTS_AUTH.me, setIsRequestLoading: setIsRequestLoading });
+        const result = await Fetch.get({ url: CONSTS_AUTH.me, setIsRequestLoading: setIsRequestLoading }) as iMe;
         console.log(CONSTS_AUTH.me, result);
     }
 

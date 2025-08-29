@@ -15,7 +15,7 @@ public sealed class CompanyInput
 
     public string Phone { get; set; } = string.Empty;
 
-    public CompanyTypeEnum Type { get; set; }
+    public CompanyTypeEnum CompanyType { get; set; }
     #endregion
 
     #region location

@@ -14,7 +14,7 @@ public static class CompanyMock
             Name = GetRandomString(GetRandomNumber(5, 15), false),
             Email = $"{GetRandomString(GetRandomNumber(5, 15), false)}@gmail.com",
             Phone = GetRandomString(GetRandomNumber(5, 15), false),
-            Type = CompanyTypeEnum.ClinicaOdontologia,
+            CompanyType = CompanyTypeEnum.ClinicaOdontologia,
             Address = GetRandomString(GetRandomNumber(5, 15), false),
             City = GetRandomString(GetRandomNumber(5, 15), false),
             State = GetRandomString(GetRandomNumber(5, 15), false),
