@@ -74,4 +74,3 @@ public class CompanyUserController(
         return NoContent();
     }
 }
-

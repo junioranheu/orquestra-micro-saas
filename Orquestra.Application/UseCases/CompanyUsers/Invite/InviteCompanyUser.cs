@@ -44,6 +44,13 @@ public sealed class InviteCompanyUser(
             throw new ArgumentException("O e-mail não pode ser vazio.");
         }
 
+        bool checkEmail = IsEmailValid(email);
+
+        if (!checkEmail)
+        {
+            throw new ArgumentException("O e-mail não é válido.");
+        }
+
         email = GetNormalizedLowerStr(email);
 
         CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId, throwIfStatusFalse: !isFirstAdministrator);

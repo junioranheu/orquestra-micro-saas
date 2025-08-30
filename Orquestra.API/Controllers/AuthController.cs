@@ -41,7 +41,7 @@ public class AuthController(
     {
         if (IsUserAuth())
         {
-            throw new Exception($"Você já está autenticado.");
+            await LogoutAsync();
         }
 
         UserOutput output = await _createToken.Execute(input);
@@ -82,7 +82,7 @@ public class AuthController(
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
         // Current main company;
-        CompanyOutput? currentMainCompany = await _getCurrentMainCompanyUser.Execute(userIdAuth); 
+        CompanyOutput? currentMainCompany = await _getCurrentMainCompanyUser.Execute(userIdAuth);
 
         CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
 
@@ -119,10 +119,15 @@ public class AuthController(
             return NoContent();
         }
 
+        await LogoutAsync();
+
+        return NoContent();
+    }
+
+    private async Task LogoutAsync()
+    {
         CookieOptions cookieOptions = _jwtTokenGenerator.GetCookieOptions();
         HttpContext.Response.Cookies.Delete(SystemConsts.CookieName, cookieOptions);
         await _createRefreshToken.Update(userIdAuth: GetUserIdAuth(), mustCheckForValidRefreshTokens: true);
-
-        return NoContent();
     }
 }

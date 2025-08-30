@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Orquestra.Utils.Fixtures;
 
@@ -171,5 +173,21 @@ public static class Get
         }
 
         return str.Trim().ToLowerInvariant();
+    }
+
+    /// <summary>
+    /// Valida se o e-mail informado está em um formato válido.
+    /// Retorna false se for nulo, vazio ou não corresponder ao padrão de e-mail.
+    /// </summary>
+    /// <param name="email">E-mail a ser validado.</param>
+    /// <returns>true se o e-mail for válido; caso contrário, false.</returns>
+    public static bool IsEmailValid(string? email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return false;
+        }
+
+        return new EmailAddressAttribute().IsValid(email);
     }
 }

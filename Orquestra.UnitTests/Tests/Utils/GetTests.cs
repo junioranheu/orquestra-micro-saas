@@ -211,10 +211,29 @@ public sealed class GetTests
     [InlineData(" Hello ", "hello")]
     [InlineData("HELLO", "hello")]
     [InlineData(" HeLLo WoRLd ", "hello world")]
-    public void ToNormalizedLower_ShouldReturnExpectedResult(string? input, string expected)
+    public void GetNormalizedLowerStr_ShouldReturnExpectedResult(string? input, string expected)
     {
         // Act;
         var result = GetNormalizedLowerStr(input);
+
+        // Assert;
+        Assert.Equal(expected, result);
+    }
+
+    [Theory]
+    [InlineData("teste@email.com", true)]
+    [InlineData("teste+alias@email.com", true)]
+    [InlineData("TESTE@EMAIL.COM", true)]
+    [InlineData("   ", false)]
+    [InlineData(null, false)]
+    [InlineData("email_invalido", false)]
+    [InlineData("email@invalido", false)]
+    [InlineData("email@invalido.", false)]
+    [InlineData("@semusuario.com", false)]
+    public void IsEmailValid_ShouldReturnExpectedResult(string? email, bool expected)
+    {
+        // Act;
+        bool result = IsEmailValid(email);
 
         // Assert;
         Assert.Equal(expected, result);

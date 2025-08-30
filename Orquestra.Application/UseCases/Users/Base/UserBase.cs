@@ -14,7 +14,7 @@ public partial class UserBase(IGetUser getUser)
         #region email
         input.Email = input.Email?.Trim().ToLowerInvariant();
 
-        bool checkEmail = IsEmailValid(input.Email ?? string.Empty);
+        bool checkEmail = IsEmailValid(input.Email);
 
         if (!checkEmail)
         {
@@ -70,12 +70,6 @@ public partial class UserBase(IGetUser getUser)
         return RegexName().IsMatch(fullName);
     }
 
-    // Simple email validation regex;
-    private static bool IsEmailValid(string email)
-    {
-        return RegexEmail().IsMatch(email);
-    }
-
     // Minimum requirements: 8+ characters, at least 1 digit OR 1 special character;
     private static bool IsPasswordValid(string password)
     {
@@ -85,9 +79,6 @@ public partial class UserBase(IGetUser getUser)
     // Regex;
     [GeneratedRegex(@"^(?i)[A-Za-zÀ-ÿ]{3,}(?:\s+(?:de|da|dos|das))?\s+[A-Za-zÀ-ÿ]{3,}$")]
     private static partial Regex RegexName();
-
-    [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]
-    private static partial Regex RegexEmail();
 
     [GeneratedRegex(@"^(?=.*[\d@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")]
     private static partial Regex RegexPassword();
