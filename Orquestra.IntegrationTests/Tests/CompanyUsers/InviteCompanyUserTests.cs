@@ -446,6 +446,100 @@ public sealed class InviteCompanyUserIntegrationTests
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(authUser.UserId, company.CompanyId, invalidEmail, false));
     }
 
+    [Fact]
+    public async Task Execute_ShouldSendFrontendLink_WhenUserHasNoAccount()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        string email = "novo.usuario@teste.com";
+
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
+
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        // Act;
+        await sut.Execute(authUser.UserId, company.CompanyId, email, false);
+
+        // Assert;
+        Assert.NotNull(capturedValues);
+        Assert.True(capturedValues!.TryGetValue("[VerifyUrl]", out string? verifyUrl));
+        Assert.Contains("criar-conta", verifyUrl); // Front-end link;
+    }
+
+    [Fact]
+    public async Task Execute_ShouldSendBackendLink_WhenUserAlreadyHasAccount()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User existingUser = UserMock.Create();
+        await Fixture.Save(context, existingUser);
+
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
+
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        // Act;
+        await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false);
+
+        // Assert;
+        Assert.NotNull(capturedValues);
+        Assert.True(capturedValues!.TryGetValue("[VerifyUrl]", out string? verifyUrl));
+        Assert.Contains("/CompanyUser/Verify/", verifyUrl); // Back-end link;
+    }
+
+    [Fact]
+    public async Task Execute_ShouldGenerateValidTokenInVerifyUrl_WhenUserAlreadyHasAccount()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User existingUser = UserMock.Create();
+        await Fixture.Save(context, existingUser);
+
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
+
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        // Act;
+        await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false);
+
+        // Assert;
+        Assert.NotNull(capturedValues);
+        Assert.True(capturedValues!.TryGetValue("[VerifyUrl]", out string? verifyUrl));
+
+        // Extrai o token da URL;
+        string token = verifyUrl.Split('/').Last(); // Pega a parte final da URL;
+        Assert.False(string.IsNullOrWhiteSpace(token));
+
+        // Verifica se o token tem comprimento esperado e apenas caracteres válidos;
+        Assert.Equal(43, token.Length); // Geralmente URL-safe 32 bytes codificados ficam com 43 chars;
+        Assert.Matches("^[A-Za-z0-9_-]+$", token); // Somente caracteres URL-safe;
+    }
+
+
     #region Helpers
     private static InviteCompanyUser CreateSut(Context context, User authUser, IEmailService? emailService = null)
     {
