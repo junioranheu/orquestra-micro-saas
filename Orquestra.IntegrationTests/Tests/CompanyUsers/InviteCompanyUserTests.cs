@@ -83,8 +83,7 @@ public sealed class InviteCompanyUserIntegrationTests
         await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false);
 
         // Assert;
-        CompanyUser? created = await context.CompanyUsers.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.UserId == existingUser.UserId && x.CompanyId == company.CompanyId);
+        CompanyUser? created = await context.CompanyUsers.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == existingUser.UserId && x.CompanyId == company.CompanyId);
 
         Assert.NotNull(created);
         Assert.Equal(CompanyUserRoleEnum.Member, created!.CompanyUserRole);
@@ -125,6 +124,132 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.Null(created.InviterUserId);
 
         emailServiceMock.Verify(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Never);
+    }
+
+    [Fact]
+    public async Task ShouldCreateVerification_WithAllRequiredFields()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Verification verification = new()
+        {
+            VerificationId = Guid.NewGuid(),
+            Token = "token123",
+            EntityId = Guid.NewGuid(),
+            EntityType = nameof(CompanyUser),
+            VerificationType = VerificationTypeEnum.CompanyUser,
+            Reference = "teste@orquestra.com",
+            Used = false
+        };
+
+        // Act;
+        await context.Verifications.AddAsync(verification);
+        await context.SaveChangesAsync();
+
+        // Assert;
+        Verification? saved = await context.Verifications.AsNoTracking().FirstOrDefaultAsync(v => v.VerificationId == verification.VerificationId);
+
+        Assert.NotNull(saved);
+        Assert.Equal(verification.Token, saved!.Token);
+        Assert.Equal(verification.EntityId, saved.EntityId);
+        Assert.Equal(verification.EntityType, saved.EntityType);
+        Assert.Equal(verification.VerificationType, saved.VerificationType);
+        Assert.Equal(verification.Reference, saved.Reference);
+        Assert.False(saved.Used);
+    }
+
+    [Fact]
+    public async Task ShouldMarkVerificationAsUsed()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Verification verification = new()
+        {
+            VerificationId = Guid.NewGuid(),
+            Token = "token456",
+            EntityId = Guid.NewGuid(),
+            EntityType = nameof(User),
+            VerificationType = VerificationTypeEnum.User,
+            Reference = null,
+            Used = false
+        };
+
+        await context.Verifications.AddAsync(verification);
+        await context.SaveChangesAsync();
+
+        // Act;
+        verification.Used = true;
+        context.Verifications.Update(verification);
+        await context.SaveChangesAsync();
+
+        // Assert;
+        Verification? saved = await context.Verifications.AsNoTracking().FirstOrDefaultAsync(v => v.VerificationId == verification.VerificationId);
+
+        Assert.NotNull(saved);
+        Assert.True(saved!.Used);
+    }
+
+    [Fact]
+    public async Task ShouldAllowNullReference()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Verification verification = new()
+        {
+            VerificationId = Guid.NewGuid(),
+            Token = "token789",
+            EntityId = Guid.NewGuid(),
+            EntityType = nameof(User),
+            VerificationType = VerificationTypeEnum.User,
+            Reference = null,
+            Used = false
+        };
+
+        // Act;
+        await context.Verifications.AddAsync(verification);
+        await context.SaveChangesAsync();
+
+        // Assert;
+        Verification? saved = await context.Verifications.AsNoTracking().FirstOrDefaultAsync(v => v.VerificationId == verification.VerificationId);
+
+        Assert.NotNull(saved);
+        Assert.Null(saved!.Reference);
+    }
+
+    [Fact]
+    public async Task ShouldPersistMultipleVerifications()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Verification verification1 = new()
+        {
+            VerificationId = Guid.NewGuid(),
+            Token = "token1",
+            EntityId = Guid.NewGuid(),
+            EntityType = nameof(User),
+            VerificationType = VerificationTypeEnum.User
+        };
+
+        Verification verification2 = new()
+        {
+            VerificationId = Guid.NewGuid(),
+            Token = "token2",
+            EntityId = Guid.NewGuid(),
+            EntityType = nameof(CompanyUser),
+            VerificationType = VerificationTypeEnum.CompanyUser
+        };
+
+        // Act;
+        await context.Verifications.AddRangeAsync(verification1, verification2);
+        await context.SaveChangesAsync();
+
+        // Assert;
+        int count = await context.Verifications.CountAsync();
+        Assert.Equal(2, count);
     }
 
     #region Helpers
