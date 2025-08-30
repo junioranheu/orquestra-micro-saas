@@ -24,109 +24,100 @@ public sealed class InviteCompanyUserIntegrationTests
     [Fact]
     public async Task Execute_ShouldThrow_WhenEmailIsEmpty()
     {
-        // Arrange
-        var context = Fixture.CreateContext();
+        // Arrange;
+        Context context = Fixture.CreateContext();
         var authUser = UserMock.Create();
         await Fixture.Save(context, authUser);
 
-        var sut = CreateSut(context, authUser);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
-        // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() =>
-            sut.Execute(authUser.UserId, Guid.NewGuid(), "", false));
+        // Act & Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(authUser.UserId, Guid.NewGuid(), "", false));
     }
 
     [Fact]
     public async Task Execute_ShouldInviteNewUserWithoutAccount()
     {
-        // Arrange
-        var context = Fixture.CreateContext();
-        var authUser = UserMock.Create();
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User authUser = UserMock.Create();
         authUser.Role = UserRoleEnum.Administrator;
         await Fixture.Save(context, authUser);
 
-        var company = CompanyMock.Create();
+        Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
         string email = "novo.usuario@teste.com";
 
-        var emailServiceMock = Fixture.CreateEmailService();
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
 
-        var sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
 
-        // Act
+        // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, email, false);
 
-        // Assert
-        emailServiceMock.Verify(x =>
-            x.SendEmail(It.Is<string>(s => s == email), It.IsAny<string>(), It.IsAny<string>(), true, null),
-            Times.Once);
+        // Assert;
+        emailServiceMock.Verify(x => x.SendEmail(It.Is<string>(s => s == email), It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Once);
     }
 
     [Fact]
     public async Task Execute_ShouldInviteExistingUserAsMember()
     {
-        // Arrange
-        var context = Fixture.CreateContext();
+        // Arrange;
+        Context context = Fixture.CreateContext();
         var authUser = UserMock.Create();
         authUser.Role = UserRoleEnum.Administrator;
         await Fixture.Save(context, authUser);
 
-        var company = CompanyMock.Create();
+        Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        var existingUser = UserMock.Create();
+        User existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        var emailServiceMock = Fixture.CreateEmailService();
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
 
-        var sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
 
-        // Act
+        // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false);
 
-        // Assert
-        var created = await context.CompanyUsers.AsNoTracking()
+        // Assert;
+        CompanyUser? created = await context.CompanyUsers.AsNoTracking()
             .FirstOrDefaultAsync(x => x.UserId == existingUser.UserId && x.CompanyId == company.CompanyId);
-
-        var createdX = await context.CompanyUsers.AsNoTracking()
-            .ToListAsync();
 
         Assert.NotNull(created);
         Assert.Equal(CompanyUserRoleEnum.Member, created!.CompanyUserRole);
         Assert.Equal(authUser.UserId, created.InviterUserId);
         Assert.False(created.IsCurrentMainCompanyUser);
 
-        emailServiceMock.Verify(x =>
-            x.SendEmail(existingUser.Email, It.IsAny<string>(), It.IsAny<string>(), true, null),
-            Times.Once);
+        emailServiceMock.Verify(x => x.SendEmail(existingUser.Email, It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Once);
     }
 
     [Fact]
     public async Task Execute_ShouldInviteExistingUserAsFirstAdministrator()
     {
-        // Arrange
-        var context = Fixture.CreateContext();
-        var authUser = UserMock.Create();
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User authUser = UserMock.Create();
         authUser.Role = UserRoleEnum.Administrator;
         await Fixture.Save(context, authUser);
 
-        var company = CompanyMock.Create();
+        Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        var existingUser = UserMock.Create();
+        User existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        var emailServiceMock = Fixture.CreateEmailService();
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
 
-        var sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
 
-        // Act
+        // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, true);
 
-        // Assert
-        var created = await context.CompanyUsers.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.UserId == authUser.UserId && x.CompanyId == company.CompanyId);
+        // Assert;
+        CompanyUser? created = await context.CompanyUsers.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == authUser.UserId && x.CompanyId == company.CompanyId);
 
         Assert.NotNull(created);
         Assert.Equal(CompanyUserRoleEnum.Administrator, created!.CompanyUserRole);
