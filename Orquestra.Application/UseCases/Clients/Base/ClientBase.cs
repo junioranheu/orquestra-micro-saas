@@ -3,6 +3,7 @@ using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Infrastructure.Data;
 using System.Text.RegularExpressions;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Clients.Base;
 
@@ -22,6 +23,8 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
             throw new Exception("O e-mail do cliente não é válido. Insira um e-mail válido, por favor.");
         }
 
+        input.Email = GetNormalizedLowerStr(input.Email);
+
         if (isCreate)
         {
             bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId && x.Status == true);
@@ -31,7 +34,12 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
                 throw new Exception("Este CPF já está registrado nesta empresa como cliente.");
             }
 
-            bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email == input.Email && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId && x.Status == true);
+            bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x =>
+                                x.Email.Equals(input.Email, StringComparison.InvariantCultureIgnoreCase) && 
+                                x.CompanyId == input.CompanyId && 
+                                x.ClientId == input.ClientId &&
+                                x.Status == true
+                            );
 
             if (anyEmail)
             {

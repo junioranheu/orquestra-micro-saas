@@ -82,11 +82,7 @@ public sealed class InviteCompanyUserIntegrationTests
         var existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        var emailServiceMock = new Mock<IEmailService>();
-        emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
-                        .Returns("<html>fake</html>");
-        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null))
-                        .Returns(Task.CompletedTask);
+        var emailServiceMock = Fixture.CreateEmailService();
 
         var sut = CreateSut(context, authUser, emailServiceMock.Object);
 
@@ -125,11 +121,7 @@ public sealed class InviteCompanyUserIntegrationTests
         var existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        var emailServiceMock = new Mock<IEmailService>();
-        emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
-                        .Returns("<html>fake</html>");
-        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null))
-                        .Returns(Task.CompletedTask);
+        var emailServiceMock = Fixture.CreateEmailService();
 
         var sut = CreateSut(context, authUser, emailServiceMock.Object);
 

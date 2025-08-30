@@ -37,7 +37,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
             throw new Exception($"Já existe uma empresa registrada com esse nome. {warn}");
         }
 
-        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email == input.Email);
+        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email.Equals(input.Email, StringComparison.InvariantCultureIgnoreCase));
 
         if (checkEmailAlreadyExist)
         {

@@ -21,7 +21,7 @@ public sealed class GetUser(Context context) : IGetUser
                      AsNoTracking().
                      Where(x =>
                         (input.UserId == Guid.Empty || x.UserId == input.UserId) &&
-                        (string.IsNullOrEmpty(input.Email) || x.Email == input.Email)
+                        (string.IsNullOrEmpty(input.Email) || x.Email.Equals(input.Email, StringComparison.InvariantCultureIgnoreCase))
                      ).FirstOrDefaultAsync();
 
         if (result is null)
@@ -42,20 +42,19 @@ public sealed class GetUser(Context context) : IGetUser
 
     public async Task<UserOutput> Execute(Guid? userId, string? email = "", bool throwIfStatusFalse = true)
     {
+        if ((userId == Guid.Empty || userId == null) && string.IsNullOrEmpty(email))
+        {
+            throw new ArgumentException($"Erro interno: todos os parâmetros estão nulos ({nameof(GetUser)}/{nameof(Execute)}).");
+        }
+
         email = GetNormalizedLowerStr(email);
 
         var result = await _context.Users.
                      AsNoTracking().
                      Where(x => 
                         ((userId == Guid.Empty || userId == null) || x.UserId == userId) &&
-                        (string.IsNullOrEmpty(email) || x.Email == email)
+                        (string.IsNullOrEmpty(email) || x.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
                      ).FirstOrDefaultAsync();
-
-        var resultxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx = await _context.Users.
-                  AsNoTracking().
-                  Where(x =>
-                     ((userId == Guid.Empty || userId == null) || x.UserId == userId)
-                  ).FirstOrDefaultAsync();
 
         if (result is null)
         {

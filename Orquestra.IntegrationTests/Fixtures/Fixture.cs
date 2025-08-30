@@ -8,6 +8,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Email;
 using System.Security.Claims;
 
 namespace Orquestra.IntegrationTests.Fixtures;
@@ -99,5 +100,15 @@ public static class Fixture
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(urls!).Build();
 
         return configuration;
+    }
+
+    public static Mock<IEmailService> CreateEmailService()
+    {
+        Mock<IEmailService> emailServiceMock = new();
+
+        emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>())).Returns("<html>fake</html>");
+        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null)).Returns(Task.CompletedTask);
+
+        return emailServiceMock;
     }
 }
