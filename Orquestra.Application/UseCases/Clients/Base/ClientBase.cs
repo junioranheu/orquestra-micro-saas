@@ -27,23 +27,24 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
         if (isCreate)
         {
-            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId && x.ClientId == input.ClientId && x.Status == true);
+            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => 
+                             x.CPF == input.CPF && 
+                             x.CompanyId == input.CompanyId
+                          );
 
             if (anyCPF)
             {
-                throw new Exception("Este CPF já está registrado nesta empresa como cliente.");
+                throw new Exception($"O CPF {input.CPF} já está registrado nesta empresa como cliente.");
             }
 
             bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x =>
-                                x.Email.Equals(input.Email, StringComparison.InvariantCultureIgnoreCase) && 
-                                x.CompanyId == input.CompanyId && 
-                                x.ClientId == input.ClientId &&
-                                x.Status == true
+                                EF.Functions.ILike(x.Email, input.Email) &&
+                                x.CompanyId == input.CompanyId
                             );
 
             if (anyEmail)
             {
-                throw new Exception("Este e-mail já está registrado nesta empresa como cliente.");
+                throw new Exception($"O e-mail {input.Email} já está registrado nesta empresa como cliente.");
             }
         }
     }

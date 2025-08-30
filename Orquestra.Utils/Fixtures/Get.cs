@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -181,6 +181,8 @@ public static class Get
     /// </summary>
     /// <param name="email">E-mail a ser validado.</param>
     /// <returns>true se o e-mail for válido; caso contrário, false.</returns>
+    [SuppressMessage("Performance", "SYSLIB1045:Converter em 'GeneratedRegexAttribute'.", Justification = "<Pendente>")]
+    [SuppressMessage("CodeQuality", "IDE0079:Remover a supressão desnecessária", Justification = "<Pendente>")]
     public static bool IsEmailValid(string? email)
     {
         if (string.IsNullOrWhiteSpace(email))
@@ -188,6 +190,7 @@ public static class Get
             return false;
         }
 
-        return new EmailAddressAttribute().IsValid(email);
+        Regex regex = new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled);
+        return regex.IsMatch(email);
     }
 }

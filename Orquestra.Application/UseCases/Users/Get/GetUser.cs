@@ -21,7 +21,7 @@ public sealed class GetUser(Context context) : IGetUser
                      AsNoTracking().
                      Where(x =>
                         (input.UserId == Guid.Empty || x.UserId == input.UserId) &&
-                        (string.IsNullOrEmpty(input.Email) || x.Email.Equals(input.Email, StringComparison.InvariantCultureIgnoreCase))
+                        EF.Functions.ILike(x.Email, input.Email)
                      ).FirstOrDefaultAsync();
 
         if (result is null)
