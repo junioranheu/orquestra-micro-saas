@@ -252,6 +252,150 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.Equal(2, count);
     }
 
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenAuthUserNotLinkedAsAdmin()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User authUser = UserMock.Create(); // Not linked to company;
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User target = UserMock.Create();
+        await Fixture.Save(context, target);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = target.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        InviteCompanyUser sut = CreateSut(context, authUser);
+
+        // Act & Assert: authUser is not linked as admin -> should throw;
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(authUser.UserId, company.CompanyId, target.Email, false));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldNormalizeEmail_ToLowercase_WhenInvitingNoAccount()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        string mixedCaseEmail = "Foo.Bar@Example.COM";
+
+        // Capture template values via o mock do Fixture;
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
+
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        // Act;
+        await sut.Execute(authUser.UserId, company.CompanyId, mixedCaseEmail, false);
+
+        // Assert;
+        Assert.NotNull(capturedValues);
+
+        // [UserName] deve ser o email normalizado em lowercase;
+        Assert.True(capturedValues!.TryGetValue("[UserName]", out string? userName));
+        Assert.Equal(mixedCaseEmail.ToLowerInvariant(), userName);
+
+        // [VerifyUrl] deve conter o token;
+        Assert.True(capturedValues.TryGetValue("[VerifyUrl]", out string? verifyUrl));
+        Assert.Contains("token", verifyUrl); // Assume que o token é gerado pelo CreateVerification mock;
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenCompanyNotFound()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User authUser = UserMock.Create();
+        await Fixture.Save(context, authUser);
+
+        // Don't create company in DB => GetCompany should throw;
+        InviteCompanyUser sut = CreateSut(context, authUser);
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<Exception>(() => sut.Execute(authUser.UserId, Guid.NewGuid(), "xx@x.com", false));
+    }
+
+    [Fact]
+    public async Task Execute_FirstAdministrator_ShouldUseAuthUserId_EvenIfTargetUserExists()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User existing = UserMock.Create();
+        await Fixture.Save(context, existing);
+
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        // Act;
+        await sut.Execute(authUser.UserId, company.CompanyId, existing.Email, true);
+
+        // Assert: created CompanyUser must reference authUser.UserId (first admin uses userIdAuth);
+        CompanyUser? created = await context.CompanyUsers.AsNoTracking().FirstOrDefaultAsync(x => x.CompanyId == company.CompanyId && x.UserId == authUser.UserId);
+       
+        Assert.NotNull(created);
+        Assert.Equal(CompanyUserRoleEnum.Administrator, created!.CompanyUserRole);
+        Assert.True(created.IsCurrentMainCompanyUser);
+        Assert.Null(created.InviterUserId);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldPassLowercaseCompanyUserRole_ToTemplateValues()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User authUser = UserMock.Create();
+        authUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User existing = UserMock.Create();
+        await Fixture.Save(context, existing);
+
+        // Capture template values via o mock do Fixture;
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
+
+        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+
+        // Act;
+        await sut.Execute(authUser.UserId, company.CompanyId, existing.Email, false);
+
+        // Assert: [CompanyUserRole] exists and is lowercase;
+        Assert.NotNull(capturedValues);
+        Assert.True(capturedValues!.TryGetValue("[CompanyUserRole]", out string? roleValue));
+        Assert.Equal(roleValue, roleValue.ToLowerInvariant());
+    }
+
     #region Helpers
     private static InviteCompanyUser CreateSut(Context context, User authUser, IEmailService? emailService = null)
     {

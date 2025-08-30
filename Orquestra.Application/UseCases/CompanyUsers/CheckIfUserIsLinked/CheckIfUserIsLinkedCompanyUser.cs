@@ -59,7 +59,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
         // #2 - Verificar se tem algum parâmetro super importante vazio;
         if ((companyId is null || companyId == Guid.Empty) || (userId is null || userId == Guid.Empty))
         {
-            throw new Exception($"Os parâmetros {nameof(companyId)} e {nameof(userId)} devem ser preenchidos corretamente.");
+            throw new ArgumentException($"Os parâmetros {nameof(companyId)} e {nameof(userId)} devem ser preenchidos corretamente.");
         }
 
         // #3 - Verificar se o usuário em questão (userId) está registrado na empresa;

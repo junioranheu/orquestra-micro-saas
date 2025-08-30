@@ -64,8 +64,8 @@ public static class Fixture
             new(ClaimTypes.Role, UserRoleEnum.Common.ToString())
         ];
 
-        ClaimsIdentity identity = new (claims, "TestAuthScheme");
-        ClaimsPrincipal principal = new (identity);
+        ClaimsIdentity identity = new(claims, "TestAuthScheme");
+        ClaimsPrincipal principal = new(identity);
 
         DefaultHttpContext httpContext = new()
         {
@@ -107,6 +107,21 @@ public static class Fixture
         Mock<IEmailService> emailServiceMock = new();
 
         emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>())).Returns("<html>fake</html>");
+        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null)).Returns(Task.CompletedTask);
+
+        return emailServiceMock;
+    }
+
+    public static Mock<IEmailService> CreateEmailService(Action<Dictionary<string, string>>? capture = null)
+    {
+        Mock<IEmailService> emailServiceMock = new();
+
+        emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>())).
+            Callback<string, Dictionary<string, string>>((tpl, vals) =>
+            {
+                capture?.Invoke(vals);
+            }).Returns("<html>fake</html>");
+
         emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null)).Returns(Task.CompletedTask);
 
         return emailServiceMock;

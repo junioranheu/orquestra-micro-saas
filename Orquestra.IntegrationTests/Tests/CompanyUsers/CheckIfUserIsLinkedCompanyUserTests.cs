@@ -44,7 +44,7 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        var sut = CreateSut(context, user);
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
         bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false);
 
