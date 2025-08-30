@@ -20,11 +20,11 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
-                     FirstOrDefaultAsync() ?? throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NeedToVerifyCompany);
 
         if (throwIfStatusFalse && !result.Status)
         {
-            throw new Exception($"A empresa {result.Name} está desativada.");
+            throw new InvalidOperationException($"A empresa {result.Name} está desativada.");
         }
 
         var output = result.Adapt<CompanyOutput>();

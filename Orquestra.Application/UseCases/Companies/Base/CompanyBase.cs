@@ -27,42 +27,42 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
 
         if (!checkName)
         {
-            throw new Exception("O nome da empresa não é válido.");
+            throw new ArgumentException("O nome da empresa não é válido.");
         }
 
         bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => EF.Functions.ILike(x.Name, input.Name));
 
         if (checkNameAlreadyExist)
         {
-            throw new Exception($"Já existe uma empresa registrada com esse nome. {warn}");
+            throw new InvalidOperationException($"Já existe uma empresa registrada com esse nome. {warn}");
         }
 
         bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => EF.Functions.ILike(x.Email, input.Email));
 
         if (checkEmailAlreadyExist)
         {
-            throw new Exception($"Já existe uma empresa registrada com esse e-mail. {warn}");
+            throw new InvalidOperationException($"Já existe uma empresa registrada com esse e-mail. {warn}");
         }
 
         bool checkEmail = IsEmailValid(input.Email);
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail da empresa não é válido. Insira um e-mail válido, por favor.");
+            throw new ArgumentException("O e-mail da empresa não é válido. Insira um e-mail válido, por favor.");
         }
 
         bool checkPhone = IsPhoneValid(input.Phone);
 
         if (!checkPhone)
         {
-            throw new Exception("O número de telefone não é válido. Insira um número válido, por favor.");
+            throw new ArgumentException("O número de telefone não é válido. Insira um número válido, por favor.");
         }
 
         bool checkType = IsTypeValid(input.CompanyType);
 
         if (!checkType)
         {
-            throw new Exception("O tipo da empresa não é válido. Insira um tipo válido, por favor.");
+            throw new ArgumentException("O tipo da empresa não é válido. Insira um tipo válido, por favor.");
         }
         #endregion
 
@@ -71,35 +71,35 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
 
         if (!checkAddress)
         {
-            throw new Exception("O endereço não é válido. Insira um endereço válido, por favor.");
+            throw new ArgumentException("O endereço não é válido. Insira um endereço válido, por favor.");
         }
 
         bool checkCity = IsCityValid(input.City);
 
         if (!checkCity)
         {
-            throw new Exception("A cidade não é válida. Insira uma cidade válida, por favor.");
+            throw new ArgumentException("A cidade não é válida. Insira uma cidade válida, por favor.");
         }
 
         bool checkState = IsStateValid(input.State);
 
         if (!checkState)
         {
-            throw new Exception("O estado não é válido. Insira um estado válido, por favor.");
+            throw new ArgumentException("O estado não é válido. Insira um estado válido, por favor.");
         }
 
         bool checkZipCode = IsZipCodeValid(input.ZipCode);
 
         if (!checkZipCode)
         {
-            throw new Exception("O CEP não é válido. Insira um CEP válido, por favor.");
+            throw new ArgumentException("O CEP não é válido. Insira um CEP válido, por favor.");
         }
 
         bool checkCountry = IsCountryValid(input.Country);
 
         if (!checkCountry)
         {
-            throw new Exception("O país não é válido. Insira um país válido, por favor.");
+            throw new ArgumentException("O país não é válido. Insira um país válido, por favor.");
         }
         #endregion
 
@@ -108,7 +108,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
 
         if (!checkLogoUrl)
         {
-            throw new Exception("A logo não é válida. Insira uma logo válida, por favor.");
+            throw new ArgumentException("A logo não é válida. Insira uma logo válida, por favor.");
         }
         #endregion
 
@@ -117,7 +117,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
         {
             if (!input.Status)
             {
-                throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
+                throw new InvalidOperationException(SystemConsts.Warn_NeedToVerifyCompany);
             }
         }
         #endregion

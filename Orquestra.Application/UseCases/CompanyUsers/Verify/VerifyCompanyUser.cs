@@ -24,7 +24,7 @@ public sealed class VerifyCompanyUser(
         var result = await _context.CompanyUsers.
                      AsNoTracking().
                      Where(x => x.CompanyUserId == verification.EntityId).
-                     FirstOrDefaultAsync() ?? throw new Exception($"O token {token} não pertence a nenhum usuário.");
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"O token {token} não pertence a nenhum usuário.");
 
         // Salvar alteração;
         result.Status = true;

@@ -44,7 +44,7 @@ public class CompanyUserController(
     {
         if (companyId == Guid.Empty)
         {
-            throw new Exception($"O parâmetro {nameof(companyId)} não pode estar vazio.");
+            throw new ArgumentException($"O parâmetro {nameof(companyId)} não pode estar vazio.");
         }
 
         List<CompanyUserOutput>? output = await _getCompanyUserByCompanyId.Execute(companyId);

@@ -27,8 +27,8 @@ public class EnvService(IWebHostEnvironment env, IConfiguration configuration) :
 
         return new EnvOutput
         {
-            UrlBackend = urlsSection["Backend"] ?? throw new Exception("Erro crítico interno: URLs back-end não definidas."),
-            UrlFrontend = urlsSection["Frontend"] ?? throw new Exception("Erro crítico interno: URLs front-end não definidas.")
+            UrlBackend = urlsSection["Backend"] ?? throw new InvalidOperationException("Erro crítico interno: URLs back-end não definidas."),
+            UrlFrontend = urlsSection["Frontend"] ?? throw new InvalidOperationException("Erro crítico interno: URLs front-end não definidas.")
         };
     }
 }

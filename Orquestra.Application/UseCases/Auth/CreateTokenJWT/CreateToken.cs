@@ -28,7 +28,7 @@ public sealed class CreateToken(
 
         if (user is null)
         {
-            throw new Exception("Usuário não encontrado.");
+            throw new InvalidOperationException("Usuário não encontrado.");
         }
 
         if (!CheckPassword(password: input.Password, passwordEncrypted: passwordEncrypted))

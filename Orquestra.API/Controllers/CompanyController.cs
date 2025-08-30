@@ -64,7 +64,7 @@ public class CompanyController(
 
         if (userIdAuth != userId && !(userRolesEnum.Contains(UserRoleEnum.Administrator) || userRolesEnum.Contains(UserRoleEnum.Maintainer)))
         {
-            throw new Exception("Você só pode visualizar a sua relação de empresas.");
+            throw new UnauthorizedAccessException("Você só pode visualizar a sua relação de empresas.");
         }
 
         List<CompanyOutput>? output = await _get.Execute(userId);

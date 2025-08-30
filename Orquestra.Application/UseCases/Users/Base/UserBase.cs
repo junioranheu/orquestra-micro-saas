@@ -18,7 +18,7 @@ public partial class UserBase(IGetUser getUser)
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail não é válido. Insira um e-mail válido, por favor.");
+            throw new ArgumentException("O e-mail não é válido. Insira um e-mail válido, por favor.");
         }
 
         if (isCreate)
@@ -27,7 +27,7 @@ public partial class UserBase(IGetUser getUser)
 
             if (checkUserByEmail is not null)
             {
-                throw new Exception($"O e-mail {input.Email} já está cadastrado no sistema.");
+                throw new InvalidOperationException($"O e-mail {input.Email} já está cadastrado no sistema.");
             }
         }
 
@@ -37,7 +37,7 @@ public partial class UserBase(IGetUser getUser)
 
             if (checkUserById is not null && userIdAuth != checkUserById?.UserId)
             {
-                throw new Exception("Apenas o proprietário da conta pode alterar suas informações.");
+                throw new UnauthorizedAccessException("Apenas o proprietário da conta pode alterar suas informações.");
             }
         }
         #endregion
@@ -47,7 +47,7 @@ public partial class UserBase(IGetUser getUser)
 
         if (!checkName)
         {
-            throw new Exception("O nome não é válido. Insira seu nome completo, por favor.");
+            throw new ArgumentException("O nome não é válido. Insira seu nome completo, por favor.");
         }
 
         input.FullName = NormalizeToProperName(input.FullName ?? string.Empty);
@@ -58,7 +58,7 @@ public partial class UserBase(IGetUser getUser)
 
         if (!checkPassword)
         {
-            throw new Exception("A senha não é válida. Insira uma senha com pelo menos 8 carácteres e um digito ou carácter especial, por favor.");
+            throw new ArgumentException("A senha não é válida. Insira uma senha com pelo menos 8 carácteres e um digito ou carácter especial, por favor.");
         }
         #endregion
     }

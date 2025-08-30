@@ -331,7 +331,7 @@ public sealed class InviteCompanyUserIntegrationTests
         InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act & Assert;
-        await Assert.ThrowsAsync<Exception>(() => sut.Execute(authUser.UserId, Guid.NewGuid(), "xx@x.com", false));
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(authUser.UserId, Guid.NewGuid(), "xx@x.com", false));
     }
 
     [Fact]

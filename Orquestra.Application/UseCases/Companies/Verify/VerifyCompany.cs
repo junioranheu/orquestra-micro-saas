@@ -24,7 +24,7 @@ public sealed class VerifyCompany(
         var result = await _context.Companies.
                      AsNoTracking().
                      Where(x => x.CompanyId == verification.EntityId).
-                     FirstOrDefaultAsync() ?? throw new Exception($"O token {token} não pertence a nenhuma empresa.");
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"O token {token} não pertence a nenhuma empresa.");
 
         // Salvar alteração;
         result.Status = true;

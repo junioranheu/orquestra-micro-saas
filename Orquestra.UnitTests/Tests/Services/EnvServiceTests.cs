@@ -110,7 +110,7 @@ public sealed class EnvServiceTests
         EnvService service = new(mockEnv.Object, mockConfig.Object);
 
         // Act & Assert;
-        Exception ex = Assert.Throws<Exception>(() => service.GetUrls());
+        Exception ex = Assert.Throws<InvalidOperationException>(() => service.GetUrls());
         Assert.Equal("Erro crítico interno: URLs back-end não definidas.", ex.Message);
     }
 
@@ -131,7 +131,7 @@ public sealed class EnvServiceTests
         EnvService service = new(mockEnv.Object, mockConfig.Object);
 
         // Act & Assert;
-        Exception ex = Assert.Throws<Exception>(() => service.GetUrls());
+        Exception ex = Assert.Throws<InvalidOperationException>(() => service.GetUrls());
         Assert.Equal("Erro crítico interno: URLs front-end não definidas.", ex.Message);
     }
 }

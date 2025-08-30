@@ -25,7 +25,7 @@ public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUse
     #region extras
     private async Task<Client> Update(ClientInput input)
     {
-        Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId).FirstOrDefaultAsync() ?? throw new Exception("Cliente não encontrado.");
+        Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Cliente não encontrado.");
 
         client.FullName = input.FullName ?? client.FullName;
         client.Email = input.Email ?? client.Email;

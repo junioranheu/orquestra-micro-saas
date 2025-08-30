@@ -22,7 +22,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
                       Where(x =>
                         x.CompanyId == input.CompanyId &&
                         (input.CompanyUserRole == CompanyUserRoleEnum.Administrator || x.Status == true)
-                      ).FirstOrDefaultAsync() ?? throw new Exception("A empresa não foi contrada na base de dados.");
+                      ).FirstOrDefaultAsync() ?? throw new KeyNotFoundException("A empresa não foi contrada na base de dados.");
 
         List<CompanyUser> companyUsers = await _context.CompanyUsers.AsNoTracking().Where(x => x.CompanyId == input.CompanyId && x.Status == true).ToListAsync();
         bool isFirstAdministrator = CheckIfIsFirstAdministratorBeforeCreatingIt(companyUsers);
@@ -31,7 +31,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
         {
             if (!company.Status)
             {
-                throw new Exception(SystemConsts.Warn_NeedToVerifyCompany);
+                throw new InvalidOperationException(SystemConsts.Warn_NeedToVerifyCompany);
             }
         }
 
@@ -45,7 +45,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
             if (companyUser is not null)
             {
                 User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == companyUser.UserId).FirstOrDefaultAsync();
-                throw new Exception($"O usuário {user?.FullName ?? input.UserId.ToString()} já está cadastrado nessa empresa.");
+                throw new InvalidOperationException($"O usuário {user?.FullName ?? input.UserId.ToString()} já está cadastrado nessa empresa.");
             }
 
             return;
@@ -55,7 +55,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
         {
             if (companyUser is null)
             {
-                throw new Exception("O usuário não está cadastrado nessa empresa.");
+                throw new InvalidOperationException("O usuário não está cadastrado nessa empresa.");
             }
 
             return;

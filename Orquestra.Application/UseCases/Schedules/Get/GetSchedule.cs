@@ -19,7 +19,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
                      Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.ScheduleId == scheduleId && x.Status == true).
-                     FirstOrDefaultAsync() ?? throw new Exception($"Não foi possível localizar este horário agendado. ({scheduleId})");
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"Não foi possível localizar este horário agendado. ({scheduleId})");
 
         Guid companyId = result.CompanyId;
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);

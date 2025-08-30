@@ -20,7 +20,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
         if (!checkEmail)
         {
-            throw new Exception("O e-mail do cliente não é válido. Insira um e-mail válido, por favor.");
+            throw new ArgumentException("O e-mail do cliente não é válido. Insira um e-mail válido, por favor.");
         }
 
         input.Email = GetNormalizedLowerStr(input.Email);
@@ -34,7 +34,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
             if (anyCPF)
             {
-                throw new Exception($"O CPF {input.CPF} já está registrado nesta empresa como cliente.");
+                throw new InvalidOperationException($"O CPF {input.CPF} já está registrado nesta empresa como cliente.");
             }
 
             bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x =>
@@ -44,7 +44,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
             if (anyEmail)
             {
-                throw new Exception($"O e-mail {input.Email} já está registrado nesta empresa como cliente.");
+                throw new InvalidOperationException($"O e-mail {input.Email} já está registrado nesta empresa como cliente.");
             }
         }
     }

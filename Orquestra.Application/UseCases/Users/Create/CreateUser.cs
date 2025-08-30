@@ -48,7 +48,7 @@ public sealed class CreateUser(
     {
         if (string.IsNullOrEmpty(input.FullName) || string.IsNullOrEmpty(input.Email) || string.IsNullOrEmpty(input.Password))
         {
-            throw new Exception("Os dados do usuário não podem ser nulos.");
+            throw new ArgumentException("Os dados do usuário não podem ser nulos.");
         }
 
         User user = new()

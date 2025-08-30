@@ -56,7 +56,7 @@ public static class DependencyInjection
 
         if (frontendUrls is null || frontendUrls.Any(x => string.IsNullOrEmpty(x)))
         {
-            throw new Exception("Erro interno crítico: um ou mais URLs de Frontend não estão configurados no appsettings.json.");
+            throw new InvalidOperationException("Erro interno crítico: um ou mais URLs de Frontend não estão configurados no appsettings.json.");
         }
 
         services.AddCors(x =>

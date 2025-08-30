@@ -17,7 +17,7 @@ public sealed class GetClient(Context context, ICheckIfUserIsLinkedCompanyUser c
                      Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.ClientId == clientId && x.Status == true).
-                     FirstOrDefaultAsync() ?? throw new Exception($"Não foi possível localizar este cliente. ({clientId})");
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"Não foi possível localizar este cliente. ({clientId})");
 
         Guid companyId = result.CompanyId;
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);

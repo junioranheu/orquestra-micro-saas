@@ -24,7 +24,7 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     #region extras
     private async Task<Schedule> Update(ScheduleInput input)
     {
-        Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == input.ScheduleId).FirstOrDefaultAsync() ?? throw new Exception("Agendamento não encontrado.");
+        Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == input.ScheduleId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Agendamento não encontrado.");
 
         schedule.Date = input.Date;
         schedule.PaymentType = input.PaymentType;

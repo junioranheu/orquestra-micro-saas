@@ -45,7 +45,7 @@ public class UserController(
     {
         if (IsUserAuth())
         {
-            throw new Exception("Não é póssível criar uma nova conta porque você já está autenticado no sistema.");
+            throw new UnauthorizedAccessException("Não é póssível criar uma nova conta porque você já está autenticado no sistema.");
         }
 
         UserOutput output = await _create.Execute(input);
