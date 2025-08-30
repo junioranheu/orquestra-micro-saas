@@ -358,7 +358,7 @@ public sealed class InviteCompanyUserIntegrationTests
 
         // Assert: created CompanyUser must reference authUser.UserId (first admin uses userIdAuth);
         CompanyUser? created = await context.CompanyUsers.AsNoTracking().FirstOrDefaultAsync(x => x.CompanyId == company.CompanyId && x.UserId == authUser.UserId);
-       
+
         Assert.NotNull(created);
         Assert.Equal(CompanyUserRoleEnum.Administrator, created!.CompanyUserRole);
         Assert.True(created.IsCurrentMainCompanyUser);
@@ -394,6 +394,56 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.NotNull(capturedValues);
         Assert.True(capturedValues!.TryGetValue("[CompanyUserRole]", out string? roleValue));
         Assert.Equal(roleValue, roleValue.ToLowerInvariant());
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenUserAlreadyLinkedToCompany()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User authUser = UserMock.Create();
+        await Fixture.Save(context, authUser);
+
+        User existingUser = UserMock.Create();
+        await Fixture.Save(context, existingUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        // Adiciona usuário já como CompanyUser;
+        CompanyUser alreadyLinked = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = existingUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member
+        };
+
+        await context.AddAsync(alreadyLinked);
+        await context.SaveChangesAsync();
+
+        InviteCompanyUser sut = CreateSut(context, authUser, Fixture.CreateEmailService().Object);
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenEmailIsInvalid()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User authUser = UserMock.Create();
+        await Fixture.Save(context, authUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        InviteCompanyUser sut = CreateSut(context, authUser, Fixture.CreateEmailService().Object);
+
+        string invalidEmail = "email-invalido";
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(authUser.UserId, company.CompanyId, invalidEmail, false));
     }
 
     #region Helpers
