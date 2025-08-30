@@ -38,7 +38,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
             }
 
             bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x =>
-                                EF.Functions.ILike(x.Email, input.Email) &&
+                                x.Email.ToLower() == input.Email &&
                                 x.CompanyId == input.CompanyId
                             );
 

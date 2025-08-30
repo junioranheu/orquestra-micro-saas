@@ -30,14 +30,14 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
             throw new ArgumentException("O nome da empresa não é válido.");
         }
 
-        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => EF.Functions.ILike(x.Name, input.Name));
+        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name.ToLower() == input.Name);
 
         if (checkNameAlreadyExist)
         {
             throw new InvalidOperationException($"Já existe uma empresa registrada com esse nome. {warn}");
         }
 
-        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => EF.Functions.ILike(x.Email, input.Email));
+        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email.ToLower() == input.Email);
 
         if (checkEmailAlreadyExist)
         {

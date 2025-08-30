@@ -188,7 +188,7 @@ public sealed class InviteCompanyUserIntegrationTests
         Verification? saved = await context.Verifications.AsNoTracking().FirstOrDefaultAsync(v => v.VerificationId == verification.VerificationId);
 
         Assert.NotNull(saved);
-        Assert.True(saved!.Used);
+        Assert.True(saved.Used);
     }
 
     [Fact]
@@ -539,8 +539,7 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.Matches("^[A-Za-z0-9_-]+$", token); // Somente caracteres URL-safe;
     }
 
-
-    #region Helpers
+    #region helpers
     private static InviteCompanyUser CreateSut(Context context, User authUser, IEmailService? emailService = null)
     {
         // Cria o IHttpContextAccessor real com o usuário autenticado;

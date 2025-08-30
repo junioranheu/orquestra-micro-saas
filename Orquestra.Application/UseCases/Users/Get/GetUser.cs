@@ -15,13 +15,18 @@ public sealed class GetUser(Context context) : IGetUser
 
     public async Task<(UserOutput? output, string passwordEncrypted)> Execute(UserInput input)
     {
+        if ((input.UserId == Guid.Empty || input.UserId == null) && string.IsNullOrEmpty(input.Email))
+        {
+            throw new ArgumentException($"Erro interno: todos os parâmetros estão nulos ({nameof(GetUser)}/{nameof(Execute)}).");
+        }
+
         input.Email = GetNormalizedLowerStr(input.Email);
 
         var result = await _context.Users.
                      AsNoTracking().
                      Where(x =>
                         (input.UserId == Guid.Empty || x.UserId == input.UserId) &&
-                        EF.Functions.ILike(x.Email, input.Email)
+                        (string.IsNullOrEmpty(input.Email) || x.Email.ToLower() == input.Email)
                      ).FirstOrDefaultAsync();
 
         if (result is null)
@@ -51,7 +56,7 @@ public sealed class GetUser(Context context) : IGetUser
 
         var result = await _context.Users.
                      AsNoTracking().
-                     Where(x => 
+                     Where(x =>
                         ((userId == Guid.Empty || userId == null) || x.UserId == userId) &&
                         (string.IsNullOrEmpty(email) || x.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
                      ).FirstOrDefaultAsync();
