@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Orquestra.Domain.Consts;
+﻿namespace Orquestra.Domain.Consts;
 
 public static class SystemConsts
 {

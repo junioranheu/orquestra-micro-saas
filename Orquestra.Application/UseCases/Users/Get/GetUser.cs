@@ -51,6 +51,12 @@ public sealed class GetUser(Context context) : IGetUser
                         (string.IsNullOrEmpty(email) || x.Email == email)
                      ).FirstOrDefaultAsync();
 
+        var resultxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx = await _context.Users.
+                  AsNoTracking().
+                  Where(x =>
+                     ((userId == Guid.Empty || userId == null) || x.UserId == userId)
+                  ).FirstOrDefaultAsync();
+
         if (result is null)
         {
             return new();

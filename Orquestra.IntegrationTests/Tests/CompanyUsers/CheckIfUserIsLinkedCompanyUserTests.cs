@@ -140,7 +140,9 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        return new CheckIfUserIsLinkedCompanyUser(getCompanyUserByCompanyId, httpContextAccessor);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+
+        return checkIfUserIsLinkedCompanyUser;
     }
     #endregion
 }

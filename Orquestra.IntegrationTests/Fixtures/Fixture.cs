@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moq;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -23,17 +26,17 @@ public static class Fixture
 
     public static IHttpContextAccessor CreateIHttpContextAccessor(User user)
     {
-        var context = new DefaultHttpContext();
+        DefaultHttpContext context = new();
 
-        var claimList = new List<Claim>
-        {
+        List<Claim> claimList =
+        [
             new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new(ClaimTypes.Name, user.FullName),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Role, user.Role.ToString())
-        };
+        ];
 
-        var identity = new ClaimsIdentity(claimList, "mock");
+        ClaimsIdentity identity = new(claimList, "mock");
         context.User = new ClaimsPrincipal(identity);
 
         Mock<IHttpContextAccessor> mockAccessor = new();
@@ -60,10 +63,10 @@ public static class Fixture
             new(ClaimTypes.Role, UserRoleEnum.Common.ToString())
         ];
 
-        var identity = new ClaimsIdentity(claims, "TestAuthScheme");
-        var principal = new ClaimsPrincipal(identity);
+        ClaimsIdentity identity = new (claims, "TestAuthScheme");
+        ClaimsPrincipal principal = new (identity);
 
-        var httpContext = new DefaultHttpContext
+        DefaultHttpContext httpContext = new()
         {
             User = principal
         };
@@ -72,5 +75,29 @@ public static class Fixture
         {
             HttpContext = httpContext
         };
+    }
+
+    public static IWebHostEnvironment CreateDevelopmentEnvironment()
+    {
+        Mock<IWebHostEnvironment> envMock = new();
+        envMock.SetupGet(x => x.EnvironmentName).Returns("Development");
+        envMock.SetupGet(x => x.ApplicationName).Returns(SystemConsts.NameApp);
+        envMock.SetupGet(x => x.ContentRootPath).Returns(AppContext.BaseDirectory);
+        envMock.SetupGet(x => x.WebRootPath).Returns(AppContext.BaseDirectory);
+
+        return envMock.Object;
+    }
+
+    public static IConfiguration CreateConfiguration()
+    {
+        Dictionary<string, string> urls = new()
+        {
+            { "Urls:Development:Backend", "http://localhost:5035/api" },
+            { "Urls:Development:Frontend", "http://localhost:5173" }
+        };
+
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(urls!).Build();
+
+        return configuration;
     }
 }

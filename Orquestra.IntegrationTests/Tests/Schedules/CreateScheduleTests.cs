@@ -1,62 +1,145 @@
-﻿using Mapster;
-using Microsoft.AspNetCore.Http;
-using Orquestra.Application.UseCases.Clients.Get;
-using Orquestra.Application.UseCases.Companies.Get;
+﻿using Microsoft.AspNetCore.Http;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
-using Orquestra.Application.UseCases.Schedules.Base;
-using Orquestra.Application.UseCases.Schedules.Create;
-using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
 
-public sealed class CreateScheduleTests
+public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
 {
     [Fact]
-    public async Task Execute_ShouldCreateSchedule_WhenInputIsValid()
+    public async Task Execute_ShouldReturnTrue_WhenUserIsLinkedToCompany()
     {
-        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
-        await AddCompanyUserAsync(context, company, user);
+        // Arrange: contexto com usuário vinculado à empresa
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync();
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
-        CreateSchedule service = CreateScheduleService(context, user);
+        // Act: verificar se usuário está vinculado
+        bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false);
 
-        ScheduleOutput output = await service.Execute(user.UserId, input);
-        Schedule? savedSchedule = await context.Schedules.FindAsync(output.ScheduleId);
-
-        Assert.NotNull(output);
-        Assert.Equal(input.ClientId, output.ClientId);
-        Assert.Equal(input.CompanyId, output.CompanyId);
-        Assert.Equal(input.Date, output.Date);
-
-        Assert.NotNull(savedSchedule);
-        Assert.Equal(output.ScheduleId, savedSchedule.ScheduleId);
+        // Assert: deve retornar true
+        Assert.True(result);
     }
 
     [Fact]
-    public async Task Execute_ShouldThrow_WhenCoworkersAreNotValid()
+    public async Task Execute_ShouldReturnFalse_WhenUserNotLinkedAndThrowErrorFalse()
     {
-        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
-        input.UsersIds = [Guid.NewGuid()]; // Usuário aleatório, não linkado à empresa;
+        // Arrange: contexto com outro usuário vinculado à empresa
+        (Context context, User user, Company company) = await ArrangeCompanyWithOtherUserAsync();
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
 
-        await AddCompanyUserAsync(context, company, user);
+        // Act: tentar verificar vínculo sem lançar exceção
+        bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false, throwError: false);
 
-        CreateSchedule service = CreateScheduleService(context, user);
-
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.Execute(user.UserId, input));
+        // Assert: deve retornar false
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task Execute_ShouldThrow_WhenUserNotLinkedToCompany()
+    public async Task Execute_ShouldReturnTrue_WhenCompanyIsEmptyAndUserNotLinked()
     {
-        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
+        // Arrange: criar contexto, usuário e empresa vazia
+        Context context = Fixture.CreateContext();
 
-        // Empresa já tem outro usuário, mas não o usuário do teste;
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        var sut = CreateSut(context, user);
+
+        // Act: verificar vínculo do usuário
+        bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false);
+
+        // Assert: deve retornar true, pois empresa está vazia
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenUserLinkedButNotAdminAndNeedAdmin()
+    {
+        // Arrange: contexto com usuário vinculado como membro
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync();
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
+
+        // Act & Assert: deve lançar exceção pois precisa ser admin
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReturnTrue_WhenUserIsAdmin()
+    {
+        // Arrange: contexto com usuário vinculado como administrador
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync(CompanyUserRoleEnum.Administrator);
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
+
+        // Act: verificar vínculo com necessidade de admin
+        bool result = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: true);
+
+        // Assert: deve retornar true
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReturnTrue_WhenUserIsSystemAdmin()
+    {
+        // Arrange: contexto com usuário system admin
+        Context context = Fixture.CreateContext();
+
+        User adminUser = UserMock.Create();
+        adminUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, adminUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, adminUser);
+
+        // Act: verificar vínculo com necessidade de admin
+        bool result = await sut.Execute(company.CompanyId, adminUser.UserId, needCompanyAdmin: true);
+
+        // Assert: deve retornar true
+        Assert.True(result);
+    }
+
+    #region Helpers
+    private static async Task<(Context context, User user, Company company)> ArrangeCompanyWithUserAsync(CompanyUserRoleEnum role = CompanyUserRoleEnum.Member)
+    {
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = user.UserId,
+            CompanyUserRole = role
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        return (context, user, company);
+    }
+
+    private static async Task<(Context context, User user, Company company)> ArrangeCompanyWithOtherUserAsync()
+    {
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
         CompanyUser anotherUser = new()
         {
             CompanyId = company.CompanyId,
@@ -66,79 +149,16 @@ public sealed class CreateScheduleTests
 
         await Fixture.Save(context, anotherUser);
 
-        CreateSchedule service = CreateScheduleService(context, user);
-
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.Execute(user.UserId, input));
+        return (context, user, company);
     }
 
-    [Fact]
-    public async Task Execute_ShouldThrow_WhenScheduleDateIsBeforeToday()
-    {
-        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
-        await AddCompanyUserAsync(context, company, user);
-
-        input.Date = GetDate().AddDays(-1);
-
-        CreateSchedule service = CreateScheduleService(context, user);
-
-        await Assert.ThrowsAsync<Exception>(() => service.Execute(user.UserId, input));
-    }
-
-    [Fact]
-    public async Task Execute_ShouldThrow_WhenScheduleTypeIsInvalid()
-    {
-        (Context context, User user, Client _, Company company, ScheduleInput input) = await ArrangeValidScheduleAsync();
-        await AddCompanyUserAsync(context, company, user);
-
-        input.ScheduleStatus = ScheduleStatusEnum.Completed; // Tipo inválido;
-
-        CreateSchedule service = CreateScheduleService(context, user);
-
-        await Assert.ThrowsAsync<Exception>(() => service.Execute(user.UserId, input));
-    }
-
-    #region helpers
-    private static async Task<(Context context, User user, Client client, Company company, ScheduleInput input)> ArrangeValidScheduleAsync()
-    {
-        Context context = Fixture.CreateContext();
-
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Client client = ClientMock.Create();
-        await Fixture.Save(context, client);
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        ScheduleInput input = ScheduleMock.Create(client.ClientId, company.CompanyId).Adapt<ScheduleInput>();
-
-        return (context, user, client, company, input);
-    }
-
-    private static CreateSchedule CreateScheduleService(Context context, User user)
+    private static CheckIfUserIsLinkedCompanyUser CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-        GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
-        GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
-        ScheduleBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, getClient, getCompany);
-
-        return new CreateSchedule(deps);
-    }
-
-    private static async Task AddCompanyUserAsync(Context context, Company company, User user, CompanyUserRoleEnum role = CompanyUserRoleEnum.Member)
-    {
-        CompanyUser companyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = user.UserId,
-            CompanyUserRole = role
-        };
-
-        await Fixture.Save(context, companyUser);
+        return checkIfUserIsLinkedCompanyUser;
     }
     #endregion
 }
