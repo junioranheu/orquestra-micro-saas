@@ -15,6 +15,7 @@ public sealed class UpdateVerification(Context context, IGetVerification get) : 
 
         verification.Used = true;
 
+        _context.ChangeTracker.Clear();
         _context.Update(verification);
         await _context.SaveChangesAsync();
     }

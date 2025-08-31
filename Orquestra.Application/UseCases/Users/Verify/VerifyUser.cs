@@ -22,7 +22,7 @@ public sealed class VerifyUser(
         Verification verification = await _getVerification.Execute(token, verificationType: VerificationTypeEnum.User);
 
         var result = await _context.Users.
-                     AsNoTracking().
+                     // AsNoTracking(). // Intencionalmente sem AsNoTracking();
                      Where(x => x.UserId == verification.EntityId).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"O token {token} não pertence a nenhum usuário.");
 
