@@ -32,6 +32,7 @@ public sealed class UpdateUser(Context context,IGetUser getUser) : UserBase(getU
         user.Email = input.Email ?? user.Email;
         user.Password = !string.IsNullOrEmpty(input.Password) ? EncryptPassword(input.Password) : user.Password;
 
+        _context.ChangeTracker.Clear();
         _context.Update(user);
         await _context.SaveChangesAsync();
 
