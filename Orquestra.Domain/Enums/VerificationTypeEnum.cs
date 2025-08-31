@@ -3,7 +3,7 @@
 public enum VerificationTypeEnum
 {
     User = 1,
-    ResetPassword = 2,
+    PasswordReset = 2,
     Company = 3,
     CompanyUser = 4
 }
