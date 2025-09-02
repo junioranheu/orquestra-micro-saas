@@ -14,7 +14,6 @@ public sealed class CreateLog(Context context, ILogger<CreateLog> logger) : ICre
         try
         {
             _context.ChangeTracker.Clear();
-
             await _context.AddAsync(input);
             await _context.SaveChangesAsync();
         }

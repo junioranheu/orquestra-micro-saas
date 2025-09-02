@@ -31,7 +31,7 @@ public sealed class CreateCompanyTests
     [InlineData(UserRoleEnum.Administrator)]
     public async Task Execute_ShouldCreateCompany_ForAnyUserRole(UserRoleEnum role)
     {
-        // Arrange
+        // Arrange;
         Context context = Fixture.CreateContext();
 
         User user = UserMock.Create();
@@ -44,10 +44,10 @@ public sealed class CreateCompanyTests
         Company company = CompanyMock.Create();
         CompanyInput input = company.Adapt<CompanyInput>();
 
-        // Act
+        // Act;
         CompanyOutput result = await sut.Execute(user.UserId, input);
 
-        // Assert
+        // Assert;
         Assert.NotNull(result);
         Assert.Equal(input.Name, result.Name);
         Assert.Equal(input.Email, result.Email);
@@ -68,7 +68,7 @@ public sealed class CreateCompanyTests
     [InlineData(UserRoleEnum.Administrator)]
     public async Task Execute_ShouldThrow_WhenCompanyNameIsEmpty(UserRoleEnum role)
     {
-        // Arrange
+        // Arrange;
         Context context = Fixture.CreateContext();
 
         User user = UserMock.Create();
@@ -82,7 +82,7 @@ public sealed class CreateCompanyTests
         CompanyInput input = company.Adapt<CompanyInput>();
         input.Name = string.Empty;
 
-        // Act & Assert
+        // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
     }
 
@@ -92,7 +92,7 @@ public sealed class CreateCompanyTests
     [InlineData(UserRoleEnum.Administrator)]
     public async Task Execute_ShouldThrow_WhenCompanyEmailIsInvalid(UserRoleEnum role)
     {
-        // Arrange
+        // Arrange;
         Context context = Fixture.CreateContext();
 
         User user = UserMock.Create();
@@ -106,7 +106,7 @@ public sealed class CreateCompanyTests
         CompanyInput input = company.Adapt<CompanyInput>();
         input.Email = "email-invalido";
 
-        // Act & Assert
+        // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
     }
 
@@ -116,7 +116,7 @@ public sealed class CreateCompanyTests
     [InlineData(UserRoleEnum.Administrator)]
     public async Task Execute_ShouldSendEmailWithCorrectValues(UserRoleEnum role)
     {
-        // Arrange
+        // Arrange;
         Context context = Fixture.CreateContext();
 
         User user = UserMock.Create();
@@ -131,10 +131,10 @@ public sealed class CreateCompanyTests
         Company company = CompanyMock.Create();
         CompanyInput input = company.Adapt<CompanyInput>();
 
-        // Act
+        // Act;
         await sut.Execute(user.UserId, input);
 
-        // Assert
+        // Assert;
         Assert.NotNull(capturedValues);
         Assert.Equal(input.Name, capturedValues!["[CompanyName]"]);
         Assert.Equal(user.FullName.Split(" ")[0], capturedValues!["[UserName]"]);
@@ -149,7 +149,7 @@ public sealed class CreateCompanyTests
     [InlineData(UserRoleEnum.Administrator)]
     public async Task Execute_ShouldCreateVerificationWithUrlSafeToken(UserRoleEnum role)
     {
-        // Arrange
+        // Arrange;
         Context context = Fixture.CreateContext();
 
         User user = UserMock.Create();
@@ -162,10 +162,10 @@ public sealed class CreateCompanyTests
         Company company = CompanyMock.Create();
         CompanyInput input = company.Adapt<CompanyInput>();
 
-        // Act
+        // Act;
         CompanyOutput result = await sut.Execute(user.UserId, input);
 
-        // Assert
+        // Assert;
         Verification? verification = await context.Verifications.AsNoTracking().FirstOrDefaultAsync(v => v.EntityId == result.CompanyId && v.VerificationType == VerificationTypeEnum.Company);
 
         Assert.NotNull(verification);

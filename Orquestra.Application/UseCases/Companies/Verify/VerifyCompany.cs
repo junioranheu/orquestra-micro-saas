@@ -29,6 +29,7 @@ public sealed class VerifyCompany(
         // Salvar alteração;
         result.Status = true;
 
+        _context.ChangeTracker.Clear();
         _context.Update(result);
         await _context.SaveChangesAsync();
 
