@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Orquestra.Application.UseCases.Companies.Create;
@@ -24,25 +25,29 @@ namespace Orquestra.IntegrationTests.Tests.Companies;
 
 public sealed class CreateCompanyTests
 {
-    [Fact]
-    public async Task Execute_ShouldCreateCompany_WhenValidInput()
+    [Theory]
+    [InlineData(UserRoleEnum.Common)]
+    [InlineData(UserRoleEnum.Maintainer)]
+    [InlineData(UserRoleEnum.Administrator)]
+    public async Task Execute_ShouldCreateCompany_ForAnyUserRole(UserRoleEnum role)
     {
-        // Arrange;
+        // Arrange
         Context context = Fixture.CreateContext();
 
-        User adminUser = UserMock.Create();
-        adminUser.Role = UserRoleEnum.Administrator;
-        await Fixture.Save(context, adminUser);
+        User user = UserMock.Create();
+        user.Role = role;
+        await Fixture.Save(context, user);
 
-        CreateCompany sut = CreateSut(context, user: adminUser);
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompany sut = CreateSut(context, user, emailServiceMock);
 
         Company company = CompanyMock.Create();
         CompanyInput input = company.Adapt<CompanyInput>();
 
-        // Act;
-        CompanyOutput result = await sut.Execute(userIdAuth: adminUser.UserId, input);
+        // Act
+        CompanyOutput result = await sut.Execute(user.UserId, input);
 
-        // Assert;
+        // Assert
         Assert.NotNull(result);
         Assert.Equal(input.Name, result.Name);
         Assert.Equal(input.Email, result.Email);
@@ -57,8 +62,119 @@ public sealed class CreateCompanyTests
         Assert.False(result.Status);
     }
 
+    [Theory]
+    [InlineData(UserRoleEnum.Common)]
+    [InlineData(UserRoleEnum.Maintainer)]
+    [InlineData(UserRoleEnum.Administrator)]
+    public async Task Execute_ShouldThrow_WhenCompanyNameIsEmpty(UserRoleEnum role)
+    {
+        // Arrange
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        user.Role = role;
+        await Fixture.Save(context, user);
+
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompany sut = CreateSut(context, user, emailServiceMock);
+
+        Company company = CompanyMock.Create();
+        CompanyInput input = company.Adapt<CompanyInput>();
+        input.Name = string.Empty;
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Theory]
+    [InlineData(UserRoleEnum.Common)]
+    [InlineData(UserRoleEnum.Maintainer)]
+    [InlineData(UserRoleEnum.Administrator)]
+    public async Task Execute_ShouldThrow_WhenCompanyEmailIsInvalid(UserRoleEnum role)
+    {
+        // Arrange
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        user.Role = role;
+        await Fixture.Save(context, user);
+
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompany sut = CreateSut(context, user, emailServiceMock);
+
+        Company company = CompanyMock.Create();
+        CompanyInput input = company.Adapt<CompanyInput>();
+        input.Email = "email-invalido";
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Theory]
+    [InlineData(UserRoleEnum.Common)]
+    [InlineData(UserRoleEnum.Maintainer)]
+    [InlineData(UserRoleEnum.Administrator)]
+    public async Task Execute_ShouldSendEmailWithCorrectValues(UserRoleEnum role)
+    {
+        // Arrange
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        user.Role = role;
+        await Fixture.Save(context, user);
+
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
+
+        CreateCompany sut = CreateSut(context, user, emailServiceMock);
+
+        Company company = CompanyMock.Create();
+        CompanyInput input = company.Adapt<CompanyInput>();
+
+        // Act
+        await sut.Execute(user.UserId, input);
+
+        // Assert
+        Assert.NotNull(capturedValues);
+        Assert.Equal(input.Name, capturedValues!["[CompanyName]"]);
+        Assert.Equal(user.FullName.Split(" ")[0], capturedValues!["[UserName]"]);
+        Assert.Contains("/Company/Verify/", capturedValues!["[VerifyUrl]"]);
+
+        emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, It.IsAny<IEnumerable<string>>()), Times.Once);
+    }
+
+    [Theory]
+    [InlineData(UserRoleEnum.Common)]
+    [InlineData(UserRoleEnum.Maintainer)]
+    [InlineData(UserRoleEnum.Administrator)]
+    public async Task Execute_ShouldCreateVerificationWithUrlSafeToken(UserRoleEnum role)
+    {
+        // Arrange
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        user.Role = role;
+        await Fixture.Save(context, user);
+
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompany sut = CreateSut(context, user, emailServiceMock);
+
+        Company company = CompanyMock.Create();
+        CompanyInput input = company.Adapt<CompanyInput>();
+
+        // Act
+        CompanyOutput result = await sut.Execute(user.UserId, input);
+
+        // Assert
+        Verification? verification = await context.Verifications.AsNoTracking().FirstOrDefaultAsync(v => v.EntityId == result.CompanyId && v.VerificationType == VerificationTypeEnum.Company);
+
+        Assert.NotNull(verification);
+        Assert.Matches("^[A-Za-z0-9_-]+$", verification!.Token); // URL-safe token
+        Assert.False(verification.Used);
+    }
+
     #region helper
-    private static CreateCompany CreateSut(Context context, User user)
+    private static CreateCompany CreateSut(Context context, User user, Mock<IEmailService> emailServiceMock)
     {
         IConfiguration config = Fixture.CreateConfiguration();
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
@@ -66,10 +182,9 @@ public sealed class CreateCompanyTests
         EnvService envService = new(env, config);
         CreateVerification createVerification = new(context);
         GetUser getUser = new(context);
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-        GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);   
+        GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
         InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
 
