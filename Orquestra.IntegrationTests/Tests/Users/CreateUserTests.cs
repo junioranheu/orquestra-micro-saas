@@ -22,7 +22,7 @@ public sealed class CreateUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        var sut = CreateSutWithRealServices(context, new Mock<IEmailService>());
+        CreateUser sut = CreateSut(context, new Mock<IEmailService>());
 
         UserInput input = new() { FullName = "", Email = "", Password = "" };
 
@@ -46,7 +46,7 @@ public sealed class CreateUserTests
         Dictionary<string, string>? capturedValues = null;
         Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
 
-        CreateUser sut = CreateSutWithRealServices(context, emailServiceMock);
+        CreateUser sut = CreateSut(context, emailServiceMock);
 
         // Act;
         UserOutput output = await sut.Execute(input);
@@ -125,7 +125,7 @@ public sealed class CreateUserTests
         };
 
         Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        CreateUser sut = CreateSutWithRealServices(context, emailServiceMock);
+        CreateUser sut = CreateSut(context, emailServiceMock);
 
         // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(input));
@@ -154,7 +154,7 @@ public sealed class CreateUserTests
         };
 
         Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        CreateUser sut = CreateSutWithRealServices(context, emailServiceMock);
+        CreateUser sut = CreateSut(context, emailServiceMock);
 
         // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(input));
@@ -186,14 +186,14 @@ public sealed class CreateUserTests
         await context.SaveChangesAsync();
 
         Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        CreateUser sut = CreateSutWithRealServices(context, emailServiceMock);
+        CreateUser sut = CreateSut(context, emailServiceMock);
 
         // Act & Assert;
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(input));
     }
 
     #region helpers
-    private static CreateUser CreateSutWithRealServices(Context context, Mock<IEmailService> emailService)
+    private static CreateUser CreateSut(Context context, Mock<IEmailService> emailService)
     {
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
         IConfiguration config = Fixture.CreateConfiguration();
@@ -204,6 +204,6 @@ public sealed class CreateUserTests
         CreateUser createUser = new(context, envService, verificationService, emailService.Object, getUser);
 
         return createUser;
-        #endregion
     }
+    #endregion
 }

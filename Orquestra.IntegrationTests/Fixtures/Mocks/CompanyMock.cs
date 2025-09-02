@@ -13,7 +13,7 @@ public static class CompanyMock
             CompanyId = Guid.NewGuid(),
             Name = GetRandomString(GetRandomNumber(5, 15), false),
             Email = $"{GetRandomString(GetRandomNumber(5, 15), false)}@gmail.com",
-            Phone = GetRandomString(GetRandomNumber(5, 15), false),
+            Phone = $"12 9827163{GetRandomNumber(2, 2)}",
             CompanyType = CompanyTypeEnum.ClinicaOdontologia,
             Address = GetRandomString(GetRandomNumber(5, 15), false),
             City = GetRandomString(GetRandomNumber(5, 15), false),
