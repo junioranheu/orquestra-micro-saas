@@ -32,8 +32,8 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
 
         #region postgreSQL_datetime_normalize_utc
         var utcConverter = new ValueConverter<DateTime, DateTime>(
-           v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(), // Salva como UTC;
-           v => DateTime.SpecifyKind(v, DateTimeKind.Utc)             // Lê como UTC;
+           x => x.Kind == DateTimeKind.Utc ? x : x.ToUniversalTime(), // Salva como UTC;
+           x => DateTime.SpecifyKind(x, DateTimeKind.Utc)             // Lê como UTC;
         );
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -48,8 +48,8 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
                 {
                     property.SetValueConverter(
                         new ValueConverter<DateTime?, DateTime?>(
-                            v => v.HasValue ? (v.Value.Kind == DateTimeKind.Utc ? v.Value : v.Value.ToUniversalTime()) : v,
-                            v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v
+                            x => x.HasValue ? (x.Value.Kind == DateTimeKind.Utc ? x.Value : x.Value.ToUniversalTime()) : x,
+                            x => x.HasValue ? DateTime.SpecifyKind(x.Value, DateTimeKind.Utc) : x
                         )
                     );
                 }

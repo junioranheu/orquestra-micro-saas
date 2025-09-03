@@ -7,7 +7,6 @@ using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
-using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Auth.Models;
@@ -93,17 +92,7 @@ public sealed class CreateTokenTests
     private static CreateToken CreateSut(Context context, User user)
     {
         IConfiguration config = Fixture.CreateConfiguration();
-
-        JwtSettings jwtSettings = new()
-        {
-            TokenExpiryMinutes = 10,
-            RefreshTokenExpiryMinutes = 30,
-            Issuer = $"{SystemConsts.NameApp}.Test",
-            Audience = $"{SystemConsts.NameApp}.TestAudience",
-        };
-
-        IOptions<JwtSettings> jwtOptions = Options.Create(jwtSettings);
-
+        IOptions<JwtSettings> jwtOptions = Fixture.CreateJwtOptions();
         JwtTokenGenerator jwtTokenGenerator = new(jwtOptions, config);
         GetRefreshToken getRefreshToken = new(context);
         CreateRefreshToken createRefreshToken = new(context, jwtTokenGenerator, getRefreshToken);

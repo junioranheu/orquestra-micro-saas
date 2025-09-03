@@ -64,8 +64,24 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         //await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         #endregion
 
+        #region teste_de_integracao
+        // Foi necessário criar esse IF para os testes de integração porque aparentemente ele não entende o ExecuteUpdateAsync;
+        if (_context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory")
+        {
+            List<RefreshToken> tokens = await _context.RefreshTokens.Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).ToListAsync();
+
+            foreach (var t in tokens)
+            {
+                t.RevokedDate = GetDate();
+            }
+
+            await _context.SaveChangesAsync();
+            return;
+        }
+        #endregion
+
         await _context.RefreshTokens.
-        AsNoTracking().
+        // AsNoTracking(). // Intencionalmente sem AsNoTracking();
         Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
         ExecuteUpdateAsync(x => x.
             SetProperty(prop => prop.RevokedDate, GetDate())

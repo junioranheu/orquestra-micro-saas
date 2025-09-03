@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Moq;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
+using Orquestra.Infrastructure.Auth.Models;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using System.Security.Claims;
@@ -127,5 +129,20 @@ public static class Fixture
         emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null)).Returns(Task.CompletedTask);
 
         return emailServiceMock;
+    }
+
+    public static IOptions<JwtSettings> CreateJwtOptions()
+    {
+        JwtSettings jwtSettings = new()
+        {
+            TokenExpiryMinutes = 10,
+            RefreshTokenExpiryMinutes = 30,
+            Issuer = $"{SystemConsts.NameApp}.Test",
+            Audience = $"{SystemConsts.NameApp}.TestAudience",
+        };
+
+        IOptions<JwtSettings> jwtOptions = Options.Create(jwtSettings);
+
+        return jwtOptions;
     }
 }
