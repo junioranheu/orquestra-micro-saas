@@ -160,7 +160,7 @@ public sealed class GetTests
     }
 
     [Fact]
-    public void GenerateSafeToken32_ShouldReturnNonNullBase64String()
+    public void GenerateSafeToken32_ShouldReturn_NonNullBase64String()
     {
         // Act
         string token = GenerateSafeToken32Bytes(urlSafe: false);
@@ -179,7 +179,7 @@ public sealed class GetTests
     }
 
     [Fact]
-    public void GenerateSafeToken32_UrlSafe_ShouldReturnNonNullStringWithoutIllegalChars()
+    public void GenerateSafeToken32_UrlSafe_ShouldReturn_NonNullStringWithoutIllegalChars()
     {
         // Act
         string token = GenerateSafeToken32Bytes(urlSafe: true);
@@ -194,7 +194,7 @@ public sealed class GetTests
     }
 
     [Fact]
-    public void GenerateSafeToken32_ShouldGenerateUniqueTokens()
+    public void GenerateSafeToken32_ShouldGenerate_UniqueTokens()
     {
         // Act
         string token1 = GenerateSafeToken32Bytes(urlSafe: true);
@@ -211,7 +211,7 @@ public sealed class GetTests
     [InlineData(" Hello ", "hello")]
     [InlineData("HELLO", "hello")]
     [InlineData(" HeLLo WoRLd ", "hello world")]
-    public void GetNormalizedLowerStr_ShouldReturnExpectedResult(string? input, string expected)
+    public void GetNormalizedLowerStr_ShouldReturn_ExpectedResult(string? input, string expected)
     {
         // Act;
         var result = GetNormalizedLowerStr(input);
@@ -230,13 +230,25 @@ public sealed class GetTests
     [InlineData("email@invalido", false)]
     [InlineData("email@invalido.", false)]
     [InlineData("@semusuario.com", false)]
-    public void IsEmailValid_ShouldReturnExpectedResult(string? email, bool expected)
+    public void IsEmailValid_ShouldReturn_ExpectedResult(string? email, bool expected)
     {
         // Act;
         bool result = IsEmailValid(email);
 
         // Assert;
         Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void GenerateJwtSecret_ShouldReturn_32CharHexString()
+    {
+        // Act;
+        string secret = GenerateJwtSecret();
+
+        // Assert;
+        Assert.NotNull(secret);                         
+        Assert.Equal(32, secret.Length); // Tem 32 caracteres;
+        Assert.True(secret.All(x => "0123456789abcdef".Contains(char.ToLower(x)))); // Todos hex;
     }
 
     #region helpers

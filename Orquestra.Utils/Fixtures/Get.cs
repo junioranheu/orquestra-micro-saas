@@ -193,4 +193,18 @@ public static class Get
         Regex regex = new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled);
         return regex.IsMatch(email);
     }
+
+    /// <summary>
+    /// Gera um segredo aleatório para JWT no formato hexadecimal de 32 caracteres (16 bytes),
+    /// que pode ser usado para configurar a chave secreta do JWT.
+    /// </summary>
+    /// <returns>Uma string hexadecimal de 32 caracteres representando a chave secreta.</returns>
+    public static string GenerateJwtSecret()
+    {
+        byte[] bytes = new byte[16]; // 16 bytes = 32 chars hex;
+        Random.Shared.NextBytes(bytes);
+        string hex = string.Concat(bytes.Select(x => x.ToString("x2"))); // Hex string;
+
+        return hex;
+    }
 }

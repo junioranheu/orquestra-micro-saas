@@ -10,6 +10,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using System.Security.Claims;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Fixtures;
 
@@ -94,7 +95,8 @@ public static class Fixture
         Dictionary<string, string> urls = new()
         {
             { "Urls:Development:Backend", "http://localhost:5035/api" },
-            { "Urls:Development:Frontend", "http://localhost:5173" }
+            { "Urls:Development:Frontend", "http://localhost:5173" },
+            { "JwtSettings:Secret", GenerateJwtSecret() }
         };
 
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(urls!).Build();
