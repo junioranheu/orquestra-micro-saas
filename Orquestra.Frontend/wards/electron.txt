@@ -1,0 +1,52 @@
+# 04/09/2025
+# Funcional APENAS em Dev;
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#1 - Instalar dependências
+npm i concurrently
+npm i wait-on
+npm i electron
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#2 - package.json
+Embaixo do item "private" e acima de "scripts", adicionar os itens:
+"type": "module",
+ 
+Dentro de "scripts", adicionar:
+"dev:all": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron electron/main.js\""
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#3 - Criar arquivos .js
+Dentro do root do projeto, criar a pasta "electron", e dentro da pasta criar os arquivos:
+main.js
+
+import { app, BrowserWindow } from 'electron';
+
+function createWindow() {
+    const win = new BrowserWindow({
+        width: 1280,
+        height: 800,
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+        },
+        autoHideMenuBar: true
+    });
+
+    win.loadURL('http://localhost:3000'); // Dev;
+    win.webContents.openDevTools();
+}
+
+app.whenReady().then(createWindow);
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#4 - next.config.js
+Talvez seja necessário ajustar a escrita do next.config.js para a versão mais moderna (usa o CONTROL + PONTO, gg)

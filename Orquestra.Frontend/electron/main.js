@@ -1,9 +1,4 @@
 import { app, BrowserWindow } from 'electron';
-// import path from 'path';
-// import { fileURLToPath } from 'url';
-
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -16,8 +11,9 @@ function createWindow() {
         autoHideMenuBar: true
     });
 
-    win.loadURL('http://localhost:3000'); // Dev;
-    // win.webContents.openDevTools();
+    // Dev;
+    win.loadURL('http://localhost:3000');
+    win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
