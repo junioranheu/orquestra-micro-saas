@@ -58,7 +58,7 @@ public sealed class GetUser(Context context) : IGetUser
                      AsNoTracking().
                      Where(x =>
                         ((userId == Guid.Empty || userId == null) || x.UserId == userId) &&
-                        (string.IsNullOrEmpty(email) || x.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
+                        (string.IsNullOrEmpty(email) || x.Email.ToLower() == email)
                      ).FirstOrDefaultAsync();
 
         if (result is null)
