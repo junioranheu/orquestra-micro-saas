@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
 
@@ -58,7 +59,14 @@ public sealed class UpdateModuleCompanyUser(
 
         if (invalidModules.Length != 0)
         {
-            throw new InvalidOperationException($"Os módulos a seguir não são válidos para a empresa: {string.Join(", ", invalidModules)}");
+            List<string> invalidModulesStr = [];
+
+            foreach (var module in invalidModules)
+            {
+                invalidModulesStr.Add(GetEnumDesc(module));
+            }
+
+            throw new InvalidOperationException($"Os módulos a seguir não são válidos para a empresa: {string.Join(", ", invalidModulesStr)}");
         }
     }
     #endregion
