@@ -1,14 +1,14 @@
 {
     "name": "orquestra",
     "version": "0.1.0",
-    "type": "module",
     "private": true,
+    "type": "module",
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build --turbopack",
         "start": "next start",
         "lint": "eslint",
-        "dev:all": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron electron/main.js\""
+        "dev:electron": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron electron/main.js\""
     },
     "dependencies": {
         "animate.css": "^4.1.1",
