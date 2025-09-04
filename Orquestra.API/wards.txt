@@ -1,1 +1,1 @@
-criar parada de usuário confirmar conta
+criar testes unitários para as novas paradas de Module de Company e CompanyUsers

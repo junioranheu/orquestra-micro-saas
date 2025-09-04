@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Orquestra.Infrastructure.Data;
@@ -11,9 +12,11 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20250904190937_AddModulesInCompanyUserEntity")]
+    partial class AddModulesInCompanyUserEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,10 +137,6 @@ namespace Orquestra.Infrastructure.Migrations
 
                     b.Property<string>("LogoUrl")
                         .HasColumnType("text");
-
-                    b.PrimitiveCollection<int[]>("Modules")
-                        .IsRequired()
-                        .HasColumnType("integer[]");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
+using Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
 
 namespace Orquestra.Application.UseCases.CompanyUsers;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IUpdateCurrentMainCompanyUser, UpdateCurrentMainCompanyUser>();
         services.AddScoped<IGetCurrentMainCompanyUser, GetCurrentMainCompanyUser>();
         services.AddScoped<IInviteCompanyUser, InviteCompanyUser>();
+        services.AddScoped<IUpdateModuleCompany, UpdateModuleCompanyUser>();
 
         return services;
     }

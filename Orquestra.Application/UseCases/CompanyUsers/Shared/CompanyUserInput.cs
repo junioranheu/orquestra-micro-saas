@@ -9,4 +9,6 @@ public sealed class CompanyUserInput
     public Guid UserId { get; set; }
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
+
+    public ModuleEnum[] Modules { get; set; } = [];
 }

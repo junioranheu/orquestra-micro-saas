@@ -34,6 +34,8 @@ public sealed class CompanyInput
     public string? LogoUrl { get; set; } = string.Empty;
 
     public string? Color { get; set; } = string.Empty;
+
+    public ModuleEnum[] Modules { get; set; } = [];
     #endregion
 
     public bool Status { get; set; }

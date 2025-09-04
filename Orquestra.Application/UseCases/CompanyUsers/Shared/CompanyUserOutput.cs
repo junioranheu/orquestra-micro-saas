@@ -18,6 +18,8 @@ public sealed class CompanyUserOutput
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
 
+    public ModuleEnum[] Modules { get; set; } = [];
+
     public bool IsCurrentMainCompanyUser { get; set; } = false;
 
     public DateTime CreatedDate { get; set; }
