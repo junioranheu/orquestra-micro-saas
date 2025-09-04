@@ -14,9 +14,9 @@ public sealed class GetModuleCompany(Context context, ICheckIfUserIsLinkedCompan
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<CompanyModulesOutput> Execute(Guid userIdAuth, Guid companyId)
+    public async Task<CompanyModulesOutput> Execute(Guid userId, Guid companyId)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId, needCompanyAdmin: false);
 
         var result = await _context.Companies.
                      AsNoTracking().

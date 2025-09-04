@@ -41,7 +41,7 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
     private async Task UpdateAllModulesFromUsersOfThisCompany(ModuleEnum[]? oldModules, ModuleEnum[]? newModules, Guid companyId)
     {
         // Obter todos os módulos que NÃO farão mais parte da lista de módulos da empresa;
-        ModuleEnum[]? invalidModules = (newModules is null || newModules.Length == 0) ? oldModules : [.. newModules?.Except(oldModules ?? []) ?? []];
+        ModuleEnum[]? invalidModules = (newModules is null || newModules.Length == 0) ? oldModules : [.. oldModules?.Except(newModules ?? []) ?? []];
 
         if (invalidModules is null || invalidModules.Length == 0)
         {
@@ -50,10 +50,7 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
 
         var result = await _context.CompanyUsers.
                      AsNoTracking().
-                     Where(x =>
-                        x.CompanyId == companyId &&
-                        !x.Modules!.Any(y => invalidModules.Contains(y))
-                     ).ToListAsync();
+                     Where(x => x.CompanyId == companyId).ToListAsync();
 
         if (result is null || result.Count == 0)
         {
@@ -62,7 +59,7 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
 
         foreach (var item in result)
         {
-            ModuleEnum[] validModules = [.. (invalidModules ?? []).Except(item.Modules ?? [])];
+            ModuleEnum[] validModules = [.. (item.Modules ?? []).Except(invalidModules ?? [])];
             item.Modules = validModules;
         }
 

@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.Companies.GetModule;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -10,7 +11,7 @@ using static Orquestra.Utils.Fixtures.Get;
 namespace Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
 
 public sealed class UpdateModuleCompanyUser(
-        Context context, 
+        Context context,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IGetModuleCompany getModuleCompany
     ) : IUpdateModuleCompanyUser
@@ -22,12 +23,13 @@ public sealed class UpdateModuleCompanyUser(
     public async Task Execute(Guid userIdAuth, CompanyUserUpdateModuleInput input)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: input.UserId, needCompanyAdmin: false);
 
-        CompanyModulesOutput companyModulesOutput = await _getModuleCompany.Execute(userIdAuth, companyId: input.CompanyId) ?? throw new InvalidOperationException("Nenhum módulo está vinculado à empresa, portanto você não pode prosseguir com esta ação.");
-        
+        CompanyModulesOutput companyModulesOutput = await _getModuleCompany.Execute(userId: input.UserId, companyId: input.CompanyId) ?? throw new InvalidOperationException("Nenhum módulo está vinculado à empresa, portanto você não pode prosseguir com esta ação.");
+
         var result = await _context.CompanyUsers.
                      AsNoTracking().
-                     Where(x => x.CompanyId == input.CompanyId && x.UserId == userIdAuth).
+                     Where(x => x.CompanyId == input.CompanyId && x.UserId == input.UserId).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NeedToVerify_User);
 
         if (!result.Status)
@@ -66,7 +68,11 @@ public sealed class UpdateModuleCompanyUser(
                 invalidModulesStr.Add(GetEnumDesc(module));
             }
 
-            throw new InvalidOperationException($"Os módulos a seguir não são válidos para a empresa: {string.Join(", ", invalidModulesStr)}");
+            string msg = invalidModules.Length == 1 ? 
+                $"O módulo a seguir não é válido para a empresa: {string.Join(", ", invalidModulesStr)}" : 
+                $"Os módulos a seguir não são válidos para a empresa: {string.Join(", ", invalidModulesStr)}";
+
+            throw new InvalidOperationException(msg);
         }
     }
     #endregion
