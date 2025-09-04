@@ -1,8 +1,8 @@
-﻿using Orquestra.Domain.Enums;
+﻿using Orquestra.Application.UseCases.Companies.Shared;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
 
 public interface IUpdateModuleCompanyUser
 {
-    Task Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules);
+    Task Execute(Guid userIdAuth, CompanyUserUpdateModuleInput input);
 }

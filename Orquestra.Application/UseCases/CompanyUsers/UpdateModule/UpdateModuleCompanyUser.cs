@@ -18,15 +18,15 @@ public sealed class UpdateModuleCompanyUser(
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
     private readonly IGetModuleCompany _getModuleCompany = getModuleCompany;
 
-    public async Task Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
+    public async Task Execute(Guid userIdAuth, CompanyUserUpdateModuleInput input)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        CompanyModulesOutput companyModulesOutput = await _getModuleCompany.Execute(userIdAuth, companyId) ?? throw new InvalidOperationException("Nenhum módulo está vinculado à empresa, portanto você não pode prosseguir com esta ação.");
+        CompanyModulesOutput companyModulesOutput = await _getModuleCompany.Execute(userIdAuth, companyId: input.CompanyId) ?? throw new InvalidOperationException("Nenhum módulo está vinculado à empresa, portanto você não pode prosseguir com esta ação.");
         
         var result = await _context.CompanyUsers.
                      AsNoTracking().
-                     Where(x => x.CompanyId == companyId && x.UserId == userIdAuth).
+                     Where(x => x.CompanyId == input.CompanyId && x.UserId == userIdAuth).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NeedToVerify_User);
 
         if (!result.Status)
@@ -34,26 +34,31 @@ public sealed class UpdateModuleCompanyUser(
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_User);
         }
 
-        CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(companyModulesOutput, newModules: modules);
+        CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(companyModulesOutput, newModules: input.Modules);
 
         // Atualizar/sobrescrever;
-        result.Modules = modules;
+        result.Modules = input.Modules;
 
         _context.Update(result);
         await _context.SaveChangesAsync();
     }
 
     #region extras
-    private static void CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(CompanyModulesOutput companyModulesOutput, ModuleEnum[] newModules)
+    private static void CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(CompanyModulesOutput companyModulesOutput, ModuleEnum[]? newModules)
     {
         ModuleEnum[] companiesModules = companyModulesOutput.Modules ?? [];
+
+        if (newModules is null || newModules.Length == 0)
+        {
+            return;
+        }
 
         // Obter todos os módulos que NÃO estão na lista da empresa;
         ModuleEnum[] invalidModules = [.. newModules.Except(companiesModules)];
 
         if (invalidModules.Length != 0)
         {
-            throw new Exception($"Os módulos a seguir não são válidos para a empresa: {string.Join(", ", invalidModules)}");
+            throw new InvalidOperationException($"Os módulos a seguir não são válidos para a empresa: {string.Join(", ", invalidModules)}");
         }
     }
     #endregion

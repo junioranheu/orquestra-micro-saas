@@ -15,6 +15,8 @@ public class MeSimpleOutput
 public sealed class MeOutput : MeSimpleOutput
 {
     public CompanySimpleOutput? CurrentMainCompany { get; set; }
+    public ModuleEnum[]? Modules { get; set; } = [];
+    public List<string> ModulesStr { get; set; } = [];
     public DateTime TokenExpirationDate { get; set; }
     public DateTime RefreshTokenExpirationDate { get; set; }
 }

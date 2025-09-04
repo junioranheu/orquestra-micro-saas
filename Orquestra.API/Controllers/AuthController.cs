@@ -9,6 +9,7 @@ using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
+using Orquestra.Application.UseCases.CompanyUsers.GetModule;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
@@ -25,7 +26,8 @@ public class AuthController(
         ICreateRefreshToken createRefreshToken,
         IJwtTokenGenerator jwtTokenGenerator,
         IGetRefreshToken getRefreshToken,
-        IGetCurrentMainCompanyUser getCurrentMainCompanyUser
+        IGetCurrentMainCompanyUser getCurrentMainCompanyUser,
+        IGetModuleCompanyUser getModuleCompanyUser
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
@@ -33,6 +35,7 @@ public class AuthController(
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
+    private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;  
 
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
@@ -103,9 +106,20 @@ public class AuthController(
             Roles = userRoles,
             RolesStr = userRolesStr,
             CurrentMainCompany = currentMainCompanySimple,
+            Modules = [],
+            ModulesStr = [], 
             TokenExpirationDate = validTo,
             RefreshTokenExpirationDate = refreshToken?.ExpiredDate.GetValueOrDefault() ?? DateTime.MinValue
         };
+
+        // Módulos;
+        if (currentMainCompany is not null)
+        {
+            (ModuleEnum[] modules, List<string> modulesStr) = await _getModuleCompanyUser.Execute(userIdAuth, companyId: currentMainCompany.CompanyId);
+
+            output.Modules = modules;
+            output.ModulesStr = modulesStr;
+        }
 
         return Ok(output);
     }
