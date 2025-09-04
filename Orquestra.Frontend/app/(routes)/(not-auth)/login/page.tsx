@@ -1,30 +1,23 @@
 'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
-import iUser from '@/app/api/consts/user';
-import { Fetch } from '@/app/api/fetch';
+import { iUserInput } from '@/app/api/consts/user';
 import ImgLogo from '@/app/assets/png/logo.png';
 import CookieWidget from '@/app/components/cookie/cookie-consent';
 import Button from '@/app/components/input/button/button';
 import InputMask from '@/app/components/input/text/input.mask';
-import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
+import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
-import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import styles from './page.module.scss';
-
-interface iLoginForm {
-    email: string;
-    password: string;
-}
 
 export default function Login() {
 
@@ -37,13 +30,13 @@ export default function Login() {
 
     const refButton = useRef<HTMLButtonElement>(null);
 
-    function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
         if (e.key === 'Enter') {
             refButton.current?.click();
         }
     }
 
-    const [formData, setFormData] = useState<iLoginForm>({
+    const [formData, setFormData] = useState<iUserInput>({
         email: '', password: ''
     });
 
@@ -56,18 +49,10 @@ export default function Login() {
         const user = {
             email: formData.email,
             password: formData.password
-        } as iLoginForm;
+        } as iUserInput;
 
         try {
-            const result = await Fetch.post({ url: CONSTS_AUTH.auth, body: user }) as iUser;
-
-            if (!result) {
-                return;
-            }
-
-            setAuth(result);
-            Cookies.set(SYSTEM.COOKIE_NAME, JSON.stringify(result), { expires: new Date(result.refreshTokenExpirationDate), path: '/' });
-            router.push(ROUTES.DASHBOARD);
+            await handleSetCookieAndLogin(CONSTS_AUTH.auth, user, setAuth, router);
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             return;
@@ -114,7 +99,7 @@ export default function Login() {
                 <div className={styles.flex}>
                     <InputMask
                         title={'E-mail'}
-                        objectFormData={handleGetPropName(formData, x => x.email)}
+                        objectFormData={handleGetPropName(formData, x => x.email ?? '')}
                         isDisabled={isIncognito}
                         handleChange={(e) => handleInputFormStateChange(e, setFormData)}
                         handleKeyDown={(e) => handleKeyDown(e)}
@@ -122,7 +107,7 @@ export default function Login() {
 
                     <InputMask
                         title={'Senha'}
-                        objectFormData={handleGetPropName(formData, x => x.password)}
+                        objectFormData={handleGetPropName(formData, x => x.password ?? '')}
                         type='password'
                         isDisabled={isIncognito}
                         handleChange={(e) => handleInputFormStateChange(e, setFormData)}

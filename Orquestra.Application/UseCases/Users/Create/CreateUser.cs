@@ -38,6 +38,12 @@ public sealed class CreateUser(
 
         await SendEmail(user, verification);
 
+        if (!string.IsNullOrEmpty(input.InviteToken))
+        {
+            // Encontrar empresa e vincular o usuário;
+            throw new NotImplementedException();
+        }
+
         var output = user.Adapt<UserOutput>(); 
 
         return output;

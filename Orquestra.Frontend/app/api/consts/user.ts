@@ -9,7 +9,14 @@ export const CONSTS_USER = {
     put: `${BASE}/${controller}`
 };
 
-export default interface iUser {
+export interface iUserInput {
+    fullName?: string;
+    email?: string;
+    password?: string;
+    inviteToken?: string;
+}
+
+export interface iUser {
     userId: string;
     fullName: string;
     email: string;
