@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.Get;
@@ -19,7 +20,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
                      Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.ScheduleId == scheduleId && x.Status == true).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"Não foi possível localizar este horário agendado. ({scheduleId})");
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
 
         Guid companyId = result.CompanyId;
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);

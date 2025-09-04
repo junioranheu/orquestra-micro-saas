@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Base;
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
@@ -25,7 +26,7 @@ public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUse
     #region extras
     private async Task<Client> Update(ClientInput input)
     {
-        Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Cliente não encontrado.");
+        Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);
 
         client.FullName = input.FullName ?? client.FullName;
         client.Email = input.Email ?? client.Email;

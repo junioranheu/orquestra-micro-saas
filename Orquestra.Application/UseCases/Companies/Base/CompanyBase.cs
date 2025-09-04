@@ -117,7 +117,7 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
         {
             if (!input.Status)
             {
-                throw new InvalidOperationException(SystemConsts.Warn_NeedToVerifyCompany);
+                throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
             }
         }
         #endregion

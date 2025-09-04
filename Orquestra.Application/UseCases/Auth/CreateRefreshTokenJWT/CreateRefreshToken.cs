@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
@@ -116,7 +117,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         var user = await _context.Users.
                    AsNoTracking().
                    Where(x => x.UserId == userIdAuth).
-                   FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"Usuário do id {userIdAuth} não foi encontrado na base de dados.");
+                   FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_User);
 
         if (!user.Status)
         {

@@ -52,7 +52,7 @@ public sealed class GetVerificationTests
             () => sut.Execute("invalid-token", VerificationTypeEnum.Company)
         );
 
-        Assert.Equal(SystemConsts.Warn_VerifyTokenInvalid, ex.Message);
+        Assert.Equal(SystemConsts.Warn_VerifyToken_Invalid, ex.Message);
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public sealed class GetVerificationTests
         // Act & Assert;
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(Guid.NewGuid()));
 
-        Assert.Equal(SystemConsts.Warn_VerifyTokenInvalid, ex.Message);
+        Assert.Equal(SystemConsts.Warn_VerifyToken_Invalid, ex.Message);
     }
 
     [Fact]

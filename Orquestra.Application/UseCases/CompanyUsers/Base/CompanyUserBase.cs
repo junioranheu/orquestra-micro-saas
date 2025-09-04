@@ -22,7 +22,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
                       Where(x =>
                         x.CompanyId == input.CompanyId &&
                         (input.CompanyUserRole == CompanyUserRoleEnum.Administrator || x.Status == true)
-                      ).FirstOrDefaultAsync() ?? throw new KeyNotFoundException("A empresa não foi contrada na base de dados.");
+                      ).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
         List<CompanyUser> companyUsers = await _context.CompanyUsers.AsNoTracking().Where(x => x.CompanyId == input.CompanyId && x.Status == true).ToListAsync();
         bool isFirstAdministrator = CheckIfIsFirstAdministratorBeforeCreatingIt(companyUsers);
@@ -31,7 +31,7 @@ public partial class CompanyUserBase(Context context, ICheckIfUserIsLinkedCompan
         {
             if (!company.Status)
             {
-                throw new InvalidOperationException(SystemConsts.Warn_NeedToVerifyCompany);
+                throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
             }
         }
 

@@ -16,6 +16,40 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     /// <summary>
+    /// Para otimizar a performance, o resultado desta verificação é armazenado no
+    /// <see cref="HttpContext.Items"/> usando uma chave única baseada nos parâmetros da chamada.
+    /// Isso significa que, durante a mesma requisição HTTP, chamadas repetidas com os mesmos parâmetros
+    /// retornarão o resultado previamente calculado, evitando múltiplas consultas ao banco.
+    ///
+    /// Esse cache é válido apenas durante a requisição atual!!! Cada nova requisição terá seu próprio
+    /// cache isolado, garantindo que os dados não se misturem entre usuários ou sessões.
+    /// </summary>
+    public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needCompanyAdmin, bool throwError = true)
+    {
+        if (_httpContextAccessor.HttpContext is null)
+        {
+            throw new Exception("HttpContext não disponível.");
+        }
+
+        string cacheKey = $"Key_CheckIfUserIsLinkedCompanyUser{companyId}_{userId}_{needCompanyAdmin}";
+
+        if (_httpContextAccessor.HttpContext.Items.TryGetValue(cacheKey, out object? cached))
+        {
+            if (cached is bool cachedBool)
+            {
+                return cachedBool;
+            }
+        }
+
+        bool isLinked = await InternalCheck(companyId, userId, needCompanyAdmin, throwError);
+
+        _httpContextAccessor.HttpContext.Items[cacheKey] = isLinked;
+
+        return isLinked;
+    }
+
+    #region extras
+    /// <summary>
     /// Executa a verificação de vínculo entre um usuário e uma empresa.
     /// </summary>
     /// <param name="companyId">Identificador da empresa alvo da verificação.</param>
@@ -36,7 +70,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
     /// - O usuário não estiver vinculado à empresa e <paramref name="throwError"/> for verdadeiro;
     /// - O usuário não possuir permissão de administrador quando exigido.
     /// </exception>
-    public async Task<bool> Execute(Guid? companyId, Guid? userId, bool needCompanyAdmin, bool throwError = true)
+    private async Task<bool> InternalCheck(Guid? companyId, Guid? userId, bool needCompanyAdmin, bool throwError = true)
     {
         // #1 - Checar se o usuário autenticado é Administrador ou Suporte do SISTEMA (NÃO DA EMPRESA!);
         bool isSystemAdmin = false;
@@ -109,7 +143,6 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
         return true;
     }
 
-    #region extras
     private static void ThrowError(bool needAdmin)
     {
         string message = needAdmin ? "Apenas administradores da empresa podem executar esta ação." : "Apenas usuários vinculados à empresa podem executar esta ação.";

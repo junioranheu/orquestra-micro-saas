@@ -19,7 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IUpdateCurrentMainCompanyUser, UpdateCurrentMainCompanyUser>();
         services.AddScoped<IGetCurrentMainCompanyUser, GetCurrentMainCompanyUser>();
         services.AddScoped<IInviteCompanyUser, InviteCompanyUser>();
-        services.AddScoped<IUpdateModuleCompany, UpdateModuleCompanyUser>();
+        services.AddScoped<IUpdateModuleCompanyUser, UpdateModuleCompanyUser>();
 
         return services;
     }

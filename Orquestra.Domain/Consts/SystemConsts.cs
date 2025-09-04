@@ -20,10 +20,15 @@ public static class SystemConsts
     public const string CookieName = "auth";
     public const string CookieRefreshedTokenName = "auth_refreshedToken";
 
-    public const string Warn_Simple_UserNotAuth = "Usuário não autenticado.";
-    public const string Warn_NeedToVerifyUser = "A conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.";
-    public const string Warn_NeedToVerifyCompany = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
-    public const string Warn_VerifyTokenInvalid = "Código de verificação inválido ou inexistente.";
+    public const string Warn_Invalid_LinkedCompanyUser = "Você não faz parte de nenhuma empresa.";
+    public const string Warn_NotAuth_Simple_User = "Usuário não autenticado.";
+    public const string Warn_NeedToVerify_User = "A conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.";
+    public const string Warn_NeedToVerify_Company = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
+    public const string Warn_VerifyToken_Invalid = "Código de verificação inválido ou inexistente.";
+    public const string Warn_NotFound_Company = "A empresa não foi encontrada na base de dados.";
+    public const string Warn_NotFound_Client = "O cliente não foi encontrado na base de dados.";
+    public const string Warn_NotFound_User = "O usuário não foi encontrado na base de dados.";
+    public const string Warn_NotFound_Schedule = "O agendamento não foi encontrado na base de dados.";
 
     public const bool DO_NOT_SEND_EMAIL_IF_ENV_DEV = false;
 

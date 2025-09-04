@@ -13,16 +13,18 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
 
     public async Task Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
     {
+        // TO DO: Criar lógica para cobrar $;
+
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
         var result = await _context.Companies.
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NeedToVerifyCompany);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
         if (!result.Status)
         {
-            throw new InvalidOperationException($"A empresa {result.Name} está desativada.");
+            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
 
         result.Modules = modules;

@@ -24,7 +24,7 @@ public sealed class CompanyUser : Audit
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
 
-    public ModuleEnum[] Modules { get; set; } = [];
+    public ModuleEnum[]? Modules { get; set; } = [];
 
     public bool IsCurrentMainCompanyUser { get; set; } = false;
 

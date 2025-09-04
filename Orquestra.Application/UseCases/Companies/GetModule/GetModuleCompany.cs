@@ -21,14 +21,14 @@ public sealed class GetModuleCompany(Context context, ICheckIfUserIsLinkedCompan
         var result = await _context.Companies.
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NeedToVerifyCompany);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
         if (!result.Status)
         {
-            throw new InvalidOperationException($"A empresa {result.Name} está desativada.");
+            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
 
-        ModuleEnum[] modules = result.Modules;
+        ModuleEnum[] modules = result.Modules ?? [];
         List<string> modulesStr = [];
 
         foreach (var module in modules)

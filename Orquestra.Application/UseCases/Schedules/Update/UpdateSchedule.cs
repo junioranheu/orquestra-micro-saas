@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
@@ -24,7 +25,7 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     #region extras
     private async Task<Schedule> Update(ScheduleInput input)
     {
-        Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == input.ScheduleId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Agendamento não encontrado.");
+        Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == input.ScheduleId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
 
         schedule.Date = input.Date;
         schedule.PaymentType = input.PaymentType;

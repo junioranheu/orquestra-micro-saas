@@ -29,7 +29,7 @@ public abstract class BaseController<T> : Controller
         {
             if (throwExceptionIfNotAuth)
             {
-                throw new UnauthorizedAccessException(SystemConsts.Warn_Simple_UserNotAuth);
+                throw new UnauthorizedAccessException(SystemConsts.Warn_NotAuth_Simple_User);
             }
 
             return Guid.Empty;

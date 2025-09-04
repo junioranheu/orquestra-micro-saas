@@ -54,7 +54,7 @@ public sealed class CompanyOutput
 
     public DateTime PlanEndDate { get; set; }
 
-    public ModuleEnum[] Modules { get; set; } = [];
+    public ModuleEnum[]? Modules { get; set; } = [];
     #endregion
 
     #region extras
@@ -84,12 +84,12 @@ public sealed class CompanySimpleOutput
 
     public DateTime PlanEndDate { get; set; }
 
-    public ModuleEnum[] Modules { get; set; } = [];
+    public ModuleEnum[]? Modules { get; set; } = [];
 }
 
 public sealed class CompanyModulesOutput
 {
     public required CompanySimpleOutput Company { get; set; }
-    public ModuleEnum[] Modules { get; set; } = [];
+    public ModuleEnum[]? Modules { get; set; } = [];
     public List<string> ModulesStr { get; set; } = [];
 }

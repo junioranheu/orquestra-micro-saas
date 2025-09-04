@@ -35,7 +35,7 @@ public sealed class CompanyInput
 
     public string? Color { get; set; } = string.Empty;
 
-    public ModuleEnum[] Modules { get; set; } = [];
+    public ModuleEnum[]? Modules { get; set; } = [];
     #endregion
 
     public bool Status { get; set; }

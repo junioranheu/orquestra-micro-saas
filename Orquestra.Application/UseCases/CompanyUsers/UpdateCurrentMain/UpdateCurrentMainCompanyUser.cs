@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
@@ -16,11 +17,11 @@ public sealed class UpdateCurrentMainCompanyUser(Context context, ICheckIfUserIs
 
         List<CompanyUser> listCompanyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                             Where(x => x.UserId == userIdAuth).
-                                            ToListAsync() ?? throw new KeyNotFoundException("Você não faz parte de nenhuma empresa.");
+                                            ToListAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_Invalid_LinkedCompanyUser);
 
         CompanyUser companyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                   Where(x => x.CompanyId == companyId && x.UserId == userIdAuth && x.Status == true).
-                                  FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Você não faz parte dessa empresa.");
+                                  FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_Invalid_LinkedCompanyUser);
 
         if (!companyUser.IsCurrentMainCompanyUser)
         {

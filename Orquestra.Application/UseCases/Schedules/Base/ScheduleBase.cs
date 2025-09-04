@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
@@ -42,9 +43,9 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             throw new ArgumentException("Você não pode agendar uma consulta com a data anterior a de hoje.");
         }
 
-        _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException("Esse cliente não existe.");
+        _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);
 
-        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new KeyNotFoundException("Essa empresa não existe.");
+        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
         await ValidateUsersAndRemoveNotLinkedOnes(input);
     }

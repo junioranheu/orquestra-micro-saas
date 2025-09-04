@@ -36,7 +36,7 @@ public sealed class GetUser(Context context) : IGetUser
 
         if (!result.Status)
         {
-            throw new UnauthorizedAccessException(SystemConsts.Warn_NeedToVerifyUser);
+            throw new UnauthorizedAccessException(SystemConsts.Warn_NeedToVerify_User);
         }
 
         string password = result.Password;
@@ -68,7 +68,7 @@ public sealed class GetUser(Context context) : IGetUser
 
         if (throwIfStatusFalse && !result.Status)
         {
-            throw new UnauthorizedAccessException(SystemConsts.Warn_NeedToVerifyUser);
+            throw new UnauthorizedAccessException(SystemConsts.Warn_NeedToVerify_User);
         }
 
         var output = result.Adapt<UserOutput>();

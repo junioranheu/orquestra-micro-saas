@@ -57,7 +57,7 @@ public sealed class Company: Audit
 
     public DateTime PlanEndDate { get; set; }
 
-    public ModuleEnum[] Modules { get; set; } = [];
+    public ModuleEnum[]? Modules { get; set; } = [];
     #endregion
 
     public IEnumerable<CompanyUser>? CompanyUsers { get; init; }
