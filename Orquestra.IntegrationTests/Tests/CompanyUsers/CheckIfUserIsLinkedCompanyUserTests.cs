@@ -90,6 +90,24 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
         Assert.True(result);
     }
 
+    [Fact]
+    public async Task Execute_ShouldUseCache_WhenCalledMultipleTimesWithSameParameters()
+    {
+        // Arrange;
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync();
+        CheckIfUserIsLinkedCompanyUser sut = CreateSut(context, user);
+
+        // Act - 1ª vez (vai chamar InternalCheck e setar no cache);
+        bool firstCall = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false);
+
+        // Act - 2ª vez (mesmo parâmetro, deve vir do cache);
+        bool secondCall = await sut.Execute(company.CompanyId, user.UserId, needCompanyAdmin: false);
+
+        // Assert;
+        Assert.True(firstCall);
+        Assert.True(secondCall);
+    }
+
     #region helpers
     private static async Task<(Context context, User user, Company company)> ArrangeCompanyWithUserAsync(CompanyUserRoleEnum role = CompanyUserRoleEnum.Member)
     {
