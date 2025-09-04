@@ -50,6 +50,7 @@ public class AuthController(
     }
 
     [AllowAnonymous]
+    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("Me/Simple")]
     public ActionResult MeSimple()
     {
@@ -83,7 +84,6 @@ public class AuthController(
 
         // Current main company;
         CompanyOutput? currentMainCompany = await _getCurrentMainCompanyUser.Execute(userIdAuth);
-
         CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
 
         // Token;

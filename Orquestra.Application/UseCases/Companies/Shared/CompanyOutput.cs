@@ -58,6 +58,8 @@ public sealed class CompanyOutput
     #endregion
 
     #region extras
+    public List<string> ModulesStr { get; set; } = [];
+
     public bool Status { get; set; }
 
     public DateTime CreatedDate { get; set; }
@@ -85,6 +87,9 @@ public sealed class CompanySimpleOutput
     public DateTime PlanEndDate { get; set; }
 
     public ModuleEnum[]? Modules { get; set; } = [];
+
+    // Extras;
+    public List<string> ModulesStr { get; set; } = [];
 }
 
 public sealed class CompanyModulesOutput

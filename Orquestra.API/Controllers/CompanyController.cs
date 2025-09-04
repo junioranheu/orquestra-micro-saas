@@ -102,10 +102,10 @@ public class CompanyController(
 
     [AuthorizeFilter]
     [HttpPut("UpdateModules")]
-    public async Task<IActionResult> UpdateModules(Guid companyId, ModuleEnum[] modules)
+    public async Task<IActionResult> UpdateModules([FromForm] CompanyUpdateModuleInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        await _updateModuleCompany.Execute(userIdAuth, companyId, modules);
+        await _updateModuleCompany.Execute(userIdAuth, input);
 
         return NoContent();
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Companies.UpdateModule;
@@ -11,15 +11,15 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
+    public async Task Execute(Guid userIdAuth, CompanyUpdateModuleInput input)
     {
         // TO DO: Criar lógica para cobrar $;
 
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         var result = await _context.Companies.
                      AsNoTracking().
-                     Where(x => x.CompanyId == companyId).
+                     Where(x => x.CompanyId == input.CompanyId).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
         if (!result.Status)
@@ -27,7 +27,7 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
 
-        result.Modules = modules;
+        result.Modules = input.Modules;
 
         _context.Update(result);
         await _context.SaveChangesAsync();
