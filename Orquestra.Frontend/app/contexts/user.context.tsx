@@ -1,4 +1,5 @@
-import iUser from '@/app/api/consts/user';
+
+import { iUser } from '@/app/api/consts/user';
 import SYSTEM from '@/app/consts/system';
 import Cookies from 'js-cookie';
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';

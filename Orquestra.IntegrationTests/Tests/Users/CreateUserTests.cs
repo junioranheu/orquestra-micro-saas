@@ -12,6 +12,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Users;
 
@@ -24,7 +25,7 @@ public sealed class CreateUserTests
         Context context = Fixture.CreateContext();
         CreateUser sut = CreateSut(context, new Mock<IEmailService>());
 
-        UserInput input = new() { FullName = "", Email = "", Password = "" };
+        UserInput input = new() { FullName = string.Empty, Email = "a", Password = "b", InviteToken = string.Empty };
 
         // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(input));
@@ -40,7 +41,8 @@ public sealed class CreateUserTests
         {
             FullName = "Junior Test",
             Email = "junior@teste.com",
-            Password = "FazOBellingham22@"
+            Password = "FazOBellingham22@",
+            InviteToken = string.Empty
         };
 
         Dictionary<string, string>? capturedValues = null;
@@ -68,6 +70,46 @@ public sealed class CreateUserTests
     }
 
     [Fact]
+    public async Task Execute_ShouldCreateUserAndSendEmailHavingOneValidValidInviteToken()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        UserInput input = new()
+        {
+            FullName = "Junior Pébbles",
+            Email = "junior@teste.com",
+            Password = "FazOBellingham22@",
+            InviteToken = GenerateSafeToken32Bytes(urlSafe: true)
+        };
+
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
+
+        CreateUser sut = CreateSut(context, emailServiceMock);
+
+        await Assert.ThrowsAsync<NotImplementedException>(() => sut.Execute(input));
+
+        //// Act;
+        //UserOutput output = await sut.Execute(input);
+
+        //// Assert: Usuário criado corretamente;
+        //User? userInDb = await context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == output.UserId);
+
+        //Assert.NotNull(userInDb);
+        //Assert.Equal(input.FullName, userInDb!.FullName);
+        //Assert.Equal(input.Email, userInDb.Email);
+        //Assert.False(userInDb.Status); // Status inicial false;
+
+        //// Assert: E-mail enviado com token correto;
+        //Assert.NotNull(capturedValues);
+        //Assert.Equal("Junior", capturedValues!["[UserName]"]);
+        //Assert.Contains("/User/Verify/", capturedValues["[VerifyUrl]"]);
+
+        //emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Once);
+    }
+
+    [Fact]
     public async Task Execute_ShouldGenerateValidToken()
     {
         // Arrange
@@ -77,7 +119,8 @@ public sealed class CreateUserTests
         {
             FullName = "Token Test",
             Email = "token@teste.com",
-            Password = "Selalau22@"
+            Password = "Selalau22@",
+            InviteToken = string.Empty
         };
 
         // Cria CreateVerification real, mas com token controlado;
@@ -150,7 +193,8 @@ public sealed class CreateUserTests
         {
             FullName = fullName,
             Email = email,
-            Password = password
+            Password = password,
+            InviteToken = string.Empty
         };
 
         Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
@@ -170,7 +214,8 @@ public sealed class CreateUserTests
         {
             FullName = "Junior Test",
             Email = "duplicate@teste.com",
-            Password = "SenhaSegura123!"
+            Password = "SenhaSegura123!",
+            InviteToken = string.Empty
         };
 
         // Salva usuário original;

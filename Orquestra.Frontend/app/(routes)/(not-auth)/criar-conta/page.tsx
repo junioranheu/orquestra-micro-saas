@@ -4,7 +4,7 @@ import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
 import swal from '@/app/functions/swal';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import styles from './page.module.scss';
 
@@ -12,12 +12,20 @@ export default function CriarConta() {
 
     useTitle('Criar conta');
 
-    const searchParams = useSearchParams();
     const router = useRouter();
     const [auth, setAuth] = useUserContext();
     const [token, setToken] = useState('');
 
     const refButton = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+
+        if (token) {
+            setToken(token);
+        }
+    }, []);
 
     function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
         if (e.key === 'Enter') {
@@ -49,14 +57,6 @@ export default function CriarConta() {
             return;
         }
     }
-
-    useEffect(() => {
-        const token = searchParams.get('token');
-
-        if (token) {
-            setToken(token);
-        }
-    }, [searchParams]);
 
     return (
         <section className={styles.main}>

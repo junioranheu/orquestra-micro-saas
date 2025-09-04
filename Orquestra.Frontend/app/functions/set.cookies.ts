@@ -1,3 +1,4 @@
+'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { iUser, iUserInput } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
