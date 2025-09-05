@@ -1,5 +1,5 @@
 # 04/09/2025
-# Funcional APENAS em Dev;
+# Funcional (por ora) APENAS em Dev;
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #1 - Instalar dependências
