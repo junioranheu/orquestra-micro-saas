@@ -28,9 +28,9 @@ public sealed class UpdateModuleCompanyUser(
         CompanyModulesOutput companyModulesOutput = await _getModuleCompany.Execute(userId: input.UserId, companyId: input.CompanyId) ?? throw new InvalidOperationException("Nenhum módulo está vinculado à empresa, portanto você não pode prosseguir com esta ação.");
 
         var result = await _context.CompanyUsers.
-                     AsNoTracking().
+                     // AsNoTracking(). // Propositalmente sem AsNoTracking;
                      Where(x => x.CompanyId == input.CompanyId && x.UserId == input.UserId).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NeedToVerify_User);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_User);
 
         if (!result.Status)
         {
