@@ -19,7 +19,7 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
     public DbSet<Client> Clients { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<Verification> Verifications { get; set; }
-
+    public DbSet<CompanyInvoice> CompanyInvoices { get; set; }
     #region extras
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
