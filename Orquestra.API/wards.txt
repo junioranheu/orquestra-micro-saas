@@ -1,3 +1,3 @@
 resolver os "TO DO"
 criar envio de e-mail no CreateCompanyInvoice
-criar teste unitário para Invoices
+criar teste de integração para Invoices
