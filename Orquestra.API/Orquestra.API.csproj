@@ -18,6 +18,12 @@
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
 	<ItemGroup>
+	  <Compile Remove="Assets\**" />
+	  <Content Remove="Assets\**" />
+	  <EmbeddedResource Remove="Assets\**" />
+	  <None Remove="Assets\**" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,16 +46,6 @@
 		<ProjectReference Include="..\Orquestra.Domain\Orquestra.Domain.csproj" />
 		<ProjectReference Include="..\Orquestra.Infrastructure\Orquestra.Infrastructure.csproj" />
 		<ProjectReference Include="..\Orquestra.Utils\Orquestra.Utils.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="Assets\**">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Assets\" />
 	</ItemGroup>
 
 	<ItemGroup>
