@@ -82,7 +82,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         #endregion
 
         await _context.RefreshTokens.
-        // AsNoTracking(). // Intencionalmente sem AsNoTracking();
+        // AsNoTracking(). // Propositalmente sem AsNoTracking;
         Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
         ExecuteUpdateAsync(x => x.
             SetProperty(prop => prop.RevokedDate, GetDate())
