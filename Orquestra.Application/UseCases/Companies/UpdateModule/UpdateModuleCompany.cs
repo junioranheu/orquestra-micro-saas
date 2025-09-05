@@ -19,7 +19,7 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
         // TO DO: Criar lógica para cobrar $;
 
         var result = await _context.Companies.
-                     AsNoTracking().
+                     // AsNoTracking(). // Propositalmente sem AsNoTracking;
                      Where(x => x.CompanyId == input.CompanyId).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
@@ -49,7 +49,7 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
         }
 
         var result = await _context.CompanyUsers.
-                     AsNoTracking().
+                     // AsNoTracking(). // Propositalmente sem AsNoTracking;
                      Where(x => x.CompanyId == companyId).ToListAsync();
 
         if (result is null || result.Count == 0)
@@ -60,7 +60,7 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
         foreach (var item in result)
         {
             ModuleEnum[] validModules = [.. (item.Modules ?? []).Except(invalidModules ?? [])];
-            item.Modules = validModules;
+            item.Modules = [.. validModules.Distinct()];
         }
 
         _context.UpdateRange(result);

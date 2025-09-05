@@ -40,7 +40,7 @@ public sealed class UpdateModuleCompanyUser(
         CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(companyModulesOutput, newModules: input.Modules);
 
         // Atualizar/sobrescrever;
-        result.Modules = input.Modules;
+        result.Modules = [.. input.Modules?.Distinct() ?? []];
 
         _context.Update(result);
         await _context.SaveChangesAsync();

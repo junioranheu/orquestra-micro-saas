@@ -8,5 +8,5 @@ public enum ModuleEnum
     Scheduling = 1,
 
     [Description("Módulo de controle financeiro")]
-    Financial = 2
+    Sales = 2
 }

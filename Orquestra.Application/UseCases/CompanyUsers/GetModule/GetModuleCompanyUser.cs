@@ -17,13 +17,20 @@ public sealed class GetModuleCompanyUser(Context context, ICheckIfUserIsLinkedCo
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         var result = await _context.CompanyUsers.
+                     Include(x => x.User).
+                     Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId && x.UserId == userIdAuth).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_User);
 
-        if (!result.Status)
+        if (!result.Status || result.User is null || (result.User is not null && !result.User.Status))
         {
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_User);
+        }
+
+        if (result.Company is not null && !result.Company.Status)
+        {
+            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
 
         ModuleEnum[] modules = result.Modules ?? [];
