@@ -1,6 +1,7 @@
 ﻿using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Orquestra.Domain.Entities;
 
@@ -10,6 +11,7 @@ public sealed class CompanyInvoice : Audit
     public Guid CompanyInvoiceId { get; set; }
 
     public Guid CompanyId { get; set; }
+    [JsonIgnore]
     [ForeignKey(nameof(CompanyId))]
     public Company? Company { get; set; }
 

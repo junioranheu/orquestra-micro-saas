@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
@@ -7,16 +8,19 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Companies.UpdateModule;
 
-public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IUpdateModuleCompany
+public sealed class UpdateModuleCompany(
+        Context context, 
+        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
+        ICreateCompanyInvoice createCompanyInvoice
+    ) : IUpdateModuleCompany
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
+    private readonly ICreateCompanyInvoice _createCompanyInvoice = createCompanyInvoice;
 
     public async Task Execute(Guid userIdAuth, CompanyUpdateModuleInput input)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
-
-        // TO DO: Criar lógica para cobrar $;
 
         var result = await _context.Companies.
                      // AsNoTracking(). // Propositalmente sem AsNoTracking;
@@ -27,6 +31,9 @@ public sealed class UpdateModuleCompany(Context context, ICheckIfUserIsLinkedCom
         {
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
+
+        // Criar cobrança;
+        await _createCompanyInvoice.Execute(userIdAuth, companyId: input.CompanyId, modules: input.Modules ?? []);
 
         // Atualizar os módulos dos funcionário dessa empresa, removendo os módulos não válidos;
         await UpdateAllModulesFromUsersOfThisCompany(oldModules: result.Modules, newModules: input.Modules, companyId: input.CompanyId);

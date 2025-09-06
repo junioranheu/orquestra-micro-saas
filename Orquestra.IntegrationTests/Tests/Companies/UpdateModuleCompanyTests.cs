@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.UpdateModule;
+using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Domain.Entities;
@@ -225,9 +226,10 @@ public sealed class UpdateModuleCompanyTests
     {
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        CheckIfUserIsLinkedCompanyUser checkUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser);
 
-        UpdateModuleCompany updateModuleCompany = new(context, checkUser);
+        UpdateModuleCompany updateModuleCompany = new(context, checkIfUserIsLinkedCompanyUser, createCompanyInvoice);
 
         return updateModuleCompany;
     }

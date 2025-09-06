@@ -15,11 +15,11 @@ public sealed class CreateCompanyInvoice(
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<CompanyInvoice> Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
+    public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
     {
         if (modules is null || modules.Length == 0)
         {
-            throw new ArgumentException($"O parâmetro {nameof(modules)} está vazio.");
+            return null;
         }
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
@@ -37,7 +37,7 @@ public sealed class CreateCompanyInvoice(
         {
             CompanyId = companyId,
             Amount = amount,
-            Description = modules.Length > 1 ? $"Adição dos módulos: {string.Join(", ", modulesStr)}" : $"Adição do módulo: {string.Join(", ", modulesStr)}",
+            Description = modules.Length > 1 ? $"Adição dos módulos: {string.Join("; ", modulesStr)}" : $"Adição do módulo: {string.Join("; ", modulesStr)}",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
         };
 

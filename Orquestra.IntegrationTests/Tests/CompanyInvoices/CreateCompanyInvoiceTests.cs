@@ -41,7 +41,7 @@ public sealed class CreateCompanyInvoiceTests
         ModuleEnum[] modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
 
         // Act;
-        CompanyInvoice invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
+        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
 
         // Assert;
         Assert.NotNull(invoice);
@@ -88,17 +88,17 @@ public sealed class CreateCompanyInvoiceTests
         ModuleEnum[] modules = [ModuleEnum.Sales];
 
         // Act;
-        CompanyInvoice invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
+        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
 
         List<string> modulesList = [.. modules.Select(x => GetEnumDesc(x))];
 
         // Assert;
         foreach (var module in modules)
         {
-            Assert.Contains(GetEnumDesc(module), invoice.Description);
+            Assert.Contains(GetEnumDesc(module), invoice?.Description);
         }
 
-        Assert.Equal(ModuleHelper.GetPrice(ModuleEnum.Sales), invoice.Amount);
+        Assert.Equal(ModuleHelper.GetPrice(ModuleEnum.Sales), invoice?.Amount);
     }
 
     [Fact]
@@ -125,8 +125,13 @@ public sealed class CreateCompanyInvoiceTests
 
         CreateCompanyInvoice sut = CreateSut(context, adminUser);
 
+        ModuleEnum[] modules = [];
+
+        // Act;
+        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
+
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(adminUser.UserId, company.CompanyId, []));
+        Assert.Null(invoice);
     }
 
     [Fact]
