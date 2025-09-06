@@ -1,4 +1,4 @@
-﻿using Orquestra.Application.UseCases.Companies.Base;
+﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -7,10 +7,7 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyInvoices.Create;
 
-public sealed class CreateCompanyInvoice(
-        Context context,
-        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser
-    ) : CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompanyInvoice
+public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : ICreateCompanyInvoice
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
@@ -23,6 +20,13 @@ public sealed class CreateCompanyInvoice(
         }
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
+
+        modules = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules);
+
+        if (modules is null || modules.Length == 0)
+        {
+            return null;
+        }
 
         List<string> modulesStr = [];
         decimal amount = 0;
@@ -46,4 +50,17 @@ public sealed class CreateCompanyInvoice(
 
         return invoice;
     }
+
+    #region extras
+    private async Task<ModuleEnum[]> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules)
+    {
+        List<ModuleEnum[]?> companyModules = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId && x.Status == true).Select(x => x.Modules).ToListAsync();
+
+        HashSet<ModuleEnum> existingModules = [.. companyModules.SelectMany(x => x ?? [])];
+
+        ModuleEnum[] newModules = [.. modules.Where(x => !existingModules.Contains(x))];
+
+        return newModules;
+    }
+    #endregion
 }
