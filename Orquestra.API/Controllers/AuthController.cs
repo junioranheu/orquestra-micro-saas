@@ -106,8 +106,6 @@ public class AuthController(
             Roles = userRoles,
             RolesStr = userRolesStr,
             CurrentMainCompany = currentMainCompanySimple,
-            Modules = [],
-            ModulesStr = [], 
             TokenExpirationDate = validTo,
             RefreshTokenExpirationDate = refreshToken?.ExpiredDate.GetValueOrDefault() ?? DateTime.MinValue
         };
@@ -117,8 +115,8 @@ public class AuthController(
         {
             (ModuleEnum[] modules, List<string> modulesStr) = await _getModuleCompanyUser.Execute(userIdAuth, companyId: currentMainCompany.CompanyId);
 
-            output.Modules = modules;
-            output.ModulesStr = modulesStr;
+            output.CurrentMainCompany.UserModules = modules;
+            output.CurrentMainCompany.UserModulesStr = modulesStr;
         }
 
         return Ok(output);

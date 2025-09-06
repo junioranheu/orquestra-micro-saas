@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { UserRoleEnum } from '@/app/enums/userRoleEnum';
-import iCompany from './company';
+import iCompanySimpleOutput from './company';
 
 const controller = 'api/Auth';
 
@@ -16,8 +16,8 @@ export default interface iMe {
     userId: string;
     userName: string;
     roles: string[];
-    rolesStrrole: UserRoleEnum[];
-    currentMainCompany: iCompany;
+    rolesStr: UserRoleEnum[];
+    currentMainCompany: iCompanySimpleOutput;
     tokenExpirationDate: Date;
-    RefreshTokenExpirationDate: Date;
+    refreshTokenExpirationDate: Date;
 }

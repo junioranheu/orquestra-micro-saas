@@ -1,6 +1,6 @@
 import { Guid } from 'guid-typescript';
 
-export default interface iCompany {
+export default interface iCompanySimpleOutput {
     companyId: Guid;
     name: string;
     email: string;
@@ -9,4 +9,8 @@ export default interface iCompany {
     planType: any; // TO DO;
     planStartDate: Date;
     planEndDate: Date;
+    modules: any; // TO DO;
+    modulesStr: string[];
+    userModules: any; // TO DO;
+    userModulesStr: string[];
 }

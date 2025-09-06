@@ -90,6 +90,10 @@ public sealed class CompanySimpleOutput
 
     // Extras;
     public List<string> ModulesStr { get; set; } = [];
+
+    public ModuleEnum[]? UserModules { get; set; } = [];
+
+    public List<string> UserModulesStr { get; set; } = [];
 }
 
 public sealed class CompanyModulesOutput
