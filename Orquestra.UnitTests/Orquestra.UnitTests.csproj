@@ -10,6 +10,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Tests\Bases\**" />
+	  <EmbeddedResource Remove="Tests\Bases\**" />
+	  <None Remove="Tests\Bases\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.4">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
@@ -35,10 +41,6 @@
 	  <ProjectReference Include="..\Orquestra.Application\Orquestra.Application.csproj" />
 	  <ProjectReference Include="..\Orquestra.Infrastructure\Orquestra.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Orquestra.IntegrationTests\Orquestra.IntegrationTests.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Tests\Bases\" />
 	</ItemGroup>
 
 </Project>
