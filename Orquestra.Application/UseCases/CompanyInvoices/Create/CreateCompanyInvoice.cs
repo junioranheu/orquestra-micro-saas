@@ -23,30 +23,18 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
 
         (Company? company, ModuleEnum[] newModules) = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules);
 
-        if (newModules is null || newModules.Length == 0)
+        if (company is null || newModules is null || newModules.Length == 0)
         {
             return null;
         }
 
-        List<string> modulesStr = [];
-        decimal amount = 0;
-
-        foreach (var item in modules)
-        {
-            modulesStr.Add(GetEnumDesc(item));
-
-            decimal price = ModuleHelper.GetPrice(item);
-
-            // TO DO LOGICA DE NAO COBRAR TUDO, E SIM SÓ OS DIAS FALTANTES;
-
-            amount += price;
-        }
+        (List<string> modulesStr, decimal finalPrice) = CalculateInvoicePrice(company, modules);
 
         CompanyInvoice invoice = new()
         {
             CompanyId = companyId,
             Modules = modules,
-            Amount = amount,
+            Amount = finalPrice,
             Description = modules.Length > 1 ? $"Adição dos módulos: {string.Join("; ", modulesStr)}" : $"Adição do módulo: {string.Join("; ", modulesStr)}",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
         };
@@ -71,6 +59,29 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
         ModuleEnum[] newModules = [.. modules.Where(x => !existingCompanyModules.Contains(x))];
 
         return (company, newModules);
+    }
+
+    private static (List<string> modulesStr, decimal finalPrice) CalculateInvoicePrice(Company company, ModuleEnum[] modules)
+    {
+        DateTime planStartDate = company.PlanStartDate.GetValueOrDefault();
+        DateTime planEndDate = company.PlanEndDate.GetValueOrDefault();
+        int diffDays = (planEndDate - planStartDate).Days;
+
+        List<string> modulesStr = [];
+        decimal finalPrice = 0;
+
+        foreach (var item in modules)
+        {
+            modulesStr.Add(GetEnumDesc(item));
+            decimal price = ModuleHelper.GetPrice(item);
+
+            // TO DO LOGICA DE NAO COBRAR TUDO, E SIM SÓ OS DIAS FALTANTES;
+            diffDays
+
+            finalPrice += price;
+        }
+
+        return (modulesStr, finalPrice);
     }
     #endregion
 }

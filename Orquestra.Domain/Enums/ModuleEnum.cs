@@ -35,6 +35,11 @@ public class ModuleHelper()
         public decimal Percentage { get; } = (decimal)percentage;
     }
 
+    /// <summary>
+    /// Retorna o preço original do módulo sem aplicar desconto.
+    /// Arredonda para 2 casas decimais usando MidpointRounding.AwayFromZero.
+    /// Retorna 0 se o módulo não existir ou não tiver atributo de preço.
+    /// </summary>
     public static decimal GetOriginalPrice(ModuleEnum module)
     {
         FieldInfo? field = typeof(ModuleEnum).GetField(module.ToString());
@@ -51,6 +56,10 @@ public class ModuleHelper()
         return priceRound;
     }
 
+    /// <summary>
+    /// Retorna o percentual de desconto do módulo.
+    /// Retorna 0 se o módulo não existir ou não tiver atributo de desconto.
+    /// </summary>
     public static decimal GetDiscount(ModuleEnum module)
     {
         FieldInfo? field = typeof(ModuleEnum).GetField(module.ToString());
@@ -67,6 +76,10 @@ public class ModuleHelper()
         return percentage;
     }
 
+    /// <summary>
+    /// Retorna o preço final do módulo aplicando o desconto.
+    /// Arredonda para 2 casas decimais usando MidpointRounding.AwayFromZero.
+    /// </summary>
     public static decimal GetPrice(ModuleEnum module)
     {
         decimal price = GetOriginalPrice(module);
