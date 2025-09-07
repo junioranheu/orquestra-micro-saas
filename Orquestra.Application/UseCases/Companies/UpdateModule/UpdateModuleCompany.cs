@@ -11,7 +11,7 @@ using static Orquestra.Utils.Fixtures.Get;
 namespace Orquestra.Application.UseCases.Companies.UpdateModule;
 
 public sealed class UpdateModuleCompany(
-        Context context, 
+        Context context,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         ICreateCompanyInvoice createCompanyInvoice
     ) : IUpdateModuleCompany
@@ -47,8 +47,9 @@ public sealed class UpdateModuleCompany(
     #region extras
     private async Task UpdateCompanyData(Company company, CompanyUpdateModuleInput input)
     {
-        company.CompanySituation = CompanySituationEnum.PendingPayment;
-        company.PlanStartDate = GetDate();
+        company.CompanySituation = input.Modules?.Length >= 1 ? CompanySituationEnum.RegisteredButWithoutAnyModules : CompanySituationEnum.PendingPayment;
+        company.PlanStartDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate() : company.PlanStartDate;
+        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(30) : company.PlanStartDate;
         company.Modules = input.Modules;
 
         _context.Update(company);

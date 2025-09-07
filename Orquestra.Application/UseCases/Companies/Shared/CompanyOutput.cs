@@ -48,9 +48,9 @@ public sealed class CompanyOutput
     #region subscription
     public CompanySituationEnum CompanySituation { get; set; }
 
-    public DateTime PlanStartDate { get; set; }
+    public DateTime? PlanStartDate { get; set; }
 
-    public DateTime PlanEndDate { get; set; }
+    public DateTime? PlanEndDate { get; set; }
 
     public ModuleEnum[]? Modules { get; set; } = [];
     #endregion

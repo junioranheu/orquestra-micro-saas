@@ -62,8 +62,6 @@ public sealed class CreateCompany(
         var company = input.Adapt<Company>();
 
         company.CompanySituation = CompanySituationEnum.RegisteredButWithoutAnyModules;
-        company.PlanStartDate = GetDate();
-        company.PlanEndDate = GetDate().AddDays(7);
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
