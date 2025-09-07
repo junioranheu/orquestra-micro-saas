@@ -4,6 +4,8 @@ using Orquestra.Application.UseCases.Locations.Cities.Get;
 using Orquestra.Application.UseCases.Locations.States.Get;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace Orquestra.API.Controllers;
@@ -36,6 +38,32 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         };
 
         return Ok(build);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("GetModulesInfo")]
+    public ActionResult GetModulesInfo()
+    {
+        var modules = Enum.GetValues<ModuleEnum>().
+            Select(x =>
+            {
+                string description = x.GetType().GetField(x.ToString())?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty;
+
+                decimal originalPrice = ModuleHelper.GetOriginalPrice(x);
+                decimal price = ModuleHelper.GetPrice(x);
+                decimal discountPercent = ModuleHelper.GetDiscount(x);
+
+                return new
+                {
+                    Name = x.ToString(),
+                    Description = description,
+                    OriginalPrice = originalPrice,
+                    DiscountPercent = discountPercent,
+                    Price = price,
+                };
+            });
+
+        return Ok(modules);
     }
 
     [ResponseCache(Duration = SystemConsts.OneMonthInSec)]

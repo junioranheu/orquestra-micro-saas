@@ -6,11 +6,13 @@ namespace Orquestra.Domain.Enums;
 public enum ModuleEnum
 {
     [Description("Módulo de controle de agendamentos")]
-    [ModuleHelper.Price(4.99)]
+    [ModuleHelper.Price(7.99)]
+    [ModuleHelper.Discount(37.55)]
     Scheduling = 1,
 
     [Description("Módulo de controle financeiro")]
     [ModuleHelper.Price(7.99)]
+    [ModuleHelper.Discount(0)]
     Sales = 2
 }
 
@@ -26,12 +28,53 @@ public class ModuleHelper()
         public decimal Value { get; } = (decimal)value;
     }
 
-    public static decimal GetPrice(ModuleEnum module)
+    [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+    public sealed class DiscountAttribute(double percentage) : Attribute
+    {
+        public decimal Value { get; } = (decimal)percentage / 100m;
+        public decimal Percentage { get; } = (decimal)percentage;
+    }
+
+    public static decimal GetOriginalPrice(ModuleEnum module)
     {
         FieldInfo? field = typeof(ModuleEnum).GetField(module.ToString());
-        PriceAttribute? attr = (PriceAttribute?)Attribute.GetCustomAttribute(field!, typeof(PriceAttribute));
-        decimal price = attr?.Value ?? 0m;
 
-        return price;
+        if (field is null) { 
+            return 0m;
+        }
+
+        PriceAttribute? priceAttr = (PriceAttribute?)Attribute.GetCustomAttribute(field!, typeof(PriceAttribute));
+
+        decimal price = priceAttr?.Value ?? 0m;
+        decimal priceRound = decimal.Round(price, 2, MidpointRounding.AwayFromZero);
+
+        return priceRound;
+    }
+
+    public static decimal GetDiscount(ModuleEnum module)
+    {
+        FieldInfo? field = typeof(ModuleEnum).GetField(module.ToString());
+
+        if (field is null)
+        {
+            return 0m;
+        }
+
+        DiscountAttribute? discountAttr = (DiscountAttribute?)Attribute.GetCustomAttribute(field!, typeof(DiscountAttribute));
+
+        decimal percentage = discountAttr?.Percentage ?? 0m;
+
+        return percentage;
+    }
+
+    public static decimal GetPrice(ModuleEnum module)
+    {
+        decimal price = GetOriginalPrice(module);
+        decimal discountPercent = GetDiscount(module);
+
+        decimal finalPrice = price * (1 - (discountPercent / 100m));
+        decimal finalPriceRound = decimal.Round(finalPrice, 2, MidpointRounding.AwayFromZero);
+
+        return finalPriceRound;
     }
 }

@@ -21,9 +21,9 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        modules = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules);
+        (Company? company, ModuleEnum[] newModules) = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules);
 
-        if (modules is null || modules.Length == 0)
+        if (newModules is null || newModules.Length == 0)
         {
             return null;
         }
@@ -34,7 +34,12 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
         foreach (var item in modules)
         {
             modulesStr.Add(GetEnumDesc(item));
-            amount += ModuleHelper.GetPrice(item);
+
+            decimal price = ModuleHelper.GetPrice(item);
+
+            // TO DO LOGICA DE NAO COBRAR TUDO, E SIM SÓ OS DIAS FALTANTES;
+
+            amount += price;
         }
 
         CompanyInvoice invoice = new()
@@ -53,15 +58,19 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
     }
 
     #region extras
-    private async Task<ModuleEnum[]> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules)
+    private async Task<(Company? company, ModuleEnum[] newModules)> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules)
     {
-        List<ModuleEnum[]?> companyModules = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId && x.Status == true).Select(x => x.Modules).ToListAsync();
+        Company? company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId && x.Status == true).FirstOrDefaultAsync();
 
-        HashSet<ModuleEnum> existingModules = [.. companyModules.SelectMany(x => x ?? [])];
+        if (company is null)
+        {
+            return (null, []);
+        }
 
-        ModuleEnum[] newModules = [.. modules.Where(x => !existingModules.Contains(x))];
+        HashSet<ModuleEnum> existingCompanyModules = [.. company.Modules ?? []];
+        ModuleEnum[] newModules = [.. modules.Where(x => !existingCompanyModules.Contains(x))];
 
-        return newModules;
+        return (company, newModules);
     }
     #endregion
 }
