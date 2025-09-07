@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
+using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.GetModule;
@@ -22,7 +23,8 @@ public class CompanyController(
         IGetCompany get,
         IVerifyCompany verify,
         IGetModuleCompany getModuleCompany,
-        IUpdateModuleCompany updateModuleCompany
+        IUpdateModuleCompany updateModuleCompany,
+        ICalculatePriceModuleCompany calculatePriceModuleCompany
     ) : BaseController<CompanyController>
 {
     private readonly IEnvService _env = env;
@@ -31,6 +33,7 @@ public class CompanyController(
     private readonly IVerifyCompany _verify = verify;
     private readonly IGetModuleCompany _getModuleCompany = getModuleCompany;
     private readonly IUpdateModuleCompany _updateModuleCompany = updateModuleCompany;
+    private readonly ICalculatePriceModuleCompany _calculatePriceModuleCompany = calculatePriceModuleCompany;
 
     [AuthorizeFilter]
     [HttpPost]
@@ -91,7 +94,7 @@ public class CompanyController(
     }
 
     [AuthorizeFilter]
-    [HttpGet("GetModules")]
+    [HttpGet("Module")]
     public async Task<IActionResult> GetModules(Guid companyId)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
@@ -101,12 +104,22 @@ public class CompanyController(
     }
 
     [AuthorizeFilter]
-    [HttpPut("UpdateModules")]
+    [HttpPut("Module")]
     public async Task<IActionResult> UpdateModules([FromBody] CompanyUpdateModuleInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _updateModuleCompany.Execute(userIdAuth, input);
 
         return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("Module/GetInfo")]
+    public async Task<ActionResult> GetModulesInfo(Guid companyId)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        List<CalculatePriceModuleCompanyOutput> output = await _calculatePriceModuleCompany.Execute(userIdAuth, companyId, modules: []);
+
+        return Ok(output);
     }
 }

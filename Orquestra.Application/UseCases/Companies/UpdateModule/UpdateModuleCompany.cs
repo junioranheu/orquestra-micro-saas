@@ -34,14 +34,14 @@ public sealed class UpdateModuleCompany(
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
 
+        // Atualizar os dados da empresa, em si;
+        await UpdateCompanyData(company: result, input);
+
         // Criar cobrança;
         await _createCompanyInvoice.Execute(userIdAuth, companyId: input.CompanyId, modules: input.Modules ?? []);
 
         // Atualizar os módulos dos funcionário dessa empresa, removendo os módulos não válidos;
         await UpdateAllModulesFromUsersOfThisCompany(oldModules: result.Modules, newModules: input.Modules, companyId: input.CompanyId);
-
-        // Atualizar os dados da empresa, em si;
-        await UpdateCompanyData(company: result, input);
     }
 
     #region extras
@@ -49,7 +49,7 @@ public sealed class UpdateModuleCompany(
     {
         company.CompanySituation = input.Modules?.Length >= 1 ? CompanySituationEnum.RegisteredButWithoutAnyModules : CompanySituationEnum.PendingPayment;
         company.PlanStartDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate() : company.PlanStartDate;
-        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(30) : company.PlanStartDate;
+        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(30) : company.PlanEndDate;
         company.Modules = input.Modules;
 
         _context.Update(company);

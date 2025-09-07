@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.GetModule;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IVerifyCompany, VerifyCompany>();
         services.AddScoped<IGetModuleCompany, GetModuleCompany>();
         services.AddScoped<IUpdateModuleCompany, UpdateModuleCompany>();
+        services.AddScoped<ICalculatePriceModuleCompany, CalculatePriceModuleCompany>();
 
         return services;
     }

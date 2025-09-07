@@ -1,16 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.Companies.CalculatePrice;
+using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyInvoices.Create;
 
-public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : ICreateCompanyInvoice
+public sealed class CreateCompanyInvoice(
+        Context context,
+        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
+        ICalculatePriceModuleCompany calculatePriceModuleCompany
+    ) : ICreateCompanyInvoice
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
+    private readonly ICalculatePriceModuleCompany _calculatePriceModuleCompany = calculatePriceModuleCompany;
 
     public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
     {
@@ -21,20 +27,20 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        (Company? company, ModuleEnum[] newModules) = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules);
+        ModuleEnum[] newModules = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules);
 
-        if (company is null || newModules is null || newModules.Length == 0)
+        if (newModules is null || newModules.Length == 0)
         {
             return null;
         }
 
-        (List<string> modulesStr, decimal finalPrice) = CalculateInvoicePrice(company, modules);
+        (List<string> modulesStr, decimal finalPriceUsingProportionalPrice) = await CalculateInvoicePriceUsingProportionalPrice(userIdAuth, companyId, modules);
 
         CompanyInvoice invoice = new()
         {
             CompanyId = companyId,
             Modules = modules,
-            Amount = finalPrice,
+            Amount = finalPriceUsingProportionalPrice,
             Description = modules.Length > 1 ? $"Adição dos módulos: {string.Join("; ", modulesStr)}" : $"Adição do módulo: {string.Join("; ", modulesStr)}",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
         };
@@ -46,42 +52,35 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
     }
 
     #region extras
-    private async Task<(Company? company, ModuleEnum[] newModules)> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules)
+    private async Task<ModuleEnum[]> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules)
     {
-        Company? company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId && x.Status == true).FirstOrDefaultAsync();
+        List<ModuleEnum[]?> companyModules = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId && x.Status == true).Select(x => x.Modules).ToListAsync();
 
-        if (company is null)
+        if (companyModules is null || companyModules.Count == 0)
         {
-            return (null, []);
+            return [];
         }
 
-        HashSet<ModuleEnum> existingCompanyModules = [.. company.Modules ?? []];
+        HashSet<ModuleEnum> existingCompanyModules = [.. companyModules.Where(x => x != null).SelectMany(x => x!)];
         ModuleEnum[] newModules = [.. modules.Where(x => !existingCompanyModules.Contains(x))];
 
-        return (company, newModules);
+        return newModules;
     }
 
-    private static (List<string> modulesStr, decimal finalPrice) CalculateInvoicePrice(Company company, ModuleEnum[] modules)
+    private async Task<(List<string> modulesStr, decimal finalPriceUsingProportionalPrice)> CalculateInvoicePriceUsingProportionalPrice(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
     {
-        DateTime planStartDate = company.PlanStartDate.GetValueOrDefault();
-        DateTime planEndDate = company.PlanEndDate.GetValueOrDefault();
-        int diffDays = (planEndDate - planStartDate).Days;
+        List<CalculatePriceModuleCompanyOutput> output = await _calculatePriceModuleCompany.Execute(userIdAuth, companyId, modules);
 
         List<string> modulesStr = [];
-        decimal finalPrice = 0;
+        decimal finalPriceUsingProportionalPrice = 0;
 
-        foreach (var item in modules)
+        foreach (var item in output)
         {
-            modulesStr.Add(GetEnumDesc(item));
-            decimal price = ModuleHelper.GetPrice(item);
-
-            // TO DO LOGICA DE NAO COBRAR TUDO, E SIM SÓ OS DIAS FALTANTES;
-            diffDays
-
-            finalPrice += price;
+            modulesStr.Add(item.ModuleStr);
+            finalPriceUsingProportionalPrice += item.ProportionalPrice;
         }
 
-        return (modulesStr, finalPrice);
+        return (modulesStr, finalPriceUsingProportionalPrice);
     }
     #endregion
 }
