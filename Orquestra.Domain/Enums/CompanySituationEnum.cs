@@ -4,12 +4,12 @@ namespace Orquestra.Domain.Enums;
 
 public enum CompanySituationEnum
 {
-    [Description("Registrado mas ainda não aprovado")]
-    RegisteredButNotApproved = 1,
+    [Description("Registrado na plataforma, mas ainda sem nenhum módulo adquirido")]
+    RegisteredButWithoutAnyModules = 1,
 
-    [Description("Aprovado")]
-    Approved = 2,
+    [Description("Módulo(s) comprado(s), mas pagamento pendente")]
+    PendingPayment = 2,
 
-    [Description("Aprovado mas a mensalidade não foi paga")]
-    ApprovedButNotPaid = 3
+    [Description("Módulo(s) comprado(s)")]
+    Approved = 3
 }

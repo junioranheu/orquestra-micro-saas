@@ -3,8 +3,10 @@ using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.UpdateModule;
 
@@ -38,13 +40,21 @@ public sealed class UpdateModuleCompany(
         // Atualizar os módulos dos funcionário dessa empresa, removendo os módulos não válidos;
         await UpdateAllModulesFromUsersOfThisCompany(oldModules: result.Modules, newModules: input.Modules, companyId: input.CompanyId);
 
-        // Atualizar o módulo da empresa, em si;
-        result.Modules = input.Modules;
-        _context.Update(result);
-        await _context.SaveChangesAsync();
+        // Atualizar os dados da empresa, em si;
+        await UpdateCompanyData(company: result, input);
     }
 
     #region extras
+    private async Task UpdateCompanyData(Company company, CompanyUpdateModuleInput input)
+    {
+        company.CompanySituation = CompanySituationEnum.PendingPayment;
+        company.PlanStartDate = GetDate();
+        company.Modules = input.Modules;
+
+        _context.Update(company);
+        await _context.SaveChangesAsync();
+    }
+
     private async Task UpdateAllModulesFromUsersOfThisCompany(ModuleEnum[]? oldModules, ModuleEnum[]? newModules, Guid companyId)
     {
         // Obter todos os módulos que NÃO farão mais parte da lista de módulos da empresa;

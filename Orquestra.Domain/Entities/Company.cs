@@ -49,9 +49,7 @@ public sealed class Company: Audit
     #endregion
 
     #region subscription
-    public CompanySituationEnum CompanySituation { get; set; }
-
-    public PlanTypeEnum PlanType { get; set; }
+    public CompanySituationEnum CompanySituation { get; set; } = CompanySituationEnum.RegisteredButWithoutAnyModules;
 
     public DateTime PlanStartDate { get; set; }
 

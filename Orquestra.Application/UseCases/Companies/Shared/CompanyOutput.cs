@@ -48,8 +48,6 @@ public sealed class CompanyOutput
     #region subscription
     public CompanySituationEnum CompanySituation { get; set; }
 
-    public PlanTypeEnum PlanType { get; set; }
-
     public DateTime PlanStartDate { get; set; }
 
     public DateTime PlanEndDate { get; set; }
@@ -79,8 +77,6 @@ public sealed class CompanySimpleOutput
     public CompanyTypeEnum CompanyType { get; set; }
 
     public CompanySituationEnum CompanySituation { get; set; }
-
-    public PlanTypeEnum PlanType { get; set; }
 
     public DateTime PlanStartDate { get; set; }
 

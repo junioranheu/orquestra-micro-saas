@@ -61,8 +61,7 @@ public sealed class CreateCompany(
     {
         var company = input.Adapt<Company>();
 
-        company.PlanType = PlanTypeEnum.Basic;
-        company.CompanySituation = CompanySituationEnum.ApprovedButNotPaid;
+        company.CompanySituation = CompanySituationEnum.RegisteredButWithoutAnyModules;
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(7);
 

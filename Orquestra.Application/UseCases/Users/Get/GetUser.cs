@@ -17,7 +17,7 @@ public sealed class GetUser(Context context) : IGetUser
     {
         if ((input.UserId == Guid.Empty || input.UserId == null) && string.IsNullOrEmpty(input.Email))
         {
-            throw new ArgumentException($"Erro interno: todos os parâmetros estão nulos ({nameof(GetUser)}/{nameof(Execute)}).");
+            throw new ArgumentException($"Todos os parâmetros estão nulos ({nameof(GetUser)}/{nameof(Execute)}).");
         }
 
         input.Email = GetNormalizedLowerStr(input.Email);
@@ -49,7 +49,7 @@ public sealed class GetUser(Context context) : IGetUser
     {
         if ((userId == Guid.Empty || userId == null) && string.IsNullOrEmpty(email))
         {
-            throw new ArgumentException($"Erro interno: todos os parâmetros estão nulos ({nameof(GetUser)}/{nameof(Execute)}).");
+            throw new ArgumentException($"Todos os parâmetros estão nulos ({nameof(GetUser)}/{nameof(Execute)}).");
         }
 
         email = GetNormalizedLowerStr(email);

@@ -23,7 +23,6 @@ public static class CompanyMock
             LogoUrl = "https://placehold.co/200x200",
             Color = "#FFFFFF",
             CompanySituation = CompanySituationEnum.Approved,
-            PlanType = PlanTypeEnum.Basic,
             PlanStartDate = GetDate(),
             PlanEndDate = GetDate().AddDays(7),
             Status = true

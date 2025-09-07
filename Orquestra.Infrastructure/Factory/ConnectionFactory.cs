@@ -14,7 +14,7 @@ public class ConnectionFactory(IConfiguration configuration) : IConnectionFactor
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new InvalidOperationException("Erro interno: a connection string está nula.");
+            throw new InvalidOperationException("A connection string está nula.");
         }
 
         return connectionString;
