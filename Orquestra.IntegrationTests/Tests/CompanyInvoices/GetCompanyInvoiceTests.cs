@@ -38,6 +38,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Scheduling],
             Amount = 199.90m,
             Description = "Plano Premium"
         };
@@ -110,6 +111,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Scheduling], 
             Amount = 49.90m,
             Description = "Plano Básico"
         };
@@ -149,6 +151,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Scheduling],
             Amount = 79.90m,
             Description = "Plano Intermediário"
         };

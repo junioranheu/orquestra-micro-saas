@@ -102,7 +102,7 @@ public sealed class CreateCompanyInvoiceTests
     }
 
     [Fact]
-    public async Task Execute_ShouldThrow_WhenModulesAreEmpty()
+    public async Task Execute_ShouldReturnNull_WhenModulesAreEmpty()
     {
         // Arrange;
         Context context = Fixture.CreateContext();

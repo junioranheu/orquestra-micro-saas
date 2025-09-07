@@ -6,11 +6,11 @@ namespace Orquestra.Domain.Enums;
 public enum ModuleEnum
 {
     [Description("Módulo de controle de agendamentos")]
-    [ModuleHelper.Price(44.90)]
+    [ModuleHelper.Price(4.99)]
     Scheduling = 1,
 
     [Description("Módulo de controle financeiro")]
-    [ModuleHelper.Price(99.90)]
+    [ModuleHelper.Price(7.99)]
     Sales = 2
 }
 

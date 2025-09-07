@@ -40,6 +40,7 @@ public sealed class CreateCompanyInvoice(Context context, ICheckIfUserIsLinkedCo
         CompanyInvoice invoice = new()
         {
             CompanyId = companyId,
+            Modules = modules,
             Amount = amount,
             Description = modules.Length > 1 ? $"Adição dos módulos: {string.Join("; ", modulesStr)}" : $"Adição do módulo: {string.Join("; ", modulesStr)}",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
