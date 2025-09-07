@@ -39,14 +39,15 @@ public sealed class UpdateModuleCompany(
 
         // Criar cobrança;
         await _createCompanyInvoice.Execute(userIdAuth, companyId: input.CompanyId, modules: input.Modules ?? []);
-
-        // Atualizar os módulos dos funcionário dessa empresa, removendo os módulos não válidos;
-        await UpdateAllModulesFromUsersOfThisCompany(oldModules: result.Modules, newModules: input.Modules, companyId: input.CompanyId);
     }
 
     #region extras
     private async Task UpdateCompanyData(Company company, CompanyUpdateModuleInput input)
     {
+        // Atualizar os módulos dos funcionário dessa empresa, removendo os módulos não válidos;
+        await UpdateAllModulesFromUsersOfThisCompany(oldModules: company.Modules, newModules: input.Modules, companyId: input.CompanyId);
+
+        // Atualizar dados da empresa;
         company.CompanySituation = input.Modules?.Length >= 1 ? CompanySituationEnum.RegisteredButWithoutAnyModules : CompanySituationEnum.PendingPayment;
         company.PlanStartDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate() : company.PlanStartDate;
         company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(30) : company.PlanEndDate;

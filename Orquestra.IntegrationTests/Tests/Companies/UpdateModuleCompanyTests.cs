@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.UpdateModule;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
@@ -227,7 +228,8 @@ public sealed class UpdateModuleCompanyTests
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser);
+        CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany);
 
         UpdateModuleCompany updateModuleCompany = new(context, checkIfUserIsLinkedCompanyUser, createCompanyInvoice);
 

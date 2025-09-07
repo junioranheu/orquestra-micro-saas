@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
@@ -54,8 +55,10 @@ public sealed class CreateCompanyInvoiceTests
         }
 
         Assert.Equal(company.CompanyId, invoice.CompanyId);
-        Assert.Equal(ModuleHelper.GetPrice(ModuleEnum.Sales) + ModuleHelper.GetPrice(ModuleEnum.Scheduling), invoice.Amount);
         Assert.Equal(CompanyInvoiceSituationEnum.Pending, invoice.CompanyInvoiceSituation);
+
+        decimal expected = ModuleHelper.GetPrice(ModuleEnum.Sales) + ModuleHelper.GetPrice(ModuleEnum.Scheduling);
+        Assert.True(invoice?.Amount <= expected, $"Esperado que {invoice.Amount} seja menor ou igual a {expected} (por descontos e valor proporcional).");
 
         CompanyInvoice? dbInvoice = await context.CompanyInvoices.FirstOrDefaultAsync(x => x.CompanyInvoiceId == invoice.CompanyInvoiceId);
         Assert.NotNull(dbInvoice);
@@ -98,7 +101,8 @@ public sealed class CreateCompanyInvoiceTests
             Assert.Contains(GetEnumDesc(module), invoice?.Description);
         }
 
-        Assert.Equal(ModuleHelper.GetPrice(ModuleEnum.Sales), invoice?.Amount);
+        decimal expected = ModuleHelper.GetPrice(ModuleEnum.Sales);
+        Assert.True(invoice?.Amount <= expected, $"Esperado que {invoice.Amount} seja menor ou igual a {expected} (por descontos e valor proporcional).");
     }
 
     [Fact]
@@ -168,8 +172,11 @@ public sealed class CreateCompanyInvoiceTests
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+        CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
-        return new CreateCompanyInvoice(context, checkIfUserIsLinkedCompanyUser);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany);
+
+        return createCompanyInvoice;
     }
     #endregion
 }
