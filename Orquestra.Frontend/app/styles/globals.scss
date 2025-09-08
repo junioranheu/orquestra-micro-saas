@@ -218,8 +218,11 @@ input[type='password'] {
         font-weight: 400 !important;
         font-size: 1rem !important;
         font-family: inherit !important;
-        // text-align: left !important;
         color: var(--black) !important;
+
+        // text-align: left !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
     }
 
     button {
