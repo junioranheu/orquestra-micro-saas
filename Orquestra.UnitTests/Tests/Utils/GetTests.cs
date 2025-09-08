@@ -9,13 +9,13 @@ public sealed class GetTests
     [Fact]
     public void GetDate_ShouldReturn_UtcNowOrClose()
     {
-        // Arrange
+        // Arrange;
         DateTime before = DateTime.UtcNow;
 
-        // Act
+        // Act;
         DateTime result = GetDate();
-
-        // Assert
+        
+        // Assert;
         DateTime after = DateTime.UtcNow;
         Assert.InRange(result, before, after);
     }
@@ -23,22 +23,32 @@ public sealed class GetTests
     [Fact]
     public void GetEnumDesc_ShouldReturn_EnumDescription()
     {
-        // Act
+        // Act;
         string desc = GetEnumDesc(TestEnum.First);
 
-        // Assert
+        // Assert;
         Assert.Equal("Primeiro valor", desc);
     }
 
     [Fact]
     public void GetDateDetails_ShouldReturn_FormattedDate()
     {
-        // Act
+        // Act;
         string result = GetDateDetails();
 
-        // Assert
+        // Assert;
         Assert.Contains(" às ", result);
         Assert.Matches(@"\d{2}/\d{2}/\d{4} às \d{2}:\d{2}:\d{2}", result);
+    }
+
+    [Fact]
+    public void GetDateDetails_ShouldReturn_FormattedDate_WithoutHour()
+    {
+        // Act;
+        string result = GetDateDetails(withHour: false);
+
+        // Assert;
+        Assert.Matches(@"\d{2}/\d{2}/\d{4}", result);
     }
 
     [Theory]
@@ -46,10 +56,10 @@ public sealed class GetTests
     [InlineData(15, false)]
     public void GetRandomString_ShouldReturn_CorrectLength(int length, bool onlyUpper)
     {
-        // Act
+        // Act;
         string result = GetRandomString(length, onlyUpper);
 
-        // Assert
+        // Assert;
         Assert.Equal(length, result.Length);
 
         if (onlyUpper)
@@ -63,10 +73,10 @@ public sealed class GetTests
     [InlineData(50, 50)]
     public void GetRandomNumber_ShouldReturnWithinRange(int min, int max)
     {
-        // Act
+        // Act;
         int result = GetRandomNumber(min, max);
 
-        // Assert
+        // Assert;
         Assert.InRange(result, min, max);
     }
 
@@ -75,31 +85,31 @@ public sealed class GetTests
     [InlineData("MARIAna ScalzaRETTO", "Mariana Scalzaretto")]
     public void NormalizeToProperName_ShouldReturn_ProperCase(string input, string expected)
     {
-        // Act
+        // Act;
         string result = NormalizeToProperName(input);
 
-        // Assert
+        // Assert;
         Assert.Equal(expected, result);
     }
 
     [Fact]
     public void GenerateTrueOrFalse_ShouldReturn_Bool()
     {
-        // Act
+        // Act;
         bool result = GenerateTrueOrFalse();
 
-        // Assert
+        // Assert;
         Assert.IsType<bool>(result);
     }
 
     [Fact]
     public void GenerateTrueOrFalse_ShouldRespect_HitChance()
     {
-        // Act
+        // Act;
         bool alwaysTrue = GenerateTrueOrFalse(100);
         bool alwaysFalse = GenerateTrueOrFalse(0);
 
-        // Assert
+        // Assert;
         Assert.True(alwaysTrue);
         Assert.False(alwaysFalse);
     }
@@ -107,41 +117,41 @@ public sealed class GetTests
     [Fact]
     public void GetFirstPart_ShouldReturn_FirstWord_WhenStringHasMultipleWords()
     {
-        // Arrange
+        // Arrange;
         string input = "Junior de Souza";
 
-        // Act
+        // Act;
         string result = GetFirstWord(input);
 
-        // Assert
+        // Assert;
         Assert.Equal("Junior", result);
     }
 
     [Fact]
     public void GetFirstPart_ShouldReturn_WholeString_WhenNoDelimiterFound()
     {
-        // Arrange
+        // Arrange;
         string input = SystemConsts.NameApp;
 
-        // Act
+        // Act;
         string result = GetFirstWord(input);
 
-        // Assert
+        // Assert;
         Assert.Equal(SystemConsts.NameApp, result);
     }
 
     [Fact]
     public void GetFirstPart_ShouldReturn_Empty_WhenInputIsNullOrEmpty()
     {
-        // Arrange
+        // Arrange;
         string? nullInput = null;
         string emptyInput = "";
 
-        // Act
+        // Act;
         string resultNull = GetFirstWord(nullInput);
         string resultEmpty = GetFirstWord(emptyInput);
 
-        // Assert
+        // Assert;
         Assert.Equal(string.Empty, resultNull);
         Assert.Equal(string.Empty, resultEmpty);
     }
@@ -149,23 +159,23 @@ public sealed class GetTests
     [Fact]
     public void GetFirstPart_ShouldRespect_CustomDelimiter()
     {
-        // Arrange
+        // Arrange;
         string input = "part1|part2|part3";
 
-        // Act
+        // Act;
         string result = GetFirstWord(input, '|');
 
-        // Assert
+        // Assert;
         Assert.Equal("part1", result);
     }
 
     [Fact]
     public void GenerateSafeToken32_ShouldReturn_NonNullBase64String()
     {
-        // Act
+        // Act;
         string token = GenerateSafeToken32Bytes(urlSafe: false);
 
-        // Assert
+        // Assert;
         Assert.False(string.IsNullOrWhiteSpace(token));
 
         // Base64 de 32 bytes gera geralmente 44 caracteres;
@@ -174,17 +184,16 @@ public sealed class GetTests
         // Verifica se é Base64 válido;
         Span<byte> buffer = new(new byte[32]);
         bool isBase64 = Convert.TryFromBase64String(token, buffer, out _);
-
         Assert.True(isBase64);
     }
 
     [Fact]
     public void GenerateSafeToken32_UrlSafe_ShouldReturn_NonNullStringWithoutIllegalChars()
     {
-        // Act
+        // Act;
         string token = GenerateSafeToken32Bytes(urlSafe: true);
 
-        // Assert
+        // Assert;
         Assert.False(string.IsNullOrWhiteSpace(token));
 
         // Não deve conter caracteres problemáticos para URL;
@@ -196,11 +205,11 @@ public sealed class GetTests
     [Fact]
     public void GenerateSafeToken32_ShouldGenerate_UniqueTokens()
     {
-        // Act
+        // Act;
         string token1 = GenerateSafeToken32Bytes(urlSafe: true);
         string token2 = GenerateSafeToken32Bytes(urlSafe: true);
 
-        // Assert
+        // Assert;
         Assert.NotEqual(token1, token2);
     }
 

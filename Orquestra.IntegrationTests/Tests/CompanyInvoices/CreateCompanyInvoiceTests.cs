@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
@@ -7,6 +10,8 @@ using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 using static Orquestra.Utils.Fixtures.Get;
@@ -169,12 +174,16 @@ public sealed class CreateCompanyInvoiceTests
     #region helpers
     private static CreateCompanyInvoice CreateSut(Context context, User user)
     {
+        IConfiguration config = Fixture.CreateConfiguration();
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
+        IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
+        EnvService envService = new(env, config);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany, envService, emailServiceMock.Object);
 
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany);
 
         return createCompanyInvoice;
     }

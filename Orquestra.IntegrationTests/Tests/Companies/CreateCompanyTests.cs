@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
@@ -187,6 +189,8 @@ public sealed class CreateCompanyTests
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
         InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
+        CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany, envService, emailServiceMock.Object);
 
         CreateCompany createCompany = new(
             context,
@@ -196,7 +200,8 @@ public sealed class CreateCompanyTests
             updateCurrentMainCompanyUser,
             getUser,
             emailServiceMock.Object,
-            checkIfUserIsLinkedCompanyUser
+            checkIfUserIsLinkedCompanyUser,
+            createCompanyInvoice
         );
 
         return createCompany;

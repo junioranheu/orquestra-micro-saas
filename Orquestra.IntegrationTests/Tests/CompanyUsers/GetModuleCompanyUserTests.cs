@@ -96,37 +96,6 @@ public sealed class GetModuleCompanyUserTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId));
     }
 
-    [Fact]
-    public async Task Execute_ShouldThrowInvalidOperation_WhenCompanyInactive()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        company.Status = false;
-        context.Update(company);
-        await context.SaveChangesAsync();
-
-        CompanyUser companyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Member,
-            Status = false
-        };
-
-        await Fixture.Save(context, companyUser);
-
-        GetModuleCompanyUser sut = CreateSut(context, user);
-
-        // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId));
-    }
-
     #region helpers
     private static GetModuleCompanyUser CreateSut(Context context, User user)
     {

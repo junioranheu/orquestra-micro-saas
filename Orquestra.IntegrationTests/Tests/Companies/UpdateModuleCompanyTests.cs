@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.UpdateModule;
@@ -9,6 +12,8 @@ using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 
@@ -225,11 +230,15 @@ public sealed class UpdateModuleCompanyTests
     #region helpers
     private static UpdateModuleCompany CreateSut(Context context, User user)
     {
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        IConfiguration config = Fixture.CreateConfiguration();
+        IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
+        EnvService envService = new(env, config);
+        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany);
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany, envService, emailServiceMock.Object);
 
         UpdateModuleCompany updateModuleCompany = new(context, checkIfUserIsLinkedCompanyUser, createCompanyInvoice);
 
