@@ -2,23 +2,32 @@
 using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Env.Models;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyInvoices.Create;
 
 public sealed class CreateCompanyInvoice(
         Context context,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
-        ICalculatePriceModuleCompany calculatePriceModuleCompany
+        ICalculatePriceModuleCompany calculatePriceModuleCompany,
+        IEnvService env,
+        IEmailService emailService
     ) : ICreateCompanyInvoice
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
     private readonly ICalculatePriceModuleCompany _calculatePriceModuleCompany = calculatePriceModuleCompany;
+    private readonly IEnvService _env = env;
+    private readonly IEmailService _emailService = emailService;
 
-    public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
+    public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules, bool isCreateCompany = false)
     {
         if (modules is null || modules.Length == 0)
         {
@@ -27,9 +36,9 @@ public sealed class CreateCompanyInvoice(
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        ModuleEnum[] newModules = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules);
+        (Company? company, ModuleEnum[] newModules) = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules, isCreateCompany);
 
-        if (newModules is null || newModules.Length == 0)
+        if (company is null || newModules is null || newModules.Length == 0)
         {
             return null;
         }
@@ -48,23 +57,25 @@ public sealed class CreateCompanyInvoice(
         await _context.AddAsync(invoice);
         await _context.SaveChangesAsync();
 
+        await SendEmail(company, invoice);
+
         return invoice;
     }
 
     #region extras
-    private async Task<ModuleEnum[]> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules)
+    private async Task<(Company? company, ModuleEnum[] newModules)> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules, bool isCreateCompany)
     {
-        List<ModuleEnum[]?> companyModules = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId && x.Status == true).Select(x => x.Modules).ToListAsync();
+        Company? company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
-        if (companyModules is null || companyModules.Count == 0)
+        if (isCreateCompany)
         {
-            return [];
+            return (company, modules);
         }
 
-        HashSet<ModuleEnum> existingCompanyModules = [.. companyModules.Where(x => x != null).SelectMany(x => x!)];
+        HashSet<ModuleEnum> existingCompanyModules = [.. company?.Modules ?? []];
         ModuleEnum[] newModules = [.. modules.Where(x => !existingCompanyModules.Contains(x))];
 
-        return newModules;
+        return (company, newModules);
     }
 
     private async Task<(List<string> modulesStr, decimal finalPriceUsingProportionalPrice)> CalculateInvoicePriceUsingProportionalPrice(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
@@ -81,6 +92,26 @@ public sealed class CreateCompanyInvoice(
         }
 
         return (modulesStr, finalPriceUsingProportionalPrice);
+    }
+
+    private async Task SendEmail(Company company, CompanyInvoice invoice)
+    {
+        EnvOutput env = _env.GetUrls();
+        string paymentUrl = $"{env.UrlBackend}/AEA";
+
+        Dictionary<string, string> values = new()
+        {
+            { "[NameApp]", SystemConsts.NameApp },
+            { "[CompanyName]", company.Name },
+            { "[InvoiceNumber]", invoice.CompanyInvoiceId.ToString() },
+            { "[InvoiceDate]", GetDateDetails(withHour: false) },
+            { "[ModuleDescription]", invoice.Description ?? string.Empty },
+            { "[Price]", invoice.Amount.ToString() },
+            { "[PaymentUrl]", paymentUrl }
+        };
+
+        string bodyHtml = _emailService.RenderTemplate("EmailCreateInvoice.html", values);
+        await _emailService.SendEmail(to: company.Email, subject: $"Nova fatura — {company.Name} — {SystemConsts.NameApp}", body: bodyHtml);
     }
     #endregion
 }

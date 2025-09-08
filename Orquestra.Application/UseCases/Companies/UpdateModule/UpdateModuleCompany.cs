@@ -34,11 +34,11 @@ public sealed class UpdateModuleCompany(
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
 
-        // Atualizar os dados da empresa, em si;
-        await UpdateCompanyData(company: result, input);
-
         // Criar cobrança;
         await _createCompanyInvoice.Execute(userIdAuth, companyId: input.CompanyId, modules: input.Modules ?? []);
+
+        // Atualizar os dados da empresa, em si;
+        await UpdateCompanyData(company: result, input);
     }
 
     #region extras

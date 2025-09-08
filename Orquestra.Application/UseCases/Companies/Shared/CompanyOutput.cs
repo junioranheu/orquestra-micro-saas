@@ -82,6 +82,8 @@ public sealed class CompanySimpleOutput
 
     public DateTime PlanEndDate { get; set; }
 
+    public bool Status { get; set; }
+
     public ModuleEnum[]? Modules { get; set; } = [];
 
     // Extras;

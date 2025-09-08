@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Orquestra.Utils.Fixtures;
 
@@ -32,10 +33,12 @@ public static class Get
     /// <summary>
     /// Detalha em texto a data e hora atual;
     /// </summary>
-    public static string GetDateDetails()
+    public static string GetDateDetails(bool withHour = true)
     {
-        DateTime data = GetDate();
-        return $"{data:dd/MM/yyyy} às {data:HH:mm:ss}";
+        DateTime date = GetDate();
+        string dateDetails = withHour ? $"{date:dd/MM/yyyy} às {date:HH:mm:ss}" : $"{date:dd/MM/yyyy}";
+
+        return dateDetails;
     }
 
     /// <summary>

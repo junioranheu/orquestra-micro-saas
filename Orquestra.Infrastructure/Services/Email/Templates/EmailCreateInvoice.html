@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8">
+    <title>Fatura - [NameApp]</title>
+</head>
+<body style="margin:0; padding:0; font-family: 'Segoe UI', Arial, sans-serif; background-color:#f4f6f8; color:#333333;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:40px 0;">
+        <tr>
+            <td align="center">
+                <!-- Card principal -->
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color:#222222; text-align:center; padding:30px;">
+                            <h1 style="margin:0; font-size:24px; font-weight:700; color:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+                                Fatura #[InvoiceNumber]
+                            </h1>
+                            <p style="margin:8px 0 0 0; font-size:14px; color:#cccccc;">Emitida em [InvoiceDate]</p>
+                        </td>
+                    </tr>
+
+                    <!-- Informações -->
+                    <tr>
+                        <td style="padding:30px; font-size:16px; line-height:1.6; color:#444444;">
+                            <p style="margin:0 0 8px 0;">Olá,</p>
+                            <p style="margin:0 0 20px 0;">Aqui estão os detalhes da sua fatura referente ao uso do <strong>[NameApp]</strong>:</p>
+                        </td>
+                    </tr>
+
+                    <!-- Itens da fatura -->
+                    <tr>
+                        <td style="padding:0 30px 30px 30px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; font-size:15px;">
+                                <thead>
+                                    <tr style="background-color:#f4f6f8; text-align:left;">
+                                        <th style="padding:12px; border-bottom:1px solid #dddddd;">Descrição</th>
+                                        <th style="padding:12px; border-bottom:1px solid #dddddd; text-align:right;">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:12px; border-bottom:1px solid #eeeeee;">[ModuleDescription]</td>
+                                        <td style="padding:12px; border-bottom:1px solid #eeeeee; text-align:right;">R$ [Price]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Botão de pagamento -->
+                    <tr>
+                        <td style="text-align:center; padding:20px 30px 40px 30px;">
+                            <a href="[PaymentUrl]"
+                               style="background-color:#222222; color:#ffffff; text-decoration:none; padding:14px 32px; border-radius:6px; font-size:16px; font-weight:600; display:inline-block;">
+                                Pagar agora
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Rodapé -->
+                    <tr>
+                        <td style="background-color:#f9fff6; text-align:center; color:#666666; font-size:12px; padding:20px;">
+                            © [NameApp] - Todos os direitos reservados<br />
+                            <small>Este e-mail é apenas informativo. Em caso de dúvidas, entre em contato pelo suporte.</small>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

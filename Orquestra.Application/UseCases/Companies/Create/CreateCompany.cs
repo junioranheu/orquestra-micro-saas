@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
@@ -26,7 +27,8 @@ public sealed class CreateCompany(
         IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
         IGetUser getUser,
         IEmailService emailService,
-        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser
+        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
+        ICreateCompanyInvoice createCompanyInvoice
     ) : CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
 {
     private readonly Context _context = context;
@@ -36,20 +38,24 @@ public sealed class CreateCompany(
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
     private readonly IGetUser _getUser = getUser;
     private readonly IEmailService _emailService = emailService;
+    private readonly ICreateCompanyInvoice _createCompanyInvoice = createCompanyInvoice;
 
     public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
     {
+        // Validar;
         await Validate(input, userIdAuth, isCreate: true);
 
+        // Criar;
         Company company = await Save(input);
-
-        Verification verification = await SaveVerification(company);
-
         UserOutput user = await _getUser.Execute(userId: userIdAuth, throwIfStatusFalse: true);
-
         await SaveCompanyFirstAdministrator(userIdAuth, company, user);
 
+        // E-mail;
+        Verification verification = await SaveVerification(company);
         await SendEmail(company, verification, user);
+
+        // Criar cobrança;
+        await _createCompanyInvoice.Execute(userIdAuth, companyId: company.CompanyId, modules: input.Modules ?? [], isCreateCompany: true);
 
         var output = company.Adapt<CompanyOutput>();
 

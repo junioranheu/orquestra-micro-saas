@@ -28,11 +28,6 @@ public sealed class GetModuleCompanyUser(Context context, ICheckIfUserIsLinkedCo
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_User);
         }
 
-        if (result.Company is not null && !result.Company.Status)
-        {
-            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
-        }
-
         ModuleEnum[] modules = result.Modules ?? [];
         List<string> modulesStr = [];
 
