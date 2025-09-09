@@ -55,7 +55,7 @@ public sealed class UpdateModuleCompany(
         UserOutput user = await _getUser.Execute(userId: userIdAuth, throwIfStatusFalse: true);
 
         // ADM do sistema não normaliza o input, permitindo remover módulos, se necessário;
-        if (user.Role is UserRoleEnum.Administrator && user.Role is UserRoleEnum.Maintainer)
+        if (user.Role is UserRoleEnum.Administrator || user.Role is UserRoleEnum.Maintainer)
         {
             return;
         }

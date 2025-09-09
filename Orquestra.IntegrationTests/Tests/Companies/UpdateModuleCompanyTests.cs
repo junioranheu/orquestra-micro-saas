@@ -9,6 +9,7 @@ using Orquestra.Application.UseCases.Companies.UpdateModule;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
+using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -75,7 +76,7 @@ public sealed class UpdateModuleCompanyTests
             Modules = [ModuleEnum.Sales] // Remove Scheduling;
         };
 
-        if (role != UserRoleEnum.Common)
+        if (role is not UserRoleEnum.Common)
         {
             // Act;
             await sut.Execute(user.UserId, input);
@@ -135,7 +136,54 @@ public sealed class UpdateModuleCompanyTests
     }
 
     [Fact]
-    public async Task Execute_ShouldRemoveAllUserModules_WhenNewModulesEmpty()
+    public async Task Execute_ShouldRemoveAllUserModules_WhenNewModulesEmpty_IfAdminSystem()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User adminUser = UserMock.Create();
+        await Fixture.Save(context, adminUser);
+
+        adminUser.Role = UserRoleEnum.Administrator;
+        context.Update(adminUser);
+        await context.SaveChangesAsync();
+
+        Company company = CompanyMock.Create();
+        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        await Fixture.Save(context, company);
+
+        CompanyUser member = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = adminUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator,
+            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            Status = true
+        };
+
+        await Fixture.Save(context, member);
+
+        UpdateModuleCompany sut = CreateSut(context, adminUser);
+
+        CompanyUpdateModuleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            Modules = [] // Remove todos;
+        };
+
+        // Act;
+        await sut.Execute(adminUser.UserId, input);
+
+        // Assert;
+        CompanyUser? updatedMember = await context.CompanyUsers.FindAsync(member.CompanyUserId);
+        Assert.Empty(updatedMember!.Modules ?? []);
+
+        Company? updatedCompany = await context.Companies.FindAsync(company.CompanyId);
+        Assert.Empty(updatedCompany!.Modules ?? []);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldNotRemoveAllUserModules_WhenNewModulesEmpty_IfNotAdminSystem()
     {
         // Arrange;
         Context context = Fixture.CreateContext();
@@ -171,10 +219,10 @@ public sealed class UpdateModuleCompanyTests
 
         // Assert;
         CompanyUser? updatedMember = await context.CompanyUsers.FindAsync(member.CompanyUserId);
-        Assert.Empty(updatedMember!.Modules ?? []);
+        Assert.NotEmpty(updatedMember!.Modules ?? []);
 
         Company? updatedCompany = await context.Companies.FindAsync(company.CompanyId);
-        Assert.Empty(updatedCompany!.Modules ?? []);
+        Assert.NotEmpty(updatedCompany!.Modules ?? []);
     }
 
     [Fact]
@@ -239,8 +287,9 @@ public sealed class UpdateModuleCompanyTests
         CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
         Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany, envService, emailServiceMock.Object);
+        GetUser getUser = new(context);
 
-        UpdateModuleCompany updateModuleCompany = new(context, checkIfUserIsLinkedCompanyUser, createCompanyInvoice);
+        UpdateModuleCompany updateModuleCompany = new(context, checkIfUserIsLinkedCompanyUser, createCompanyInvoice, getUser);
 
         return updateModuleCompany;
     }
