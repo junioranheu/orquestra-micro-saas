@@ -210,4 +210,21 @@ public static class Get
 
         return hex;
     }
+
+    /// <summary>
+    /// Converte um <see cref="Guid"/> em um identificador numérico baseado em hash.
+    /// Usa SHA1 para gerar 20 bytes e pega os 8 primeiros para caber em um <see cref="long"/> (64 bits).
+    /// O resultado não é reversível e pode haver colisões em cenários de altíssimo volume,
+    /// mas na prática é suficientemente único para a maioria dos usos.
+    /// </summary>
+    /// <param name="guid">O GUID de entrada.</param>
+    /// <returns>Um número positivo de até 18-19 dígitos.</returns>
+    public static long GuidToNumericId(Guid guid)
+    {
+        byte[] hash = SHA1.HashData(guid.ToByteArray());
+        long value = BitConverter.ToInt64(hash, 0);
+        long output = Math.Abs(value);
+
+        return output;
+    }
 }

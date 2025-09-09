@@ -260,6 +260,48 @@ public sealed class GetTests
         Assert.True(secret.All(x => "0123456789abcdef".Contains(char.ToLower(x)))); // Todos hex;
     }
 
+    [Fact]
+    public void GuidToNumericId_ShouldReturnPositiveNumber()
+    {
+        // Arrange;
+        Guid guid = Guid.NewGuid();
+
+        // Act;
+        long result = GuidToNumericId(guid);
+
+        // Assert;
+        Assert.True(result > 0, "O número gerado deve ser positivo.");
+    }
+
+    [Fact]
+    public void GuidToNumericId_ShouldGenerateSameResult_ForSameGuid()
+    {
+        // Arrange;
+        Guid guid = Guid.NewGuid();
+
+        // Act;
+        long result1 = GuidToNumericId(guid);
+        long result2 = GuidToNumericId(guid);
+
+        // Assert;
+        Assert.Equal(result1, result2);
+    }
+
+    [Fact]
+    public void GuidToNumericId_ShouldGenerateDifferentResults_ForDifferentGuids()
+    {
+        // Arrange;
+        Guid guid1 = Guid.NewGuid();
+        Guid guid2 = Guid.NewGuid();
+
+        // Act;
+        long result1 = GuidToNumericId(guid1);
+        long result2 = GuidToNumericId(guid2);
+
+        // Assert;
+        Assert.NotEqual(result1, result2);
+    }
+
     #region helpers
     private enum TestEnum
     {

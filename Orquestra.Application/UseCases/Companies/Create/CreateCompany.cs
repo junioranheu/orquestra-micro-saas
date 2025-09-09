@@ -67,7 +67,18 @@ public sealed class CreateCompany(
     {
         var company = input.Adapt<Company>();
 
-        company.CompanySituation = CompanySituationEnum.RegisteredButWithoutAnyModules;
+        if (input.Modules is null || input.Modules.Length == 0)
+        {
+            company.CompanySituation = CompanySituationEnum.RegisteredButWithoutAnyModules;
+            company.PlanStartDate = null;
+            company.PlanEndDate = null;
+        }
+        else
+        {
+            company.CompanySituation = CompanySituationEnum.PendingPayment;
+            company.PlanStartDate = GetDate();
+            company.PlanEndDate = GetDate().AddDays(SystemConsts.PlanDurationInDays);
+        }
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();

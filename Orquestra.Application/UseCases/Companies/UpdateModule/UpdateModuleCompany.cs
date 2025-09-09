@@ -48,9 +48,9 @@ public sealed class UpdateModuleCompany(
         await UpdateAllModulesFromUsersOfThisCompany(oldModules: company.Modules, newModules: input.Modules, companyId: input.CompanyId);
 
         // Atualizar dados da empresa;
-        company.CompanySituation = input.Modules?.Length >= 1 ? CompanySituationEnum.RegisteredButWithoutAnyModules : CompanySituationEnum.PendingPayment;
+        company.CompanySituation = input.Modules?.Length >= 1 ? CompanySituationEnum.PendingPayment : CompanySituationEnum.RegisteredButWithoutAnyModules;
         company.PlanStartDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate() : company.PlanStartDate;
-        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(30) : company.PlanEndDate;
+        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(SystemConsts.PlanDurationInDays) : company.PlanEndDate;
         company.Modules = input.Modules;
 
         _context.Update(company);

@@ -2,13 +2,21 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Domain.Entities;
 
 public sealed class CompanyInvoice : Audit
 {
+    public CompanyInvoice()
+    {
+        InvoiceNumber = GuidToNumericId(CompanyInvoiceId);
+    }
+
     [Key]
     public Guid CompanyInvoiceId { get; set; }
+
+    public long InvoiceNumber { get; private set; }
 
     public Guid CompanyId { get; set; }
     [JsonIgnore]

@@ -15,6 +15,8 @@ public static class SystemConsts
     public const int OneDayInSec = 86400;
     public const int OneMonthInSec = 2629800;
 
+    public const int PlanDurationInDays = 30;
+
     public const string PolicyRateLimiting = "_policyRateLimiting";
 
     public const string CookieName = "auth";

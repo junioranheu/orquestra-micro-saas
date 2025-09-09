@@ -103,7 +103,7 @@ public sealed class CreateCompanyInvoice(
         {
             { "[NameApp]", SystemConsts.NameApp },
             { "[CompanyName]", company.Name },
-            { "[InvoiceNumber]", invoice.CompanyInvoiceId.ToString() },
+            { "[InvoiceNumber]", GuidToNumericId(invoice.CompanyInvoiceId).ToString() },
             { "[InvoiceDate]", GetDateDetails(withHour: false) },
             { "[ModuleDescription]", invoice.Description ?? string.Empty },
             { "[Price]", invoice.Amount.ToString() },
