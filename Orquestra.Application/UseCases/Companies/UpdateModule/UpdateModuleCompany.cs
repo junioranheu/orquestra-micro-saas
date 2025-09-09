@@ -2,6 +2,8 @@
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.Users.Get;
+using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -13,12 +15,14 @@ namespace Orquestra.Application.UseCases.Companies.UpdateModule;
 public sealed class UpdateModuleCompany(
         Context context,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
-        ICreateCompanyInvoice createCompanyInvoice
+        ICreateCompanyInvoice createCompanyInvoice,
+        IGetUser getUser
     ) : IUpdateModuleCompany
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
     private readonly ICreateCompanyInvoice _createCompanyInvoice = createCompanyInvoice;
+    private readonly IGetUser _getUser = getUser;
 
     public async Task Execute(Guid userIdAuth, CompanyUpdateModuleInput input)
     {
@@ -34,14 +38,36 @@ public sealed class UpdateModuleCompany(
             throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
         }
 
-        // Criar cobrança;
+        // #1 - Criar cobrança, obrigatoriamente antes de normalizar o input.Modules;
         await _createCompanyInvoice.Execute(userIdAuth, companyId: input.CompanyId, modules: input.Modules ?? []);
 
-        // Atualizar os dados da empresa, em si;
+        // #2 - Se o usuário for ADM do sistema, ele pode remover os módulos;
+        // Se o usuário não for ADM do sistema, ele NÃO pode remover, e aí automaticamente o input é normalizado;
+        await NormalizeInputModulesIfNotSystemAdmin(userIdAuth, input, result);
+
+        // #3 - Atualizar os dados da empresa, em si;
         await UpdateCompanyData(company: result, input);
     }
 
     #region extras
+    private async Task NormalizeInputModulesIfNotSystemAdmin(Guid userIdAuth, CompanyUpdateModuleInput input, Company company)
+    {
+        UserOutput user = await _getUser.Execute(userId: userIdAuth, throwIfStatusFalse: true);
+
+        // ADM do sistema não normaliza o input, permitindo remover módulos, se necessário;
+        if (user.Role is UserRoleEnum.Administrator && user.Role is UserRoleEnum.Maintainer)
+        {
+            return;
+        }
+
+        // Usuário comum normaliza o input, NÃO permitindo remover módulos;
+        ModuleEnum[]? newModules = input.Modules;
+        ModuleEnum[]? existentModules = company.Modules;
+        ModuleEnum[]? output = existentModules?.Concat(newModules ?? []).Distinct().ToArray();
+
+        input.Modules = output;
+    }
+
     private async Task UpdateCompanyData(Company company, CompanyUpdateModuleInput input)
     {
         // Atualizar os módulos dos funcionário dessa empresa, removendo os módulos não válidos;
