@@ -8,7 +8,7 @@ public enum CompanyInvoiceSituationEnum
     Pending = 1,
 
     [Description("Aprovado")]
-    Approved = 2,
+    Paid = 2,
 
     [Description("Cancelado")]
     Canceled = 999,

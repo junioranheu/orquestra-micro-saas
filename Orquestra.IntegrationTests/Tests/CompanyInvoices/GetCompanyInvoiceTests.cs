@@ -111,7 +111,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Scheduling], 
+            Modules = [ModuleEnum.Scheduling],
             Amount = 49.90m,
             Description = "Plano Básico"
         };
@@ -162,6 +162,120 @@ public sealed class GetCompanyInvoiceTests
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(adminUser.UserId, company.CompanyId));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReturnInvoicesFilteredBySituation()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User adminUser = UserMock.Create();
+        await Fixture.Save(context, adminUser);
+
+        CompanyUser adminCompanyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = adminUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator,
+            Status = true
+        };
+
+        await Fixture.Save(context, adminCompanyUser);
+
+        CompanyInvoice invoice1 = new()
+        {
+            CompanyInvoiceId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Scheduling],
+            Amount = 199.90m,
+            Description = "Plano Premium",
+            CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
+        };
+
+        await Fixture.Save(context, invoice1);
+
+        CompanyInvoice invoice2 = new()
+        {
+            CompanyInvoiceId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Sales],
+            Amount = 49.90m,
+            Description = "Plano Básico",
+            CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid
+        };
+
+        await Fixture.Save(context, invoice2);
+
+        GetCompanyInvoice sut = CreateSut(context, adminUser);
+
+        // Act;
+        List<CompanyInvoice> result = await sut.Execute(adminUser.UserId, company.CompanyId, CompanyInvoiceSituationEnum.Pending);
+
+        // Assert;
+        Assert.Single(result);
+        Assert.Equal(invoice1.CompanyInvoiceId, result[0].CompanyInvoiceId);
+        Assert.Equal(CompanyInvoiceSituationEnum.Pending, result[0].CompanyInvoiceSituation);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReturnAllInvoices_WhenSituationIsNull()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User adminUser = UserMock.Create();
+        await Fixture.Save(context, adminUser);
+
+        CompanyUser adminCompanyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = adminUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator,
+            Status = true
+        };
+
+        await Fixture.Save(context, adminCompanyUser);
+
+        CompanyInvoice invoice1 = new()
+        {
+            CompanyInvoiceId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Scheduling],
+            Amount = 199.90m,
+            Description = "Plano Premium",
+            CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
+        };
+
+        await Fixture.Save(context, invoice1);
+
+        CompanyInvoice invoice2 = new()
+        {
+            CompanyInvoiceId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Sales],
+            Amount = 49.90m,
+            Description = "Plano Básico",
+            CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid
+        };
+
+        await Fixture.Save(context, invoice2);
+
+        GetCompanyInvoice sut = CreateSut(context, adminUser);
+
+        // Act;
+        List<CompanyInvoice> result = await sut.Execute(adminUser.UserId, company.CompanyId, null);
+
+        // Assert;
+        Assert.Equal(2, result.Count);
+        Assert.Contains(result, i => i.CompanyInvoiceId == invoice1.CompanyInvoiceId);
+        Assert.Contains(result, i => i.CompanyInvoiceId == invoice2.CompanyInvoiceId);
     }
 
     #region helpers

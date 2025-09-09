@@ -97,7 +97,7 @@ public sealed class CreateCompanyInvoice(
     private async Task SendEmail(Company company, CompanyInvoice invoice)
     {
         EnvOutput env = _env.GetUrls();
-        string paymentUrl = $"{env.UrlBackend}/AEA";
+        string paymentUrl = $"{env.UrlBackend}/AEA"; // TO DO;
 
         Dictionary<string, string> values = new()
         {
