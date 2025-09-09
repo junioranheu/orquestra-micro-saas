@@ -97,13 +97,13 @@ public sealed class CreateCompanyInvoice(
     private async Task SendEmail(Company company, CompanyInvoice invoice)
     {
         EnvOutput env = _env.GetUrls();
-        string paymentUrl = $"{env.UrlBackend}/AEA"; // TO DO;
+        string paymentUrl = $"{env.UrlBackend}/CompanyInvoice/Pay/{invoice.InvoiceNumber}";
 
         Dictionary<string, string> values = new()
         {
             { "[NameApp]", SystemConsts.NameApp },
             { "[CompanyName]", company.Name },
-            { "[InvoiceNumber]", GuidToNumericId(invoice.CompanyInvoiceId).ToString() },
+            { "[InvoiceNumber]", invoice.InvoiceNumber.ToString() },
             { "[InvoiceDate]", GetDateDetails(withHour: false) },
             { "[ModuleDescription]", invoice.Description ?? string.Empty },
             { "[Price]", invoice.Amount.ToString() },
