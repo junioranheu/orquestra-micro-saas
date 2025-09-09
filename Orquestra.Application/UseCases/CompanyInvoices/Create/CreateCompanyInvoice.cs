@@ -43,7 +43,7 @@ public sealed class CreateCompanyInvoice(
             return null;
         }
 
-        (List<string> modulesStr, decimal finalPriceUsingProportionalPrice) = await CalculateInvoicePriceUsingProportionalPrice(userIdAuth, companyId, modules);
+        (List<string> modulesStr, decimal finalPriceUsingProportionalPrice) = await CalculateInvoicePriceUsingProportionalPrice(userIdAuth, companyId, newModules);
 
         CompanyInvoice invoice = new()
         {
