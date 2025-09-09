@@ -275,6 +275,114 @@ public sealed class UpdateModuleCompanyTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(adminUser.UserId, input));
     }
 
+    [Fact]
+    public async Task Execute_ShouldNormalizeModules_WhenUserIsCommon()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        user.Role = UserRoleEnum.Common;
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        await Fixture.Save(context, company);
+
+        UpdateModuleCompany sut = CreateSut(context, user);
+
+        CompanyUpdateModuleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Sales] // Tenta remover Scheduling;
+        };
+
+        // Act;
+        await sut.Execute(user.UserId, input);
+
+        // Assert → Scheduling não foi removido;
+        Company updatedCompany = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
+        Assert.Contains(ModuleEnum.Sales, updatedCompany?.Modules ?? []);
+        Assert.Contains(ModuleEnum.Scheduling, updatedCompany?.Modules ?? []);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldSetSituationToRegisteredWithoutModules_WhenAdminRemovesAll()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User admin = UserMock.Create();
+        admin.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, admin);
+
+        Company company = CompanyMock.Create();
+        company.Modules = [ModuleEnum.Sales];
+        await Fixture.Save(context, company);
+
+        UpdateModuleCompany sut = CreateSut(context, admin);
+
+        CompanyUpdateModuleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            Modules = [] // Remove todos;
+        };
+
+        // Act;
+        await sut.Execute(admin.UserId, input);
+
+        // Assert;
+        Company updatedCompany = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
+        Assert.Empty(updatedCompany?.Modules ?? []);
+        Assert.Equal(CompanySituationEnum.RegisteredButWithoutAnyModules, updatedCompany?.CompanySituation);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldUpdateAllUserModules_WhenSomeRemoved()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User admin = UserMock.Create();
+        admin.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, admin);
+
+        Company company = CompanyMock.Create();
+        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        await Fixture.Save(context, company);
+
+        // CompanyUsers;
+        User member1 = UserMock.Create();
+        await Fixture.Save(context, member1);
+
+        CompanyUser cu1 = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = member1.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member,
+            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            Status = true
+        };
+
+        await Fixture.Save(context, cu1);
+
+        UpdateModuleCompany sut = CreateSut(context, admin);
+
+        CompanyUpdateModuleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            Modules = [ModuleEnum.Sales] // Remove Scheduling;
+        };
+
+        // Act;
+        await sut.Execute(admin.UserId, input);
+
+        // Assert;
+        CompanyUser updatedMember = await context.CompanyUsers.FirstAsync(x => x.CompanyUserId == cu1.CompanyUserId);
+        Assert.Contains(ModuleEnum.Sales, updatedMember?.Modules ?? []);
+        Assert.DoesNotContain(ModuleEnum.Scheduling, updatedMember?.Modules ?? []);
+    }
+
     #region helpers
     private static UpdateModuleCompany CreateSut(Context context, User user)
     {

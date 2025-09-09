@@ -175,6 +175,78 @@ public sealed class CreateCompanyTests
         Assert.False(verification.Used);
     }
 
+    [Theory]
+    [InlineData(true)] // Com módulos;
+    [InlineData(false)] // Sem módulos;
+    public async Task Execute_ShouldSetCompanySituationAndPlanDatesCorrectly(bool withModules)
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Mock<IEmailService> emailService = Fixture.CreateEmailService();
+        CreateCompany sut = CreateSut(context, user, emailService);
+
+        Company company = CompanyMock.Create();
+        company.Modules = [];
+
+        if (withModules)
+        {
+            company.Modules = [ModuleEnum.Sales];
+        }
+
+        var input = company.Adapt<CompanyInput>();
+
+        // Act;
+        CompanyOutput result = await sut.Execute(user.UserId, input);
+
+        // Assert;
+        Company? createdCompany = await context.Companies.FindAsync(result.CompanyId);
+        Assert.NotNull(createdCompany);
+
+        if (withModules)
+        {
+            Assert.Equal(CompanySituationEnum.PendingPayment, createdCompany!.CompanySituation);
+            Assert.NotNull(createdCompany.PlanStartDate);
+            Assert.NotNull(createdCompany.PlanEndDate);
+        }
+        else
+        {
+            Assert.Equal(CompanySituationEnum.RegisteredButWithoutAnyModules, createdCompany!.CompanySituation);
+            Assert.Null(createdCompany.PlanStartDate);
+            Assert.Null(createdCompany.PlanEndDate);
+        }
+    }
+
+    [Fact]
+    public async Task Execute_ShouldCallCreateCompanyInvoice()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        var emailService = Fixture.CreateEmailService();
+
+        CreateCompany sut = CreateSut(context, user, emailService);
+
+        Company company = CompanyMock.Create();
+        company.Modules = [ModuleEnum.Scheduling];
+        var input = company.Adapt<CompanyInput>();
+
+        // Act;
+        await sut.Execute(user.UserId, input);
+
+        // Assert
+        CompanyInvoice? invoice = await context.CompanyInvoices.AsNoTracking().FirstOrDefaultAsync(i => i.CompanyId == company.CompanyId);
+
+        Assert.NotNull(invoice);
+        Assert.True(invoice.Amount > 0);
+    }
+
     #region helper
     private static CreateCompany CreateSut(Context context, User user, Mock<IEmailService> emailServiceMock)
     {
