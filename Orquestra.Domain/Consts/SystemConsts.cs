@@ -24,7 +24,7 @@ public static class SystemConsts
 
     public const string Warn_Invalid_LinkedCompanyUser = "Você não faz parte de nenhuma empresa.";
     public const string Warn_NotAuth_Simple_User = "Usuário não autenticado.";
-    public const string Warn_NeedToVerify_User = "A conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.";
+    public const string Warn_NeedToVerify_User = "A sua conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.";
     public const string Warn_NeedToVerify_Company = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";
     public const string Warn_VerifyToken_Invalid = "Código de verificação inválido ou inexistente.";
     public const string Warn_NotFound_Company = "A empresa não foi encontrada na base de dados.";
