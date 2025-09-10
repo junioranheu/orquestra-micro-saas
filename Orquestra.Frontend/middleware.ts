@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
 
-const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [ROUTES.LOGIN, ROUTES.CRIAR_CONTA];
+const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [ROUTES.LOGIN, ROUTES.CRIAR_CONTA, ROUTES.LANDING_PAGE];
 
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get(SYSTEM.COOKIE_NAME)?.value;
