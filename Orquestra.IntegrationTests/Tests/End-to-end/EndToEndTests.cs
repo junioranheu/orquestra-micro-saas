@@ -26,13 +26,14 @@ using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.End_to_end;
 
 public sealed class EndToEndTests
 {
     [Fact]
-    public async Task FullHappyPath_CreateAccount_CreateCompany_InviteUser_CreateCustomer_CreateSchedule()
+    public async Task FullHappyPathFlow()
     {
         // Arrange - Context + common fixtures;
         Context context = Fixture.CreateContext();
@@ -196,6 +197,22 @@ public sealed class EndToEndTests
         Assert.NotNull(invoice);
         CompanyInvoice? dbInvoice = await context.CompanyInvoices.FirstOrDefaultAsync(i => i.CompanyInvoiceId == invoice.CompanyInvoiceId);
         Assert.NotNull(dbInvoice);
+
+        // ---------- 7) VERIFICAÇÕES EXTRAS;
+        // 7.1) Invoice amount > 0;
+        Assert.True(invoice.Amount > 0, "Invoice amount should be greater than 0");
+
+        // 7.2) Invoice description contém todos os módulos;
+        foreach (var module in newModules)
+        {
+            Assert.Contains(GetEnumDesc(module), invoice.Description);
+        }
+
+        // 7.3) Verifica que foi chamado pelo menos X vezes;
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<IEnumerable<string>?>()), Times.AtLeast(4));
+
+        // 7.4) Verifica chamada específica para invoice;
+        emailServiceMock.Verify(x => x.SendEmail(It.Is<string>(to => to == dbCompany.Email), It.Is<string>(subject => subject.Contains("Nova fatura")), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<IEnumerable<string>?>()), Times.Once);
     }
 
     #region helpers
