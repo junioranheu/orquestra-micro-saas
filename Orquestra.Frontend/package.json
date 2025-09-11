@@ -12,7 +12,6 @@
     },
     "dependencies": {
         "animate.css": "^4.1.1",
-        "aos": "^2.3.4",
         "concurrently": "^9.2.1",
         "detectincognitojs": "^1.6.1",
         "electron": "^38.0.0",

@@ -24,7 +24,7 @@ export default function Dashboard() {
     const me = useApiGetMe();
     const [modules, setModules] = useState<iCalculatePriceModuleCompanyOutput[]>([]);
 
-    async function handleLogout() {
+    function handleLogout() {
         router.push(ROUTES.LOGOUT);
     }
 
