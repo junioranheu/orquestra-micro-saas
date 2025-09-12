@@ -47,7 +47,7 @@ export default function Dashboard() {
     return (
         <section className={styles.main}>
             <h1>Olá... {auth?.fullName}</h1>
-            {me && me.currentMainCompany.name}
+            {me && me.currentMainCompany?.name}
             {auth && <h2>Refresh token válido até {handleFormatDate(auth?.refreshTokenExpirationDate, DATE_STYLE.DETALHADO)}</h2>}
 
             <br />

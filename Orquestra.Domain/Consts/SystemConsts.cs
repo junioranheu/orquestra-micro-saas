@@ -36,7 +36,7 @@ public static class SystemConsts
     public const bool DO_NOT_SEND_EMAIL_IF_ENV_DEV = false;
 
     public const string ScreenDashboard = "dashboard";
-    public const string ScreenUserHasBeenVerified = "usuario/verificada";
+    public const string ScreenUserHasBeenVerified = "usuario/verificado";
     public const string ScreenCompanyHasBeenVerified = "empresa/verificada";
-    public const string ScreenCompanyUserHasBeenVerified = "usuario/verificada";
+    public const string ScreenCompanyUserHasBeenVerified = "usuario/verificado";
 }
