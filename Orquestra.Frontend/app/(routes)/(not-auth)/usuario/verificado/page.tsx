@@ -8,7 +8,7 @@ export default function Dashboard() {
 
     return (
         <section className={styles.main}>
-            <h1>Olá...</h1>
+            <h1>Olá... bem-vindo!</h1>
         </section>
     )
 }
