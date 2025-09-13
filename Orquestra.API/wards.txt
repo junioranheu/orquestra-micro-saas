@@ -1,1 +1,2 @@
 resolver os "TO DO"
+atualizar o .NET para o 10
