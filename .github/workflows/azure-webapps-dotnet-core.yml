@@ -28,10 +28,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 0️⃣ Clear artifacts
-      - name: Delete Old Artifacts
+      # 0️⃣ Deleta os artifacts antigos do GitHub
+      - name: Delete old artifacts
         uses: actions/github-script@v6
         with:
+          permissions: 
+            actions: write
+            contents: read
           script: |
             const keep = 10
 
