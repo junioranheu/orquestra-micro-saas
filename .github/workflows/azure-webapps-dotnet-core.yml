@@ -29,34 +29,34 @@ jobs:
  
     steps:
       # 0️⃣ Deleta os artifacts antigos do GitHub
-      - name: Delete old artifacts
-        uses: actions/github-script@v6
-        with:
-          permissions: 
-            actions: write
-            contents: read
-          script: |
-            const keep = 10
+      # - name: Delete old artifacts
+      #   uses: actions/github-script@v6
+      #   with:
+      #     permissions: 
+      #       actions: write
+      #       contents: read
+      #     script: |
+      #       const keep = 10
 
-            const res = await github.rest.actions.listArtifactsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 100
-            })
+      #       const res = await github.rest.actions.listArtifactsForRepo({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         per_page: 100
+      #       })
 
-            const artifacts = res.data.artifacts
-              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      #       const artifacts = res.data.artifacts
+      #         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
-            const toDelete = artifacts.slice(keep)
+      #       const toDelete = artifacts.slice(keep)
 
-            for (const { id, name } of toDelete) {
-              console.log(`Deleting artifact: ${name} (${id})`)
-              await github.rest.actions.deleteArtifact({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                artifact_id: id,
-              })
-            }
+      #       for (const { id, name } of toDelete) {
+      #         console.log(`Deleting artifact: ${name} (${id})`)
+      #         await github.rest.actions.deleteArtifact({
+      #           owner: context.repo.owner,
+      #           repo: context.repo.repo,
+      #           artifact_id: id,
+      #         })
+      #       }
 
       # 1️⃣ Checkout do código
       - name: Checkout code
