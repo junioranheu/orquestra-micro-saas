@@ -1,2 +1,2 @@
 resolver os "TO DO"
-atualizar o .NET para o 10
+atualizar o sistema para o .NET 10
