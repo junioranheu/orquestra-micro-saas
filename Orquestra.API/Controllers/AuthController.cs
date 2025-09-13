@@ -140,6 +140,7 @@ public class AuthController(
     {
         CookieOptions cookieOptions = _jwtTokenGenerator.GetCookieOptions();
         HttpContext.Response.Cookies.Delete(SystemConsts.CookieName, cookieOptions);
+
         await _createRefreshToken.Update(userIdAuth: GetUserIdAuth(), mustCheckForValidRefreshTokens: true);
     }
 }
