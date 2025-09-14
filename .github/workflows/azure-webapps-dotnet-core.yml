@@ -23,6 +23,26 @@ env:
   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  
 
 jobs:
+  cleanup:
+    name: Cleanup old artifacts
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Set up GitHub CLI
+        uses: actions/setup-gh-cli@v3
+
+      - name: Delete old artifacts (keep last 10)
+        run: |
+          artifacts=$(gh api repos/${{ github.repository }}/actions/artifacts --paginate -q '.artifacts | sort_by(.created_at) | reverse | .[10:] | .[].id')
+          for artifact_id in $artifacts; do
+            echo "Deleting artifact ID: $artifact_id"
+            gh api --method DELETE repos/${{ github.repository }}/actions/artifacts/$artifact_id
+          done
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   build-and-test:
     name: Build and test back-end
     runs-on: ubuntu-latest
