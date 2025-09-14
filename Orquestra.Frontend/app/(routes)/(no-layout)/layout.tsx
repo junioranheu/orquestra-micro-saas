@@ -1,5 +1,7 @@
 'use client';
 import Head from '@/app/(routes)/head';
+import { CookieDefault } from '@/app/components/cookie';
+import '@/app/styles/globals.scss';
 import feather from 'feather-icons';
 import { useEffect } from 'react';
 
@@ -20,6 +22,8 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
             <body>
                 <main>
                     {children}
+
+                    <CookieDefault extenseButtonDescription={false} />
                 </main>
             </body>
         </html>

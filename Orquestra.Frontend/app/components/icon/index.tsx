@@ -4,6 +4,7 @@ interface iParams {
     icon: keyof typeof feather.icons;
     size?: 'small' | 'regular' | 'big';
     className?: string;
+    weight?: 'normal' | 'bold' | 'bolder';
 }
 
 const sizeMap = {
@@ -12,9 +13,15 @@ const sizeMap = {
     big: 36
 };
 
-export default function Icon({ icon, size = 'regular', className }: iParams) {
+const weightMap = {
+    normal: 2,
+    bold: 3,
+    bolder: 4
+};
 
-    const featherIcon = feather.icons[icon];
+export default function Icon({ icon, size = 'regular', className, weight = 'normal' }: iParams) {
+
+    const featherIcon = feather.icons?.[icon];
 
     if (!featherIcon) {
         return null;
@@ -22,7 +29,8 @@ export default function Icon({ icon, size = 'regular', className }: iParams) {
 
     const svg = featherIcon.toSvg({
         width: sizeMap[size],
-        height: sizeMap[size]
+        height: sizeMap[size],
+        'stroke-width': weightMap[weight]
     });
 
     return <span dangerouslySetInnerHTML={{ __html: svg }} className={className} />;

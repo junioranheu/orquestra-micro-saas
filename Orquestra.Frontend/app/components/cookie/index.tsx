@@ -1,6 +1,7 @@
+import SYSTEM from '@/app/consts/system';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import './cookie-consent.css';
+import './index.css';
 
 // Fork react-cookie-gpdr;
 export interface iCookieWidgetProps {
@@ -108,5 +109,29 @@ const CookieWidget = (props: iCookieWidgetProps) => {
         </div>
     );
 };
+
+export interface iParams {
+    extenseButtonDescription?: boolean;
+}
+
+export function CookieDefault({ extenseButtonDescription = true }: iParams) {
+    return (
+        <CookieWidget
+            location='right'
+            color='var(--main)'
+            policyLink=''
+            policyLinkText=''
+            title='Cookies 🍪'
+            subtitle=''
+            text={`A plataforma ${SYSTEM.NAME} utiliza cookies para oferecer uma melhor experiência. Ao continuar navegando, você concorda com o uso de cookies.`}
+            cookieSecurity={true}
+            hideOnScrollDown={false}
+            rejectButtonText={extenseButtonDescription ? 'Aceitar cookies obrigatórios' : 'Rejeitar cookies'}
+            acceptButtonText={extenseButtonDescription ? 'Aceitar todos os cookies' : 'Aceitar cookies'}
+            onAccept={() => null}
+            onReject={() => null}
+        />
+    )
+}
 
 export default CookieWidget;

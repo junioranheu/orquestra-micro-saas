@@ -1,6 +1,6 @@
 import { Fetch } from '@/app/api/fetch';
-import { iDropdownOption } from '@/app/components/input/drop-down/drop-down';
-import styles from '@/app/components/input/drop-down/drop-down.module.scss';
+import { iDropdownOption } from '@/app/components/input/drop-down';
+import styles from '@/app/components/input/drop-down/index.module.scss';
 import { CSSProperties, Dispatch, SetStateAction, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';

@@ -1,4 +1,4 @@
-import { iDropdownOption } from '@/app/components/input/drop-down/drop-down';
+import { iDropdownOption } from '@/app/components/input/drop-down';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 // Helpers para inputs (texto);

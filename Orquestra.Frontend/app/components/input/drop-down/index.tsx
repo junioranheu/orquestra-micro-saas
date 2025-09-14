@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
-import styles from './drop-down.module.scss';
+import styles from './index.module.scss';
 
 export interface iDropdownOption {
     value: number;

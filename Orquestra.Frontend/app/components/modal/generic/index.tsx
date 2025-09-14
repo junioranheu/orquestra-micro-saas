@@ -3,7 +3,7 @@ import { handleDisableScroll } from '@/app/hooks/useDisableScroll';
 import useKeyPress from '@/app/hooks/useKeyPress';
 import { CSSProperties, Dispatch, ReactNode, SetStateAction, useEffect } from 'react';
 import Modal from 'react-modal';
-import styles from './modal.generic.module.scss';
+import styles from './index.module.scss';
 
 interface iParams {
     isOpen: boolean;

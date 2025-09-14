@@ -1,4 +1,4 @@
-import styles from './radio-button.module.scss';
+import styles from './index.module.scss';
 
 export interface iRadioButtonOption {
     value: number;

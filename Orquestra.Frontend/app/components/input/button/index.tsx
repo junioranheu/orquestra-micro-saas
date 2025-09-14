@@ -2,7 +2,7 @@
 import Image, { StaticImageData } from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CSSProperties, ReactNode, RefObject, cloneElement, useState } from 'react';
-import styles from './button.module.scss';
+import styles from './index.module.scss';
 
 interface iParams {
     label: string;

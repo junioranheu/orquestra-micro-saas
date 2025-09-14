@@ -1,7 +1,8 @@
 'use client';
 import Head from '@/app/(routes)/head';
-import Loading from '@/app/components/loading/loading';
-import Navbar from '@/app/components/navbar/nav/navbar';
+import Loading from '@/app/components/loading';
+import Navbar from '@/app/components/navbar/nav';
+import UpNav from '@/app/components/navbar/up-nav';
 import SYSTEM from '@/app/consts/system';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                         <Toaster expand={false} closeButton={false} />
 
                         <header>
+                            <UpNav />
                             <Navbar />
                         </header>
 

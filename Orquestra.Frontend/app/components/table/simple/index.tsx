@@ -1,4 +1,4 @@
-import styles from './table.simple.module.scss';
+import styles from './index.module.scss';
 
 interface iParams<T> {
     titles: string[];

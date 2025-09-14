@@ -1,7 +1,7 @@
 'use client';
-import Tag from '@/app/components/tag/tag';
+import Tag from '@/app/components/tag';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import styles from './filters-selected.module.scss';
+import styles from './index.module.scss';
 
 interface iParams {
     modalFilterformData?: any;

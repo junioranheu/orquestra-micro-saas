@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import styles from './modal.infos.module.scss';
+import styles from './index.module.scss';
 
 interface iParams {
     title: string;

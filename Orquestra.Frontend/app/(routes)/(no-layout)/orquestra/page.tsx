@@ -1,5 +1,5 @@
 'use client';
-import Icon from '@/app/components/icon/icon';
+import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';

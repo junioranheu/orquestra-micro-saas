@@ -1,7 +1,7 @@
 import Image, { StaticImageData } from 'next/image';
 import { ChangeEvent, FocusEventHandler, KeyboardEventHandler, ReactNode, cloneElement, useEffect, useState } from 'react';
 import { IMaskInput } from 'react-imask';
-import styles from './input.mask.module.scss';
+import styles from './index.module.scss';
 
 interface iParametros {
     objectFormData: [any, string];

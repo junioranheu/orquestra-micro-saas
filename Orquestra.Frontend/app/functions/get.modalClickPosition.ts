@@ -1,4 +1,4 @@
-import { iModalCustomPosition } from '@/app/components/modal/generic/modal.generic';
+import { iModalCustomPosition } from '@/app/components/modal/generic';
 import { MouseEvent } from 'react';
 
 export default function handleGetModalClickPosition(event: MouseEvent<HTMLDivElement>, topOffset: number = 125): iModalCustomPosition {

@@ -2,8 +2,8 @@
 import ImgDownload from '@/app/assets/svg/download.svg';
 import ImgFilter from '@/app/assets/svg/filter.svg';
 import ImgUpload from '@/app/assets/svg/upload.svg';
-import Button from '@/app/components/input/button/button';
-import FiltersSelected from '@/app/components/table/filters-selected/filters-selected';
+import Button from '@/app/components/input/button';
+import FiltersSelected from '@/app/components/table/filters-selected';
 import SYSTEM from '@/app/consts/system';
 import Image, { StaticImageData } from 'next/image';
 import Pagination from 'rc-pagination';
@@ -11,7 +11,7 @@ import 'rc-pagination/assets/index.css';
 import Table, { ColumnType as RcTableColumnType } from 'rc-table';
 import 'rc-table/assets/index.css';
 import { Dispatch, MouseEvent, SetStateAction, useEffect, useState } from 'react';
-import styles from './table.generic.module.scss';
+import styles from './index.module.scss';
 
 export interface iTableColumn extends RcTableColumnType<any> {
     dataIndex: string;

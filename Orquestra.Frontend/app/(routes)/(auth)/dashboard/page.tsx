@@ -3,7 +3,7 @@ import iMe, { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { CONSTS_COMPANY, iCalculatePriceModuleCompanyOutput } from '@/app/api/consts/company';
 import { CONSTS_LOG } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
-import Button from '@/app/components/input/button/button';
+import Button from '@/app/components/input/button';
 import ROUTES from '@/app/consts/routes';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';

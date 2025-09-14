@@ -1,6 +1,6 @@
 import handleProperlyCapitalizeStr from '@/app/functions/fix.properlyCapitalizeText';
 import { CSSProperties } from 'react';
-import styles from './tag.module.scss';
+import styles from './index.module.scss';
 
 interface iParams {
     text: string;

@@ -2,9 +2,9 @@
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { iUserInput } from '@/app/api/consts/user';
 import ImgLogo from '@/app/assets/png/logo.png';
-import CookieWidget from '@/app/components/cookie/cookie-consent';
-import Button from '@/app/components/input/button/button';
-import InputMask from '@/app/components/input/text/input.mask';
+import { CookieDefault } from '@/app/components/cookie';
+import Button from '@/app/components/input/button';
+import InputMask from '@/app/components/input/text';
 import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
@@ -62,7 +62,6 @@ export default function Login() {
     useEffect(() => {
         if (isIncognito) {
             swal({
-                // title: 'Aviso',
                 str: `Não é possível acessar o ${SYSTEM.NAME} em modo anônimo.`,
                 confirmBtnText: 'OK',
                 cancelBtnText: 'Saiba mais',
@@ -128,21 +127,7 @@ export default function Login() {
                 <code>{versionBuild?.configuration}</code>
             </div>
 
-            <CookieWidget
-                location='right'
-                color='var(--main)'
-                policyLink=''
-                policyLinkText=''
-                title='Cookies 🍪'
-                subtitle=''
-                text={`A plataforma ${SYSTEM.NAME} utiliza cookies para oferecer uma melhor experiência. Ao continuar navegando, você concorda com o uso de cookies.`}
-                cookieSecurity={true}
-                hideOnScrollDown={false}
-                rejectButtonText='Aceitar cookies obrigatórios'
-                acceptButtonText='Aceitar todos os cookies'
-                onAccept={() => null}
-                onReject={() => null}
-            />
+            <CookieDefault />
         </section>
     )
 }

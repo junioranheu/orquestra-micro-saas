@@ -1,5 +1,5 @@
 import { ChangeEvent, RefObject } from 'react';
-import styles from './input.file.module.scss';
+import styles from './index.module.scss';
 
 type TypeMIMEs =
     | 'audio/*'

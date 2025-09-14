@@ -3,7 +3,7 @@ import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import styles from './loading.module.scss';
+import styles from './index.module.scss';
 
 interface iParams {
     typeMessage?: 'normal' | 'long';
