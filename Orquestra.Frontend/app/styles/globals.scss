@@ -1,9 +1,9 @@
 :root {
-    --main: #a4dcb9;
-    --main-light: #d1f2e0;
-    --main-dark: #6aa87d;
+    --main: #d7fec8;
+    --main-light: #f9fff6;
+    --main-dark: #0b996f;
     --black: #15171A;
-    --white: #FFFFFF;
+    --white: #f7f9fc;
     --white-alt: #dbedf3;
     --gray: lightgray;
     --gray-light: #f5f5f5;
@@ -24,7 +24,7 @@ body {
     scroll-behavior: smooth;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: #f7f9fc;
+    background-color: var(--white);
     color: var(--black);
 
     -moz-osx-font-smoothing: grayscale;
@@ -46,7 +46,7 @@ img {
 }
 
 ::selection {
-    background: var(--main);
+    background: var(--main-dark);
     color: var(--white);
 }
 

@@ -1,17 +1,23 @@
 'use client';
 import Head from '@/app/(routes)/head';
-import Navbar from '@/app/components/(main)/navbar/nav/navbar';
 import Loading from '@/app/components/loading/loading';
+import Navbar from '@/app/components/navbar/nav/navbar';
 import SYSTEM from '@/app/consts/system';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
-import { ReactNode } from 'react';
+import feather from 'feather-icons';
+import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+
+    useEffect(() => {
+        feather.replace();
+    }, [])
+
     return (
         <html lang='pt-BR'>
             <UserProvider>

@@ -1,19 +1,15 @@
 'use client';
+import Icon from '@/app/components/icon/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
-import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 export default function LandingPage() {
 
     useTitle(`${SYSTEM.NAME}: ${SYSTEM.DESCRIPTION}`, false);
     const [open, setOpen] = useState<boolean>(false);
-
-    useEffect(() => {
-        feather.replace();
-    }, [])
 
     return (
         <div className='min-h-screen font-inter text-gray-800 bg-white'>
@@ -49,7 +45,7 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => voi
             <div className='container mx-auto px-6 py-4 flex items-center justify-between'>
                 <div className='flex items-center space-x-2'>
                     <div className='w-10 h-10 rounded-full bg-[#a4dcb9] flex items-center justify-center'>
-                        <i data-feather='calendar' className='text-white'></i>
+                        <Icon icon='calendar' size='small' />
                     </div>
 
                     <span className='text-xl font-semibold'>{SYSTEM.NAME}</span>
@@ -85,7 +81,7 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => voi
                     onClick={() => setOpen(!open)}
                     title='menu'
                 >
-                    <i data-feather='menu'></i>
+                    <Icon icon='menu' />
                 </button>
             </div>
 
@@ -129,7 +125,7 @@ function Hero() {
             <div className='container mx-auto px-6 text-center'>
                 <div className='max-w-3xl mx-auto' data-aos='fade-up'>
                     <div className='w-20 h-20 rounded-full bg-[#a4dcb9] flex items-center justify-center mx-auto mb-8'>
-                        <i data-feather='calendar' className='text-white'></i>
+                        <Icon icon='calendar' className='text-white' />
                     </div>
 
                     <h1 className='text-5xl md:text-6xl font-bold mb-6 leading-tight'>
@@ -161,36 +157,36 @@ function Hero() {
 
 function Features() {
     return (
-        <section id="features" className="py-24">
-            <div className="container mx-auto px-6">
-                <div className="text-center mb-16" data-aos="fade-up">
-                    <h2 className="text-4xl font-bold mb-4">Funcionalidades Poderosas</h2>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
+        <section id='features' className='py-24'>
+            <div className='container mx-auto px-6'>
+                <div className='text-center mb-16' data-aos='fade-up'>
+                    <h2 className='text-4xl font-bold mb-4'>Funcionalidades Poderosas</h2>
+                    <p className='text-gray-600 max-w-2xl mx-auto'>
                         Tudo que você precisa para gerenciar agendamentos, clientes e pagamentos em um só lugar.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-12">
-                    <div className="p-6 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="100">
-                        <i data-feather="clock" className="w-10 h-10 text-[#a4dcb9] mb-4"></i>
-                        <h3 className="text-xl font-semibold mb-2">Agendamento Inteligente</h3>
-                        <p className="text-gray-600">
+                <div className='grid md:grid-cols-3 gap-12'>
+                    <div className='p-6 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all' data-aos='fade-up' data-aos-delay='100'>
+                        <Icon icon='clock' size='big' className='w-10 h-10 text-[#a4dcb9] mb-4' />
+                        <h3 className='text-xl font-semibold mb-2'>Agendamento Inteligente</h3>
+                        <p className='text-gray-600'>
                             Gerencie horários automaticamente com lembretes para clientes e equipe.
                         </p>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="200">
-                        <i data-feather="users" className="w-10 h-10 text-[#a4dcb9] mb-4"></i>
-                        <h3 className="text-xl font-semibold mb-2">Gestão de Clientes</h3>
-                        <p className="text-gray-600">
+                    <div className='p-6 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all' data-aos='fade-up' data-aos-delay='200'>
+                        <Icon icon='users' size='big' className='w-10 h-10 text-[#a4dcb9] mb-4' />
+                        <h3 className='text-xl font-semibold mb-2'>Gestão de Clientes</h3>
+                        <p className='text-gray-600'>
                             Tenha o histórico completo dos seus clientes em um só lugar.
                         </p>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="300">
-                        <i data-feather="credit-card" className="w-10 h-10 text-[#a4dcb9] mb-4"></i>
-                        <h3 className="text-xl font-semibold mb-2">Pagamentos Integrados</h3>
-                        <p className="text-gray-600">
+                    <div className='p-6 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all' data-aos='fade-up' data-aos-delay='300'>
+                        <Icon icon='credit-card' size='big' className='w-10 h-10 text-[#a4dcb9] mb-4' />
+                        <h3 className='text-xl font-semibold mb-2'>Pagamentos Integrados</h3>
+                        <p className='text-gray-600'>
                             Receba pagamentos online de forma simples e segura.
                         </p>
                     </div>
@@ -202,52 +198,52 @@ function Features() {
 
 function Pricing() {
     return (
-        <section id="pricing" className="py-24 bg-gray-50">
-            <div className="container mx-auto px-6">
-                <div className="text-center mb-16" data-aos="fade-up">
-                    <h2 className="text-4xl font-bold mb-4">Planos e Preços</h2>
-                    <p className="text-gray-600">Escolha o plano que melhor se adapta ao seu negócio</p>
+        <section id='pricing' className='py-24 bg-gray-50'>
+            <div className='container mx-auto px-6'>
+                <div className='text-center mb-16' data-aos='fade-up'>
+                    <h2 className='text-4xl font-bold mb-4'>Planos e Preços</h2>
+                    <p className='text-gray-600'>Escolha o plano que melhor se adapta ao seu negócio</p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
-                    <div className="p-8 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="100">
-                        <h3 className="text-2xl font-semibold mb-4">Básico</h3>
-                        <p className="text-gray-600 mb-6">Ideal para profissionais individuais</p>
-                        <p className="text-4xl font-bold mb-6">R$29<span className="text-lg">/mês</span></p>
-                        <ul className="space-y-3 text-gray-600 mb-6">
+                <div className='grid md:grid-cols-3 gap-8'>
+                    <div className='p-8 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all' data-aos='fade-up' data-aos-delay='100'>
+                        <h3 className='text-2xl font-semibold mb-4'>Básico</h3>
+                        <p className='text-gray-600 mb-6'>Ideal para profissionais individuais</p>
+                        <p className='text-4xl font-bold mb-6'>R$29<span className='text-lg'>/mês</span></p>
+                        <ul className='space-y-3 text-gray-600 mb-6'>
                             <li>✔️ 50 agendamentos/mês</li>
                             <li>✔️ Notificações por e-mail</li>
                             <li>✔️ Suporte básico</li>
                         </ul>
-                        <a href="#" className="w-full block text-center px-6 py-3 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d] transition-all">
+                        <a href='#' className='w-full block text-center px-6 py-3 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d] transition-all'>
                             Escolher plano
                         </a>
                     </div>
 
-                    <div className="p-8 bg-white rounded-2xl shadow-lg border-2 border-[#a4dcb9]" data-aos="fade-up" data-aos-delay="200">
-                        <h3 className="text-2xl font-semibold mb-4">Profissional</h3>
-                        <p className="text-gray-600 mb-6">Perfeito para equipes pequenas</p>
-                        <p className="text-4xl font-bold mb-6">R$79<span className="text-lg">/mês</span></p>
-                        <ul className="space-y-3 text-gray-600 mb-6">
+                    <div className='p-8 bg-white rounded-2xl shadow-lg border-2 border-[#a4dcb9]' data-aos='fade-up' data-aos-delay='200'>
+                        <h3 className='text-2xl font-semibold mb-4'>Profissional</h3>
+                        <p className='text-gray-600 mb-6'>Perfeito para equipes pequenas</p>
+                        <p className='text-4xl font-bold mb-6'>R$79<span className='text-lg'>/mês</span></p>
+                        <ul className='space-y-3 text-gray-600 mb-6'>
                             <li>✔️ Agendamentos ilimitados</li>
                             <li>✔️ Notificações por SMS</li>
                             <li>✔️ Suporte prioritário</li>
                         </ul>
-                        <a href="#" className="w-full block text-center px-6 py-3 rounded-full bg-[#6aa87d] text-white hover:bg-[#4d7a5b] transition-all">
+                        <a href='#' className='w-full block text-center px-6 py-3 rounded-full bg-[#6aa87d] text-white hover:bg-[#4d7a5b] transition-all'>
                             Escolher plano
                         </a>
                     </div>
 
-                    <div className="p-8 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="300">
-                        <h3 className="text-2xl font-semibold mb-4">Empresarial</h3>
-                        <p className="text-gray-600 mb-6">Para grandes empresas</p>
-                        <p className="text-4xl font-bold mb-6">R$199<span className="text-lg">/mês</span></p>
-                        <ul className="space-y-3 text-gray-600 mb-6">
+                    <div className='p-8 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all' data-aos='fade-up' data-aos-delay='300'>
+                        <h3 className='text-2xl font-semibold mb-4'>Empresarial</h3>
+                        <p className='text-gray-600 mb-6'>Para grandes empresas</p>
+                        <p className='text-4xl font-bold mb-6'>R$199<span className='text-lg'>/mês</span></p>
+                        <ul className='space-y-3 text-gray-600 mb-6'>
                             <li>✔️ Tudo do Profissional</li>
                             <li>✔️ Integrações avançadas</li>
                             <li>✔️ Suporte dedicado</li>
                         </ul>
-                        <a href="#" className="w-full block text-center px-6 py-3 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d] transition-all">
+                        <a href='#' className='w-full block text-center px-6 py-3 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d] transition-all'>
                             Escolher plano
                         </a>
                     </div>
@@ -262,11 +258,11 @@ function CTA() {
     const router = useRouter();
 
     return (
-        <section id="cta" className="py-24 bg-[#a4dcb9] text-white text-center">
-            <div className="container mx-auto px-6" data-aos="zoom-in">
-                <h2 className="text-4xl font-bold mb-6">Pronto para organizar sua agenda?</h2>
-                <p className="text-lg mb-8">Experimente o {SYSTEM.NAME} gratuitamente por 14 dias</p>
-                <a className="px-8 py-4 rounded-full bg-white text-[#6aa87d] font-medium hover:bg-gray-100 transition-all" href="#" onClick={() => router.push(ROUTES.LOGIN)}>
+        <section id='cta' className='py-24 bg-[#a4dcb9] text-white text-center'>
+            <div className='container mx-auto px-6' data-aos='zoom-in'>
+                <h2 className='text-4xl font-bold mb-6'>Pronto para organizar sua agenda?</h2>
+                <p className='text-lg mb-8'>Experimente o {SYSTEM.NAME} gratuitamente por 14 dias</p>
+                <a className='px-8 py-4 rounded-full bg-white text-[#6aa87d] font-medium hover:bg-gray-100 transition-all' href='#' onClick={() => router.push(ROUTES.LOGIN)}>
                     Criar conta grátis
                 </a>
             </div>
@@ -276,8 +272,8 @@ function CTA() {
 
 function Footer() {
     return (
-        <footer className="py-12 bg-gray-900 text-gray-400">
-            <div className="container mx-auto px-6 text-center">
+        <footer className='py-12 bg-gray-900 text-gray-400'>
+            <div className='container mx-auto px-6 text-center'>
                 <p>© {new Date().getFullYear()} {SYSTEM.NAME}. Todos os direitos reservados.</p>
             </div>
         </footer>

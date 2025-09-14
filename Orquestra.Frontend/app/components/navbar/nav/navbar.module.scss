@@ -1,0 +1,49 @@
+.nav {
+    // background-color: tomato !important;
+    background-color: var(--white);
+    height: 3rem;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    .inner {
+        // background-color: orange !important;
+        width: 100%;
+        padding-right: 1rem;
+        margin: auto;
+
+        font-size: 0.8rem;
+        color: var(--black);
+        white-space: nowrap;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+
+        .right {
+            // background-color: purple;
+            width: auto;
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+        }
+    }
+}
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}
