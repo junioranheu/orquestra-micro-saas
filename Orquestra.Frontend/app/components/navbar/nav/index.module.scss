@@ -1,15 +1,14 @@
 .nav {
     // background-color: tomato !important;
     background-color: var(--white);
-    height: 2.5rem;
+    height: 3rem;
     width: 100%;
 
     display: flex;
 
     .inner {
-        background-color: tomato !important;
+        // background-color: tomato !important;
         width: 100%;
-        padding-right: 1rem;
 
         font-size: 1.1rem;
         font-weight: bold;
@@ -20,20 +19,40 @@
         gap: 2rem;
 
         .right {
-            background-color: purple;
+            // background-color: purple;
             width: auto;
             margin-left: auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
+            gap: 1rem;
 
-            span {
-                background-color: orange;
+            >span {
+                // background-color: orange;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 0.25rem;
+                gap: 0.5rem;
+
+                padding: 0.25rem 1rem;
+                min-height: 2rem;
+                max-height: 2rem;
+                border-radius: var(--border-radius);
+                transition: 0.3s;
+
+                svg {
+                    // background-color: purple !important;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                &:hover {
+                    background-color: var(--contrast-light);
+                    color: var(--contrast);
+                    cursor: pointer;
+                    transition: 0.3s;
+                }
             }
         }
     }
