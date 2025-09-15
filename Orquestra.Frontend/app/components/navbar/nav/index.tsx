@@ -22,7 +22,9 @@ export default function Navbar() {
         <nav className={styles.nav}>
             <div className={styles.inner}>
                 <div className={styles.right}>
-                    <span><Icon icon='tag' weight='bold' /> Uso e plano</span>
+                    <Tippy content="Entenda mais sobre plano atual e explore novos">
+                        <span><Icon icon='tag' weight='bold' /> Uso e plano</span>
+                    </Tippy>
 
                     <Tippy content="Ajuda">
                         <span><Icon icon='help-circle' weight='bold' /></span>

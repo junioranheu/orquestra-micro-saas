@@ -57,12 +57,12 @@ export default function Dashboard() {
             <br />
             <Button label={'Logout'} handleFunction={() => handleLogout()} />
             <br />
-            <div className="space-y-4">
+            <div className='space-y-4'>
                 {
                     modules?.map((m, index) => (
-                        <div key={index} className="p-4 rounded-lg shadow bg-white">
-                            <h2 className="text-lg font-semibold">{m.moduleStr}</h2>
-                            <p>Já possui: {m.companyAlreadyHasThisModule ? "Sim" : "Não"}</p>
+                        <div key={index}>
+                            <h2>{m.moduleStr}</h2>
+                            <p>Já possui: {m.companyAlreadyHasThisModule ? 'Sim' : 'Não'}</p>
                             <p>Preço original: R$ {m.originalPrice.toFixed(2)}</p>
                             <p>Desconto: {m.discountPercentage}%</p>
                             <p>Preço com desconto: R$ {m.discountedPrice.toFixed(2)}</p>
