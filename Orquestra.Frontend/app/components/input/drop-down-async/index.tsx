@@ -5,7 +5,7 @@ import { CSSProperties, Dispatch, SetStateAction, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';
 
-interface iParams {
+interface iProps {
     title?: string;
     multiple?: boolean;
     setSelectedOption: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -23,7 +23,7 @@ export default function DropdownAsync({
     apiUrl,
     isStyleSimple = false,
     placeholder
-}: iParams) {
+}: iProps) {
 
     const [inputValue, setInputValue] = useState<string>('');
 

@@ -6,33 +6,35 @@ interface iProps {
     ms?: number;
     title?: string;
     triggerFunction?: () => void;
+    isClosable?: boolean;
 }
 
-export default function toast(props: iProps) {
-    const { content, ms = 5000, title = '', triggerFunction = () => null } = props;
+export default function toast(props: iProps): number {
+    const { content, ms = 5000, title = '', triggerFunction = () => null, isClosable = true } = props;
 
-    const isSmallScreen = window.innerWidth <= 801;
+    const isSmallScreen = window.innerWidth <= 600;
 
     const style = {
-        background: 'var(--main)',
-        borderColor: 'var(--main)',
+        background: 'var(--black)',
+        borderColor: 'var(--black)',
         borderRadius: 'var(--border-radius)',
         boxShadow: '0 4px 30px rgba(0, 0, 0, 0.25)',
-        color: 'var(--white)',
         userSelect: 'none'
     } as CSSProperties;
 
-    ToastSonner(title, {
+    const toastId = ToastSonner(title, {
         description: content,
-        duration: ms,
-        position: isSmallScreen ? 'top-center' : 'bottom-right',
+        duration: isClosable ? ms : Infinity,
+        position: isSmallScreen ? 'top-left' : 'bottom-right',
         style: style,
         className: 'toastSonner',
-        action: {
-            label: '✕',
-            onClick: () => {
-                triggerFunction && triggerFunction();
+        ...(isClosable && {
+            action: {
+                label: '✕',
+                onClick: () => triggerFunction()
             }
-        }
+        })
     });
+
+    return Number(toastId);
 }

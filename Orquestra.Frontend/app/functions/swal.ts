@@ -1,6 +1,6 @@
 import Swal, { SweetAlertResult } from 'sweetalert2';
 
-interface iParams {
+interface iProps {
     title?: string;
     str?: string;
     cancelBtnText?: string;
@@ -11,7 +11,7 @@ interface iParams {
     icon?: undefined | 'info' | 'success' | 'error' | 'warning' | 'question';
 }
 
-export default function swal(options: iParams): Promise<any> {
+export default function swal(options: iProps): Promise<any> {
     return new Promise((resolve) => {
         const { title, str, cancelBtnText, cancelFunction, confirmBtnText = 'Ok', confirmFunction, allowOutsideClick = true, icon = undefined } = options;
 

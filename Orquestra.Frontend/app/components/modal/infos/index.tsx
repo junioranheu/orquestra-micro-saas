@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
 import styles from './index.module.scss';
 
-interface iParams {
+interface iProps {
     title: string;
     items: {
         title: string;
@@ -11,7 +11,7 @@ interface iParams {
     showHr?: boolean;
 }
 
-export default function ModalInfos({ title, items, style = {}, showHr = true }: iParams) {
+export default function ModalInfos({ title, items, style = {}, showHr = true }: iProps) {
     return (
         <section className={styles.main} style={style}>
             <span className={styles.title}>{title}</span>

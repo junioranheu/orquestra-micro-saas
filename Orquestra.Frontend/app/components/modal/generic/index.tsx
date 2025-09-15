@@ -5,7 +5,7 @@ import { CSSProperties, Dispatch, ReactNode, SetStateAction, useEffect } from 'r
 import Modal from 'react-modal';
 import styles from './index.module.scss';
 
-interface iParams {
+interface iProps {
     isOpen: boolean;
     setModalIsOpen: Dispatch<SetStateAction<boolean>>
     onRequestClose?: () => void;
@@ -42,7 +42,7 @@ export default function ModalGeneric({
     title,
     customPosition = {},
     children
-}: iParams) {
+}: iProps) {
 
     useKeyPress('Escape', () => setModalIsOpen(false));
 

@@ -1,6 +1,6 @@
 import feather from 'feather-icons';
 
-interface iParams {
+interface iProps {
     icon: keyof typeof feather.icons;
     size?: 'small' | 'regular' | 'big';
     className?: string;
@@ -19,7 +19,7 @@ const weightMap = {
     bolder: 4
 };
 
-export default function Icon({ icon, size = 'regular', className, weight = 'normal' }: iParams) {
+export default function Icon({ icon, size = 'regular', className, weight = 'normal' }: iProps) {
 
     const featherIcon = feather.icons?.[icon];
 

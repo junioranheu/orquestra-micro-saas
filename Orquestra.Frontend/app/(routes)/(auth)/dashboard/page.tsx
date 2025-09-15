@@ -30,7 +30,7 @@ export default function Dashboard() {
 
     async function handleXD() {
         console.clear();
-        const test = await Fetch.get({ url: CONSTS_AUTH.me, setIsRequestLoading: setIsRequestLoading }) as iMe;
+        const test = await Fetch.get({ url: CONSTS_AUTH.me }) as iMe;
         console.log(CONSTS_AUTH.me, test);
 
         const modules = await Fetch.get({ url: `${CONSTS_COMPANY.getModulesInfo}?companyId=${test.currentMainCompany.companyId}`, setIsRequestLoading: setIsRequestLoading }) as iCalculatePriceModuleCompanyOutput[];

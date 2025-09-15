@@ -5,7 +5,7 @@ export interface iRadioButtonOption {
     label: string;
 }
 
-interface iParams {
+interface iProps {
     title?: string;
     options: iRadioButtonOption[];
     selectedId: number | null;
@@ -17,7 +17,7 @@ export default function RadioButton({
     options,
     selectedId,
     onChange
-}: iParams) {
+}: iProps) {
     return (
         <div className={styles.main}>
             {title && <span className={styles.title}>{title}</span>}

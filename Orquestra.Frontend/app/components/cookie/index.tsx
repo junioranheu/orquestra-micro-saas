@@ -110,11 +110,11 @@ const CookieWidget = (props: iCookieWidgetProps) => {
     );
 };
 
-export interface iParams {
+export interface iProps {
     extenseButtonDescription?: boolean;
 }
 
-export function CookieDefault({ extenseButtonDescription = true }: iParams) {
+export function CookieDefault({ extenseButtonDescription = true }: iProps) {
     return (
         <CookieWidget
             location='right'

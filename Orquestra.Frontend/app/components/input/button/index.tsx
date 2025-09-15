@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { CSSProperties, ReactNode, RefObject, cloneElement, useState } from 'react';
 import styles from './index.module.scss';
 
-interface iParams {
+interface iProps {
     label: string;
     url?: string;
     isNewTab?: boolean;
@@ -30,7 +30,7 @@ export default function Button({
     isStyleSimple = false,
     classes,
     style = {}
-}: iParams) {
+}: iProps) {
 
     const router = useRouter();
     const [isDisabledInternal, setIsDisabledInternal] = useState<boolean>(false);

@@ -152,14 +152,15 @@ input[type='password'] {
     div {
         // background-color: orange !important;
         font-weight: 600 !important;
+        color: var(--white) !important;
     }
 
     button {
-        background-color: var(--main) !important;
+        background-color: #1d2024 !important;
         transition: 0.3s !important;
 
         &:hover {
-            background-color: var(--main-dark) !important;
+            background-color: #373c42 !important;
         }
     }
 }

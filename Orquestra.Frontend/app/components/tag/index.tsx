@@ -2,14 +2,14 @@ import handleProperlyCapitalizeStr from '@/app/functions/fix.properlyCapitalizeT
 import { CSSProperties } from 'react';
 import styles from './index.module.scss';
 
-interface iParams {
+interface iProps {
     text: string;
     handleClick?: any | null;
     fixCapitalizeStr?: boolean;
     style?: CSSProperties;
 }
 
-export default function Tag({ text, handleClick, fixCapitalizeStr = true, style = {} }: iParams) {
+export default function Tag({ text, handleClick, fixCapitalizeStr = true, style = {} }: iProps) {
     return (
         <div
             className={styles.tag}

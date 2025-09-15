@@ -17,13 +17,13 @@ type TypeMIMEs =
     | 'text/plain'
     | 'text/csv';
 
-interface iParams {
+interface iProps {
     refInput: RefObject<HTMLInputElement>;
     handleFile: (file: File | null) => Promise<void>;
     accept?: TypeMIMEs[];
 }
 
-export default function InputFile({ refInput, handleFile, accept }: iParams) {
+export default function InputFile({ refInput, handleFile, accept }: iProps) {
 
     async function handleFileInputChange(e: ChangeEvent<HTMLInputElement>) {
         const selectedFile = e.target.files && e.target.files[0];

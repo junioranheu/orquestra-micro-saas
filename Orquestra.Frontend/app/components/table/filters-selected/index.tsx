@@ -3,7 +3,7 @@ import Tag from '@/app/components/tag';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
-interface iParams {
+interface iProps {
     modalFilterformData?: any;
     setModalFilterFormData?: Dispatch<SetStateAction<any>>;
     apiUrlRequest: string;
@@ -15,7 +15,7 @@ interface iFilter {
     value: string | number;
 }
 
-export default function FiltersSelected({ modalFilterformData, setModalFilterFormData, apiUrlRequest, setApiUrlRequest }: iParams) {
+export default function FiltersSelected({ modalFilterformData, setModalFilterFormData, apiUrlRequest, setApiUrlRequest }: iProps) {
 
     const [apiUrlBase, setApiUrlBase] = useState<string>('');
     const [filtersInternal, setFiltersInternal] = useState<iFilter[]>([]);

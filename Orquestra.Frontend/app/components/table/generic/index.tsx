@@ -30,7 +30,7 @@ export interface iTableManagingOptions {
     isButton?: boolean;
 }
 
-interface iParams {
+interface iProps {
     idPropName: string;
     columns: iTableColumn[];
     data: any[] | undefined;
@@ -87,7 +87,7 @@ export default function TableGeneric({
     setModalFilterFormData,
     apiUrlRequest,
     setApiUrlRequest
-}: iParams) {
+}: iProps) {
 
     const [pageSize, setPageSize] = useState<number>(0);
     const [countTotalItems, setCountTotalItems] = useState<number>(0);

@@ -1,11 +1,11 @@
 import styles from './index.module.scss';
 
-interface iParams<T> {
+interface iProps<T> {
     titles: string[];
     data: T[] | undefined;
 }
 
-export default function TableSimple<T>({ titles, data }: iParams<T>) {
+export default function TableSimple<T>({ titles, data }: iProps<T>) {
 
     if (!titles || !data || data?.length < 1) {
         return;

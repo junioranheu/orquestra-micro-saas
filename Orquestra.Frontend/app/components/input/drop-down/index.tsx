@@ -7,7 +7,7 @@ export interface iDropdownOption {
     label: string;
 }
 
-interface iParams {
+interface iProps {
     title?: string;
     options: iDropdownOption[];
     multiple?: boolean;
@@ -34,7 +34,7 @@ export default function Dropdown({
     isDisabled = false,
     isSearchable = true,
     isClearable = true
-}: iParams) {
+}: iProps) {
 
     const [uniqueOptions, setUniqueOptions] = useState<iDropdownOption[]>([]);
 

@@ -1,7 +1,7 @@
 import { Fetch } from '@/app/api/fetch';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 
-interface iParams<T> {
+interface iProps<T> {
     apiUrlRequest: string;
     setter: Dispatch<SetStateAction<T | undefined>>;
     index?: number;
@@ -13,7 +13,7 @@ interface iParams<T> {
     setIsRequestLoading?: Dispatch<boolean>;
 }
 
-export default function useApiRequestToSetterOnUrlChange<T>(options: iParams<T>): void {
+export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>): void {
 
     const {
         apiUrlRequest,

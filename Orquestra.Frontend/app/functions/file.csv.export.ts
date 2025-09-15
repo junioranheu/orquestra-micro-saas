@@ -4,7 +4,7 @@ import { DATE_STYLE, handleFormatDate } from './format.date';
 import handleGetDateBrazil from './get.date.brazil';
 import swal from './swal';
 
-interface iParams {
+interface iProps {
     setIsRequestLoading: Dispatch<SetStateAction<boolean>>;
     fileName: string;
     apiUrl: string;
@@ -12,7 +12,7 @@ interface iParams {
     messageError: string;
 }
 
-export default async function handleFileCSVExport(params: iParams): Promise<boolean> {
+export default async function handleFileCSVExport(params: iProps): Promise<boolean> {
     const { setIsRequestLoading, fileName, apiUrl, messageSuccess, messageError } = params;
 
     try {
