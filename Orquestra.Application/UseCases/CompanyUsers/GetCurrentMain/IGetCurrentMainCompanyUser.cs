@@ -4,5 +4,5 @@ namespace Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 
 public interface IGetCurrentMainCompanyUser
 {
-    Task<CompanyOutput?> Execute(Guid userId);
+    Task<(CompanyOutput? currentMainCompany, bool isUserAdm)> Execute(Guid userId);
 }

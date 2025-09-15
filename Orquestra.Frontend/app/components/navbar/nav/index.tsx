@@ -16,9 +16,13 @@ export default function Navbar() {
         <nav className={styles.nav}>
             <div className={styles.inner}>
                 <div className={styles.right}>
-                    <Tippy content="Entenda mais sobre plano atual e explore novos">
-                        <span onClick={() => router.push(ROUTES.DASHBOARD)}><Icon icon='tag' weight='bold' /> Uso e plano</span>
-                    </Tippy>
+                    {
+                        (me && me?.isUserAdmOfCurrentMainCompany) && (
+                            <Tippy content="Entenda mais sobre o plano atual da sua empresa e explore novos">
+                                <span onClick={() => router.push(ROUTES.DASHBOARD)}><Icon icon='tag' weight='bold' /> Uso e plano</span>
+                            </Tippy>
+                        )
+                    }
 
                     <Tippy content="Ajuda">
                         <span onClick={() => router.push(ROUTES.DASHBOARD)}><Icon icon='help-circle' weight='bold' /></span>

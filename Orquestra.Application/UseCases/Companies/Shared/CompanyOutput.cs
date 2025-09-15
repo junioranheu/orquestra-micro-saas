@@ -92,6 +92,8 @@ public sealed class CompanySimpleOutput
     public ModuleEnum[]? UserModules { get; set; } = [];
 
     public List<string> UserModulesStr { get; set; } = [];
+
+    public bool IsAdm { get; set; } = false;
 }
 
 public sealed class CompanyModulesOutput

@@ -1,8 +1,10 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using System.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
@@ -11,24 +13,28 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
 {
     private readonly Context _context = context;
 
-    public async Task<CompanyOutput?> Execute(Guid userId)
+    public async Task<(CompanyOutput? currentMainCompany, bool isUserAdm)> Execute(Guid userId)
     {
         var output = await _context.CompanyUsers.
+                     Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.UserId == userId && x.IsCurrentMainCompanyUser && x.Status).
-                     Select(x => x.Company.Adapt<CompanyOutput>()).
-                     FirstOrDefaultAsync();
+                     FirstOrDefaultAsync() ?? throw new Exception(SystemConsts.Warn_NotFound_User);
 
-        if (output is not null)
+        CompanyOutput outputAdapt = output.Company.Adapt<CompanyOutput>() ?? throw new Exception(SystemConsts.Warn_NotFound_Company);
+
+        if (outputAdapt is not null)
         {
-            ModuleEnum[] modules = output.Modules ?? [];
+            ModuleEnum[] modules = outputAdapt.Modules ?? [];
 
             foreach (var module in modules)
             {
-                output.ModulesStr.Add(GetEnumDesc(module));
+                outputAdapt.ModulesStr.Add(GetEnumDesc(module));
             }
         }
 
-        return output;
+       bool isUserAdm = output.CompanyUserRole == CompanyUserRoleEnum.Administrator;
+
+        return (outputAdapt, isUserAdm);
     }
 }

@@ -17,4 +17,5 @@ public sealed class MeOutput : MeSimpleOutput
     public CompanySimpleOutput? CurrentMainCompany { get; set; }
     public DateTime TokenExpirationDate { get; set; }
     public DateTime RefreshTokenExpirationDate { get; set; }
+    public bool IsUserAdmOfCurrentMainCompany { get; set; }
 }

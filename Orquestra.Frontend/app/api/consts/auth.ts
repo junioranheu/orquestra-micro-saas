@@ -20,4 +20,5 @@ export default interface iMe {
     currentMainCompany: iCompanySimpleOutput;
     tokenExpirationDate: Date;
     refreshTokenExpirationDate: Date;
+    isUserAdmOfCurrentMainCompany: boolean;
 }

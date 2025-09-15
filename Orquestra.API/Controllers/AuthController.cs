@@ -35,7 +35,7 @@ public class AuthController(
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
-    private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;  
+    private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;
 
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
@@ -86,7 +86,7 @@ public class AuthController(
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
         // Current main company;
-        CompanyOutput? currentMainCompany = await _getCurrentMainCompanyUser.Execute(userIdAuth);
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
         CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
 
         // Token;
@@ -107,7 +107,8 @@ public class AuthController(
             RolesStr = userRolesStr,
             CurrentMainCompany = currentMainCompanySimple,
             TokenExpirationDate = validTo,
-            RefreshTokenExpirationDate = refreshToken?.ExpiredDate.GetValueOrDefault() ?? DateTime.MinValue
+            RefreshTokenExpirationDate = refreshToken?.ExpiredDate.GetValueOrDefault() ?? DateTime.MinValue,
+            IsUserAdmOfCurrentMainCompany = isUserAdm
         };
 
         // Módulos;
