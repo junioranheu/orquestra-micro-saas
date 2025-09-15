@@ -23,6 +23,7 @@
 
 html,
 body {
+    // background-color: orange !important;
     scroll-behavior: smooth;
     overflow-x: hidden;
     overflow-y: auto;
@@ -35,6 +36,12 @@ body {
     text-rendering: optimizelegibility;
     letter-spacing: 0.03em;
     font-size: 1rem;
+}
+
+main {
+    background-color: tomato;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
 // Misc
@@ -356,6 +363,31 @@ input[type='password'] {
                 transition: 0.2s;
             }
         }
+    }
+}
+
+// Tip
+.tippy-box {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+    font-weight: 500 !important;
+    border-radius: var(--border-radius) !important;
+    padding: 0.35rem 0.5rem !important;
+
+    &[data-placement^='top']>.tippy-arrow::before {
+        border-top-color: var(--black) !important;
+    }
+
+    &[data-placement^='bottom']>.tippy-arrow::before {
+        border-bottom-color: var(--black) !important;
+    }
+
+    &[data-placement^='left']>.tippy-arrow::before {
+        border-left-color: var(--black) !important;
+    }
+
+    &[data-placement^='right']>.tippy-arrow::before {
+        border-right-color: var(--black) !important;
     }
 }
 

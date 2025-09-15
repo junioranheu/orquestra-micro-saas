@@ -11,6 +11,7 @@
         "dev:electron": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron electron/main.js\""
     },
     "dependencies": {
+        "@tippyjs/react": "^4.2.6",
         "animate.css": "^4.1.1",
         "concurrently": "^9.2.1",
         "detectincognitojs": "^1.6.1",
@@ -29,6 +30,7 @@
         "sass": "^1.90.0",
         "sonner": "^2.0.7",
         "sweetalert2": "^11.22.4",
+        "tippy.js": "^6.3.7",
         "wait-on": "^8.0.4"
     },
     "devDependencies": {

@@ -2,6 +2,7 @@ import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
+import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from './index.module.scss';
@@ -22,9 +23,20 @@ export default function Navbar() {
             <div className={styles.inner}>
                 <div className={styles.right}>
                     <span><Icon icon='tag' weight='bold' /> Uso e plano</span>
-                    <span><Icon icon='help-circle' weight='bold' /></span>
-                    <span><Icon icon='alert-circle' weight='bold' /></span>
-                    <span><Icon icon='briefcase' weight='bold' />{me && me.currentMainCompany?.name} <Icon icon='chevron-down' weight='bold' /></span>
+
+                    <Tippy content="Ajuda">
+                        <span><Icon icon='help-circle' weight='bold' /></span>
+                    </Tippy>
+
+
+                    <Tippy content="Notificações">
+                        <span><Icon icon='bell' weight='bold' /></span>
+                    </Tippy>
+
+
+                    <Tippy content="Gerencie seu perfil, plano, configurações e muito mais.">
+                        <span><Icon icon='briefcase' weight='bold' />{me && me?.currentMainCompany ? me.currentMainCompany?.name : 'Olá, tudo bem?'} <Icon icon='chevron-down' weight='bold' /></span>
+                    </Tippy>
                 </div>
             </div>
         </nav>
