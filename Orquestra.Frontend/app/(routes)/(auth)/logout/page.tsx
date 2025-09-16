@@ -5,7 +5,6 @@ import useDisableScroll from '@/app/hooks/useDisableScroll';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import styles from './page.module.scss';
 
 export default function Logout() {
 
@@ -24,7 +23,7 @@ export default function Logout() {
     }, []);
 
     return (
-        <section className={styles.main}>
+        <section>
         </section>
     )
 }
