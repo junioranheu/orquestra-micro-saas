@@ -61,13 +61,6 @@
                 border-radius: var(--border-radius);
                 transition: 0.3s;
 
-                svg {
-                    // background-color: purple !important;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
                 &:hover {
                     background-color: var(--contrast-light);
                     color: var(--contrast);

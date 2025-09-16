@@ -23,12 +23,15 @@ $shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
 }
 
 .main {
+    // background-color: orange !important;
     width: 20rem;
     background: $bg;
     border-radius: var(--border-radius);
     box-shadow: $shadow;
     padding: 1rem;
     color: var(--black);
+    font-family: inherit;
+    font-size: 1rem;
 
     .header {
         display: flex;
@@ -85,7 +88,7 @@ $shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
             text-align: left;
             cursor: pointer;
             transition: background 120ms ease;
-            letter-spacing: 0.01em;
+            font-family: inherit;
 
             &:hover {
                 background: $hover;
@@ -109,7 +112,10 @@ $shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
                     gap: 8px;
 
                     .label {
+                        // background-color: orange;
                         font-weight: 600;
+                        letter-spacing: 0.01em;
+                        font-size: 0.9rem;
                     }
 
                     .badge {

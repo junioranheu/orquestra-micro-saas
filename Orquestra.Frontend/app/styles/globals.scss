@@ -24,9 +24,9 @@
 html,
 body {
     // background-color: orange !important;
-    height: 100%;
+    height: 100vh;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 
     background-color: var(--white);
     color: var(--black);
@@ -46,19 +46,19 @@ body {
 }
 
 .main-wrapper {
-    background-color: purple !important;
+    // background-color: purple !important;
     display: flex;
     flex-direction: row;
 
     main {
-        background-color: tomato !important;
+        // background-color: tomato !important;
         flex-grow: 1;
         min-height: 100vh;
         max-height: 100vh;
 
         .children {
             // background-color: purple;
-            padding: 2rem;
+            padding: 0rem 2rem 2rem 2rem;
             overflow-y: auto;
             height: 100%;
         }
@@ -73,6 +73,13 @@ img {
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+}
+
+svg {
+    // background-color: purple !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 ::selection {

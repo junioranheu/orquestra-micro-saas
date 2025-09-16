@@ -102,7 +102,6 @@ export function ProfileMenu({ setModalIsOpen }: iPropsProfileMenu): JSX.Element 
                     (me && me?.isUserAdmOfCurrentMainCompany) && (
                         <Fragment>
                             <MenuItem icon='tag' label='Plano da empresa' handleFunction={() => handleRedirect(ROUTES.EMPRESA_USO_E_PLANO)} />
-                            <MenuItem icon='user' label='Usuários' badge={me?.currentMainCompany?.name} handleFunction={() => handleRedirect(ROUTES.EMPRESA_USUARIOS)} />
                             <MenuItem icon='bell' label='Notificações' handleFunction={() => handleRedirect(ROUTES.USUARIO_NOTIFICACOES)} />
                             <div className={styles.separator} />
                         </Fragment>

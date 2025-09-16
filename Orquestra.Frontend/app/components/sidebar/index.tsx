@@ -5,31 +5,35 @@ import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
 
+interface iMenuItem {
+    label: string;
+    icon: keyof typeof feather.icons;
+    route: (typeof ROUTES)[keyof typeof ROUTES];
+    hasAccess: boolean;
+}
+
 export default function Sidebar() {
 
     const router = useRouter();
 
     const menuItems = [
-        { label: 'Início', icon: 'home' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Contatos', icon: 'users' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Campanhas', icon: 'check-square' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Automação', icon: 'settings' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Transacional', icon: 'send' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Conversações', icon: 'message-square' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Oportunidades', icon: 'briefcase' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Meetings', icon: 'video' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-        { label: 'Telefone', icon: 'phone' as keyof typeof feather.icons, route: ROUTES.DASHBOARD },
-    ];
+        { label: 'Início', icon: 'home', route: ROUTES.DASHBOARD, hasAccess: true },
+        { label: 'Clientes', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: true },
+        { label: 'Agendamentos', icon: 'calendar', route: ROUTES.EMPRESA_AGENDAMENTOS, hasAccess: true },
+        { label: 'Financeiro', icon: 'dollar-sign', route: ROUTES.EMPRESA_FINANCEIRO, hasAccess: true },
+        { label: 'Faturas', icon: 'file-text', route: ROUTES.EMPRESA_USO_E_PLANO, hasAccess: true },
+        { label: 'Membros', icon: 'users', route: ROUTES.EMPRESA_MEMBROS, hasAccess: true }
+    ] as iMenuItem[];
 
     return (
-        <aside className={`${styles.sidebar} ${styles.open}`}>
-            <div className={styles.brand}>{SYSTEM.NAME}</div>
+        <aside className={styles.sidebar}>
+            <div className={styles.brand}><Icon icon='calendar' weight='bold' /> {SYSTEM.NAME}</div>
 
             <nav>
                 <ul>
                     {
-                        menuItems.map((item) => (
-                            <li key={item.route} onClick={() => router.push(item.route)}>
+                        menuItems?.filter(x => x.hasAccess)?.map((item, index) => (
+                            <li key={index} onClick={() => router.push(item.route)}>
                                 <Icon icon={item.icon} />
                                 <span>{item.label}</span>
                             </li>

@@ -11,7 +11,10 @@ const ROUTES = {
     ETC_AJUDA: '/etc/ajuda',
     ETC_SEGURANCA: '/etc/seguranca',
     EMPRESA_USO_E_PLANO: '/empresa/uso-e-plano',
-    EMPRESA_USUARIOS: '/empresa/usuarios',
+    EMPRESA_MEMBROS: '/empresa/membros',
+    EMPRESA_CLIENTES: '/empresa/clientes',
+    EMPRESA_FINANCEIRO: '/empresa/financeiro',
+    EMPRESA_AGENDAMENTOS: '/empresa/agendamentos',
     DASHBOARD: '/dashboard'
 };
 
