@@ -1,103 +1,41 @@
-import ROUTES from '@/app/consts/routes';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import swalUnauthorized from './swal.unauthorized';
+import iMe from '@/app/api/consts/auth';
 
-export const ROLES = {
-    AUDITOR: 'Auditor',
-    ADM: 'Administrador',
-    BASICO: 'Basico'
-};
+export const MODULES = {
+    Scheduling: 'Scheduling',
+    Sales: 'Sales',
+} as const;
 
-// Verificar se o usuário tem o acesso, com base no tipo de usuário, para acessar à página;
-export function handleCheckHasPermission(router: AppRouterInstance, rolesRequired: string[]): boolean {
-    const auth = true; // TO DO: Requisição pro back, simplesmente ao IsAuth();
-    // console.log(auth);
+type Module = typeof MODULES[keyof typeof MODULES];
 
-    if (!auth) {
-        swalUnauthorized();
-        return false;
-    }
-
-    // console.log('userRoles', userRoles, 'rolesRequired', rolesRequired);
-    const roles = [] as string[] | undefined; // TO DO: Requisição pro back, simplesmente ao GetUserRolesAuth();
-
-    return true;
-
-    if (!roles?.length) {
-        swalUnauthorized();
-        return false;
-    }
-
-    if (!rolesRequired?.length) {
+// Verificar se o usuário tem a permissão para visualizar um elemento;
+export function handleCheckShowElement(me: iMe | undefined, rolesRequired: Module[]): boolean {
+    if (!rolesRequired || !rolesRequired.length) {
         return true;
     }
 
-    let userHasPermission = false;
+    // console.log(me);
 
-    rolesRequired.forEach(tipo => {
-        if (roles?.includes(tipo)) {
-            // console.log('Tem acesso', tipo);
-            userHasPermission = true;
-        }
-    });
-
-    if (!userHasPermission) {
-        swalUnauthorized();
+    if (!me || !me?.isAuth || !me?.currentMainCompany) {
         return false;
     }
 
-    return userHasPermission;
-}
+    const modules = me?.currentMainCompany?.modules as string[];
+    // console.log(modules);
 
-// Verificar se o usuário tem o acesso, com base no tipo de usuário, para visualizar um elemento;
-export function handleCheckShowElement(rolesRequired: string[]): boolean {
-    const auth = true; // TO DO: Requisição pro back, simplesmente ao IsAuth();
-    // console.log(auth);
-
-    if (!auth) {
+    if (!modules || !modules?.length) {
         return false;
-    }
-
-    const roles = [] as string[] | undefined; // TO DO: Requisição pro back, simplesmente ao GetUserRolesAuth();
-
-    return true;
-
-    if (!roles?.length) {
-        return false;
-    }
-
-    if (!rolesRequired?.length) {
-        return true;
     }
 
     let isShowElement = false;
 
-    roles?.forEach(id => {
+    modules?.forEach(x => {
         rolesRequired.forEach(required => {
-            if ((id === required) && !isShowElement) {
+            if ((x === required) && !isShowElement) {
                 isShowElement = true;
             }
         });
     })
 
-    // console.log(isShowElement);
+    console.log(rolesRequired, isShowElement);
     return isShowElement;
-}
-
-// Verificar se o usuário já está autenticado;
-export function handleCheckIfAlreadyAuth(router: AppRouterInstance, isAuth: boolean): boolean {
-    if (isAuth) {
-        router.push(ROUTES.DASHBOARD);
-        return true;
-    }
-
-    return false
-}
-
-export function handleGetRoleNames(roles: string[] | undefined): string {
-    if (!roles) {
-        return '';
-    }
-
-    return roles.join(', ');
 }

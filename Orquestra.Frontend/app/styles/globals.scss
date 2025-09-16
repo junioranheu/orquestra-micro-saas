@@ -99,10 +99,12 @@ svg {
 
 ::-webkit-scrollbar-track {
     background: var(--white);
+    border-radius: var(--border-radius);
 }
 
 ::-webkit-scrollbar-thumb {
     background: var(--gray);
+    border-radius: var(--border-radius);
 }
 
 ::-webkit-scrollbar-thumb:hover {

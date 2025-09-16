@@ -20,6 +20,7 @@
     }
 
     nav {
+        // background-color: orange;
         flex: 1;
 
         ul {
@@ -36,6 +37,8 @@
                 color: var(--black);
                 border-left: 3px solid transparent;
                 transition: background 0.2s, border 0.2s;
+
+                margin-bottom: 0.25rem;
 
                 svg {
                     stroke: #444;

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Caching.Memory;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
@@ -27,7 +28,8 @@ public class AuthController(
         IJwtTokenGenerator jwtTokenGenerator,
         IGetRefreshToken getRefreshToken,
         IGetCurrentMainCompanyUser getCurrentMainCompanyUser,
-        IGetModuleCompanyUser getModuleCompanyUser
+        IGetModuleCompanyUser getModuleCompanyUser,
+        IMemoryCache cache
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
@@ -36,6 +38,7 @@ public class AuthController(
     private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
     private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;
+    private readonly IMemoryCache _cache = cache;
 
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
@@ -81,8 +84,15 @@ public class AuthController(
     public async Task<ActionResult> Me()
     {
         // Misc;
-        const bool isAuth = true;
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        string cacheKey = $"Key_Auth_Me_{userIdAuth}";
+
+        if (_cache.TryGetValue(cacheKey, out MeOutput? cachedOutput))
+        {
+            return Ok(cachedOutput);
+        }
+
+        const bool isAuth = true;
         string nameAuth = GetUserNameAuth();
         string emailAuth = GetUserEmailAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
@@ -123,6 +133,8 @@ public class AuthController(
             output.CurrentMainCompany.UserModulesStr = modulesStr;
         }
 
+        _cache.Set(cacheKey, output, TimeSpan.FromSeconds(30));
+
         return Ok(output);
     }
 
@@ -140,6 +152,7 @@ public class AuthController(
         return NoContent();
     }
 
+    #region extras
     private async Task LogoutAsync()
     {
         CookieOptions cookieOptions = _jwtTokenGenerator.GetCookieOptions();
@@ -147,4 +160,5 @@ public class AuthController(
 
         await _createRefreshToken.Update(userIdAuth: GetUserIdAuth(), mustCheckForValidRefreshTokens: true);
     }
+    #endregion
 }

@@ -64,6 +64,7 @@ export default function Dashboard() {
                 }
             </div>
 
+            <hr />
             <br />
             <h1>Saco wea</h1>
             <br />

@@ -5,10 +5,11 @@ const controller = 'api/Utility';
 export const CONSTS_UTILITY = {
     getBuildVersion: `${BASE}/${controller}/GetBuildVersion`,
     getState: `${BASE}/${controller}/GetState`,
-    getCity: `${BASE}/${controller}/GetCity`
+    getCity: `${BASE}/${controller}/GetCity`,
+    getModules: `${BASE}/${controller}/GetModules`
 };
 
-export default interface iBuildVersion {
+export interface iBuildVersion {
     buildVersion: string;
     assemblyName: string;
     configuration: string;

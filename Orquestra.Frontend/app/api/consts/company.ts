@@ -23,14 +23,14 @@ export default interface iCompanySimpleOutput {
     planType: any; // TO DO;
     planStartDate: Date;
     planEndDate: Date;
-    modules: any; // TO DO;
+    modules: string[];
     modulesStr: string[];
-    userModules: any; // TO DO;
+    userModules: string[];
     userModulesStr: string[];
 }
 
 export interface iCalculatePriceModuleCompanyOutput {
-    module: any; // TO DO;
+    module: string;
     moduleStr: string;
     companyAlreadyHasThisModule: boolean;
     originalPrice: number;
