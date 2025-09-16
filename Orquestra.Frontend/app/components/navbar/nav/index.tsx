@@ -17,8 +17,7 @@ export default function Navbar() {
     const [modalClickPosition, setModalClickPosition] = useState<iModalCustomPosition>({});
 
     function handleModalClick(e: MouseEvent<HTMLSpanElement>) {
-        setModalClickPosition(handleGetModalClickPosition(e, 220, 50));
-
+        setModalClickPosition(handleGetModalClickPosition(e, 270, 70));
         setIsMenuOpen(true);
     }
 
@@ -30,17 +29,17 @@ export default function Navbar() {
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (
                                 <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos'>
-                                    <span onClick={() => router.push(ROUTES.DASHBOARD)}><Icon icon='tag' weight='bold' /> Uso e plano</span>
+                                    <span onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /> Uso e plano</span>
                                 </Tippy>
                             )
                         }
 
                         <Tippy content='Ajuda'>
-                            <span onClick={() => router.push(ROUTES.DASHBOARD)}><Icon icon='help-circle' weight='bold' /></span>
+                            <span onClick={() => router.push(ROUTES.ETC_AJUDA)}><Icon icon='help-circle' weight='bold' /></span>
                         </Tippy>
 
                         <Tippy content='Notificações'>
-                            <span onClick={() => router.push(ROUTES.DASHBOARD)}><Icon icon='bell' weight='bold' /></span>
+                            <span onClick={() => router.push(ROUTES.USUARIO_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
                         </Tippy>
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>

@@ -36,6 +36,11 @@ body {
     text-rendering: optimizelegibility;
     letter-spacing: 0.03em;
     font-size: 1rem;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 main {

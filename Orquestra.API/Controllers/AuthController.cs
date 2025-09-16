@@ -77,7 +77,6 @@ public class AuthController(
     }
 
     [AuthorizeFilter]
-    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("Me")]
     public async Task<ActionResult> Me()
     {

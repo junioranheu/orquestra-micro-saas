@@ -39,10 +39,10 @@ export default function ModalSettings({ isOpen, setModalIsOpen, customPosition }
 
 export function MenuItem({ icon, label, desc, badge, handleFunction }: iPropsMenuItem) {
     return (
-        <button className={styles.item} type='button'>
+        <button className={styles.item} type='button' onClick={() => handleFunction && handleFunction()}>
             <span className={styles.icon}><Icon icon={icon} weight='bold' /></span>
 
-            <div className={styles.content} onClick={() => handleFunction && handleFunction()}>
+            <div className={styles.content}>
                 <div className={styles.labelRow}>
                     <span className={styles.label}>{label}</span>
                     {badge && <span className={styles.badge}>{badge}</span>}
@@ -63,9 +63,9 @@ export function ProfileMenu({ setModalIsOpen }: iPropsProfileMenu): JSX.Element 
     const me = useApiGetMe();
     const router = useRouter();
 
-    function handleLogout() {
+    function handleRedirect(route: (typeof ROUTES)[keyof typeof ROUTES]) {
         setModalIsOpen(false);
-        router.push(ROUTES.LOGOUT);
+        router.push(route);
     }
 
     return (
@@ -85,18 +85,20 @@ export function ProfileMenu({ setModalIsOpen }: iPropsProfileMenu): JSX.Element 
                 {
                     (me && me?.isUserAdmOfCurrentMainCompany) && (
                         <Fragment>
-                            <MenuItem icon='credit-card' label='Plano da empresa' />
-                            <MenuItem icon='user' label='Usuários' badge={me?.currentMainCompany?.name} />
+                            <MenuItem icon='tag' label='Plano da empresa' handleFunction={() => handleRedirect(ROUTES.EMPRESA_USO_E_PLANO)} />
+                            <MenuItem icon='user' label='Usuários' badge={me?.currentMainCompany?.name} handleFunction={() => handleRedirect(ROUTES.EMPRESA_USUARIOS)} />
+                            <MenuItem icon='bell' label='Notificações' handleFunction={() => handleRedirect(ROUTES.USUARIO_NOTIFICACOES)} />
                             <div className={styles.separator} />
                         </Fragment>
                     )
                 }
 
-                <MenuItem icon='settings' label='Configurações' />
-                <MenuItem icon='shield' label='Segurança' />
+                <MenuItem icon='help-circle' label='Ajuda' handleFunction={() => handleRedirect(ROUTES.ETC_AJUDA)} />
+                <MenuItem icon='shield' label='Segurança' handleFunction={() => handleRedirect(ROUTES.ETC_SEGURANCA)} />
+                <MenuItem icon='settings' label='Configurações' handleFunction={() => handleRedirect(ROUTES.USUARIO_CONFIGURACOES)} />
 
                 <div className={styles.separator} />
-                <MenuItem icon='log-out' label='Sair' handleFunction={() => handleLogout()} />
+                <MenuItem icon='log-out' label='Sair' handleFunction={() => handleRedirect(ROUTES.LOGOUT)} />
             </div>
         </div>
     )

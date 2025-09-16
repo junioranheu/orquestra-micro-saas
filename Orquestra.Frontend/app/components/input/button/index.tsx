@@ -1,4 +1,5 @@
 'use client';
+import ROUTES from '@/app/consts/routes';
 import Image, { StaticImageData } from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CSSProperties, ReactNode, RefObject, cloneElement, useState } from 'react';
@@ -6,7 +7,7 @@ import styles from './index.module.scss';
 
 interface iProps {
     label: string;
-    url?: string;
+    url?: (typeof ROUTES)[keyof typeof ROUTES];
     isNewTab?: boolean;
     handleFunction?: ((param?: any) => void) | null;
     svg_component?: ReactNode;
