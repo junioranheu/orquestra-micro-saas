@@ -19,6 +19,7 @@ interface iProps {
     allowCloseOutsideClick?: boolean;
     title?: string;
     customPosition?: iModalCustomPosition;
+    mustDisableScroll?: boolean;
     children: ReactNode;
 }
 
@@ -41,20 +42,21 @@ export default function ModalGeneric({
     allowCloseOutsideClick = true,
     title,
     customPosition = {},
+    mustDisableScroll = true,
     children
 }: iProps) {
 
     useKeyPress('Escape', () => setModalIsOpen(false));
 
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && mustDisableScroll) {
             handleDisableScroll();
         }
 
         return () => {
             handleDisableScroll(false);
         };
-    }, [isOpen]);
+    }, [isOpen, mustDisableScroll]);
 
     function handleClose(isCloseIconClick: boolean = false) {
         if (!allowCloseOutsideClick && !isCloseIconClick) {
@@ -85,7 +87,6 @@ export default function ModalGeneric({
             className={`${styles.modal} ${customClass} ${SYSTEM.ANIMATE_FAST}`}
             ariaHideApp={false}
         >
-
             {
                 (title || showCloseButton) && (
                     <div

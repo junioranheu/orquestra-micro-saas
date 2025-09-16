@@ -3,6 +3,7 @@ export const DATE_STYLE = {
     DETALHADO: 'DETALHADO',
     MES_EXTENSO_E_ANO: 'MES_EXTENSO_E_ANO',
     DIA_DA_SEMANA_E_DIA_DO_MES: 'DIA_DA_SEMANA_E_DIA_DO_MES',
+    DIA_DA_SEMANA: 'DIA_DA_SEMANA',
     DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO: 'DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO',
     DIA_MES_ANO_HORA_MINUTO_SEGUNDO: 'DIA_MES_ANO_HORA_MINUTO_SEGUNDO',
 } as const;
@@ -48,6 +49,9 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
             break;
         case DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES:
             dateFormatted = dataObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+            break;
+        case DATE_STYLE.DIA_DA_SEMANA:
+            dateFormatted = dataObj.toLocaleDateString(locale, { weekday: 'long' });
             break;
         case DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO:
             dateFormatted = dataObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
