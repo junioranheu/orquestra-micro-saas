@@ -10,7 +10,8 @@ const SYSTEM = {
     ANIMATE: 'animate__animated animate__fadeIn',
     ANIMATE_SLOW: 'animate__animated animate__fadeIn animate__slow',
     ANIMATE_FAST: 'animate__animated animate__fadeIn animate__faster',
-    ANIMATE_DELAY: 'animate__animated animate__fadeIn animate__fast animate__delay-2s'
+    ANIMATE_DELAY_1s: 'animate__animated animate__fadeIn animate__fast animate__delay-1s',
+    ANIMATE_DELAY_LESS_1s: 'animate__animated animate__fadeIn animate__fast animate__delay-0_1s'
 };
 
 export default SYSTEM;

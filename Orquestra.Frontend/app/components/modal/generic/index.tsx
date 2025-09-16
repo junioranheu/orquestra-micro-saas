@@ -1,4 +1,3 @@
-import SYSTEM from '@/app/consts/system';
 import { handleDisableScroll } from '@/app/hooks/useDisableScroll';
 import useKeyPress from '@/app/hooks/useKeyPress';
 import { CSSProperties, Dispatch, ReactNode, SetStateAction, useEffect } from 'react';
@@ -84,7 +83,7 @@ export default function ModalGeneric({
                     backgroundColor: `rgba(0, 0, 0, ${overlayColor})`,
                 }
             }}
-            className={`${styles.modal} ${customClass} ${SYSTEM.ANIMATE_FAST}`}
+            className={`${styles.modal} ${customClass}`}
             ariaHideApp={false}
         >
             {
@@ -110,7 +109,7 @@ export default function ModalGeneric({
                 )
             }
 
-            <section>
+            <section id='modal-settings'>
                 {children}
             </section>
         </Modal>

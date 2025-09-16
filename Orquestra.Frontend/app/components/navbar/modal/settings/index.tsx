@@ -5,7 +5,7 @@ import { handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
-import { Dispatch, Fragment, JSX, SetStateAction } from 'react';
+import { Dispatch, Fragment, JSX, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -23,6 +23,22 @@ interface iPropsMenuItem {
 }
 
 export default function ModalSettings({ isOpen, setModalIsOpen, customPosition }: iProps) {
+
+    const [showContent, setShowContent] = useState<boolean>(false);
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+
+        if (isOpen) {
+            // Abre com delay para evitar a visualização do loading do conteúdo;
+            timer = setTimeout(() => setShowContent(true), 100);
+        } else {
+            setShowContent(false);
+        }
+
+        return () => clearTimeout(timer);
+    }, [isOpen]);
+
     return (
         <ModalGeneric
             isOpen={isOpen}
@@ -30,7 +46,7 @@ export default function ModalSettings({ isOpen, setModalIsOpen, customPosition }
             customPosition={customPosition}
             showCloseButton={false}
             overlayColor={0}
-            customStyle={{ padding: 0 }}
+            customStyle={{ padding: 0, visibility: showContent ? 'visible' : 'hidden', }}
         >
             <ProfileMenu setModalIsOpen={setModalIsOpen} />
         </ModalGeneric>

@@ -416,6 +416,11 @@ input[type='password'] {
     }
 }
 
+// animate.css
+.animate__delay-0_1s {
+    animation-delay: 0.1s;
+}
+
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1281px) {}

@@ -17,12 +17,22 @@ export default function Navbar() {
     const [modalPosition, setModalPosition] = useState<iModalCustomPosition>({});
 
     function handleModalClick() {
-        handleGetPosition();
         setIsMenuOpen(true);
+
+        setTimeout(() => {
+            handleGetPosition();
+        }, 100);
     }
 
     function handleGetPosition() {
-        setModalPosition({ top: 330, left: window.innerWidth - 180 } as iModalCustomPosition);
+        const element = document.getElementById('modal-settings');
+        let height = 327;
+
+        if (element) {
+            height = element.getBoundingClientRect().height / 2;
+        }
+
+        setModalPosition({ top: height + 79, left: window.innerWidth - 192 } as iModalCustomPosition);
     }
 
     useOnResize(() => {
