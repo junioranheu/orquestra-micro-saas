@@ -3,6 +3,7 @@ const SYSTEM = {
     DESCRIPTION: 'Harmonia na gestão do seu negócio',
     AUTHOR: '@junioranheu',
     COLOR: '#f0fcdc',
+    EMAIL_SUPPORT: 'orquestra.saas@gmail.com',
 
     COOKIE_NAME: 'auth_front',
 

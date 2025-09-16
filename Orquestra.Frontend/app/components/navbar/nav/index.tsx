@@ -17,7 +17,8 @@ export default function Navbar() {
     const [modalClickPosition, setModalClickPosition] = useState<iModalCustomPosition>({});
 
     function handleModalClick(e: MouseEvent<HTMLSpanElement>) {
-        setModalClickPosition(handleGetModalClickPosition(e, 55));
+        setModalClickPosition(handleGetModalClickPosition(e, 220, 50));
+
         setIsMenuOpen(true);
     }
 

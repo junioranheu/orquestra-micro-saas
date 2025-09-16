@@ -60,6 +60,7 @@ public class AuthController(
         bool isAuth = IsUserAuth();
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: false);
         string nameAuth = GetUserNameAuth();
+        string emailAuth = GetUserEmailAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
         MeSimpleOutput output = new()
@@ -67,6 +68,7 @@ public class AuthController(
             IsAuth = isAuth,
             UserId = userIdAuth,
             UserName = nameAuth,
+            Email = emailAuth,
             Roles = userRoles,
             RolesStr = userRolesStr
         };
@@ -83,6 +85,7 @@ public class AuthController(
         const bool isAuth = true;
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         string nameAuth = GetUserNameAuth();
+        string emailAuth = GetUserEmailAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
 
         // Current main company;
@@ -103,6 +106,7 @@ public class AuthController(
             IsAuth = isAuth,
             UserId = userIdAuth,
             UserName = nameAuth,
+            Email = emailAuth,
             Roles = userRoles,
             RolesStr = userRolesStr,
             CurrentMainCompany = currentMainCompanySimple,

@@ -8,7 +8,7 @@ interface iProps {
     label: string;
     url?: string;
     isNewTab?: boolean;
-    handleFunction?: any | null;
+    handleFunction?: ((param?: any) => void) | null;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
     refBtn?: RefObject<HTMLButtonElement | null>;

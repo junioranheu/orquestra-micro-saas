@@ -57,7 +57,7 @@ export default function Dashboard() {
             <br />
             <Button label={'Logout'} handleFunction={() => handleLogout()} />
             <br />
-            <div className='space-y-4'>
+            <div>
                 {
                     modules?.map((m, index) => (
                         <div key={index}>

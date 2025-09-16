@@ -15,6 +15,7 @@ export default interface iMe {
     isAuth: boolean;
     userId: string;
     userName: string;
+    email: string;
     roles: string[];
     rolesStr: UserRoleEnum[];
     currentMainCompany: iCompanySimpleOutput;
