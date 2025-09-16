@@ -4,7 +4,8 @@ import SYSTEM from '@/app/consts/system';
 import { handleCheckShowElement, MODULES } from '@/app/functions/check.permission';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import feather from 'feather-icons';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iMenuItem {
@@ -17,7 +18,9 @@ interface iMenuItem {
 export default function Sidebar() {
 
     const router = useRouter();
+    const pathname = usePathname();
     const me = useApiGetMe();
+    const [active, setActive] = useState<string>('');
 
     const menuItems = [
         { label: 'Início', icon: 'home', route: ROUTES.DASHBOARD, hasAccess: handleCheckShowElement(me, []) },
@@ -28,6 +31,10 @@ export default function Sidebar() {
         { label: 'Membros', icon: 'users', route: ROUTES.EMPRESA_MEMBROS, hasAccess: handleCheckShowElement(me, []) }
     ] as iMenuItem[];
 
+    useEffect(() => {
+        setActive(pathname);
+    }, [pathname]);
+
     return (
         <aside className={styles.sidebar}>
             <div className={styles.brand}><Icon icon='calendar' weight='bold' /> {SYSTEM.NAME}</div>
@@ -36,7 +43,11 @@ export default function Sidebar() {
                 <ul>
                     {
                         menuItems?.filter(x => x.hasAccess)?.map((item, index) => (
-                            <li key={index} onClick={() => router.push(item.route)}>
+                            <li
+                                key={index}
+                                className={active === item.route ? styles.active : ''}
+                                onClick={() => router.push(item.route)}
+                            >
                                 <Icon icon={item.icon} />
                                 <span>{item.label}</span>
                             </li>

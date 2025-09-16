@@ -47,6 +47,16 @@
                 &:hover {
                     background-color: #eafce8;
                 }
+
+                &.active {
+                    background-color: #eafce8;
+                    border-left-color: var(--main);
+                    font-weight: 500;
+
+                    svg {
+                        stroke: var(--main);
+                    }
+                }
             }
         }
     }
