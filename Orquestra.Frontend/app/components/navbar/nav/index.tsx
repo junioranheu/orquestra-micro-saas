@@ -64,7 +64,7 @@ export default function Navbar() {
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
-                                <Icon icon='briefcase' weight='bold' />{me && me?.currentMainCompany ? me.currentMainCompany?.name : 'Olá, tudo bem?'} <Icon icon='chevron-down' weight='bold' />
+                                <Icon icon='briefcase' weight='bold' />{me && me?.currentMainCompany ? me.currentMainCompany?.name : me?.userName} <Icon icon='chevron-down' weight='bold' />
                             </span>
                         </Tippy>
                     </div>

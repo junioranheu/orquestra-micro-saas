@@ -1,7 +1,6 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Data;
@@ -19,9 +18,19 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
                      Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.UserId == userId && x.IsCurrentMainCompanyUser && x.Status).
-                     FirstOrDefaultAsync() ?? throw new Exception(SystemConsts.Warn_NotFound_User);
+                     FirstOrDefaultAsync();
 
-        CompanyOutput outputAdapt = output.Company.Adapt<CompanyOutput>() ?? throw new Exception(SystemConsts.Warn_NotFound_Company);
+        if (output is null)
+        {
+            return (null, false);
+        }
+
+        CompanyOutput outputAdapt = output.Company.Adapt<CompanyOutput>();
+
+        if (outputAdapt is null)
+        {
+            return (null, false);
+        }
 
         if (outputAdapt is not null)
         {
@@ -33,7 +42,7 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
             }
         }
 
-       bool isUserAdm = output.CompanyUserRole == CompanyUserRoleEnum.Administrator;
+        bool isUserAdm = output.CompanyUserRole == CompanyUserRoleEnum.Administrator;
 
         return (outputAdapt, isUserAdm);
     }
