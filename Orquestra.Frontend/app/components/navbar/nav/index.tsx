@@ -2,11 +2,11 @@ import Icon from '@/app/components/icon';
 import { iModalCustomPosition } from '@/app/components/modal/generic';
 import ModalSettings from '@/app/components/navbar/modal/settings';
 import ROUTES from '@/app/consts/routes';
-import handleGetModalClickPosition from '@/app/functions/get.modalClickPosition';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
-import { Fragment, MouseEvent, useState } from 'react';
+import { Fragment, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function Navbar() {
@@ -14,12 +14,22 @@ export default function Navbar() {
     const router = useRouter();
     const me = useApiGetMe();
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const [modalClickPosition, setModalClickPosition] = useState<iModalCustomPosition>({});
+    const [modalPosition, setModalPosition] = useState<iModalCustomPosition>({});
 
-    function handleModalClick(e: MouseEvent<HTMLSpanElement>) {
-        setModalClickPosition(handleGetModalClickPosition(e, 270, 70));
+    function handleModalClick() {
+        handleGetPosition();
         setIsMenuOpen(true);
     }
+
+    function handleGetPosition() {
+        setModalPosition({ top: 330, left: window.innerWidth - 180 } as iModalCustomPosition);
+    }
+
+    useOnResize(() => {
+        if (isMenuOpen) {
+            handleGetPosition();
+        }
+    });
 
     return (
         <Fragment>
@@ -43,7 +53,7 @@ export default function Navbar() {
                         </Tippy>
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
-                            <span onClick={(e) => handleModalClick(e)}>
+                            <span onClick={() => handleModalClick()}>
                                 <Icon icon='briefcase' weight='bold' />{me && me?.currentMainCompany ? me.currentMainCompany?.name : 'Olá, tudo bem?'} <Icon icon='chevron-down' weight='bold' />
                             </span>
                         </Tippy>
@@ -51,11 +61,7 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            <ModalSettings
-                isOpen={isMenuOpen}
-                setModalIsOpen={setIsMenuOpen}
-                customPosition={modalClickPosition}
-            />
+            <ModalSettings isOpen={isMenuOpen} setModalIsOpen={setIsMenuOpen} customPosition={modalPosition} />
         </Fragment>
     )
 }
