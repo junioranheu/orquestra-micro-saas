@@ -24,18 +24,20 @@
 html,
 body {
     // background-color: orange !important;
-    scroll-behavior: smooth;
+    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+
     background-color: var(--white);
     color: var(--black);
-
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
     text-rendering: optimizelegibility;
     letter-spacing: 0.03em;
     font-size: 1rem;
+
+    scroll-behavior: smooth;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
 
     user-select: none;
     -webkit-user-select: none;
@@ -43,10 +45,24 @@ body {
     -ms-user-select: none;
 }
 
-main {
-    background-color: tomato;
-    margin-left: 2rem;
-    margin-right: 2rem;
+.main-wrapper {
+    background-color: purple !important;
+    display: flex;
+    flex-direction: row;
+
+    main {
+        background-color: tomato !important;
+        flex-grow: 1;
+        min-height: 100vh;
+        max-height: 100vh;
+
+        .children {
+            // background-color: purple;
+            padding: 2rem;
+            overflow-y: auto;
+            height: 100%;
+        }
+    }
 }
 
 // Misc

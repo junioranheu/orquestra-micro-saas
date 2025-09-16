@@ -3,6 +3,7 @@ import { iModalCustomPosition } from '@/app/components/modal/generic';
 import ModalSettings from '@/app/components/navbar/modal/settings';
 import ROUTES from '@/app/consts/routes';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import useUserContext from '@/app/hooks/contexts/useUserContext';
 import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
@@ -13,6 +14,7 @@ export default function Navbar() {
 
     const router = useRouter();
     const me = useApiGetMe();
+    const [auth, setAuth] = useUserContext();
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [modalPosition, setModalPosition] = useState<iModalCustomPosition>({});
 
@@ -45,6 +47,14 @@ export default function Navbar() {
         <Fragment>
             <nav className={styles.nav}>
                 <div className={styles.inner}>
+                    <div className={styles.left}>
+                        <Tippy content='Voltar ao ínicio'>
+                            <span onClick={() => router.push(ROUTES.DASHBOARD)}>
+                                <Icon icon='calendar' size='regular' weight='bold' />
+                            </span>
+                        </Tippy>
+                    </div>
+
                     <div className={styles.right}>
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (
@@ -64,7 +74,7 @@ export default function Navbar() {
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
-                                <Icon icon='briefcase' weight='bold' />{me && me?.currentMainCompany ? me.currentMainCompany?.name : me?.userName} <Icon icon='chevron-down' weight='bold' />
+                                {auth ? auth.fullName : ''} <Icon icon='chevron-down' weight='bold' />
                             </span>
                         </Tippy>
                     </div>

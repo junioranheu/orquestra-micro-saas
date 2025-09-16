@@ -3,6 +3,7 @@ import Head from '@/app/(routes)/head';
 import Loading from '@/app/components/loading';
 import Navbar from '@/app/components/navbar/nav';
 import UpNav from '@/app/components/navbar/up-nav';
+import Sidebar from '@/app/components/sidebar';
 import SYSTEM from '@/app/consts/system';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
@@ -28,16 +29,22 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
                     <body className={HANKEN.className}>
                         <Toaster expand={false} closeButton={false} />
+                        <Loading typeMessage='normal' />
+                        <UpNav />
 
-                        <header>
-                            <UpNav />
-                            <Navbar />
-                        </header>
+                        <div className='main-wrapper'>
+                            <Sidebar />
 
-                        <main className={SYSTEM.ANIMATE}>
-                            <Loading typeMessage='normal' />
-                            {children}
-                        </main>
+                            <main>
+                                <header>
+                                    <Navbar />
+                                </header>
+
+                                <div className={`children ${SYSTEM.ANIMATE}`}>
+                                    {children}
+                                </div>
+                            </main>
+                        </div>
                     </body>
                 </GlobalContextProvider>
             </UserProvider>

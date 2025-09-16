@@ -23,7 +23,7 @@ $shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
 }
 
 .main {
-    width: 320px;
+    width: 20rem;
     background: $bg;
     border-radius: var(--border-radius);
     box-shadow: $shadow;
@@ -71,7 +71,7 @@ $shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
     .menu {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0px;
 
         .item {
             // background-color: orange !important;
