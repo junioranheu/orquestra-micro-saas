@@ -4,6 +4,7 @@ import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
 import '@/app/styles/globals.scss';
+import 'animate.css/animate.min.css';
 import { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 

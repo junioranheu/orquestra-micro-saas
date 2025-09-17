@@ -1,4 +1,5 @@
 'use client';
+import SYSTEM from '@/app/consts/system';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import Image, { StaticImageData } from 'next/image';
 import { useEffect, useState } from 'react';
@@ -36,18 +37,24 @@ export default function Carousel({ images, autoSlideInterval = 5000, mustHideBut
     }
 
     return (
-        <div className={styles.carouselContainer}>
+        <div className={`${styles.carouselContainer} ${SYSTEM.ANIMATE_FADE_IN_RIGHT_FAST}`}>
             {
                 mustShowButtons && <button className={`${styles.prev} ${styles.arrow}`} onClick={prevImage}>‹</button>
             }
 
-            <picture
-                key={current}
-                className={`${styles.carouselImage} ${styles.fade}`}
-                title='Img'
-            >
-                <Image src={images[current]} alt={`Img ${current + 1}`} priority={true} />
-            </picture>
+            <div className={styles.carouselWrapper}>
+                {
+                    images?.map((img, index) => (
+                        <picture
+                            key={index}
+                            className={`${styles.carouselImage} ${current === index ? styles.active : ''}`}
+                            title={`Img ${index + 1}`}
+                        >
+                            <Image src={img} alt={`Img ${index + 1}`} priority={true} />
+                        </picture>
+                    ))
+                }
+            </div>
 
             {
                 mustShowButtons && <button className={`${styles.next} ${styles.arrow}`} onClick={nextImage}>›</button>
