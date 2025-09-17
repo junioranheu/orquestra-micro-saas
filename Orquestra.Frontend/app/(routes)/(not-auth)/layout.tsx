@@ -1,5 +1,6 @@
 'use client';
 import Head from '@/app/(routes)/head';
+import UpNav from '@/app/components/navbar/up-nav';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
                     <body className={HANKEN.className}>
                         <Toaster expand={false} closeButton={false} />
+                        <UpNav />
 
                         <main>
                             {children}

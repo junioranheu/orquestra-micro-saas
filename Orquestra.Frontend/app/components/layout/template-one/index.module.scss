@@ -18,7 +18,8 @@
             align-items: center;
         }
 
-        .errorIcon {
+        .errorIcon,
+        .successIcon {
             width: 120px;
             height: 120px;
             color: var(--contrast);

@@ -1,6 +1,7 @@
 'use client';
 import Head from '@/app/(routes)/head';
 import { CookieDefault } from '@/app/components/cookie';
+import UpNav from '@/app/components/navbar/up-nav';
 import { HANKEN } from '@/app/fonts/fonts';
 import '@/app/styles/globals.scss';
 import feather from 'feather-icons';
@@ -23,6 +24,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
 
             <body>
                 <Toaster expand={false} closeButton={false} />
+                <UpNav />
 
                 <main className={HANKEN.className}>
                     {children}

@@ -1,14 +1,21 @@
 'use client';
+import LayoutTemplateOne from '@/app/components/layout/template-one';
+import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
-import styles from './page.module.scss';
 
-export default function Dashboard() {
+export default function UsuarioVerificado() {
 
     useTitle('Bem-vindo');
 
     return (
-        <section className={styles.main}>
-            <h1>Olá... bem-vindo!</h1>
-        </section>
+        <LayoutTemplateOne
+            svg='success'
+            title='Uhu!'
+            description={
+                `Estamos muito felizes por você estar aqui no <b>${SYSTEM.NAME}</b>!<br/>
+                Agora você já pode voltar ao início para realizar o login na plataforma.`
+            }
+            showSupportContact={false}
+        />
     )
 }
