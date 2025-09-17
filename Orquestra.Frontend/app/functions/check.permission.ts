@@ -13,7 +13,6 @@ export const MODULES_PERMISSIONS: Record<string, string[]> = {
     [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales]
 };
 
-
 type Module = typeof MODULES[keyof typeof MODULES];
 
 // Verificar se o usuário tem a permissão para visualizar um elemento;
@@ -43,6 +42,6 @@ export function handleCheckShowElement(me: iMe | undefined, rolesRequired: Modul
         });
     })
 
-    console.log(rolesRequired, isShowElement);
+    // console.log(rolesRequired, isShowElement);
     return isShowElement;
 }
