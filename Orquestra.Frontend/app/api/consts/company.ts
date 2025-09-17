@@ -20,6 +20,8 @@ export default interface iCompanySimpleOutput {
     email: string;
     companyType: any; // TO DO;
     companySituation: any; // TO DO;
+    logoUrl?: string;
+    color?: string;
     planType: any; // TO DO;
     planStartDate: Date;
     planEndDate: Date;

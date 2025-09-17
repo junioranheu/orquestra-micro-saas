@@ -51,8 +51,8 @@ export default function Navbar() {
                     <div className={styles.right}>
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (
-                                <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos'>
-                                    <span onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /> Uso e plano</span>
+                                <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos; também, consulte suas faturas'>
+                                    <span onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /> Plano e faturas</span>
                                 </Tippy>
                             )
                         }

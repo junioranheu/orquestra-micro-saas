@@ -4,11 +4,11 @@ import styles from './page.module.scss';
 
 export default function EmpresaUsoEPlano() {
 
-    useTitle('Uso e plano');
+    useTitle('Uso, plano e faturas');
 
     return (
         <section className={styles.main}>
-            <h1>Olá... Uso e plano</h1>
+            <h1>Olá... Uso, plano e faturas</h1>
         </section>
     )
 }

@@ -9,14 +9,12 @@ type Module = typeof MODULES[keyof typeof MODULES];
 
 // Verificar se o usuário tem a permissão para visualizar um elemento;
 export function handleCheckShowElement(me: iMe | undefined, rolesRequired: Module[]): boolean {
-    if (!rolesRequired || !rolesRequired.length) {
-        return true;
-    }
-
-    // console.log(me);
-
     if (!me || !me?.isAuth || !me?.currentMainCompany) {
         return false;
+    }
+
+    if (!rolesRequired || !rolesRequired.length) {
+        return true;
     }
 
     const modules = me?.currentMainCompany?.modules as string[];

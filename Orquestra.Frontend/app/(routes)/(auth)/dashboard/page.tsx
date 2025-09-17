@@ -40,8 +40,9 @@ export default function Dashboard() {
     return (
         <section className={styles.main}>
             <h1>Olá... {auth?.fullName}</h1>
-            {me && me.currentMainCompany?.name}
-            {auth && <h2>Refresh token válido até {handleFormatDate(auth?.refreshTokenExpirationDate, DATE_STYLE.DETALHADO)}</h2>}
+            <h3>{me && me.currentMainCompany?.name}</h3>
+            <h3>{me && me.currentMainCompany?.color}</h3>
+            {auth && <h3>Refresh token válido até {handleFormatDate(auth?.refreshTokenExpirationDate, DATE_STYLE.DETALHADO)}</h3>}
 
             <br />
             <Button label={'/me'} handleFunction={() => handleXD()} />

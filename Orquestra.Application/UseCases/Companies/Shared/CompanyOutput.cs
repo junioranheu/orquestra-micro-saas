@@ -76,6 +76,10 @@ public sealed class CompanySimpleOutput
 
     public CompanyTypeEnum CompanyType { get; set; }
 
+    public string? LogoUrl { get; set; } = string.Empty;
+
+    public string? Color { get; set; } = string.Empty;
+
     public CompanySituationEnum CompanySituation { get; set; }
 
     public DateTime PlanStartDate { get; set; }
