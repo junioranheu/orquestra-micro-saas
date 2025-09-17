@@ -42,13 +42,12 @@ export default function Carousel({ images, autoSlideInterval = 5000, mustHideBut
                 mustShowButtons && <button className={`${styles.prev} ${styles.arrow}`} onClick={prevImage}>‹</button>
             }
 
-            <div className={styles.carouselWrapper}>
+            <div>
                 {
                     images?.map((img, index) => (
                         <picture
                             key={index}
                             className={`${styles.carouselImage} ${current === index ? styles.active : ''}`}
-                            title={`Img ${index + 1}`}
                         >
                             <Image src={img} alt={`Img ${index + 1}`} priority={true} />
                         </picture>
