@@ -31,9 +31,9 @@ $radius: 1.25rem;
         .caption {
             position: absolute;
             bottom: 1rem;
-            left: 1rem;
+            right: 1rem;
             background: rgba(0, 0, 0, 0.5);
-            color: #fff;
+            color: var(--white);
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
             font-size: 0.95rem;

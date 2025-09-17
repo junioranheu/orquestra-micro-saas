@@ -3,6 +3,7 @@ import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
+import '@/app/styles/globals.scss';
 import Link from 'next/link';
 import styles from './page.module.scss';
 

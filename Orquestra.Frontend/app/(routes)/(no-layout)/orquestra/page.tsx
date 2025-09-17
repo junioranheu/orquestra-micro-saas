@@ -5,6 +5,7 @@ import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
 import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function LandingPage() {
 
@@ -15,7 +16,7 @@ export default function LandingPage() {
         <div className='min-h-screen font-inter text-gray-800 bg-white'>
             <Header open={open} setOpen={setOpen} />
 
-            <main>
+            <main className={styles.main}>
                 <Hero />
                 <Features />
                 <Pricing />
