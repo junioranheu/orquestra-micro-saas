@@ -1,11 +1,5 @@
 import iMe from '@/app/api/consts/auth';
-
-export const MODULES = {
-    Scheduling: 'Scheduling',
-    Sales: 'Sales',
-} as const;
-
-type Module = typeof MODULES[keyof typeof MODULES];
+import { Module } from '@/app/consts/modules';
 
 // Verificar se o usuário tem a permissão para visualizar um elemento;
 export function handleCheckShowElement(me: iMe | undefined, rolesRequired: Module[]): boolean {

@@ -1,7 +1,8 @@
 import Icon from '@/app/components/icon';
+import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import { handleCheckShowElement, MODULES } from '@/app/functions/check.permission';
+import { handleCheckShowElement } from '@/app/functions/check.permission';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import feather from 'feather-icons';
