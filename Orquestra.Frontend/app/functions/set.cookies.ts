@@ -6,9 +6,18 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import Cookies from 'js-cookie';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { Dispatch, SetStateAction } from 'react';
 
-export async function handleSetCookieAndLogin(url: string, user: iUserInput, setAuth: (value: any) => void, router: AppRouterInstance) {
-    const result = await Fetch.post({ url: url, body: user }) as iUser;
+interface iSetProps {
+    url: string;
+    user: iUserInput;
+    setAuth: (value: any) => void;
+    router: AppRouterInstance;
+    setIsRequestLoading?: Dispatch<SetStateAction<boolean>>;
+}
+
+export async function handleSetCookieAndLogin({ url, user, setAuth, router, setIsRequestLoading }: iSetProps) {
+    const result = await Fetch.post({ url: url, body: user, setIsRequestLoading: setIsRequestLoading }) as iUser;
 
     if (!result) {
         return;
@@ -19,7 +28,12 @@ export async function handleSetCookieAndLogin(url: string, user: iUserInput, set
     router.push(ROUTES.DASHBOARD);
 }
 
-export async function handleRemoveCookieAndLogout(setAuth: (value: any) => void, router: AppRouterInstance) {
+interface iRemoveProps {
+    setAuth: (value: any) => void;
+    router: AppRouterInstance;
+}
+
+export async function handleRemoveCookieAndLogout({ setAuth, router }: iRemoveProps) {
     await Fetch.delete({ url: CONSTS_AUTH.logout });
     Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
     setAuth(null);

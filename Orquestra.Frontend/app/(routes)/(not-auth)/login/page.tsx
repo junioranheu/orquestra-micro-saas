@@ -15,6 +15,7 @@ import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
+import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
@@ -30,6 +31,7 @@ export default function Login() {
     const versionBuild = useApiGetBuildVersion();
     const router = useRouter();
     const [_, setAuth] = useUserContext();
+    const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
     const isIncognito = useIsIncognito();
 
     const refButton = useRef<HTMLButtonElement>(null);
@@ -56,7 +58,7 @@ export default function Login() {
         } as iUserInput;
 
         try {
-            await handleSetCookieAndLogin(CONSTS_AUTH.auth, user, setAuth, router);
+            await handleSetCookieAndLogin({ url: CONSTS_AUTH.auth, user: user, setAuth: setAuth, router: router });
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             return;
@@ -119,7 +121,7 @@ export default function Login() {
                                 label={'Iniciar sessão'}
                                 handleFunction={() => handleLogin()}
                                 refBtn={refButton}
-                                isDisabled={isIncognito}
+                                isDisabled={isIncognito || isRequestLoading}
                                 style={{ height: '3rem', fontWeight: '600', boxShadow: 'var(--box-shadow)' }}
                             />
 
@@ -133,7 +135,7 @@ export default function Login() {
                                 label={'Crie uma conta agora mesmo'}
                                 handleFunction={() => handleLogin()}
                                 refBtn={refButton}
-                                isDisabled={isIncognito}
+                                isDisabled={isIncognito || isRequestLoading}
                                 classes='btn-secondary'
                                 style={{ height: '3rem', fontWeight: '600' }}
                             />

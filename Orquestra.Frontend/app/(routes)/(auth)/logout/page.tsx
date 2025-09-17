@@ -15,7 +15,7 @@ export default function Logout() {
     const [_, setAuth] = useUserContext();
 
     async function handleLogout() {
-        await handleRemoveCookieAndLogout(setAuth, router);
+        await handleRemoveCookieAndLogout({ setAuth: setAuth, router: router });
     }
 
     useEffect(() => {

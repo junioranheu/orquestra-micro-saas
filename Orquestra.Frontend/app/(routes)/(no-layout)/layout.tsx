@@ -4,6 +4,7 @@ import { CookieDefault } from '@/app/components/cookie';
 import { HANKEN } from '@/app/fonts/fonts';
 import feather from 'feather-icons';
 import { useEffect } from 'react';
+import { Toaster } from 'sonner';
 
 export default function RootLayout({ children, }: { children: React.ReactNode; }) {
 
@@ -20,6 +21,8 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
             <Head />
 
             <body>
+                <Toaster expand={false} closeButton={false} />
+
                 <main className={HANKEN.className}>
                     {children}
 

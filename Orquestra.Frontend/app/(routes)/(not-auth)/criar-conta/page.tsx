@@ -51,7 +51,7 @@ export default function CriarConta() {
         } as iUserInput;
 
         try {
-            await handleSetCookieAndLogin(CONSTS_USER.create, user, setAuth, router);
+            await handleSetCookieAndLogin({ url: CONSTS_USER.create, user: user, setAuth: setAuth, router: router });
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             return;
