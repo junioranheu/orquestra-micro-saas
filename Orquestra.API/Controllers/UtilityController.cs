@@ -17,7 +17,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     private readonly IGetState _getState = getState;
     private readonly IGetCity _getCity = getCity;
 
-    [ResponseCache(Duration = SystemConsts.OneHourInSec)]
+    [ResponseCache(Duration = SystemConsts.OneDayInSec)]
     [AllowAnonymous]
     [HttpGet("GetBuildVersion")]
     public ActionResult GetBuildVersion()
@@ -60,6 +60,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(output);
     }
 
+    [ResponseCache(Duration = SystemConsts.OneHourInSec)]
     [AllowAnonymous]
     [HttpGet("GetModules")]
     public ActionResult GetModules()

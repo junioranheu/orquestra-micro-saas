@@ -2,28 +2,35 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { CONSTS_AUTH } from './app/api/consts/auth';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
-import { MODULES_PERMISSIONS } from './app/functions/check.permission';
+import { MODULES } from './app/functions/check.permission';
 
 const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [ROUTES.LOGIN, ROUTES.CRIAR_CONTA, ROUTES.LANDING_PAGE, ROUTES.USUARIO_VERIFICADO];
+
+export const MODULES_PERMISSIONS: Record<string, string[]> = {
+    [ROUTES.EMPRESA_CLIENTES]: ['*'],
+    [ROUTES.EMPRESA_MEMBROS]: ['*'],
+    [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULES.Scheduling],
+    [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales]
+};
 
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get(SYSTEM.COOKIE_NAME)?.value;
     const pathname = request.nextUrl.pathname;
     const isPublicPath = PUBLIC_PATHS_BLOCKED_WITH_TOKEN.some(path => pathname.startsWith(path));
 
-    // Sem token: só permite rotas públicas;
+    // #1 - Sem token: só permite rotas públicas;
     if (!token) {
         return isPublicPath ? NextResponse.next() : NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
     }
 
-    // Com token: redireciona home ('/') e rotas públicas para dashboard;
+    // #2 - Com token: redireciona home ('/') e rotas públicas para dashboard;
     if (pathname === '/' || isPublicPath) {
         return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.url));
     }
 
-    // Checar se o usuário tem acesso à rota;
+    // #3 - Checar se o usuário tem acesso à rota;
     const hasAccess = await handleCheckUserAccess(token, pathname);
-    console.log('hasAccess', hasAccess);
+    // console.log('hasAccess', hasAccess);
 
     if (!hasAccess) {
         return NextResponse.redirect(new URL(ROUTES.ERRO_403, request.url));
