@@ -1,8 +1,7 @@
 $radius: 1.25rem;
 
 .main {
-    background: linear-gradient(120deg, #e5e5e5, #f8f1f7, #d7e2d7, #eee7ce);
-    // background: linear-gradient(120deg, #bc8b6f, #956662);
+    background: var(--gradient);
     height: 100vh;
     overflow: hidden;
 

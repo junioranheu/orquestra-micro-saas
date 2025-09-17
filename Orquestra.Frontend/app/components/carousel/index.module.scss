@@ -29,15 +29,17 @@ $radius: 1.25rem;
         }
 
         .caption {
+            // background-color: orange !important;
             position: absolute;
             bottom: 1rem;
             right: 1rem;
             background: rgba(0, 0, 0, 0.5);
             color: var(--white);
+            white-space: normal;
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
             font-size: 0.95rem;
-            max-width: 70%;
+            max-width: 75%;
             pointer-events: none;
             backdrop-filter: blur(4px);
             transition: opacity 0.3s ease, transform 0.3s ease;
@@ -84,3 +86,28 @@ $radius: 1.25rem;
         right: 0.5rem;
     }
 }
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {
+    .carouselContainer {
+        .carouselImage {
+            .caption {
+                // background-color: orange !important;
+                max-width: 70%;
+            }
+        }
+    }
+}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}

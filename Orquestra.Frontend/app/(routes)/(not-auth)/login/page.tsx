@@ -1,8 +1,10 @@
 'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { iUserInput } from '@/app/api/consts/user';
-import Img2 from '@/app/assets/png/2.png';
-import Img from '@/app/assets/png/ney.png';
+import Img1 from '@/app/assets/abstract/1.webp';
+import Img2 from '@/app/assets/abstract/2.webp';
+import Img3 from '@/app/assets/abstract/3.webp';
+import Img4 from '@/app/assets/abstract/4.webp';
 import Carousel from '@/app/components/carousel';
 import { CookieDefault } from '@/app/components/cookie';
 import Divider from '@/app/components/divider';
@@ -145,8 +147,13 @@ export default function Login() {
 
                 <div className={styles.right}>
                     <Carousel
-                        images={[Img, Img2]}
-                        captions={['aeaaa', 'xdd']}
+                        images={[Img1, Img2, Img3, Img4]}
+                        captions={[
+                            'Agende seus compromissos em segundos',
+                            'Seu negócio afinado como uma orquestra',
+                            'Organize sua agenda sem dor de cabeça',
+                            'Mais tempo pra você, menos tempo no caos'
+                        ]}
                         autoSlideInterval={7500}
                         mustHideButtonsIfSmallScreen={true}
                     />
