@@ -111,6 +111,8 @@ export const Fetch = {
                 return blob;
             }
 
+            // console.log('response.status', response.status);
+
             // Forbidden;
             if (response.status === 403) {
                 swal({ str: 'Você não tem permissão para acessar este recurso.', icon: 'error' });

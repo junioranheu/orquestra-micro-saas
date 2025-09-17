@@ -20,7 +20,7 @@ export async function handleSetCookieAndLogin({ url, user, setAuth, router, setI
     const result = await Fetch.post({ url: url, body: user, setIsRequestLoading: setIsRequestLoading }) as iUser;
 
     if (!result) {
-        return;
+        throw new Error();
     }
 
     setAuth(result);
