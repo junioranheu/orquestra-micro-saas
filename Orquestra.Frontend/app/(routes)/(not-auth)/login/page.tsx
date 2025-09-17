@@ -1,7 +1,9 @@
 'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { iUserInput } from '@/app/api/consts/user';
+import Img2 from '@/app/assets/png/2.png';
 import Img from '@/app/assets/png/ney.png';
+import Carousel from '@/app/components/carousel';
 import { CookieDefault } from '@/app/components/cookie';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
@@ -16,7 +18,6 @@ import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -141,9 +142,7 @@ export default function Login() {
                 </div>
 
                 <div className={styles.right}>
-                    <picture className={styles.image} title={SYSTEM.NAME}>
-                        <Image src={Img} alt='' priority={true} />
-                    </picture>
+                    <Carousel images={[Img, Img2, Img]} />
                 </div>
             </div>
 
