@@ -1,9 +1,18 @@
 import iMe from '@/app/api/consts/auth';
+import ROUTES from '@/app/consts/routes';
 
 export const MODULES = {
     Scheduling: 'Scheduling',
     Sales: 'Sales',
 } as const;
+
+export const MODULES_PERMISSIONS: Record<string, string[]> = {
+    [ROUTES.EMPRESA_CLIENTES]: ['*'],
+    [ROUTES.EMPRESA_MEMBROS]: ['*'],
+    [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULES.Scheduling],
+    [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales]
+};
+
 
 type Module = typeof MODULES[keyof typeof MODULES];
 

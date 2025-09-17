@@ -56,7 +56,6 @@ public class AuthController(
     }
 
     [AllowAnonymous]
-    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
     [HttpGet("Me/Simple")]
     public ActionResult MeSimple()
     {
@@ -132,6 +131,31 @@ public class AuthController(
             output.CurrentMainCompany.UserModules = modules;
             output.CurrentMainCompany.UserModulesStr = modulesStr;
         }
+
+        _cache.Set(cacheKey, output, TimeSpan.FromSeconds(30));
+
+        return Ok(output);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("Me/Modules")]
+    public async Task<ActionResult> MeModules(Guid? userId)
+    {
+        if (userId is null || userId == Guid.Empty)
+        {
+            throw new UnauthorizedAccessException("O usuário da requisição é inválido.");
+        }
+
+        string cacheKey = $"Key_Auth_Me_Modules_{userId}";
+
+        if (_cache.TryGetValue(cacheKey, out ModuleEnum[]? cachedOutput))
+        {
+            return Ok(cachedOutput);
+        }
+
+        // Current main company;
+        (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.Execute(userId.GetValueOrDefault());
+        ModuleEnum[]? output = currentMainCompany?.Modules ?? [];
 
         _cache.Set(cacheKey, output, TimeSpan.FromSeconds(30));
 

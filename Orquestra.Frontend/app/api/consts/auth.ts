@@ -8,6 +8,7 @@ export const CONSTS_AUTH = {
     auth: `${BASE}/${controller}`,
     meSimple: `${BASE}/${controller}/Me/Simple`,
     me: `${BASE}/${controller}/Me`,
+    meModules: `${BASE}/${controller}/Me/Modules`,
     logout: `${BASE}/${controller}`
 };
 
