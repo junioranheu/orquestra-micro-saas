@@ -144,6 +144,7 @@ export default function Login() {
                 <div className={styles.right}>
                     <Carousel
                         images={[Img, Img2]}
+                        captions={['aeaaa', 'xdd']}
                         autoSlideInterval={7500}
                         mustHideButtonsIfSmallScreen={true}
                     />

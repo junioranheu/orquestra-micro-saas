@@ -7,11 +7,12 @@ import styles from './index.module.scss';
 
 interface iProps {
     images: (string | StaticImageData)[];
+    captions?: string[];
     autoSlideInterval?: number;
     mustHideButtonsIfSmallScreen: boolean;
 }
 
-export default function Carousel({ images, autoSlideInterval = 5000, mustHideButtonsIfSmallScreen }: iProps) {
+export default function Carousel({ images, captions, autoSlideInterval = 5000, mustHideButtonsIfSmallScreen }: iProps) {
 
     const windowSize = useWindowSize();
     const [current, setCurrent] = useState<number>(0);
@@ -50,6 +51,14 @@ export default function Carousel({ images, autoSlideInterval = 5000, mustHideBut
                             className={`${styles.carouselImage} ${current === index ? styles.active : ''}`}
                         >
                             <Image src={img} alt={`Img ${index + 1}`} priority={true} />
+
+                            {
+                                captions && captions.length === images.length && captions[index] && (
+                                    <div className={styles.caption}>
+                                        {captions[index]}
+                                    </div>
+                                )
+                            }
                         </picture>
                     ))
                 }
