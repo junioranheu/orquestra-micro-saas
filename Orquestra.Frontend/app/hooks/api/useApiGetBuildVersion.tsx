@@ -1,4 +1,4 @@
-import iBuildVersion, { CONSTS_UTILITY } from '@/app/api/consts/utility';
+import { CONSTS_UTILITY, iBuildVersion } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import { useEffect, useState } from 'react';
 
