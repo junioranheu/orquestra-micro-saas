@@ -3,7 +3,7 @@ import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
 
 export default function LandingPage() {
@@ -28,8 +28,6 @@ export default function LandingPage() {
 }
 
 function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
-
-    const router = useRouter();
 
     function handleScroll(e: MouseEvent<HTMLAnchorElement>, id: string) {
         e.preventDefault();
@@ -66,13 +64,13 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => voi
                 </nav>
 
                 <div className='hidden md:flex items-center space-x-4'>
-                    <a className='text-gray-600 hover:text-[#a4dcb9] transition-all duration-300' href='#' onClick={() => router.push(ROUTES.LOGIN)}>
+                    <Link className='text-gray-600 hover:text-[#a4dcb9] transition-all duration-300' href={ROUTES.LOGIN}>
                         Entrar
-                    </a>
+                    </Link>
 
-                    <a className='px-4 py-2 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d] transition-all duration-300' href='#' onClick={() => router.push(ROUTES.CRIAR_CONTA)}>
+                    <Link className='px-4 py-2 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d] transition-all duration-300' href={ROUTES.CRIAR_CONTA}>
                         Criar conta
-                    </a>
+                    </Link>
                 </div>
 
                 <button
@@ -103,13 +101,13 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => voi
                             </a>
 
                             <div className='pt-3 flex gap-3'>
-                                <a className='text-gray-700' href='#' onClick={() => router.push(ROUTES.LOGIN)}>
+                                <Link className='text-gray-700' href={ROUTES.LOGIN}>
                                     Entrar
-                                </a>
+                                </Link>
 
-                                <a className='px-4 py-2 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d]' href='#' onClick={() => router.push(ROUTES.CRIAR_CONTA)}>
+                                <Link className='px-4 py-2 rounded-full bg-[#a4dcb9] text-white hover:bg-[#6aa87d]' href={ROUTES.CRIAR_CONTA}>
                                     Criar conta
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -254,17 +252,15 @@ function Pricing() {
 }
 
 function CTA() {
-
-    const router = useRouter();
-
     return (
         <section id='cta' className='py-24 bg-[#a4dcb9] text-white text-center'>
             <div className='container mx-auto px-6' data-aos='zoom-in'>
                 <h2 className='text-4xl font-bold mb-6'>Pronto para organizar sua agenda?</h2>
-                <p className='text-lg mb-8'>Experimente o {SYSTEM.NAME} gratuitamente por 14 dias</p>
-                <a className='px-8 py-4 rounded-full bg-white text-[#6aa87d] font-medium hover:bg-gray-100 transition-all' href='#' onClick={() => router.push(ROUTES.LOGIN)}>
-                    Criar conta grátis
-                </a>
+                <p className='text-lg mb-8'>Entre no {SYSTEM.NAME} agora mesmo</p>
+
+                <Link className='px-8 py-4 rounded-full bg-white text-[#6aa87d] font-medium hover:bg-gray-100 transition-all' href={ROUTES.CRIAR_CONTA}>
+                    Criar conta
+                </Link>
             </div>
         </section>
     );

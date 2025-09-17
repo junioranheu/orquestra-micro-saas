@@ -2,7 +2,6 @@
 import Head from '@/app/(routes)/head';
 import { CookieDefault } from '@/app/components/cookie';
 import { HANKEN } from '@/app/fonts/fonts';
-import '@/app/styles/globals.scss';
 import feather from 'feather-icons';
 import { useEffect } from 'react';
 

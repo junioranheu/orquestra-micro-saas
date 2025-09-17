@@ -6,6 +6,7 @@ import { CookieDefault } from '@/app/components/cookie';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
@@ -16,6 +17,7 @@ import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import styles from './page.module.scss';
@@ -119,6 +121,8 @@ export default function Login() {
                                 isDisabled={isIncognito}
                                 style={{ height: '3rem', fontWeight: '600', boxShadow: 'var(--box-shadow)' }}
                             />
+
+                            <Link className={styles.forget} href={ROUTES.RECUPERAR_SENHA}>Esqueci minha senha</Link>
                         </div>
 
                         <Divider text='Não tem uma conta?' />

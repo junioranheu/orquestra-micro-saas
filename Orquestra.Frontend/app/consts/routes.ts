@@ -3,6 +3,7 @@ import SYSTEM from './system';
 const ROUTES = {
     LANDING_PAGE: `/${SYSTEM.NAME.toLocaleLowerCase()}`,
     LOGIN: '/login',
+    RECUPERAR_SENHA: '/recuperar-senha',
     CRIAR_CONTA: '/criar-conta',
     LOGOUT: '/logout',
     ERRO_403: '/erro/403',

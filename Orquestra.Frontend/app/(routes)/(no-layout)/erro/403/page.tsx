@@ -3,6 +3,7 @@ import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
+import Link from 'next/link';
 import styles from './page.module.scss';
 
 export default function Erro403() {
@@ -37,10 +38,10 @@ export default function Erro403() {
                 </p>
 
                 <div className={styles.actions}>
-                    <a href={ROUTES.DASHBOARD} className={styles.primary}>
+                    <Link className={styles.primary} href={ROUTES.CRIAR_CONTA}>
                         <Icon icon='home' />
                         Voltar para o início
-                    </a>
+                    </Link>
 
                     <a href={`mailto:${SYSTEM.EMAIL_SUPPORT}`} className='btn-secondary'>
                         <Icon icon='mail' />

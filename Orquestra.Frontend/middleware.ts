@@ -4,7 +4,10 @@ import { MODULES } from './app/consts/modules';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
 
-const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [ROUTES.LOGIN, ROUTES.CRIAR_CONTA, ROUTES.LANDING_PAGE, ROUTES.USUARIO_VERIFICADO];
+const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [
+    ROUTES.LOGIN, ROUTES.CRIAR_CONTA, ROUTES.RECUPERAR_SENHA,
+    ROUTES.LANDING_PAGE, ROUTES.USUARIO_VERIFICADO
+];
 
 export const MODULES_PERMISSIONS: Record<string, string[]> = {
     [ROUTES.EMPRESA_CLIENTES]: ['*'],

@@ -91,6 +91,22 @@ svg {
     cursor: not-allowed !important;
 }
 
+a {
+    color: var(--contrast);
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: var(--contrast);
+    text-underline-offset: 3px;
+    text-decoration-skip-ink: none;
+    transition: color 0.3s, text-decoration-color 0.3s;
+
+    &:hover {
+        color: color-mix(in srgb, var(--contrast) 70%, white 30%);
+        text-decoration-color: color-mix(in srgb, var(--contrast) 70%, white 30%);
+        transition: color 0.3s, text-decoration-color 0.3s;
+    }
+}
+
 // Scroll
 ::-webkit-scrollbar {
     width: 0.75rem;

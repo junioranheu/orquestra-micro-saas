@@ -49,6 +49,12 @@ $radius: 1.25rem;
                 display: flex;
                 flex-direction: column;
                 gap: 1.5rem;
+
+                .forget {
+                    // background-color: orange;
+                    text-align: right;
+                    font-size: 0.8rem;
+                }
             }
         }
 
@@ -91,7 +97,7 @@ $radius: 1.25rem;
 // Media queries
 @media (max-width:1600px) {
     .main {
-        background: orange !important;
+        // background: orange !important;
 
         .wrapper {
             width: 70vw;
@@ -102,7 +108,7 @@ $radius: 1.25rem;
 // hi-res laptops and desktops 
 @media (max-width:1281px) {
     .main {
-        background: purple !important;
+        // background: purple !important;
 
         .wrapper {
             width: 80vw;
@@ -119,7 +125,7 @@ $radius: 1.25rem;
 // big landscape tablets, laptops, and desktops 
 @media (max-width:1025px) {
     .main {
-        background: tomato !important;
+        // background: tomato !important;
 
         .wrapper {
             width: 90vw;
