@@ -135,7 +135,7 @@ export default function Login() {
                         <div className={styles.flex}>
                             <Button
                                 label={'Crie uma conta agora mesmo'}
-                                handleFunction={() => handleLogin()}
+                                handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
                                 refBtn={refButton}
                                 isDisabled={isIncognito || isRequestLoading}
                                 classes='btn-secondary'
