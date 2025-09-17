@@ -103,7 +103,7 @@ export default function Login() {
 
                         <div className={styles.flex}>
                             <InputMask
-                                title={'E-mail'}
+                                title='E-mail'
                                 objectFormData={handleGetPropName(formData, x => x.email ?? '')}
                                 isDisabled={isIncognito}
                                 handleChange={(e) => handleInputFormStateChange(e, setFormData)}
@@ -111,7 +111,7 @@ export default function Login() {
                             />
 
                             <InputMask
-                                title={'Senha'}
+                                title='Senha'
                                 objectFormData={handleGetPropName(formData, x => x.password ?? '')}
                                 type='password'
                                 isDisabled={isIncognito}
@@ -134,7 +134,7 @@ export default function Login() {
 
                         <div className={styles.flex}>
                             <Button
-                                label={'Crie uma conta agora mesmo'}
+                                label='Crie uma conta agora mesmo'
                                 handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
                                 refBtn={refButton}
                                 isDisabled={isIncognito || isRequestLoading}
@@ -146,17 +146,7 @@ export default function Login() {
                 </div>
 
                 <div className={styles.right}>
-                    <Carousel
-                        items={[
-                            { image: Img1, caption: 'Agende seus compromissos em segundos' },
-                            { image: Img2, caption: 'Seu negócio afinado como uma orquestra' },
-                            { image: Img3, caption: 'Organize sua agenda sem dor de cabeça' },
-                            { image: Img4, caption: 'Mais tempo pra você, menos tempo no caos' }
-                        ]}
-                        autoSlideInterval={7500}
-                        mustShuffle={true}
-                        mustHideButtonsIfSmallScreen={true}
-                    />
+                    <CarouselLogin alignCaptionToRight={true} />
                 </div>
             </div>
 
@@ -167,5 +157,26 @@ export default function Login() {
 
             <CookieDefault />
         </section>
+    )
+}
+
+interface iCarouselLoginProps {
+    alignCaptionToRight: boolean;
+}
+
+export function CarouselLogin({ alignCaptionToRight }: iCarouselLoginProps) {
+    return (
+        <Carousel
+            items={[
+                { image: Img1, caption: 'Agende seus compromissos em segundos' },
+                { image: Img2, caption: 'Seu negócio afinado como uma orquestra' },
+                { image: Img3, caption: 'Organize sua agenda sem dor de cabeça' },
+                { image: Img4, caption: 'Mais tempo pra você, menos tempo no caos' }
+            ]}
+            autoSlideInterval={7500}
+            mustShuffle={true}
+            mustHideButtonsIfSmallScreen={true}
+            alignCaptionToRight={alignCaptionToRight}
+        />
     )
 }

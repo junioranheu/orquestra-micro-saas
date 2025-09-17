@@ -81,6 +81,12 @@ $radius: 1.25rem;
     }
 }
 
+.invert {
+    // background-color: orange !important;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 // Media queries
 @media (max-width:1600px) {
     .main {

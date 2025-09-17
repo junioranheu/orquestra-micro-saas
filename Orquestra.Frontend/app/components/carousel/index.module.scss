@@ -32,7 +32,6 @@ $radius: 1.25rem;
             // background-color: orange !important;
             position: absolute;
             bottom: 1rem;
-            right: 1rem;
             background: rgba(0, 0, 0, 0.5);
             color: var(--white);
             white-space: normal;
@@ -43,6 +42,16 @@ $radius: 1.25rem;
             pointer-events: none;
             backdrop-filter: blur(4px);
             transition: opacity 0.3s ease, transform 0.3s ease;
+
+            &.right {
+                // background-color: orange !important;
+                right: 1rem;
+            }
+
+            &.left {
+                // background-color: purple !important;
+                left: 1rem;
+            }
         }
     }
 

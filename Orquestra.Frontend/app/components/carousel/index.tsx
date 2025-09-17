@@ -11,6 +11,7 @@ interface iProps {
     autoSlideInterval?: number;
     mustShuffle: boolean;
     mustHideButtonsIfSmallScreen: boolean;
+    alignCaptionToRight: boolean;
 }
 
 interface iItemProps {
@@ -18,7 +19,7 @@ interface iItemProps {
     caption?: string;
 }
 
-export default function Carousel({ items, autoSlideInterval = 5000, mustShuffle, mustHideButtonsIfSmallScreen }: iProps) {
+export default function Carousel({ items, autoSlideInterval = 5000, mustShuffle, mustHideButtonsIfSmallScreen, alignCaptionToRight }: iProps) {
 
     const windowSize = useWindowSize();
     const [current, setCurrent] = useState<number>(0);
@@ -70,7 +71,7 @@ export default function Carousel({ items, autoSlideInterval = 5000, mustShuffle,
 
                             {
                                 item.caption && item.caption?.length && (
-                                    <div className={styles.caption}>
+                                    <div className={`${styles.caption} ${(alignCaptionToRight ? styles.right : styles.left)}`}>
                                         {item.caption}
                                     </div>
                                 )
