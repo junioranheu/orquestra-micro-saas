@@ -1,7 +1,6 @@
 'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { iUserInput } from '@/app/api/consts/user';
-import ImgLogo from '@/app/assets/png/logo.png';
 import { CookieDefault } from '@/app/components/cookie';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
@@ -14,7 +13,6 @@ import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import styles from './page.module.scss';
@@ -88,7 +86,7 @@ export default function Login() {
         <section className={styles.main}>
             <div className={styles.form}>
                 <picture className={styles.icon} title={SYSTEM.NAME}>
-                    <Image src={ImgLogo} alt={SYSTEM.NAME} priority={true} width={120} height={120} />
+
                 </picture>
 
                 <div className={styles.welcome}>

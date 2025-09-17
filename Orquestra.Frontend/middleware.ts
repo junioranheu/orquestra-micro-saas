@@ -69,7 +69,7 @@ async function handleCheckUserAccess(token: string, pathname: string): Promise<b
         }
 
         const userModules = await res.json();
-        console.log('userModules', userModules, userModules?.length);
+        // console.log('userModules', userModules, userModules?.length);
 
         // #3 - Checagem: se precisar de QUALQEUER modulo mas o usuário não tem nenhum: false;
         if (mustModulePermissions.includes('*') && (!userModules || !userModules.length)) {
