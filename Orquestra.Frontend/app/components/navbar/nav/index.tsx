@@ -49,6 +49,10 @@ export default function Navbar() {
                     </div>
 
                     <div className={styles.right}>
+                        <Tippy content='Gerencie suas empresas ou cadastre a sua'>
+                            <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}><Icon icon='briefcase' weight='bold' /> Empresas</span>
+                        </Tippy>
+
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (
                                 <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos; também, consulte suas faturas'>

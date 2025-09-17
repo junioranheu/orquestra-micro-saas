@@ -98,6 +98,8 @@ export function ProfileMenu({ setModalIsOpen }: iPropsProfileMenu): JSX.Element 
             <div className={styles.separator} />
 
             <div className={styles.menu}>
+                <MenuItem icon='briefcase' label='Gerenciar empresas' handleFunction={() => handleRedirect(ROUTES.EMPRESA_GERENCIAR)} />
+
                 {
                     (me && me?.isUserAdmOfCurrentMainCompany) && (
                         <Fragment>

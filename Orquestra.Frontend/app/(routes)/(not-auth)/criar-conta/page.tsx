@@ -7,6 +7,7 @@ import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
@@ -46,7 +47,7 @@ export default function CriarConta() {
     }
 
     const [formData, setFormData] = useState<iUserInput>({
-        fullName: '', email: '', password: '', inviteToken: ''
+        fullName: '', email: '', password: ''
     });
 
     async function handleCreate() {
@@ -59,11 +60,17 @@ export default function CriarConta() {
             fullName: formData.fullName,
             email: formData.email,
             password: formData.password,
-            inviteToken: formData.inviteToken
+            inviteToken: token
         } as iUserInput;
 
         try {
             await handleSetCookieAndLogin({ url: CONSTS_USER.create, user: user, setAuth: setAuth, router: router });
+            router.push(ROUTES.LOGIN);
+
+            swal({
+                str: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta usando o e-mail que foi enviado para ${formData.email}</b>.`,
+                icon: 'success'
+            });
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             return;
@@ -81,7 +88,15 @@ export default function CriarConta() {
 
                         <div className={styles.flex}>
                             <InputMask
-                                title={'E-mail'}
+                                title='Nome completo'
+                                objectFormData={handleGetPropName(formData, x => x.fullName ?? '')}
+                                isDisabled={isIncognito}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                                handleKeyDown={(e) => handleKeyDown(e)}
+                            />
+
+                            <InputMask
+                                title='E-mail'
                                 objectFormData={handleGetPropName(formData, x => x.email ?? '')}
                                 isDisabled={isIncognito}
                                 handleChange={(e) => handleInputFormStateChange(e, setFormData)}
@@ -89,7 +104,7 @@ export default function CriarConta() {
                             />
 
                             <InputMask
-                                title={'Senha'}
+                                title='Senha'
                                 objectFormData={handleGetPropName(formData, x => x.password ?? '')}
                                 type='password'
                                 isDisabled={isIncognito}
@@ -112,7 +127,6 @@ export default function CriarConta() {
                             <Button
                                 label='Entre agora mesmo'
                                 handleFunction={() => router.push(ROUTES.LOGIN)}
-                                refBtn={refButton}
                                 isDisabled={isIncognito || isRequestLoading}
                                 classes='btn-secondary'
                                 style={{ height: '3rem', fontWeight: '600' }}

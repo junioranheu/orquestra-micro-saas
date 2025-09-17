@@ -13,7 +13,7 @@ interface iProps {
 
 export default function swal(options: iProps): Promise<any> {
     return new Promise((resolve) => {
-        const { title, str, cancelBtnText, cancelFunction, confirmBtnText = 'Ok', confirmFunction, allowOutsideClick = true, icon = undefined } = options;
+        const { title, str, cancelBtnText, cancelFunction, confirmBtnText = 'Ok', confirmFunction, allowOutsideClick = false, icon = undefined } = options;
 
         Swal.fire({
             title: title,

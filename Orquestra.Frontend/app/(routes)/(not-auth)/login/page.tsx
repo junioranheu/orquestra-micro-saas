@@ -136,7 +136,6 @@ export default function Login() {
                             <Button
                                 label='Crie uma conta agora mesmo'
                                 handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
-                                refBtn={refButton}
                                 isDisabled={isIncognito || isRequestLoading}
                                 classes='btn-secondary'
                                 style={{ height: '3rem', fontWeight: '600' }}

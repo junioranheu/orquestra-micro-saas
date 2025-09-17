@@ -12,6 +12,7 @@ const ROUTES = {
     USUARIO_NOTIFICACOES: '/usuario/notificacoes',
     ETC_AJUDA: '/etc/ajuda',
     ETC_SEGURANCA: '/etc/seguranca',
+    EMPRESA_GERENCIAR: '/empresa/gerenciar',
     EMPRESA_USO_E_PLANO: '/empresa/uso-e-plano',
     EMPRESA_MEMBROS: '/empresa/membros',
     EMPRESA_CLIENTES: '/empresa/clientes',

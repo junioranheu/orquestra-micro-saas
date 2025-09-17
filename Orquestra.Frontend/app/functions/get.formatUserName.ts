@@ -29,3 +29,17 @@ export function handleFormatUserName(fullName: string | undefined, defaultStr: s
 
     return `${firstName} ${lastName}`;
 }
+
+export function handleGetFirstName(fullName: string): string {
+    if (!fullName) {
+        return '';
+    }
+
+    const words = fullName.trim().split(/\s+/).filter(Boolean);
+
+    if (words.length === 1) {
+        return words[0];
+    }
+
+    return words[0];
+}

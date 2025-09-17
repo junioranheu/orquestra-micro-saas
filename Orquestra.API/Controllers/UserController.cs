@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
-using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Application.UseCases.Users.Create;
@@ -23,8 +22,7 @@ public class UserController(
         IGetUser get,
         ICreateUser create,
         IUpdateUser update,
-        IVerifyUser verify,
-        ICreateToken createToken
+        IVerifyUser verify
     ) : BaseController<UserController>
 {
     private readonly IEnvService _env = env;
@@ -32,7 +30,6 @@ public class UserController(
     private readonly ICreateUser _create = create;
     private readonly IUpdateUser _update = update;
     private readonly IVerifyUser _verify = verify;
-    private readonly ICreateToken _createToken = createToken;
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet]
@@ -45,7 +42,7 @@ public class UserController(
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<ActionResult> Create([FromForm] UserInput input)
+    public async Task<ActionResult> Create(UserInput input)
     {
         if (IsUserAuth())
         {
@@ -54,15 +51,7 @@ public class UserController(
 
         await _create.Execute(input);
 
-        AuthInput authInput = new()
-        {
-            Email = input.Email ?? string.Empty,
-            Password = input.Password ?? string.Empty
-        };
-
-        UserOutput output = await _createToken.Execute(authInput);
-
-        return Ok(output);
+        return NoContent();
     }
 
     [AuthorizeFilter]
