@@ -1,22 +1,38 @@
 'use client';
 import SYSTEM from '@/app/consts/system';
+import handleShuffleArray from '@/app/functions/shuffle.array';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import Image, { StaticImageData } from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
-    images: (string | StaticImageData)[];
-    captions?: string[];
+    items: iItemProps[];
     autoSlideInterval?: number;
+    mustShuffle: boolean;
     mustHideButtonsIfSmallScreen: boolean;
 }
 
-export default function Carousel({ images, captions, autoSlideInterval = 5000, mustHideButtonsIfSmallScreen }: iProps) {
+interface iItemProps {
+    image: (string | StaticImageData);
+    caption?: string;
+}
+
+export default function Carousel({ items, autoSlideInterval = 5000, mustShuffle, mustHideButtonsIfSmallScreen }: iProps) {
 
     const windowSize = useWindowSize();
     const [current, setCurrent] = useState<number>(0);
-    const [mustShowButtons, setMustShowButtons] = useState<boolean>(images?.length > 1);
+    const [mustShowButtons, setMustShowButtons] = useState<boolean>(items?.length > 1);
+
+    const [shuffledItems, setShuffledItems] = useState<null | iItemProps[]>(null);
+
+    useEffect(() => {
+        if (mustShuffle && !shuffledItems?.length) {
+            setShuffledItems(handleShuffleArray(items));
+        } else if (!mustShuffle && !shuffledItems?.length) {
+            setShuffledItems(items);
+        }
+    }, [items, mustShuffle]);
 
     useEffect(() => {
         if (mustHideButtonsIfSmallScreen) {
@@ -28,12 +44,12 @@ export default function Carousel({ images, captions, autoSlideInterval = 5000, m
     useEffect(() => {
         const interval = setInterval(nextImage, autoSlideInterval);
         return () => clearInterval(interval);
-    }, [images, autoSlideInterval]);
+    }, [items, autoSlideInterval]);
 
-    const nextImage = () => setCurrent((prev) => (prev + 1) % images.length);
-    const prevImage = () => setCurrent((prev) => (prev - 1 + images.length) % images.length);
+    const nextImage = () => setCurrent((prev) => (prev + 1) % items.length);
+    const prevImage = () => setCurrent((prev) => (prev - 1 + items.length) % items.length);
 
-    if (!images || images.length === 0) {
+    if (!items || items?.length === 0) {
         return null;
     }
 
@@ -45,17 +61,17 @@ export default function Carousel({ images, captions, autoSlideInterval = 5000, m
 
             <div>
                 {
-                    images?.map((img, index) => (
+                    shuffledItems?.map((item, index) => (
                         <picture
                             key={index}
                             className={`${styles.carouselImage} ${current === index ? styles.active : ''}`}
                         >
-                            <Image src={img} alt={`Img ${index + 1}`} priority={true} />
+                            <Image src={item.image} alt={`Img ${index + 1}`} priority={true} />
 
                             {
-                                captions && captions.length === images.length && captions[index] && (
+                                item.caption && item.caption?.length && (
                                     <div className={styles.caption}>
-                                        {captions[index]}
+                                        {item.caption}
                                     </div>
                                 )
                             }

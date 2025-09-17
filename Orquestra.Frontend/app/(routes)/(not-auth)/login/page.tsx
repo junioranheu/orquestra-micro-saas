@@ -147,14 +147,14 @@ export default function Login() {
 
                 <div className={styles.right}>
                     <Carousel
-                        images={[Img1, Img2, Img3, Img4]}
-                        captions={[
-                            'Agende seus compromissos em segundos',
-                            'Seu negócio afinado como uma orquestra',
-                            'Organize sua agenda sem dor de cabeça',
-                            'Mais tempo pra você, menos tempo no caos'
+                        items={[
+                            { image: Img1, caption: 'Agende seus compromissos em segundos' },
+                            { image: Img2, caption: 'Seu negócio afinado como uma orquestra' },
+                            { image: Img3, caption: 'Organize sua agenda sem dor de cabeça' },
+                            { image: Img4, caption: 'Mais tempo pra você, menos tempo no caos' }
                         ]}
                         autoSlideInterval={7500}
+                        mustShuffle={true}
                         mustHideButtonsIfSmallScreen={true}
                     />
                 </div>
