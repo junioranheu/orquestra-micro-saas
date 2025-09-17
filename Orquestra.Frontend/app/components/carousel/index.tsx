@@ -6,10 +6,11 @@ import styles from './index.module.scss';
 
 interface iProps {
     images: (string | StaticImageData)[];
+    autoSlideInterval?: number;
     mustHideButtonsIfSmallScreen: boolean;
 }
 
-export default function Carousel({ images, mustHideButtonsIfSmallScreen }: iProps) {
+export default function Carousel({ images, autoSlideInterval = 5000, mustHideButtonsIfSmallScreen }: iProps) {
 
     const windowSize = useWindowSize();
     const [current, setCurrent] = useState<number>(0);
@@ -22,6 +23,11 @@ export default function Carousel({ images, mustHideButtonsIfSmallScreen }: iProp
         }
     }, [mustHideButtonsIfSmallScreen, windowSize]);
 
+    useEffect(() => {
+        const interval = setInterval(nextImage, autoSlideInterval);
+        return () => clearInterval(interval);
+    }, [images, autoSlideInterval]);
+
     const nextImage = () => setCurrent((prev) => (prev + 1) % images.length);
     const prevImage = () => setCurrent((prev) => (prev - 1 + images.length) % images.length);
 
@@ -32,15 +38,19 @@ export default function Carousel({ images, mustHideButtonsIfSmallScreen }: iProp
     return (
         <div className={styles.carouselContainer}>
             {
-                mustShowButtons && <button className={styles.prev} onClick={prevImage}>‹</button>
+                mustShowButtons && <button className={`${styles.prev} ${styles.arrow}`} onClick={prevImage}>‹</button>
             }
 
-            <picture className={styles.carouselImage} title='Img'>
+            <picture
+                key={current}
+                className={`${styles.carouselImage} ${styles.fade}`}
+                title='Img'
+            >
                 <Image src={images[current]} alt={`Img ${current + 1}`} priority={true} />
             </picture>
 
             {
-                mustShowButtons && <button className={styles.next} onClick={nextImage}>›</button>
+                mustShowButtons && <button className={`${styles.next} ${styles.arrow}`} onClick={nextImage}>›</button>
             }
         </div>
     )
