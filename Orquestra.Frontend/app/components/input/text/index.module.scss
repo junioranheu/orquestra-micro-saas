@@ -8,6 +8,7 @@
         // background-color: orange !important;
         // Tamanho do dropdown do react-select;
         height: 2.85em;
+        font-family: inherit !important;
     }
 
     .wrapperTop {
@@ -22,6 +23,7 @@
             color: var(--black);
             font-size: 0.75rem;
             font-weight: 500;
+            font-family: inherit !important;
             margin-right: auto;
         }
 
