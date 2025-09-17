@@ -1,7 +1,9 @@
 'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { iUserInput } from '@/app/api/consts/user';
+import Img from '@/app/assets/png/ney.png';
 import { CookieDefault } from '@/app/components/cookie';
+import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import SYSTEM from '@/app/consts/system';
@@ -13,6 +15,7 @@ import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import styles from './page.module.scss';
@@ -84,39 +87,59 @@ export default function Login() {
 
     return (
         <section className={styles.main}>
-            <div className={styles.form}>
-                <picture className={styles.icon} title={SYSTEM.NAME}>
+            <div className={styles.wrapper}>
+                <div className={styles.left}>
+                    <div className={styles.form}>
+                        <div className={styles.welcome}>
+                            <span>Bem-vindo ao {SYSTEM.NAME}</span>
+                        </div>
 
-                </picture>
+                        <div className={styles.flex}>
+                            <InputMask
+                                title={'E-mail'}
+                                objectFormData={handleGetPropName(formData, x => x.email ?? '')}
+                                isDisabled={isIncognito}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                                handleKeyDown={(e) => handleKeyDown(e)}
+                            />
 
-                <div className={styles.welcome}>
-                    <span>Bem-vindo ao {SYSTEM.NAME}</span>
+                            <InputMask
+                                title={'Senha'}
+                                objectFormData={handleGetPropName(formData, x => x.password ?? '')}
+                                type='password'
+                                isDisabled={isIncognito}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                                handleKeyDown={(e) => handleKeyDown(e)}
+                            />
+
+                            <Button
+                                label={'Iniciar sessão'}
+                                handleFunction={() => handleLogin()}
+                                refBtn={refButton}
+                                isDisabled={isIncognito}
+                                style={{ height: '3rem', fontWeight: '600', boxShadow: 'var(--box-shadow)' }}
+                            />
+                        </div>
+
+                        <Divider text='Não tem uma conta?' />
+
+                        <div className={styles.flex}>
+                            <Button
+                                label={'Crie uma conta agora mesmo'}
+                                handleFunction={() => handleLogin()}
+                                refBtn={refButton}
+                                isDisabled={isIncognito}
+                                classes='btn-secondary'
+                                style={{ height: '3rem', fontWeight: '600' }}
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <div className={styles.flex}>
-                    <InputMask
-                        title={'E-mail'}
-                        objectFormData={handleGetPropName(formData, x => x.email ?? '')}
-                        isDisabled={isIncognito}
-                        handleChange={(e) => handleInputFormStateChange(e, setFormData)}
-                        handleKeyDown={(e) => handleKeyDown(e)}
-                    />
-
-                    <InputMask
-                        title={'Senha'}
-                        objectFormData={handleGetPropName(formData, x => x.password ?? '')}
-                        type='password'
-                        isDisabled={isIncognito}
-                        handleChange={(e) => handleInputFormStateChange(e, setFormData)}
-                        handleKeyDown={(e) => handleKeyDown(e)}
-                    />
-
-                    <Button
-                        label={'Entrar'}
-                        handleFunction={() => handleLogin()}
-                        refBtn={refButton}
-                        isDisabled={isIncognito}
-                    />
+                <div className={styles.right}>
+                    <picture className={styles.image} title={SYSTEM.NAME}>
+                        <Image src={Img} alt='' priority={true} />
+                    </picture>
                 </div>
             </div>
 

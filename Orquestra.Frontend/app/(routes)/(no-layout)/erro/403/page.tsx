@@ -42,7 +42,7 @@ export default function Erro403() {
                         Voltar para o início
                     </a>
 
-                    <a href={`mailto:${SYSTEM.EMAIL_SUPPORT}`} className={styles.secondary}>
+                    <a href={`mailto:${SYSTEM.EMAIL_SUPPORT}`} className='btn-secondary'>
                         <Icon icon='mail' />
                         Contatar suporte
                     </a>

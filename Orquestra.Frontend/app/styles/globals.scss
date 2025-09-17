@@ -13,7 +13,6 @@
     --red: #ef4444;
     --border-radius: 0.35rem;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05), 0 6px 20px rgba(0, 0, 0, 0.05);
-    --azure-bg-color: linear-gradient(120deg, #e5e5e5, #f8f1f7, #d7e2d7, #eee7ce);
 }
 
 * {
@@ -197,6 +196,27 @@ input[type='password'] {
     }
 }
 
+.btn-secondary {
+    // background-color: orange !important;
+    border: 1px solid var(--gray) !important;
+    color: var(--gray-dark) !important;
+    background-color: transparent !important;
+    transition: 0.3s !important;
+
+    &:hover {
+        border: 1px solid var(--contrast) !important;
+        color: var(--contrast) !important;
+        transition: 0.3s !important;
+    }
+}
+
+// Autofill;
+input:-webkit-autofill {
+    background-color: transparent !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--white) inset !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
 // Sonner (toast)
 .toastSonner {
     div {
@@ -285,8 +305,17 @@ input[type='password'] {
         padding-right: 1rem !important;
     }
 
+    // .swal2-error {
+    //     border-color: var(--contrast) !important;
+    // }
+
+    // .swal2-x-mark-line-left,
+    // .swal2-x-mark-line-right {
+    //     background-color: var(--contrast) !important;
+    // }
+
     button {
-        background-color: var(--main-dark) !important;
+        background-color: var(--main) !important;
         font-weight: 600 !important;
         font-size: 0.75rem !important;
         letter-spacing: 1px !important;
@@ -298,7 +327,8 @@ input[type='password'] {
         transition: 0.3s !important;
 
         &:hover {
-            background-color: var(--main) !important;
+            transition: 0.3s !important;
+            opacity: 0.75 !important;
         }
     }
 
