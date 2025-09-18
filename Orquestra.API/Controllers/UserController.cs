@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
-using Orquestra.Application.UseCases.Auth.Shared;
+using Orquestra.Application.UseCases.Auth.Logout;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Application.UseCases.Users.Create;
 using Orquestra.Application.UseCases.Users.Get;
@@ -22,7 +22,8 @@ public class UserController(
         IGetUser get,
         ICreateUser create,
         IUpdateUser update,
-        IVerifyUser verify
+        IVerifyUser verify,
+        ILogoutUser logout
     ) : BaseController<UserController>
 {
     private readonly IEnvService _env = env;
@@ -30,6 +31,7 @@ public class UserController(
     private readonly ICreateUser _create = create;
     private readonly IUpdateUser _update = update;
     private readonly IVerifyUser _verify = verify;
+    private readonly ILogoutUser _logout = logout;
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet]
@@ -46,12 +48,12 @@ public class UserController(
     {
         if (IsUserAuth())
         {
-            throw new UnauthorizedAccessException("Não é póssível criar uma nova conta porque você já está autenticado no sistema.");
+            await _logout.Execute(userIdAuth: GetUserIdAuth());
         }
 
         await _create.Execute(input);
 
-        return NoContent();
+        return Ok(true);
     }
 
     [AuthorizeFilter]

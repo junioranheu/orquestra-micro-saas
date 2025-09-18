@@ -1,7 +1,7 @@
 'use client';
 import { CarouselLogin } from '@/app/(routes)/(not-auth)/login/page';
 import styles from '@/app/(routes)/(not-auth)/login/page.module.scss';
-import { CONSTS_USER, iUserInput } from '@/app/api/consts/user';
+import { iUserInput } from '@/app/api/consts/user';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
@@ -64,7 +64,7 @@ export default function CriarConta() {
         } as iUserInput;
 
         try {
-            await handleSetCookieAndLogin({ url: CONSTS_USER.create, user: user, setAuth: setAuth, router: router });
+            await handleSetCookieAndLogin({ type: 'create', user: user, setAuth: setAuth, router: router });
             router.push(ROUTES.LOGIN);
 
             swal({

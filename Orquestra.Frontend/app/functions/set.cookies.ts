@@ -1,6 +1,6 @@
 'use client';
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
-import { iUser, iUserInput } from '@/app/api/consts/user';
+import { CONSTS_USER, iUser, iUserInput } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
@@ -9,18 +9,24 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { Dispatch, SetStateAction } from 'react';
 
 interface iSetProps {
-    url: string;
+    type: 'auth' | 'create';
     user: iUserInput;
     setAuth: (value: any) => void;
     router: AppRouterInstance;
     setIsRequestLoading?: Dispatch<SetStateAction<boolean>>;
 }
 
-export async function handleSetCookieAndLogin({ url, user, setAuth, router, setIsRequestLoading }: iSetProps) {
+export async function handleSetCookieAndLogin({ type, user, setAuth, router, setIsRequestLoading }: iSetProps) {
+    const url = type === 'create' ? CONSTS_USER.create : CONSTS_AUTH.auth;
     const result = await Fetch.post({ url: url, body: user, setIsRequestLoading: setIsRequestLoading }) as iUser;
+    // console.log(type, result);
 
     if (!result) {
         throw new Error();
+    }
+
+    if (type === 'create') {
+        return;
     }
 
     setAuth(result);

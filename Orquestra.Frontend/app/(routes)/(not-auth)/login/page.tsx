@@ -1,5 +1,4 @@
 'use client';
-import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { iUserInput } from '@/app/api/consts/user';
 import Img1 from '@/app/assets/abstract/1.webp';
 import Img2 from '@/app/assets/abstract/2.webp';
@@ -60,7 +59,7 @@ export default function Login() {
         } as iUserInput;
 
         try {
-            await handleSetCookieAndLogin({ url: CONSTS_AUTH.auth, user: user, setAuth: setAuth, router: router });
+            await handleSetCookieAndLogin({ type: 'auth', user: user, setAuth: setAuth, router: router });
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             return;

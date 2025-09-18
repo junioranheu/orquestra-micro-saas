@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
+using Orquestra.Application.UseCases.Auth.Logout;
 
 namespace Orquestra.Application.UseCases.Auth;
 
@@ -12,6 +13,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateToken, CreateToken>();
         services.AddScoped<ICreateRefreshToken, CreateRefreshToken>();
         services.AddScoped<IGetRefreshToken, GetRefreshToken>();
+        services.AddScoped<ILogoutUser, LogoutUser>();
 
         return services;
     }

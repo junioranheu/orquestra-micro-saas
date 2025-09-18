@@ -7,6 +7,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
+using Orquestra.Application.UseCases.Auth.Logout;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
@@ -24,20 +25,20 @@ namespace Orquestra.API.Controllers;
 [Route("api/[controller]")]
 public class AuthController(
         ICreateToken createToken,
-        ICreateRefreshToken createRefreshToken,
         IJwtTokenGenerator jwtTokenGenerator,
         IGetRefreshToken getRefreshToken,
         IGetCurrentMainCompanyUser getCurrentMainCompanyUser,
         IGetModuleCompanyUser getModuleCompanyUser,
+        ILogoutUser logoutUser,
         IMemoryCache cache
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
-    private readonly ICreateRefreshToken _createRefreshToken = createRefreshToken;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
     private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;
+    private readonly ILogoutUser _logoutUser = logoutUser;
     private readonly IMemoryCache _cache = cache;
 
     [AllowAnonymous]
@@ -47,7 +48,7 @@ public class AuthController(
     {
         if (IsUserAuth())
         {
-            await LogoutAsync();
+            await _logoutUser.Execute(userIdAuth: GetUserIdAuth());
         }
 
         UserOutput output = await _createToken.Execute(input);
@@ -171,18 +172,8 @@ public class AuthController(
             return NoContent();
         }
 
-        await LogoutAsync();
+        await _logoutUser.Execute(userIdAuth: GetUserIdAuth());
 
         return NoContent();
     }
-
-    #region extras
-    private async Task LogoutAsync()
-    {
-        CookieOptions cookieOptions = _jwtTokenGenerator.GetCookieOptions();
-        HttpContext.Response.Cookies.Delete(SystemConsts.CookieName, cookieOptions);
-
-        await _createRefreshToken.Update(userIdAuth: GetUserIdAuth(), mustCheckForValidRefreshTokens: true);
-    }
-    #endregion
 }
