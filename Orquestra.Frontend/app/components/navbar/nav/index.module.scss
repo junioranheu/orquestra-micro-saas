@@ -48,11 +48,6 @@
             align-items: center;
             gap: 0.75rem;
 
-            .label {
-                // background-color: tomato;
-                display: flex;
-            }
-
             >span {
                 // background-color: orange;
                 display: flex;
@@ -92,8 +87,8 @@
                 gap: 0.25rem;
 
                 .hideIfSmall {
-                    background-color: tomato;
-                    display: none !important;
+                    // background-color: tomato;
+                    display: none;
                 }
             }
         }
