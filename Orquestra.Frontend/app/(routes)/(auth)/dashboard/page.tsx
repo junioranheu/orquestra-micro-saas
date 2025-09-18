@@ -1,4 +1,8 @@
 'use client';
+import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
+import SvgUserEnvelope from '@/app/assets/svg/user-envelope.svg';
+import Card from '@/app/components/card';
+import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
@@ -24,7 +28,25 @@ export default function Dashboard() {
 
     return (
         <section className={styles.main}>
-            <h1>Olá... {auth?.fullName}</h1>
+            <span className={styles.hello}>Olá, {handleGetFirstName(auth?.fullName)}</span>
+
+            <div className={styles.flex}>
+                <Card
+                    img={SvgUserArrow}
+                    title='Organize seus contatos para personalizar as mensagens'
+                    description='Com segmentação e listas, crie campanhas altamente direcionadas com base no comportamento ou na demografia de seus clientes.'
+                    buttonLabel='AEA'
+                    buttonFunction={() => alert('xd')}
+                />
+
+                <Card
+                    img={SvgUserEnvelope}
+                    title='XD'
+                    description='Huh?'
+                    buttonLabel='Oi, né?'
+                    buttonFunction={() => alert('xdxd')}
+                />
+            </div>
         </section>
     )
 }

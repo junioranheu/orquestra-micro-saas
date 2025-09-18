@@ -1,0 +1,34 @@
+.main {
+    // background-color: orange;
+    display: flex;
+    flex-direction: column;
+
+    .hello {
+        font-size: 2.5rem;
+        font-weight: 600;
+        line-height: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .flex {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+
+        >* {
+            flex: 0 0 calc(50% - 0.75rem);
+            box-sizing: border-box;
+        }
+    }
+}
+
+@media (max-width: 1281px) {
+    .main {
+        // background-color: orange;
+
+        .flex>* {
+            flex: 0 0 100%;
+        }
+    }
+}

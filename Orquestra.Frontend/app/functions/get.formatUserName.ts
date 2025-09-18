@@ -30,7 +30,7 @@ export function handleFormatUserName(fullName: string | undefined, defaultStr: s
     return `${firstName} ${lastName}`;
 }
 
-export function handleGetFirstName(fullName: string): string {
+export function handleGetFirstName(fullName?: string): string {
     if (!fullName) {
         return '';
     }
