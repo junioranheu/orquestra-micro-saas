@@ -2,22 +2,22 @@
     // background-color: orange;
     display: flex;
     flex-direction: column;
+    gap: 2rem;
 
     .hello {
         font-size: 2.5rem;
         font-weight: 600;
         line-height: 3rem;
-        margin-bottom: 2rem;
     }
 
     .flex {
         display: flex;
         flex-wrap: wrap;
-        gap: 1.5rem;
+        gap: 2rem;
         justify-content: center;
 
         >* {
-            flex: 0 0 calc(50% - 0.75rem);
+            flex: 0 0 calc(50% - 1rem);
             box-sizing: border-box;
         }
     }

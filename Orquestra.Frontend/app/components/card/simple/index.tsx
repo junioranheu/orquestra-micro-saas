@@ -10,7 +10,7 @@ export type iProps = {
     buttonFunction?: () => void;
 }
 
-export default function Card({ img, title, description, buttonLabel, buttonFunction }: iProps) {
+export default function CardSimple({ img, title, description, buttonLabel, buttonFunction }: iProps) {
     return (
         <article className={styles.card}>
             <div className={styles.inner}>
