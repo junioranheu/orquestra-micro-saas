@@ -44,10 +44,9 @@
     }
 
     &.btnSimple {
-        // background-color: purple !important;
+        background-color: transparent !important;
         border: 1px solid var(--gray) !important;
         color: var(--gray-dark) !important;
-        background-color: transparent !important;
         transition: 0.3s !important;
 
         &:hover {
@@ -56,7 +55,6 @@
             transition: 0.3s !important;
 
             svg {
-                filter: invert(34%) sepia(96%) saturate(942%) hue-rotate(219deg) brightness(84%) contrast(88%) !important;
                 transition: 0.3s !important;
             }
         }

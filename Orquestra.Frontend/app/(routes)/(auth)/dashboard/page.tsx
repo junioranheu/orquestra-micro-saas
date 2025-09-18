@@ -58,9 +58,9 @@ export default function Dashboard() {
             {auth && <h3>Refresh token válido até {handleFormatDate(auth?.refreshTokenExpirationDate, DATE_STYLE.DETALHADO)}</h3>}
 
             <br />
-            <Button label={'/me'} handleFunction={() => handleXD()} />
+            <Button label={'/me'} handleFunction={() => handleXD()} isDisabled={isRequestLoading} />
             <br />
-            <Button label={'/log'} handleFunction={() => handleLog()} isStyleSimple={true} />
+            <Button label={'/log'} handleFunction={() => handleLog()} isStyleSimple={true} isDisabled={isRequestLoading} />
             <br />
 
             <div>

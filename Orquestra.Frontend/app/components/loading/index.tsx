@@ -1,11 +1,9 @@
 'use client';
 import ImgLoading from '@/app/assets/gif/loading.gif';
-import toast from '@/app/functions/toast';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { toast as ToastSonner } from 'sonner';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -19,13 +17,10 @@ export default function Loading({ typeMessage = 'normal' }: iProps) {
 
     useEffect(() => {
         if (isRequestLoading) {
-            const timeoutDuration = typeMessage === 'long' ? (5 * 60 * 1000) : (3 * 1000);
-            const message = typeMessage === 'long' ? 'A sua requisição está em progresso. Isso pode demorar...' : 'A sua requisição está em progresso. Aguarde uns instantes.';
-
-            toast({ content: message, isClosable: false });
+            const timeoutDuration = typeMessage === 'long' ? (5 * 60 * 1000) : (5 * 1000);
+            // const message = typeMessage === 'long' ? 'A sua requisição está em progresso. Isso pode demorar...' : 'A sua requisição está em progresso. Aguarde uns instantes.';
 
             const timer = setTimeout(() => {
-                ToastSonner.dismiss();
                 setIsRequestLoading(false);
             }, timeoutDuration);
 
@@ -34,10 +29,6 @@ export default function Loading({ typeMessage = 'normal' }: iProps) {
     }, [isRequestLoading, typeMessage, setIsRequestLoading]);
 
     if (!isRequestLoading) {
-        setTimeout(() => {
-            ToastSonner.dismiss();
-        }, 3000);
-
         return;
     }
 
