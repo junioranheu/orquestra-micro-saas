@@ -2,6 +2,7 @@
 import '@/app/styles/globals.scss';
 import { useEffect, useState } from 'react';
 import LayoutTemplateOne from './components/layout/template-one';
+import UpNav from './components/navbar/up-nav';
 import { HANKEN } from './fonts/fonts';
 import useTitle from './hooks/useTitle';
 
@@ -16,6 +17,8 @@ export default function NotFound() {
 
     return (
         <div className={HANKEN.className}>
+            <UpNav />
+
             <LayoutTemplateOne
                 svg='error'
                 code='#404'
