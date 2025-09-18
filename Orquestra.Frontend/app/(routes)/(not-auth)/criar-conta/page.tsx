@@ -51,8 +51,11 @@ export default function CriarConta() {
     });
 
     async function handleCreate() {
+        setIsRequestLoading(true);
+
         if (!formData.fullName || !formData.email || !formData.password) {
             swal({ str: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
+            setIsRequestLoading(false);
             return;
         }
 
@@ -73,6 +76,7 @@ export default function CriarConta() {
             });
         } catch {
             setFormData(x => ({ ...x, password: '' }));
+            setIsRequestLoading(false);
             return;
         }
     }

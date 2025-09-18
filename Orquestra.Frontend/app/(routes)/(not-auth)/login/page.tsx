@@ -48,8 +48,12 @@ export default function Login() {
     });
 
     async function handleLogin() {
+        setIsRequestLoading(true);
+
         if (!formData.email || !formData.password) {
+
             swal({ str: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
+            setIsRequestLoading(false);
             return;
         }
 
@@ -62,6 +66,7 @@ export default function Login() {
             await handleSetCookieAndLogin({ type: 'auth', user: user, setAuth: setAuth, router: router });
         } catch {
             setFormData(x => ({ ...x, password: '' }));
+            setIsRequestLoading(false);
             return;
         }
     }
@@ -72,9 +77,7 @@ export default function Login() {
                 str: `Não é possível acessar o ${SYSTEM.NAME} em modo anônimo.`,
                 confirmBtnText: 'OK',
                 cancelBtnText: 'Saiba mais',
-                confirmFunction: () => {
-
-                },
+                confirmFunction: () => { },
                 cancelFunction: () => {
                     swal({
                         title: 'Por que não é permitido o modo anônimo?',
