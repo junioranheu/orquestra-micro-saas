@@ -5,6 +5,7 @@ interface iProps {
     size?: 'small' | 'regular' | 'big';
     className?: string;
     weight?: 'normal' | 'bold' | 'bolder';
+    color?: string;
 }
 
 const sizeMap = {
@@ -19,7 +20,7 @@ const weightMap = {
     bolder: 4
 };
 
-export default function Icon({ icon, size = 'regular', className, weight = 'normal' }: iProps) {
+export default function Icon({ icon, size = 'regular', className, weight = 'normal', color = 'currentColor' }: iProps) {
 
     const featherIcon = feather.icons?.[icon];
 
@@ -30,8 +31,11 @@ export default function Icon({ icon, size = 'regular', className, weight = 'norm
     const svg = featherIcon.toSvg({
         width: sizeMap[size],
         height: sizeMap[size],
-        'stroke-width': weightMap[weight]
+        'stroke-width': weightMap[weight],
+        color: color
     });
 
-    return <span dangerouslySetInnerHTML={{ __html: svg }} className={className} />;
+    return (
+        <span dangerouslySetInnerHTML={{ __html: svg }} className={className} />
+    )
 }

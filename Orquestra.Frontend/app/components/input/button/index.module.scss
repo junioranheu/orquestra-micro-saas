@@ -21,19 +21,19 @@
     -webkit-transition: opacity .2s;
     transition: opacity .2s;
     user-select: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.025), 0 6px 20px rgba(0, 0, 0, 0.025);
 
     display: flex;
     gap: 0.25rem;
 
-    img,
-    svg {
-        // background-color: orange;
-        filter: brightness(0) invert(1);
-        margin-right: 0.1rem;
-    }
-
     &:hover {
         opacity: 0.8;
+    }
+
+    img,
+    svg {
+        // background-color: orange !important;
+        margin-right: 0.2rem;
     }
 
     &:disabled {
@@ -45,9 +45,26 @@
 
     &.btnSimple {
         // background-color: purple !important;
-        background-color: transparent;
-        border: 1px solid var(--gray-dark);
-        color: var(--black);
-        filter: brightness(0%);
+        border: 1px solid var(--gray) !important;
+        color: var(--gray-dark) !important;
+        background-color: transparent !important;
+        transition: 0.3s !important;
+
+        &:hover {
+            border: 1px solid var(--contrast) !important;
+            color: var(--contrast) !important;
+            transition: 0.3s !important;
+
+            svg {
+                filter: invert(34%) sepia(96%) saturate(942%) hue-rotate(219deg) brightness(84%) contrast(88%) !important;
+                transition: 0.3s !important;
+            }
+        }
+    }
+
+    &.big {
+        // background-color: orange !important;
+        padding: 0.75rem 1.5rem !important;
+        height: 3rem !important;
     }
 }

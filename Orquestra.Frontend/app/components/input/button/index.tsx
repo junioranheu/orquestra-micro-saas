@@ -2,7 +2,7 @@
 import ROUTES from '@/app/consts/routes';
 import Image, { StaticImageData } from 'next/image';
 import { useRouter } from 'next/navigation';
-import { CSSProperties, ReactNode, RefObject, cloneElement, useState } from 'react';
+import { CSSProperties, JSX, ReactNode, RefObject, cloneElement, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -12,9 +12,11 @@ interface iProps {
     handleFunction?: ((param?: any) => void) | null;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
+    icone_feather?: JSX.Element;
     refBtn?: RefObject<HTMLButtonElement | null>;
     isDisabled?: boolean;
     isStyleSimple?: boolean;
+    isBig?: boolean;
     classes?: string;
     style?: CSSProperties;
 }
@@ -26,9 +28,11 @@ export default function Button({
     handleFunction: handleFuncao,
     svg_component = null,
     svg_staticImageData = null,
+    icone_feather,
     refBtn,
     isDisabled = false,
     isStyleSimple = false,
+    isBig = false,
     classes,
     style = {}
 }: iProps) {
@@ -45,7 +49,7 @@ export default function Button({
         if (!url) {
             if (handleFuncao) {
                 try {
-                    await handleFuncao(e);
+                    handleFuncao(e);
                 } catch {
                     setIsDisabledInternal(false);
                 }
@@ -71,12 +75,13 @@ export default function Button({
 
     return (
         <button
-            className={`${styles.button} ${classes} ${isStyleSimple && styles.btnSimple}`}
+            className={`${styles.button} ${classes} ${isStyleSimple && styles.btnSimple} ${isBig && styles.big}`}
             style={style}
             onClick={(e) => handleClick(e)}
             ref={refBtn}
             disabled={isDisabledInternal || isDisabled}
         >
+            {icone_feather && cloneElement(icone_feather)}
             {/* @ts-ignore */}
             {svg_component && cloneElement(svg_component, svgDefaultProps)}
             {svg_staticImageData && <Image src={svg_staticImageData} width={20} alt='' />}

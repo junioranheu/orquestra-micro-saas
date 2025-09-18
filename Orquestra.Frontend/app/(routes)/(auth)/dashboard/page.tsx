@@ -60,7 +60,7 @@ export default function Dashboard() {
             <br />
             <Button label={'/me'} handleFunction={() => handleXD()} />
             <br />
-            <Button label={'/log'} handleFunction={() => handleLog()} />
+            <Button label={'/log'} handleFunction={() => handleLog()} isStyleSimple={true} />
             <br />
 
             <div>

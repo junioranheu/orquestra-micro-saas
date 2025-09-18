@@ -1,7 +1,8 @@
 import Icon from '@/app/components/icon';
+import Button from '@/app/components/input/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -13,6 +14,9 @@ interface iProps {
 }
 
 export default function LayoutTemplateOne({ svg, code, title, description, showSupportContact }: iProps) {
+
+    const router = useRouter();
+
     return (
         <main className={styles.container}>
             <div className={styles.inner}>
@@ -42,17 +46,22 @@ export default function LayoutTemplateOne({ svg, code, title, description, showS
                 <p className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
 
                 <div className={styles.actions}>
-                    <Link className={styles.primary} href={ROUTES.CRIAR_CONTA}>
-                        <Icon icon='home' />
-                        Voltar para o início
-                    </Link>
+                    <Button
+                        label='Voltar para o início'
+                        icone_feather={<Icon icon='home' />}
+                        handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
+                        isBig={true}
+                    />
 
                     {
                         showSupportContact && (
-                            <a href={`mailto:${SYSTEM.EMAIL_SUPPORT}`} className='btn-secondary'>
-                                <Icon icon='mail' />
-                                Contatar suporte
-                            </a>
+                            <Button
+                                label='Contatar suporte'
+                                icone_feather={<Icon icon='mail' />}
+                                handleFunction={() => window.location.href = `mailto:${SYSTEM.EMAIL_SUPPORT}`}
+                                isStyleSimple={true}
+                                isBig={true}
+                            />
                         )
                     }
                 </div>
