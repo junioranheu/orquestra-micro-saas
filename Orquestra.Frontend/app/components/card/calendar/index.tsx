@@ -16,16 +16,16 @@ export default function CardCalendar() {
 
     const me = useApiGetMe();
     const router = useRouter();
-    const [hasAccess, setHasAccess] = useState<boolean>(false);
+    const [hasAccessToSchedule, setHasAccessToSchedule] = useState<boolean>(false);
 
     useEffect(() => {
         const hasAccess = handleCheckShowElement(me, [MODULES.Scheduling]);
-        setHasAccess(hasAccess);
+        setHasAccessToSchedule(hasAccess);
     }, [me]);
 
     return (
         <section className={styles.wrapper}>
-            <CalendarSimple />
+            <CalendarSimple isReadOnly={!hasAccessToSchedule} />
 
             <div className={styles.panel}>
                 <div className={styles.panelInner}>
@@ -35,7 +35,7 @@ export default function CardCalendar() {
 
                     <div className={styles.steps}>
                         {
-                            hasAccess ? (
+                            hasAccessToSchedule ? (
                                 <CardSimple
                                     img={SvgOne}
                                     title='Tudo certo!'
@@ -58,7 +58,7 @@ export default function CardCalendar() {
                             description='Gestão de horários simples, rápida e sem dor de cabeça. Agende agora seus compromissos em segundos. Seu negócio afinado como uma orquestra.'
                             buttonLabel='Agendar compromissos'
                             buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
-                            buttonDisabled={!hasAccess}
+                            buttonDisabled={!hasAccessToSchedule}
                         />
                     </div>
                 </div>

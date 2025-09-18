@@ -1,9 +1,19 @@
 'use client';
+import ROUTES from '@/app/consts/routes';
+import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
-import { useMemo, useState } from 'react';
+import swal from '@/app/functions/swal';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './index.module.scss';
 
-export default function CalendarSimple() {
+interface iProps {
+    isReadOnly: boolean;
+}
+
+export default function CalendarSimple({ isReadOnly }: iProps) {
+
+    const router = useRouter();
 
     const today = new Date();
     const [viewDate, setViewDate] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), 1));
@@ -63,12 +73,27 @@ export default function CalendarSimple() {
         return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
     }
 
+    const firstRun = useRef<boolean>(true);
+
+    useEffect(() => {
+        if (firstRun.current) {
+            firstRun.current = false;
+            return;
+        }
+
+        swal({
+            str: `Você quer agendar um novo compromisso para a ${handleFormatDate(selectedDate ?? undefined, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES)}?`,
+            icon: 'question',
+            confirmFunction: () => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?date=${selectedDate}`)
+        });
+    }, [selectedDate]);
+
     return (
         <div className={styles.calendar}>
             <div className={styles.calendarHeader}>
-                <button aria-label="Mês anterior" onClick={handlePrevMonth} className={styles.iconBtn}>{'‹'}</button>
+                <button aria-label="Mês anterior" onClick={isReadOnly ? undefined : handlePrevMonth} className={`${styles.iconBtn} ${(isReadOnly && 'notAllowed')}`}>{'‹'}</button>
                 <div className={styles.title}>{handleCapitalizeFirstLetter(handleGetMonthNames()[viewDate.getMonth()])} de {viewDate.getFullYear()}</div>
-                <button aria-label="Próximo mês" onClick={handleNextMonth} className={styles.iconBtn}>{'›'}</button>
+                <button aria-label="Próximo mês" onClick={isReadOnly ? undefined : handleNextMonth} className={`${styles.iconBtn} ${(isReadOnly && 'notAllowed')}`}>{'›'}</button>
             </div>
 
             <div className={styles.weekdays}>
@@ -91,10 +116,11 @@ export default function CalendarSimple() {
                         return (
                             <button
                                 key={i}
-                                className={cls}
+                                className={`${cls} ${(isReadOnly && 'notAllowed')}`}
                                 onClick={function () { setSelectedDate(cell.date); }}
                                 aria-pressed={handleIsSameDay(cell.date, selectedDate)}
                                 title={`${cell.date.toLocaleDateString()}`}
+                                disabled={isReadOnly}
                             >
                                 <span className={styles.dayNumber}>{cell.date.getDate()}</span>
                             </button>
