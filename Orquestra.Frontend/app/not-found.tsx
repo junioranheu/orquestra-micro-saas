@@ -20,7 +20,7 @@ export default function NotFound() {
                 svg='error'
                 code='#404'
                 title='Página não encontrada'
-                description={path ? `A página "${path}" que você tentou acessar não existe (ou está de férias 🏖️).` : 'A página que você tentou acessar não existe (ou está de férias 🏖️).'}
+                description={path ? `A página "${path}" que você tentou acessar não existe.` : 'A página que você tentou acessar não existe.'}
                 showSupportContact={true}
             />
         </div>
