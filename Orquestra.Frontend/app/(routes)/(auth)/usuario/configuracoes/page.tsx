@@ -71,7 +71,7 @@ export default function UsuarioConfiguracoes() {
             <h1>Saco wea</h1>
             <br />
 
-            <CalendarSimple />
+            <CalendarSimple isReadOnly={false} disablePastDays={true} />
         </section>
     )
 }

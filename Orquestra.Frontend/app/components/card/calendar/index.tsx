@@ -25,7 +25,10 @@ export default function CardCalendar() {
 
     return (
         <section className={styles.wrapper}>
-            <CalendarSimple isReadOnly={!hasAccessToSchedule} />
+            <CalendarSimple
+                isReadOnly={!hasAccessToSchedule}
+                disablePastDays={true}
+            />
 
             <div className={styles.panel}>
                 <div className={styles.panelInner}>

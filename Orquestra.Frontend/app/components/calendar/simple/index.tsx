@@ -9,9 +9,10 @@ import styles from './index.module.scss';
 
 interface iProps {
     isReadOnly: boolean;
+    disablePastDays: boolean;
 }
 
-export default function CalendarSimple({ isReadOnly }: iProps) {
+export default function CalendarSimple({ isReadOnly, disablePastDays }: iProps) {
 
     const router = useRouter();
 
@@ -73,6 +74,10 @@ export default function CalendarSimple({ isReadOnly }: iProps) {
         return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
     }
 
+    function handleCheckIsBeforeDay(a: Date, b: Date): boolean {
+        return a.getFullYear() < b.getFullYear() || (a.getFullYear() === b.getFullYear() && a.getMonth() < b.getMonth()) || (a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() < b.getDate());
+    }
+
     const firstRun = useRef<boolean>(true);
 
     useEffect(() => {
@@ -81,10 +86,19 @@ export default function CalendarSimple({ isReadOnly }: iProps) {
             return;
         }
 
+        if (!selectedDate) {
+            return;
+        }
+
+        const isoDate = selectedDate?.toISOString().split('T')[0];
+
         swal({
             str: `Você quer agendar um novo compromisso para a ${handleFormatDate(selectedDate ?? undefined, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES)}?`,
-            icon: 'question',
-            confirmFunction: () => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?date=${selectedDate}`)
+            cancelBtnText: 'Voltar',
+            cancelFunction: () => setSelectedDate(null),
+            confirmBtnText: 'Agendar',
+            confirmFunction: () => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?date=${isoDate}`),
+            icon: 'question'
         });
     }, [selectedDate]);
 
@@ -107,20 +121,23 @@ export default function CalendarSimple({ isReadOnly }: iProps) {
             <div className={styles.days}>
                 {
                     grid.map(function (cell, i) {
+                        const isPastDay = disablePastDays && handleCheckIsBeforeDay(cell.date, today);
+
                         const cls = [
                             styles.day,
                             cell.inCurrent ? '' : styles.outside,
-                            handleIsSameDay(cell.date, selectedDate) ? styles.selected : ''
+                            handleIsSameDay(cell.date, selectedDate) ? styles.selected : '',
+                            (isReadOnly || isPastDay) ? 'notAllowed' : ''
                         ].join(' ').trim();
 
                         return (
                             <button
                                 key={i}
                                 className={`${cls} ${(isReadOnly && 'notAllowed')}`}
-                                onClick={function () { setSelectedDate(cell.date); }}
+                                onClick={isReadOnly || isPastDay ? undefined : () => setSelectedDate(cell.date)}
                                 aria-pressed={handleIsSameDay(cell.date, selectedDate)}
                                 title={`${cell.date.toLocaleDateString()}`}
-                                disabled={isReadOnly}
+                                disabled={isReadOnly || isPastDay}
                             >
                                 <span className={styles.dayNumber}>{cell.date.getDate()}</span>
                             </button>
