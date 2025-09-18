@@ -3,11 +3,13 @@ import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import SvgUserEnvelope from '@/app/assets/svg/user-envelope.svg';
 import CardCalendar from '@/app/components/card/calendar';
 import CardSimple from '@/app/components/card/simple';
+import ROUTES from '@/app/consts/routes';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import styles from './page.module.scss';
 
@@ -15,6 +17,7 @@ export default function Dashboard() {
 
     useTitle('Dashboard');
 
+    const router = useRouter();
     const [auth, setAuth] = useUserContext();
     const me = useApiGetMe();
 
@@ -38,18 +41,18 @@ export default function Dashboard() {
             <div className={styles.flex}>
                 <CardSimple
                     img={SvgUserArrow}
-                    title='Organize seus contatos para personalizar as mensagens'
-                    description='Com segmentação e listas, crie campanhas altamente direcionadas com base no comportamento ou na demografia de seus clientes.'
-                    buttonLabel='AEA'
-                    buttonFunction={() => alert('xd')}
+                    title='Configurações avançadas'
+                    description='Personalize a plataforma do seu jeito: gerencie preferências, permissões e integrações em um só lugar.'
+                    buttonLabel='Abrir configurações'
+                    buttonFunction={() => router.push(ROUTES.USUARIO_CONFIGURACOES)}
                 />
 
                 <CardSimple
                     img={SvgUserEnvelope}
-                    title='XD'
-                    description='Huh?'
-                    buttonLabel='Oi, né?'
-                    buttonFunction={() => alert('xdxd')}
+                    title='Central de ajuda'
+                    description='Encontre respostas rápidas, tutoriais e suporte para tirar suas dúvidas e aproveitar ao máximo a plataforma.'
+                    buttonLabel='Acessar ajuda'
+                    buttonFunction={() => router.push(ROUTES.ETC_AJUDA)}
                 />
             </div>
         </section>

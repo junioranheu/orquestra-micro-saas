@@ -7,10 +7,11 @@ export type iProps = {
     title?: string;
     description?: string;
     buttonLabel?: string;
+    buttonDisabled?: boolean;
     buttonFunction?: () => void;
 }
 
-export default function CardSimple({ img, title, description, buttonLabel, buttonFunction }: iProps) {
+export default function CardSimple({ img, title, description, buttonLabel, buttonDisabled = false, buttonFunction }: iProps) {
     return (
         <article className={styles.card}>
             <div className={styles.inner}>
@@ -29,7 +30,11 @@ export default function CardSimple({ img, title, description, buttonLabel, butto
                     {
                         buttonLabel && buttonFunction && (
                             <div className={styles.actions}>
-                                <Button label={buttonLabel} handleFunction={() => buttonFunction()} />
+                                <Button
+                                    label={buttonLabel}
+                                    handleFunction={() => !buttonDisabled && buttonFunction()}
+                                    isDisabled={buttonDisabled}
+                                />
                             </div>
                         )
                     }

@@ -3,10 +3,25 @@ import SvgOne from '@/app/assets/svg/one.svg';
 import SvgTwo from '@/app/assets/svg/two.svg';
 import CalendarSimple from '@/app/components/calendar/simple';
 import CardSimple from '@/app/components/card/simple';
+import { MODULES } from '@/app/consts/modules';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleCheckShowElement } from '@/app/functions/check.permission';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function CardCalendar() {
+
+    const me = useApiGetMe();
+    const router = useRouter();
+    const [hasAccess, setHasAccess] = useState<boolean>(false);
+
+    useEffect(() => {
+        const hasAccess = handleCheckShowElement(me, [MODULES.Scheduling]);
+        setHasAccess(hasAccess);
+    }, [me]);
 
     return (
         <section className={styles.wrapper}>
@@ -19,20 +34,31 @@ export default function CardCalendar() {
                     </div>
 
                     <div className={styles.steps}>
-                        <CardSimple
-                            img={SvgOne}
-                            title='Adicione seus primeiros contatos'
-                            description='Você precisa de contatos para criar uma campanha. Crie seu banco de dados de contatos ou adicione os destinatários da sua primeira campanha.'
-                            buttonLabel='Importar seus contatos'
-                            buttonFunction={() => alert('xd')}
-                        />
+                        {
+                            hasAccess ? (
+                                <CardSimple
+                                    img={SvgOne}
+                                    title='Tudo certo!'
+                                    description='Sua empresa já possui o módulo de Agendamento. Comece a gerenciar seus compromissos agora mesmo.'
+                                />
+                            ) : (
+                                <CardSimple
+                                    img={SvgOne}
+                                    title='Não perca mais tempo!'
+                                    description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação clicando no botão abaixo:'
+                                    buttonLabel='Gerenciar situação da empresa'
+                                    buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
+                                />
+                            )
+                        }
 
                         <CardSimple
                             img={SvgTwo}
-                            title='Crie sua primeira campanha'
-                            description='É hora de ser criativo e criar uma campanha. Precisa de inspiração? Escolha um modelo e use nosso assistente de redação com IA.'
-                            buttonLabel='Crie sua primeira campanha'
-                            buttonFunction={() => alert('xd')}
+                            title='Simplifique sua vida e a gestão da sua empresa'
+                            description='Gestão de horários simples, rápida e sem dor de cabeça. Agende agora seus compromissos em segundos. Seu negócio afinado como uma orquestra.'
+                            buttonLabel='Agendar compromissos'
+                            buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
+                            buttonDisabled={!hasAccess}
                         />
                     </div>
                 </div>
