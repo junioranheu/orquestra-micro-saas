@@ -123,7 +123,8 @@ export default function Login() {
                                 handleFunction={() => handleLogin()}
                                 refBtn={refButton}
                                 isDisabled={isIncognito || isRequestLoading}
-                                style={{ height: '3rem', fontWeight: '600', boxShadow: 'var(--box-shadow)' }}
+                                style={{ fontWeight: '600', boxShadow: 'var(--box-shadow)' }}
+                                isBig={true}
                             />
 
                             <Link className={styles.forget} href={ROUTES.RECUPERAR_SENHA}>Esqueci minha senha</Link>
@@ -137,7 +138,8 @@ export default function Login() {
                                 handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
                                 isDisabled={isIncognito || isRequestLoading}
                                 isStyleSimple={true}
-                                style={{ height: '3rem', fontWeight: '600' }}
+                                isBig={true}
+                                style={{ fontWeight: '600' }}
                             />
                         </div>
                     </div>

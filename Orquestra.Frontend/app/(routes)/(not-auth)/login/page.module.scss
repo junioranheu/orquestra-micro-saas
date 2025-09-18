@@ -15,7 +15,7 @@ $radius: 1.25rem;
         width: 50vw;
         height: fit-content;
         border-radius: $radius;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.48), 0 4px 6px rgba(0, 0, 0, 0.04);
+        box-shadow: var(--box-shadow-dark);
         overflow: hidden;
 
         .left {
