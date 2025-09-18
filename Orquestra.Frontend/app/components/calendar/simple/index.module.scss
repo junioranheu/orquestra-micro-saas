@@ -5,7 +5,7 @@
     min-width: 22rem;
     border: 1px solid var(--gray-light);
     border-radius: var(--border-radius);
-    padding: 14px;
+    padding: 1rem;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
 
     .calendarHeader {
@@ -109,5 +109,13 @@
     @media (max-width: 720px) {
         width: 100%;
         min-width: auto;
+    }
+}
+
+@media (max-width: 801px) {
+    .calendar {
+        // background: tomato !important;
+        min-width: 100%;
+        height: fit-content;
     }
 }
