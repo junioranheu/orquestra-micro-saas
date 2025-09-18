@@ -7,6 +7,7 @@ import Sidebar from '@/app/components/sidebar';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
+import useCheckAzureServer from '@/app/hooks/useCheckAzureServer';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
@@ -15,6 +16,8 @@ import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+
+    useCheckAzureServer();
 
     useEffect(() => {
         feather.replace();

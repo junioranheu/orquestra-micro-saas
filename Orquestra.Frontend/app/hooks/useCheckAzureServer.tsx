@@ -1,0 +1,55 @@
+import { CONSTS_UTILITY } from '@/app/api/consts/utility';
+import { Fetch } from '@/app/api/fetch';
+import swal from '@/app/functions/swal';
+import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
+
+export default function useCheckAzureServer() {
+
+    const [loading, setLoading] = useState<boolean>(true);
+    const thresholdInMsToStartChecking = 2500;
+
+    useEffect(() => {
+        async function fetchGetFake() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve('mock_getFakefake');
+                }, thresholdInMsToStartChecking + 5000);
+            });
+        }
+
+        async function handleCheck() {
+            try {
+                // await fetchGetFake();
+                await Fetch.get({ url: CONSTS_UTILITY.getBuildVersion });
+            } catch (error: unknown) {
+                const errorMsg = error instanceof Error ? error.message : String(error);
+                swal({ str: errorMsg });
+            } finally {
+                setLoading(false);
+                Swal.close();
+            }
+        }
+
+        const timeout = setTimeout(() => {
+            if (loading) {
+                Swal.fire({
+                    html: '<p>Por favor, aguarde alguns instantes enquanto o servidor é iniciado.</p>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setLoading(false);
+            }
+        }, thresholdInMsToStartChecking);
+
+        if (loading) {
+            handleCheck();
+        }
+
+        return () => clearTimeout(timeout);
+    }, [loading]);
+
+}
