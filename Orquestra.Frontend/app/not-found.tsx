@@ -1,6 +1,6 @@
 'use client';
 import '@/app/styles/globals.scss';
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import LayoutTemplateOne from './components/layout/template-one';
 import { HANKEN } from './fonts/fonts';
 import useTitle from './hooks/useTitle';
@@ -8,7 +8,11 @@ import useTitle from './hooks/useTitle';
 export default function NotFound() {
 
     useTitle('Página não encontrada');
-    const pathname = usePathname();
+    const [path, setPath] = useState<string>('');
+
+    useEffect(() => {
+        setPath(window.location.pathname);
+    }, []);
 
     return (
         <div className={HANKEN.className}>
@@ -16,7 +20,7 @@ export default function NotFound() {
                 svg='error'
                 code='#404'
                 title='Página não encontrada'
-                description={`A página "${pathname}" que você tentou acessar não existe (ou está de férias).`}
+                description={path ? `A página "${path}" que você tentou acessar não existe (ou está de férias 🏖️).` : 'A página que você tentou acessar não existe (ou está de férias 🏖️).'}
                 showSupportContact={true}
             />
         </div>
