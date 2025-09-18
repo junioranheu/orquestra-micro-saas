@@ -5,11 +5,12 @@ import { CONSTS_LOG } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
+import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function Dashboard() {
@@ -20,6 +21,18 @@ export default function Dashboard() {
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
     const me = useApiGetMe();
     const [modules, setModules] = useState<iCalculatePriceModuleCompanyOutput[]>([]);
+
+    // Verificar se o usuário autenticado pelo back e front são o mesmo;
+    useEffect(() => {
+        if (auth && me) {
+            // console.log(auth.userId);
+            // console.log(me.userId);
+
+            if (auth.userId !== me.userId) {
+                swalUnauthorized();
+            }
+        }
+    }, [auth, me]);
 
     async function handleXD() {
         console.clear();

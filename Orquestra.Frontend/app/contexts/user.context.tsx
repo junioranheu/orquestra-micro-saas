@@ -19,7 +19,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
         if (cookieAuth) {
             try {
-                setAuth(JSON.parse(cookieAuth));
+                const cookie = JSON.parse(cookieAuth);
+                // console.log(cookie);
+
+                setAuth(cookie);
             } catch (err) {
                 console.error('Erro ao parsear cookie auth', err);
                 setAuth(null);
