@@ -43,3 +43,11 @@ export function handleGetFirstName(fullName?: string): string {
 
     return words[0];
 }
+
+export function handleCapitalizeFirstLetter(text?: string): string {
+    if (!text) {
+        return '';
+    }
+
+    return text.charAt(0).toUpperCase() + text.slice(1);
+}
