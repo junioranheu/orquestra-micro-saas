@@ -50,20 +50,22 @@ export default function Navbar() {
 
                     <div className={styles.right}>
                         <Tippy content='Gerencie suas empresas ou cadastre a sua'>
-                            <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}><Icon icon='briefcase' weight='bold' /> Empresas</span>
+                            <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}><Icon icon='briefcase' weight='bold' /><span className={styles.hideIfSmall}>Empresas</span></span>
                         </Tippy>
 
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (
                                 <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos; também, consulte suas faturas'>
-                                    <span onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /> Plano e faturas</span>
+                                    <span onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /><span className={styles.hideIfSmall}>Plano e faturas</span></span>
                                 </Tippy>
                             )
                         }
 
-                        <Tippy content='Ajuda'>
-                            <span onClick={() => router.push(ROUTES.ETC_AJUDA)}><Icon icon='help-circle' weight='bold' /></span>
-                        </Tippy>
+                        <span className={styles.hideIfSmall}>
+                            <Tippy content='Ajuda'>
+                                <span onClick={() => router.push(ROUTES.ETC_AJUDA)}><Icon icon='help-circle' weight='bold' className={styles.hideIfSmall} /></span>
+                            </Tippy>
+                        </span>
 
                         <Tippy content='Notificações'>
                             <span onClick={() => router.push(ROUTES.USUARIO_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
@@ -71,7 +73,7 @@ export default function Navbar() {
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
-                                {(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : me?.userName} <Icon icon='chevron-down' weight='bold' />
+                                <span className={styles.hideIfSmall}>{(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : me?.userName}</span><Icon icon='chevron-down' weight='bold' />
                             </span>
                         </Tippy>
                     </div>
