@@ -16,17 +16,17 @@ export default function Topico() {
     const params = useParams();
     const query = params.topico;
 
-    const [filteredTopics, setFilteredTopics] = useState<iAjudaTopico[]>();
+    const [filteredTopic, setFilteredTopic] = useState<iAjudaTopico>();
     const [queryNormalized, setQueryNormalized] = useState<string>('');
 
     useEffect(() => {
         if (query) {
-            const filtered = HELP_TOPICS.filter(x =>
+            const filtered = HELP_TOPICS.find(x =>
                 handleNormalizeUrl(handleNormalizeHtml(x?.topic)) === query.toString()
-            ) as iAjudaTopico[];
+            ) as iAjudaTopico;
 
-            setFilteredTopics(filtered);
-            setQueryNormalized(filtered[0]?.topic ?? '');
+            setFilteredTopic(filtered);
+            setQueryNormalized(filtered?.topic ?? '');
         }
     }, [query]);
 
@@ -41,7 +41,7 @@ export default function Topico() {
                 <div className={styles.title} dangerouslySetInnerHTML={{ __html: queryNormalized }} />
             </div>
 
-            <AjudaListRows filteredTopics={filteredTopics} query='' showTopic={true} />
+            <AjudaListRows filteredTopic={filteredTopic} query='' showTopic={true} />
         </section>
     )
 }

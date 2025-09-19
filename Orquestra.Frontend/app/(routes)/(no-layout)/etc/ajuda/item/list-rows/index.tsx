@@ -1,28 +1,29 @@
-import { iAjudaTopico } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
+import { iAjudaItem, iAjudaTopico } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
 import handleNormalizeUrl from '@/app/functions/format.url';
 import Router from 'next/router';
 import styles from './index.module.scss';
 
 interface iParametros {
-    filteredTopics: iAjudaTopico[] | null | undefined;
+    filteredTopic: iAjudaTopico | undefined;
     query: string;
     showTopic: boolean;
 }
 
-export default function AjudaListRows({ filteredTopics, query, showTopic }: iParametros) {
+export default function AjudaListRows({ filteredTopic, query, showTopic }: iParametros) {
+
     return (
         <div className={styles.main}>
             {
-                filteredTopics?.map((item: iAjudaTopico, i: number) => (
+                filteredTopic?.items.map((item: iAjudaItem, i: number) => (
                     <div
                         key={i}
                         className={styles.item}
-                        onClick={() => Router.push(`/ajuda/item/${handleNormalizeUrl(item?.topic)}`)}
+                        onClick={() => Router.push(`/ajuda/item/${handleNormalizeUrl(item?.title)}`)}
                     >
                         <div className={styles.itemInner}>
                             <span className='pointer'>
-                                {item?.topic}
+                                {item?.title}
 
                                 {
                                     // showTopic && (

@@ -139,7 +139,7 @@ export default function Ajuda() {
                 <span>Central de ajuda</span>
 
                 <div className={SYSTEM.ANIMATE_PULSE_INFINITE}>
-                    <Image src={ImgMeditation} alt='' width={50} height={63} priority={true} />
+                    <Image src={ImgMeditation} alt='' priority={true} />
                 </div>
             </div>
 

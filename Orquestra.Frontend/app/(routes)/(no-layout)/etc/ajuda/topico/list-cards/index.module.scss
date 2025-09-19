@@ -21,6 +21,18 @@
         border-radius: var(--border-radius);
 
         cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+            // background-color: orange;
+            opacity: 0.75;
+            transition: 0.3s;
+
+            .title {
+                color: var(--contrast);
+                transition: 0.3s;
+            }
+        }
 
         .title {
             // background-color: red;
@@ -45,11 +57,20 @@
 
         .more {
             // background-color: blue;
-            color: var(--contrast);
+            color: var(--black);
             font-size: 0.9rem;
             font-weight: 400;
             cursor: pointer;
             margin-top: auto;
+            text-decoration: underline dotted currentColor;
+            text-underline-offset: 3px;
+            transition: 0.3s;
+
+            &:hover {
+                // background-color: orange;
+                color: var(--contrast);
+                transition: 0.3s;
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ interface iProps {
 export default function ItemAjuda({ ajudaItem }: iProps) {
 
     document.title = `${(ajudaItem?.titulo ?? 'Ajuda')} — ${CONSTS_SISTEMA.NOME_SISTEMA}`;
+    useTitle('Central de ajuda');
 
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     useEffect(() => {
