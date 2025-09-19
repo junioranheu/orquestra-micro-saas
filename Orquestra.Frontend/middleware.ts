@@ -4,6 +4,10 @@ import { MODULES } from './app/consts/modules';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
 
+const PUBLIC_PATHS = [
+    ROUTES.ETC_AJUDA, ROUTES.ETC_SEGURANCA
+];
+
 const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [
     ROUTES.LOGIN, ROUTES.CRIAR_CONTA, ROUTES.RECUPERAR_SENHA,
     ROUTES.LANDING_PAGE, ROUTES.USUARIO_VERIFICADO
@@ -19,19 +23,27 @@ export const MODULES_PERMISSIONS: Record<string, string[]> = {
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get(SYSTEM.COOKIE_NAME)?.value;
     const pathname = request.nextUrl.pathname;
-    const isPublicPath = PUBLIC_PATHS_BLOCKED_WITH_TOKEN.some(path => pathname.startsWith(path));
 
-    // #1 - Sem token: só permite rotas públicas;
-    if (!token) {
-        return isPublicPath ? NextResponse.next() : NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
+    const isPublicPath = PUBLIC_PATHS.some(x => pathname.startsWith(x));
+
+    // #1 - Rota pública;
+    if (isPublicPath) {
+        return NextResponse.next();
     }
 
-    // #2 - Com token: redireciona home ('/') e rotas públicas para dashboard;
-    if (pathname === '/' || isPublicPath) {
+    const isPublicPathBlockedWithToken = PUBLIC_PATHS_BLOCKED_WITH_TOKEN.some(x => pathname.startsWith(x));
+
+    // #2 - Rotas públicas que são bloqueadas caso o usuário não tenha um token;
+    if (!token) {
+        return isPublicPathBlockedWithToken ? NextResponse.next() : NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
+    }
+
+    // #3 - Com token: redireciona home ('/') e rotas públicas para dashboard;
+    if (pathname === '/' || isPublicPathBlockedWithToken) {
         return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.url));
     }
 
-    // #3 - Checar se o usuário tem acesso à rota;
+    // #4 - Checar se o usuário tem acesso à rota;
     const hasAccess = await handleCheckUserAccess(token, pathname);
     // console.log('hasAccess', hasAccess);
 
