@@ -26,14 +26,6 @@
         }
     }
 
-    .result {
-        // background-color: orange;
-        display: flex;
-        flex-direction: column;
-        font-size: 0.9rem;
-        width: 45%;
-    }
-
     .search {
         // background-color: tomato;
         width: 45%;
@@ -65,11 +57,6 @@
 /* hi-res laptops and desktops */
 @media (max-width:1281px) {
     .main {
-        .result {
-            // background-color: orange;
-            width: 80%;
-        }
-
         .search {
             // background-color: tomato;
             width: 80%;

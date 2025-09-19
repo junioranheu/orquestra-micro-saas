@@ -1,5 +1,5 @@
  .main {
-     //  background-color: coral;
+     background-color: coral;
      padding: 5rem 2rem 2rem 2rem;
 
      width: 60%;
@@ -22,6 +22,14 @@
          margin-top: 2rem;
          margin-bottom: 2rem;
      }
+
+     .result {
+         // background-color: orange;
+         display: flex;
+         flex-direction: column;
+         font-size: 0.9rem;
+         width: 45%;
+     }
  }
 
  // Media queries
@@ -29,6 +37,12 @@
  @media (max-width:1281px) {
      .main {
          width: 90%;
+
+         .result {
+             //  background-color: orange;
+             width: 80%;
+         }
+
      }
  }
 

@@ -1,8 +1,9 @@
 'use client';
 import AjudaListRows from '@/app/(routes)/(no-layout)/(etc)/ajuda/item/list-rows';
 import { HELP_TOPICS, iAjudaTopicoItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
-import styles from '@/app/(routes)/(no-layout)/(etc)/ajuda/page.module.scss';
+// import styles from '@/app/(routes)/(no-layout)/(etc)/ajuda/page.module.scss';
 import AjudaSearchInput from '@/app/(routes)/(no-layout)/(etc)/ajuda/seach-input';
+import styles from '@/app/(routes)/(no-layout)/(etc)/ajuda/topico/[topico]/page.module.scss';
 import ImgMeditation from '@/app/assets/webp/meditation.webp';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
