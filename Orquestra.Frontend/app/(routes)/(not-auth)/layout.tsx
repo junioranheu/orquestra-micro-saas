@@ -9,6 +9,7 @@ import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import { ReactNode } from 'react';
 import { Toaster } from 'sonner';
+import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
 

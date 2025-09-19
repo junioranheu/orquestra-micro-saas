@@ -1,31 +1,75 @@
 'use client';
-import { iAjudaItem } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
+import { HELP_TOPICS, iAjudaItem } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
+import Seta from '@/app/components/svg/seta/seta';
+import ROUTES from '@/app/consts/routes';
+import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';
 import useTitle from '@/app/hooks/useTitle';
+import Tippy from '@tippyjs/react';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
-interface iProps {
-    ajudaItem: iAjudaItem;
-}
-
-export default function ItemAjuda({ ajudaItem }: iProps) {
+export default function AjudaItem() {
 
     useTitle('Central de ajuda');
+    const router = useRouter();
+    const params = useParams();
+    const query = params.topico;
+
+    const [filteredTopicItem, setFilteredTopicItem] = useState<iAjudaItem | null>();
+    const [originalTopic, setOriginalTopic] = useState<string>('');
+
+    function handleFindItem(title: string): iAjudaItem | null {
+        for (const topic of HELP_TOPICS) {
+            const item = topic.items.find(x => handleNormalizeUrl(handleNormalizeHtml(x?.title)) === title) as iAjudaItem;
+
+            if (item) {
+                setOriginalTopic(topic.topic);
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    useEffect(() => {
+        if (query) {
+            const result = handleFindItem(query.toString());
+
+            if (!result) {
+                router.push(ROUTES.ERRO_404);
+                return;
+            }
+
+            setFilteredTopicItem(result);
+        }
+    }, [query]);
+
+    if (!filteredTopicItem) {
+        return;
+    }
 
     return (
         <section className={styles.main}>
-            {/* <div className={Styles.divVoltar} onClick={() => Router.push(`/ajuda/topico/${ajudaItem?.ajudaTopicoId}/${ajustarUrl(removerHTML(ajudaItem?.ajudasTopicos?.topico))}`)}>
-                <SetaDois width={16} url={null} title='Voltar' isCorPrincipal={true} />
-                <span className='texto pointer cor-principal-hover' title={removerHTML(ajudaItem?.ajudasTopicos?.topico)}>Voltar ao tópico original</span>
+            <div
+                className={`${styles.back} contrastOnHover`}
+                onClick={() => router.push(`${ROUTES.ETC_AJUDA}/topico/${handleNormalizeUrl(handleNormalizeHtml(originalTopic))}`)}
+            >
+                <Seta />
+
+                <Tippy content={originalTopic}>
+                    <span className='pointer'>Voltar ao tópico original</span>
+                </Tippy>
             </div>
 
-            <div className={`${Styles.divTitulo} margem3`}>
-                <span className={Styles.textoPequeno}>Central de ajuda / {removerHTML(ajudaItem?.ajudasTopicos?.topico)}</span>
-                <span className={Styles.titulo}>{ajudaItem?.titulo}</span>
+            <div className={styles.title}>
+                <span className={styles.small}>Central de ajuda / {originalTopic} /</span>
+                <span className={styles.regular}>{filteredTopicItem?.title}</span>
             </div>
 
-            <div className='margem3'>
-                <div className={Styles.conteudoHTML} dangerouslySetInnerHTML={{ __html: (ajudaItem?.conteudoHtml ?? '') }} />
-            </div> */}
+            <div className={styles.content}>
+                <span dangerouslySetInnerHTML={{ __html: (filteredTopicItem?.description ?? '') }} />
+            </div>
         </section>
     )
 }

@@ -7,6 +7,7 @@ const ROUTES = {
     CRIAR_CONTA: '/criar-conta',
     LOGOUT: '/logout',
     ERRO_403: '/erro/403',
+    ERRO_404: '/erro/404',
     USUARIO_VERIFICADO: '/usuario/verificado',
     USUARIO_CONFIGURACOES: '/usuario/configuracoes',
     USUARIO_NOTIFICACOES: '/usuario/notificacoes',

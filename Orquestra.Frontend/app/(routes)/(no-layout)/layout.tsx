@@ -8,6 +8,7 @@ import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
 import { useEffect } from 'react';
 import { Toaster } from 'sonner';
+import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children, }: { children: React.ReactNode; }) {
 

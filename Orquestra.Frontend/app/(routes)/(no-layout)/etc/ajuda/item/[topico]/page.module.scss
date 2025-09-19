@@ -1,39 +1,54 @@
- .main {
-     // background-color: coral;
+.main {
+    //  background-color: coral;
+    padding: 5rem 2rem 2rem 2rem;
 
-     .divVoltar {
-         //  background-color: tomato;
-         display: flex;
-         align-items: center;
-         gap: 0.75rem;
-     }
+    width: 60%;
+    margin: 0 auto;
 
-     .divTitulo {
-         //  background-color: blue;
-         display: flex;
-         flex-direction: column;
-         gap: 0.5rem;
+    .back {
+        //  background-color: tomato;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
 
-         .textoPequeno {
-             color: var(--cinza);
-             font-size: 0.9rem;
-             font-weight: 400;
-         }
+    .title {
+        // background-color: purple;
+        display: flex;
+        flex-direction: column;
+        margin-top: 1rem;
 
-         .titulo {
-             color: var(--preto);
-             font-size: 2.5rem;
-             font-weight: 700;
-             line-height: 2.5rem;
-             letter-spacing: 0.025rem;
-         }
-     }
+        .small {
+            color: var(--gray-dark);
+            font-size: 0.75rem;
+            font-weight: 400;
+        }
 
-     .conteudoHTML {
-         //  background-color: coral;
-         color: var(--preto);
-         font-size: 1rem;
-         font-weight: 400;
-         letter-spacing: 0.025rem;
-     }
- }
+        .regular {
+            color: var(--black);
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 2.5rem;
+            letter-spacing: 0.025rem;
+            margin-top: 0rem;
+        }
+    }
+
+    .content {
+        // background-color: coral;
+        color: var(--black);
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.025rem;
+        margin-top: 2rem;
+    }
+}
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {
+    .main {
+        // background-color: orange;
+        width: 90%;
+    }
+}

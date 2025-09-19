@@ -1,9 +1,18 @@
-export function handleNormalizeHtml(str: string) {
+export function handleNormalizeHtml(str: string | undefined) {
+    if (!str) {
+        return '';
+    }
+
     return str?.replace(/<[^>]*>?/gm, '');
 }
 
-export default function handleNormalizeUrl(url: string) {
+export default function handleNormalizeUrl(url: string | undefined) {
     // console.log(url);
+
+    if (!url) {
+        return '';
+    }
+
     let normalizedUrl = url.normalize('NFD').replace(/\p{Diacritic}/gu, ''); // Remover acentuação e letras estranhas;
     normalizedUrl = normalizedUrl.replace(/\s+/g, '-').toLowerCase(); // Trocar espaços por traços e deixar em minúsculo;
     normalizedUrl = normalizedUrl.replaceAll('?', '');

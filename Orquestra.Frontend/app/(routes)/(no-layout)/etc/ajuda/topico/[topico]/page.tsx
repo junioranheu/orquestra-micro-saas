@@ -9,7 +9,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
-export default function Topico() {
+export default function AjudaTopico() {
 
     useTitle('Central de ajuda');
     const router = useRouter();
