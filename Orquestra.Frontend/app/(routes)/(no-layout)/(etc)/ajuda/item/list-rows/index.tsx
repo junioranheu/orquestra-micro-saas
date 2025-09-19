@@ -1,4 +1,4 @@
-import { iAjudaItem, iAjudaTopico } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
+import { iAjudaItem, iAjudaTopico } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
 import ImgServer from '@/app/assets/png/server.png';
 import CardSimple from '@/app/components/card/simple';
 import Seta from '@/app/components/svg/seta/seta';

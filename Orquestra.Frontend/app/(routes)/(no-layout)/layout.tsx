@@ -18,17 +18,13 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
 
     return (
         <html lang='pt-BR'>
-            <head>
-                <script src='https://cdn.tailwindcss.com'></script>
-            </head>
-
             <Head />
 
-            <body>
+            <body className={HANKEN.className}>
                 <Toaster expand={false} closeButton={false} />
                 <UpNav />
 
-                <main className={HANKEN.className}>
+                <main>
                     {children}
 
                     <CookieDefault extenseButtonDescription={false} />

@@ -1,6 +1,6 @@
 'use client';
-import AjudaListRows from '@/app/(routes)/(no-layout)/etc/ajuda/item/list-rows';
-import { HELP_TOPICS, iAjudaTopico } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
+import AjudaListRows from '@/app/(routes)/(no-layout)/(etc)/ajuda/item/list-rows';
+import { HELP_TOPICS, iAjudaTopico } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
 import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';

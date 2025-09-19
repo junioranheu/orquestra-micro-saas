@@ -1,16 +1,25 @@
-import styles from '@/app/(routes)/(no-layout)/etc/ajuda/page.module.scss';
+import styles from '@/app/(routes)/(no-layout)/(etc)/ajuda/page.module.scss';
 import InputMask from '@/app/components/input/text';
 import Lupa from '@/app/components/svg/lupa/lupa';
+import ROUTES from '@/app/consts/routes';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import { useRouter } from 'next/navigation';
-import { KeyboardEvent, useState } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
 
-interface iFormData {
-    key: string | null;
+interface iProps {
+    key: string | undefined;
 }
 
-export default function AjudaSearchInput() {
+interface iFormData {
+    key: string | undefined;
+}
+
+export default function AjudaSearchInput({ key }: iProps) {
+
+    useEffect(() => {
+        console.log(key);
+    }, [key]);
 
     const router = useRouter();
 
@@ -21,7 +30,7 @@ export default function AjudaSearchInput() {
     }
 
     const [formData, setFormData] = useState<iFormData>({
-        key: ''
+        key: key
     });
 
     function handleSearch() {
@@ -29,7 +38,7 @@ export default function AjudaSearchInput() {
             return;
         }
 
-        router.push(`/ajuda/busca?q=${formData.key}`);
+        router.push(`${ROUTES.ETC_AJUDA}/busca?q=${formData.key}`);
     }
 
     return (

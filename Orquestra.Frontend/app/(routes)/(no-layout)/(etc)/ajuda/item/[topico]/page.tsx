@@ -1,5 +1,5 @@
 'use client';
-import { HELP_TOPICS, iAjudaItem } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
+import { HELP_TOPICS, iAjudaItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
 import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';
