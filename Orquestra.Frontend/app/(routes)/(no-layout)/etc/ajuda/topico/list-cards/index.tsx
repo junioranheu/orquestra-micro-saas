@@ -1,4 +1,5 @@
 import { iAjudaTopico } from '@/app/(routes)/(no-layout)/etc/ajuda/page';
+import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
@@ -18,7 +19,7 @@ export default function AjudaListCards({ topics }: iProps) {
                     <div
                         key={i}
                         className={styles.topic}
-                        onClick={() => router.push(`/etc/ajuda/topico/${handleNormalizeUrl(handleNormalizeHtml(item?.topic))}`)}
+                        onClick={() => router.push(`${ROUTES.ETC_AJUDA}/topico/${handleNormalizeUrl(handleNormalizeHtml(item?.topic))}`)}
                     >
                         <div className={styles.title} dangerouslySetInnerHTML={{ __html: item?.topic }} />
                         <span className={styles.subtitle}>{item?.description}</span>

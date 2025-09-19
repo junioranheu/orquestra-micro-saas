@@ -34,7 +34,7 @@ export default function Topico() {
         <section className={styles.main}>
             <div className={`${styles.back} contrastOnHover`} onClick={() => router.push(ROUTES.ETC_AJUDA)}>
                 <Seta />
-                <span className='pointer contrastOnHover'>Voltar à central de ajuda</span>
+                <span className='pointer'>Voltar à central de ajuda</span>
             </div>
 
             <div>
