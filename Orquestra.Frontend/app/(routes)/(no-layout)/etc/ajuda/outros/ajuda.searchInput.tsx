@@ -1,0 +1,56 @@
+import styles from '@/app/(routes)/(no-layout)/etc/ajuda/page.module.scss';
+import InputMask from '@/app/components/input/text';
+import Lupa from '@/app/components/svg/lupa/lupa';
+import handleGetPropName from '@/app/functions/get.propName';
+import { handleInputFormStateChange } from '@/app/functions/set.formState';
+import { useRouter } from 'next/navigation';
+import { KeyboardEvent, useState } from 'react';
+
+interface iFormData {
+    key: string | null;
+}
+
+export default function AjudaSearchInput() {
+
+    const router = useRouter();
+
+    function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    }
+
+    const [formData, setFormData] = useState<iFormData>({
+        key: ''
+    });
+
+    function handleSearch() {
+        if (!formData.key) {
+            return;
+        }
+
+        router.push(`/ajuda/busca?q=${formData.key}`);
+    }
+
+    return (
+        <div className={styles.search}>
+            <InputMask
+                title='Busque aqui :)'
+                objectFormData={handleGetPropName(formData, x => x.key ?? '')}
+                placeholder='Procure por um tópico como "agendamento" ou "empresa", por exemplo'
+                type='text'
+                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                handleKeyDown={(e) => handleKeyDown(e)}
+            />
+
+            <div
+                className={`${styles.icon} contrastOnHover`}
+                title='Buscar tópico'
+                onClick={() => handleSearch()}
+            >
+                <Lupa />
+            </div>
+        </div>
+    )
+}
+

@@ -1,0 +1,89 @@
+.main {
+    // background-color: purple;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    row-gap: 1.25rem;
+    width: 80%;
+
+    .topic {
+        // background-color: blue;
+        flex: 1 0 30%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        max-width: 30%;
+        padding: 2rem 1.75rem;
+        border: 1px solid var(--gray-light);
+        box-shadow: 0 0 1px var(--gray-light);
+        border-radius: var(--border-radius);
+
+        cursor: pointer;
+
+        .title {
+            // background-color: red;
+            color: var(--black);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            white-space: nowrap;
+
+            b {
+                color: var(--main);
+            }
+        }
+
+        .subtitle {
+            // background-color: blue;
+            color: var(--black);
+            font-size: 0.9rem;
+            font-weight: 400;
+            min-height: 4rem;
+        }
+
+        .more {
+            // background-color: blue;
+            color: var(--contrast);
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            margin-top: auto;
+        }
+    }
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
+/* hi-res laptops and desktops */
+@media (max-width:1281px) {}
+
+/* big landscape tablets, laptops, and desktops */
+@media (max-width:1025px) {
+    .main {
+        // background-color: purple;
+
+        .topic {
+            // background-color: blue;
+            max-width: 40%;
+        }
+    }
+}
+
+/* tablet, landscape iPad, lo-res laptops ands desktops */
+@media (max-width:801px) {
+    .main {
+        // background-color: coral;
+
+        .topic {
+            // background-color: blue;
+            max-width: 100%;
+        }
+    }
+}
+
+/* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+@media (max-width:600px) {}
+
+/* smartphones, Android phones, landscape iPhone */
+@media (max-width:480px) {}

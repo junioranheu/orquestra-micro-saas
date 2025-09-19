@@ -1,0 +1,15 @@
+
+
+export default function Lupa() {
+    return (
+        <svg width={24} height={24} className='pointer'>
+            <defs>
+                <symbol id='svg-lupa' viewBox='0 0 24 24'>
+                    <path d='M23.28,19.86l-6.45-6.45a9,9,0,1,0-3.43,3.43l6.44,6.44a2.42,2.42,0,1,0,3.43-3.42ZM1,9a8,8,0,1,1,8,8A8,8,0,0,1,1,9ZM22.57,22.58a1.45,1.45,0,0,1-2,0l-6.29-6.29a9.06,9.06,0,0,0,2-2l6.3,6.3a1.41,1.41,0,0,1,0,2Z'></path>
+                </symbol>
+            </defs>
+            &gt;
+            <use xlinkHref='#svg-lupa' fill='currentColor'></use>
+        </svg>
+    )
+} 

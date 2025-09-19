@@ -96,6 +96,10 @@ svg {
     cursor: not-allowed !important;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .contrastOnHover {
     // background-color: orange;
     transition: 0.3s;

@@ -4,6 +4,7 @@ import { CookieDefault } from '@/app/components/cookie';
 import UpNav from '@/app/components/navbar/up-nav';
 import { HANKEN } from '@/app/fonts/fonts';
 import '@/app/styles/globals.scss';
+import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
 import { useEffect } from 'react';
 import { Toaster } from 'sonner';

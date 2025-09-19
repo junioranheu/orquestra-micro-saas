@@ -1,0 +1,31 @@
+.divItens {
+    // background-color: blue;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .item {
+        // background-color: red;
+        color: var(--preto);
+        font-size: 1.1rem;
+        font-weight: 400;
+        letter-spacing: 0.025rem;
+
+        padding-bottom: 2rem;
+        margin-bottom: 1.785rem;
+        border-bottom: 1px solid var(--bege);
+
+        .itemInner {
+            //  background-color: coral;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+
+            span {
+                // background-color: red;
+                width: fit-content;
+            }
+        }
+    }
+}

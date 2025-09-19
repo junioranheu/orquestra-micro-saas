@@ -1,0 +1,88 @@
+.main {
+    // background-color: coral;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+
+    .hero {
+        // background-color: red;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        margin-top: 5rem;
+
+        span {
+            color: var(--black);
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 2.5rem;
+            letter-spacing: 0.025rem;
+        }
+    }
+
+    .search {
+        // background-color: red;
+        width: 45%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        transition: width 0.3s;
+
+        input {
+            // background-color: red;
+
+            &:hover {
+                border-bottom: 1px solid var(--contrast);
+            }
+        }
+
+        .icon {
+            // background-color: blue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+    }
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
+/* hi-res laptops and desktops */
+@media (max-width:1281px) {
+    .main {
+        .search {
+            // background-color: red;
+            width: 80%;
+        }
+    }
+}
+
+/* big landscape tablets, laptops, and desktops */
+@media (max-width:1025px) {}
+
+/* tablet, landscape iPad, lo-res laptops ands desktops */
+@media (max-width:801px) {
+    .main {
+        .hero {
+            // background-color: blue;
+            gap: 1rem;
+
+            span {
+                font-size: 2.5rem;
+            }
+        }
+
+        .search {
+            // background-color: red;
+            width: 80%;
+        }
+    }
+}
+
+/* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+@media (max-width:600px) {}
+
+/* smartphones, Android phones, landscape iPhone */
+@media (max-width:480px) {}

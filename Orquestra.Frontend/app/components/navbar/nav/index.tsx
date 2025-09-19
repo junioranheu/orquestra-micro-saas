@@ -67,7 +67,7 @@ export default function Navbar() {
                             <span onClick={() => router.push(ROUTES.USUARIO_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
                         </Tippy>
 
-                        <Tippy content='Ajuda'>
+                        <Tippy content='Central de ajuda'>
                             <span className={styles.hideIfSmall} onClick={() => router.push(ROUTES.ETC_AJUDA)}><Icon icon='help-circle' weight='bold' /></span>
                         </Tippy>
 
