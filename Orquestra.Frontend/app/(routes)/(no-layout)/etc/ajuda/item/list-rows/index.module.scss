@@ -35,4 +35,23 @@
             }
         }
     }
+
+    .notFound {
+        // background-color: purple;
+        width: 70%;
+    }
+}
+
+
+/* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
+/* hi-res laptops and desktops */
+@media (max-width:1281px) {
+    .main {
+        // background-color: blue;
+
+        .notFound {
+            // background-color: purple;
+            width: 100%;
+        }
+    }
 }
