@@ -1,21 +1,22 @@
 .footer {
+    position: sticky;
+    top: 100vh;
+    background: var(--cream);
+    border-top: 1px solid var(--gray-light);
+    padding: 0 0 2.5rem 0;
+    margin-top: 5rem;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    width: 100%;
-    background-color: var(--cream);
-
-    margin-top: auto;
-    border-top: 1px solid var(--gray);
 
     .wrapper {
+        // background-color: orange;
         border-top: var(--border);
         width: 70vw;
         font-weight: 400;
         font-size: 0.85rem;
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+        padding: 2rem;
         display: flex;
         justify-content: space-between;
         color: var(--black);
@@ -38,16 +39,7 @@
 @media (max-width:1281px) {
     .footer {
         .wrapper {
-            // background-color: pink !important;
-            width: 90vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 18px;
-            padding-top: 21px;
-            margin-top: 3vw;
-            text-align: center;
+            display: none;
         }
     }
 }
