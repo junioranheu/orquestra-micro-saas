@@ -1,11 +1,11 @@
 .footer {
+    // background-color: orange !important;
     position: sticky;
     top: 100vh;
     background: var(--cream);
-    padding: 0 0 2.5rem 0;
+    padding: 0;
     border: 1px solid var(--gray-light);
     border-radius: var(--border-radius);
-    margin-top: 5rem;
 
     display: flex;
     justify-content: center;
@@ -37,13 +37,7 @@
 
 /* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
 /* hi-res laptops and desktops */
-@media (max-width:1281px) {
-    .footer {
-        .wrapper {
-            display: none;
-        }
-    }
-}
+@media (max-width:1281px) {}
 
 /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
 @media (max-width:600px) {}

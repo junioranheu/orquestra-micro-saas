@@ -60,10 +60,12 @@ body {
         max-height: 100vh;
 
         .children {
-            // background-color: purple;
+            // background-color: orange;
             padding: 0rem 2rem 2rem 2rem;
             overflow-y: auto;
-            height: 100%;
+
+            // Gambiarra monstra para exibir tudo;
+            height: 92%;
         }
     }
 }

@@ -63,12 +63,12 @@ export default function Navbar() {
                             )
                         }
 
-                        <Tippy content='Ajuda'>
-                            <span className={styles.hideIfSmall} onClick={() => router.push(ROUTES.ETC_AJUDA)}><Icon icon='help-circle' weight='bold' /></span>
-                        </Tippy>
-
                         <Tippy content='Notificações'>
                             <span onClick={() => router.push(ROUTES.USUARIO_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
+                        </Tippy>
+
+                        <Tippy content='Ajuda'>
+                            <span className={styles.hideIfSmall} onClick={() => router.push(ROUTES.ETC_AJUDA)}><Icon icon='help-circle' weight='bold' /></span>
                         </Tippy>
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>

@@ -1,6 +1,5 @@
 'use client';
 import Head from '@/app/(routes)/head';
-import Footer from '@/app/components/footer';
 import Loading from '@/app/components/loading';
 import Navbar from '@/app/components/navbar/nav';
 import UpNav from '@/app/components/navbar/up-nav';
@@ -45,8 +44,6 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
                                 <div className='children'>
                                     {children}
-
-                                    <Footer />
                                 </div>
                             </main>
                         </div>

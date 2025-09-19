@@ -3,6 +3,7 @@ import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import SvgUserEnvelope from '@/app/assets/svg/user-envelope.svg';
 import CardCalendar from '@/app/components/card/calendar';
 import CardSimple from '@/app/components/card/simple';
+import Footer from '@/app/components/footer';
 import ROUTES from '@/app/consts/routes';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
@@ -55,6 +56,8 @@ export default function Dashboard() {
                     buttonFunction={() => router.push(ROUTES.ETC_AJUDA)}
                 />
             </div>
+
+            <Footer />
         </section>
     )
 }

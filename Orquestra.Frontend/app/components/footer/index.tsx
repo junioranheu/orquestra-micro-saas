@@ -9,7 +9,7 @@ export default function Footer() {
         <footer className={Styles.footer}>
             <div className={Styles.wrapper}>
                 <span>
-                    Copyright © {new Date().getFullYear()} — <b>{SYSTEM.NAME}</b> — Desenvolvido por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>
+                    Copyright © {new Date().getFullYear()} — {SYSTEM.NAME} — Desenvolvido por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>
                 </span>
 
                 <div className={Styles.right}>
