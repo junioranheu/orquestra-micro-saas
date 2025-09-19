@@ -7,18 +7,39 @@ import ImgMeditation from '@/app/assets/webp/meditation.webp';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function AjudaBusca() {
 
     useTitle('Central de ajuda');
 
+    const router = useRouter();
     const [query, setQuery] = useState('');
 
     useEffect(() => {
-        const q = new URLSearchParams(window.location.search).get('q') ?? '';
-        setQuery(q);
-    }, []);
+        // Função para atualizar query
+        function handleUpdateQuery() {
+            const q = new URLSearchParams(window.location.search).get('q') ?? '';
+            setQuery(q);
+        };
+
+        handleUpdateQuery(); // Executa na montagem;
+
+        // Workaround: intercepta router.push para atualizar query;
+        const originalPush = router.push;
+
+        router.push = (url: string, ...args: any) => {
+            const result = originalPush(url, ...args);
+            handleUpdateQuery();
+
+            return result;
+        };
+
+        return () => {
+            router.push = originalPush;
+        }
+    }, [router]);
 
     const [filteredTopicItems, setFilteredTopicItems] = useState<iAjudaTopicoItem[]>();
 
