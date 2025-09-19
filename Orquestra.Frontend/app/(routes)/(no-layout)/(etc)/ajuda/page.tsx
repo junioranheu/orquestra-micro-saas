@@ -10,10 +10,10 @@ import AjudaListCards from './topico/list-cards';
 export interface iAjudaTopico {
     topic: string;
     description: string;
-    items: iAjudaItem[];
+    items: iAjudaTopicoItem[];
 }
 
-export interface iAjudaItem {
+export interface iAjudaTopicoItem {
     title: string;
     description: string;
 }
@@ -143,7 +143,7 @@ export default function Ajuda() {
                 </div>
             </div>
 
-            <AjudaSearchInput />
+            <AjudaSearchInput keySearch='' />
             <AjudaListCards topics={HELP_TOPICS} />
         </section>
     )

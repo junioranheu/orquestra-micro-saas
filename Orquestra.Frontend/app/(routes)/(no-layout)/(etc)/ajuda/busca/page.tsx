@@ -1,31 +1,47 @@
 'use client';
-import { HELP_TOPICS, iAjudaTopico } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
+import AjudaListRows from '@/app/(routes)/(no-layout)/(etc)/ajuda/item/list-rows';
+import { HELP_TOPICS, iAjudaTopicoItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
 import styles from '@/app/(routes)/(no-layout)/(etc)/ajuda/page.module.scss';
+import AjudaSearchInput from '@/app/(routes)/(no-layout)/(etc)/ajuda/seach-input';
 import ImgMeditation from '@/app/assets/webp/meditation.webp';
 import SYSTEM from '@/app/consts/system';
-import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function AjudaBusca() {
 
     useTitle('Central de ajuda');
-    const router = useRouter();
     const searchParams = useSearchParams();
     const query = searchParams.get('q');
 
-    const [filteredTopics, setFilteredTopics] = useState<iAjudaTopico[]>();
+    const [filteredTopicItems, setFilteredTopicItems] = useState<iAjudaTopicoItem[]>();
 
     useEffect(() => {
-        if (query) {
-            const filtered = HELP_TOPICS.filter(x =>
-                handleNormalizeUrl(handleNormalizeHtml(x?.topic)) === query.toString()
-            ) as iAjudaTopico[];
+        const queryLower = query?.toString().toLowerCase();
 
-            setFilteredTopics(filtered);
+        if (!queryLower) {
+            setFilteredTopicItems(HELP_TOPICS.flatMap(x => x.items));
+            return;
         }
+
+        const filteredItems = HELP_TOPICS.flatMap(topic => {
+            const topicMatch = topic.topic.toLowerCase().includes(queryLower);
+            const itemsMatch = topic.items.filter(item => item.title.toLowerCase().includes(queryLower));
+
+            if (topicMatch) {
+                return topic.items.map(item => ({ ...item, topic: topic.topic }));
+            }
+
+            if (itemsMatch.length > 0) {
+                return itemsMatch.map(item => ({ ...item, topic: topic.topic }));
+            }
+
+            return [];
+        });
+
+        setFilteredTopicItems(filteredItems);
     }, [query]);
 
     return (
@@ -38,21 +54,14 @@ export default function AjudaBusca() {
                 </div>
             </div>
 
-            {/* <AjudaSearchInput key={q?.toString()} /> */}
+            <AjudaSearchInput keySearch={query?.toString() ?? ''} />
 
-            {/* <div>
-                <span className='title'>Resultado da busca</span>
-                <br />
-                <span className={styles.textoPequeno}> {listaAjudasItens?.length ?? 0} {listaAjudasItens?.length === 1 ? 'resultado' : 'resultados'}</span>
+            <div className={styles.result}>
+                <span>Resultado da busca</span>
+                <span>{filteredTopicItems?.length ?? 0} {filteredTopicItems?.length === 1 ? 'resultado' : 'resultados'}</span>
             </div>
-            <span className='margem2'></span>
 
-            <AjudaListaItens
-                listaAjudasItens={listaAjudasItens}
-                queryBuscada={queryBuscada}
-                isMargemTop={false}
-                isExibirTopico={true}
-            /> */}
+            <AjudaListRows filteredTopicItems={filteredTopicItems} />
         </section>
     )
 }

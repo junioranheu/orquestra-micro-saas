@@ -41,7 +41,7 @@ export default function AjudaTopico() {
                 <div className={styles.title} dangerouslySetInnerHTML={{ __html: queryNormalized }} />
             </div>
 
-            <AjudaListRows filteredTopic={filteredTopic} />
+            <AjudaListRows filteredTopicItems={filteredTopic?.items} />
         </section>
     )
 }

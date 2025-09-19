@@ -3,7 +3,6 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    margin-top: 2rem;
 
     .item {
         // background-color: tomato;
@@ -11,6 +10,7 @@
         font-size: 1.1rem;
         font-weight: 400;
         letter-spacing: 0.025rem;
+        width: 100%;
 
         padding-bottom: 1rem;
         border-bottom: 1px solid var(--gray-light);
@@ -38,20 +38,11 @@
 
     .notFound {
         // background-color: purple;
-        width: 70%;
+        width: 100%;
     }
 }
 
 
 /* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
 /* hi-res laptops and desktops */
-@media (max-width:1281px) {
-    .main {
-        // background-color: blue;
-
-        .notFound {
-            // background-color: purple;
-            width: 100%;
-        }
-    }
-}
+@media (max-width:1281px) {}

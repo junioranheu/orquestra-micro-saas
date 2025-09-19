@@ -5,21 +5,17 @@ import ROUTES from '@/app/consts/routes';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import { useRouter } from 'next/navigation';
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 
 interface iProps {
-    key: string | undefined;
+    keySearch: string | undefined;
 }
 
 interface iFormData {
     key: string | undefined;
 }
 
-export default function AjudaSearchInput({ key }: iProps) {
-
-    useEffect(() => {
-        console.log(key);
-    }, [key]);
+export default function AjudaSearchInput({ keySearch }: iProps) {
 
     const router = useRouter();
 
@@ -30,14 +26,10 @@ export default function AjudaSearchInput({ key }: iProps) {
     }
 
     const [formData, setFormData] = useState<iFormData>({
-        key: key
+        key: keySearch
     });
 
     function handleSearch() {
-        if (!formData.key) {
-            return;
-        }
-
         router.push(`${ROUTES.ETC_AJUDA}/busca?q=${formData.key}`);
     }
 

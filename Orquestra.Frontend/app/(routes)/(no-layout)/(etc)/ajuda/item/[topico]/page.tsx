@@ -1,5 +1,5 @@
 'use client';
-import { HELP_TOPICS, iAjudaItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
+import { HELP_TOPICS, iAjudaTopicoItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
 import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';
@@ -16,12 +16,12 @@ export default function AjudaItem() {
     const params = useParams();
     const query = params.topico;
 
-    const [filteredTopicItem, setFilteredTopicItem] = useState<iAjudaItem | null>();
+    const [filteredTopicItem, setFilteredTopicItem] = useState<iAjudaTopicoItem | null>();
     const [originalTopic, setOriginalTopic] = useState<string>('');
 
-    function handleFindItem(title: string): iAjudaItem | null {
+    function handleFindItem(title: string): iAjudaTopicoItem | null {
         for (const topic of HELP_TOPICS) {
-            const item = topic.items.find(x => handleNormalizeUrl(handleNormalizeHtml(x?.title)) === title) as iAjudaItem;
+            const item = topic.items.find(x => handleNormalizeUrl(handleNormalizeHtml(x?.title)) === title) as iAjudaTopicoItem;
 
             if (item) {
                 setOriginalTopic(topic.topic);
