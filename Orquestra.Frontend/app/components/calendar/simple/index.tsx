@@ -10,9 +10,11 @@ import styles from './index.module.scss';
 interface iProps {
     isReadOnly: boolean;
     disablePastDays: boolean;
+    resetBorderRadiusRight?: boolean;
+    removeAllBorder?: boolean;
 }
 
-export default function CalendarSimple({ isReadOnly, disablePastDays }: iProps) {
+export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorderRadiusRight = false, removeAllBorder = false }: iProps) {
 
     const router = useRouter();
 
@@ -103,7 +105,19 @@ export default function CalendarSimple({ isReadOnly, disablePastDays }: iProps) 
     }, [selectedDate]);
 
     return (
-        <div className={styles.calendar}>
+        <div
+            className={styles.calendar}
+            style={{
+                ...(resetBorderRadiusRight && {
+                    borderTopRightRadius: 0,
+                    borderBottomRightRadius: 0,
+                    borderRight: 0
+                }),
+                ...(removeAllBorder && {
+                    border: 0
+                })
+            }}
+        >
             <div className={styles.calendarHeader}>
                 <button aria-label="Mês anterior" onClick={isReadOnly ? undefined : handlePrevMonth} className={`${styles.iconBtn} ${(isReadOnly && 'notAllowed')}`}>{'‹'}</button>
                 <div className={styles.title}>{handleCapitalizeFirstLetter(handleGetMonthNames()[viewDate.getMonth()])} de {viewDate.getFullYear()}</div>
@@ -147,4 +161,4 @@ export default function CalendarSimple({ isReadOnly, disablePastDays }: iProps) 
             </div>
         </div>
     )
-}
+} 

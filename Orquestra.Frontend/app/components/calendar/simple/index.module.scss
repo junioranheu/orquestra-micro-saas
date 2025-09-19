@@ -2,12 +2,15 @@
     // background-color: orange !important;
     background: #ffffff;
     width: fit-content;
-    height: fit-content;
+    height: 100%;
     min-width: 20rem;
     border: 1px solid var(--gray-light);
     border-radius: var(--border-radius);
     padding: 1rem;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+
+    display: flex;
+    flex-direction: column;
 
     .calendarHeader {
         display: flex;

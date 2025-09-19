@@ -28,47 +28,51 @@ export default function CardCalendar() {
             <CalendarSimple
                 isReadOnly={!hasAccessToSchedule}
                 disablePastDays={true}
+                resetBorderRadiusRight={true}
+                removeAllBorder={true}
             />
 
-            <div className={styles.panel}>
-                <div className={styles.panelInner}>
-                    <div className={styles.panelHeader}>
-                        <span>Comece a usar o {SYSTEM.NAME}</span>
-                    </div>
+            <div className={styles.flex}>
+                <div className={styles.panel}>
+                    <div className={styles.panelInner}>
+                        <div className={styles.panelHeader}>
+                            <span>Comece a usar o {SYSTEM.NAME}</span>
+                        </div>
 
-                    <div className={styles.steps}>
-                        {
-                            hasAccessToSchedule ? (
-                                <CardSimple
-                                    img={SvgOne}
-                                    isImgInsideOfCard={false}
-                                    title='Tudo certo!'
-                                    description='Sua empresa já possui o módulo de Agendamento. Comece a gerenciar seus compromissos agora mesmo.'
-                                />
-                            ) : (
-                                <CardSimple
-                                    img={SvgOne}
-                                    isImgInsideOfCard={false}
-                                    title='Não perca mais tempo!'
-                                    description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação clicando no botão abaixo:'
-                                    buttonLabel='Gerenciar situação da empresa'
-                                    buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
-                                />
-                            )
-                        }
+                        <div className={styles.steps}>
+                            {
+                                hasAccessToSchedule ? (
+                                    <CardSimple
+                                        img={SvgOne}
+                                        isImgInsideOfCard={false}
+                                        title='Tudo certo!'
+                                        description='Sua empresa já possui o módulo de Agendamento. Comece a gerenciar seus compromissos agora mesmo.'
+                                    />
+                                ) : (
+                                    <CardSimple
+                                        img={SvgOne}
+                                        isImgInsideOfCard={false}
+                                        title='Não perca mais tempo!'
+                                        description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação clicando no botão abaixo:'
+                                        buttonLabel='Gerenciar situação da empresa'
+                                        buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
+                                    />
+                                )
+                            }
 
-                        <CardSimple
-                            img={SvgTwo}
-                            isImgInsideOfCard={false}
-                            title='Simplifique a gestão da sua empresa'
-                            description='Gestão de horários simples, rápida e sem dor de cabeça. Seu negócio afinado como uma orquestra.'
-                            buttonLabel='Agendar compromissos'
-                            buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
-                            buttonDisabled={!hasAccessToSchedule}
-                        />
+                            <CardSimple
+                                img={SvgTwo}
+                                isImgInsideOfCard={false}
+                                title='Simplifique a gestão da sua empresa'
+                                description='Gestão de horários simples, rápida e sem dor de cabeça. Seu negócio afinado como uma orquestra.'
+                                buttonLabel='Agendar compromissos'
+                                buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
+                                buttonDisabled={!hasAccessToSchedule}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     )
-}
+} 
