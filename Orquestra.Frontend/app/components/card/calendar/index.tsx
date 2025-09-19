@@ -33,7 +33,7 @@ export default function CardCalendar() {
             <div className={styles.panel}>
                 <div className={styles.panelInner}>
                     <div className={styles.panelHeader}>
-                        <h2>Comece a usar o {SYSTEM.NAME}</h2>
+                        <span>Comece a usar o {SYSTEM.NAME}</span>
                     </div>
 
                     <div className={styles.steps}>
@@ -41,12 +41,14 @@ export default function CardCalendar() {
                             hasAccessToSchedule ? (
                                 <CardSimple
                                     img={SvgOne}
+                                    isImgInsideOfCard={false}
                                     title='Tudo certo!'
                                     description='Sua empresa já possui o módulo de Agendamento. Comece a gerenciar seus compromissos agora mesmo.'
                                 />
                             ) : (
                                 <CardSimple
                                     img={SvgOne}
+                                    isImgInsideOfCard={false}
                                     title='Não perca mais tempo!'
                                     description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação clicando no botão abaixo:'
                                     buttonLabel='Gerenciar situação da empresa'
@@ -57,8 +59,9 @@ export default function CardCalendar() {
 
                         <CardSimple
                             img={SvgTwo}
-                            title='Simplifique sua vida e a gestão da sua empresa'
-                            description='Gestão de horários simples, rápida e sem dor de cabeça. Agende agora seus compromissos em segundos. Seu negócio afinado como uma orquestra.'
+                            isImgInsideOfCard={false}
+                            title='Simplifique a gestão da sua empresa'
+                            description='Gestão de horários simples, rápida e sem dor de cabeça. Seu negócio afinado como uma orquestra.'
                             buttonLabel='Agendar compromissos'
                             buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
                             buttonDisabled={!hasAccessToSchedule}

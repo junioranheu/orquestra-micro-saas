@@ -9,39 +9,46 @@
     align-items: stretch;
 
     .panel {
+        // background-color: orange;
         flex: 1;
-        min-width: 360px;
         display: flex;
         align-items: stretch;
 
         .panelInner {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 100%);
+            // background-color: orange;
             border-radius: var(--border-radius);
             width: 100%;
-            padding: 18px;
             position: relative;
             overflow: visible;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 0.5rem;
 
             .panelHeader {
+                // background-color: orange;
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-                gap: 8px;
+                margin-bottom: 0.5rem;
 
-                h2 {
+                span {
                     margin: 0;
-                    font-size: 1.15rem;
-                    color: #111;
+                    font-size: 1.35rem;
+                    font-weight: 600;
+                    letter-spacing: 0.1px;
+                    color: var(--black);
                 }
             }
 
             .steps {
                 display: flex;
                 flex-direction: row;
-                gap: 2rem;
+                gap: 1rem;
+
+                >* {
+                    // background-color: tomato;
+                    width: 50%;
+                }
             }
         }
     }
