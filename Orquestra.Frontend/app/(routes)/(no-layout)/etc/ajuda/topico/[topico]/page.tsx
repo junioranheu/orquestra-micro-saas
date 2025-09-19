@@ -32,16 +32,16 @@ export default function Topico() {
 
     return (
         <section className={styles.main}>
-            <div className={styles.back} onClick={() => router.push(ROUTES.ETC_AJUDA)}>
+            <div className={`${styles.back} contrastOnHover`} onClick={() => router.push(ROUTES.ETC_AJUDA)}>
                 <Seta />
-                <span className='pointer'>Voltar à central de ajuda</span>
+                <span className='pointer contrastOnHover'>Voltar à central de ajuda</span>
             </div>
 
             <div>
                 <div className={styles.title} dangerouslySetInnerHTML={{ __html: queryNormalized }} />
             </div>
 
-            <AjudaListRows filteredTopic={filteredTopic} query='' showTopic={true} />
+            <AjudaListRows filteredTopic={filteredTopic} />
         </section>
     )
 }

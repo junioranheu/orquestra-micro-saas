@@ -6,11 +6,9 @@ import styles from './index.module.scss';
 
 interface iParametros {
     filteredTopic: iAjudaTopico | undefined;
-    query: string;
-    showTopic: boolean;
 }
 
-export default function AjudaListRows({ filteredTopic, query, showTopic }: iParametros) {
+export default function AjudaListRows({ filteredTopic }: iParametros) {
 
     return (
         <div className={styles.main}>
@@ -24,12 +22,6 @@ export default function AjudaListRows({ filteredTopic, query, showTopic }: iPara
                         <div className={styles.itemInner}>
                             <span className='pointer'>
                                 {item?.title}
-
-                                {
-                                    // showTopic && (
-                                    //     <span> / <span dangerouslySetInnerHTML={{ __html: item?.ajudasTopicos?.topico }} /></span>
-                                    // )
-                                }
                             </span>
 
                             <Seta />
@@ -40,4 +32,3 @@ export default function AjudaListRows({ filteredTopic, query, showTopic }: iPara
         </div>
     )
 }
-

@@ -6,7 +6,7 @@
     gap: 2rem;
 
     .hero {
-        // background-color: red;
+        // background-color: tomato;
         display: flex;
         align-items: center;
         gap: 1.25rem;
@@ -27,7 +27,7 @@
     }
 
     .search {
-        // background-color: red;
+        // background-color: tomato;
         width: 45%;
         display: flex;
         justify-content: center;
@@ -36,7 +36,7 @@
         transition: width 0.3s;
 
         input {
-            // background-color: red;
+            // background-color: tomato;
 
             &:hover {
                 border-bottom: 1px solid var(--contrast);
@@ -58,7 +58,7 @@
 @media (max-width:1281px) {
     .main {
         .search {
-            // background-color: red;
+            // background-color: tomato;
             width: 80%;
         }
     }
@@ -80,7 +80,7 @@
         }
 
         .search {
-            // background-color: red;
+            // background-color: tomato;
             width: 80%;
         }
     }

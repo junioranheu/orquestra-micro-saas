@@ -1,8 +1,12 @@
  .main {
-     background-color: coral;
+     //  background-color: coral;
+     padding: 5rem 2rem 2rem 2rem;
+
+     width: 60%;
+     margin: 0 auto;
 
      .back {
-         //  background-color: red;
+         //  background-color: tomato;
          display: flex;
          align-items: center;
          gap: 0.75rem;
@@ -14,5 +18,20 @@
          font-weight: 700;
          line-height: 2.5rem;
          letter-spacing: 0.025rem;
+         margin-top: 2rem;
      }
  }
+
+ // Media queries
+ // hi-res laptops and desktops 
+ @media (max-width:1281px) {
+     .main {
+         width: 90%;
+     }
+ }
+
+ // big landscape tablets, laptops, and desktops 
+ @media (max-width:1025px) {}
+
+ // tablet, landscape iPad, lo-res laptops ands desktops 
+ @media (max-width:801px) {}

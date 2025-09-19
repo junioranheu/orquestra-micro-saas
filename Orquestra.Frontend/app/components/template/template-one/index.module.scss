@@ -62,7 +62,8 @@
             text-align: center;
             position: relative;
             padding: 1rem 1.5rem;
-            background-color: transparent;
+            // background-color: transparent;
+            background-color: #ffffff;
             border-radius: 1rem;
             border: 1px solid var(--gray-light);
             box-shadow: var(--box-shadow);
@@ -75,7 +76,7 @@
                 transform: translateX(-50%);
                 border-width: 10px 10px 0 10px;
                 border-style: solid;
-                border-color: var(--main-light) transparent transparent transparent;
+                border-color: #ffffff transparent transparent transparent;
             }
         }
 

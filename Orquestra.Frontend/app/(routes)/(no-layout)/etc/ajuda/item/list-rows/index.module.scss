@@ -2,29 +2,36 @@
     // background-color: blue;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2rem;
+    margin-top: 2rem;
 
     .item {
-        // background-color: red;
-        color: var(--preto);
+        // background-color: tomato;
+        color: var(--black);
         font-size: 1.1rem;
         font-weight: 400;
         letter-spacing: 0.025rem;
 
-        padding-bottom: 2rem;
-        margin-bottom: 1.785rem;
-        border-bottom: 1px solid var(--bege);
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--gray-light);
 
         .itemInner {
-            //  background-color: coral;
+            // background-color: coral;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 2rem;
 
-            span {
-                // background-color: red;
+            span,
+            svg {
+                // background-color: tomato;
                 width: fit-content;
+
+                &:hover {
+                    // background-color: orange;
+                    color: var(--contrast);
+                    transition: 0.3s;
+                }
             }
         }
     }

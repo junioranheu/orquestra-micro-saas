@@ -1,5 +1,5 @@
 'use client';
-import LayoutTemplateOne from '@/app/components/layout/template-one';
+import LayoutTemplateOne from '@/app/components/template/template-one';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
 

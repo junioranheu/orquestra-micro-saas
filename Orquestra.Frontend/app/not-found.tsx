@@ -1,8 +1,8 @@
 'use client';
 import '@/app/styles/globals.scss';
 import { useEffect, useState } from 'react';
-import LayoutTemplateOne from './components/layout/template-one';
 import UpNav from './components/navbar/up-nav';
+import LayoutTemplateOne from './components/template/template-one';
 import { HANKEN } from './fonts/fonts';
 import useTitle from './hooks/useTitle';
 
