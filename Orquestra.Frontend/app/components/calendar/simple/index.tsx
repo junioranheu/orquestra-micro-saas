@@ -136,7 +136,7 @@ export default function CalendarSimple({ isReadOnly, disablePastDays }: iProps) 
                                 className={`${cls} ${(isReadOnly && 'notAllowed')}`}
                                 onClick={isReadOnly || isPastDay ? undefined : () => setSelectedDate(cell.date)}
                                 aria-pressed={handleIsSameDay(cell.date, selectedDate)}
-                                title={`${cell.date.toLocaleDateString()}`}
+                                // title={`${cell.date.toLocaleDateString()}`}
                                 disabled={isReadOnly || isPastDay}
                             >
                                 <span className={styles.dayNumber}>{cell.date.getDate()}</span>
