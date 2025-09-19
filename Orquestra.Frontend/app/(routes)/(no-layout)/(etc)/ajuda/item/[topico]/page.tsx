@@ -53,7 +53,7 @@ export default function AjudaItem() {
         <section className={styles.main}>
             <div
                 className={`${styles.back} contrastOnHover`}
-                onClick={() => router.push(`${ROUTES.ETC_AJUDA}/topico/${handleNormalizeUrl(handleNormalizeHtml(originalTopic))}`)}
+                onClick={() => router.push(`${ROUTES.ETC_AJUDA}/topico?t=${handleNormalizeUrl(handleNormalizeHtml(originalTopic))}`)}
             >
                 <Seta />
 

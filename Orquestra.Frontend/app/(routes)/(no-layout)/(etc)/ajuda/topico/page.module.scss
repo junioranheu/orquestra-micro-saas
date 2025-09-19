@@ -1,5 +1,5 @@
  .main {
-     background-color: coral;
+     //  background-color: coral;
      padding: 5rem 2rem 2rem 2rem;
 
      width: 60%;
@@ -24,11 +24,14 @@
      }
 
      .result {
-         // background-color: orange;
+         //  background-color: purple;
          display: flex;
          flex-direction: column;
-         font-size: 0.9rem;
-         width: 45%;
+
+         font-size: 0.75rem;
+         width: fit-content;
+         margin-top: 2rem;
+         margin-bottom: 2rem;
      }
  }
 

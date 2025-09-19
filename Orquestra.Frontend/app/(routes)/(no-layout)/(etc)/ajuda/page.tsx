@@ -3,9 +3,9 @@ import ImgMeditation from '@/app/assets/webp/meditation.webp';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
+import AjudaListCards from './components/list-cards';
+import AjudaSearchInput from './components/seach-input';
 import styles from './page.module.scss';
-import AjudaSearchInput from './seach-input';
-import AjudaListCards from './topico/list-cards';
 
 export interface iAjudaTopico {
     topic: string;

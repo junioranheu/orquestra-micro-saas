@@ -19,7 +19,7 @@ export default function AjudaListCards({ topics }: iProps) {
                     <div
                         key={i}
                         className={styles.topic}
-                        onClick={() => router.push(`${ROUTES.ETC_AJUDA}/topico/${handleNormalizeUrl(handleNormalizeHtml(item?.topic))}`)}
+                        onClick={() => router.push(`${ROUTES.ETC_AJUDA}/topico?t=${handleNormalizeUrl(handleNormalizeHtml(item?.topic))}`)}
                     >
                         <div className={styles.title} dangerouslySetInnerHTML={{ __html: item?.topic }} />
                         <span className={styles.subtitle}>{item?.description}</span>

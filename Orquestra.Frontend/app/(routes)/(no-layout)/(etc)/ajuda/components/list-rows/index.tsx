@@ -22,7 +22,7 @@ export default function AjudaListRows({ filteredTopicItems }: iParametros) {
                         <div
                             key={i}
                             className={styles.item}
-                            onClick={() => window.open(`${ROUTES.ETC_AJUDA}/item/${handleNormalizeUrl(item?.title)}`, '_blank')}
+                            onClick={() => router.push(`${ROUTES.ETC_AJUDA}/item/${handleNormalizeUrl(item?.title)}`)}
                         >
                             <div className={styles.itemInner}>
                                 <span className='pointer'>

@@ -25,44 +25,11 @@
             height: auto;
         }
     }
-
-    .search {
-        // background-color: tomato;
-        width: 45%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-        transition: width 0.3s;
-
-        input {
-            // background-color: tomato;
-
-            &:hover {
-                border-bottom: 1px solid var(--contrast);
-            }
-        }
-
-        .icon {
-            // background-color: blue;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-    }
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
 /* hi-res laptops and desktops */
-@media (max-width:1281px) {
-    .main {
-        .search {
-            // background-color: tomato;
-            width: 80%;
-        }
-    }
-}
+@media (max-width:1281px) {}
 
 /* big landscape tablets, laptops, and desktops */
 @media (max-width:1025px) {}
@@ -77,11 +44,6 @@
             span {
                 font-size: 2.5rem;
             }
-        }
-
-        .search {
-            // background-color: tomato;
-            width: 80%;
         }
     }
 }

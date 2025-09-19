@@ -1,4 +1,3 @@
-import styles from '@/app/(routes)/(no-layout)/(etc)/ajuda/page.module.scss';
 import InputMask from '@/app/components/input/text';
 import Lupa from '@/app/components/svg/lupa/lupa';
 import ROUTES from '@/app/consts/routes';
@@ -6,6 +5,7 @@ import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useState } from 'react';
+import styles from './index.module.scss';
 
 interface iProps {
     keySearch: string | undefined;
@@ -30,7 +30,7 @@ export default function AjudaSearchInput({ keySearch }: iProps) {
     });
 
     function handleSearch() {
-        router.push(`${ROUTES.ETC_AJUDA}/busca?q=${formData.key}`);
+        router.push(`${ROUTES.ETC_AJUDA}/topico?i=${formData.key}`);
     }
 
     return (
@@ -54,4 +54,3 @@ export default function AjudaSearchInput({ keySearch }: iProps) {
         </div>
     )
 }
-
