@@ -7,14 +7,18 @@ import ImgMeditation from '@/app/assets/webp/meditation.webp';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function AjudaBusca() {
 
     useTitle('Central de ajuda');
-    const searchParams = useSearchParams();
-    const query = searchParams.get('q');
+
+    const [query, setQuery] = useState('');
+
+    useEffect(() => {
+        const q = new URLSearchParams(window.location.search).get('q') ?? '';
+        setQuery(q);
+    }, []);
 
     const [filteredTopicItems, setFilteredTopicItems] = useState<iAjudaTopicoItem[]>();
 
