@@ -24,7 +24,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                 <Toaster expand={false} closeButton={false} />
                 <UpNav />
 
-                <main>
+                <main className='no-layout'>
                     {children}
 
                     <CookieDefault extenseButtonDescription={false} />

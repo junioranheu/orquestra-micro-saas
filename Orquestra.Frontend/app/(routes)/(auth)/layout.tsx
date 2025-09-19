@@ -29,12 +29,12 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                 <GlobalContextProvider>
                     <Head />
 
-                    <body className={HANKEN.className}>
+                    <body className={`body ${HANKEN.className}`}>
                         <Toaster expand={false} closeButton={false} />
                         <Loading typeMessage='normal' />
                         <UpNav />
 
-                        <div className='main-wrapper'>
+                        <div className='auth'>
                             <Sidebar />
 
                             <main>

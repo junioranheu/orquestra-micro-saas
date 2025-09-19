@@ -21,7 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                 <GlobalContextProvider>
                     <Head />
 
-                    <body className={HANKEN.className}>
+                    <body className={`body ${HANKEN.className}`}>
                         <Toaster expand={false} closeButton={false} />
                         <UpNav />
 
