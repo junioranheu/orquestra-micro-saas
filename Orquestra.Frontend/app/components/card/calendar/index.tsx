@@ -31,7 +31,7 @@ export default function CardCalendar() {
                 isReadOnly={!hasAccessToSchedule}
                 disablePastDays={true}
                 resetBorderRadiusRight={true}
-                removeAllBorder={true}
+                removerBorderRight={true}
             />
 
             <div className={styles.flex}>
