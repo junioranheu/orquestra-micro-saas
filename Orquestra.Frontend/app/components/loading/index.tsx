@@ -35,7 +35,7 @@ export default function Loading({ typeMessage = 'normal' }: iProps) {
     return (
         <section className={styles.main}>
             <div className={styles.loading}>
-                <Image src={ImgLoading} alt={'Carregando'} width={50} priority={true} unoptimized={true} />
+                <Image src={ImgLoading} alt='Carregando' width={50} priority={true} unoptimized={true} />
             </div>
         </section>
     )

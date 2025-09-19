@@ -492,7 +492,11 @@ input:-webkit-autofill {
 }
 
 // animate.css
-.animate__delay-0_1s {
+.animate__delay-0_5s {
+    animation-delay: 0.5s;
+}
+
+.animate__delay-faster {
     animation-delay: 0.1s;
 }
 

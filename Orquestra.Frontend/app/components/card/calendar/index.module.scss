@@ -7,10 +7,10 @@
 
     .flex {
         // background-color: purple !important;
-        // min-width: 100%;
+        width: 100%;
         display: flex;
         gap: 1.5rem;
-        padding: 1.25rem;
+        padding: 1rem;
         background: var(--cream);
         border-top-right-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
@@ -31,6 +31,8 @@
                 position: relative;
                 overflow: visible;
                 display: flex;
+                justify-content: center;
+                align-items: flex-start;
                 flex-direction: column;
                 gap: 0.5rem;
 
@@ -78,6 +80,11 @@
                 min-width: auto;
 
                 .panelInner {
+                    // background-color: orange;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
                     .steps {
                         flex-direction: column;
 

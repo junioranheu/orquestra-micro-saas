@@ -10,9 +10,10 @@ export type iProps = {
     buttonLabel?: string;
     buttonDisabled?: boolean;
     buttonFunction?: () => void;
+    className?: string;
 }
 
-export default function CardSimple({ img, isImgInsideOfCard = true, title, description, buttonLabel, buttonDisabled = false, buttonFunction }: iProps) {
+export default function CardSimple({ img, isImgInsideOfCard = true, title, description, buttonLabel, buttonDisabled = false, buttonFunction, className }: iProps) {
     return (
         <div className={styles.wrapper}>
             {
@@ -41,7 +42,7 @@ export default function CardSimple({ img, isImgInsideOfCard = true, title, descr
                         )
                     }
 
-                    <div className={styles.right}>
+                    <div className={`${styles.right} ${className}`}>
                         <h3 className={styles.title}>{title}</h3>
                         <p className={styles.description}>{description}</p>
 

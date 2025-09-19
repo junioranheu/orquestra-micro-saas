@@ -8,6 +8,7 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
@@ -16,6 +17,7 @@ export default function CardCalendar() {
 
     const me = useApiGetMe();
     const router = useRouter();
+    const windowSize = useWindowSize();
     const [hasAccessToSchedule, setHasAccessToSchedule] = useState<boolean>(false);
 
     useEffect(() => {
@@ -44,25 +46,26 @@ export default function CardCalendar() {
                                 hasAccessToSchedule ? (
                                     <CardSimple
                                         img={SvgOne}
-                                        isImgInsideOfCard={false}
+                                        isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
                                         title='Tudo certo!'
-                                        description='Sua empresa já possui o módulo de Agendamento. Comece a gerenciar seus compromissos agora mesmo.'
+                                        description={`A empresa ${me?.currentMainCompany?.name} já possui o módulo de Agendamento. Comece a gerenciar seus compromissos agora mesmo.`}
+                                        className={SYSTEM.ANIMATE_DELAY_0_5s}
                                     />
                                 ) : (
                                     <CardSimple
                                         img={SvgOne}
-                                        isImgInsideOfCard={false}
+                                        isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
                                         title='Não perca mais tempo!'
-                                        description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação clicando no botão abaixo:'
+                                        description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação abaixo:'
                                         buttonLabel='Gerenciar situação da empresa'
                                         buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
-                                    />
+                                        className={SYSTEM.ANIMATE_DELAY_0_5s} />
                                 )
                             }
 
                             <CardSimple
                                 img={SvgTwo}
-                                isImgInsideOfCard={false}
+                                isImgInsideOfCard={windowSize.width < 1281}
                                 title='Simplifique a gestão da sua empresa'
                                 description='Gestão de horários simples, rápida e sem dor de cabeça. Seu negócio afinado como uma orquestra.'
                                 buttonLabel='Agendar compromissos'
