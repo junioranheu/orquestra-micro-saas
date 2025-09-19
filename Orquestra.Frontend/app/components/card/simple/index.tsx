@@ -18,7 +18,7 @@ export default function CardSimple({ img, title, description, buttonLabel, butto
                 <div className={styles.left} aria-hidden>
                     {
                         img && (
-                            <Image src={img} alt='' />
+                            <Image src={img} alt='' priority={true} />
                         )
                     }
                 </div>

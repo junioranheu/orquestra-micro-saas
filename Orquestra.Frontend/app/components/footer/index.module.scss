@@ -1,0 +1,56 @@
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    background-color: var(--cream);
+
+    margin-top: auto;
+    border-top: 1px solid var(--gray);
+
+    .wrapper {
+        border-top: var(--border);
+        width: 70vw;
+        font-weight: 400;
+        font-size: 0.85rem;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        color: var(--black);
+
+        .right {
+            display: flex;
+
+            .icons {
+                // background-color: rebeccapurple;
+                display: flex;
+                justify-content: space-between;
+                gap: 1rem;
+            }
+        }
+    }
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
+/* hi-res laptops and desktops */
+@media (max-width:1281px) {
+    .footer {
+        .wrapper {
+            // background-color: pink !important;
+            width: 90vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 18px;
+            padding-top: 21px;
+            margin-top: 3vw;
+            text-align: center;
+        }
+    }
+}
+
+/* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+@media (max-width:600px) {}

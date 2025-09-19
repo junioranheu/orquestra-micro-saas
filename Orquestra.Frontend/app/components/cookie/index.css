@@ -122,7 +122,7 @@
 
 .cookie_widget_button_accept {
     color: #bb2030;
-    font-weight: bold;
+    /* font-weight: bold; */
     border-bottom-right-radius: 8px;
 }
 

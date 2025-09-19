@@ -20,12 +20,12 @@
             border: none;
             font-size: 1.05rem;
             padding: 6px 8px;
-            border-radius: var(--border-radius);
+            border-radius: 999px;
             cursor: pointer;
             color: #444;
 
             &:hover {
-                background: #f5f5f7;
+                background: #faf8ff;
             }
         }
 
