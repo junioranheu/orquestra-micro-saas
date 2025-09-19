@@ -96,6 +96,21 @@ svg {
     cursor: not-allowed !important;
 }
 
+.contrastOnHover {
+    // background-color: orange;
+    transition: 0.3s;
+
+    &:hover {
+        color: var(--contrast);
+        transition: 0.3s;
+
+        svg {
+            filter: var(--filter-contrast);
+            transition: 0s;
+        }
+    }
+}
+
 a {
     color: var(--contrast);
     text-decoration-line: underline;

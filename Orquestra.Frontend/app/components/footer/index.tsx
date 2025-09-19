@@ -16,13 +16,13 @@ export default function Footer() {
                     <div className={Styles.icons}>
                         <Tippy content='GitHub'>
                             <Link href={SYSTEM.URL_GITHUB} target='_blank'>
-                                <Icon icon='github' color='var(--gray-dark)' />
+                                <Icon icon='github' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>
 
                         <Tippy content='LinkedIn'>
                             <Link href={SYSTEM.URL_LINKEDIN} target='_blank'>
-                                <Icon icon='linkedin' color='var(--gray-dark)' />
+                                <Icon icon='linkedin' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>
                     </div>

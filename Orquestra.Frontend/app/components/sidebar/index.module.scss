@@ -1,13 +1,14 @@
 .sidebar {
     // background-color: orange !important;
-    width: 13.75rem;
+    min-width: 14.5rem;
+    max-width: 14.5rem;
     background-color: var(--main-light);
     height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 0.5rem 0;
     transition: transform 0.3s ease;
-    border-right: 1px solid var(--gray-light);
+    border-right: 2px solid #d8efe8;
 
     .brand {
         // background-color: orange;
@@ -44,13 +45,14 @@
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
-                padding: 0.75rem 1rem;
+
                 cursor: pointer;
                 color: var(--black);
-                border-left: 3px solid transparent;
+                border-left: 5px solid transparent; // Tem que ser igual o border-left do .active abaixo;
                 transition: background 0.2s, border 0.2s;
 
                 margin-bottom: 0.25rem;
+                padding: 0.75rem 1rem;
 
                 svg {
                     stroke: #444;
@@ -62,7 +64,7 @@
 
                 &.active {
                     background-color: #eafce8;
-                    border-left-color: var(--main);
+                    border-left: 5px solid var(--main);
                     font-weight: 500;
 
                     svg {

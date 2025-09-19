@@ -1,8 +1,9 @@
 .calendar {
+    // background-color: orange !important;
     background: #ffffff;
     width: fit-content;
     height: fit-content;
-    min-width: 22rem;
+    min-width: 20rem;
     border: 1px solid var(--gray-light);
     border-radius: var(--border-radius);
     padding: 1rem;
@@ -52,6 +53,7 @@
     }
 
     .days {
+        // background-color: orange;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         gap: 6px;
@@ -67,6 +69,7 @@
             place-items: center;
             position: relative;
             transition: transform 0.06s ease, background 0.12s ease;
+            font-family: inherit;
 
             &:hover {
                 transform: translateY(-2px);
@@ -74,6 +77,7 @@
             }
 
             .dayNumber {
+                // background-color: purple;
                 font-size: 0.95rem;
                 color: #222;
             }
@@ -112,10 +116,11 @@
     }
 }
 
-@media (max-width: 801px) {
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {
     .calendar {
-        // background: tomato !important;
-        min-width: 100%;
-        height: fit-content;
+        // background: purple !important;
+        display: none;
     }
 }
