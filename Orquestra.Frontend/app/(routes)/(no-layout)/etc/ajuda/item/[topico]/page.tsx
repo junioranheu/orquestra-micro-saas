@@ -10,11 +10,11 @@ import removerHTML from '../../../../utils/outros/removerHTML';
 import iAjudaItem from '../../../../utils/types/ajuda.item';
 import Styles from './item.module.scss';
 
-interface iParametros {
+interface iProps {
     ajudaItem: iAjudaItem;
 }
 
-export default function ItemAjuda({ ajudaItem }: iParametros) {
+export default function ItemAjuda({ ajudaItem }: iProps) {
 
     document.title = `${(ajudaItem?.titulo ?? 'Ajuda')} — ${CONSTS_SISTEMA.NOME_SISTEMA}`;
 

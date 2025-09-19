@@ -9,8 +9,8 @@ import CONSTS_SISTEMA from '../../../utils/consts/outros/sistema';
 import paginaCarregada from '../../../utils/outros/paginaCarregada';
 import iAjudaItem from '../../../utils/types/ajuda.item';
 import Styles from '../index.module.scss';
-import AjudaListaItens from '../item/outros/ajuda.listaItens';
-import AjudaInputPesquisaTopico from '../outros/ajuda.searchInput';
+import AjudaListaItens from '../item/list-rows';
+import AjudaInputPesquisaTopico from '../seach-input';
 
 export default function BuscaAjuda() {
 

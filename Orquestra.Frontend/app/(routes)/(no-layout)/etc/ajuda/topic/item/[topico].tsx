@@ -11,7 +11,7 @@ import paginaCarregada from '../../../../utils/outros/paginaCarregada';
 import removerHTML from '../../../../utils/outros/removerHTML';
 import iAjudaItem from '../../../../utils/types/ajuda.item';
 import iAjudaTopico from '../../../../utils/types/ajuda.topico';
-import AjudaListaItens from '../../item/outros/ajuda.listaItens';
+import AjudaListaItens from '../../item/list-rows';
 import Styles from './topico.module.scss';
 
 interface iParametros {

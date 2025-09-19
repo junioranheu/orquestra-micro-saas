@@ -1,19 +1,18 @@
  .main {
-    //   background-color: coral;
+     // background-color: coral;
 
-     .divVoltar {
+     .back {
          //  background-color: red;
          display: flex;
          align-items: center;
          gap: 0.75rem;
      }
 
-     .titulo {
-         color: var(--preto);
+     .title {
+         color: var(--black);
          font-size: 2.5rem;
          font-weight: 700;
          line-height: 2.5rem;
          letter-spacing: 0.025rem;
      }
  }
-
