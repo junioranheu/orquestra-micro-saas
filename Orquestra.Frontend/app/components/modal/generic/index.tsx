@@ -12,8 +12,8 @@ interface iProps {
     height?: string | number;
     borderRadius?: string | number;
     showCloseButton?: boolean;
-    customStyle?: CSSProperties;
-    customClass?: string;
+    className?: string;
+    style?: CSSProperties;
     overlayColor?: number;
     allowCloseOutsideClick?: boolean;
     title?: string;
@@ -35,8 +35,8 @@ export default function ModalGeneric({
     height = 'auto',
     borderRadius = 'var(--border-radius)',
     showCloseButton = true,
-    customStyle,
-    customClass,
+    className,
+    style = {},
     overlayColor = 0.2,
     allowCloseOutsideClick = true,
     title,
@@ -77,13 +77,13 @@ export default function ModalGeneric({
                     borderRadius,
                     top: customPosition?.top,
                     left: customPosition?.left,
-                    ...customStyle,
+                    ...style,
                 },
                 overlay: {
                     backgroundColor: `rgba(0, 0, 0, ${overlayColor})`,
                 }
             }}
-            className={`${styles.modal} ${customClass}`}
+            className={`${styles.modal} ${className}`}
             ariaHideApp={false}
         >
             {

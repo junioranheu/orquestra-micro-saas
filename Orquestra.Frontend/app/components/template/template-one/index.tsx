@@ -47,7 +47,7 @@ export default function LayoutTemplateOne({ svg, code, title, description, showS
 
                 <div className={styles.actions}>
                     <Button
-                        label='Voltar para o início'
+                        label='Voltar ao início'
                         icone_feather={<Icon icon='home' />}
                         handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
                         isBig={true}

@@ -46,7 +46,7 @@ export default function ModalSettings({ isOpen, setModalIsOpen, customPosition }
             customPosition={customPosition}
             showCloseButton={false}
             overlayColor={0}
-            customStyle={{ padding: 0, visibility: showContent ? 'visible' : 'hidden', }}
+            style={{ padding: 0, visibility: showContent ? 'visible' : 'hidden', }}
         >
             <ProfileMenu setModalIsOpen={setModalIsOpen} />
         </ModalGeneric>

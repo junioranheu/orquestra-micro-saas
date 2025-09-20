@@ -1,7 +1,7 @@
 import { Fetch } from '@/app/api/fetch';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import styles from '@/app/components/input/drop-down/index.module.scss';
-import { CSSProperties, Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';
 
@@ -11,8 +11,6 @@ interface iProps {
     setSelectedOption: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
     apiUrl: string;
     isStyleSimple?: boolean;
-    style?: CSSProperties;
-    showDefaultOption0?: boolean;
     placeholder?: string;
 }
 

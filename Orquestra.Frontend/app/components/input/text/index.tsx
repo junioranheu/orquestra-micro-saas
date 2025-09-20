@@ -24,7 +24,7 @@ interface iProps {
 }
 
 export default function InputMaskCustom({
-    objectFormData, title = '', type = 'text', classes = '', style, placeholder,
+    objectFormData, title = '', type = 'text', classes = '', style = {}, placeholder,
     isDisabled = false, minChar = 0, mask = '', showIcon = false, svg_component = null,
     svg_staticImageData = null,
     handleChange, handleExtraValidation = () => null, handleKeyDown = () => null, handleBlur = () => null

@@ -10,8 +10,8 @@ interface iProps {
 }
 
 export default function toast(props: iProps): number {
-    const { content, ms = 5000, title = '', triggerFunction = () => null, isClosable = true } = props;
 
+    const { content, ms = 5000, title = '', triggerFunction = () => null, isClosable = true } = props;
     const isSmallScreen = window.innerWidth <= 600;
 
     const style = {
