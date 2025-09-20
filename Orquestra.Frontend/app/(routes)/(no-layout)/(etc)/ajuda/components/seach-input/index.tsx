@@ -3,6 +3,7 @@ import Lupa from '@/app/components/svg/lupa/lupa';
 import ROUTES from '@/app/consts/routes';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange } from '@/app/functions/set.formState';
+import toast from '@/app/functions/toast';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useState } from 'react';
 import styles from './index.module.scss';
@@ -30,6 +31,11 @@ export default function AjudaSearchInput({ keySearch }: iProps) {
     });
 
     function handleSearch() {
+        if (!formData.key) {
+            toast({ content: 'O filtro não pode estar nulo.' });
+            return;
+        }
+
         router.push(`${ROUTES.ETC_AJUDA}/topico?i=${formData.key}`);
     }
 

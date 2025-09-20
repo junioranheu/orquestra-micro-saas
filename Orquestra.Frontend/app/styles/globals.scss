@@ -72,6 +72,29 @@
 .no-layout {
     // background: orange !important;
     height: 100vh !important;
+
+    .float-back-button {
+        width: 3rem;
+        height: 3rem;
+        color: var(--contrast);
+        background-color: var(--contrast-light);
+        border-radius: var(--border-radius);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: grab;
+        z-index: 9999;
+        transition: 0.3s;
+
+        &:hover {
+            opacity: 0.9;
+            transition: 0.3s;
+        }
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
 }
 
 // Misc

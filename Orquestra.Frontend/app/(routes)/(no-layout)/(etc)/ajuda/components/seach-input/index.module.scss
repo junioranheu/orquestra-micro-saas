@@ -11,7 +11,8 @@
     input {
         // background-color: tomato;
 
-        &:hover {
+        &:hover,
+        &:focus {
             border-bottom: 1px solid var(--contrast) !important;
         }
     }

@@ -6,16 +6,27 @@ import Seta from '@/app/components/svg/seta/seta';
 import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl from '@/app/functions/format.url';
 import useTitle from '@/app/hooks/useTitle';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Fragment, Suspense, useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
-export default function AjudaTopico() {
+export default function Page() {
 
     useTitle('Central de ajuda');
-    const router = useRouter();
 
-    const [queryTopico, setqueryTopico] = useState<string>('');
+    return (
+        <Suspense fallback={<div>Carregando...</div>}>
+            <AjudaTopico />
+        </Suspense>
+    )
+}
+
+export function AjudaTopico() {
+
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const [queryTopico, setQueryTopico] = useState<string>('');
     const [queryTopicoNormalized, setQueryTopicoNormalized] = useState<string>('');
 
     const [queryItem, setQueryItem] = useState<string>('');
@@ -23,36 +34,21 @@ export default function AjudaTopico() {
     const [filteredTopicItems, setFilteredTopicItems] = useState<iAjudaTopicoItem[] | undefined>();
 
     useEffect(() => {
-        // Função para atualizar os valores com base na URL;
-        function handleUpdateQuery() {
-            const url = window.location.search;
-            const topico = new URLSearchParams(url).get('t') ?? '';
+        const topico = searchParams.get('t') ?? '';
+        const item = searchParams.get('i') ?? '';
 
-            if (topico) {
-                setqueryTopico(topico);
-                return;
-            }
-
-            const item = new URLSearchParams(url).get('i') ?? '';
-            setQueryItem(item);
-        };
-
-        handleUpdateQuery(); // Executa na montagem;
-
-        // Workaround: intercepta router.push para atualizar a URL;
-        const originalPush = router.push;
-
-        router.push = (url: string, ...args: any) => {
-            const result = originalPush(url, ...args);
-            handleUpdateQuery();
-
-            return result;
-        };
-
-        return () => {
-            router.push = originalPush;
+        if (topico) {
+            setQueryTopico(topico);
+            setQueryItem('');
+            return;
         }
-    }, [router]);
+
+        if (item) {
+            setQueryItem(item);
+            setQueryTopico('');
+            return;
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         if (!queryTopico) {
@@ -68,7 +64,6 @@ export default function AjudaTopico() {
 
     useEffect(() => {
         if (!queryItem) {
-            // setFilteredTopicItems(HELP_TOPICS.flatMap(x => x.items));
             return;
         }
 
@@ -105,16 +100,17 @@ export default function AjudaTopico() {
 
             {
                 queryItem && (
-                    <div>
+                    <Fragment>
                         <AjudaSearchInput keySearch={queryItem?.toString() ?? ''} />
 
                         <div className={styles.result}>
                             <span>Resultado da busca</span>
                             <span>{filteredTopicItems?.length ?? 0} {filteredTopicItems?.length === 1 ? 'resultado' : 'resultados'}</span>
                         </div>
-                    </div>
+                    </Fragment>
                 )
             }
+
             <AjudaListRows filteredTopicItems={filteredTopicItems} />
         </section>
     )

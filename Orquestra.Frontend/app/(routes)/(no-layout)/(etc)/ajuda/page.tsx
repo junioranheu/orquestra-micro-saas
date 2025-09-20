@@ -20,110 +20,164 @@ export interface iAjudaTopicoItem {
 
 export const HELP_TOPICS = [
     {
-        topic: 'Conta e Acesso',
-        description: 'Tudo sobre criação de conta, login e gerenciamento do seu acesso ao Orquestra.',
+        topic: 'Criar Conta e Acesso',
+        description: `Tudo sobre como criar sua conta, login e segurança de acesso ao ${SYSTEM.NAME}.`,
         items: [
             {
                 title: 'Como criar uma conta?',
-                description: 'Clique em "Cadastrar" na tela inicial, preencha seus dados e confirme o e-mail enviado para ativar sua conta.'
+                description: 'Clique em "Cadastrar", preencha seus dados e confirme o e-mail enviado para ativar sua conta.'
             },
             {
                 title: 'Esqueci minha senha',
-                description: 'Na tela de login, clique em "Esqueci minha senha". Você receberá um link no seu e-mail para redefinir a senha.'
+                description: 'Na tela de login, clique em "Esqueci minha senha" e siga o link enviado para redefinir sua senha.'
             },
             {
-                title: 'Posso acessar em mais de um dispositivo?',
-                description: 'Sim, o Orquestra funciona tanto no computador quanto no celular, basta entrar com seu e-mail e senha.'
-            }
-        ]
-    },
-    {
-        topic: 'Agendamentos',
-        description: 'Gerencie seus horários, marque consultas e receba lembretes automáticos.',
-        items: [
-            {
-                title: 'Como marcar um horário?',
-                description: 'Acesse a aba "Agendamentos", escolha o serviço e o profissional desejado e confirme o horário disponível.'
-            },
-            {
-                title: 'Cancelar ou reagendar',
-                description: 'Clique sobre o agendamento e selecione "Cancelar" ou "Reagendar". O sistema notificará automaticamente o profissional.'
-            },
-            {
-                title: 'Recebo lembrete do agendamento?',
-                description: 'Sim! O Orquestra envia lembretes por e-mail e WhatsApp para evitar esquecimentos.'
-            }
-        ]
-    },
-    {
-        topic: 'Serviços e Profissionais',
-        description: 'Adicione, gerencie e organize seus serviços e a equipe que os atende.',
-        items: [
-            {
-                title: 'Adicionar novos serviços',
-                description: 'No painel administrativo, vá até "Serviços" e clique em "Adicionar". Defina nome, duração e preço do serviço.'
-            },
-            {
-                title: 'Gerenciar equipe',
-                description: 'Na seção "Profissionais", você pode cadastrar novos membros da equipe, definir horários e vincular serviços.'
-            },
-            {
-                title: 'Bloquear horários de um profissional',
-                description: 'Clique no calendário do profissional e marque o período como indisponível para evitar novos agendamentos.'
-            }
-        ]
-    },
-    {
-        topic: 'Pagamentos',
-        description: 'Configure métodos de pagamento, emita recibos e faça reembolsos facilmente.',
-        items: [
-            {
-                title: 'Como ativar pagamentos online?',
-                description: 'No painel, acesse "Configurações > Pagamentos" e conecte sua conta do provedor (ex: Stripe ou Mercado Pago).'
-            },
-            {
-                title: 'Emitir recibo para cliente',
-                description: 'Após concluir um pagamento, clique em "Gerar recibo" no histórico e envie por e-mail ou imprima.'
-            },
-            {
-                title: 'Reembolsos',
-                description: 'Se precisar reembolsar, acesse o histórico do pagamento e clique em "Reembolsar". O valor será devolvido ao cliente.'
-            }
-        ]
-    },
-    {
-        topic: 'Configurações',
-        description: 'Personalize sua agenda, identidade visual e notificações do Orquestra.',
-        items: [
-            {
-                title: 'Personalizar horários de funcionamento',
-                description: 'Em "Configurações > Agenda", defina os horários e dias da semana que sua empresa atende.'
-            },
-            {
-                title: 'Logotipo e identidade visual',
-                description: 'Você pode enviar seu logotipo e escolher as cores da interface para deixar o Orquestra com a cara da sua marca.'
-            },
-            {
-                title: 'Notificações automáticas',
-                description: 'Ative ou desative lembretes por e-mail e WhatsApp em "Configurações > Notificações".'
+                title: 'Acessar em mais de um dispositivo',
+                description: 'Sim, basta usar seu e-mail e senha no computador ou celular, o acesso é multi-dispositivo.'
             }
         ]
     },
     {
         topic: 'Clientes',
-        description: 'Gerencie seus clientes, histórico de agendamentos e importação de listas.',
+        description: 'Gerencie o cadastro, histórico e relacionamento com seus clientes.',
         items: [
             {
                 title: 'Cadastrar clientes manualmente',
-                description: 'Na aba "Clientes", clique em "Adicionar". Preencha nome, e-mail e telefone para manter tudo organizado.'
+                description: 'Na aba "Clientes", clique em "Adicionar" e preencha os dados como nome, telefone e e-mail.'
             },
             {
-                title: 'Histórico de agendamentos do cliente',
-                description: 'Clique no perfil de um cliente para ver todos os agendamentos, pagamentos e observações feitas.'
+                title: 'Histórico do cliente',
+                description: 'No perfil do cliente, visualize agendamentos, pagamentos e observações registradas.'
             },
             {
                 title: 'Importar lista de clientes',
-                description: 'Você pode importar um arquivo CSV com os dados dos seus clientes para agilizar o processo.'
+                description: 'Carregue um arquivo CSV para importar múltiplos clientes de uma vez.'
+            }
+        ]
+    },
+    {
+        topic: 'Agendamentos',
+        description: 'Controle seus horários, serviços e confirmações automáticas.',
+        items: [
+            {
+                title: 'Marcar um agendamento',
+                description: 'Acesse "Agendamentos", escolha serviço e profissional e confirme o horário disponível.'
+            },
+            {
+                title: 'Cancelar ou reagendar',
+                description: 'Abra o agendamento e selecione "Cancelar" ou "Reagendar". O cliente e o profissional são notificados automaticamente.'
+            },
+            {
+                title: 'Lembretes automáticos',
+                description: `O ${SYSTEM.NAME} envia notificações por e-mail e WhatsApp para evitar esquecimentos`
+            }
+        ]
+    },
+    {
+        topic: 'Financeiro',
+        description: 'Acompanhe pagamentos, relatórios e fluxo de caixa da sua empresa.',
+        items: [
+            {
+                title: 'Relatórios financeiros',
+                description: 'Veja relatórios de entrada e saída de valores por período para manter controle do seu negócio.'
+            },
+            {
+                title: 'Controle de recebimentos',
+                description: `Acompanhe todos os pagamentos feitos pelo ${SYSTEM.NAME}, inclusive pendentes e em processamento.`
+            },
+            {
+                title: 'Reembolsos e ajustes',
+                description: 'Se necessário, reembolse um pagamento diretamente pelo histórico financeiro.'
+            }
+        ]
+    },
+    {
+        topic: 'Membros e Equipe',
+        description: 'Gerencie os profissionais da sua equipe e seus acessos.',
+        items: [
+            {
+                title: 'Cadastrar novos membros',
+                description: 'Na aba "Membros", clique em "Adicionar" e defina permissões e serviços vinculados.'
+            },
+            {
+                title: 'Definir agenda de profissionais',
+                description: 'Cada membro pode ter seus horários de trabalho personalizados no calendário.'
+            },
+            {
+                title: 'Gerenciar permissões de acesso',
+                description: 'Controle quem pode acessar informações financeiras, agendamentos e configurações.'
+            }
+        ]
+    },
+    {
+        topic: 'Preços e Pagamentos',
+        description: 'Configure formas de pagamento, planos e emissão de recibos.',
+        items: [
+            {
+                title: 'Ativar pagamentos online',
+                description: 'Em "Configurações > Pagamentos", conecte sua conta do provedor (ex: Stripe ou Mercado Pago).'
+            },
+            {
+                title: 'Emitir recibo',
+                description: 'Após o pagamento, clique em "Gerar recibo" e envie por e-mail ou imprima.'
+            },
+            {
+                title: 'Definir preços de serviços',
+                description: 'Nos cadastros de serviços, insira valores que serão exibidos automaticamente no agendamento.'
+            }
+        ]
+    },
+    {
+        topic: 'LGPD e Privacidade',
+        description: `Saiba como o ${SYSTEM.NAME}} protege os dados de clientes e profissionais.`,
+        items: [
+            {
+                title: 'Consentimento de clientes',
+                description: 'Durante o cadastro, os clientes aceitam os termos de uso e privacidade conforme a LGPD.'
+            },
+            {
+                title: 'Armazenamento de dados',
+                description: 'Os dados são armazenados de forma segura, com criptografia e backups automáticos.'
+            },
+            {
+                title: 'Excluir dados pessoais',
+                description: 'Se um cliente solicitar, você pode remover todas as informações associadas ao perfil dele.'
+            }
+        ]
+    },
+    {
+        topic: 'Módulos',
+        description: `Entenda os diferentes módulos disponíveis no ${SYSTEM.NAME} e como utilizá-los.`,
+        items: [
+            {
+                title: 'Quais módulos estão disponíveis?',
+                description: `O ${SYSTEM.NAME} possui módulos de Agendamentos, Clientes, Financeiro, Membros e Configurações.`
+            },
+            {
+                title: 'Posso ativar ou desativar módulos?',
+                description: 'Sim, em "Configurações > Módulos" você pode ativar apenas os módulos que deseja utilizar.'
+            },
+            {
+                title: 'Novos módulos futuros',
+                description: 'Periodicamente adicionamos novos módulos para expandir as funcionalidades da plataforma.'
+            }
+        ]
+    },
+    {
+        topic: 'Segurança',
+        description: 'Veja como protegemos seus dados e garantimos acesso seguro à plataforma.',
+        items: [
+            {
+                title: 'Autenticação segura',
+                description: 'Todas as senhas são criptografadas e o sistema conta com autenticação multifator (2FA).'
+            },
+            {
+                title: 'Proteção de dados sensíveis',
+                description: 'As informações financeiras e pessoais são transmitidas com criptografia SSL/TLS.'
+            },
+            {
+                title: 'Controle de acessos',
+                description: 'Você pode limitar permissões de membros da equipe para proteger dados estratégicos.'
             }
         ]
     }
@@ -144,7 +198,7 @@ export default function Ajuda() {
             </div>
 
             <AjudaSearchInput keySearch='' />
-            <AjudaListCards topics={HELP_TOPICS} />
+            <AjudaListCards topics={[...HELP_TOPICS].sort((a, b) => a.topic.localeCompare(b.topic))} />
         </section>
     )
 }
