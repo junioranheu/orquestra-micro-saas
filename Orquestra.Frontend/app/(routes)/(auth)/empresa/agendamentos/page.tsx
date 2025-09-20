@@ -1,5 +1,7 @@
 'use client';
+import CalendarComplete from '@/app/components/calendar/complete';
 import useTitle from '@/app/hooks/useTitle';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './page.module.scss';
 
 export default function EmpresaAgendamentos() {
@@ -8,7 +10,7 @@ export default function EmpresaAgendamentos() {
 
     return (
         <section className={styles.main}>
-            <h1>Olá... Agendamentos</h1>
+            <CalendarComplete />
         </section>
     )
 }

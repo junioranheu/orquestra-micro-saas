@@ -5,6 +5,7 @@ import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
 import useCheckAzureServer from '@/app/hooks/useCheckAzureServer';
+import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import { ReactNode } from 'react';
@@ -13,6 +14,7 @@ import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
 
+    useStandardIntructions();
     useCheckAzureServer();
 
     return (

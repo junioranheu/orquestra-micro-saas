@@ -4,6 +4,7 @@ import { CookieDefault } from '@/app/components/cookie';
 import NavbarNotAuth from '@/app/components/navbar/nav-not-auth';
 import UpNav from '@/app/components/navbar/up-nav';
 import { HANKEN } from '@/app/fonts/fonts';
+import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
@@ -12,6 +13,8 @@ import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+
+    useStandardIntructions();
 
     useEffect(() => {
         feather.replace();

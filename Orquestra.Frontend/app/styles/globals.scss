@@ -531,6 +531,62 @@ input:-webkit-autofill {
     animation-delay: 0.1s;
 }
 
+// react-big-calendar 
+.rbc-calendar {
+    .rbc-event {
+        background-color: var(--main) !important;
+    }
+
+    .rbc-today {
+        background-color: var(--contrast-light) !important;
+    }
+
+    .rbc-month-view {
+        // background-color: orange !important;
+        border-radius: var(--border-radius) !important;
+    }
+
+    .rbc-month-view {
+        border: 1px solid var(--gray-light) !important;
+    }
+
+    .rbc-toolbar {
+        // background-color: purple !important;
+
+        .rbc-toolbar-label {
+            // background-color: orange !important;
+            text-transform: capitalize !important;
+            font-weight: 700 !important;
+        }
+
+        .rbc-btn-group {
+            border-radius: var(--border-radius) !important;
+
+            .rbc-active {
+                // background-color: orange !important;
+                background-color: var(--main-light) !important;
+                box-shadow: none !important;
+            }
+
+            button {
+                // background-color: orange !important;
+                transition: 0.3s !important;
+                border: 1px solid var(--gray-light) !important;
+
+                &:hover {
+                    background-color: var(--contrast-light) !important;
+                    transition: 0.3s !important;
+                }
+
+                &:focus {
+                    background-color: var(--main-light) !important;
+                    transition: 0.3s !important;
+                }
+            }
+        }
+    }
+}
+
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1281px) {}
