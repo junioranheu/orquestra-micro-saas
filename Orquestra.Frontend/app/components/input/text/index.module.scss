@@ -3,6 +3,12 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    font-family: inherit !important;
+
+    text-rendering: optimizelegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
 
     input {
         // background-color: orange !important;

@@ -88,11 +88,12 @@ $radius: 1.25rem;
 }
 
 // Media queries
-@media (max-width:1600px) {
+@media (max-width:1536px) {
     .main {
         // background: orange !important;
 
         .wrapper {
+            transform: scale(0.825);
             width: 70vw;
         }
     }
@@ -121,7 +122,7 @@ $radius: 1.25rem;
         // background: tomato !important;
 
         .wrapper {
-            width: 90vw;
+            width: 100%;
         }
     }
 }
@@ -132,6 +133,7 @@ $radius: 1.25rem;
         // background: yellow !important;
 
         .wrapper {
+            transform: scale(1);
             width: 100vw;
             border-radius: 0rem;
 
