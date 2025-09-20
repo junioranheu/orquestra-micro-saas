@@ -10,7 +10,7 @@ import Tippy from '@tippyjs/react';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
 
@@ -41,21 +41,47 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
 }
 
 export function FloatBackButton() {
-
     const router = useRouter();
-    const [pos, setPos] = useState<{ x: number; y: number }>({ x: 20, y: 20 });
+    const buttonRef = useRef<HTMLSpanElement>(null);
 
-    function handleMouseDown(e: React.MouseEvent) {
+    const localStorageItemName = 'floatBackButtonPos';
+    const [pos, setPos] = useState({ x: 20, y: 20 }); // Valor inicial seguro;
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem(localStorageItemName);
+
+            if (saved) {
+                setPos(JSON.parse(saved)); // Atualiza a posição do botão;
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (buttonRef.current) {
+            buttonRef.current.style.left = pos.x + 'px';
+            buttonRef.current.style.top = pos.y + 'px';
+        }
+    }, [pos]);
+
+    function handleMouseDown(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
         e.preventDefault();
 
         const shiftX = e.clientX - pos.x;
         const shiftY = e.clientY - pos.y;
 
         const moveAt = (ev: MouseEvent) => {
-            setPos({ x: ev.clientX - shiftX, y: ev.clientY - shiftY });
+            if (buttonRef.current) {
+                buttonRef.current.style.left = ev.clientX - shiftX + 'px';
+                buttonRef.current.style.top = ev.clientY - shiftY + 'px';
+            }
         };
 
-        const stopMoving = () => {
+        const stopMoving = (ev: MouseEvent) => {
+            const newPos = { x: ev.clientX - shiftX, y: ev.clientY - shiftY };
+            setPos(newPos); // Atualiza o state;
+            localStorage.setItem(localStorageItemName, JSON.stringify(newPos)); // Salva no localStorage;
+
             document.removeEventListener('mousemove', moveAt);
             document.removeEventListener('mouseup', stopMoving);
         };
@@ -67,10 +93,11 @@ export function FloatBackButton() {
     return (
         <Tippy content='Clique duas vezes para voltar ao início' placement='right'>
             <span
+                ref={buttonRef}
                 className='float-back-button'
-                style={{ position: 'fixed', top: pos.y, left: pos.x, }}
-                onDoubleClick={() => router.push(ROUTES.DASHBOARD)}
+                style={{ position: 'fixed', top: pos.y, left: pos.x }}
                 onMouseDown={handleMouseDown}
+                onDoubleClick={() => router.push(ROUTES.DASHBOARD)}
             >
                 <Icon icon='home' weight='bold' />
             </span>
