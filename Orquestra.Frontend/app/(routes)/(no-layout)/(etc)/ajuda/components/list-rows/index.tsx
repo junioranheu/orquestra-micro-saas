@@ -1,9 +1,7 @@
 import { iAjudaTopicoItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
-import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import handleNormalizeUrl from '@/app/functions/format.url';
-import { useRouter } from 'next/navigation';
+import swal from '@/app/functions/swal';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -12,7 +10,14 @@ interface iProps {
 
 export default function AjudaListRows({ filteredTopicItems }: iProps) {
 
-    const router = useRouter();
+    function handleOpenSwal(item: iAjudaTopicoItem) {
+        swal({
+            title: item.title,
+            str: item.description,
+            confirmBtnText: 'Entendi',
+            icon: 'info'
+        });
+    }
 
     return (
         <div className={styles.main}>
@@ -22,7 +27,8 @@ export default function AjudaListRows({ filteredTopicItems }: iProps) {
                         <div
                             key={i}
                             className={styles.item}
-                            onClick={() => router.push(`${ROUTES.ETC_AJUDA}/item/${handleNormalizeUrl(item?.title)}`)}
+                            // onClick={() => router.push(`${ROUTES.ETC_AJUDA}/item/${handleNormalizeUrl(item?.title)}`)}
+                            onClick={() => handleOpenSwal(item)}
                         >
                             <div className={styles.itemInner}>
                                 <span className='pointer'>
