@@ -7,7 +7,7 @@
 
     .flex {
         // background-color: purple !important;
-        width: 100%;
+        width: 100% !important;
         display: flex;
         gap: 1.5rem;
         padding: 1rem;
@@ -98,3 +98,17 @@
         }
     }
 }
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {
+    .wrapper {
+        // background-color: tomato !important;
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}

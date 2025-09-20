@@ -96,9 +96,9 @@
                 .dayNumber {
                     display: inline-grid;
                     place-items: center;
-                    width: 36px;
-                    height: 36px;
-                    background: var(--contrast);
+                    width: 2rem;
+                    height: 2rem;
+                    background: var(--main);
                     color: var(--white);
                     border-radius: 999px;
                     font-weight: 700;
@@ -122,7 +122,10 @@
 // hi-res laptops and desktops 
 @media (max-width:1281px) {
     .calendar {
-        // background: purple !important;
-        display: none;
+        // display: none;
+        width: 100%;
     }
 }
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}

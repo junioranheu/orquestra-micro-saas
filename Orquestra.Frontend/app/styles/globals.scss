@@ -14,7 +14,7 @@
     --gradient: linear-gradient(120deg, #e5e5e5, #f8f1f7, #d7e2d7, #eee7ce);
     --border-radius: 0.5rem;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05), 0 6px 20px rgba(0, 0, 0, 0.05);
-    --box-shadow-dark: 0 10px 40px rgba(0, 0, 0, 0.48), 0 4px 6px rgba(0, 0, 0, 0.04);
+    --box-shadow-dark: 0 10px 40px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.04);
     --filter-contrast: invert(34%) sepia(96%) saturate(942%) hue-rotate(219deg) brightness(84%) contrast(88%);
 }
 
@@ -337,7 +337,7 @@ input:-webkit-autofill {
     // background-color: orange !important;
     padding: 2.5rem 2rem !important;
     border-radius: var(--border-radius) !important;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--box-shadow-dark);
     font-family: inherit !important;
 
     .swal2-html-container {

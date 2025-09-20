@@ -11,11 +11,11 @@ interface iProps {
     isReadOnly: boolean;
     disablePastDays: boolean;
     resetBorderRadiusRight?: boolean;
-    removerBorderLeft?: boolean;
-    removerBorderRight?: boolean;
+    removeBorderLeft?: boolean;
+    removeBorderRight?: boolean;
 }
 
-export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorderRadiusRight = false, removerBorderLeft = false, removerBorderRight = false }: iProps) {
+export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorderRadiusRight = false, removeBorderLeft = false, removeBorderRight = false }: iProps) {
 
     const router = useRouter();
 
@@ -114,10 +114,10 @@ export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorde
                     borderBottomRightRadius: 0,
                     borderRight: 0
                 }),
-                ...(removerBorderLeft && {
+                ...(removeBorderLeft && {
                     borderLeft: 0
                 }),
-                ...(removerBorderRight && {
+                ...(removeBorderRight && {
                     borderRight: 0
                 })
             }}

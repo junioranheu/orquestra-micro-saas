@@ -75,3 +75,74 @@
         }
     }
 }
+
+// Media queries
+@media (max-width:1536px) {
+    .wrapper {
+        // background-color: orange !important;
+
+        .imgOutside {
+            // background-color: purple;
+            margin-right: 0;
+            position: relative;
+
+            img {
+                min-width: 3rem;
+                max-width: 3rem;
+                object-fit: contain;
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: 99999999999;
+            }
+        }
+
+        .card {
+            min-height: 15rem;
+
+            .inner {
+                // background-color: tomato;
+
+                .right {
+
+                    .actions {
+                        // background-color: purple;
+                        display: flex;
+                        justify-content: flex-end;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// hi-res laptops and desktops 
+@media (max-width:1281px) {
+    .wrapper {
+        .card {
+            min-height: 15rem;
+
+            .inner {
+                .right {
+                    .actions {
+                        // background-color: purple;
+                        display: flex;
+                        justify-content: flex-start;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}

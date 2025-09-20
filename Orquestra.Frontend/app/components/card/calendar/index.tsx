@@ -30,8 +30,8 @@ export default function CardCalendar() {
             <CalendarSimple
                 isReadOnly={!hasAccessToSchedule}
                 disablePastDays={true}
-                resetBorderRadiusRight={true}
-                removerBorderRight={true}
+                resetBorderRadiusRight={!windowSize.width ? true : windowSize.width > 1281}
+                removeBorderRight={!windowSize.width ? true : windowSize.width > 1281}
             />
 
             <div className={styles.flex}>
