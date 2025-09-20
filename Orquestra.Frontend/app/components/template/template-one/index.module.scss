@@ -2,10 +2,12 @@
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-color: transparent;
     font-family: inherit;
     padding: 2rem;
+
+    margin-top: 5rem;
 
     .inner {
         text-align: center;
@@ -100,4 +102,33 @@
     }
 }
 
-@media (max-width: 801px) {}
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {
+    .container {
+        // background: orange !important;
+
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 0rem;
+
+        .inner {
+
+            .errorIcon,
+            .successIcon {
+                display: none;
+            }
+
+            .code {
+                font-size: 2.5rem;
+            }
+        }
+    }
+}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {}

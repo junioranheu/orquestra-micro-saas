@@ -2,6 +2,7 @@
 import Head from '@/app/(routes)/head';
 import { CookieDefault } from '@/app/components/cookie';
 import NavbarNotAuth from '@/app/components/navbar/nav-not-auth';
+import UpNav from '@/app/components/navbar/up-nav';
 import { HANKEN } from '@/app/fonts/fonts';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
             <body className={HANKEN.className}>
                 <Toaster expand={false} closeButton={false} />
+                <UpNav />
 
                 <main className='no-layout'>
                     <header>
