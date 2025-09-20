@@ -144,7 +144,10 @@ export default function TableGeneric({
     const [animateClass, setAnimateClass] = useState<string>('');
 
     function handlePageChange(page: number) {
-        setCurrentPage && setCurrentPage(page);
+        if (setCurrentPage) {
+            setCurrentPage(page);
+        }
+
         setAnimateClass('');
 
         setTimeout(() => {

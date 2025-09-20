@@ -40,7 +40,7 @@ const CookieWidget = (props: iCookieWidgetProps) => {
 
     const [isVisible, setIsVisible] = useState(false);
 
-    const _handleScroll = (e: Event): void => {
+    const _handleScroll = (): void => {
         console.log(window.scrollY);
         if (isVisible && window.scrollY > 150) {
             _onAccept();
@@ -60,7 +60,7 @@ const CookieWidget = (props: iCookieWidgetProps) => {
         return () => {
             window.removeEventListener('scroll', _handleScroll);
         }
-    }, []);
+    }, [_handleScroll, props.hideOnScrollDown]);
 
     const setCookie = (cookieValue: string) => {
         let { cookieSecurity } = props;

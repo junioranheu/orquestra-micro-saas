@@ -33,7 +33,7 @@ export default function Carousel({ items, autoSlideInterval = 5000, mustShuffle,
         } else if (!mustShuffle && !shuffledItems?.length) {
             setShuffledItems(items);
         }
-    }, [items, mustShuffle]);
+    }, [items, mustShuffle, shuffledItems?.length]);
 
     useEffect(() => {
         if (mustHideButtonsIfSmallScreen) {
@@ -42,13 +42,13 @@ export default function Carousel({ items, autoSlideInterval = 5000, mustShuffle,
         }
     }, [mustHideButtonsIfSmallScreen, windowSize]);
 
+    const nextImage = () => setCurrent((prev) => (prev + 1) % items.length);
+    const prevImage = () => setCurrent((prev) => (prev - 1 + items.length) % items.length);
+
     useEffect(() => {
         const interval = setInterval(nextImage, autoSlideInterval);
         return () => clearInterval(interval);
-    }, [items, autoSlideInterval]);
-
-    const nextImage = () => setCurrent((prev) => (prev + 1) % items.length);
-    const prevImage = () => setCurrent((prev) => (prev - 1 + items.length) % items.length);
+    }, [items, autoSlideInterval, nextImage]);
 
     if (!items || items?.length === 0) {
         return null;

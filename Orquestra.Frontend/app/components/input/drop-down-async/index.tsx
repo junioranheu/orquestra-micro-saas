@@ -35,7 +35,7 @@ export default function DropdownAsync({
             // console.log(response);
 
             return response;
-        } catch (error: unknown) {
+        } catch {
             return [];
         }
     }

@@ -51,8 +51,8 @@ export function handleLoopFormData(formData: any, dropDownWhichValue: 'value' | 
         } else {
             for (const key in formData) {
                 if (!hideNull || formData[key] !== null) {
-                    const item = `${key}: ${formData[key]}`;
-                    log && console.log(item);
+                    // const item = `${key}: ${formData[key]}`;
+                    // log && console.log(item);
 
                     let data = formData[key];
 
