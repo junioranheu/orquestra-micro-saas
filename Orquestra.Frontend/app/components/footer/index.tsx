@@ -4,9 +4,16 @@ import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import Styles from './index.module.scss';
 
-export default function Footer() {
+interface iProps {
+    resetBorderRadius?: boolean;
+}
+
+export default function Footer({ resetBorderRadius = false }: iProps) {
     return (
-        <footer className={Styles.footer}>
+        <footer
+            className={Styles.footer}
+            style={resetBorderRadius ? { borderRadius: 0 } : {}}
+        >
             <div className={Styles.wrapper}>
                 <span>
                     Copyright © {new Date().getFullYear()} — {SYSTEM.NAME} — Desenvolvido por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>

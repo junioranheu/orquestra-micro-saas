@@ -2,6 +2,7 @@ import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import useDisableScroll from '@/app/hooks/useDisableScroll';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
 
@@ -16,6 +17,7 @@ interface iProps {
 export default function LayoutTemplateOne({ svg, code, title, description, showSupportContact }: iProps) {
 
     const router = useRouter();
+    useDisableScroll();
 
     return (
         <main className={styles.container}>

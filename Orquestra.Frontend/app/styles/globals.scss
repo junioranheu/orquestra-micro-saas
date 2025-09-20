@@ -71,12 +71,23 @@
 
 .no-layout {
     // background: orange !important;
-    height: calc(100vh + 2rem) !important;
+    height: 100vh;
+    flex-grow: 1;
+    min-height: 100vh;
+    max-height: 100vh;
 
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+
+
+    .children {
+        // background-color: orange !important;
+        background: transparent;
+        padding: 0rem 0rem 2rem 0rem;
+        overflow-y: auto;
+    }
 }
 
 // Misc

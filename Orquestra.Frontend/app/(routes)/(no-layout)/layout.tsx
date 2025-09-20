@@ -28,7 +28,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                         <NavbarNotAuth />
                     </header>
 
-                    <div>
+                    <div className='children'>
                         {children}
                     </div>
 
