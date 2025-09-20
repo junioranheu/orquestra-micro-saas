@@ -3,7 +3,7 @@ import SYSTEM from '@/app/consts/system';
 import handleShuffleArray from '@/app/functions/shuffle.array';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import Image, { StaticImageData } from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -42,13 +42,18 @@ export default function Carousel({ items, autoSlideInterval = 5000, mustShuffle,
         }
     }, [mustHideButtonsIfSmallScreen, windowSize]);
 
-    const nextImage = () => setCurrent((prev) => (prev + 1) % items.length);
-    const prevImage = () => setCurrent((prev) => (prev - 1 + items.length) % items.length);
+    const nextImage = useCallback(() => {
+        setCurrent((prev) => (prev + 1) % items.length);
+    }, [items.length]);
+
+    const prevImage = useCallback(() => {
+        setCurrent((prev) => (prev - 1 + items.length) % items.length);
+    }, [items.length]);
 
     useEffect(() => {
         const interval = setInterval(nextImage, autoSlideInterval);
         return () => clearInterval(interval);
-    }, [items, autoSlideInterval, nextImage]);
+    }, [autoSlideInterval, nextImage]);
 
     if (!items || items?.length === 0) {
         return null;
