@@ -26,7 +26,7 @@ export default function useCheckAzureServer() {
                 await Fetch.get({ url: CONSTS_UTILITY.getBuildVersion });
             } catch (error: unknown) {
                 const errorMsg = error instanceof Error ? error.message : String(error);
-                swal({ str: errorMsg });
+                swal({ content: errorMsg });
             } finally {
                 setLoading(false);
 

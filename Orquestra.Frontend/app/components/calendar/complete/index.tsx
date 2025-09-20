@@ -1,8 +1,9 @@
+import swal from '@/app/functions/swal';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Guid } from 'guid-typescript';
 import { useState } from 'react';
-import { Calendar, dateFnsLocalizer, Event as RBCEvent, View } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer, Event as RBCEvent, SlotInfo, View } from 'react-big-calendar';
 import styles from './index.module.scss';
 
 export interface iEvent extends RBCEvent {
@@ -50,6 +51,33 @@ export default function CalendarComplete({ events }: iProps) {
     const [date, setDate] = useState<Date>(new Date());
     const [view, setView] = useState<View>('month');
 
+    function handleAddNewEvent(event: SlotInfo) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const slotDate = new Date(event.start);
+        slotDate.setHours(0, 0, 0, 0);
+
+        if (slotDate < today) {
+            swal({ content: 'Não é possível agendar um compromisso numa data passada.', icon: 'error' });
+            return;
+        }
+
+        const newEvent = {
+            scheduleId: Guid.create(),
+            title: 'Novo Evento',
+            start: event.start,
+            end: event.end,
+            allDay: true,
+        } as iEvent;
+
+        console.log('Novo evento:', event.start.toLocaleDateString('pt-BR'), event);
+        console.log('newEvent:', newEvent);
+    }
+
+    function handleCheckEvent(event: iEvent) {
+        console.log('Clicou no evento:', event);
+    }
+
     return (
         <div className={styles.calendar}>
             <Calendar
@@ -66,14 +94,8 @@ export default function CalendarComplete({ events }: iProps) {
                 culture='pt-BR'
                 messages={messages}
                 selectable={true}
-                onSelectSlot={(slotInfo) => {
-                    // slotInfo tem start, end, slots
-                    console.log('Clicou no dia:', slotInfo.start);
-                    alert(`Você clicou em ${slotInfo.start.toLocaleDateString('pt-BR')}`);
-                }}
-                onSelectEvent={(event) => {
-                    console.log('Clicou no evento:', event.title);
-                }}
+                onSelectSlot={(e) => handleAddNewEvent(e)}
+                onSelectEvent={(e) => handleCheckEvent(e)}
             />
         </div>
     )

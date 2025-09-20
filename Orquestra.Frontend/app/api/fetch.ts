@@ -96,7 +96,7 @@ export const Fetch = {
                 const blob = await response.blob();
 
                 if (!blob.size) {
-                    swal({ str: 'Não foi possível gerar o arquivo.', icon: 'error' });
+                    swal({ content: 'Não foi possível gerar o arquivo.', icon: 'error' });
                     throw new Error('Null blob.');
                 }
 
@@ -115,13 +115,13 @@ export const Fetch = {
 
             // Forbidden;
             if (response.status === 403) {
-                swal({ str: 'Você não tem permissão para acessar este recurso.', icon: 'error' });
+                swal({ content: 'Você não tem permissão para acessar este recurso.', icon: 'error' });
                 return;
             }
 
             // Too many requests (429);
             if (response.status === 429) {
-                swal({ str: 'O sistema recebeu muitas solicitações em um curto período de tempo. Aguarde alguns instantes antes de tentar novamente.', icon: 'error' });
+                swal({ content: 'O sistema recebeu muitas solicitações em um curto período de tempo. Aguarde alguns instantes antes de tentar novamente.', icon: 'error' });
                 return;
             }
 
@@ -145,7 +145,7 @@ export const Fetch = {
                     resErrorStr = JSON.stringify(resError) || response.statusText;
                 }
 
-                swal({ str: resErrorStr, icon: 'error' });
+                swal({ content: resErrorStr, icon: 'error' });
                 return;
             }
 
@@ -189,7 +189,7 @@ export const Fetch = {
             };
 
             console.table(errorData);
-            swal({ str: error, icon: 'error' });
+            swal({ content: error, icon: 'error' });
 
             throw new Error(error?.message ?? error?.statusText);
         } finally {

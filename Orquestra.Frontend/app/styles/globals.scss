@@ -565,6 +565,10 @@ input:-webkit-autofill {
             // background-color: orange !important;
             border: 1px solid var(--gray-light) !important;
         }
+
+        .rbc-agenda-empty {
+            padding: 1rem !important;
+        }
     }
 
     .rbc-toolbar {

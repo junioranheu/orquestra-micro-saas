@@ -51,7 +51,7 @@ export default function Login() {
         setIsRequestLoading(true);
 
         if (!formData.email || !formData.password) {
-            swal({ str: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
+            swal({ content: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
             setIsRequestLoading(false);
             return;
         }

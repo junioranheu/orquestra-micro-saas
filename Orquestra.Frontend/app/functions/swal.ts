@@ -2,7 +2,7 @@ import Swal, { SweetAlertResult } from 'sweetalert2';
 
 interface iProps {
     title?: string;
-    str?: string;
+    content?: string;
     cancelBtnText?: string;
     cancelFunction?: () => void;
     confirmBtnText?: string;
@@ -13,11 +13,11 @@ interface iProps {
 
 export default function swal(options: iProps): Promise<any> {
     return new Promise((resolve) => {
-        const { title, str, cancelBtnText, cancelFunction, confirmBtnText = 'Ok', confirmFunction, allowOutsideClick = false, icon = undefined } = options;
+        const { title, content, cancelBtnText, cancelFunction, confirmBtnText = 'Ok', confirmFunction, allowOutsideClick = false, icon = undefined } = options;
 
         Swal.fire({
             title: title,
-            html: str?.toString()?.replace(/^Error:\s*/, ''),
+            html: content?.toString()?.replace(/^Error:\s*/, ''),
             icon: icon,
             allowOutsideClick: allowOutsideClick,
             reverseButtons: true,
