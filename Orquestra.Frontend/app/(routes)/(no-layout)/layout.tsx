@@ -6,11 +6,11 @@ import { HANKEN } from '@/app/fonts/fonts';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
 
-export default function RootLayout({ children, }: { children: React.ReactNode; }) {
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
 
     useEffect(() => {
         feather.replace();
