@@ -24,7 +24,7 @@ export default async function handleFileCSVExport(params: iProps): Promise<boole
         setIsRequestLoading(false);
 
         await swal({
-            str: messageError,
+            content: messageError,
             icon: 'error'
         });
 
@@ -34,7 +34,7 @@ export default async function handleFileCSVExport(params: iProps): Promise<boole
     setIsRequestLoading(false);
 
     await swal({
-        str: messageSuccess,
+        content: messageSuccess,
         icon: 'success'
     });
 

@@ -172,7 +172,7 @@ export const Fetch = {
 
             if (isApiOffline) {
                 swal({
-                    str: 'Não foi possível conectar ao servidor. Aparentemente a API está indisponível. Tente novamente mais tarde.',
+                    content: 'Não foi possível conectar ao servidor. Aparentemente a API está indisponível. Tente novamente mais tarde.',
                     confirmFunction: () => location.reload(),
                     allowOutsideClick: false,
                     icon: 'error'

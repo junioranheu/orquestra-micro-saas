@@ -71,7 +71,7 @@ export default function CriarConta() {
             router.push(ROUTES.LOGIN);
 
             swal({
-                str: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta usando o e-mail que foi enviado para ${formData.email}</b>.`,
+                content: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta usando o e-mail que foi enviado para ${formData.email}</b>.`,
                 icon: 'success'
             });
         } catch {

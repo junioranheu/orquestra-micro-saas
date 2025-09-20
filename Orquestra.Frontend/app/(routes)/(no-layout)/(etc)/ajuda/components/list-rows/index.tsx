@@ -13,7 +13,7 @@ export default function AjudaListRows({ filteredTopicItems }: iProps) {
     function handleOpenSwal(item: iAjudaTopicoItem) {
         swal({
             title: item.title,
-            str: item.description,
+            content: item.description,
             confirmBtnText: 'Entendi',
             icon: 'info'
         });

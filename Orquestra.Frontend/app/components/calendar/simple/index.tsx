@@ -96,7 +96,7 @@ export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorde
         const isoDate = selectedDate?.toISOString().split('T')[0];
 
         swal({
-            str: `Você quer agendar um novo compromisso para a ${handleFormatDate(selectedDate ?? undefined, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES)}?`,
+            content: `Você quer agendar um novo compromisso para a ${handleFormatDate(selectedDate ?? undefined, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES)}?`,
             cancelBtnText: 'Voltar',
             cancelFunction: () => setSelectedDate(null),
             confirmBtnText: 'Agendar',
