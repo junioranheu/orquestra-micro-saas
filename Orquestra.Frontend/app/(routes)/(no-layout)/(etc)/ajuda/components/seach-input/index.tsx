@@ -43,9 +43,10 @@ export default function AjudaSearchInput({ keySearch }: iProps) {
         <div className={styles.search}>
             <InputMask
                 title='Busque aqui :)'
+                type='text'
+                style={{ padding: 0 }}
                 objectFormData={handleGetPropName(formData, x => x.key ?? '')}
                 placeholder='Procure por um tópico como "agendamento" ou "empresa", por exemplo'
-                type='text'
                 handleChange={(e) => handleInputFormStateChange(e, setFormData)}
                 handleKeyDown={(e) => handleKeyDown(e)}
             />

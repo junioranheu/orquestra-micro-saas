@@ -6,11 +6,11 @@ import handleNormalizeUrl from '@/app/functions/format.url';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
 
-interface iParametros {
+interface iProps {
     filteredTopicItems: iAjudaTopicoItem[] | undefined;
 }
 
-export default function AjudaListRows({ filteredTopicItems }: iParametros) {
+export default function AjudaListRows({ filteredTopicItems }: iProps) {
 
     const router = useRouter();
 

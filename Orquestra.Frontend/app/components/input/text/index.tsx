@@ -1,13 +1,14 @@
 import Image, { StaticImageData } from 'next/image';
-import { ChangeEvent, FocusEventHandler, KeyboardEventHandler, ReactNode, cloneElement, useEffect, useState } from 'react';
+import { CSSProperties, ChangeEvent, FocusEventHandler, KeyboardEventHandler, ReactNode, cloneElement, useEffect, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import styles from './index.module.scss';
 
-interface iParametros {
+interface iProps {
     objectFormData: [any, string];
     title?: string;
     type?: 'text' | 'password' | 'email' | 'number' | 'date';
     classes?: string;
+    style?: CSSProperties;
     placeholder?: string;
     isDisabled?: boolean;
     minChar?: number;
@@ -23,11 +24,11 @@ interface iParametros {
 }
 
 export default function InputMaskCustom({
-    objectFormData, title = '', type = 'text', classes = '', placeholder,
+    objectFormData, title = '', type = 'text', classes = '', style, placeholder,
     isDisabled = false, minChar = 0, mask = '', showIcon = false, svg_component = null,
     svg_staticImageData = null,
     handleChange, handleExtraValidation = () => null, handleKeyDown = () => null, handleBlur = () => null
-}: iParametros) {
+}: iProps) {
 
     const form_formData = objectFormData[0];
     const prop_formData = objectFormData[1];
@@ -96,6 +97,7 @@ export default function InputMaskCustom({
                     mask={mask}
                     type={type}
                     className={classes}
+                    style={style}
                     placeholder={placeholder}
                     name={prop_formData}
                     readOnly={isDisabled}
