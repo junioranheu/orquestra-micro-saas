@@ -15,15 +15,15 @@ export default function Logout() {
 
     useDisableScroll();
     const router = useRouter();
-    const [_, setAuth] = useUserContext();
-
-    async function handleLogout() {
-        await handleRemoveCookieAndLogout({ setAuth: setAuth, router: router });
-    }
+    const [, setAuth] = useUserContext();
 
     useEffect(() => {
+        async function handleLogout() {
+            await handleRemoveCookieAndLogout({ setAuth: setAuth, router: router });
+        }
+
         handleLogout();
-    }, []);
+    }, [router, setAuth]);
 
     return (
         <section className={styles.main}>

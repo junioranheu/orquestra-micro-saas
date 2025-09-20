@@ -63,7 +63,10 @@ export default function ModalGeneric({
         }
 
         setModalIsOpen(false);
-        onRequestClose && onRequestClose();
+
+        if (onRequestClose) {
+            onRequestClose();
+        }
     }
 
     return (

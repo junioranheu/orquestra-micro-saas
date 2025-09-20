@@ -21,9 +21,9 @@ export default function swal(options: iProps): Promise<any> {
             icon: icon,
             allowOutsideClick: allowOutsideClick,
             reverseButtons: true,
-            showConfirmButton: confirmBtnText?.length! > 0,
+            showConfirmButton: (confirmBtnText?.length ?? 0) > 0,
             confirmButtonText: confirmBtnText,
-            showCancelButton: cancelBtnText?.length! > 0,
+            showCancelButton: (cancelBtnText?.length ?? 0) > 0,
             cancelButtonText: cancelBtnText
         }).then((result: SweetAlertResult) => {
             if (result.isConfirmed && confirmFunction) {

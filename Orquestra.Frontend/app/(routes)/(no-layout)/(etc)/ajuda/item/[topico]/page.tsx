@@ -43,7 +43,7 @@ export default function AjudaItem() {
 
             setFilteredTopicItem(result);
         }
-    }, [query]);
+    }, [query, router]);
 
     if (!filteredTopicItem) {
         return;

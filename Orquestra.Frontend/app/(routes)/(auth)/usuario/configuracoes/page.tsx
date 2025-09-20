@@ -17,7 +17,7 @@ export default function UsuarioConfiguracoes() {
 
     useTitle('Configurações');
 
-    const [auth, setAuth] = useUserContext();
+    const [auth,] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
     const me = useApiGetMe();
     const [modules, setModules] = useState<iCalculatePriceModuleCompanyOutput[]>([]);

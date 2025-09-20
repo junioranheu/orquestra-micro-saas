@@ -30,7 +30,9 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>):
     useEffect(() => {
         async function handleApiRequest() {
             if (apiUrlRequest || allowRequestNull) {
-                setIsRequestLoading && setIsRequestLoading(true);
+                if (setIsRequestLoading) {
+                    setIsRequestLoading(true);
+                }
 
                 const separator = apiUrlRequest.includes('?') ? '&' : '?';
                 const paginationInput = (hasPaginationInput ? `${separator}index=${(index - 1)}&limit=${limit}&isSelectAll=${isSelectAll}` : '')
@@ -43,12 +45,18 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>):
                 // console.log(url, result);
 
                 if (!result) {
-                    setIsRequestLoading && setIsRequestLoading(false);
+                    if (setIsRequestLoading) {
+                        setIsRequestLoading(false);
+                    }
+
                     setter(undefined);
                     return;
                 }
 
-                setIsRequestLoading && setIsRequestLoading(false);
+                if (setIsRequestLoading) {
+                    setIsRequestLoading(false);
+                }
+
                 setter(result);
             }
         }

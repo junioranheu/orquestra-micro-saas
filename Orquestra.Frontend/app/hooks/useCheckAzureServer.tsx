@@ -12,13 +12,13 @@ export default function useCheckAzureServer() {
     useEffect(() => {
         let swalServer: any;
 
-        async function fetchGetFake() {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('mock_getFakefake');
-                }, thresholdInMsToStartChecking + 5000);
-            });
-        }
+        // async function fetchGetFake() {
+        //     return new Promise((resolve) => {
+        //         setTimeout(() => {
+        //             resolve('mock_getFakefake');
+        //         }, thresholdInMsToStartChecking + 5000);
+        //     });
+        // }
 
         async function handleCheck() {
             try {
