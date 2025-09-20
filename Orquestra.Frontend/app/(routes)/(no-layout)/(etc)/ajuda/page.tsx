@@ -129,7 +129,7 @@ export const HELP_TOPICS = [
     },
     {
         topic: 'LGPD e Privacidade',
-        description: `Saiba como o ${SYSTEM.NAME}} protege os dados de clientes e profissionais.`,
+        description: `Saiba como o ${SYSTEM.NAME} protege os dados de clientes e profissionais.`,
         items: [
             {
                 title: 'Consentimento de clientes',
