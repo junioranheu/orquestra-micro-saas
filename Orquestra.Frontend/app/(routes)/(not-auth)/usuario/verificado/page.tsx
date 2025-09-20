@@ -16,6 +16,7 @@ export default function UsuarioVerificado() {
                 Agora você já pode voltar ao início para realizar o login na plataforma.`
             }
             showSupportContact={false}
+            isCentralized={true}
         />
     )
 }

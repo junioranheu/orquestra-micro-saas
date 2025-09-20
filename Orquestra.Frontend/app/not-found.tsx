@@ -25,6 +25,7 @@ export default function NotFound() {
                 title='Página não encontrada'
                 description={path ? `A página ${(path.includes("/404") ? "" : `"${path}"`)} que você tentou acessar não existe.` : 'A página que você tentou acessar não existe.'}
                 showSupportContact={true}
+                isCentralized={true}
             />
         </div>
     )

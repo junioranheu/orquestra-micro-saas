@@ -72,22 +72,24 @@
 
 .no-layout {
     // background: orange !important;
-    height: 100vh;
+    background-color: var(--white);
+    height: 100%;
     flex-grow: 1;
-    min-height: 100vh;
-    max-height: 100vh;
+
+    // overflow-y: auto;
+    // overflow-x: hidden;
 
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
 
-
     .children {
         // background-color: orange !important;
         background: transparent;
         padding: 0rem 0rem 2rem 0rem;
-        overflow-y: auto;
+        overflow: hidden;
+        min-height: 100vh;
     }
 }
 

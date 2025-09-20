@@ -12,15 +12,19 @@ interface iProps {
     title?: string;
     description: string;
     showSupportContact: boolean;
+    isCentralized: boolean;
 }
 
-export default function LayoutTemplateOne({ svg, code, title, description, showSupportContact }: iProps) {
+export default function LayoutTemplateOne({ svg, code, title, description, showSupportContact, isCentralized }: iProps) {
 
     const router = useRouter();
     useDisableScroll();
 
     return (
-        <main className={styles.container}>
+        <main
+            className={styles.container}
+            style={isCentralized ? { alignItems: 'center' } : { alignItems: 'flex-start' }}
+        >
             <div className={styles.inner}>
                 <div className={styles.iconWrapper}>
                     {
