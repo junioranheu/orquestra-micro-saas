@@ -1,10 +1,23 @@
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useCallback, useState } from 'react';
-import { Calendar, dateFnsLocalizer, View } from 'react-big-calendar';
+import { Guid } from 'guid-typescript';
+import { useState } from 'react';
+import { Calendar, dateFnsLocalizer, Event as RBCEvent, View } from 'react-big-calendar';
 import styles from './index.module.scss';
 
-export default function CalendarComplete() {
+export interface iEvent extends RBCEvent {
+    scheduleId: Guid;
+    title: string;
+    start: Date;
+    end: Date;
+    allDay?: boolean;
+}
+
+interface iProps {
+    events: iEvent[];
+}
+
+export default function CalendarComplete({ events }: iProps) {
 
     const locales = { 'pt-BR': ptBR };
     const localizer = dateFnsLocalizer({
@@ -34,41 +47,14 @@ export default function CalendarComplete() {
         showMore: (total: number) => `+ ver mais (${total})`,
     }
 
-    const myEventsList = [
-        {
-            title: 'Consulta com dentista',
-            start: new Date(2025, 8, 21, 9, 30), // 21/09/2025 09:30
-            end: new Date(2025, 8, 21, 10, 30),
-        },
-        {
-            title: 'Reunião com cliente',
-            start: new Date(2025, 8, 22, 14, 0), // 22/09/2025 14:00
-            end: new Date(2025, 8, 22, 15, 0),
-        },
-        {
-            title: 'Feriado',
-            start: new Date(2025, 8, 23), // começa dia inteiro
-            end: new Date(2025, 8, 23),   // termina mesmo dia
-            allDay: true,
-        }
-    ];
-
     const [date, setDate] = useState<Date>(new Date());
     const [view, setView] = useState<View>('month');
-
-    const onNavigate = useCallback((newDate: Date) => {
-        setDate(newDate);
-    }, []);
-
-    const onViewChange = useCallback((newView: View) => {
-        setView(newView);
-    }, []);
 
     return (
         <div className={styles.calendar}>
             <Calendar
                 localizer={localizer}
-                events={myEventsList}
+                events={events}
                 startAccessor='start'
                 endAccessor='end'
                 date={date}
@@ -79,6 +65,15 @@ export default function CalendarComplete() {
                 style={{ height: '100%' }}
                 culture='pt-BR'
                 messages={messages}
+                selectable={true}
+                onSelectSlot={(slotInfo) => {
+                    // slotInfo tem start, end, slots
+                    console.log('Clicou no dia:', slotInfo.start);
+                    alert(`Você clicou em ${slotInfo.start.toLocaleDateString('pt-BR')}`);
+                }}
+                onSelectEvent={(event) => {
+                    console.log('Clicou no evento:', event.title);
+                }}
             />
         </div>
     )
