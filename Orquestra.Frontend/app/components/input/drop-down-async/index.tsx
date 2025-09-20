@@ -1,7 +1,7 @@
 import { Fetch } from '@/app/api/fetch';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import styles from '@/app/components/input/drop-down/index.module.scss';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';
 
@@ -23,8 +23,6 @@ export default function DropdownAsync({
     placeholder
 }: iProps) {
 
-    const [inputValue, setInputValue] = useState<string>('');
-
     async function handleLoadOptions(input: string): Promise<iDropdownOption[]> {
         // console.clear();
 
@@ -43,7 +41,6 @@ export default function DropdownAsync({
     }
 
     function handleInputChange(newValue: string): string {
-        setInputValue(newValue);
         return newValue;
     }
 

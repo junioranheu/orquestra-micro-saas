@@ -103,7 +103,7 @@ export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorde
             confirmFunction: () => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?date=${isoDate}`),
             icon: 'question'
         });
-    }, [selectedDate]);
+    }, [selectedDate, router]);
 
     return (
         <div

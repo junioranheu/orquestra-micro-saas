@@ -31,7 +31,7 @@ export default function Login() {
 
     const versionBuild = useApiGetBuildVersion();
     const router = useRouter();
-    const [_, setAuth] = useUserContext();
+    const [, setAuth] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
 

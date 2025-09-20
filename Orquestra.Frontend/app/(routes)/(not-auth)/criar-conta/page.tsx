@@ -24,7 +24,7 @@ export default function CriarConta() {
     useTitle('Criar conta');
 
     const router = useRouter();
-    const [auth, setAuth] = useUserContext();
+    const [, setAuth] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
     const [token, setToken] = useState('');
