@@ -122,8 +122,20 @@
 // hi-res laptops and desktops 
 @media (max-width:1281px) {
     .calendar {
-        // display: none;
+        // background-color: orange !important;
         width: 100%;
+
+        .days {
+            // background-color: orange;
+            // gap: 1rem;
+
+            .day {
+                // background-color: purple !important;
+                width: 60%;
+                aspect-ratio: 1 / 1;
+                margin: auto;
+            }
+        }
     }
 }
 
