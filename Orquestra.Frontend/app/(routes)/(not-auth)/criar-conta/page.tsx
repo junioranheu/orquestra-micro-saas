@@ -26,7 +26,7 @@ export default function CriarConta() {
     const router = useRouter();
     const [auth, setAuth] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
-    const isIncognito = useIsIncognito();
+    const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
     const [token, setToken] = useState('');
 
     const refButton = useRef<HTMLButtonElement>(null);

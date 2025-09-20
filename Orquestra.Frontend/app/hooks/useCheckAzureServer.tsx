@@ -10,6 +10,8 @@ export default function useCheckAzureServer() {
     const thresholdInMsToStartChecking = 2500;
 
     useEffect(() => {
+        let swalServer: any;
+
         async function fetchGetFake() {
             return new Promise((resolve) => {
                 setTimeout(() => {
@@ -27,13 +29,16 @@ export default function useCheckAzureServer() {
                 swal({ str: errorMsg });
             } finally {
                 setLoading(false);
-                Swal.close();
+
+                if (swalServer) {
+                    swalServer.close();
+                }
             }
         }
 
         const timeout = setTimeout(() => {
             if (loading) {
-                Swal.fire({
+                swalServer = Swal.fire({
                     html: '<p>Por favor, aguarde alguns instantes enquanto o servidor é iniciado.</p>',
                     allowOutsideClick: false,
                     didOpen: () => {

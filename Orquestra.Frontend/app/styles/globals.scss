@@ -345,6 +345,7 @@ input:-webkit-autofill {
     padding: 2.5rem 2rem !important;
     border-radius: var(--border-radius) !important;
     box-shadow: var(--box-shadow);
+    font-family: inherit !important;
 
     .swal2-html-container {
         // background-color: purple !important;
@@ -377,6 +378,7 @@ input:-webkit-autofill {
         min-width: 10rem !important;
         border-radius: var(--border-radius) !important;
         box-shadow: var(--box-shadow) !important;
+        font-family: inherit !important;
         transition: 0.3s !important;
 
         &:hover {
@@ -387,13 +389,15 @@ input:-webkit-autofill {
 
     .swal2-cancel {
         background-color: transparent !important;
-        border: 1px solid var(--gray-light) !important;
+        font-weight: 500 !important;
         color: var(--black) !important;
+        font-family: inherit !important;
         transition: 0.3s !important;
 
         &:hover {
             background-color: inherit !important;
-            border: 1px solid var(--gray) !important;
+            opacity: 0.6 !important;
+            transition: 0.3s !important;
         }
     }
 

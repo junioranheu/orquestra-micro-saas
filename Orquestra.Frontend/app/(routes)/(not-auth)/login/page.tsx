@@ -22,7 +22,7 @@ import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useRef, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function Login() {
@@ -33,7 +33,7 @@ export default function Login() {
     const router = useRouter();
     const [_, setAuth] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
-    const isIncognito = useIsIncognito();
+    const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
 
     const refButton = useRef<HTMLButtonElement>(null);
 
@@ -69,29 +69,6 @@ export default function Login() {
             return;
         }
     }
-
-    useEffect(() => {
-        if (isIncognito) {
-            swal({
-                str: `Não é possível acessar o ${SYSTEM.NAME} em modo anônimo.`,
-                confirmBtnText: 'OK',
-                cancelBtnText: 'Saiba mais',
-                confirmFunction: () => { },
-                cancelFunction: () => {
-                    swal({
-                        title: 'Por que não é permitido o modo anônimo?',
-                        str: 'O sistema não pode ser usado em modo anônimo ou privado porque, nesse modo, os cookies e dados de autenticação não são salvos permanentemente. ' +
-                            'Isso significa que sua sessão pode ser perdida a qualquer momento, e você não conseguiria acessar suas informações de forma segura. ' +
-                            '<b>Para garantir que tudo funcione corretamente, use o navegador no modo normal.</b>',
-                        confirmBtnText: 'OK',
-                        icon: 'info'
-                    });
-                },
-                icon: 'error',
-                allowOutsideClick: false
-            });
-        }
-    }, [isIncognito]);
 
     return (
         <section className={styles.main}>
@@ -129,7 +106,9 @@ export default function Login() {
                                 isBig={true}
                             />
 
-                            <Link className={styles.forget} href={ROUTES.RECUPERAR_SENHA}>Esqueci minha senha</Link>
+                            {
+                                !isIncognito && <Link className={styles.forget} href={ROUTES.RECUPERAR_SENHA}>Esqueci minha senha</Link>
+                            }
                         </div>
 
                         <Divider text='Não tem uma conta?' />
