@@ -4,7 +4,6 @@ import ModalSettings from '@/app/components/navbar/modal/settings';
 import ROUTES from '@/app/consts/routes';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useOnResize } from '@/app/hooks/useOnResize';
-import useWindowSize from '@/app/hooks/useWindowSize';
 import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
@@ -14,7 +13,6 @@ export default function Navbar() {
 
     const router = useRouter();
     const me = useApiGetMe();
-    const windowSize = useWindowSize();
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [modalPosition, setModalPosition] = useState<iModalCustomPosition>({});
 

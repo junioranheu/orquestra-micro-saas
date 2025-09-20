@@ -21,25 +21,12 @@
         gap: 2rem;
 
         .left {
-            // background-color: purple;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            span {
-                svg {
-                    cursor: pointer;
-                    transition: 0.3s;
-
-                    &:hover {
-                        stroke: var(--contrast);
-                        transition: 0.3s;
-                    }
-                }
-            }
+            // background-color: orange !important;
+            margin-left: 0 !important;
         }
 
-        .right {
+        .right,
+        .left {
             // background-color: purple;
             width: auto;
             margin-left: auto;
