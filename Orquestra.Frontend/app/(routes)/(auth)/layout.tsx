@@ -12,6 +12,7 @@ import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
+import 'nprogress/nprogress.css';
 import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';

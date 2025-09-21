@@ -79,6 +79,14 @@
     // overflow-y: auto;
     // overflow-x: hidden;
 
+    letter-spacing: 0.01em;
+    font-size: 1rem;
+
+    text-rendering: optimizelegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -519,6 +527,27 @@ input:-webkit-autofill {
 
     &[data-placement^='right']>.tippy-arrow::before {
         border-right-color: var(--black) !important;
+    }
+}
+
+// NProgress
+#nprogress {
+    .bar {
+        background: var(--contrast) !important;
+        height: 3px !important;
+        box-shadow: none !important;
+    }
+
+    .peg {
+        box-shadow: 0 0 10px var(--contrast), 0 0 5px var(--contrast) !important;
+        box-shadow: none !important;
+        height: 3px !important;
+    }
+
+    .spinner-icon {
+        display: none !important;
+        border-top-color: var(--contrast) !important;
+        border-left-color: var(--contrast) !important;
     }
 }
 

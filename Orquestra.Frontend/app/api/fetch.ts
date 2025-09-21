@@ -2,6 +2,7 @@ import handleGetDateBrazil from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import toast from '@/app/functions/toast';
+import NProgress from 'nprogress';
 import { Dispatch, SetStateAction } from 'react';
 
 interface iFetchError {
@@ -72,6 +73,7 @@ export const Fetch = {
 
         try {
             if (setIsRequestLoading) {
+                NProgress.start();
                 setIsRequestLoading(true);
             }
 
@@ -84,6 +86,7 @@ export const Fetch = {
             });
 
             if (setIsRequestLoading) {
+                NProgress.done();
                 setIsRequestLoading(false);
             }
 
@@ -164,6 +167,7 @@ export const Fetch = {
             return responseJson;
         } catch (error: any) {
             if (setIsRequestLoading) {
+                NProgress.done();
                 setIsRequestLoading(false);
             }
 

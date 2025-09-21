@@ -8,6 +8,7 @@ import useCheckAzureServer from '@/app/hooks/useCheckAzureServer';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
+import 'nprogress/nprogress.css';
 import { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
