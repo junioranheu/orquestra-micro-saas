@@ -1,8 +1,12 @@
-import iSchedule from '@/app/api/consts/schedule';
+'use client';
+import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { Fetch } from '@/app/api/fetch';
 import swal from '@/app/functions/swal';
+import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useEffect, useState } from 'react';
+import { Guid } from 'guid-typescript';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event as RBCEvent, SlotInfo, View } from 'react-big-calendar';
 import styles from './index.module.scss';
 
@@ -17,15 +21,19 @@ export interface iEvent extends RBCEvent {
 interface iProps {
     events: iEvent[];
     customElementHeight?: number;
+    companyId: Guid;
+    setEvents: Dispatch<SetStateAction<iEvent[]>>;
 }
 
-export default function CalendarComplete({ events, customElementHeight }: iProps) {
+export default function CalendarComplete({ events, customElementHeight, companyId, setEvents }: iProps) {
+
+    const [, setIsRequestLoading] = useIsRequestLoading();
 
     const locales = { 'pt-BR': ptBR };
     const localizer = dateFnsLocalizer({
         format,
         parse,
-        startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }), // Segunda;
+        startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }), // Segunda-feira;
         getDay,
         locales
     });
@@ -53,6 +61,7 @@ export default function CalendarComplete({ events, customElementHeight }: iProps
     const [view, setView] = useState<View>('month');
     const [availableViews, setAvailableViews] = useState<Array<View>>(['month', 'week', 'day', 'agenda']);
 
+    // Responsividade;
     useEffect(() => {
         function handleResize() {
             if (window.innerWidth < 801) {
@@ -68,7 +77,31 @@ export default function CalendarComplete({ events, customElementHeight }: iProps
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Buscar toda vez no back-end ao alterar a opção de mês e/ou ano;
+    useEffect(() => {
+        async function handleGetSchedules(companyId: Guid, year: number = 0, month: number = 0) {
+            const items = await Fetch.get({
+                url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${companyId}&year=${year}&month=${month}`,
+                setIsRequestLoading: setIsRequestLoading
+            }) as iSchedule[];
 
+            const events = handleMapSchedulesToEvents(items) as iEvent[];
+            // console.log('handleGet/events', events);
+
+            setEvents(events);
+        }
+
+        if (!date || !companyId) {
+            return;
+        }
+
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // 0-based;
+
+        handleGetSchedules(companyId, year, month);
+    }, [date, companyId, setEvents]);
+
+    // Adicionar novo evento;
     function handleAddNewEvent(event: SlotInfo) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -92,6 +125,7 @@ export default function CalendarComplete({ events, customElementHeight }: iProps
         // console.log('newEvent:', newEvent);
     }
 
+    // Visualizar evento;
     function handleCheckEvent(event: iEvent) {
         console.log('Clicou no evento:', event);
     }
@@ -134,11 +168,7 @@ export default function CalendarComplete({ events, customElementHeight }: iProps
                 }}
                 eventPropGetter={(event) => {
                     const today = new Date();
-                    // today.setHours(0, 0, 0, 0);
-
-                    console.log(event.end);
                     const eventEnd = new Date(event.end);
-                    // eventEnd.setHours(0, 0, 0, 0);
 
                     // Se o evento terminou antes de hoje → cor diferenciada;
                     if (eventEnd < today) {

@@ -10,7 +10,10 @@ export default function useStandardIntructions() {
 
         function handleConsole() {
             setTimeout(function () {
-                process.env.NODE_ENV === 'production' && console.clear();
+                if (process.env.NODE_ENV === 'production') {
+                    console.clear();
+                }
+
                 console.log(`%c${SYSTEM.NAME}: ${SYSTEM.DESCRIPTION}`, 'color: #0b996f; font-family:monospace; font-size: 26px');
             }, 3000);
         }

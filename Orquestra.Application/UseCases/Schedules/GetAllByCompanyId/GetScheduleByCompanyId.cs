@@ -12,7 +12,7 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
     private readonly Context _context = deps.Context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
 
-    public async Task<List<ScheduleOutput>?> Execute(Guid userIdAuth, Guid companyId)
+    public async Task<List<ScheduleOutput>?> Execute(Guid userIdAuth, Guid companyId, int? year, int? month)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
@@ -20,8 +20,12 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
                      Include(x => x.Client).
                      Include(x => x.Company).
                      AsNoTracking().
-                     Where(x => x.CompanyId == companyId && x.Status == true).
-                     ToListAsync();
+                     Where(x => 
+                        x.CompanyId == companyId && 
+                        (year == null || year <= 0 || x.Date.Year == year) &&
+                        (month == null || month <= 0 || x.Date.Month == month) &&
+                        x.Status == true
+                     ).ToListAsync();
 
         var output = result.Adapt<List<ScheduleOutput>>();
 
