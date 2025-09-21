@@ -15,7 +15,7 @@ export default function useStandardIntructions() {
                 }
 
                 console.log(`%c${SYSTEM.NAME}: ${SYSTEM.DESCRIPTION}`, 'color: #0b996f; font-family:monospace; font-size: 26px');
-            }, 3000);
+            }, 2000);
         }
 
         function handleBlockConsoleInspectTool() {

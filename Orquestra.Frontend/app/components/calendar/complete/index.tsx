@@ -1,6 +1,7 @@
 'use client';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
+import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
@@ -56,6 +57,18 @@ export default function CalendarComplete({ events, customElementHeight, companyI
         noEventsInRange: 'Nenhum evento neste período.',
         showMore: (total: number) => `+ ver mais (${total})`,
     }
+
+    const formats = {
+        monthHeaderFormat: (date: Date) => handleCapitalizeFirstLetter(format(date, `MMMM 'de' yyyy`, { locale: ptBR })),
+        dayRangeHeaderFormat: ({ start, end }: { start: Date, end: Date }) => `${format(start, 'dd', { locale: ptBR })} - ${format(end, 'dd', { locale: ptBR })} de ${format(start, 'MMMM', { locale: ptBR })}`,
+        dayHeaderFormat: (date: Date) => {
+            const dayName = format(date, 'EEEE', { locale: ptBR });
+            const dayNumber = format(date, 'dd', { locale: ptBR });
+            const monthName = format(date, 'MMMM', { locale: ptBR });
+
+            return handleCapitalizeFirstLetter(`${dayName}, ${dayNumber} de ${monthName}`);
+        }
+    };
 
     const [date, setDate] = useState<Date>(new Date());
     const [view, setView] = useState<View>('month');
@@ -145,6 +158,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                 style={{ height: customElementHeight || '85vh' }}
                 culture='pt-BR'
                 messages={messages}
+                formats={formats}
                 selectable={true}
                 onSelectSlot={(e) => handleAddNewEvent(e)}
                 onSelectEvent={(e) => handleCheckEvent(e)}
