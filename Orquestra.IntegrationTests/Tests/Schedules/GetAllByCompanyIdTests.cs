@@ -236,14 +236,14 @@ public sealed class GetAllByCompanyIdTests
         GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
-        GetScheduleByCompanyId getSchedule = new(new ScheduleBaseDependencies(
+        GetScheduleByCompanyId createSchedule = new(new ScheduleBaseDependencies(
             context,
             checkIfUserIsLinkedCompanyUser,
             getClient,
             getCompany
         ));
 
-        return getSchedule;
+        return createSchedule;
     }
     #endregion
 }

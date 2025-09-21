@@ -18,6 +18,8 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         Schedule schedule = await Update(input);
 
         var output = schedule.Adapt<ScheduleOutput>();
+        output.Observations = await CheckForObservations(output);
+        output.UsersOutput = await GetUsers(output.UsersIds);
 
         return output;
     }
@@ -25,7 +27,10 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     #region extras
     private async Task<Schedule> Update(ScheduleInput input)
     {
-        Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == input.ScheduleId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
+        Schedule? schedule = await _context.Schedules.
+                             // AsNoTracking(). // Propositalmente sem AsNoTracking;
+                             Where(x => x.ScheduleId == input.ScheduleId).
+                             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
 
         schedule.Date = input.Date;
         schedule.PaymentType = input.PaymentType;

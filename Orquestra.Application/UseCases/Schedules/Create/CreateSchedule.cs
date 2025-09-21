@@ -16,6 +16,8 @@ public sealed class CreateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         Schedule schedule = await Save(input);
 
         var output = schedule.Adapt<ScheduleOutput>();
+        output.Observations = await CheckForObservations(output);
+        output.UsersOutput = await GetUsers(output.UsersIds);
 
         return output;
     }
