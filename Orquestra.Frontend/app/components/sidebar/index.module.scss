@@ -75,3 +75,48 @@
         }
     }
 }
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {
+    .sidebar {
+        // background-color: orange !important;
+        min-width: 3.5rem;
+        max-width: 3.5rem;
+
+        .brand {
+            display: none;
+        }
+
+        nav {
+            // background-color: orange;
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                li {
+                    font-size: 0;
+                }
+
+                svg {
+                    width: 1rem;
+                    height: auto;
+                }
+            }
+        }
+    }
+}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}

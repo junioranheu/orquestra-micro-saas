@@ -1,5 +1,6 @@
 'use client';
 import CalendarComplete, { iEvent } from '@/app/components/calendar/complete';
+import useDisableScroll from '@/app/hooks/useDisableScroll';
 import useTitle from '@/app/hooks/useTitle';
 import { Guid } from 'guid-typescript';
 import { useEffect, useState } from 'react';
@@ -9,6 +10,8 @@ import styles from './page.module.scss';
 export default function EmpresaAgendamentos() {
 
     useTitle('Agendamentos');
+    useDisableScroll();
+
     const [events, setEvents] = useState<iEvent[]>([]);
 
     useEffect(() => {
@@ -24,6 +27,60 @@ export default function EmpresaAgendamentos() {
                 title: 'Mariana Scalzaretto',
                 start: new Date(2025, 8, 21, 9, 30),
                 end: new Date(2025, 8, 21, 10, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 12, 30),
+                end: new Date(2025, 8, 21, 13, 30)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Bau bau',
+                start: new Date(2025, 8, 21, 15, 30),
+                end: new Date(2025, 8, 21, 16, 30)
             },
             {
                 scheduleId: Guid.create(),

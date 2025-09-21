@@ -2,7 +2,7 @@ import swal from '@/app/functions/swal';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Guid } from 'guid-typescript';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event as RBCEvent, SlotInfo, View } from 'react-big-calendar';
 import styles from './index.module.scss';
 
@@ -50,6 +50,23 @@ export default function CalendarComplete({ events }: iProps) {
 
     const [date, setDate] = useState<Date>(new Date());
     const [view, setView] = useState<View>('month');
+    const [availableViews, setAvailableViews] = useState<Array<View>>(['month', 'week', 'day', 'agenda']);
+
+    useEffect(() => {
+        function handleResize() {
+            if (window.innerWidth < 801) {
+                setView('day'); // Força a view pra day;
+                setAvailableViews(['day', 'agenda']); // Remove month e week;
+            } else {
+                setAvailableViews(['month', 'week', 'day', 'agenda']); // Mostra todas;
+            }
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
 
     function handleAddNewEvent(event: SlotInfo) {
         const today = new Date();
@@ -89,13 +106,31 @@ export default function CalendarComplete({ events }: iProps) {
                 view={view}
                 onNavigate={setDate}
                 onView={setView}
-                views={['month', 'week', 'day', 'agenda']}
+                views={availableViews}
                 style={{ height: '100%' }}
                 culture='pt-BR'
                 messages={messages}
                 selectable={true}
                 onSelectSlot={(e) => handleAddNewEvent(e)}
                 onSelectEvent={(e) => handleCheckEvent(e)}
+                dayPropGetter={(date) => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    const day = new Date(date);
+                    day.setHours(0, 0, 0, 0);
+
+                    if (day < today) {
+                        return {
+                            style: {
+                                cursor: 'not-allowed',
+                                backgroundColor: '#f5f5f5'
+                            }
+                        }
+                    }
+
+                    return {};
+                }}
             />
         </div>
     )
