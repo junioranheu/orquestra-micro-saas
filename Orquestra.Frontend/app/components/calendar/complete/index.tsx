@@ -1,4 +1,5 @@
 'use client';
+import iClient from '@/app/api/consts/client';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
@@ -112,7 +113,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
         const month = date.getMonth() + 1; // 0-based;
 
         handleGetSchedules(companyId, year, month);
-    }, [date, companyId, setEvents]);
+    }, [date, companyId, setEvents, setIsRequestLoading]);
 
     // Adicionar novo evento;
     function handleAddNewEvent(event: SlotInfo) {
@@ -202,16 +203,22 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
 export function handleMapSchedulesToEvents(schedules: iSchedule[]): iEvent[] {
     return schedules.map((schedule) => {
+        // console.log('handleMapSchedulesToEvents', schedule);
         const start = new Date(schedule.date);
-        const end = new Date(schedule.date);
+        const end = schedule.dateEnd ? new Date(schedule.dateEnd) : start;
+
+        const client = schedule.client as iClient;
+        const clientName = client ? client.fullName : '';
+
+        const title = clientName;
 
         const isAllDay = start.getHours() === 0 && start.getMinutes() === 0 && start.getSeconds() === 0 && end.getHours() === 23 && end.getMinutes() === 59;
 
         return {
             schedule,
-            title: schedule.company?.name ?? schedule.client?.fullName ?? '-',
-            start: new Date(schedule.date),
-            end: new Date(schedule.date),
+            title: title,
+            start: start,
+            end: end,
             allDay: isAllDay
         };
     })
