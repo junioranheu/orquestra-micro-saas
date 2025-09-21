@@ -131,6 +131,24 @@ export default function CalendarComplete({ events }: iProps) {
 
                     return {};
                 }}
+                eventPropGetter={(event) => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    const eventEnd = new Date(event.end);
+                    eventEnd.setHours(0, 0, 0, 0);
+
+                    // Se o evento terminou antes de hoje → cor diferenciada;
+                    if (eventEnd < today) {
+                        return {
+                            style: {
+                                backgroundColor: 'var(--gray)'
+                            },
+                        };
+                    }
+
+                    return {};
+                }}
             />
         </div>
     )

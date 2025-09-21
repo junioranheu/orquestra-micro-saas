@@ -94,6 +94,18 @@ export default function EmpresaAgendamentos() {
                 start: new Date(2025, 8, 23),
                 end: new Date(2025, 8, 23),
                 allDay: true
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Reunião com o Lulers',
+                start: new Date(2025, 8, 20, 21, 0),
+                end: new Date(2025, 8, 20, 22, 0)
+            },
+            {
+                scheduleId: Guid.create(),
+                title: 'Reunião com o Lulers',
+                start: new Date(2025, 8, 20, 22, 0),
+                end: new Date(2025, 8, 20, 23, 0)
             }
         ] as iEvent[];
 

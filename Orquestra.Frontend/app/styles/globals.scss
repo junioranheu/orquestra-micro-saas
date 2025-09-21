@@ -533,22 +533,29 @@ input:-webkit-autofill {
 
 // react-big-calendar  
 .rbc-calendar {
+
+    // Quadrados;
+    .rbc-day-bg {
+        background-color: orange !important;
+        cursor: not-allowed !important;
+    }
+
+    // Quadrado de hoje;
+    .rbc-today {
+        // background-color: orange !important;
+        background-color: inherit;
+    }
+
+    // Eventos;
     .rbc-event {
+        // background-color: tomato !important;
+        border: none !important;
         background-color: var(--main);
 
         .rbc-event-content {
             // background-color: orange !important;
             font-size: 0.85rem;
         }
-    }
-
-    .rbc-today {
-        background-color: inherit;
-    }
-
-    .rbc-event {
-        // background-color: tomato !important;
-        border: none !important;
 
         &:focus,
         &:active {
@@ -558,9 +565,10 @@ input:-webkit-autofill {
         }
     }
 
+    // Evento selecionado;
     .rbc-selected {
-        // background-color: orange !important;
         background-color: var(--contrast) !important;
+        // background-color: orange !important;
         border: none !important;
 
         &:focus,
@@ -571,6 +579,7 @@ input:-webkit-autofill {
         }
     }
 
+    // Tipo mês;
     .rbc-month-view {
         border: 1px solid var(--gray-light);
         border-radius: var(--border-radius);
@@ -604,18 +613,23 @@ input:-webkit-autofill {
         }
 
         .rbc-off-range-bg {
-            // background-color: orange;
-            // background-color: #f5f5f5;
             background-color: inherit;
         }
     }
 
+    // Tipo semana e dia;
     .rbc-time-view {
         // background-color: orange;
         border: 1px solid var(--gray-light);
         border-radius: var(--border-radius);
+
+        .rbc-current-time-indicator {
+            background-color: var(--contrast);
+            height: 3px;
+        }
     }
 
+    // Tipo agenda;
     .rbc-agenda-view {
         // background-color: orange;
         border: 1px solid var(--gray-light);
@@ -630,6 +644,7 @@ input:-webkit-autofill {
         }
     }
 
+    // toolbar;
     .rbc-toolbar {
         // background-color: purple;
 
