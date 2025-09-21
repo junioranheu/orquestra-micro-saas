@@ -18,11 +18,11 @@ export default interface iCompanySimpleOutput {
     companyId: Guid;
     name: string;
     email: string;
-    companyType: any; // TO DO;
-    companySituation: any; // TO DO;
+    companyType: string;
+    companySituation: string;
     logoUrl?: string;
     color?: string;
-    planType: any; // TO DO;
+    planType: string;
     planStartDate: Date;
     planEndDate: Date;
     modules: string[];

@@ -1,6 +1,9 @@
 'use client';
-import CalendarComplete, { iEvent } from '@/app/components/calendar/complete';
+import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { Fetch } from '@/app/api/fetch';
+import CalendarComplete, { handleMapSchedulesToEvents, iEvent } from '@/app/components/calendar/complete';
 import SYSTEM from '@/app/consts/system';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import useTitle from '@/app/hooks/useTitle';
 import { Guid } from 'guid-typescript';
@@ -13,105 +16,26 @@ export default function EmpresaAgendamentos() {
     useTitle('Agendamentos');
     useDisableScroll();
 
+    const me = useApiGetMe();
     const [events, setEvents] = useState<iEvent[]>([]);
 
     useEffect(() => {
-        const events = [
-            {
-                scheduleId: Guid.create(),
-                title: 'Pita',
-                start: new Date(2025, 8, 19, 9, 30),
-                end: new Date(2025, 8, 19, 10, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Mariana Scalzaretto',
-                start: new Date(2025, 8, 21, 8, 30),
-                end: new Date(2025, 8, 21, 10, 5)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 12, 30),
-                end: new Date(2025, 8, 21, 13, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Bau bau',
-                start: new Date(2025, 8, 21, 15, 30),
-                end: new Date(2025, 8, 21, 16, 30)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Reunião com o Lule',
-                start: new Date(2025, 8, 22, 14, 0),
-                end: new Date(2025, 8, 22, 15, 0)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Feriado',
-                start: new Date(2025, 8, 23),
-                end: new Date(2025, 8, 23),
-                allDay: true
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Reunião com o Lulers',
-                start: new Date(2025, 8, 20, 21, 0),
-                end: new Date(2025, 8, 20, 22, 0)
-            },
-            {
-                scheduleId: Guid.create(),
-                title: 'Reunião com o Lulers',
-                start: new Date(2025, 8, 20, 22, 0),
-                end: new Date(2025, 8, 20, 23, 0)
-            }
-        ] as iEvent[];
+        async function handleGet(companyId: Guid) {
+            const items = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${companyId}` }) as iSchedule[];
+            // console.log('handleGet/items', companyId, items);
 
-        setEvents(events);
-    }, []);
+            const events = handleMapSchedulesToEvents(items) as iEvent[];
+            // console.log('handleGet/events', events);
+
+            setEvents(events);
+        }
+
+        if (!me || !me.currentMainCompany) {
+            return;
+        }
+
+        handleGet(me.currentMainCompany.companyId);
+    }, [me]);
 
     const sectionRef = useRef<HTMLElement>(null);
     const [availableHeight, setAvailableHeight] = useState<number>(0);

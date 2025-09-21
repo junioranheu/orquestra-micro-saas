@@ -588,7 +588,7 @@ input:-webkit-autofill {
         border: 1px solid var(--gray-light);
         border-radius: var(--border-radius);
 
-        .rbc-current {
+        .rbc-now {
             .rbc-button-link {
                 // background-color: orange !important;
                 background-color: var(--main);
@@ -641,6 +641,16 @@ input:-webkit-autofill {
         .rbc-agenda-table {
             // background-color: orange;
             border: 1px solid var(--gray-light);
+
+            .rbc-agenda-date-cell {
+                // background-color: orange !important;
+                background-color: var(--white) !important;
+            }
+
+            .rbc-agenda-time-cell {
+                // background-color: orange !important;
+                border: 1px solid var(--gray-light);
+            }
         }
 
         .rbc-agenda-empty {

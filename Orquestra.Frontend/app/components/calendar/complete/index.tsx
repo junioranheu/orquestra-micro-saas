@@ -1,13 +1,13 @@
+import iSchedule from '@/app/api/consts/schedule';
 import swal from '@/app/functions/swal';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Guid } from 'guid-typescript';
 import { useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event as RBCEvent, SlotInfo, View } from 'react-big-calendar';
 import styles from './index.module.scss';
 
 export interface iEvent extends RBCEvent {
-    scheduleId: Guid;
+    schedule: iSchedule;
     title: string;
     start: Date;
     end: Date;
@@ -80,16 +80,16 @@ export default function CalendarComplete({ events, customElementHeight }: iProps
             return;
         }
 
-        const newEvent = {
-            scheduleId: Guid.create(),
-            title: 'Novo Evento',
-            start: event.start,
-            end: event.end,
-            allDay: true,
-        } as iEvent;
+        // const newEvent = {
+        //     scheduleId: Guid.create(),
+        //     title: 'Novo Evento',
+        //     start: event.start,
+        //     end: event.end,
+        //     allDay: true,
+        // } as iEvent;
 
         console.log('Novo evento:', event.start.toLocaleDateString('pt-BR'), event);
-        console.log('newEvent:', newEvent);
+        // console.log('newEvent:', newEvent);
     }
 
     function handleCheckEvent(event: iEvent) {
@@ -154,4 +154,21 @@ export default function CalendarComplete({ events, customElementHeight }: iProps
             />
         </div>
     )
+}
+
+export function handleMapSchedulesToEvents(schedules: iSchedule[]): iEvent[] {
+    return schedules.map((schedule) => {
+        const start = new Date(schedule.date);
+        const end = new Date(schedule.date);
+
+        const isAllDay = start.getHours() === 0 && start.getMinutes() === 0 && start.getSeconds() === 0 && end.getHours() === 23 && end.getMinutes() === 59;
+
+        return {
+            schedule,
+            title: schedule.company?.name ?? schedule.client?.fullName ?? '-',
+            start: new Date(schedule.date),
+            end: new Date(schedule.date),
+            allDay: isAllDay
+        };
+    })
 }
