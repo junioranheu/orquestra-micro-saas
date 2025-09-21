@@ -16,9 +16,10 @@ export interface iEvent extends RBCEvent {
 
 interface iProps {
     events: iEvent[];
+    customElementHeight?: number;
 }
 
-export default function CalendarComplete({ events }: iProps) {
+export default function CalendarComplete({ events, customElementHeight }: iProps) {
 
     const locales = { 'pt-BR': ptBR };
     const localizer = dateFnsLocalizer({
@@ -107,7 +108,7 @@ export default function CalendarComplete({ events }: iProps) {
                 onNavigate={setDate}
                 onView={setView}
                 views={availableViews}
-                style={{ height: '100%' }}
+                style={{ height: customElementHeight || '85vh' }}
                 culture='pt-BR'
                 messages={messages}
                 selectable={true}
@@ -133,17 +134,18 @@ export default function CalendarComplete({ events }: iProps) {
                 }}
                 eventPropGetter={(event) => {
                     const today = new Date();
-                    today.setHours(0, 0, 0, 0);
+                    // today.setHours(0, 0, 0, 0);
 
+                    console.log(event.end);
                     const eventEnd = new Date(event.end);
-                    eventEnd.setHours(0, 0, 0, 0);
+                    // eventEnd.setHours(0, 0, 0, 0);
 
                     // Se o evento terminou antes de hoje → cor diferenciada;
                     if (eventEnd < today) {
                         return {
                             style: {
                                 backgroundColor: 'var(--gray)'
-                            },
+                            }
                         };
                     }
 
