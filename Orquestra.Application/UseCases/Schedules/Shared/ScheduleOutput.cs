@@ -11,6 +11,8 @@ public sealed class ScheduleOutput
 
     public DateTime Date { get; set; }
 
+    public int DurationMinutes { get; set; }
+
     public PaymentTypeEnum PaymentType { get; set; }
 
     public ScheduleStatusEnum ScheduleStatus { get; set; }
@@ -26,6 +28,8 @@ public sealed class ScheduleOutput
     public bool IsRestrictForSpecificUsers { get; set; }
 
     // Extras;
+    public DateTime DateEnd { get; set; }
+
     public List<string>? Observations { get; set; }
 
     public UserOutput[]? UsersOutput { get; set; } = [];

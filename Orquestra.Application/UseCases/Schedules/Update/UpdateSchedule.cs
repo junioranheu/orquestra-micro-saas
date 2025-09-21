@@ -18,6 +18,7 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         Schedule schedule = await Update(input);
 
         var output = schedule.Adapt<ScheduleOutput>();
+        output.DateEnd = output.Date.AddMinutes(output.DurationMinutes);
         output.Observations = await CheckForObservations(output);
         output.UsersOutput = await GetUsers(output.UsersIds);
 

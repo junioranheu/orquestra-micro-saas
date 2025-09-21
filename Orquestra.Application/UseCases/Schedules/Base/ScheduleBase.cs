@@ -43,6 +43,20 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             throw new ArgumentException("Você não pode agendar uma consulta com a data anterior a de hoje.");
         }
 
+        if (input.DurationMinutes <= 0)
+        {
+            throw new ArgumentException("A duração do agendamento não pode ser menor que 1 minuto.");
+        }
+
+        // Calcula o horário final com base em Date e DurationMinutes;
+        DateTime endDate = input.Date.AddMinutes(input.DurationMinutes);
+
+        // Verifica se ultrapassa o mesmo dia;
+        if (endDate.Date != input.Date.Date)
+        {
+            throw new ArgumentException($"A duração não pode ultrapassar o final do dia da consulta ({endDate.Date}).");
+        }
+
         _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);
 
         _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);

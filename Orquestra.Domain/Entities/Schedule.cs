@@ -13,6 +13,8 @@ public sealed class Schedule : Audit
 
     public DateTime Date { get; set; }
 
+    public int DurationMinutes { get; set; }
+
     public PaymentTypeEnum PaymentType { get; set; }
 
     public ScheduleStatusEnum ScheduleStatus { get; set; }

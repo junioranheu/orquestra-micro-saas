@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
+using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Base;
@@ -11,6 +13,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
@@ -20,75 +23,39 @@ public sealed class UpdateScheduleTests
     [Fact]
     public async Task Execute_ShouldUpdateSchedule_WhenInputIsValid()
     {
-        // Arrange;
         (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
 
-        ScheduleInput input = new()
-        {
-            ScheduleId = schedule.ScheduleId,
-            CompanyId = schedule.CompanyId,
-            ClientId = schedule.ClientId,
-            Date = schedule.Date.AddDays(1),
-            UsersIds = schedule.UsersIds,
-            PaymentType = PaymentTypeEnum.Pix,
-            ScheduleStatus = schedule.ScheduleStatus
-        };
+        ScheduleInput input = schedule.Adapt<ScheduleInput>();
 
         UpdateSchedule sut = CreateSut(context, user);
 
-        // Act;
         ScheduleOutput result = await sut.Execute(user.UserId, input);
 
-        // Assert;
         Assert.NotNull(result);
         Assert.Equal(input.ScheduleId, result.ScheduleId);
         Assert.Equal(input.Date, result.Date);
         Assert.Equal(input.PaymentType, result.PaymentType);
+        Assert.Equal(input.DurationMinutes, result.DurationMinutes);
 
-        // Confirma que foi salvo no contexto;
         Schedule? saved = await context.Schedules.FindAsync(schedule.ScheduleId);
         Assert.NotNull(saved);
         Assert.Equal(input.Date, saved.Date);
+        Assert.Equal(input.DurationMinutes, saved.DurationMinutes);
         Assert.Equal(input.PaymentType, saved.PaymentType);
     }
 
     [Fact]
-    public async Task Execute_ShouldThrow_WhenScheduleDoesNotExist()
+    public async Task Execute_ShouldThrow_WhenDurationMinutesIsZeroOrNegative()
     {
-        // Arrange;
-        (Context context, User user, _) = await ArrangeScheduleWithUserAsync();
-
-        ScheduleInput input = new()
-        {
-            ScheduleId = Guid.NewGuid(),
-            CompanyId = Guid.NewGuid(),
-            ClientId = Guid.NewGuid(),
-            Date = GetDate().AddDays(1),
-            UsersIds = []
-        };
-
-        UpdateSchedule sut = CreateSut(context, user);
-
-        // Act & Assert;
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, input));
-    }
-
-    [Fact]
-    public async Task Execute_ShouldThrow_WhenUserNotLinkedToCompany()
-    {
-        // Arrange;
         (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
-
-        // Remove vínculo do usuário;
-        context.CompanyUsers.RemoveRange(context.CompanyUsers);
-        await context.SaveChangesAsync();
 
         ScheduleInput input = new()
         {
             ScheduleId = schedule.ScheduleId,
             CompanyId = schedule.CompanyId,
             ClientId = schedule.ClientId,
-            Date = schedule.Date.AddDays(1),
+            Date = schedule.Date.AddDays(1).AddHours(10),
+            DurationMinutes = 0,
             UsersIds = schedule.UsersIds,
             PaymentType = schedule.PaymentType,
             ScheduleStatus = schedule.ScheduleStatus
@@ -96,7 +63,89 @@ public sealed class UpdateScheduleTests
 
         UpdateSchedule sut = CreateSut(context, user);
 
-        // Act & Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDurationExceedsEndOfDay()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        DateTime scheduleDate = GetDate().AddDays(1).Date.AddHours(23).AddMinutes(30);
+
+        ScheduleInput input = new()
+        {
+            ScheduleId = schedule.ScheduleId,
+            CompanyId = schedule.CompanyId,
+            ClientId = schedule.ClientId,
+            Date = scheduleDate,
+            DurationMinutes = 90, // ultrapassa meia-noite
+            UsersIds = schedule.UsersIds,
+            PaymentType = schedule.PaymentType,
+            ScheduleStatus = schedule.ScheduleStatus
+        };
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenScheduleDoesNotExist()
+    {
+        (Context context, User user, Schedule _) = await ArrangeScheduleWithUserAsync();
+
+        ScheduleInput input = new()
+        {
+            ScheduleId = Guid.NewGuid(),
+            CompanyId = Guid.NewGuid(),
+            ClientId = Guid.NewGuid(),
+            Date = GetDate().AddDays(1),
+            DurationMinutes = 60,
+            UsersIds = []
+        };
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenUserNotLinkedToCompany()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        context.CompanyUsers.RemoveRange(context.CompanyUsers);
+        await context.SaveChangesAsync();
+
+        // Cria um outro usuário vinculado à empresa, mas não o user original;
+        User user2 = UserMock.Create();
+        await Fixture.Save(context, user2);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyUserId = Guid.NewGuid(),
+            CompanyId = schedule.CompanyId,
+            UserId = user2.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        ScheduleInput input = new()
+        {
+            ScheduleId = schedule.ScheduleId,
+            CompanyId = schedule.CompanyId,
+            ClientId = schedule.ClientId,
+            Date = schedule.Date.AddDays(1),
+            DurationMinutes = 60,
+            UsersIds = schedule.UsersIds,
+            PaymentType = schedule.PaymentType,
+            ScheduleStatus = schedule.ScheduleStatus
+        };
+
+        UpdateSchedule sut = CreateSut(context, user);
+
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, input));
     }
 

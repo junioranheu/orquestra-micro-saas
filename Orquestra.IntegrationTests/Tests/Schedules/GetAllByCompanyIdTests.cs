@@ -30,8 +30,11 @@ public sealed class GetAllByCompanyIdTests
         // Assert;
         Assert.NotNull(result);
         Assert.Equal(schedules.Count, result.Count);
+
         foreach (var schedule in schedules)
         {
+            Assert.True(schedule.Date > DateTime.MinValue);
+            Assert.True(schedule.DurationMinutes > 0);
             Assert.Contains(result, r => r.ScheduleId == schedule.ScheduleId);
         }
     }
@@ -50,7 +53,7 @@ public sealed class GetAllByCompanyIdTests
         GetScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
-        var result = await sut.Execute(user.UserId, company.CompanyId, year, month);
+        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, year, month);
 
         // Assert;
         Assert.NotNull(result);

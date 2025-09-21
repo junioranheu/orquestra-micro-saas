@@ -15,6 +15,7 @@ export const CONSTS_SCHEDULE = {
 export default interface iSchedule {
     scheduleId: Guid;
     date: Date;
+    durationMinutes: number;
     paymentType: string;
     scheduleStatus: string;
     clientId: Guid;
@@ -23,6 +24,7 @@ export default interface iSchedule {
     company: iCompanySimpleOutput;
     usersIds: Guid[];
     isRestrictForSpecificUsers: boolean;
+    dateEnd: Date;
     observations: string[];
     usersOutput: iUserResponse[];
 }

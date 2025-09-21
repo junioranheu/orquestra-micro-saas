@@ -31,6 +31,7 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
 
         foreach (var item in output)
         {
+            item.DateEnd = item.Date.AddMinutes(item.DurationMinutes);
             item.Observations = await CheckForObservations(item);
             item.UsersOutput = await GetUsers(item.UsersIds);
         }

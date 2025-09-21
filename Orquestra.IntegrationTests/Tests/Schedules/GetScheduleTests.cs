@@ -31,6 +31,8 @@ public sealed class GetScheduleTests
         Assert.NotNull(result);
         Assert.Equal(schedule.ScheduleId, result.ScheduleId);
         Assert.Equal(schedule.CompanyId, result.CompanyId);
+        Assert.Equal(schedule.Date, result.Date);
+        Assert.Equal(schedule.DurationMinutes, result.DurationMinutes);
         Assert.Equal(schedule.UsersIds?.Length, result.UsersOutput?.Length);
     }
 

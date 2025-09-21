@@ -12,6 +12,7 @@ public static class ScheduleMock
         {
             ScheduleId = Guid.NewGuid(),
             Date = GetDate().AddDays(GetRandomNumber(1, 7)),
+            DurationMinutes = GetRandomNumber(1, 5),
             PaymentType = PaymentTypeEnum.Credito,
             ScheduleStatus = ScheduleStatusEnum.Scheduled,
             ClientId = clientId,
