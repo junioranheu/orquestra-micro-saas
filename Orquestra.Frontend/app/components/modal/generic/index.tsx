@@ -1,4 +1,5 @@
 import useKeyPress from '@/app/hooks/useKeyPress';
+import Tippy from '@tippyjs/react';
 import { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react';
 import Modal from 'react-modal';
 import styles from './index.module.scss';
@@ -90,9 +91,11 @@ export default function ModalGeneric({
 
                         {
                             showCloseButton && (
-                                <button className='close' onClick={() => handleClose(true)}>
-                                    ✖
-                                </button>
+                                <Tippy content='Fechar'>
+                                    <button className='close' onClick={() => handleClose(true)}>
+                                        ✖
+                                    </button>
+                                </Tippy>
                             )
                         }
                     </div>

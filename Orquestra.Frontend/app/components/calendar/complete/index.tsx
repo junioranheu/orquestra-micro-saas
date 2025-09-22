@@ -9,9 +9,10 @@ import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Guid } from 'guid-typescript';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event as RBCEvent, SlotInfo, View } from 'react-big-calendar';
 import styles from './index.module.scss';
+import ModalCalendarView from './modal/view';
 
 export interface iEvent extends RBCEvent {
     schedule: iSchedule;
@@ -31,6 +32,10 @@ interface iProps {
 export default function CalendarComplete({ events, customElementHeight, companyId, setEvents }: iProps) {
 
     const [, setIsRequestLoading] = useIsRequestLoading();
+
+    const [eventClicked, setEventClicked] = useState<iEvent | undefined>(undefined);
+    const [isMenuViewOpen, setIsMenuViewOpen] = useState<boolean>(false);
+    const [isMenuCreateOpen, setIsMenuCreateOpen] = useState<boolean>(false);
 
     const locales = { 'pt-BR': ptBR };
     const localizer = dateFnsLocalizer({
@@ -145,65 +150,70 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
     // Visualizar evento;
     function handleCheckEvent(event: iEvent) {
-        console.log('Clicou no evento:', event);
+        setIsMenuViewOpen(true);
+        setEventClicked(event);
     }
 
     return (
-        <div className={styles.calendar}>
-            <Calendar
-                localizer={localizer}
-                events={events}
-                startAccessor='start'
-                endAccessor='end'
-                date={date}
-                view={view}
-                onNavigate={setDate}
-                onView={setView}
-                views={availableViews}
-                style={{ height: customElementHeight || '85vh' }}
-                culture='pt-BR'
-                messages={messages}
-                formats={formats}
-                selectable={true}
-                onSelectSlot={(e) => handleAddNewEvent(e)}
-                onSelectEvent={(e) => handleCheckEvent(e)}
-                dayPropGetter={(date) => {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
+        <Fragment>
+            <div className={styles.calendar}>
+                <Calendar
+                    localizer={localizer}
+                    events={events}
+                    startAccessor='start'
+                    endAccessor='end'
+                    date={date}
+                    view={view}
+                    onNavigate={setDate}
+                    onView={setView}
+                    views={availableViews}
+                    style={{ height: customElementHeight || '85vh' }}
+                    culture='pt-BR'
+                    messages={messages}
+                    formats={formats}
+                    selectable={true}
+                    onSelectSlot={(e) => handleAddNewEvent(e)}
+                    onSelectEvent={(e) => handleCheckEvent(e)}
+                    dayPropGetter={(date) => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
 
-                    const day = new Date(date);
-                    day.setHours(0, 0, 0, 0);
+                        const day = new Date(date);
+                        day.setHours(0, 0, 0, 0);
 
-                    if (day < today) {
-                        return {
-                            style: {
-                                cursor: 'not-allowed',
-                                backgroundColor: '#f5f5f5'
+                        if (day < today) {
+                            return {
+                                style: {
+                                    cursor: 'not-allowed',
+                                    backgroundColor: '#f5f5f5'
+                                }
                             }
                         }
-                    }
 
-                    return {};
-                }}
-                eventPropGetter={(event) => {
-                    const today = new Date();
-                    const eventEnd = new Date(event.end);
+                        return {};
+                    }}
+                    eventPropGetter={(event) => {
+                        const today = new Date();
+                        const eventEnd = new Date(event.end);
 
-                    // Se o evento terminou antes de hoje → cor diferenciada;
-                    if (eventEnd < today) {
-                        return {
-                            style: {
-                                backgroundColor: 'var(--gray)',
-                                color: 'var(--black)',
-                                opacity: '0.75'
-                            }
-                        };
-                    }
+                        // Se o evento terminou antes de hoje → cor diferenciada;
+                        if (eventEnd < today) {
+                            return {
+                                style: {
+                                    backgroundColor: 'var(--gray)',
+                                    color: 'var(--black)',
+                                    opacity: '0.75'
+                                }
+                            };
+                        }
 
-                    return {};
-                }}
-            />
-        </div>
+                        return {};
+                    }}
+                />
+            </div>
+
+            <ModalCalendarView isOpen={isMenuViewOpen} setModalIsOpen={setIsMenuViewOpen} event={eventClicked} />
+        </Fragment>
     )
 }
 
