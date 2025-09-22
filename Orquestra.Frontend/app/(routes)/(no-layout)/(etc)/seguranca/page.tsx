@@ -11,7 +11,7 @@ export default function Seguranca() {
 
     useEffect(() => {
         router.push(`${ROUTES.ETC_AJUDA}/topico?t=seguranca`);
-    }, []);
+    }, [router]);
 
     return (
         <section>
