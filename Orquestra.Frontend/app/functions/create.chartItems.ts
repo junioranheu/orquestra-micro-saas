@@ -29,13 +29,13 @@ export interface iChartSeries {
     data: number[];
 }
 
-interface iChartOptionsParams {
+interface iChartOptionsProps {
     categories?: string[];
     color?: string[];
     isHorizontal?: boolean;
 }
 
-export function handleCreateChartOptions(options: iChartOptionsParams): iChartOptions {
+export function handleCreateChartOptions(options: iChartOptionsProps): iChartOptions {
     return {
         plotOptions: {
             bar: {

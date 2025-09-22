@@ -7,14 +7,14 @@ import { Dispatch, SetStateAction } from 'react';
 
 interface iFetchError {
     url: string;
-    body: any;
+    body: string | Blob | BufferSource | FormData | URLSearchParams | ReadableStream | null;
     error: string;
     date: Date;
 }
 
-interface IFetchParams {
+interface iFetchProps {
     url: string;
-    body?: any;
+    body?: string | Blob | BufferSource | FormData | URLSearchParams | ReadableStream | null;
     blobExportName?: string;
     isFormData?: boolean;
     setIsRequestLoading?: Dispatch<SetStateAction<boolean>>;
@@ -30,34 +30,34 @@ const HTTP = {
 export const BASE = process.env.NEXT_PUBLIC_API_URL_BASE as string;
 
 export const Fetch = {
-    async get({ url, blobExportName = '', setIsRequestLoading }: IFetchParams) {
+    async get({ url, blobExportName = '', setIsRequestLoading }: iFetchProps) {
         return this.handleRequestAPI({ url, method: HTTP.GET, body: null, blobExportName, isFormData: false, setIsRequestLoading });
     },
 
-    async post({ url, body = null, setIsRequestLoading }: IFetchParams) {
+    async post({ url, body = null, setIsRequestLoading }: iFetchProps) {
         return this.handleRequestAPI({ url, method: HTTP.POST, body, blobExportName: '', isFormData: false, setIsRequestLoading });
     },
 
-    async put({ url, body = null, setIsRequestLoading }: IFetchParams) {
+    async put({ url, body = null, setIsRequestLoading }: iFetchProps) {
         return this.handleRequestAPI({ url, method: HTTP.PUT, body, blobExportName: '', isFormData: false, setIsRequestLoading });
     },
 
-    async delete({ url, body = null, setIsRequestLoading }: IFetchParams) {
+    async delete({ url, body = null, setIsRequestLoading }: iFetchProps) {
         return this.handleRequestAPI({ url, method: HTTP.DELETE, body, blobExportName: '', isFormData: false, setIsRequestLoading });
     },
 
-    async postIFormFile({ url, body, setIsRequestLoading }: IFetchParams & { body: FormData }) {
+    async postIFormFile({ url, body, setIsRequestLoading }: iFetchProps & { body: FormData }) {
         return this.handleRequestAPI({ url, method: HTTP.POST, body, blobExportName: '', isFormData: true, setIsRequestLoading });
     },
 
-    async handleRequestAPI<T = any>({
+    async handleRequestAPI<T = unknown>({
         url,
         method,
         body = null,
         blobExportName = '',
         isFormData = false,
         setIsRequestLoading
-    }: IFetchParams & { method: typeof HTTP[keyof typeof HTTP] }): Promise<T | Blob | undefined> {
+    }: iFetchProps & { method: typeof HTTP[keyof typeof HTTP] }): Promise<T | Blob | undefined> {
         if (!url) {
             return;
         }
