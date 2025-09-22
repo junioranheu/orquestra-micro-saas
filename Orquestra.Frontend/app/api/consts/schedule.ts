@@ -24,11 +24,12 @@ export default interface iSchedule {
     company: iCompanySimpleOutput;
     usersIds: Guid[];
     isRestrictForSpecificUsers: boolean;
-    dateEnd: Date;
-    observations: string[];
-    usersOutput: iUserResponse[];
     customTitle: string;
     customUrl: string;
-    observation: string;
+    observation: string; // Observação no cadastro do schedule;
     amountReceived: number;
+
+    dateEnd: Date;
+    observations: string[]; // Avisos do sistema;
+    usersOutput: iUserResponse[];
 }

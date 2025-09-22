@@ -1,6 +1,13 @@
+import iSchedule from '@/app/api/consts/schedule';
 import { iEvent } from '@/app/components/calendar/complete';
+import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
-import { Dispatch, Fragment, SetStateAction, useMemo, useState } from 'react';
+import handleGetPropName from '@/app/functions/get.propName';
+import { handleInputFormStateChange, handleSetDropdownOption } from '@/app/functions/set.formState';
+import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -10,68 +17,104 @@ interface iProps {
     onSave?: (updated: iEvent) => Promise<void> | void;
 }
 
+export const CONSTS_PAYMENT_TYPE = [
+    { value: 1, label: 'Dinheiro' },
+    { value: 2, label: 'Crédito' },
+    { value: 3, label: 'Débito' },
+    { value: 4, label: 'Pix' },
+    { value: 5, label: 'TED' },
+    { value: 6, label: 'Outro' }
+] as iDropdownOption[];
+
+export const CONSTS_SCHEDULE_STATUS = [
+    { value: 1, label: 'Marcado' },
+    { value: 2, label: 'Remarcado' },
+    { value: 3, label: 'Concluído' },
+    { value: 4, label: 'Cancelado' }
+];
+
 export default function ModalCalendarView({ isOpen, setModalIsOpen, event, onSave }: iProps) {
 
-    if (!event) {
+    if (!isOpen) {
         return;
     }
 
-    const [editing, setEditing] = useState(false);
-    const [saving, setSaving] = useState(false);
+    if (!event || !event.schedule || !event.schedule.client) {
+        console.error(event);
+        swal({ content: 'Houve uma falha ao abrir esse agendamento. Verifique o inspecionador de elementos.' });
+        setModalIsOpen(false);
+        return;
+    }
 
-    // form state
-    const [title, setTitle] = useState(event.title ?? '');
-    const [clientName, setClientName] = useState(event.schedule.client?.fullName ?? '');
-    const [date, setDate] = useState(formatDateInput(event.start));
-    const [startTime, setStartTime] = useState(formatTimeInput(event.start));
-    const [endTime, setEndTime] = useState(formatTimeInput(event.end));
-    const [duration, setDuration] = useState(String(event.schedule.durationMinutes ?? 60));
-    const [paymentType, setPaymentType] = useState(event.schedule.paymentType ?? '');
-    const [status, setStatus] = useState(event.schedule.scheduleStatus ?? '');
-    const [observations, setObservations] = useState((event.schedule.observations ?? []).join('\n'));
+    useEffect(() => {
+        console.log(event);
+        toast({ content: event.schedule.date.toString() });
+    }, [event]);
 
-    const startDateObj = useMemo(() => toDateFromInputs(date, startTime), [date, startTime]);
-    const endDateObj = useMemo(() => toDateFromInputs(date, endTime), [date, endTime]);
+    const [editing, setEditing] = useState<boolean>(false);
+    const [saving, setSaving] = useState<boolean>(false);
 
-    const canSave = !saving && title.trim().length > 0 && startDateObj < endDateObj;
+    const [formData, setFormData] = useState<iSchedule>({
+        scheduleId: event.schedule.scheduleId,
+        date: event.start,
+        durationMinutes: event.schedule.durationMinutes,
+        paymentType: event.schedule.paymentType,
+        scheduleStatus: event.schedule.scheduleStatus,
+        clientId: event.schedule.clientId,
+        client: event.schedule.client,
+        companyId: event.schedule.companyId,
+        company: event.schedule.company,
+        usersIds: event.schedule.usersIds,
+        isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
+        customTitle: event.schedule.customTitle,
+        customUrl: event.schedule.customUrl,
+        observation: event.schedule.observation, // Observação no cadastro do schedule;
+        amountReceived: event.schedule.amountReceived,
+        dateEnd: event.end,
+        observations: event.schedule.observations, // Avisos do sistema;
+        usersOutput: event.schedule.usersOutput
+    });
+
+    const setPaymentTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.paymentType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     function handleClose() {
         setModalIsOpen(false);
     }
 
     async function handleSave() {
-        if (!canSave) return;
-        setSaving(true);
-        try {
-            const updated = {
-                ...event,
-                title: title.trim(),
-                start: startDateObj,
-                end: endDateObj,
-                schedule: {
-                    ...event?.schedule
-                }
-                // schedule: {
-                //     ...event?.schedule,
-                //     date: startDateObj,
-                //     dateEnd: endDateObj,
-                //     durationMinutes: Math.max(1, Number(duration) || 60),
-                //     paymentType,
-                //     scheduleStatus: status,
-                //     // client: { fullName: clientName },
-                //     observations: observations.split('\n').map(s => s.trim()).filter(Boolean),
-                // },
-            } as unknown as iEvent;
+        // if (!canSave) return;
+        // setSaving(true);
+        // try {
+        //     const updated = {
+        //         ...event,
+        //         title: title.trim(),
+        //         start: startDateObj,
+        //         end: endDateObj,
+        //         schedule: {
+        //             ...event?.schedule
+        //         }
+        //         // schedule: {
+        //         //     ...event?.schedule,
+        //         //     date: startDateObj,
+        //         //     dateEnd: endDateObj,
+        //         //     durationMinutes: Math.max(1, Number(duration) || 60),
+        //         //     paymentType,
+        //         //     scheduleStatus: status,
+        //         //     // client: { fullName: clientName },
+        //         //     observations: observations.split('\n').map(s => s.trim()).filter(Boolean),
+        //         // },
+        //     } as unknown as iEvent;
 
-            const maybePromise = onSave?.(updated);
-            if (maybePromise && typeof (maybePromise as any).then === 'function') await maybePromise;
-            setEditing(false);
-        } catch (err) {
-            console.error('save failed', err);
-            // aqui você pode integrar com um swal/toast
-        } finally {
-            setSaving(false);
-        }
+        //     const maybePromise = onSave?.(updated);
+        //     if (maybePromise && typeof (maybePromise as any).then === 'function') await maybePromise;
+        //     setEditing(false);
+        // } catch (err) {
+        //     console.error('save failed', err);
+        //     // aqui você pode integrar com um swal/toast
+        // } finally {
+        //     setSaving(false);
+        // }
     }
 
     function pad(n: number) {
@@ -105,14 +148,19 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, onSav
                 <header className={styles.header}>
                     <div className={styles.headerLeft}>
                         <div>
-                            <input className={styles.inputTitle} value={title} onChange={e => setTitle(e.target.value)} readOnly={!editing} />
+                            <h1 className={styles.inputTitle}>{event.title}</h1>
                         </div>
                     </div>
 
                     <div className={styles.headerRight}>
                         <div className={styles.metaRow}>
-                            <label className={styles.label}>Data</label>
-                            <input type='date' value={date} onChange={e => setDate(e.target.value)} className={styles.input} readOnly={!editing} />
+                            <InputMask
+                                title='Data'
+                                type='date'
+                                objectFormData={handleGetPropName(formData, x => x.date ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
                         </div>
 
                         <div className={styles.headerActions}>
@@ -121,8 +169,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, onSav
                                     <button className={styles.btn} onClick={() => setEditing(true)}>Editar</button>
                                 ) : (
                                     <Fragment>
-                                        <button className={`${styles.btn} ${styles.ghost}`} onClick={() => { /* reset to original values */ setEditing(false); setTitle(event.title); setClientName(event.schedule.client?.fullName ?? ''); setDate(formatDateInput(event.start)); setStartTime(formatTimeInput(event.start)); setEndTime(formatTimeInput(event.end)); setDuration(String(event.schedule.durationMinutes ?? 60)); setPaymentType(event.schedule.paymentType ?? ''); setStatus(event.schedule.scheduleStatus ?? ''); setObservations((event.schedule.observations ?? []).join('\n')); }}>Cancelar</button>
-                                        <button className={`${styles.btn} ${styles.primary}`} onClick={handleSave} disabled={!canSave || saving}>{saving ? 'Salvando...' : 'Salvar'}</button>
+                                        <button className={`${styles.btn} ${styles.ghost}`} onClick={() => setEditing(false)}>Cancelar</button>
+                                        <button className={`${styles.btn} ${styles.primary}`} onClick={handleSave} disabled={saving}>{saving ? 'Salvando...' : 'Salvar'}</button>
                                     </Fragment>
                                 )
                             }
@@ -133,45 +181,91 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, onSav
                 <main className={styles.content}>
                     <div className={styles.grid}>
                         <div className={styles.fieldGroup}>
-                            <label className={styles.labelSmall}>Cliente</label>
-                            <input className={styles.input} value={clientName} onChange={e => setClientName(e.target.value)} readOnly={!editing} />
+                            <InputMask
+                                title='Cliente'
+                                objectFormData={handleGetPropName(formData, x => x.client ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
 
-                            <label className={styles.labelSmall}>Início</label>
-                            <input type='time' value={startTime} onChange={e => setStartTime(e.target.value)} className={styles.input} readOnly={!editing} />
+                            <InputMask
+                                title='Início'
+                                type='time'
+                                objectFormData={handleGetPropName(formData, x => x.date ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
 
-                            <label className={styles.labelSmall}>Fim</label>
-                            <input type='time' value={endTime} onChange={e => setEndTime(e.target.value)} className={styles.input} readOnly={!editing} />
+                            <InputMask
+                                title='Fim'
+                                type='time'
+                                objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
 
-                            <label className={styles.labelSmall}>Duração (min)</label>
-                            <input type='number' min={1} className={styles.input} value={duration} onChange={e => setDuration(e.target.value)} readOnly={!editing} />
+                            <InputMask
+                                title='Duração (min)'
+                                type='number'
+                                objectFormData={handleGetPropName(formData, x => x.durationMinutes ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
+
+                            <InputMask
+                                title='Observação'
+                                objectFormData={handleGetPropName(formData, x => x.observation ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
+
+                            <InputMask
+                                title='Valor recebido'
+                                type='number'
+                                objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
                         </div>
 
                         <div className={styles.fieldGroup}>
-                            <label className={styles.labelSmall}>Tipo de pagamento</label>
-                            <select className={styles.input} value={paymentType} onChange={e => setPaymentType(e.target.value)} disabled={!editing}>
-                                <option value=''>—</option>
-                                <option value='cartao'>Cartão</option>
-                                <option value='pix'>PIX</option>
-                                <option value='dinheiro'>Dinheiro</option>
-                                <option value='boleto'>Boleto</option>
-                            </select>
+                            <Dropdown
+                                title='Tipo de pagamento'
+                                options={CONSTS_PAYMENT_TYPE}
+                                selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!}
+                                setSelectedOption={setPaymentTypeOption}
+                                isStyleSimple={true}
+                            />
 
-                            <label className={styles.labelSmall}>Status</label>
-                            <select className={styles.input} value={status} onChange={e => setStatus(e.target.value)} disabled={!editing}>
-                                <option value=''>—</option>
-                                <option value='scheduled'>Agendado</option>
-                                <option value='confirmed'>Confirmado</option>
-                                <option value='cancelled'>Cancelado</option>
-                                <option value='done'>Concluído</option>
-                            </select>
+                            <Dropdown
+                                title='Status'
+                                options={CONSTS_SCHEDULE_STATUS}
+                                selectedOption={CONSTS_SCHEDULE_STATUS.find(x => x.label === formData.scheduleStatus)!}
+                                setSelectedOption={setScheduleStatusOption}
+                                isStyleSimple={true}
+                            />
 
-                            <label className={styles.labelSmall}>Usuários (ids)</label>
-                            <input className={styles.input} value={event.schedule.usersIds.join(', ')} readOnly />
+                            <label>Usuários (ids)</label>
+                            <input value={event.schedule.usersIds.join(', ')} readOnly />
+
+                            <InputMask
+                                title='Título'
+                                objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
+
+                            <InputMask
+                                title='URL'
+                                objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
                         </div>
                     </div>
 
-                    <label className={styles.labelSmall}>Observações</label>
-                    <textarea className={styles.textarea} rows={4} value={observations} onChange={e => setObservations(e.target.value)} readOnly={!editing} />
+                    {/* <label className={styles.labelSmall}>Observações</label>
+                    <textarea className={styles.textarea} rows={4} value={observations} onChange={e => setObservations(e.target.value)} readOnly={!editing} /> */}
                 </main>
 
                 <footer className={styles.footer}>

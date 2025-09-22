@@ -6,7 +6,7 @@ import styles from './index.module.scss';
 interface iProps {
     objectFormData: [any, string];
     title?: string;
-    type?: 'text' | 'password' | 'email' | 'number' | 'date';
+    type?: 'text' | 'password' | 'email' | 'number' | 'date' | 'time';
     classes?: string;
     style?: CSSProperties;
     placeholder?: string;
