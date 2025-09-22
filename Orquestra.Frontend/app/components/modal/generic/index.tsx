@@ -1,6 +1,5 @@
-import { handleDisableScroll } from '@/app/hooks/useDisableScroll';
 import useKeyPress from '@/app/hooks/useKeyPress';
-import { CSSProperties, Dispatch, ReactNode, SetStateAction, useEffect } from 'react';
+import { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react';
 import Modal from 'react-modal';
 import styles from './index.module.scss';
 
@@ -18,7 +17,6 @@ interface iProps {
     allowCloseOutsideClick?: boolean;
     title?: string;
     customPosition?: iModalCustomPosition;
-    mustDisableScroll?: boolean;
     children: ReactNode;
 }
 
@@ -41,21 +39,10 @@ export default function ModalGeneric({
     allowCloseOutsideClick = true,
     title,
     customPosition = {},
-    mustDisableScroll = true,
     children
 }: iProps) {
 
     useKeyPress('Escape', () => setModalIsOpen(false));
-
-    useEffect(() => {
-        if (isOpen && mustDisableScroll) {
-            handleDisableScroll();
-        }
-
-        return () => {
-            handleDisableScroll(false);
-        };
-    }, [isOpen, mustDisableScroll]);
 
     function handleClose(isCloseIconClick: boolean = false) {
         if (!allowCloseOutsideClick && !isCloseIconClick) {

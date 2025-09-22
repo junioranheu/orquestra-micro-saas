@@ -7,42 +7,44 @@ export default function useDisableScroll(disable: boolean = true): void {
 
         return () => {
             handleDisableScroll(false);
-        };
+        }
     }, [disable]);
 
-}
+    let childrenStyleTag: HTMLStyleElement | null = null;
 
-export function handleDisableScroll(disable: boolean = true) {
-    const html = document.documentElement;
-    const body = document.body;
-    const children = document.querySelector<HTMLElement>('.children');
+    function handleDisableScroll(disable: boolean = true) {
+        const html = document.documentElement;
+        const body = document.body;
+        const children = document.querySelector<HTMLElement>('.children');
 
-    if (disable) {
-        // Trava scroll do html e body;
-        html.style.overflow = 'hidden';
-        body.style.overflow = 'hidden';
+        if (disable) {
+            html.style.overflow = 'hidden';
+            body.style.overflow = 'hidden';
 
-        if (children) {
-            // força overflow-y hidden;
-            const style = document.createElement('style');
-            style.innerHTML = `
+            if (children && !childrenStyleTag) {
+                childrenStyleTag = document.createElement('style');
+                childrenStyleTag.innerHTML = `
                 .children {
                     overflow-y: hidden !important;
                 }
             `;
+                document.head.appendChild(childrenStyleTag);
+            }
 
-            document.head.appendChild(style);
+            children?.style.setProperty('overflow-y', 'hidden', 'important');
+        } else {
+            html.style.overflow = '';
+            body.style.overflow = '';
 
-            // força overflow-y hidden com !important;
-            children.style.setProperty('overflow-y', 'hidden', 'important');
-        }
-    } else {
-        // Libera scroll do html e body;
-        html.style.overflow = '';
-        body.style.overflow = '';
+            if (children) {
+                children.style.setProperty('overflow-y', '', 'important');
+            }
 
-        if (children) {
-            children.style.setProperty('overflow-y', '', 'important');
+            if (childrenStyleTag) {
+                childrenStyleTag.remove();
+                childrenStyleTag = null;
+            }
         }
     }
+
 }
