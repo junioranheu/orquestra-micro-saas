@@ -2,6 +2,7 @@
 import iClient from '@/app/api/consts/client';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
+import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
@@ -93,13 +94,13 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
     // Buscar toda vez no back-end ao alterar a opção de mês e/ou ano;
     useEffect(() => {
-        async function handleGetSchedules(companyId: Guid, year: number = 0, month: number = 0) {
+        async function handleGetSchedules(companyId: Guid, year: number = 0, month: number = 0, view: View) {
             const items = await Fetch.get({
                 url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${companyId}&year=${year}&month=${month}`,
                 setIsRequestLoading: setIsRequestLoading
             }) as iSchedule[];
 
-            const events = handleMapSchedulesToEvents(items) as iEvent[];
+            const events = handleMapSchedulesToEvents(items, view) as iEvent[];
             // console.log('handleGet/events', events);
 
             setEvents(events);
@@ -112,8 +113,8 @@ export default function CalendarComplete({ events, customElementHeight, companyI
         const year = date.getFullYear();
         const month = date.getMonth() + 1; // 0-based;
 
-        handleGetSchedules(companyId, year, month);
-    }, [date, companyId, setEvents, setIsRequestLoading]);
+        handleGetSchedules(companyId, year, month, view);
+    }, [date, companyId, view, setEvents, setIsRequestLoading]);
 
     // Adicionar novo evento;
     function handleAddNewEvent(event: SlotInfo) {
@@ -201,16 +202,21 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     )
 }
 
-export function handleMapSchedulesToEvents(schedules: iSchedule[]): iEvent[] {
+export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): iEvent[] {
     return schedules.map((schedule) => {
         // console.log('handleMapSchedulesToEvents', schedule);
         const start = new Date(schedule.date);
         const end = schedule.dateEnd ? new Date(schedule.dateEnd) : start;
+        const startNormalized = handleFormatDate(start, DATE_STYLE.HORA_MINUTO);
 
         const client = schedule.client as iClient;
         const clientName = client ? client.fullName : '';
 
-        const title = clientName;
+        let title = clientName;
+
+        if (view === 'month') {
+            title = `${startNormalized} — ${clientName}`;
+        }
 
         const isAllDay = start.getHours() === 0 && start.getMinutes() === 0 && start.getSeconds() === 0 && end.getHours() === 23 && end.getMinutes() === 59;
 

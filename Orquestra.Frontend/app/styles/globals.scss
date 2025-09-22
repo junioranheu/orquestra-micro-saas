@@ -568,10 +568,10 @@ input:-webkit-autofill {
     //     background-color: tomato !important;
     // }
 
-    // // Quadrados;
-    // .rbc-day-bg {
-    //     // background-color: orange !important;
-    // }
+    // Quadrados;
+    .rbc-day-bg {
+        background-color: orange !important;
+    }
 
     // Quadrado de hoje;
     .rbc-today {
@@ -581,13 +581,25 @@ input:-webkit-autofill {
 
     // Eventos;
     .rbc-event {
-        // background-color: tomato !important;
+        // background-color: purple !important;
         border: none !important;
         background-color: var(--main);
+        // padding-left: 1rem;
+        // padding-right: 1rem;
+        border-radius: 0;
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         .rbc-event-content {
             // background-color: orange !important;
             font-size: 0.85rem;
+
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
         }
 
         &:focus,
@@ -616,6 +628,12 @@ input:-webkit-autofill {
     .rbc-month-view {
         border: 1px solid var(--gray-light);
         border-radius: var(--border-radius);
+
+        .rbc-event {
+            // background-color: purple !important;
+            margin-left: -1;
+            width: 101%;
+        }
 
         .rbc-now {
             .rbc-button-link {
@@ -659,6 +677,16 @@ input:-webkit-autofill {
         .rbc-current-time-indicator {
             background-color: var(--contrast);
             height: 3px;
+        }
+
+        .rbc-events-container {
+            // background-color: blue;
+            margin-right: 0;
+
+            .rbc-event {
+                // background-color: yellow !important;
+                width: 100%;
+            }
         }
     }
 

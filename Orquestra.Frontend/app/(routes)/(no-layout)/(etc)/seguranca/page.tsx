@@ -1,14 +1,20 @@
 'use client';
+import ROUTES from '@/app/consts/routes';
 import useTitle from '@/app/hooks/useTitle';
-import styles from './page.module.scss';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Seguranca() {
 
     useTitle('Segurança');
+    const router = useRouter();
+
+    useEffect(() => {
+        router.push(`${ROUTES.ETC_AJUDA}/topico?t=seguranca`);
+    }, []);
 
     return (
-        <section className={styles.main}>
-            <h1>Olá... Segurança</h1>
+        <section>
         </section>
     )
 }
