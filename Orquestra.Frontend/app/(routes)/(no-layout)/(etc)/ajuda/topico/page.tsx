@@ -111,7 +111,7 @@ export function AjudaTopico() {
                 )
             }
 
-            <AjudaListRows filteredTopicItems={filteredTopicItems} />
+            <AjudaListRows filteredTopicItems={filteredTopicItems?.sort((a, b) => a.title.localeCompare(b.title))} />
         </section>
     )
 }

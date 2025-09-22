@@ -20,20 +20,24 @@ export interface iAjudaTopicoItem {
 
 export const HELP_TOPICS = [
     {
-        topic: 'Criar Conta e Acesso',
-        description: `Tudo sobre como criar sua conta, login e segurança de acesso ao ${SYSTEM.NAME}.`,
+        topic: 'Criar conta e acesso',
+        description: `Saiba como criar sua conta, fazer login e manter a segurança de acesso ao ${SYSTEM.NAME}.`,
         items: [
             {
                 title: 'Como criar uma conta?',
-                description: 'Clique em "Cadastrar", preencha seus dados e confirme o e-mail enviado para ativar sua conta.'
+                description: 'Clique em "Crie uma conta agora mesmo", preencha os dados e confirme o e-mail enviado para ativar sua conta.'
             },
             {
                 title: 'Esqueci minha senha',
-                description: 'Na tela de login, clique em "Esqueci minha senha" e siga o link enviado para redefinir sua senha.'
+                description: 'Na tela de login, clique em "Esqueci minha senha", informe seu e-mail e siga o link recebido para redefinir a senha.'
             },
             {
-                title: 'Acessar em mais de um dispositivo',
-                description: 'Sim, basta usar seu e-mail e senha no computador ou celular, o acesso é multi-dispositivo.'
+                title: 'Acessar em múltiplos dispositivos',
+                description: 'Você pode usar seu e-mail e senha tanto no computador quanto no celular; o acesso é multi-dispositivo.'
+            },
+            {
+                title: 'Posso usar um e-mail já cadastrado?',
+                description: 'Não é possível criar uma conta com um e-mail já utilizado por você ou outro usuário.'
             }
         ]
     },
@@ -43,141 +47,111 @@ export const HELP_TOPICS = [
         items: [
             {
                 title: 'Cadastrar clientes manualmente',
-                description: 'Na aba "Clientes", clique em "Adicionar" e preencha os dados como nome, telefone e e-mail.'
+                description: 'No módulo "Clientes", clique em "Adicionar" e preencha nome, telefone, e-mail e demais informações relevantes.'
             },
             {
-                title: 'Histórico do cliente',
+                title: 'Consultar histórico do cliente',
                 description: 'No perfil do cliente, visualize agendamentos, pagamentos e observações registradas.'
             },
             {
                 title: 'Importar lista de clientes',
-                description: 'Carregue um arquivo CSV para importar múltiplos clientes de uma vez.'
+                description: 'Faça upload de um arquivo CSV para importar múltiplos clientes simultaneamente.'
             }
         ]
     },
     {
         topic: 'Agendamentos',
-        description: 'Controle seus horários, serviços e confirmações automáticas.',
+        description: 'Organize seus horários, serviços e notificações automáticas.',
         items: [
             {
                 title: 'Marcar um agendamento',
-                description: 'Acesse "Agendamentos", escolha serviço e profissional e confirme o horário disponível.'
+                description: 'No módulo "Agendamentos", clique em uma data na agenda e preencha os dados do horário, profissional e cliente.'
             },
             {
                 title: 'Cancelar ou reagendar',
-                description: 'Abra o agendamento e selecione "Cancelar" ou "Reagendar". O cliente e o profissional são notificados automaticamente.'
+                description: 'Abra o agendamento e selecione "Cancelar" ou "Reagendar". Cliente e profissional serão notificados automaticamente.'
             },
             {
                 title: 'Lembretes automáticos',
-                description: `O ${SYSTEM.NAME} envia notificações por e-mail e WhatsApp para evitar esquecimentos`
+                description: `O ${SYSTEM.NAME} envia notificações por e-mail e WhatsApp para evitar esquecimentos.`
             }
         ]
     },
     {
         topic: 'Financeiro',
-        description: 'Acompanhe pagamentos, relatórios e fluxo de caixa da sua empresa.',
+        description: 'Acompanhe pagamentos, relatórios e o fluxo de caixa da sua empresa.',
         items: [
             {
                 title: 'Relatórios financeiros',
-                description: 'Veja relatórios de entrada e saída de valores por período para manter controle do seu negócio.'
+                description: 'Visualize relatórios de entrada e saída por período no módulo "Financeiro" para manter o controle do seu negócio.'
             },
             {
                 title: 'Controle de recebimentos',
-                description: `Acompanhe todos os pagamentos feitos pelo ${SYSTEM.NAME}, inclusive pendentes e em processamento.`
-            },
-            {
-                title: 'Reembolsos e ajustes',
-                description: 'Se necessário, reembolse um pagamento diretamente pelo histórico financeiro.'
+                description: `Monitore todos os pagamentos realizados pelo ${SYSTEM.NAME}, incluindo pendentes e em processamento.`
             }
         ]
     },
     {
-        topic: 'Membros e Equipe',
-        description: 'Gerencie os profissionais da sua equipe e seus acessos.',
+        topic: 'Membros e equipe',
+        description: 'Gerencie os profissionais da equipe e seus níveis de acesso.',
         items: [
             {
                 title: 'Cadastrar novos membros',
-                description: 'Na aba "Membros", clique em "Adicionar" e defina permissões e serviços vinculados.'
+                description: 'No módulo "Membros", clique em "Adicionar" e defina permissões e serviços vinculados.'
             },
             {
                 title: 'Definir agenda de profissionais',
-                description: 'Cada membro pode ter seus horários de trabalho personalizados no calendário.'
+                description: 'Cada membro pode ter seus horários personalizados no calendário.'
             },
             {
                 title: 'Gerenciar permissões de acesso',
-                description: 'Controle quem pode acessar informações financeiras, agendamentos e configurações.'
+                description: 'Controle quem pode acessar informações financeiras, agendamentos, configurações e outros módulos.'
+            },
+            {
+                title: 'Apenas um administrador pode gerir os membros?',
+                description: 'Sim, somente administradores podem realizar alterações na equipe.'
             }
         ]
     },
     {
-        topic: 'Preços e Pagamentos',
-        description: 'Configure formas de pagamento, planos e emissão de recibos.',
+        topic: 'LGPD e privacidade',
+        description: `Entenda como o ${SYSTEM.NAME} protege os dados de clientes e profissionais.`,
         items: [
-            {
-                title: 'Ativar pagamentos online',
-                description: 'Em "Configurações > Pagamentos", conecte sua conta do provedor (ex: Stripe ou Mercado Pago).'
-            },
-            {
-                title: 'Emitir recibo',
-                description: 'Após o pagamento, clique em "Gerar recibo" e envie por e-mail ou imprima.'
-            },
-            {
-                title: 'Definir preços de serviços',
-                description: 'Nos cadastros de serviços, insira valores que serão exibidos automaticamente no agendamento.'
-            }
-        ]
-    },
-    {
-        topic: 'LGPD e Privacidade',
-        description: `Saiba como o ${SYSTEM.NAME} protege os dados de clientes e profissionais.`,
-        items: [
-            {
-                title: 'Consentimento de clientes',
-                description: 'Durante o cadastro, os clientes aceitam os termos de uso e privacidade conforme a LGPD.'
-            },
             {
                 title: 'Armazenamento de dados',
                 description: 'Os dados são armazenados de forma segura, com criptografia e backups automáticos.'
             },
             {
                 title: 'Excluir dados pessoais',
-                description: 'Se um cliente solicitar, você pode remover todas as informações associadas ao perfil dele.'
+                description: 'É possível remover todas as informações de um cliente mediante solicitação.'
             }
         ]
     },
     {
         topic: 'Módulos',
-        description: `Entenda os diferentes módulos disponíveis no ${SYSTEM.NAME} e como utilizá-los.`,
+        description: `Conheça os módulos disponíveis no ${SYSTEM.NAME} e como utilizá-los.`,
         items: [
             {
-                title: 'Quais módulos estão disponíveis?',
-                description: `O ${SYSTEM.NAME} possui módulos de Agendamentos, Clientes, Financeiro, Membros e Configurações.`
-            },
-            {
                 title: 'Posso ativar ou desativar módulos?',
-                description: 'Sim, em "Configurações > Módulos" você pode ativar apenas os módulos que deseja utilizar.'
+                description: 'Sim, em "Gerenciar empresa" (/empresa/gerenciar) você pode ativar apenas os módulos que deseja usar.'
             },
             {
-                title: 'Novos módulos futuros',
-                description: 'Periodicamente adicionamos novos módulos para expandir as funcionalidades da plataforma.'
+                title: 'Novos módulos',
+                description: 'Adicionamos periodicamente novos módulos para expandir as funcionalidades da plataforma.'
             }
         ]
     },
     {
         topic: 'Segurança',
-        description: 'Veja como protegemos seus dados e garantimos acesso seguro à plataforma.',
+        description: 'Saiba como protegemos seus dados e garantimos acesso seguro à plataforma.',
         items: [
             {
                 title: 'Autenticação segura',
-                description: 'Todas as senhas são criptografadas e o sistema conta com autenticação multifator (2FA).'
+                description: 'Todas as senhas são criptografadas e protegidas com os padrões de segurança mais modernos.'
             },
             {
                 title: 'Proteção de dados sensíveis',
-                description: 'As informações financeiras e pessoais são transmitidas com criptografia SSL/TLS.'
-            },
-            {
-                title: 'Controle de acessos',
-                description: 'Você pode limitar permissões de membros da equipe para proteger dados estratégicos.'
+                description: 'Informações financeiras e pessoais são armazenadas de forma totalmente segura, com criptografia e políticas de acesso restrito.'
             }
         ]
     }
