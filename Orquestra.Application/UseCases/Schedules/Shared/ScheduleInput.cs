@@ -23,4 +23,10 @@ public sealed class ScheduleInput
     public Guid[]? UsersIds { get; set; } = [];
 
     public bool IsRestrictForSpecificUsers { get; set; }
+
+    public string? CustomTitle { get; set; }
+
+    public string? CustomUrl { get; set; }
+
+    public string? Observation { get; set; }
 }

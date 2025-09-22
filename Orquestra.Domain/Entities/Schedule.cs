@@ -43,4 +43,12 @@ public sealed class Schedule : Audit
             _isRestrictForSpecificUsers = value;
         }
     }
+
+    public string? CustomTitle { get; set; }
+
+    public string? CustomUrl { get; set; }
+
+    public string? Observation { get; set; }
+
+    public decimal? AmountReceived { get; set; } = 0;
 }

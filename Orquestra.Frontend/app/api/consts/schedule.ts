@@ -27,4 +27,8 @@ export default interface iSchedule {
     dateEnd: Date;
     observations: string[];
     usersOutput: iUserResponse[];
+    customTitle: string;
+    customUrl: string;
+    observation: string;
+    amountReceived: number;
 }

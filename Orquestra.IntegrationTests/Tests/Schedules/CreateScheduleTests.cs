@@ -54,6 +54,27 @@ public sealed class CreateScheduleTests
     }
 
     [Fact]
+    public async Task Execute_ShouldThrow_WhenCustomUrlIsNotHttps()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            Date = GetDate().AddDays(1).AddHours(10),
+            DurationMinutes = 1,
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled,
+            CustomUrl = "aea"
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
     public async Task Execute_ShouldThrow_WhenDurationMinutesIsZeroOrNegative()
     {
         (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();

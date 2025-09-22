@@ -27,6 +27,12 @@ public sealed class ScheduleOutput
 
     public bool IsRestrictForSpecificUsers { get; set; }
 
+    public string? CustomTitle { get; set; }
+
+    public string? CustomUrl { get; set; }
+
+    public string? Observation { get; set; }
+
     // Extras;
     public DateTime DateEnd { get; set; }
 

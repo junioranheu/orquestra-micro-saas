@@ -8,6 +8,7 @@ using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Base;
@@ -29,6 +30,13 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
     public async Task Validate(ScheduleInput input, Guid userIdAuth, bool isCreate)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: false);
+
+        bool checkCustomUrl = IsCustomUrlValid(input.CustomUrl);
+
+        if (!checkCustomUrl)
+        {
+            throw new ArgumentException("A URL não é válida. Insira uma URL válida, por favor.");
+        }
 
         if (isCreate)
         {
@@ -176,5 +184,18 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         input.UsersIds = [.. validUsers];
     }
+
+    private static bool IsCustomUrlValid(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return true;
+        }
+
+        return RegexCustomUrl().IsMatch(url);
+    }
+
+    [GeneratedRegex(@"^https?:\/\/[^\s]+$")]
+    private static partial Regex RegexCustomUrl();
     #endregion
 }

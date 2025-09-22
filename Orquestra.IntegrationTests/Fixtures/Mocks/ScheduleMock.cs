@@ -16,7 +16,10 @@ public static class ScheduleMock
             PaymentType = PaymentTypeEnum.Credito,
             ScheduleStatus = ScheduleStatusEnum.Scheduled,
             ClientId = clientId,
-            CompanyId = companyId
+            CompanyId = companyId,
+            CustomTitle = GenerateTrueOrFalse() ? GetRandomString(charLength: GetRandomNumber(10, 100), onlyUpper: false) : string.Empty,
+            CustomUrl = $"https://{GetRandomString(charLength: 22, onlyUpper: false)}",
+            Observation = GetRandomString(charLength: 100, onlyUpper: false)
         };
 
         return input;
