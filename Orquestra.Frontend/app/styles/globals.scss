@@ -76,9 +76,6 @@
     height: 100%;
     flex-grow: 1;
 
-    // overflow-y: auto;
-    // overflow-x: hidden;
-
     letter-spacing: 0.01em;
     font-size: 1rem;
 
@@ -92,8 +89,16 @@
     -moz-user-select: none;
     -ms-user-select: none;
 
+    header {
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+    }
+
     .children {
-        // background-color: orange !important;
+        // background: orange !important;
         background: transparent;
         padding: 0rem 0rem 2rem 0rem;
         overflow: hidden;
