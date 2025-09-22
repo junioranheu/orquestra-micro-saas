@@ -569,8 +569,36 @@ input:-webkit-autofill {
     // }
 
     // Quadrados;
-    .rbc-day-bg {
-        background-color: orange !important;
+    .rbc-row-bg {
+        width: 100% !important;
+
+        // .rbc-day-bg:nth-child(1) {
+        //     background-color: #ffadad !important; // domingo
+        // }
+
+        // .rbc-day-bg:nth-child(2) {
+        //     background-color: #ffd6a5 !important; // segunda
+        // }
+
+        // .rbc-day-bg:nth-child(3) {
+        //     background-color: #fdffb6 !important; // terça
+        // }
+
+        // .rbc-day-bg:nth-child(4) {
+        //     background-color: #caffbf !important; // quarta
+        // }
+
+        // .rbc-day-bg:nth-child(5) {
+        //     background-color: #9bf6ff !important; // quinta
+        // }
+
+        // .rbc-day-bg:nth-child(6) {
+        //     background-color: #a0c4ff !important; // sexta
+        // }
+
+        // .rbc-day-bg:nth-child(7) {
+        //     background-color: #bdb2ff !important; // sábado
+        // }
     }
 
     // Quadrado de hoje;
@@ -633,6 +661,10 @@ input:-webkit-autofill {
             // background-color: purple !important;
             margin-left: -1;
             width: 101%;
+
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
         }
 
         .rbc-now {

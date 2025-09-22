@@ -69,7 +69,10 @@ export default function CalendarComplete({ events, customElementHeight, companyI
             const monthName = format(date, 'MMMM', { locale: ptBR });
 
             return handleCapitalizeFirstLetter(`${dayName}, ${dayNumber} de ${monthName}`);
-        }
+        },
+        agendaDateFormat: (date: Date) => handleCapitalizeFirstLetter(format(date, `EEE, dd 'de' MMM.`, { locale: ptBR })),
+        agendaTimeFormat: (date: Date) => format(date, 'HH:mm', { locale: ptBR }),
+        agendaTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) => `${format(start, 'HH:mm', { locale: ptBR })} - ${format(end, 'HH:mm', { locale: ptBR, })}`
     };
 
     const [date, setDate] = useState<Date>(new Date());
@@ -190,7 +193,9 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                     if (eventEnd < today) {
                         return {
                             style: {
-                                backgroundColor: 'var(--gray)'
+                                backgroundColor: 'var(--gray)',
+                                color: 'var(--black)',
+                                opacity: '0.75'
                             }
                         };
                     }
