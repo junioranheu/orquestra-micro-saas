@@ -567,7 +567,6 @@ input:-webkit-autofill {
 
 // react-big-calendar  
 .rbc-calendar {
-
     // // Headers;
     // .rbc-header {
     //     background-color: tomato !important;
@@ -711,6 +710,28 @@ input:-webkit-autofill {
         border: 1px solid var(--gray-light);
         border-radius: var(--border-radius);
 
+        .rbc-today {
+            // background-color: orange !important;
+
+            .rbc-button-link {
+                font-weight: 600;
+                position: relative;
+                text-decoration: underline solid var(--main);
+                text-underline-offset: 2px;
+
+                &::after {
+                    content: 'hoje';
+                    font-size: 0.6rem;
+                    font-weight: 600;
+                    color: var(--main);
+                    position: absolute;
+                    margin-left: 5px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+            }
+        }
+
         .rbc-current-time-indicator {
             background-color: var(--contrast);
             height: 3px;
@@ -795,7 +816,29 @@ input:-webkit-autofill {
 
 // Media queries
 // hi-res laptops and desktops 
-@media (max-width:1281px) {}
+@media (max-width:1281px) {
+
+    .rbc-calendar {
+        // background-color: yellow;
+
+        // Tipo semana e dia;
+        .rbc-time-view {
+            // background-color: tomato;
+
+            .rbc-today {
+                // background-color: blue;
+
+                .rbc-button-link {
+                    // background-color: orange !important;
+
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
 
 // big landscape tablets, laptops, and desktops 
 @media (max-width:1025px) {}
@@ -810,7 +853,7 @@ input:-webkit-autofill {
     }
 
     .rbc-calendar {
-        // background-color: orange;
+        // background-color: orange !important;
 
         .rbc-toolbar {
             // background-color: purple;

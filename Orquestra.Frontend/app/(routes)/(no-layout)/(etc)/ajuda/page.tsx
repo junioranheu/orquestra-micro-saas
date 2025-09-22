@@ -152,6 +152,22 @@ export const HELP_TOPICS = [
             {
                 title: 'Proteção de dados sensíveis',
                 description: 'Informações financeiras e pessoais são armazenadas de forma totalmente segura, com criptografia e políticas de acesso restrito.'
+            },
+            {
+                title: 'Monitoramento constante',
+                description: 'Nossos sistemas de segurança monitoram continuamente atividades suspeitas para prevenir qualquer tentativa de acesso não autorizado.'
+            },
+            {
+                title: 'Controle de acesso por funções',
+                description: 'Cada usuário tem permissões específicas, garantindo que apenas pessoas autorizadas possam acessar informações críticas.'
+            },
+            {
+                title: 'Backups regulares',
+                description: 'Realizamos backups automáticos periódicos para proteger seus dados contra perdas acidentais ou falhas técnicas.'
+            },
+            {
+                title: 'Atualizações de segurança',
+                description: 'Nossa plataforma recebe atualizações constantes para corrigir vulnerabilidades e manter a proteção contra ameaças emergentes.'
             }
         ]
     }
