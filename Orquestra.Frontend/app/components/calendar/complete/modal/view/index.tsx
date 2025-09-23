@@ -43,7 +43,6 @@ export const CONSTS_SCHEDULE_STATUS = [
 export default function ModalCalendarView({ isOpen, setModalIsOpen, event, companyUsers, clients, onSave }: iProps) {
 
     const router = useRouter();
-    const windowSize = useWindowSize();
 
     if (!isOpen) {
         return;
@@ -68,18 +67,23 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         return;
     }
 
+    const windowSize = useWindowSize();
+
     const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
 
     useEffect(() => {
-        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients, 'clientId', 'fullName');
-        setClientsDropDown(optionsClients);
+        console.log(clients);
+        console.log(clients);
 
-        const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(clients, 'userId', 'user.fullName');
+        const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
         setCompanyUsersDropDown(optionsCompanyUsers);
 
+        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
+        setClientsDropDown(optionsClients);
+
         console.log(event);
-    }, [event, clients, companyUsers]);
+    }, [event, companyUsers, clients]);
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -103,7 +107,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         usersOutput: event.schedule.usersOutput
     });
 
-    const setMemberIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setPaymentTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.paymentType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -261,7 +265,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                                 title='Membros'
                                 options={companyUsersDropDown ?? []}
                                 selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.map(u => u.toString()).includes(x.value.toString())) ?? []}
-                                setSelectedOption={setMemberIdOption}
+                                setSelectedOption={setCompanyUsersIdOption}
                             />
 
                             <InputMask

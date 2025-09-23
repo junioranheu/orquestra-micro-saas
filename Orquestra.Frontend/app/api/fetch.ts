@@ -7,14 +7,14 @@ import { Dispatch, SetStateAction } from 'react';
 
 interface iFetchError {
     url: string;
-    body: string | Blob | BufferSource | FormData | URLSearchParams | ReadableStream | null;
+    body?: any;
     error: string;
     date: Date;
 }
 
 interface iFetchProps {
     url: string;
-    body?: string | Blob | BufferSource | FormData | URLSearchParams | ReadableStream | null;
+    body?: any;
     blobExportName?: string;
     isFormData?: boolean;
     setIsRequestLoading?: Dispatch<SetStateAction<boolean>>;
