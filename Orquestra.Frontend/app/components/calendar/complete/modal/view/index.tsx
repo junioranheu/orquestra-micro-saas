@@ -69,8 +69,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
 
     const windowSize = useWindowSize();
 
-    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
+    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
 
     useEffect(() => {
         const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
@@ -263,10 +263,11 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                             <Dropdown
                                 title='Profissionais'
                                 options={companyUsersDropDown ?? []}
-                                multiple={true}
-                                selectedOption={companyUsersDropDown?.filter(option =>
-                                    formData.usersIds.map(g => g.toString()).includes(option.value.toString())
-                                )}
+                                multiple={false}
+                                // selectedOption={companyUsersDropDown?.filter(option =>
+                                //     formData.usersIds.map(g => g.toString()).includes(option.value.toString())
+                                // )}
+                                selectedOption={companyUsersDropDown?.find(x => x.value === formData.usersIds[0])}
                                 setSelectedOption={setCompanyUsersIdOption}
                             />
 
