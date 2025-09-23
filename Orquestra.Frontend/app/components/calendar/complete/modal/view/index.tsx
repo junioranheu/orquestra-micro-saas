@@ -73,16 +73,11 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
 
     useEffect(() => {
-        console.log(clients);
-        console.log(clients);
-
         const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
         setCompanyUsersDropDown(optionsCompanyUsers);
 
         const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
         setClientsDropDown(optionsClients);
-
-        console.log(event);
     }, [event, companyUsers, clients]);
 
     const [editing, setEditing] = useState<boolean>(false);
@@ -111,6 +106,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setPaymentTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.paymentType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+
+    useEffect(() => {
+        console.log('formData.usersIds', formData.usersIds);
+    }, [formData.usersIds]);
 
     function handleClose() {
         setModalIsOpen(false);
@@ -262,9 +261,12 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                             />
 
                             <Dropdown
-                                title='Membros'
+                                title='Profissionais'
                                 options={companyUsersDropDown ?? []}
-                                selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.map(u => u.toString()).includes(x.value.toString())) ?? []}
+                                multiple={true}
+                                selectedOption={companyUsersDropDown?.filter(option =>
+                                    formData.usersIds.map(g => g.toString()).includes(option.value.toString())
+                                )}
                                 setSelectedOption={setCompanyUsersIdOption}
                             />
 

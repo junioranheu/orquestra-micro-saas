@@ -23,7 +23,7 @@ function handleNormalizeDropdownUpdateFormField<T, K extends keyof T>(setForm: D
 export function handleSetDropdownOption<T>(formData: T, setForm: Dispatch<SetStateAction<T>>, field: keyof T | string): Dispatch<SetStateAction<any>> {
     return (value: SetStateAction<any>) => {
         handleNormalizeDropdownUpdateFormField(setForm, field as keyof T, typeof value === 'function' ? (value as Function)(formData[field as keyof T] as any) : value);
-    };
+    }
 }
 
 // Helpers extras;
