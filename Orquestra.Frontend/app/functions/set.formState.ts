@@ -100,3 +100,20 @@ export function handleParseQueryString(queryString: string): Record<string, stri
 
     return result;
 }
+
+/**
+ * Encontra uma opção de dropdown por label ou value
+ * @param options Array de opções do dropdown
+ * @param key O valor que você quer buscar (pode ser label ou value)
+ * @param by 'label' ou 'value' (opcional, default: 'value')
+ * @returns A opção encontrada ou undefined
+ */
+export function handleFindDropdownOption<T>(options: iDropdownOption<T>[], key: string | T, by: 'label' | 'value' = 'value'): iDropdownOption<T> | undefined {
+    return options.find(option => {
+        if (by === 'label') {
+            return option.label === key;
+        }
+
+        return option.value === key;
+    })
+}

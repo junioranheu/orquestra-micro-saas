@@ -7,7 +7,7 @@ import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import ROUTES from '@/app/consts/routes';
 import handleGetPropName from '@/app/functions/get.propName';
-import { handleInputFormStateChange, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { handleFindDropdownOption, handleInputFormStateChange, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
@@ -98,18 +98,13 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         observation: event.schedule.observation, // Observação no cadastro do schedule;
         amountReceived: event.schedule.amountReceived,
         dateEnd: event.end,
-        observations: event.schedule.observations, // Avisos do sistema;
-        usersOutput: event.schedule.usersOutput
+        observations: event.schedule.observations // Avisos do sistema;
     });
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setPaymentTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.paymentType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
-
-    useEffect(() => {
-        console.log('formData.usersIds', formData.usersIds);
-    }, [formData.usersIds]);
 
     function handleClose() {
         setModalIsOpen(false);
@@ -149,6 +144,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         //     setSaving(false);
         // }
     }
+
+    useEffect(() => {
+        console.log('formData', formData);
+    }, [formData]);
 
     return (
         <ModalGeneric
@@ -249,25 +248,23 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                             <Dropdown
                                 title='Tipo de pagamento'
                                 options={CONSTS_PAYMENT_TYPE}
-                                selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!}
+                                selectedOption={handleFindDropdownOption(CONSTS_PAYMENT_TYPE, formData.paymentType, 'label')}
                                 setSelectedOption={setPaymentTypeOption}
                             />
 
                             <Dropdown
                                 title='Status'
                                 options={CONSTS_SCHEDULE_STATUS}
-                                selectedOption={CONSTS_SCHEDULE_STATUS.find(x => x.label === formData.scheduleStatus)!}
+                                selectedOption={handleFindDropdownOption(CONSTS_SCHEDULE_STATUS, formData.scheduleStatus, 'label')}
                                 setSelectedOption={setScheduleStatusOption}
                             />
 
                             <Dropdown
                                 title='Profissionais'
                                 options={companyUsersDropDown ?? []}
-                                multiple={false}
-                                // selectedOption={companyUsersDropDown?.filter(option =>
-                                //     formData.usersIds.map(g => g.toString()).includes(option.value.toString())
-                                // )}
-                                selectedOption={companyUsersDropDown?.find(x => x.value === formData.usersIds[0])}
+                                multiple={true}
+                                // @ts-ignore;
+                                selectedOption={(companyUsersDropDown ?? []).filter(option => (formData.usersIds ?? []).some(userOption => userOption.value.value === option.value.value))}
                                 setSelectedOption={setCompanyUsersIdOption}
                             />
 
@@ -287,8 +284,14 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                         </div>
                     </div>
 
-                    {/* <label className={styles.labelSmall}>Observações</label>
-                    <textarea className={styles.textarea} rows={4} value={formData.observations} onChange={e => setObservations(e.target.value)} readOnly={!editing} /> */}
+                    <label className={styles.labelSmall}>Observações</label>
+                    <textarea
+                        className={styles.textarea}
+                        rows={3}
+                        value={formData.observations}
+                        onChange={e => setFormData(prev => ({ ...prev, observation: e.target.value }))}
+                        readOnly={!editing}
+                    />
                 </main>
 
                 <footer className={styles.footer}>
