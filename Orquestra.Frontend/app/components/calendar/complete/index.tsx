@@ -1,11 +1,14 @@
 'use client';
-import iClient from '@/app/api/consts/client';
+import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Guid } from 'guid-typescript';
@@ -124,6 +127,14 @@ export default function CalendarComplete({ events, customElementHeight, companyI
         handleGetSchedules(companyId, year, month, view);
     }, [date, companyId, view, setEvents, setIsRequestLoading]);
 
+    // Clientes;
+    const [clients, setClients] = useState<iClient[]>();
+    useApiRequestToSetterOnUrlChange<iClient[]>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${companyId}`, setter: setClients });
+
+    // CompanyUser;
+    const [companyUsers, setCompanyUsers] = useState<iUser[]>();
+    useApiRequestToSetterOnUrlChange<iUser[]>({ apiUrlRequest: `${CONSTS_COMPANY_USER.getAllByCompanyId}?companyId=${companyId}`, setter: setCompanyUsers });
+
     // Adicionar novo evento;
     function handleAddNewEvent(event: SlotInfo) {
         const today = new Date();
@@ -212,7 +223,13 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                 />
             </div>
 
-            <ModalCalendarView isOpen={isMenuViewOpen} setModalIsOpen={setIsMenuViewOpen} event={eventClicked} />
+            <ModalCalendarView
+                isOpen={isMenuViewOpen}
+                setModalIsOpen={setIsMenuViewOpen}
+                event={eventClicked}
+                companyUsers={companyUsers}
+                clients={clients}
+            />
         </Fragment>
     )
 }

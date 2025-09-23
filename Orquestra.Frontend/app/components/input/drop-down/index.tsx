@@ -1,9 +1,10 @@
+import { Guid } from 'guid-typescript';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import styles from './index.module.scss';
 
-export interface iDropdownOption {
-    value: number;
+export interface iDropdownOption<T = Guid | number> {
+    value: T;
     label: string;
 }
 
@@ -11,10 +12,9 @@ interface iProps {
     title?: string;
     options: iDropdownOption[];
     multiple?: boolean;
-    selectedOption: iDropdownOption | iDropdownOption[] | null;
+    selectedOption: iDropdownOption | iDropdownOption[] | null | undefined;
     setSelectedOption: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
     className?: string;
-    isStyleSimple?: boolean;
     showDefaultOption0?: boolean;
     placeholder?: string;
     isDisabled?: boolean;
@@ -29,7 +29,6 @@ export default function Dropdown({
     selectedOption,
     setSelectedOption,
     className = '',
-    isStyleSimple = false,
     placeholder,
     isDisabled = false,
     isSearchable = true,
@@ -73,6 +72,11 @@ export default function Dropdown({
             ...base,
             margin: 0,
             padding: 0
+        }),
+        option: (base: any, { isFocused, isSelected }: any) => ({
+            ...base,
+            backgroundColor: isFocused ? 'var(--contrast-light)' : isSelected ? 'var(--contrast)' : 'transparent',
+            color: isFocused ? 'var(--black)' : isSelected ? 'var(--white)' : 'var(--black)'
         })
     };
 
@@ -90,7 +94,7 @@ export default function Dropdown({
                 placeholder={(placeholder ?? 'Selecione')}
                 styles={customStyle}
                 noOptionsMessage={() => 'Nenhuma opção encontrada'}
-                className={`${styles.dropdown} ${isStyleSimple && styles.simple} ${className && className}`}
+                className={`${styles.dropdown} ${className && className}`}
                 isDisabled={isDisabled}
             />
         </div>

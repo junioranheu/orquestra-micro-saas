@@ -4,7 +4,7 @@ import iCompanySimpleOutput from './company';
 
 const controller = 'api/Client';
 
-export const CONSTS_SCHEDULE = {
+export const CONSTS_CLIENT = {
     post: `${BASE}/${controller}`,
     get: `${BASE}/${controller}`,
     getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`

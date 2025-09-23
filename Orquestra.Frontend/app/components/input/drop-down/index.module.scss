@@ -13,17 +13,22 @@
 
     .dropdown {
         // background-color: orange !important;
-        // border: 1px solid #7dc5dd !important;
-        border-radius: var(--border-radius) !important;
-        background-color: var(--main-dark) !important;
-        transition: 0.3s ease !important;
+        background-color: transparent !important;
+        border: none !important;
+        border-bottom: 1px solid var(--gray-dark) !important;
+        border-radius: 0 !important;
         color: var(--black) !important;
         font-size: 0.75rem !important;
+        transition: 0.3s !important;
+
+        >div:first-of-type {
+            // background-color: tomato !important;
+            background-color: transparent !important;
+        }
 
         &:hover,
         &:focus {
             outline: none !important;
-            border-color: var(--white) !important;
             transition: 0.3s ease !important;
         }
 
@@ -34,15 +39,6 @@
                 color: var(--gray) !important;
                 cursor: not-allowed !important;
             }
-        }
-
-        &.simple {
-            background-color: transparent !important;
-            border: none !important;
-            border-bottom: 1px solid var(--gray-dark) !important;
-            border-radius: 0 !important;
-            color: var(--black) !important;
-            transition: 0.3s !important;
         }
     }
 

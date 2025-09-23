@@ -23,7 +23,7 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>):
         isSelectAll = false,
         allowRequestNull = true,
         trigger = undefined,
-        hasPaginationInput = true,
+        hasPaginationInput = false,
         setIsRequestLoading
     } = options;
 

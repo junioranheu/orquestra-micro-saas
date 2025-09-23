@@ -21,7 +21,7 @@ export default interface iSchedule {
     clientId: Guid;
     client?: iClient;
     companyId?: Guid;
-    company: iCompanySimpleOutput;
+    company?: iCompanySimpleOutput;
     usersIds: Guid[];
     isRestrictForSpecificUsers: boolean;
     customTitle: string;
