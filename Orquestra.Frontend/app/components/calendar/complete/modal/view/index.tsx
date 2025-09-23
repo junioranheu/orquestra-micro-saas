@@ -10,6 +10,7 @@ import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
+import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';
@@ -42,6 +43,7 @@ export const CONSTS_SCHEDULE_STATUS = [
 export default function ModalCalendarView({ isOpen, setModalIsOpen, event, companyUsers, clients, onSave }: iProps) {
 
     const router = useRouter();
+    const windowSize = useWindowSize();
 
     if (!isOpen) {
         return;
@@ -151,7 +153,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
             setModalIsOpen={setModalIsOpen}
             showCloseButton={true}
             allowCloseOutsideClick={false}
-            width='60%'
+            width={windowSize.width <= 1281 ? '85%' : '60%'
+            }
         >
             <div className={styles.card}>
                 <header className={styles.header}>
@@ -163,13 +166,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
 
                     <div className={styles.headerRight}>
                         <div className={styles.metaRow}>
-                            <InputMask
-                                title='Data'
-                                type='date'
-                                objectFormData={handleGetPropName(formData, x => x.date ?? '')}
-                                isDisabled={editing}
-                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
-                            />
+                            <h1>xd</h1>
                         </div>
 
                         <div className={styles.headerActions}>
@@ -190,6 +187,14 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                 <main className={styles.content}>
                     <div className={styles.grid}>
                         <div className={styles.fieldGroup}>
+                            <InputMask
+                                title='Data'
+                                type='date'
+                                objectFormData={handleGetPropName(formData, x => x.date ?? '')}
+                                isDisabled={editing}
+                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
+                            />
+
                             <Dropdown
                                 title='Cliente'
                                 options={clientsDropDown ?? []}
@@ -285,6 +290,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                     </div>
                 </footer>
             </div>
-        </ModalGeneric>
+        </ModalGeneric >
     )
 }
