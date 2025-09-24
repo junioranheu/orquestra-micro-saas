@@ -75,31 +75,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
     });
 
     useEffect(() => {
-        if (!event?.schedule) {
-            return;
-        }
-
-        setFormData({
-            scheduleId: event.schedule.scheduleId,
-            date: event.start,
-            durationMinutes: event.schedule.durationMinutes,
-            paymentType: event.schedule.paymentType,
-            scheduleStatus: event.schedule.scheduleStatus,
-            clientId: event.schedule.clientId,
-            companyId: event.schedule.companyId,
-            usersIds: event.schedule.usersIds,
-            isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
-            customTitle: event.schedule.customTitle,
-            customUrl: event.schedule.customUrl,
-            observation: event.schedule.observation,
-            amountReceived: event.schedule.amountReceived,
-            dateEnd: event.end,
-            observations: event.schedule.observations,
-            usersOutput: event.schedule.usersOutput
-        });
-    }, [event]);
-
-    useEffect(() => {
         if (!isOpen) {
             return;
         }
@@ -123,12 +98,30 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
             return;
         }
 
+        setFormData({
+            scheduleId: event.schedule.scheduleId,
+            date: event.start,
+            durationMinutes: event.schedule.durationMinutes,
+            paymentType: event.schedule.paymentType,
+            scheduleStatus: event.schedule.scheduleStatus,
+            clientId: event.schedule.clientId,
+            companyId: event.schedule.companyId,
+            usersIds: event.schedule.usersIds,
+            isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
+            customTitle: event.schedule.customTitle,
+            customUrl: event.schedule.customUrl,
+            observation: event.schedule.observation,
+            amountReceived: event.schedule.amountReceived,
+            dateEnd: event.end,
+            observations: event.schedule.observations,
+            usersOutput: event.schedule.usersOutput
+        });
+
         const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
         setCompanyUsersDropDown(optionsCompanyUsers);
 
         const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
         setClientsDropDown(optionsClients);
-
     }, [isOpen, event, companyUsers, clients, router, setModalIsOpen]);
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
