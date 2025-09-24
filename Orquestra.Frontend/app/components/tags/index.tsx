@@ -13,13 +13,13 @@ export default function Tags({ tags }: iProps) {
     return (
         <div className={styles.tags}>
             {
-                tags?.map((tag, index) => (
+                tags?.filter(x => x && x.label?.trim()).map((x, index) => (
                     <span
                         key={index}
                         className={styles.tag}
-                        style={{ backgroundColor: tag.color || 'var(--main)' }}
+                        style={{ backgroundColor: x.color || 'var(--main)' }}
                     >
-                        {tag.label}
+                        {x.label}
                     </span>
                 ))
             }
