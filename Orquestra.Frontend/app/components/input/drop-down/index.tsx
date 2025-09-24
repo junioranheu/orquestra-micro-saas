@@ -46,14 +46,15 @@ export default function Dropdown({
     function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption>) {
         if (Array.isArray(e)) {
             // console.log('handleChange/multiple', e);
+            const ids = e.map(x => x.value);
 
             // @ts-ignore;
-            setSelectedOption(e as iDropdownOption[]);
+            setSelectedOption(ids);
         } else {
             // console.log('handleChange/single', e);
 
             // @ts-ignore;
-            setSelectedOption(e as iDropdownOption | null);
+            setSelectedOption(e);
         }
     }
 

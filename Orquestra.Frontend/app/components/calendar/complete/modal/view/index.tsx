@@ -139,8 +139,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             observation: event.schedule.observation,
             amountReceived: event.schedule.amountReceived,
             dateEnd: handleFormatDateTimeToInputValue(event.end),
-            observations: event.schedule.observations,
-            usersOutput: event.schedule.usersOutput
+            observations: event.schedule.observations
         });
     }, [isOpen, event, companyUsers, clients, router, setModalIsOpen]);
 
@@ -153,6 +152,12 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         if (!canEdit) {
             return;
         }
+
+        // @ts-ignore;
+        const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_EN?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus.label)?.value) ?? formData.scheduleStatus;
+
+        // @ts-ignore; 
+        formData.scheduleStatus = scheduleStatusNormalized;
 
         const teste = handleLoopFormData(formData, 'label');
         console.log('teste', teste);
@@ -171,14 +176,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         setEditing(false);
         setModalIsOpen(false);
     }
-
-    useEffect(() => {
-        console.log('companyUsersDropDown', companyUsersDropDown);
-    }, [companyUsersDropDown]);
-
-    useEffect(() => {
-        console.log('formData.usersIds', formData.usersIds);
-    }, [formData.usersIds]);
 
     if (!isOpen || !event) {
         return;
