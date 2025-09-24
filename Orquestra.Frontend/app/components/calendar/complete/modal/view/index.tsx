@@ -6,6 +6,7 @@ import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
+import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -16,7 +17,6 @@ import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/trans
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
-import styles from './index.module.scss';
 
 interface iProps {
     isOpen: boolean;

@@ -237,6 +237,7 @@ input[type='password'] {
     font-weight: 500;
     height: 2.5rem;
 
+    font-style: inherit !important;
     background-color: transparent;
     color: var(--black) !important;
     opacity: 0.9;
@@ -267,6 +268,7 @@ input[type='password'] {
     }
 
     &:disabled {
+        color: #999999 !important;
         background-color: rgba(221, 221, 221, 0.25);
         border: 1px solid rgba(221, 221, 221, 0.25);
         border-radius: var(--border-radius);
