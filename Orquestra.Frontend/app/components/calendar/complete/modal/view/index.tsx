@@ -9,6 +9,7 @@ import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
+import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -47,38 +48,80 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
 
     const router = useRouter();
 
-    if (!isOpen) {
-        return;
-    }
-
-    if (!clients || !clients.length) {
-        swal({
-            content: `Nenhum cliente foi registrado. Por favor, cadastre pelo menos um cliente para prosseguir.`,
-            confirmBtnText: 'Cadastrar cliente',
-            confirmFunction: () => { router.push(ROUTES.EMPRESA_CLIENTES) },
-            icon: 'warning'
-        });
-
-        setModalIsOpen(false);
-        return;
-    }
-
-    if (!event || !event.schedule || !event.schedule.client) {
-        console.error(event);
-        swal({ content: 'Houve uma falha ao abrir esse agendamento. Verifique o inspecionador de elementos.' });
-        setModalIsOpen(false);
-        return;
-    }
-
     const windowSize = useWindowSize();
     const [canEdit, setCanEdit] = useState<boolean>(false);
-
     const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
+    const [editing, setEditing] = useState<boolean>(false);
+    const [saving, setSaving] = useState<boolean>(false);
+
+    const [formData, setFormData] = useState<iSchedule>({
+        scheduleId: SYSTEM.EMPTY_GUID,
+        date: SYSTEM.EMPTY_DATE,
+        durationMinutes: 0,
+        paymentType: '',
+        scheduleStatus: '',
+        clientId: SYSTEM.EMPTY_GUID,
+        companyId: SYSTEM.EMPTY_GUID,
+        usersIds: [],
+        isRestrictForSpecificUsers: false,
+        customTitle: '',
+        customUrl: '',
+        observation: '',
+        amountReceived: 0,
+        dateEnd: SYSTEM.EMPTY_DATE,
+        observations: [],
+        usersOutput: []
+    });
 
     useEffect(() => {
-        console.log(clients);
-        console.log(clients);
+        if (!event?.schedule) {
+            return;
+        }
+
+        setFormData({
+            scheduleId: event.schedule.scheduleId,
+            date: event.start,
+            durationMinutes: event.schedule.durationMinutes,
+            paymentType: event.schedule.paymentType,
+            scheduleStatus: event.schedule.scheduleStatus,
+            clientId: event.schedule.clientId,
+            companyId: event.schedule.companyId,
+            usersIds: event.schedule.usersIds,
+            isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
+            customTitle: event.schedule.customTitle,
+            customUrl: event.schedule.customUrl,
+            observation: event.schedule.observation,
+            amountReceived: event.schedule.amountReceived,
+            dateEnd: event.end,
+            observations: event.schedule.observations,
+            usersOutput: event.schedule.usersOutput
+        });
+    }, [event]);
+
+    useEffect(() => {
+        if (!isOpen) {
+            return;
+        }
+
+        if (!clients || !clients.length) {
+            swal({
+                content: `Nenhum cliente foi registrado. Por favor, cadastre pelo menos um cliente para prosseguir.`,
+                confirmBtnText: 'Cadastrar cliente',
+                confirmFunction: () => { router.push(ROUTES.EMPRESA_CLIENTES) },
+                icon: 'warning'
+            });
+
+            setModalIsOpen(false);
+            return;
+        }
+
+        if (!event || !event.schedule || !event.schedule.client) {
+            console.error(event);
+            swal({ content: 'Houve uma falha ao abrir esse agendamento. Verifique o inspecionador de elementos.' });
+            setModalIsOpen(false);
+            return;
+        }
 
         const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
         setCompanyUsersDropDown(optionsCompanyUsers);
@@ -86,30 +129,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
         setClientsDropDown(optionsClients);
 
-        console.log(event);
-    }, [event, companyUsers, clients]);
-
-    const [editing, setEditing] = useState<boolean>(false);
-    const [saving, setSaving] = useState<boolean>(false);
-
-    const [formData, setFormData] = useState<iSchedule>({
-        scheduleId: event.schedule.scheduleId,
-        date: event.start,
-        durationMinutes: event.schedule.durationMinutes,
-        paymentType: event.schedule.paymentType,
-        scheduleStatus: event.schedule.scheduleStatus,
-        clientId: event.schedule.clientId,
-        companyId: event.schedule.companyId,
-        usersIds: event.schedule.usersIds,
-        isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
-        customTitle: event.schedule.customTitle,
-        customUrl: event.schedule.customUrl,
-        observation: event.schedule.observation, // Observação no cadastro do schedule;
-        amountReceived: event.schedule.amountReceived,
-        dateEnd: event.end,
-        observations: event.schedule.observations, // Avisos do sistema;
-        usersOutput: event.schedule.usersOutput
-    });
+    }, [isOpen, event, companyUsers, clients, router, setModalIsOpen]);
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -120,7 +140,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         if (!canEdit) {
             return;
         }
-
         setSaving(true);
 
         try {
@@ -129,6 +148,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         finally {
             setSaving(false);
         }
+    }
+
+    if (!isOpen || !event) {
+        return;
     }
 
     return (

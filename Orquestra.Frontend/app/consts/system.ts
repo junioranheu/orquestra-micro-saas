@@ -1,3 +1,5 @@
+import { Guid } from 'guid-typescript';
+
 const SYSTEM = {
     NAME: 'Orquestra',
     DESCRIPTION: 'Harmonia na gestão do seu negócio',
@@ -17,7 +19,10 @@ const SYSTEM = {
     ANIMATE_DELAY_1s: 'animate__animated animate__fadeIn animate__fast animate__delay-1s',
     ANIMATE_DELAY_0_5s: 'animate__animated animate__fadeIn animate__fast animate__delay-0_5s',
     ANIMATE_DELAY_FASTER: 'animate__animated animate__fadeIn animate__fast animate__delay-faster',
-    ANIMATE_PULSE_INFINITE: 'animate__animated animate__pulse animate__slower animate__infinite'
+    ANIMATE_PULSE_INFINITE: 'animate__animated animate__pulse animate__slower animate__infinite',
+
+    EMPTY_GUID: Guid.parse('00000000-0000-0000-0000-000000000000'),
+    EMPTY_DATE: new Date(-62135596800000)
 };
 
 export default SYSTEM;
