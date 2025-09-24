@@ -43,33 +43,14 @@ export default function Dropdown({
         // console.log(options, uniqueOptionsArray);
     }, [options]);
 
-    // function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption>) {
-    //     if (Array.isArray(e)) {
-    //         console.log('handleChange/multiple', e);
-
-    //         // @ts-ignore;
-    //         setSelectedOption(e as iDropdownOption[]);
-    //     } else {
-    //         console.log('handleChange/single', e);
-
-    //         // @ts-ignore;
-    //         setSelectedOption(e as iDropdownOption | null);
-    //     }
-    // }
-
     function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption>) {
         if (Array.isArray(e)) {
-            const fixed = e.map(opt => ({
-                ...opt,
-                value: (opt.value as any).value ?? opt.value
-            }));
-
-            console.log('handleChange/multiple', e, 'fixed', fixed);
+            // console.log('handleChange/multiple', e);
 
             // @ts-ignore;
-            setSelectedOption(fixed as iDropdownOption[]);
+            setSelectedOption(e as iDropdownOption[]);
         } else {
-            console.log('handleChange/single', e);
+            // console.log('handleChange/single', e);
 
             // @ts-ignore;
             setSelectedOption(e as iDropdownOption | null);

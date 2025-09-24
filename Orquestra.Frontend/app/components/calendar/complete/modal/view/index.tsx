@@ -168,6 +168,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         setModalIsOpen(false);
     }
 
+    useEffect(() => {
+        console.log('companyUsersDropDown', companyUsersDropDown);
+    }, [companyUsersDropDown]);
+
     if (!isOpen || !event) {
         return;
     }

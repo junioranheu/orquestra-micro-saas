@@ -1,7 +1,7 @@
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
-// Helpers para inputs;
+// Helpers para os inputs;
 export function handleInputFormStateChange(e: ChangeEvent<HTMLInputElement>, setForm: Dispatch<SetStateAction<any>>, isGetWithoutMask: boolean = false): void {
     const { name, value, type, checked } = e.target;
     setForm((prevState: any) => ({ ...prevState, [name]: type === 'checkbox' ? checked : (isGetWithoutMask ? handleGetValueWithoutMask(e) : value) }));

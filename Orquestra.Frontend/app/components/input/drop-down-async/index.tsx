@@ -45,10 +45,17 @@ export default function DropdownAsync({
     }
 
     function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption>) {
-        // console.log(e);
+        if (Array.isArray(e)) {
+            // console.log('handleChange/multiple', e);
 
-        // @ts-ignore;
-        setSelectedOption(e);
+            // @ts-ignore;
+            setSelectedOption(e as iDropdownOption[]);
+        } else {
+            // console.log('handleChange/single', e);
+
+            // @ts-ignore;
+            setSelectedOption(e as iDropdownOption | null);
+        }
     }
 
     const customStyle = {
