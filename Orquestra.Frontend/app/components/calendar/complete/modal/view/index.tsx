@@ -12,7 +12,7 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate, handleFormatDateTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
-import { handleInputFormStateChange, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
@@ -153,6 +153,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         if (!canEdit) {
             return;
         }
+
+        const teste = handleLoopFormData(formData, 'label');
+        console.log('teste', teste);
+
         setSaving(true);
 
         try {
@@ -171,6 +175,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
     useEffect(() => {
         console.log('companyUsersDropDown', companyUsersDropDown);
     }, [companyUsersDropDown]);
+
+    useEffect(() => {
+        console.log('formData.usersIds', formData.usersIds);
+    }, [formData.usersIds]);
 
     if (!isOpen || !event) {
         return;
