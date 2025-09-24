@@ -1,3 +1,5 @@
+import handleGetDateBrazil from './get.date.brazil';
+
 export const DATE_STYLE = {
     DIA_MES_ANO: 'DIA_MES_ANO',
     DETALHADO: 'DETALHADO',
@@ -78,11 +80,54 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
     }
 }
 
-function handleCheckDiffInDays(data1: Date, data2: Date) {
+export function handleCheckDiffInDays(data1: Date, data2: Date): number {
     const oneDayMs = 1000 * 60 * 60 * 24;
 
     const d1 = new Date(data1.getFullYear(), data1.getMonth(), data1.getDate());
     const d2 = new Date(data2.getFullYear(), data2.getMonth(), data2.getDate());
 
     return Math.floor((d1.getTime() - d2.getTime()) / oneDayMs);
+}
+
+export function handleIsBeforeToday(date: Date): boolean {
+    const today = new Date();
+    const dateToCompare = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    return dateToCompare.getTime() < todayWithoutTime.getTime();
+}
+
+export function handleIsBeforeTodayWithTime(date: Date): boolean {
+    return date < handleGetDateBrazil();
+}
+
+/**
+ * Formata um objeto Date em uma string no formato "YYYY-MM-DD",
+ * compatível com campos HTML do tipo date (`type="date"`).
+ *
+ * @param date - O objeto Date que será formatado.
+ * @returns Uma string representando a data no formato "YYYY-MM-DD".
+ */
+export function handleFormatDateToInputValue(date: Date): string {
+    return new Date(date).toISOString().split("T")[0];
+}
+
+/**
+ * Formata um objeto Date em uma string no formato "YYYY-MM-DDTHH:mm",
+ * compatível com campos HTML do tipo datetime-local (`type="datetime-local"`).
+ *
+ * @param date - O objeto Date que será formatado.
+ * @returns Uma string representando a data e hora no formato "YYYY-MM-DDTHH:mm".
+ */
+export function handleFormatDateTimeToInputValue(date: Date): string {
+    const d = new Date(date);
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
