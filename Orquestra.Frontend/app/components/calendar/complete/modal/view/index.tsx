@@ -2,6 +2,7 @@ import iClient from '@/app/api/consts/client';
 import iSchedule from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
 import { iEvent } from '@/app/components/calendar/complete';
+import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
@@ -153,10 +154,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
         <ModalGeneric
             isOpen={isOpen}
             setModalIsOpen={setModalIsOpen}
-            showCloseButton={true}
+            showCloseButton={false}
             allowCloseOutsideClick={false}
-            width={windowSize.width <= 1281 ? '85%' : '60%'
-            }
+            width={windowSize.width <= 1281 ? '85%' : '60%'}
+            style={{ padding: 0, background: 'transparent' }}
         >
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
@@ -214,13 +215,17 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
 
                 <footer className={styles.modalFooter}>
                     <div className={styles.buttonsRow}>
+                        <Button label='Fechar' handleFunction={() => setModalIsOpen(false)} isStyleSimple={true} />
+
                         {
                             !editing ? (
-                                <button className={`${styles.btn} ${styles.primary}`} onClick={() => setEditing(true)}>Editar</button>
+                                <Fragment>
+                                    <Button label='Editar' handleFunction={() => setEditing(true)} />
+                                </Fragment>
                             ) : (
                                 <Fragment>
-                                    <button className={`${styles.btn} ${styles.ghost}`} onClick={() => setEditing(false)}>Cancelar edição</button>
-                                    <button className={`${styles.btn} ${styles.primary}`} onClick={handleSave} disabled={saving}>{saving ? 'Salvando...' : 'Salvar'}</button>
+                                    <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
+                                    <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
                                 </Fragment>
                             )
                         }
