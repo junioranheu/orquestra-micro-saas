@@ -36,7 +36,7 @@
             // background-color: orange !important;
 
             &[disabled] {
-                color: var(--gray) !important;
+                color: rgba(221, 221, 221, 0.13) !important;
                 cursor: not-allowed !important;
             }
         }
@@ -44,5 +44,11 @@
 
     &.disabled {
         cursor: not-allowed !important;
+
+        div {
+            background-color: rgba(221, 221, 221, 0.13) !important;
+            border-bottom: 0 !important;
+            border-radius: var(--border-radius) !important;
+        }
     }
 }

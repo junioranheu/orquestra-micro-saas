@@ -267,8 +267,8 @@ input[type='password'] {
     }
 
     &:disabled {
-        background-color: var(--gray-light);
-        border: 1px solid var(--gray-light);
+        background-color: rgba(221, 221, 221, 0.25);
+        border: 1px solid rgba(221, 221, 221, 0.25);
         border-radius: var(--border-radius);
         cursor: not-allowed;
     }
