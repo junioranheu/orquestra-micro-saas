@@ -31,5 +31,5 @@ export default interface iSchedule {
 
     dateEnd: Date;
     observations: string[]; // Avisos do sistema;
-    usersOutput: iUserResponse[];
+    usersOutput?: iUserResponse[];
 }
