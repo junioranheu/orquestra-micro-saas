@@ -10,6 +10,7 @@ import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleIsBeforeTodayWithTime } from '@/app/functions/check.isDateBeforeToday';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleInputFormStateChange, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -22,6 +23,7 @@ import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 interface iProps {
     isOpen: boolean;
     setModalIsOpen: Dispatch<SetStateAction<boolean>>;
+    type: 'edit' | 'create' | undefined;
     event: iEvent | undefined;
     companyUsers: iUser[] | undefined;
     clients: iClient[] | undefined;
@@ -44,7 +46,7 @@ export const CONSTS_SCHEDULE_STATUS = [
     { value: 4, label: 'Cancelado' }
 ] as iDropdownOption[];
 
-export default function ModalCalendarView({ isOpen, setModalIsOpen, event, companyUsers, clients, onSave }: iProps) {
+export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyUsers, clients, onSave }: iProps) {
 
     const router = useRouter();
 
@@ -97,6 +99,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
             setModalIsOpen(false);
             return;
         }
+
+        console.log('event', event);
 
         setFormData({
             scheduleId: event.schedule.scheduleId,
@@ -160,13 +164,14 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>{event.schedule.customTitle ?? event.title}</h1>
+                        <b>xd {type}</b>
                     </div>
 
                     <div className={styles.modalHeaderRight}>
                         <div className={styles.metaRow}>
                             <Tags
                                 tags={[
-                                    { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO) },
+                                    { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
                                     { label: event.schedule?.scheduleStatus },
                                     { label: event.schedule?.paymentType }
                                 ]}

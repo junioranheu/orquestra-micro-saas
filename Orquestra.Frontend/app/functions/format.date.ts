@@ -19,6 +19,7 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
         const isBr = true;
         const today = 'Hoje';
         const yesterday = 'Ontem';
+        const tomorrow = 'Amanhã';
 
         let dateFormatted = '';
         const dataObj = typeof date === 'string' ? new Date(date) : date;
@@ -27,43 +28,46 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
             case DATE_STYLE.DIA_MES_ANO:
                 dateFormatted = dataObj.toLocaleDateString(locale, { day: 'numeric', month: 'numeric', year: 'numeric' });
                 break;
+
             case DATE_STYLE.DETALHADO:
-                const diferencaDias = Math.floor((Date.now() - dataObj.getTime()) / (1000 * 60 * 60 * 24));
+                const diffDays = handleCheckDiffInDays(new Date(), dataObj);
+                // console.log(diffDays);
 
-                if (diferencaDias === 0) {
-                    const isMesmoDia = dataObj.getDate() === new Date().getDate();
-
-                    if (isMesmoDia) {
-                        dateFormatted = `${today}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr })}`;
-                    } else {
-                        dataObj.setDate(dataObj.getDate() - 1);
-                        dateFormatted = `${yesterday}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr })}`;
-                    }
-                } else if (diferencaDias === 1) {
-                    dataObj.setDate(dataObj.getDate() - 1);
+                if (diffDays === 0) {
+                    dateFormatted = `${today}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr })}`;
+                } else if (diffDays === 1) {
                     dateFormatted = `${yesterday}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr })}`;
+                } else if (diffDays === -1) {
+                    dateFormatted = `${tomorrow}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr })}`;
                 } else {
                     dateFormatted = dataObj.toLocaleTimeString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr });
                 }
                 break;
+
             case DATE_STYLE.MES_EXTENSO_E_ANO:
                 dateFormatted = dataObj.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
                 break;
+
             case DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES:
                 dateFormatted = dataObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
                 break;
+
             case DATE_STYLE.DIA_DA_SEMANA:
                 dateFormatted = dataObj.toLocaleDateString(locale, { weekday: 'long' });
                 break;
+
             case DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO:
                 dateFormatted = dataObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                 break;
+
             case DATE_STYLE.DIA_MES_ANO_HORA_MINUTO_SEGUNDO:
                 dateFormatted = dataObj.toLocaleDateString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
                 break;
+
             case DATE_STYLE.HORA_MINUTO:
                 dateFormatted = dataObj.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false });
                 break;
+
             default:
                 dateFormatted = '-';
         }
@@ -72,4 +76,13 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
     } catch {
         return '-';
     }
+}
+
+function handleCheckDiffInDays(data1: Date, data2: Date) {
+    const oneDayMs = 1000 * 60 * 60 * 24;
+
+    const d1 = new Date(data1.getFullYear(), data1.getMonth(), data1.getDate());
+    const d2 = new Date(data2.getFullYear(), data2.getMonth(), data2.getDate());
+
+    return Math.floor((d1.getTime() - d2.getTime()) / oneDayMs);
 }

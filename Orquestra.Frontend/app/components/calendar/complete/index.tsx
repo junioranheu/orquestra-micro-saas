@@ -37,7 +37,8 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     const [, setIsRequestLoading] = useIsRequestLoading();
 
     const [eventClicked, setEventClicked] = useState<iEvent | undefined>(undefined);
-    const [isMenuViewOpen, setIsMenuViewOpen] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [typeModal, setTypeModal] = useState<('edit' | 'create')>();
     const [isMenuCreateOpen, setIsMenuCreateOpen] = useState<boolean>(false);
 
     const locales = { 'pt-BR': ptBR };
@@ -161,7 +162,8 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
     // Visualizar evento;
     function handleCheckEvent(event: iEvent) {
-        setIsMenuViewOpen(true);
+        setTypeModal('edit');
+        setIsModalOpen(true);
         setEventClicked(event);
     }
 
@@ -224,8 +226,9 @@ export default function CalendarComplete({ events, customElementHeight, companyI
             </div>
 
             <ModalCalendarView
-                isOpen={isMenuViewOpen}
-                setModalIsOpen={setIsMenuViewOpen}
+                isOpen={isModalOpen}
+                setModalIsOpen={setIsModalOpen}
+                type={typeModal}
                 event={eventClicked}
                 companyUsers={companyUsers}
                 clients={clients}
