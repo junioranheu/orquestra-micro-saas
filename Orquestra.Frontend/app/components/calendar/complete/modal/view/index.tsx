@@ -71,6 +71,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
     }
 
     const windowSize = useWindowSize();
+    const [canEdit, setCanEdit] = useState<boolean>(false);
 
     const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
@@ -116,38 +117,18 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
     const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
-        // if (!canSave) return;
-        // setSaving(true);
-        // try {
-        //     const updated = {
-        //         ...event,
-        //         title: title.trim(),
-        //         start: startDateObj,
-        //         end: endDateObj,
-        //         schedule: {
-        //             ...event?.schedule
-        //         }
-        //         // schedule: {
-        //         //     ...event?.schedule,
-        //         //     date: startDateObj,
-        //         //     dateEnd: endDateObj,
-        //         //     durationMinutes: Math.max(1, Number(duration) || 60),
-        //         //     paymentType,
-        //         //     scheduleStatus: status,
-        //         //     // client: { fullName: clientName },
-        //         //     observations: observations.split('\n').map(s => s.trim()).filter(Boolean),
-        //         // },
-        //     } as unknown as iEvent;
+        if (!canEdit) {
+            return;
+        }
 
-        //     const maybePromise = onSave?.(updated);
-        //     if (maybePromise && typeof (maybePromise as any).then === 'function') await maybePromise;
-        //     setEditing(false);
-        // } catch (err) {
-        //     console.error('save failed', err);
-        //     // aqui você pode integrar com um swal/toast
-        // } finally {
-        //     setSaving(false);
-        // }
+        setSaving(true);
+
+        try {
+            setEditing(false);
+        } catch { }
+        finally {
+            setSaving(false);
+        }
     }
 
     return (
@@ -156,13 +137,13 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
             setModalIsOpen={setModalIsOpen}
             showCloseButton={false}
             allowCloseOutsideClick={false}
-            width={windowSize.width <= 1281 ? '85%' : '60%'}
+            width={windowSize.width <= 1281 ? '85%' : '55%'}
             style={{ padding: 0, background: 'transparent' }}
         >
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
-                        <h1 className={styles.inputTitle}>{event.title}</h1>
+                        <h1 className={styles.inputTitle}>{event.schedule.customTitle ?? event.title}</h1>
                     </div>
 
                     <div className={styles.modalHeaderRight}>
@@ -216,7 +197,9 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
                 <footer className={styles.modalFooter}>
                     <div className={styles.buttonsRow}>
                         <Button label='Fechar' handleFunction={() => setModalIsOpen(false)} isStyleSimple={true} />
+                    </div>
 
+                    <div className={styles.buttonsRow}>
                         {
                             !editing ? (
                                 <Fragment>

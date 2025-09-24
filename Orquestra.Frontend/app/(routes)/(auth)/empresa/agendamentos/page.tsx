@@ -4,7 +4,7 @@ import SYSTEM from '@/app/consts/system';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import useTitle from '@/app/hooks/useTitle';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './page.module.scss';
 
@@ -36,14 +36,14 @@ export default function EmpresaAgendamentos() {
     return (
         <section className={`${styles.main} ${SYSTEM.ANIMATE}`} ref={sectionRef}>
             {
-                availableHeight && me && me?.currentMainCompany && (
+                availableHeight && me && me?.currentMainCompany ? (
                     <CalendarComplete
                         events={events}
                         customElementHeight={(availableHeight)}
                         companyId={me?.currentMainCompany?.companyId}
                         setEvents={setEvents}
                     />
-                )
+                ) : <Fragment></Fragment>
             }
         </section>
     )

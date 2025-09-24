@@ -33,6 +33,8 @@ public sealed class ScheduleOutput
 
     public string? Observation { get; set; }
 
+    public decimal? AmountReceived { get; set; } = 0;
+
     // Extras;
     public DateTime DateEnd { get; set; }
 
