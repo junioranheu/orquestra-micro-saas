@@ -45,6 +45,13 @@ export const CONSTS_SCHEDULE_STATUS = [
     { value: 4, label: 'Cancelado' }
 ] as iDropdownOption[];
 
+export const CONSTS_SCHEDULE_STATUS_EN = [
+    { value: 1, label: 'Scheduled' },
+    { value: 2, label: 'Rescheduled' },
+    { value: 3, label: 'Completed' },
+    { value: 4, label: 'Canceled' }
+] as iDropdownOption[];
+
 export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyUsers, clients, onSave }: iProps) {
 
     const router = useRouter();
@@ -75,6 +82,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         usersOutput: []
     });
 
+    const [clientSelected, setClientSelected] = useState<iDropdownOption>();
+    const [statusSelected, setStatusSelected] = useState<iDropdownOption>();
+    const [membersSelected, setMembersSelected] = useState<iDropdownOption[]>();
+
     useEffect(() => {
         if (!isOpen) {
             return;
@@ -85,6 +96,18 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                 content: `Nenhum cliente foi registrado. Por favor, cadastre pelo menos um cliente para prosseguir.`,
                 confirmBtnText: 'Cadastrar cliente',
                 confirmFunction: () => { router.push(ROUTES.EMPRESA_CLIENTES) },
+                icon: 'warning'
+            });
+
+            handleClose();
+            return;
+        }
+
+        if (!companyUsers || !companyUsers.length) {
+            swal({
+                content: `Nenhum membro foi registrado. Por favor, cadastre pelo menos um membro na sua empresa para prosseguir.`,
+                confirmBtnText: 'Cadastrar membro',
+                confirmFunction: () => { router.push(ROUTES.EMPRESA_MEMBROS) },
                 icon: 'warning'
             });
 
@@ -106,29 +129,30 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         setClientsDropDown(optionsClients);
 
         console.clear();
+        console.log(event);
 
-        setTimeout(() => {
-            console.log('event', event);
+        setClientSelected(optionsClients?.find(x => x.value.toString() === event.schedule.clientId.toString()));
+        setStatusSelected(CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_EN?.find(y => y.label === event.schedule.scheduleStatus)?.value));
+        setMembersSelected(optionsCompanyUsers?.filter(x => event.schedule.usersIds?.some(id => id.toString() === x.value.toString())) || []);
 
-            setFormData({
-                scheduleId: event.schedule.scheduleId,
-                date: handleFormatDateTimeToInputValue(event.start),
-                durationMinutes: event.schedule.durationMinutes,
-                paymentType: event.schedule.paymentType,
-                scheduleStatus: event.schedule.scheduleStatus,
-                clientId: event.schedule.clientId,
-                companyId: event.schedule.companyId,
-                usersIds: event.schedule.usersIds,
-                isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
-                customTitle: event.schedule.customTitle,
-                customUrl: event.schedule.customUrl,
-                observation: event.schedule.observation,
-                amountReceived: event.schedule.amountReceived,
-                dateEnd: handleFormatDateTimeToInputValue(event.end),
-                observations: event.schedule.observations,
-                usersOutput: event.schedule.usersOutput
-            });
-        }, 2000);
+        setFormData({
+            scheduleId: event.schedule.scheduleId,
+            date: handleFormatDateTimeToInputValue(event.start),
+            durationMinutes: event.schedule.durationMinutes,
+            paymentType: event.schedule.paymentType,
+            scheduleStatus: event.schedule.scheduleStatus,
+            clientId: event.schedule.clientId,
+            companyId: event.schedule.companyId,
+            usersIds: event.schedule.usersIds,
+            isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
+            customTitle: event.schedule.customTitle,
+            customUrl: event.schedule.customUrl,
+            observation: event.schedule.observation,
+            amountReceived: event.schedule.amountReceived,
+            dateEnd: handleFormatDateTimeToInputValue(event.end),
+            observations: event.schedule.observations,
+            usersOutput: event.schedule.usersOutput
+        });
     }, [isOpen, event, companyUsers, clients, router, setModalIsOpen]);
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -191,26 +215,16 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                 <main className={styles.modalContent}>
                     <div className={styles.grid}>
                         <div className={styles.fieldGroup}>
-                            <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value === formData.clientId)} setSelectedOption={setClientIdOption} isDisabled={!editing} />
+                            <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientSelected} setSelectedOption={setClientIdOption} isDisabled={!editing} />
                             <InputMask title='Data e hora de início' type='datetime-local' objectFormData={handleGetPropName(formData, x => x.date ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-
-                            <Dropdown
-                                title='Membros'
-                                options={companyUsersDropDown ?? []}
-                                multiple={true}
-                                // @ts-ignore;
-                                selectedOption={(companyUsersDropDown ?? []).filter(option => (formData.usersIds ?? []).some(userOption => userOption.value.value === option.value.value))}
-                                setSelectedOption={setCompanyUsersIdOption}
-                                isDisabled={!editing}
-                            />
-
+                            <Dropdown title='Membros' options={companyUsersDropDown ?? []} multiple={true} selectedOption={membersSelected} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
                             <InputMask title='Valor recebido' type='number' objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <InputMask title='Título' objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <InputMask title='URL' objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                         </div>
 
                         <div className={styles.fieldGroup}>
-                            <Dropdown title='Status' options={CONSTS_SCHEDULE_STATUS} selectedOption={CONSTS_SCHEDULE_STATUS.find(x => x.label === formData.scheduleStatus)!} setSelectedOption={setScheduleStatusOption} isDisabled={!editing} />
+                            <Dropdown title='Status' options={CONSTS_SCHEDULE_STATUS} selectedOption={statusSelected} setSelectedOption={setScheduleStatusOption} isDisabled={!editing} />
                             <InputMask title='Data e hora de encerramento' type='datetime-local' objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <InputMask title='Observação' objectFormData={handleGetPropName(formData, x => x.observation ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <Dropdown title='Tipo de pagamento' options={CONSTS_PAYMENT_TYPE} selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
