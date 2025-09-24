@@ -61,13 +61,31 @@
                 flex-direction: column;
                 gap: 12px;
 
+                label {
+                    // background-color: orange !important;
+                    color: var(--black);
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    margin-right: auto;
+                }
+
                 .textarea {
                     resize: vertical;
-                    min-height: 96px;
-                    padding: 8px;
-                    border-radius: 6px;
-                    border: 1px solid #ddd;
+                    min-height: 6.2rem;
+                    padding: 0.5rem;
+                    background-color: rgba(221, 221, 221, 0.25);
+                    border-radius: var(--border-radius);
+                    border: 1px solid var(--gray-light);
                     font-size: 0.95rem;
+                    color: var(--gray-dark);
+                    font-family: inherit;
+                    cursor: not-allowed;
+
+                    &:focus,
+                    &:focus-visible {
+                        outline: none;
+                        border-color: none;
+                    }
                 }
             }
         }
@@ -140,11 +158,15 @@
 // big landscape tablets, laptops, and desktops 
 @media (max-width:1025px) {
     .modalCard {
+        // background-color: tomato;
+        padding-top: 0;
+
         .modalHeader {
             // background-color: orange !important;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            padding-bottom: 1rem;
         }
     }
 }

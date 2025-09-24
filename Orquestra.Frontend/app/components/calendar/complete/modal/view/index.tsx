@@ -205,6 +205,9 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, event, compa
 
                             <InputMask title='Título' objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <InputMask title='URL' objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+
+                            <label>Observações do sistema</label>
+                            <textarea className={styles.textarea} rows={3} value={formData.observations} readOnly={true} />
                         </div>
                     </div>
                 </main>
