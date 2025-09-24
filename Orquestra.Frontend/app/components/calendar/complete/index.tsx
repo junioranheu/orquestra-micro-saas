@@ -148,23 +148,24 @@ export default function CalendarComplete({ events, customElementHeight, companyI
             return;
         }
 
-        // const newEvent = {
-        //     scheduleId: Guid.create(),
-        //     title: 'Novo Evento',
-        //     start: event.start,
-        //     end: event.end,
-        //     allDay: true,
-        // } as iEvent;
+        const newEvent = {
+            schedule: {},
+            title: 'Novo evento',
+            start: event.start,
+            end: event.end,
+            allDay: false
+        } as iEvent;
 
-        console.log('Novo evento:', event.start.toLocaleDateString('pt-BR'), event);
-        // console.log('newEvent:', newEvent);
+        setTypeModal('create');
+        setEventClicked(newEvent);
+        setIsModalOpen(true);
     }
 
     // Visualizar evento;
     function handleCheckEvent(event: iEvent) {
         setTypeModal('edit');
-        setIsModalOpen(true);
         setEventClicked(event);
+        setIsModalOpen(true);
     }
 
     return (

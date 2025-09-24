@@ -12,12 +12,13 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate, handleFormatDateTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
-import { handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 interface iProps {
     isOpen: boolean;
@@ -57,9 +58,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
     const router = useRouter();
     const windowSize = useWindowSize();
 
-    const [canEdit, setCanEdit] = useState<boolean>(false);
+    const [canEdit,] = useState<boolean>(true);
     const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
+
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
@@ -111,6 +113,18 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             return;
         }
 
+        if (type === 'create') {
+            handleClearFormData(setFormData);
+
+            setFormData(prev => ({
+                ...prev,
+                date: handleFormatDateTimeToInputValue(event!.start)
+            }));
+
+            setEditing(true);
+            return;
+        }
+
         if (!event || !event.schedule || !event.schedule.client) {
             console.error(event);
             swal({ content: 'Houve uma falha ao abrir esse agendamento. Verifique o inspecionador de elementos.' });
@@ -141,7 +155,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             dateEnd: handleFormatDateTimeToInputValue(event.end),
             observations: event.schedule.observations
         });
-    }, [isOpen, event, companyUsers, clients, router, setModalIsOpen]);
+    }, [isOpen, type, event, companyUsers, clients, router, setModalIsOpen]);
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -154,15 +168,34 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         }
 
         // @ts-ignore;
-        const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_EN?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus.label)?.value) ?? formData.scheduleStatus;
+        const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_EN?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus?.label)?.value) ?? formData.scheduleStatus;
 
         // @ts-ignore; 
         formData.scheduleStatus = scheduleStatusNormalized;
 
-        const teste = handleLoopFormData(formData, 'label');
-        console.log('teste', teste);
+        if (formData.date) {
+            const date = new Date(formData.date);
+
+            if (date.getHours() === 0 && date.getMinutes() === 0) {
+                const result = await Swal.fire({
+                    text: 'Tem certeza de que deseja agendar para meia-noite?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Voltar',
+                    reverseButtons: true
+                });
+
+                if (!result.isConfirmed) {
+                    return;
+                }
+            }
+        }
 
         setSaving(true);
+
+        const teste = handleLoopFormData(formData, 'label');
+        console.log('teste', teste);
 
         try {
             setEditing(false);
@@ -194,18 +227,21 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>{event.schedule.customTitle ?? event.title}</h1>
-                        <b>type {type}</b>
                     </div>
 
                     <div className={styles.modalHeaderRight}>
                         <div className={styles.metaRow}>
-                            <Tags
-                                tags={[
-                                    { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
-                                    { label: event.schedule?.scheduleStatus },
-                                    { label: event.schedule?.paymentType }
-                                ]}
-                            />
+                            {
+                                type === 'edit' && (
+                                    <Tags
+                                        tags={[
+                                            { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
+                                            { label: event.schedule?.scheduleStatus },
+                                            { label: event.schedule?.paymentType }
+                                        ]}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
                 </header>
@@ -240,20 +276,30 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                         <Button label='Fechar' handleFunction={() => handleClose()} isStyleSimple={true} />
                     </div>
 
-                    <div className={styles.buttonsRow}>
-                        {
-                            !editing ? (
-                                <Fragment>
-                                    <Button label='Editar' handleFunction={() => setEditing(true)} />
-                                </Fragment>
-                            ) : (
-                                <Fragment>
-                                    <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
-                                    <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
-                                </Fragment>
-                            )
-                        }
-                    </div>
+                    {
+                        type === 'create' ? (
+                            <div className={styles.buttonsRow}>
+                                <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
+                            </div>
+                        ) : (
+                            <div className={styles.buttonsRow}>
+                                {
+                                    canEdit && (
+                                        !editing ? (
+                                            <Fragment>
+                                                <Button label='Editar' handleFunction={() => setEditing(true)} />
+                                            </Fragment>
+                                        ) : (
+                                            <Fragment>
+                                                <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
+                                                <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
+                                            </Fragment>
+                                        )
+                                    )
+                                }
+                            </div>
+                        )
+                    }
                 </footer>
             </div>
         </ModalGeneric>
