@@ -17,7 +17,7 @@ import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 interface iProps {
@@ -27,7 +27,6 @@ interface iProps {
     event: iEvent | undefined;
     companyUsers: iUser[] | undefined;
     clients: iClient[] | undefined;
-    onSave?: (updated: iEvent) => Promise<void> | void;
 }
 
 export const CONSTS_PAYMENT_TYPE = [
@@ -53,7 +52,7 @@ export const CONSTS_SCHEDULE_STATUS_EN = [
     { value: 4, label: 'Canceled' }
 ] as iDropdownOption[];
 
-export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyUsers, clients, onSave }: iProps) {
+export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyUsers, clients }: iProps) {
 
     const router = useRouter();
     const windowSize = useWindowSize();
@@ -83,6 +82,11 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         observations: [],
         usersOutput: []
     });
+
+    const handleClose = useCallback(() => {
+        setEditing(false);
+        setModalIsOpen(false);
+    }, [setModalIsOpen]);
 
     useEffect(() => {
         if (!isOpen) {
@@ -155,7 +159,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             dateEnd: handleFormatDateTimeToInputValue(event.end),
             observations: event.schedule.observations
         });
-    }, [isOpen, type, event, companyUsers, clients, router, setModalIsOpen]);
+    }, [isOpen, type, event, companyUsers, clients, router, setModalIsOpen, handleClose]);
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -203,11 +207,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         finally {
             setSaving(false);
         }
-    }
-
-    function handleClose() {
-        setEditing(false);
-        setModalIsOpen(false);
     }
 
     if (!isOpen || !event) {

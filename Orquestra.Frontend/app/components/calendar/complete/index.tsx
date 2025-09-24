@@ -39,7 +39,6 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     const [eventClicked, setEventClicked] = useState<iEvent | undefined>(undefined);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [typeModal, setTypeModal] = useState<('edit' | 'create')>();
-    const [isMenuCreateOpen, setIsMenuCreateOpen] = useState<boolean>(false);
 
     const locales = { 'pt-BR': ptBR };
     const localizer = dateFnsLocalizer({
