@@ -12,7 +12,7 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterO
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event as RBCEvent, SlotInfo, View } from 'react-big-calendar';
 import styles from './index.module.scss';
 import ModalCalendarView from './modal/view';
@@ -104,17 +104,18 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     }, []);
 
     // Buscar toda vez no back-end ao alterar a opção de mês e/ou ano;
-    async function handleGetSchedules(companyId: Guid, year: number = 0, month: number = 0, view: View) {
-        const items = await Fetch.get({
-            url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${companyId}&year=${year}&month=${month}`,
-            setIsRequestLoading: setIsRequestLoading
-        }) as iSchedule[];
+    const handleGetSchedules = useCallback(
+        async (companyId: Guid, year: number = 0, month: number = 0, view: View) => {
+            const items = (await Fetch.get({
+                url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${companyId}&year=${year}&month=${month}`,
+                setIsRequestLoading: setIsRequestLoading,
+            })) as iSchedule[];
 
-        const events = handleMapSchedulesToEvents(items, view) as iEvent[];
-        // console.log('handleGet/events', events);
-
-        setEvents(events);
-    }
+            const events = handleMapSchedulesToEvents(items, view) as iEvent[];
+            setEvents(events);
+        },
+        [setIsRequestLoading, setEvents]
+    );
 
     useEffect(() => {
         if (!date || !companyId) {
@@ -125,7 +126,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
         const month = date.getMonth() + 1; // 0-based;
 
         handleGetSchedules(companyId, year, month, view);
-    }, [date, companyId, view, setEvents, setIsRequestLoading]);
+    }, [date, companyId, view, setEvents, setIsRequestLoading, handleGetSchedules]);
 
     // Clientes;
     const [clients, setClients] = useState<iClient[]>();
