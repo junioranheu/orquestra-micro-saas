@@ -30,7 +30,12 @@ export default interface iSchedule {
     observation: string; // Observação no cadastro do schedule;
     amountReceived: number;
 
+    // Extras;
     dateEnd: Date | string;
     observations: string[]; // Avisos do sistema;
     usersOutput?: iUserResponse[];
+
+    // Front apenas;
+    timeStart: string;
+    timeEnd: string;
 }

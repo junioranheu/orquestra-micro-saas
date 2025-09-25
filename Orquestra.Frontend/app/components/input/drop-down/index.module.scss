@@ -9,6 +9,7 @@
         font-size: 0.75rem;
         font-weight: 500;
         margin-right: auto;
+        margin-bottom: 1px;
 
         .obligatory {
             // background-color: orange;
@@ -25,7 +26,7 @@
         border-bottom: 1px solid var(--gray) !important;
         border-radius: 0 !important;
         color: var(--black) !important;
-        font-size: 0.75rem !important;
+        font-size: 0.8rem !important;
         transition: 0.3s !important;
 
         >div:first-of-type {

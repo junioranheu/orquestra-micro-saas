@@ -11,7 +11,7 @@ import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import { DATE_STYLE, handleFormatDate, handleFormatDateTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
+import { DATE_STYLE, handleFormatDate, handleFormatDateToInputValue, handleFormatTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
 import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeGuidArrayField, handleNormalizeGuidField } from '@/app/functions/normalize.guid';
@@ -87,7 +87,9 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         amountReceived: 0,
         dateEnd: SYSTEM.EMPTY_DATE,
         observations: [],
-        usersOutput: []
+        usersOutput: [],
+        timeStart: '',
+        timeEnd: ''
     });
 
     const handleClose = useCallback(() => {
@@ -135,7 +137,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
 
             setFormData(prev => ({
                 ...prev,
-                date: handleFormatDateTimeToInputValue(event!.start)
+                date: handleFormatDateToInputValue(event?.start ?? new Date())
             }));
 
             setEditing(true);
@@ -151,7 +153,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
 
         setFormData({
             scheduleId: event.schedule.scheduleId,
-            date: handleFormatDateTimeToInputValue(event.start),
+            date: handleFormatDateToInputValue(event.start),
             paymentType: event.schedule.paymentType,
             scheduleStatus: event.schedule.scheduleStatus,
             clientId: event.schedule.clientId,
@@ -162,8 +164,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             customUrl: event.schedule.customUrl,
             observation: event.schedule.observation,
             amountReceived: event.schedule.amountReceived,
-            dateEnd: handleFormatDateTimeToInputValue(event.end),
-            observations: event.schedule.observations
+            dateEnd: handleFormatDateToInputValue(event.end),
+            observations: event.schedule.observations,
+            timeStart: handleFormatTimeToInputValue(event.start),
+            timeEnd: handleFormatTimeToInputValue(event.end)
         });
     }, [isOpen, type, event, companyUsers, clients, router, setModalIsOpen, handleClose]);
 
@@ -177,7 +181,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             return;
         }
 
-        if (!formData.clientId || !formData.date || !formData.dateEnd || !formData.scheduleStatus) {
+        if (!formData.clientId || !formData.date || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus) {
             swal({ content: 'Preencha todos os campos obrigatórios (*) antes de prosseguir com esta ação.', icon: 'warning' });
             return;
         }
@@ -217,6 +221,9 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
             input.clientId = handleNormalizeGuidField(input.clientId);
             input.companyId = companyId;
+
+            input.date = new Date(`${input.date}T${input.timeStart}`);
+            input.dateEnd = new Date(`${input.dateEnd}T${input.timeEnd}`);
             input.date = handleToBrazilDate(input.date);
             input.dateEnd = handleToBrazilDate(input.dateEnd);
             // console.log('input', input);
@@ -249,6 +256,13 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             setSaving(false);
         }
     }
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            dateEnd: formData.date
+        }));
+    }, [formData.date]);
 
     if (!isOpen || !event) {
         return;
@@ -290,8 +304,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                     <div className={styles.grid}>
                         <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Status' options={CONSTS_SCHEDULE_STATUS} selectedOption={CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === formData.scheduleStatus)?.value)} setSelectedOption={setScheduleStatusOption} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Data e hora de início' type='datetime-local' objectFormData={handleGetPropName(formData, x => x.date ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Data e hora de encerramento' type='datetime-local' objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Data de início' type='date' objectFormData={handleGetPropName(formData, x => x.date ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Hora de início' type='time' objectFormData={handleGetPropName(formData, x => x.timeStart ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Data e hora de encerramento' type='date' objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Hora de encerramento' type='time' objectFormData={handleGetPropName(formData, x => x.timeEnd ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
                         <Dropdown title='Membros' options={companyUsersDropDown ?? []} multiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
                         <InputMask title='Observação' objectFormData={handleGetPropName(formData, x => x.observation ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                         <InputMask title='Valor recebido' type='number' objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />

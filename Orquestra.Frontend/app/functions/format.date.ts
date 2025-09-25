@@ -131,3 +131,20 @@ export function handleFormatDateTimeToInputValue(date: Date): string {
 
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
+
+/**
+ * Formata um objeto Date em uma string no formato "HH:mm",
+ * compatível com campos HTML do tipo time (`type="time"`).
+ *
+ * @param date - O objeto Date que será formatado.
+ * @returns Uma string representando a hora no formato "HH:mm".
+ */
+export function handleFormatTimeToInputValue(date: Date): string {
+    const d = new Date(date);
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+
+    return `${hours}:${minutes}`;
+}
