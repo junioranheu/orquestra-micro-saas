@@ -145,7 +145,8 @@ export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorde
                             styles.day,
                             cell.inCurrent ? '' : styles.outside,
                             handleIsSameDay(cell.date, selectedDate) ? styles.selected : '',
-                            (isReadOnly || isPastDay) ? 'notAllowed' : ''
+                            (isReadOnly || isPastDay) ? 'notAllowed' : '',
+                            isPastDay ? styles.pastDay : ''
                         ].join(' ').trim();
 
                         return (
@@ -154,10 +155,12 @@ export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorde
                                 className={`${cls} ${(isReadOnly && 'notAllowed')}`}
                                 onClick={isReadOnly || isPastDay ? undefined : () => setSelectedDate(cell.date)}
                                 aria-pressed={handleIsSameDay(cell.date, selectedDate)}
-                                // title={`${cell.date.toLocaleDateString()}`}
                                 disabled={isReadOnly || isPastDay}
                             >
-                                <span className={styles.dayNumber}>{cell.date.getDate()}</span>
+                                <span className={styles.dayNumber}>
+                                    {/* {cell.date.getDate()} */}
+                                    {cell.date.getDate().toString().padStart(2, '0')}
+                                </span>
                             </button>
                         )
                     })
