@@ -95,6 +95,7 @@ export default function InputMaskCustom({
                 {svg_staticImageData && <Image src={svg_staticImageData} alt='' />}
 
                 <IMaskInput
+                    key={type}
                     mask={mask}
                     type={type}
                     className={classes}

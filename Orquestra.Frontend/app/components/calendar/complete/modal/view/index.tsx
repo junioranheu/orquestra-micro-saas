@@ -269,10 +269,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                         <h1 className={styles.inputTitle}>{event.schedule.customTitle ?? event.title}</h1>
                     </div>
 
-                    <div className={styles.modalHeaderRight}>
-                        <div className={styles.metaRow}>
-                            {
-                                type === 'edit' && (
+                    {
+                        type === 'edit' && (
+                            <div className={styles.modalHeaderRight}>
+                                <div className={styles.metaRow}>
                                     <Tags
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
@@ -280,10 +280,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                             { label: event.schedule?.paymentType }
                                         ]}
                                     />
-                                )
-                            }
-                        </div>
-                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
                 </header>
 
                 <main className={styles.modalContent}>
