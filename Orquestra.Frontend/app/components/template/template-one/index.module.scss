@@ -12,10 +12,13 @@
         text-align: center;
         width: fit-content;
 
-        background: var(--gradient);
+        // background: var(--gradient);
+        // box-shadow: var(--box-shadow);
+        background: transparent;
+        box-shadow: none;
+
         padding: 3rem;
         border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
 
         .iconWrapper {
             // background-color: orange;
