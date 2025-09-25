@@ -625,7 +625,8 @@ input:-webkit-autofill {
     // Evento selecionado;
     .rbc-selected {
         // background-color: orange !important;
-        background-color: var(--main-dark) !important;
+        // background-color: var(--main-dark) !important;
+        background-color: var(--main) !important;
         border: none !important;
 
         &:focus,

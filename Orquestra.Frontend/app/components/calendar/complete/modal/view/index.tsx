@@ -252,7 +252,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             return;
         }
         finally {
-            setEditing(true);
+            setEditing(false);
             setSaving(false);
         }
     }
@@ -280,7 +280,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
-                        <h1 className={styles.inputTitle}>{event.schedule.customTitle ?? event.title}</h1>
+                        <h1 className={styles.inputTitle} dangerouslySetInnerHTML={{ __html: (event.schedule.customTitle ?? event.title) }} />
                     </div>
 
                     {
@@ -289,7 +289,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                 <div className={styles.metaRow}>
                                     <Tags
                                         tags={[
-                                            { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
+                                            { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO_SEM_SEGUNDOS), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
                                             { label: CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === event.schedule?.scheduleStatus)?.value)?.label ?? '' },
                                             { label: event.schedule?.paymentType }
                                         ]}

@@ -3,6 +3,7 @@ import { handleGetDateBrazil } from './get.date.brazil';
 export const DATE_STYLE = {
     DIA_MES_ANO: 'DIA_MES_ANO',
     DETALHADO: 'DETALHADO',
+    DETALHADO_SEM_SEGUNDOS: 'DETALHADO_SEM_SEGUNDOS',
     MES_EXTENSO_E_ANO: 'MES_EXTENSO_E_ANO',
     DIA_DA_SEMANA_E_DIA_DO_MES: 'DIA_DA_SEMANA_E_DIA_DO_MES',
     DIA_DA_SEMANA: 'DIA_DA_SEMANA',
@@ -43,6 +44,21 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
                     dateFormatted = `${tomorrow}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr })}`;
                 } else {
                     dateFormatted = dataObj.toLocaleTimeString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr });
+                }
+                break;
+
+            case DATE_STYLE.DETALHADO_SEM_SEGUNDOS:
+                const diffDays2 = handleCheckDiffInDays(new Date(), dataObj);
+                // console.log(diffDays2);
+
+                if (diffDays2 === 0) {
+                    dateFormatted = `${today}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', hour12: !isBr })}`;
+                } else if (diffDays2 === 1) {
+                    dateFormatted = `${yesterday}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', hour12: !isBr })}`;
+                } else if (diffDays2 === -1) {
+                    dateFormatted = `${tomorrow}, ${dataObj.toLocaleTimeString(locale, { hour: 'numeric', minute: 'numeric', hour12: !isBr })}`;
+                } else {
+                    dateFormatted = dataObj.toLocaleTimeString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: !isBr });
                 }
                 break;
 
