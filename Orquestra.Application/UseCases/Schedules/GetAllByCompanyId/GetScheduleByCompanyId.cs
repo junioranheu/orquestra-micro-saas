@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
+using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
@@ -16,16 +17,40 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
-        var result = await _context.Schedules.
-                     Include(x => x.Client).
-                     Include(x => x.Company).
-                     AsNoTracking().
-                     Where(x => 
-                        x.CompanyId == companyId && 
-                        (year == null || year <= 0 || x.Date.Year == year) &&
-                        (month == null || month <= 0 || x.Date.Month == month) &&
-                        x.Status == true
-                     ).ToListAsync();
+        var query = _context.Schedules.
+                    Include(x => x.Client).
+                    Include(x => x.Company).
+                    AsNoTracking().
+                    Where(x => x.CompanyId == companyId && x.Status == true);
+
+        if ((year.HasValue && year.Value > 0) && (month.HasValue && month.Value > 0)) // Se foi passado year e month, deve pegar o intervalo de: mês anterior, mês alvo e mês posterior;
+        {
+            // Ano alvo;
+            DateTime targetDate = new (year.Value, month.Value, 1);
+
+            // Mês anterior;
+            DateTime prev = targetDate.AddMonths(-1);
+
+            // Próximo mês;
+            DateTime next = targetDate.AddMonths(1);
+
+            // Pega o menor e maior limite de data;
+            DateTime start = prev;
+            DateTime end = next.AddMonths(1).AddTicks(-1); // Fim do próximo mês;
+
+            query = query.Where(x => x.Date >= start && x.Date <= end);
+        }
+        else if ((year.HasValue && year.Value > 0) && (month == 0 || month is null)) // Se foi passado apenas year, pegue apenas o ano alvo;
+        {
+            query = query.Where(x => x.Date.Year == year);
+        }
+
+        List<Schedule> result = await query.ToListAsync();
+
+        if (result is null || result.Count == 0)
+        {
+            return [];
+        }
 
         var output = result.Adapt<List<ScheduleOutput>>();
 

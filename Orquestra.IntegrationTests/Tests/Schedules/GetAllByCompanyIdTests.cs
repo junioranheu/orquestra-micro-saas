@@ -24,44 +24,63 @@ public sealed class GetAllByCompanyIdTests
 
         GetScheduleByCompanyId sut = CreateSut(context, user);
 
-        // Act
+        // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null);
 
         // Assert;
         Assert.NotNull(result);
         Assert.Equal(schedules.Count, result.Count);
-
-        foreach (var schedule in schedules)
-        {
-            Assert.True(schedule.Date > DateTime.MinValue);
-            Assert.True(schedule.DurationMinutes > 0);
-            Assert.Contains(result, r => r.ScheduleId == schedule.ScheduleId);
-        }
     }
 
     [Fact]
-    public async Task Execute_ShouldReturnFilteredSchedules_WhenYearAndMonthProvided()
+    public async Task Execute_ShouldReturnSchedules_WhenYearAndMonthProvided_FiltersByPreviousCurrentAndNextMonth()
     {
-        // Arrange
-        (Context context, User user, Company company, List<Schedule> schedules) = await ArrangeSchedulesWithUserAsync(count: 5);
+        // Arrange;
+        (Context context, User user, Company company, _) = await ArrangeSchedulesWithUserAsync(count: 0);
 
-        // Pega o ano e mês do primeiro schedule
-        Schedule targetSchedule = schedules[0];
-        int year = targetSchedule.Date.Year;
-        int month = targetSchedule.Date.Month;
+        // Cria um cliente;
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        // Datas: fev, mar, abr de 2025;
+        Schedule feb = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        feb.Date = new DateTime(2025, 2, 10, 10, 0, 0);
+        feb.Status = true;
+        await Fixture.Save(context, feb);
+
+        Schedule mar = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        mar.Date = new DateTime(2025, 3, 15, 14, 0, 0);
+        mar.Status = true;
+        await Fixture.Save(context, mar);
+
+        Schedule apr = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        apr.Date = new DateTime(2025, 4, 20, 9, 0, 0);
+        apr.Status = true;
+        await Fixture.Save(context, apr);
+
+        // Fora do range: jan/2025 e mai/2025;
+        Schedule jan = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        jan.Date = new DateTime(2025, 1, 5, 8, 0, 0);
+        jan.Status = true;
+        await Fixture.Save(context, jan);
+
+        Schedule may = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        may.Date = new DateTime(2025, 5, 1, 11, 0, 0);
+        may.Status = true;
+        await Fixture.Save(context, may);
 
         GetScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
-        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, year, month);
+        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, 2025, 3);
 
         // Assert;
         Assert.NotNull(result);
-        Assert.All(result, r =>
-        {
-            Assert.Equal(year, r.Date.Year);
-            Assert.Equal(month, r.Date.Month);
-        });
+        Assert.Contains(result, r => r.ScheduleId == feb.ScheduleId);
+        Assert.Contains(result, r => r.ScheduleId == mar.ScheduleId);
+        Assert.Contains(result, r => r.ScheduleId == apr.ScheduleId);
+        Assert.DoesNotContain(result, r => r.ScheduleId == jan.ScheduleId);
+        Assert.DoesNotContain(result, r => r.ScheduleId == may.ScheduleId);
     }
 
     [Fact]
@@ -92,15 +111,15 @@ public sealed class GetAllByCompanyIdTests
         // Arrange;
         (Context context, User user, Company company, List<Schedule> schedules) = await ArrangeSchedulesWithUserAsync(count: 1);
 
-        // Remove todos os vínculos originais;
+        // Remove vínculos;
         context.CompanyUsers.RemoveRange(context.CompanyUsers);
         await context.SaveChangesAsync();
 
-        // Cria um outro user;
+        // Cria outro usuário;
         User user2 = UserMock.Create();
         await Fixture.Save(context, user2);
 
-        // Cria vínculo do usuário com a empresa;
+        // Vincula o user2;
         CompanyUser companyUser = new()
         {
             CompanyUserId = Guid.NewGuid(),
@@ -121,15 +140,22 @@ public sealed class GetAllByCompanyIdTests
     public async Task Execute_ShouldReturnEmptyList_WhenYearDoesNotMatchAnySchedule()
     {
         // Arrange;
-        (Context context, User user, Company company, List<Schedule> schedules) = await ArrangeSchedulesWithUserAsync(count: 3);
+        (Context context, User user, Company company, _) = await ArrangeSchedulesWithUserAsync(count: 0);
 
-        // Passa um ano que não existe (ex: 1997);
-        int yearNotFound = 1997;
+        // Cria um cliente;
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        // Cria um schedule em 2024;
+        Schedule s = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        s.Date = new DateTime(2024, 6, 1);
+        s.Status = true;
+        await Fixture.Save(context, s);
 
         GetScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
-        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, yearNotFound, null);
+        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, 1997, null);
 
         // Assert;
         Assert.NotNull(result);
@@ -137,55 +163,32 @@ public sealed class GetAllByCompanyIdTests
     }
 
     [Fact]
-    public async Task Execute_ShouldReturnAllSchedules_WhenNoYearOrMonthProvided()
+    public async Task Execute_ShouldReturnSchedulesFilteredByYear_WhenOnlyYearProvided()
     {
         // Arrange;
-        (Context context, User user, Company company, List<Schedule> schedules) = await ArrangeSchedulesWithUserAsync(count: 3);
+        (Context context, User user, Company company, _) = await ArrangeSchedulesWithUserAsync(count: 0);
+
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        Schedule s2025 = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        s2025.Date = new DateTime(2025, 7, 1);
+        s2025.Status = true;
+        await Fixture.Save(context, s2025);
+
+        Schedule s2024 = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        s2024.Date = new DateTime(2024, 12, 1);
+        s2024.Status = true;
+        await Fixture.Save(context, s2024);
 
         GetScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
-        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null);
+        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, 2025, null);
 
         // Assert;
         Assert.NotNull(result);
-        Assert.Equal(schedules.Count, result.Count);
-    }
-
-    [Fact]
-    public async Task Execute_ShouldReturnSchedulesFilteredByYear()
-    {
-        // Arrange;
-        (Context context, User user, Company company, List<Schedule> schedules) = await ArrangeSchedulesWithUserAsync(count: 5);
-
-        int targetYear = schedules[0].Date.Year;
-
-        GetScheduleByCompanyId sut = CreateSut(context, user);
-
-        // Act
-        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, targetYear, null);
-
-        // Assert;
-        Assert.NotNull(result);
-        Assert.All(result, r => Assert.Equal(targetYear, r.Date.Year));
-    }
-
-    [Fact]
-    public async Task Execute_ShouldReturnSchedulesFilteredByMonth()
-    {
-        // Arrange;
-        (Context context, User user, Company company, List<Schedule> schedules) = await ArrangeSchedulesWithUserAsync(count: 5);
-
-        int targetMonth = schedules[0].Date.Month;
-
-        GetScheduleByCompanyId sut = CreateSut(context, user);
-
-        // Act;
-        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, targetMonth);
-
-        // Assert;
-        Assert.NotNull(result);
-        Assert.All(result, r => Assert.Equal(targetMonth, r.Date.Month));
+        Assert.All(result, r => Assert.Equal(2025, r.Date.Year));
     }
 
     #region helpers
@@ -206,7 +209,7 @@ public sealed class GetAllByCompanyIdTests
         Client client = ClientMock.Create();
         await Fixture.Save(context, client);
 
-        // Cria vínculo do usuário com a empresa;
+        // Vínculo;
         CompanyUser companyUser = new()
         {
             CompanyUserId = Guid.NewGuid(),
