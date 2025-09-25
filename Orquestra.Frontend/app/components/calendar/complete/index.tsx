@@ -144,22 +144,23 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
     // Buscar a query data na URL; caso exista: abra o modal de novo evento na data;
     useEffect(() => {
-        if (!queryData) {
+        if (!queryData || !clients || !companyUsers) {
             return;
         }
 
-        const data = handleParseDateFromString(queryData);
+        const queryDataNormalizedToDate = handleParseDateFromString(queryData) as Date;
+        // console.log(queryData, queryDataNormalizedToDate);
 
         // remove a query "?data" da URL sem recarregar a página;
         router.replace(pathname);
 
         const event = {
-            start: data,
-            end: data
+            start: queryDataNormalizedToDate,
+            end: queryDataNormalizedToDate
         } as SlotInfo;
 
         handleAddNewEvent(event);
-    }, [queryData, pathname, router]);
+    }, [queryData, pathname, router, clients, companyUsers]);
 
     // Adicionar novo evento;
     function handleAddNewEvent(event: SlotInfo) {
