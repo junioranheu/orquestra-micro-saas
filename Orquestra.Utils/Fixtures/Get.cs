@@ -32,9 +32,13 @@ public static class Get
     /// <summary>
     /// Detalha em texto a data e hora atual;
     /// </summary>
-    public static string GetDateDetails(bool withHour = true)
+    public static string GetDateDetails(DateTime? date = null, bool withHour = true)
     {
-        DateTime date = GetDate();
+        if (date is null || date == DateTime.MinValue)
+        {
+            date = GetDate();
+        }
+
         string dateDetails = withHour ? $"{date:dd/MM/yyyy} às {date:HH:mm:ss}" : $"{date:dd/MM/yyyy}";
 
         return dateDetails;

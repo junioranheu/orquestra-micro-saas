@@ -16,6 +16,7 @@ import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeGuidArrayField, handleNormalizeGuidField } from '@/app/functions/normalize.guid';
 import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
@@ -31,6 +32,7 @@ interface iProps {
     companyId: Guid;
     companyUsers: iUser[] | undefined;
     clients: iClient[] | undefined;
+    handleGetSchedules: () => Promise<void>;
 }
 
 export const CONSTS_PAYMENT_TYPE = [
@@ -56,7 +58,7 @@ export const CONSTS_SCHEDULE_STATUS_BACKEND = [
     { value: 4, label: 'Canceled' }
 ] as iDropdownOption[];
 
-export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyId, companyUsers, clients }: iProps) {
+export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyId, companyUsers, clients, handleGetSchedules }: iProps) {
 
     const router = useRouter();
     const windowSize = useWindowSize();
@@ -99,7 +101,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
 
         if (!clients || !clients.length) {
             swal({
-                content: `Nenhum cliente foi registrado. Por favor, cadastre pelo menos um cliente para prosseguir.`,
+                content: 'Nenhum cliente foi registrado. Por favor, cadastre pelo menos um cliente para prosseguir.',
                 confirmBtnText: 'Cadastrar cliente',
                 confirmFunction: () => { router.push(ROUTES.EMPRESA_CLIENTES) },
                 icon: 'warning'
@@ -111,7 +113,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
 
         if (!companyUsers || !companyUsers.length) {
             swal({
-                content: `Nenhum membro foi registrado. Por favor, cadastre pelo menos um membro na sua empresa para prosseguir.`,
+                content: 'Nenhum membro foi registrado. Por favor, cadastre pelo menos um membro na sua empresa para prosseguir.',
                 confirmBtnText: 'Cadastrar membro',
                 confirmFunction: () => { router.push(ROUTES.EMPRESA_MEMBROS) },
                 icon: 'warning'
@@ -215,11 +217,9 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                 const schedule = await Fetch.post({ url: CONSTS_SCHEDULE.post, body: input }) as iSchedule;
 
                 if (schedule) {
-                    swal({
-                        content: 'Agendamento criado com sucesso.',
-                        icon: 'success',
-                        confirmFunction: () => window.location.reload()
-                    });
+                    toast({ content: 'Agendamento criado com sucesso.' });
+                    handleGetSchedules();
+                    handleClose();
                 }
 
                 return;
@@ -228,12 +228,12 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.put, body: input }) as iSchedule;
 
             if (schedule) {
-                swal({
-                    content: 'Agendamento atualizado com sucesso.',
-                    icon: 'success',
-                    confirmFunction: () => window.location.reload()
-                });
+                toast({ content: 'Agendamento atualizado com sucesso.' });
+                handleGetSchedules();
+                handleClose();
             }
+
+            return;
         }
         finally {
             setEditing(true);

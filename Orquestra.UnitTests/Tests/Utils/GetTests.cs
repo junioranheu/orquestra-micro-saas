@@ -31,6 +31,17 @@ public sealed class GetTests
     }
 
     [Fact]
+    public void GetDateDetails_ShouldReturn_FormattedDate_UsingExistentDate()
+    {
+        // Act;
+        string result = GetDateDetails(date: GetDate());
+
+        // Assert;
+        Assert.Contains(" às ", result);
+        Assert.Matches(@"\d{2}/\d{2}/\d{4} às \d{2}:\d{2}:\d{2}", result);
+    }
+
+    [Fact]
     public void GetDateDetails_ShouldReturn_FormattedDate()
     {
         // Act;

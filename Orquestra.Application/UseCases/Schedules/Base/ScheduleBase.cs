@@ -59,7 +59,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         // Verifica se ultrapassa o mesmo dia;
         if (input.DateEnd.Date != input.Date.Date)
         {
-            throw new ArgumentException($"A duração não pode ultrapassar o final do dia do agendamento em questão ({input.Date}).");
+            throw new ArgumentException($"A duração não pode ultrapassar o final do dia do agendamento em questão ({GetDateDetails(date: input.Date, withHour: false)}).");
         }
 
         _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);

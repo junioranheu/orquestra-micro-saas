@@ -104,19 +104,19 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     }, []);
 
     // Buscar toda vez no back-end ao alterar a opção de mês e/ou ano;
+    async function handleGetSchedules(companyId: Guid, year: number = 0, month: number = 0, view: View) {
+        const items = await Fetch.get({
+            url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${companyId}&year=${year}&month=${month}`,
+            setIsRequestLoading: setIsRequestLoading
+        }) as iSchedule[];
+
+        const events = handleMapSchedulesToEvents(items, view) as iEvent[];
+        // console.log('handleGet/events', events);
+
+        setEvents(events);
+    }
+
     useEffect(() => {
-        async function handleGetSchedules(companyId: Guid, year: number = 0, month: number = 0, view: View) {
-            const items = await Fetch.get({
-                url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${companyId}&year=${year}&month=${month}`,
-                setIsRequestLoading: setIsRequestLoading
-            }) as iSchedule[];
-
-            const events = handleMapSchedulesToEvents(items, view) as iEvent[];
-            // console.log('handleGet/events', events);
-
-            setEvents(events);
-        }
-
         if (!date || !companyId) {
             return;
         }
@@ -233,6 +233,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                 companyId={companyId}
                 companyUsers={companyUsers}
                 clients={clients}
+                handleGetSchedules={() => handleGetSchedules(companyId, date.getFullYear(), date.getMonth() + 1, view)}
             />
         </Fragment>
     )
