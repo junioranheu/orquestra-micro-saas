@@ -360,6 +360,7 @@ input:-webkit-autofill {
     border-radius: var(--border-radius) !important;
     box-shadow: var(--box-shadow-dark);
     font-family: inherit !important;
+    z-index: 99999999 !important;
 
     .swal2-html-container {
         // background-color: purple !important;
