@@ -209,7 +209,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
             input.clientId = handleNormalizeGuidField(input.clientId);
             input.companyId = companyId;
-            console.log('input', input);
+            // console.log('input', input);
 
             if (type === 'create') {
                 const schedule = await Fetch.post({ url: CONSTS_SCHEDULE.post, body: input }) as iSchedule;

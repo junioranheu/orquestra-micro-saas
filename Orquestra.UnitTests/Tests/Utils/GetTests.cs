@@ -14,7 +14,7 @@ public sealed class GetTests
 
         // Act;
         DateTime result = GetDate();
-        
+
         // Assert;
         DateTime after = DateTime.UtcNow;
         Assert.InRange(result, before, after);
@@ -255,7 +255,7 @@ public sealed class GetTests
         string secret = GenerateJwtSecret();
 
         // Assert;
-        Assert.NotNull(secret);                         
+        Assert.NotNull(secret);
         Assert.Equal(32, secret.Length); // Tem 32 caracteres;
         Assert.True(secret.All(x => "0123456789abcdef".Contains(char.ToLower(x)))); // Todos hex;
     }
@@ -300,6 +300,76 @@ public sealed class GetTests
 
         // Assert;
         Assert.NotEqual(result1, result2);
+    }
+
+    [Fact]
+    public void GetDatesDiffInMinutes_ShouldReturnZero_WhenDatesAreEqual()
+    {
+        // Arrange;
+        DateTime start = new(2025, 09, 25, 10, 00, 00);
+        DateTime end = new(2025, 09, 25, 10, 00, 00);
+
+        // Act;
+        int result = GetDatesDiffInMinutes(start, end);
+
+        // Assert;
+        Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void GetDatesDiffInMinutes_ShouldReturnPositive_WhenEndIsAfterStart()
+    {
+        // Arrange;
+        DateTime start = new(2025, 09, 25, 10, 00, 00);
+        DateTime end = new(2025, 09, 25, 10, 30, 00);
+
+        // Act;
+        int result = GetDatesDiffInMinutes(start, end);
+
+        // Assert;
+        Assert.Equal(30, result);
+    }
+
+    [Fact]
+    public void GetDatesDiffInMinutes_ShouldReturnNegative_WhenEndIsBeforeStart()
+    {
+        // Arrange;
+        DateTime start = new(2025, 09, 25, 10, 30, 00);
+        DateTime end = new(2025, 09, 25, 10, 00, 00);
+
+        // Act;
+        int result = GetDatesDiffInMinutes(start, end);
+
+        // Assert;
+        Assert.Equal(-30, result);
+    }
+
+    [Fact]
+    public void GetDatesDiffInMinutes_ShouldIgnoreSeconds()
+    {
+        // Arrange;
+        DateTime start = new(2025, 09, 25, 10, 00, 00);
+        DateTime end = new(2025, 09, 25, 10, 00, 59);
+
+        // Act;
+        int result = GetDatesDiffInMinutes(start, end);
+
+        // Assert;
+        Assert.Equal(0, result); // 59 segundos < 1 minuto;
+    }
+
+    [Fact]
+    public void GetDatesDiffInMinutes_ShouldTruncateDecimalPart()
+    {
+        // Arrange;
+        DateTime start = new(2025, 09, 25, 10, 00, 00);
+        DateTime end = new(2025, 09, 25, 10, 01, 59);
+
+        // Act;
+        int result = GetDatesDiffInMinutes(start, end);
+
+        // Assert;
+        Assert.Equal(1, result); // Truncou o 1,98 min;
     }
 
     #region helpers

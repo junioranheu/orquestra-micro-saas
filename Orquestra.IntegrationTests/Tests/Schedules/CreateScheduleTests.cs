@@ -33,6 +33,8 @@ public sealed class CreateScheduleTests
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
 
+        input.DurationMinutes = GetDatesDiffInMinutes(start: input.Date, end: input.DateEnd); 
+
         CreateSchedule sut = CreateSut(context, user);
 
         // Act;

@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Update;
 
@@ -33,7 +34,7 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
                              Where(x => x.ScheduleId == input.ScheduleId).
                              FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
 
-        int diffMinutes = (int)(input.DateEnd - input.Date).TotalMinutes;
+        int diffMinutes = GetDatesDiffInMinutes(start: input.Date, end: input.DateEnd);
 
         schedule.Date = input.Date;
         schedule.DurationMinutes = diffMinutes;

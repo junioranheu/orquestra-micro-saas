@@ -3,6 +3,7 @@ using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Create;
 
@@ -28,9 +29,7 @@ public sealed class CreateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     {
         var schedule = input.Adapt<Schedule>();
 
-        int diffMinutes = (int)(input.DateEnd - input.Date).TotalMinutes;
-
-        schedule.DurationMinutes = diffMinutes;
+        schedule.DurationMinutes = GetDatesDiffInMinutes(start: input.Date, end: input.DateEnd);
         schedule.IsRestrictForSpecificUsers = input.UsersIds?.Length > 0;
 
         await _context.AddAsync(schedule);

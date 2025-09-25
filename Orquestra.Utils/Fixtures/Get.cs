@@ -226,4 +226,20 @@ public static class Get
 
         return output;
     }
+
+    /// <summary>
+    /// Calcula a diferença em minutos entre duas datas.
+    /// </summary>
+    /// <param name="start">Data/hora inicial.</param>
+    /// <param name="end">Data/hora final.</param>
+    /// <returns>
+    /// A quantidade total de minutos entre <paramref name="start"/> e <paramref name="end"/>.
+    /// O valor pode ser negativo caso <paramref name="end"/> seja anterior a <paramref name="start"/>.
+    /// </returns>
+    public static int GetDatesDiffInMinutes(DateTime start, DateTime end)
+    {
+        int diff = (int)(end - start).TotalMinutes;
+
+        return diff;
+    }
 }
