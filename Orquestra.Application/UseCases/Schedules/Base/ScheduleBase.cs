@@ -48,7 +48,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         if (input.Date <= GetDate())
         {
-            throw new ArgumentException("Não é possível criar um agendamento com data anterior à de hoje.");
+            throw new ArgumentException("Não é possível criar um agendamento com data e hora anterior à de hoje.");
         }
 
         if (input.DateEnd <= input.Date)

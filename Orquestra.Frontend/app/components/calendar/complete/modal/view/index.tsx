@@ -93,8 +93,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
     });
 
     const handleClose = useCallback(() => {
+        setSaving(false);
         setEditing(false);
         setModalIsOpen(false);
+        handleClearFormData(setFormData);
     }, [setModalIsOpen]);
 
     useEffect(() => {
@@ -205,8 +207,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             }
         }
 
-        setSaving(true);
         setEditing(false);
+        setSaving(true);
 
         const data = handleLoopFormData(formData);
         const input = data.json as iSchedule;
@@ -234,9 +236,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             if (schedule) {
                 toast({ content: 'Agendamento criado com sucesso.' });
                 handleGetSchedules();
-                handleClearFormData(setFormData);
-                setEditing(false);
-                setSaving(false);
                 handleClose();
                 return;
             }
@@ -251,9 +250,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         if (schedule) {
             toast({ content: 'Agendamento atualizado com sucesso.' });
             handleGetSchedules();
-            handleClearFormData(setFormData);
-            setEditing(false);
-            setSaving(false);
             handleClose();
             return;
         }
@@ -286,7 +282,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
-                        <h1 className={styles.inputTitle}>{event?.schedule?.customTitle ?? event?.title}</h1>
+                        <h1 className={styles.inputTitle}>{formData?.customTitle ?? event?.title}</h1>
                     </div>
 
                     {
