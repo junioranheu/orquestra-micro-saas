@@ -45,6 +45,7 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         schedule.CustomUrl = input.CustomUrl;
         schedule.Observation = input.Observation;
         schedule.AmountReceived = input.AmountReceived;
+        schedule.IsRestrictForSpecificUsers = input.UsersIds?.Length > 0;
 
         _context.Update(schedule);
         await _context.SaveChangesAsync();

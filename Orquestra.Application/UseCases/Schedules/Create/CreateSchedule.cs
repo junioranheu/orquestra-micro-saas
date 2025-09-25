@@ -28,6 +28,11 @@ public sealed class CreateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     {
         var schedule = input.Adapt<Schedule>();
 
+        int diffMinutes = (int)(input.DateEnd - input.Date).TotalMinutes;
+
+        schedule.DurationMinutes = diffMinutes;
+        schedule.IsRestrictForSpecificUsers = input.UsersIds?.Length > 0;
+
         await _context.AddAsync(schedule);
         await _context.SaveChangesAsync();
 

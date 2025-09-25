@@ -13,10 +13,12 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate, handleFormatDateTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
-import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleNormalizeArrayField, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { handleNormalizeGuidArrayField, handleNormalizeGuidField } from '@/app/functions/normalize.guid';
+import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
+import { Guid } from 'guid-typescript';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -26,14 +28,15 @@ interface iProps {
     setModalIsOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create' | undefined;
     event: iEvent | undefined;
+    companyId: Guid;
     companyUsers: iUser[] | undefined;
     clients: iClient[] | undefined;
 }
 
 export const CONSTS_PAYMENT_TYPE = [
     { value: 1, label: 'Dinheiro' },
-    { value: 2, label: 'Crédito' },
-    { value: 3, label: 'Débito' },
+    { value: 2, label: 'Credito' },
+    { value: 3, label: 'Debito' },
     { value: 4, label: 'Pix' },
     { value: 5, label: 'TED' },
     { value: 6, label: 'Outro' }
@@ -46,14 +49,14 @@ export const CONSTS_SCHEDULE_STATUS = [
     { value: 4, label: 'Cancelado' }
 ] as iDropdownOption[];
 
-export const CONSTS_SCHEDULE_STATUS_EN = [
+export const CONSTS_SCHEDULE_STATUS_BACKEND = [
     { value: 1, label: 'Scheduled' },
     { value: 2, label: 'Rescheduled' },
     { value: 3, label: 'Completed' },
     { value: 4, label: 'Canceled' }
 ] as iDropdownOption[];
 
-export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyUsers, clients }: iProps) {
+export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyId, companyUsers, clients }: iProps) {
 
     const router = useRouter();
     const windowSize = useWindowSize();
@@ -118,6 +121,12 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             return;
         }
 
+        const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
+        setCompanyUsersDropDown(optionsCompanyUsers);
+
+        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
+        setClientsDropDown(optionsClients);
+
         if (type === 'create') {
             handleClearFormData(setFormData);
 
@@ -136,12 +145,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             handleClose();
             return;
         }
-
-        const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
-        setCompanyUsersDropDown(optionsCompanyUsers);
-
-        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
-        setClientsDropDown(optionsClients);
 
         setFormData({
             scheduleId: event.schedule.scheduleId,
@@ -172,8 +175,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         }
 
         // @ts-ignore;
-        const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_EN?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus?.label)?.value) ?? formData.scheduleStatus;
-
+        const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_BACKEND?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus?.label)?.value) ?? formData.scheduleStatus;
         // @ts-ignore; 
         formData.scheduleStatus = scheduleStatusNormalized;
 
@@ -200,21 +202,41 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             setSaving(true);
             setEditing(false);
 
-            const data = handleLoopFormData(formData, 'label');
+            const data = handleLoopFormData(formData);
             const input = data.json as iSchedule;
-            input.usersIds = handleNormalizeArrayField(input.usersIds);
+
+            // Normalizar props;
+            input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
+            input.clientId = handleNormalizeGuidField(input.clientId);
+            input.companyId = companyId;
+            console.log('input', input);
+
+            if (type === 'create') {
+                const schedule = await Fetch.post({ url: CONSTS_SCHEDULE.post, body: input }) as iSchedule;
+
+                if (schedule) {
+                    swal({
+                        content: 'Agendamento criado com sucesso.',
+                        icon: 'success',
+                        confirmFunction: () => window.location.reload()
+                    });
+                }
+
+                return;
+            }
 
             const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.put, body: input }) as iSchedule;
 
             if (schedule) {
                 swal({
-                    content: type === 'create' ? 'Agendamento atualizado com sucesso.' : 'Agendamento atualizado com sucesso.',
+                    content: 'Agendamento atualizado com sucesso.',
                     icon: 'success',
                     confirmFunction: () => window.location.reload()
                 });
             }
-        } catch { }
+        }
         finally {
+            setEditing(true);
             setSaving(false);
         }
     }
@@ -245,7 +267,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                     <Tags
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
-                                            { label: CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_EN?.find(y => y.label === event.schedule?.scheduleStatus)?.value)?.label ?? '' },
+                                            { label: CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === event.schedule?.scheduleStatus)?.value)?.label ?? '' },
                                             { label: event.schedule?.paymentType }
                                         ]}
                                     />
@@ -262,20 +284,24 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                             <InputMask title='Data e hora de início' type='datetime-local' objectFormData={handleGetPropName(formData, x => x.date ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <Dropdown title='Membros' options={companyUsersDropDown ?? []} multiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
                             <InputMask title='Valor recebido' type='number' objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                            <InputMask title='Título' objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                            <InputMask title='URL' objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                            <InputMask title='Título customizado' objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+
+                            {
+                                type === 'edit' && (
+                                    <Fragment>
+                                        <label>Observações do sistema</label>
+                                        <textarea className={styles.textarea} rows={3} value={formData.observations} readOnly={true} />
+                                    </Fragment>
+                                )
+                            }
                         </div>
 
                         <div className={styles.fieldGroup}>
-                            <Dropdown title='Status' options={CONSTS_SCHEDULE_STATUS} selectedOption={CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_EN?.find(y => y.label === formData.scheduleStatus)?.value)} setSelectedOption={setScheduleStatusOption} isDisabled={!editing} />
+                            <Dropdown title='Status' options={CONSTS_SCHEDULE_STATUS} selectedOption={CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === formData.scheduleStatus)?.value)} setSelectedOption={setScheduleStatusOption} isDisabled={!editing} />
                             <InputMask title='Data e hora de encerramento' type='datetime-local' objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <InputMask title='Observação' objectFormData={handleGetPropName(formData, x => x.observation ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                             <Dropdown title='Tipo de pagamento' options={CONSTS_PAYMENT_TYPE} selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
-
-                            <Fragment>
-                                <label>Observações do sistema</label>
-                                <textarea className={styles.textarea} rows={3} value={formData.observations} readOnly={true} />
-                            </Fragment>
+                            <InputMask title='URL' objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                         </div>
                     </div>
                 </main>

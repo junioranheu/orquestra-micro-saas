@@ -230,6 +230,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                 setModalIsOpen={setIsModalOpen}
                 type={typeModal}
                 event={eventClicked}
+                companyId={companyId}
                 companyUsers={companyUsers}
                 clients={clients}
             />
