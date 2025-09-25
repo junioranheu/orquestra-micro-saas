@@ -111,17 +111,20 @@
             flex: 1;
 
             .grid {
+                // background-color: orange;
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 2rem;
+                // grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1rem;
 
-                .fieldGroup {
+                .div {
+                    // background-color: orange !important;
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem;
+                    gap: 1px;
 
                     label {
-                        // background-color: orange !important;
+                        // background-color: purple !important;
                         color: var(--black);
                         font-size: 0.75rem;
                         font-weight: 500;
@@ -132,7 +135,6 @@
                         resize: vertical;
                         min-height: 7.2rem;
                         padding: 1rem;
-                        margin-top: -14px;
                         background: rgba(221, 221, 221, 0.25);
                         border-radius: var(--border-radius);
                         border: 1px solid transparent;
@@ -217,10 +219,6 @@
                 padding: 1.25rem;
                 max-height: 65vh;
                 overflow-y: scroll;
-
-                .grid .fieldGroup {
-                    gap: 0.875rem;
-                }
             }
         }
 
@@ -242,10 +240,6 @@
             .modalContent {
                 // background-color: tomato !important;
                 padding: 1.25rem;
-
-                .grid .fieldGroup {
-                    gap: 0.875rem;
-                }
             }
 
             .modalFooter {
@@ -273,24 +267,6 @@
                 }
             }
 
-            .modalContent {
-                padding: 1rem;
-
-                .grid {
-                    gap: 1rem;
-
-                    .fieldGroup {
-                        gap: 0.75rem;
-
-                        .textarea {
-                            min-height: 5rem;
-                            padding: 0.75rem;
-                            font-size: 0.875rem;
-                        }
-                    }
-                }
-            }
-
             .modalFooter {
                 padding: 1rem;
                 border-radius: 0 0 12px 12px;
@@ -313,7 +289,25 @@
 @media (max-width:1025px) {}
 
 // tablet, landscape iPad, lo-res laptops ands desktops 
-@media (max-width:801px) {}
+@media (max-width:801px) {
+    .modal {
+
+        // background-color: orange !important;
+        .modalCard {
+
+            // background: tomato !important;
+            .modalContent {
+                // background: orange !important;
+
+                .grid {
+                    // background-color: orange;
+                    display: grid;
+                    grid-template-columns: 1fr;
+                }
+            }
+        }
+    }
+}
 
 // portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
 @media (max-width:600px) {}
