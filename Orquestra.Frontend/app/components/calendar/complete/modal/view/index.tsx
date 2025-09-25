@@ -322,7 +322,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
 
                         <div className={styles.div}>
                             <label>Observações da equipe</label>
-                            <textarea className={styles.textarea} rows={3} value={formData.observation} readOnly={!editing} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
+                            <textarea className={styles.textarea} rows={3} value={formData.observation ?? ''} readOnly={!editing} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
                         </div>
 
                         {

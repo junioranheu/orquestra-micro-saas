@@ -100,7 +100,7 @@ export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorde
             cancelBtnText: 'Voltar',
             cancelFunction: () => setSelectedDate(null),
             confirmBtnText: 'Agendar',
-            confirmFunction: () => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?date=${isoDate}`),
+            confirmFunction: () => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?data=${isoDate}`),
             icon: 'question'
         });
     }, [selectedDate, router]);

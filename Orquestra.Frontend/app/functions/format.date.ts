@@ -148,3 +148,15 @@ export function handleFormatTimeToInputValue(date: Date): string {
 
     return `${hours}:${minutes}`;
 }
+
+/**
+ * Converts a string in "YYYY-MM-DD" format into a JavaScript Date object.
+ * The time is set to midnight (00:00:00) in the local timezone.
+ *
+ * @param dateString - The string representing the date (format: "YYYY-MM-DD").
+ * @returns A Date object representing the given date.
+ */
+export function handleParseDateFromString(dateString: string): Date {
+    const [year, month, day] = dateString.split("-").map(Number);
+    return new Date(year, month - 1, day);
+}

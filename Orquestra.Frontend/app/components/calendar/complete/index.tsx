@@ -4,7 +4,7 @@ import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
-import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
+import { DATE_STYLE, handleFormatDate, handleParseDateFromString } from '@/app/functions/format.date';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
@@ -12,6 +12,7 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterO
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Guid } from 'guid-typescript';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event as RBCEvent, SlotInfo, View } from 'react-big-calendar';
 import styles from './index.module.scss';
@@ -35,6 +36,11 @@ interface iProps {
 export default function CalendarComplete({ events, customElementHeight, companyId, setEvents }: iProps) {
 
     const [, setIsRequestLoading] = useIsRequestLoading();
+
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const queryData = searchParams.get('data');
 
     const [eventClicked, setEventClicked] = useState<iEvent | undefined>(undefined);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -136,10 +142,30 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     const [companyUsers, setCompanyUsers] = useState<iUser[]>();
     useApiRequestToSetterOnUrlChange<iUser[]>({ apiUrlRequest: `${CONSTS_COMPANY_USER.getAllByCompanyId}?companyId=${companyId}`, setter: setCompanyUsers });
 
+    // Buscar a query data na URL; caso exista: abra o modal de novo evento na data;
+    useEffect(() => {
+        if (!queryData) {
+            return;
+        }
+
+        const data = handleParseDateFromString(queryData);
+
+        // remove a query "?data" da URL sem recarregar a página;
+        router.replace(pathname);
+
+        const event = {
+            start: data,
+            end: data
+        } as SlotInfo;
+
+        handleAddNewEvent(event);
+    }, [queryData, pathname, router]);
+
     // Adicionar novo evento;
     function handleAddNewEvent(event: SlotInfo) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
+
         const slotDate = new Date(event.start);
         slotDate.setHours(0, 0, 0, 0);
 
@@ -188,7 +214,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                     selectable={true}
                     onSelectSlot={(e) => handleAddNewEvent(e)}
                     onSelectEvent={(e) => handleCheckEvent(e)}
-                    dayPropGetter={(date) => {
+                    dayPropGetter={(date) => { // Quadrados;
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
 
@@ -206,7 +232,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
                         return {};
                     }}
-                    eventPropGetter={(event) => {
+                    eventPropGetter={(event) => { // Eventos;
                         const today = new Date();
                         const eventEnd = new Date(event.end);
 
