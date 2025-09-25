@@ -308,12 +308,22 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                         <InputMask title='Hora de início' type='time' objectFormData={handleGetPropName(formData, x => x.timeStart ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
                         <InputMask title='Data e hora de encerramento' type='date' objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
                         <InputMask title='Hora de encerramento' type='time' objectFormData={handleGetPropName(formData, x => x.timeEnd ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <Dropdown title='Membros' options={companyUsersDropDown ?? []} multiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
-                        <InputMask title='Observação' objectFormData={handleGetPropName(formData, x => x.observation ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <Dropdown title='Membros da equipe' options={companyUsersDropDown ?? []} multiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
+
+                        <div className={styles.div}>
+                            <label>Este agendamento é específico a um ou mais membros?</label>
+                            <input type='text' value={formData.isRestrictForSpecificUsers ? 'Sim' : 'Não'} readOnly={true} disabled={true} />
+                        </div>
+
                         <InputMask title='Valor recebido' type='number' objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                         <Dropdown title='Tipo de pagamento' options={CONSTS_PAYMENT_TYPE} selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
                         <InputMask title='Título customizado' objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                         <InputMask title='URL' objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+
+                        <div className={styles.div}>
+                            <label>Observações da equipe</label>
+                            <textarea className={styles.textarea} rows={3} value={formData.observation} readOnly={!editing} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
+                        </div>
 
                         {
                             type === 'edit' && (

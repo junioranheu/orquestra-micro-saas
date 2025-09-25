@@ -244,15 +244,18 @@ export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): 
         // console.log('handleMapSchedulesToEvents', schedule);
         const start = new Date(schedule.date);
         const end = schedule.dateEnd ? new Date(schedule.dateEnd) : start;
-        const startNormalized = handleFormatDate(start, DATE_STYLE.HORA_MINUTO);
 
-        const client = schedule.client as iClient;
-        const clientName = client ? client.fullName : '';
+        let title = schedule.customTitle ?? '';
 
-        let title = clientName;
+        if (!title) {
+            const client = schedule.client as iClient;
+            const clientName = client ? client.fullName : '';
+            title = clientName;
 
-        if (view === 'month') {
-            title = `${startNormalized} — ${clientName}`;
+            if (view === 'month') {
+                const startNormalized = handleFormatDate(start, DATE_STYLE.HORA_MINUTO);
+                title = `${startNormalized} — ${clientName}`;
+            }
         }
 
         const isAllDay = start.getHours() === 0 && start.getMinutes() === 0 && start.getSeconds() === 0 && end.getHours() === 23 && end.getMinutes() === 59;
