@@ -572,6 +572,8 @@ input:-webkit-autofill {
 
 // react-big-calendar  
 .rbc-calendar {
+    // background-color: tomato !important;
+
     // // Headers;
     // .rbc-header {
     //     background-color: tomato !important;
@@ -795,7 +797,7 @@ input:-webkit-autofill {
 @media (max-width:1281px) {
 
     .rbc-calendar {
-        // background-color: yellow;
+        // background-color: yellow !important;
 
         // Tipo semana e dia;
         .rbc-time-view {

@@ -78,13 +78,7 @@
 
 // Media queries
 // hi-res laptops and desktops 
-@media (max-width:1281px) {}
-
-// big landscape tablets, laptops, and desktops 
-@media (max-width:1025px) {}
-
-// tablet, landscape iPad, lo-res laptops ands desktops 
-@media (max-width:801px) {
+@media (max-width:1281px) {
     .sidebar {
         // background-color: orange !important;
         min-width: 3.5rem;
@@ -114,6 +108,12 @@
         }
     }
 }
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {}
 
 // portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
 @media (max-width:600px) {}

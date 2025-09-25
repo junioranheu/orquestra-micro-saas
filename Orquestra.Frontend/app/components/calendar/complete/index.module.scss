@@ -1,6 +1,6 @@
 .calendar {
-    // background-color: orange;
-    // height: 85vh; // Definido pelo tsx;
+    // background-color: orange !important;
+    // O height é definido pelo tsx (não alterar!);
     border-radius: var(--border-radius);
     font-family: inherit !important;
     margin-top: 1rem;
@@ -10,3 +10,25 @@
         font-family: inherit !important;
     }
 }
+
+
+// Media queries
+// hi-res laptops and desktops 
+@media (max-width:1281px) {
+    .calendar {
+        // background-color: tomato !important;
+        max-width: 89vw;
+    }
+}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}

@@ -235,7 +235,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                     <Tags
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
-                                            { label: event.schedule?.scheduleStatus },
+                                            { label: CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_EN?.find(y => y.label === event.schedule?.scheduleStatus)?.value)?.label ?? '' },
                                             { label: event.schedule?.paymentType }
                                         ]}
                                     />
