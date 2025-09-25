@@ -596,9 +596,8 @@ input:-webkit-autofill {
         // background-color: purple !important;
         border: none !important;
         background-color: var(--main);
-        // padding-left: 1rem;
-        // padding-right: 1rem;
-        border-radius: 0;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--border-radius);
         width: 100%;
 
         display: flex;

@@ -250,9 +250,6 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
                         return {};
                     }}
-                    components={{ // Permitir HTML nos títulos dos eventos;
-                        event: EventWithHTML
-                    }}
                 />
             </div>
 
@@ -286,8 +283,10 @@ export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): 
 
         if (view === 'month') {
             const startNormalized = handleFormatDate(start, DATE_STYLE.HORA_MINUTO);
-            const endNormalized = handleFormatDate(end, DATE_STYLE.HORA_MINUTO);
-            title = `${startNormalized} - ${endNormalized}<br/> ${title}`;
+            // const endNormalized = handleFormatDate(end, DATE_STYLE.HORA_MINUTO);
+            // title = `${startNormalized} - ${endNormalized} - ${title}`;
+
+            title = `${startNormalized} - ${title}`;
         }
 
         const isAllDay = start.getHours() === 0 && start.getMinutes() === 0 && start.getSeconds() === 0 && end.getHours() === 23 && end.getMinutes() === 59;
@@ -300,10 +299,4 @@ export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): 
             allDay: isAllDay
         };
     })
-}
-
-export function EventWithHTML({ event }: { event: iEvent }) {
-    return (
-        <div dangerouslySetInnerHTML={{ __html: event.title }} />
-    )
 }

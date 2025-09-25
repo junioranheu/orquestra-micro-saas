@@ -280,7 +280,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
-                        <h1 className={styles.inputTitle} dangerouslySetInnerHTML={{ __html: (event.schedule.customTitle ?? event.title) }} />
+                        <h1 className={styles.inputTitle}>{event?.schedule?.customTitle ?? event?.title}</h1>
                     </div>
 
                     {
