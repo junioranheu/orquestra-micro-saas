@@ -314,7 +314,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
 
                         <div className={styles.div}>
                             <label>Este agendamento é específico a um ou mais membros?</label>
-                            <input type='text' value={formData.isRestrictForSpecificUsers ? 'Sim' : 'Não'} readOnly={true} disabled={true} />
+                            <input type='text' value={formData?.usersIds?.length > 0 ? `Sim, para ${formData?.usersIds?.length} membro${formData?.usersIds?.length > 1 ? 's' : ''}` : 'Não — Liberado para qualquer membro'} readOnly={true} disabled={true} />
                         </div>
 
                         <InputMask title='Valor recebido' type='number' objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />

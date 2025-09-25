@@ -129,8 +129,13 @@
                         color: var(--black);
                         font-size: 0.75rem;
                         font-weight: 500;
+                        font-family: inherit;
                         margin-right: auto;
                         margin-bottom: 1px;
+                    }
+
+                    input {
+                        font-size: 0.75rem;
                     }
 
                     .textarea {
