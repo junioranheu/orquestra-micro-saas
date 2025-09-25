@@ -12,6 +12,7 @@ import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate, handleFormatDateTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
+import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeGuidArrayField, handleNormalizeGuidField } from '@/app/functions/normalize.guid';
 import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -211,6 +212,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
             input.clientId = handleNormalizeGuidField(input.clientId);
             input.companyId = companyId;
+            input.date = handleToBrazilDate(input.date);
+            input.dateEnd = handleToBrazilDate(input.dateEnd);
             // console.log('input', input);
 
             if (type === 'create') {

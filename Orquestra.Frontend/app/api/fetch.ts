@@ -1,4 +1,4 @@
-import handleGetDateBrazil from '@/app/functions/get.date.brazil';
+import { handleGetDateBrazil } from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import toast from '@/app/functions/toast';

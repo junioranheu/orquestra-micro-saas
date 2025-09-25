@@ -13,7 +13,7 @@ export default function Tags({ tags }: iProps) {
     return (
         <div className={styles.tags}>
             {
-                tags?.filter(x => x && x.label?.trim()).map((x, index) => (
+                tags?.filter(x => typeof x?.label === 'string' && x.label.trim())?.map((x, index) => (
                     <span
                         key={index}
                         className={styles.tag}

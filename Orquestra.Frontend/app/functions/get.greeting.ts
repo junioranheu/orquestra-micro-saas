@@ -1,5 +1,5 @@
 import { DATE_STYLE, handleFormatDate } from './format.date';
-import handleGetDateBrazil from './get.date.brazil';
+import { handleGetDateBrazil } from './get.date.brazil';
 
 interface iProps {
     mustIncludeUmUma: boolean;

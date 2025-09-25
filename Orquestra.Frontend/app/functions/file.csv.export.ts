@@ -1,7 +1,7 @@
 import { Fetch } from '@/app/api/fetch';
 import { Dispatch, SetStateAction } from 'react';
 import { DATE_STYLE, handleFormatDate } from './format.date';
-import handleGetDateBrazil from './get.date.brazil';
+import { handleGetDateBrazil } from './get.date.brazil';
 import swal from './swal';
 
 interface iProps {

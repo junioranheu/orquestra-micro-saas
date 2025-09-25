@@ -1,4 +1,4 @@
-import handleGetDateBrazil from './get.date.brazil';
+import { handleGetDateBrazil } from './get.date.brazil';
 
 export const DATE_STYLE = {
     DIA_MES_ANO: 'DIA_MES_ANO',
