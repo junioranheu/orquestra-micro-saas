@@ -25,7 +25,7 @@ export default function Button({
     label,
     url,
     isNewTab = true,
-    handleFunction: handleFuncao,
+    handleFunction,
     svg_component = null,
     svg_staticImageData = null,
     icone_feather,
@@ -47,9 +47,9 @@ export default function Button({
         }
 
         if (!url) {
-            if (handleFuncao) {
+            if (handleFunction) {
                 try {
-                    handleFuncao(e);
+                    handleFunction(e);
                 } catch {
                     setIsDisabledInternal(false);
                 }

@@ -259,6 +259,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         return;
     }
 
+    // Forçar a copia da data inicial para a prop de data final;
     useEffect(() => {
         setFormData(prev => ({
             ...prev,
@@ -282,7 +283,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
-                        <h1 className={styles.inputTitle}>{formData?.customTitle ?? event?.title}</h1>
+                        <h1 className={styles.inputTitle}>{formData?.customTitle ? formData?.customTitle : event?.title}</h1>
                     </div>
 
                     {
@@ -293,7 +294,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO_SEM_SEGUNDOS), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
                                             { label: CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === event.schedule?.scheduleStatus)?.value)?.label ?? '' },
-                                            { label: event.schedule?.paymentType }
+                                            { label: event.schedule?.paymentType },
+                                            { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' },
                                         ]}
                                     />
                                 </div>

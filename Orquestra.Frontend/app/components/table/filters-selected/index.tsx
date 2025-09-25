@@ -104,7 +104,7 @@ export default function FiltersSelected({ modalFilterformData, setModalFilterFor
                     <Tag
                         key={i}
                         text={`${x.name}: ${x.value}`}
-                        handleClick={() => handleRemoveFilter(x)}
+                        handleFunction={() => handleRemoveFilter(x)}
                     />
                 ))
             }

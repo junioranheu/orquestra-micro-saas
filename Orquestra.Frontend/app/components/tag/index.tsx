@@ -4,12 +4,12 @@ import styles from './index.module.scss';
 
 interface iProps {
     text: string;
-    handleClick?: any | null;
+    handleFunction?: ((param?: any) => void) | null;
     fixCapitalizeStr?: boolean;
     style?: CSSProperties;
 }
 
-export default function Tag({ text, handleClick, fixCapitalizeStr = true, style = {} }: iProps) {
+export default function Tag({ text, handleFunction, fixCapitalizeStr = true, style = {} }: iProps) {
     return (
         <div
             className={styles.tag}
@@ -22,10 +22,10 @@ export default function Tag({ text, handleClick, fixCapitalizeStr = true, style 
             }
 
             {
-                handleClick && (
+                handleFunction && (
                     <span
                         className={styles.x}
-                        onClick={() => handleClick && handleClick()}
+                        onClick={() => handleFunction && handleFunction()}
                     >
                         ✕
                     </span>
