@@ -205,56 +205,62 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             }
         }
 
-        try {
-            setSaving(true);
-            setEditing(false);
+        setSaving(true);
+        setEditing(false);
 
-            const data = handleLoopFormData(formData);
-            const input = data.json as iSchedule;
+        const data = handleLoopFormData(formData);
+        const input = data.json as iSchedule;
 
-            //#region Normalizar props
-            // @ts-ignore;
-            const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_BACKEND?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus?.label)?.value) ?? formData.scheduleStatus;
-            // @ts-ignore; 
-            formData.scheduleStatus = scheduleStatusNormalized;
+        //#region Normalizar props
+        // @ts-ignore;
+        const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_BACKEND?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus?.label)?.value) ?? formData.scheduleStatus;
+        // @ts-ignore; 
+        formData.scheduleStatus = scheduleStatusNormalized;
 
-            input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
-            input.clientId = handleNormalizeGuidField(input.clientId);
-            input.companyId = companyId;
+        input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
+        input.clientId = handleNormalizeGuidField(input.clientId);
+        input.companyId = companyId;
 
-            input.date = new Date(`${input.date}T${input.timeStart}`);
-            input.dateEnd = new Date(`${input.dateEnd}T${input.timeEnd}`);
-            input.date = handleToBrazilDate(input.date);
-            input.dateEnd = handleToBrazilDate(input.dateEnd);
-            // console.log('input', input);
-            // #endregion
+        input.date = new Date(`${input.date}T${input.timeStart}`);
+        input.dateEnd = new Date(`${input.dateEnd}T${input.timeEnd}`);
+        input.date = handleToBrazilDate(input.date);
+        input.dateEnd = handleToBrazilDate(input.dateEnd);
+        // console.log('input', input);
+        // #endregion
 
-            if (type === 'create') {
-                const schedule = await Fetch.post({ url: CONSTS_SCHEDULE.post, body: input }) as iSchedule;
+        if (type === 'create') {
+            const schedule = await Fetch.post({ url: CONSTS_SCHEDULE.post, body: input }) as iSchedule;
 
-                if (schedule) {
-                    toast({ content: 'Agendamento criado com sucesso.' });
-                    handleGetSchedules();
-                    handleClose();
-                }
-
+            if (schedule) {
+                toast({ content: 'Agendamento criado com sucesso.' });
+                handleGetSchedules();
+                handleClearFormData(setFormData);
+                setEditing(false);
+                setSaving(false);
+                handleClose();
                 return;
             }
 
-            const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.put, body: input }) as iSchedule;
-
-            if (schedule) {
-                toast({ content: 'Agendamento atualizado com sucesso.' });
-                handleGetSchedules();
-                handleClose();
-            }
-
+            setEditing(true);
+            setSaving(false);
             return;
         }
-        finally {
+
+        const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.put, body: input }) as iSchedule;
+
+        if (schedule) {
+            toast({ content: 'Agendamento atualizado com sucesso.' });
+            handleGetSchedules();
+            handleClearFormData(setFormData);
             setEditing(false);
             setSaving(false);
+            handleClose();
+            return;
         }
+
+        setEditing(true);
+        setSaving(false);
+        return;
     }
 
     useEffect(() => {
