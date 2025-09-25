@@ -20,7 +20,7 @@ public sealed class CreateScheduleTests
     [Fact]
     public async Task Execute_ShouldCreateSchedule_WhenInputIsValid()
     {
-        // Arrange
+        // Arrange;
         (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
 
         ScheduleInput input = new()
@@ -28,7 +28,7 @@ public sealed class CreateScheduleTests
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
             Date = GetDate().AddDays(1).AddHours(10),
-            DurationMinutes = 60, // 1 hora
+            DateEnd = GetDate().AddDays(1).AddHours(10).AddHours(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
@@ -51,6 +51,27 @@ public sealed class CreateScheduleTests
         Assert.Equal(input.DurationMinutes, saved.DurationMinutes);
         Assert.Equal(input.Date.AddMinutes(input.DurationMinutes), saved.Date.AddMinutes(saved.DurationMinutes));
         Assert.Equal(input.Date.AddMinutes(input.DurationMinutes), result.DateEnd);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateEndIsInvalid()
+    {
+        // Arrange;
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            Date = GetDate().AddDays(1).AddHours(10),
+            DateEnd = GetDate().AddDays(1).AddHours(10).AddHours(-22),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
     }
 
     [Fact]

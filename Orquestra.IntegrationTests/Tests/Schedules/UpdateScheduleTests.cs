@@ -26,6 +26,7 @@ public sealed class UpdateScheduleTests
         (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
 
         ScheduleInput input = schedule.Adapt<ScheduleInput>();
+        input.DateEnd = input.Date.AddHours(1);
 
         UpdateSchedule sut = CreateSut(context, user);
 
@@ -35,13 +36,24 @@ public sealed class UpdateScheduleTests
         Assert.Equal(input.ScheduleId, result.ScheduleId);
         Assert.Equal(input.Date, result.Date);
         Assert.Equal(input.PaymentType, result.PaymentType);
-        Assert.Equal(input.DurationMinutes, result.DurationMinutes);
 
         Schedule? saved = await context.Schedules.FindAsync(schedule.ScheduleId);
         Assert.NotNull(saved);
         Assert.Equal(input.Date, saved.Date);
-        Assert.Equal(input.DurationMinutes, saved.DurationMinutes);
         Assert.Equal(input.PaymentType, saved.PaymentType);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateEndIsInvalid()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        ScheduleInput input = schedule.Adapt<ScheduleInput>();
+        input.DateEnd = input.Date.AddHours(-1);
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
     }
 
     [Fact]
@@ -101,7 +113,7 @@ public sealed class UpdateScheduleTests
             CompanyId = Guid.NewGuid(),
             ClientId = Guid.NewGuid(),
             Date = GetDate().AddDays(1),
-            DurationMinutes = 60,
+            DateEnd = GetDate().AddDays(1).AddHours(1),
             UsersIds = []
         };
 

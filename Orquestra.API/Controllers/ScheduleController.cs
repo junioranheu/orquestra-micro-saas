@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Shared;
+using Orquestra.Application.UseCases.Schedules.Update;
 
 namespace Orquestra.API.Controllers;
 
@@ -12,19 +13,31 @@ namespace Orquestra.API.Controllers;
 public class ScheduleController(
         IGetSchedule get,
         IGetScheduleByCompanyId getScheduleByCompanyId,
-        ICreateSchedule create
+        ICreateSchedule create,
+        IUpdateSchedule update
     ) : BaseController<ScheduleController>
 {
     private readonly IGetSchedule _get = get;
     private readonly IGetScheduleByCompanyId _getScheduleByCompanyId = getScheduleByCompanyId;
     private readonly ICreateSchedule _create = create;
+    private readonly IUpdateSchedule _update = update;
 
     [AuthorizeFilter]
     [HttpPost]
-    public async Task<ActionResult> Create([FromForm] ScheduleInput input)
+    public async Task<ActionResult> Create(ScheduleInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         ScheduleOutput output = await _create.Execute(userIdAuth, input);
+
+        return Ok(output);
+    }
+
+    [AuthorizeFilter]
+    [HttpPut]
+    public async Task<ActionResult> Update(ScheduleInput input)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        ScheduleOutput output = await _update.Execute(userIdAuth, input);
 
         return Ok(output);
     }

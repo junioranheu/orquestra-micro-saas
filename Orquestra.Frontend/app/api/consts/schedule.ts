@@ -8,6 +8,7 @@ const controller = 'api/Schedule';
 
 export const CONSTS_SCHEDULE = {
     post: `${BASE}/${controller}`,
+    put: `${BASE}/${controller}`,
     get: `${BASE}/${controller}`,
     getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`
 };
@@ -15,7 +16,7 @@ export const CONSTS_SCHEDULE = {
 export default interface iSchedule {
     scheduleId: Guid;
     date: Date | string;
-    durationMinutes: number;
+    durationMinutes?: number;
     paymentType: string;
     scheduleStatus: string;
     clientId: Guid;

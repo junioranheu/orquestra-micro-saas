@@ -1,11 +1,9 @@
 ﻿using Orquestra.Domain.Enums;
-using System.Text.Json.Serialization;
 
 namespace Orquestra.Application.UseCases.Schedules.Shared;
 
 public sealed class ScheduleInput
 {
-    [JsonIgnore]
     public Guid? ScheduleId { get; set; }
 
     public DateTime Date { get; set; }
@@ -29,4 +27,9 @@ public sealed class ScheduleInput
     public string? CustomUrl { get; set; }
 
     public string? Observation { get; set; }
+
+    public decimal? AmountReceived { get; set; }
+
+    // Extras;
+    public DateTime DateEnd { get; set; }
 }

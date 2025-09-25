@@ -33,10 +33,18 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
                              Where(x => x.ScheduleId == input.ScheduleId).
                              FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
 
+        int diffMinutes = (int)(input.DateEnd - input.Date).TotalMinutes;
+
         schedule.Date = input.Date;
+        schedule.DurationMinutes = diffMinutes;
         schedule.PaymentType = input.PaymentType;
         schedule.ScheduleStatus = input.ScheduleStatus;
         schedule.ClientId = input.ClientId;
+        schedule.UsersIds = input.UsersIds;
+        schedule.CustomTitle = input.CustomTitle;
+        schedule.CustomUrl = input.CustomUrl;
+        schedule.Observation = input.Observation;
+        schedule.AmountReceived = input.AmountReceived;
 
         _context.Update(schedule);
         await _context.SaveChangesAsync();

@@ -1,6 +1,7 @@
 import iClient from '@/app/api/consts/client';
-import iSchedule from '@/app/api/consts/schedule';
+import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
+import { Fetch } from '@/app/api/fetch';
 import { iEvent } from '@/app/components/calendar/complete';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
@@ -12,7 +13,7 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate, handleFormatDateTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
-import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleNormalizeArrayField, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
@@ -145,7 +146,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         setFormData({
             scheduleId: event.schedule.scheduleId,
             date: handleFormatDateTimeToInputValue(event.start),
-            durationMinutes: event.schedule.durationMinutes,
             paymentType: event.schedule.paymentType,
             scheduleStatus: event.schedule.scheduleStatus,
             clientId: event.schedule.clientId,
@@ -196,13 +196,23 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             }
         }
 
-        setSaving(true);
-
-        const teste = handleLoopFormData(formData, 'label');
-        console.log('teste', teste);
-
         try {
+            setSaving(true);
             setEditing(false);
+
+            const data = handleLoopFormData(formData, 'label');
+            const input = data.json as iSchedule;
+            input.usersIds = handleNormalizeArrayField(input.usersIds);
+
+            const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.put, body: input }) as iSchedule;
+
+            if (schedule) {
+                swal({
+                    content: type === 'create' ? 'Agendamento atualizado com sucesso.' : 'Agendamento atualizado com sucesso.',
+                    icon: 'success',
+                    confirmFunction: () => window.location.reload()
+                });
+            }
         } catch { }
         finally {
             setSaving(false);
