@@ -10,8 +10,9 @@ interface iProps {
     multiple?: boolean;
     setSelectedOption: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
     apiUrl: string;
-    isStyleSimple?: boolean;
     placeholder?: string;
+    isStyleSimple?: boolean;
+    isObligatory?: boolean;
 }
 
 export default function DropdownAsync({
@@ -19,8 +20,9 @@ export default function DropdownAsync({
     multiple = false,
     setSelectedOption,
     apiUrl,
+    placeholder,
     isStyleSimple = false,
-    placeholder
+    isObligatory = false
 }: iProps) {
 
     async function handleLoadOptions(input: string): Promise<iDropdownOption[]> {
@@ -85,7 +87,7 @@ export default function DropdownAsync({
 
     return (
         <div className={styles.main}>
-            {title && <span className={styles.title}>{title}</span>}
+            {title && <span className={styles.title}>{title} {isObligatory && <span className={styles.obligatory}>*</span>}</span>}
 
             <AsyncSelect
                 defaultOptions

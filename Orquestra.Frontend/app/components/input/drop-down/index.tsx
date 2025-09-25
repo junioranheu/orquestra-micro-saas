@@ -20,6 +20,7 @@ interface iProps {
     isDisabled?: boolean;
     isSearchable?: boolean;
     isClearable?: boolean;
+    isObligatory?: boolean;
 }
 
 export default function Dropdown({
@@ -32,7 +33,8 @@ export default function Dropdown({
     placeholder,
     isDisabled = false,
     isSearchable = true,
-    isClearable = true
+    isClearable = true,
+    isObligatory = false
 }: iProps) {
 
     const [uniqueOptions, setUniqueOptions] = useState<iDropdownOption[]>([]);
@@ -94,7 +96,7 @@ export default function Dropdown({
 
     return (
         <div className={`${styles.main} ${isDisabled && styles.disabled}`}>
-            {title && <span className={styles.title}>{title}</span>}
+            {title && <span className={styles.title}>{title} {isObligatory && <span className={styles.obligatory}>*</span>}</span>}
 
             <Select
                 isClearable={isClearable}

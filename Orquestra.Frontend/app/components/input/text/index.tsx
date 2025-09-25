@@ -14,6 +14,7 @@ interface iProps {
     minChar?: number;
     mask?: string;
     showIcon?: boolean;
+    isObligatory?: boolean;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
 
@@ -24,9 +25,9 @@ interface iProps {
 }
 
 export default function InputMaskCustom({
-    objectFormData, title = '', type = 'text', classes = '', style = {}, placeholder,
-    isDisabled = false, minChar = 0, mask = '', showIcon = false, svg_component = null,
-    svg_staticImageData = null,
+    objectFormData, title = '', type = 'text', classes = '', style = {},
+    placeholder, isDisabled = false, minChar = 0, mask = '', showIcon = false,
+    isObligatory = false, svg_component = null, svg_staticImageData = null,
     handleChange, handleExtraValidation = () => null, handleKeyDown = () => null, handleBlur = () => null
 }: iProps) {
 
@@ -72,7 +73,7 @@ export default function InputMaskCustom({
                 (title || showIcon) && (
                     <div className={styles.wrapperTop}>
                         {
-                            title && <span className={styles.title}>{title}</span>
+                            title && <span className={styles.title}>{title} {isObligatory && <span className={styles.obligatory}>*</span>}</span>
                         }
 
                         {
