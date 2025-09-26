@@ -33,26 +33,39 @@
     }
 
     nav {
-        // background-color: orange;
+        // background-color: blue;
         flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
 
         ul {
+            // background-color: tomato;
+            width: 90%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
             list-style: none;
             padding: 0;
             margin: 0;
 
             li {
+                // background-color: orange !important;
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
 
-                cursor: pointer;
-                color: var(--black);
-                border-left: 5px solid transparent; // Tem que ser igual o border-left do .active abaixo;
-                transition: background 0.2s, border 0.2s;
-
+                width: 100%;
                 margin-bottom: 0.25rem;
                 padding: 0.75rem 1rem;
+
+                cursor: pointer;
+                color: var(--black);
+                border-radius: 1rem;
+                transition: background 0.2s, border 0.2s;
 
                 svg {
                     stroke: #444;
@@ -63,8 +76,7 @@
                 }
 
                 &.active {
-                    background-color: #eafce8;
-                    border-left: 5px solid var(--main);
+                    background-color: #d7fec8;
                     font-weight: 500;
 
                     svg {
