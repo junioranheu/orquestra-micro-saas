@@ -196,6 +196,174 @@ public sealed class CreateScheduleTests
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, input));
     }
 
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenCustomUrlIsInvalid()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = GetDate().AddDays(1).AddHours(10),
+            DateEnd = GetDate().AddDays(1).AddHours(11),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled,
+            CustomUrl = "ftp://invalid-url"
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId, true));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenScheduleStatusIsNotScheduled_OnCreate()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = GetDate().AddDays(1),
+            DateEnd = GetDate().AddDays(1).AddHours(1),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Completed
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId, true));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenUserNotLinkedToCompany()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        context.CompanyUsers.RemoveRange(context.CompanyUsers);
+        await context.SaveChangesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = GetDate().AddDays(1),
+            DateEnd = GetDate().AddDays(1).AddHours(1),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Validate(input, user.UserId, true));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenNoValidUsers()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        User invalidUser = UserMock.Create();
+        await Fixture.Save(context, invalidUser);
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = GetDate().AddDays(1),
+            DateEnd = GetDate().AddDays(1).AddHours(1),
+            UsersIds = [invalidUser.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Validate(input, user.UserId, true));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenDateStartIsPast()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = GetDate().AddMinutes(-10),
+            DateEnd = GetDate().AddMinutes(10),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId, true));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenDateEndBeforeDateStart()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = GetDate().AddDays(1).AddHours(10),
+            DateEnd = GetDate().AddDays(1).AddHours(9),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId, true));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenDateEndCrossesDayBoundary()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        DateTime scheduleDate = GetDate().AddDays(1).Date.AddHours(23).AddMinutes(30);
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = scheduleDate,
+            DateEnd = scheduleDate.AddHours(12),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId, true));
+    }
+
+    [Fact]
+    public async Task CheckForObservations_ShouldReturnObservations()
+    {
+        (Context context, User user, Company company, Client _) = await ArrangeScheduleDependenciesAsync();
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        ScheduleOutput schedule = new()
+        {
+            CompanyId = company.CompanyId,
+            DateStart = GetDate().AddDays(-1),
+            DateEnd = DateTime.MinValue,
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        List<string> observations = await sut.CheckForObservations(schedule);
+        Assert.NotNull(observations);
+    }
+
     #region helpers
     private static async Task<(Context context, User user, Company company, Client client)> ArrangeScheduleDependenciesAsync()
     {

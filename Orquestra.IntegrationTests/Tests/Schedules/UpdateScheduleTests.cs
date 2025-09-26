@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
@@ -13,7 +12,6 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
@@ -158,6 +156,121 @@ public sealed class UpdateScheduleTests
         UpdateSchedule sut = CreateSut(context, user);
 
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenCustomUrlIsInvalid()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        var input = schedule.Adapt<ScheduleInput>();
+        input.CustomUrl = "ftp://invalid-url";
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenUserNotLinkedToCompanyOnUpdate()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        context.CompanyUsers.RemoveRange(context.CompanyUsers);
+        await context.SaveChangesAsync();
+
+        var input = schedule.Adapt<ScheduleInput>();
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenNoValidUsersOnUpdate()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        User invalidUser = UserMock.Create();
+        await Fixture.Save(context, invalidUser);
+
+        var input = schedule.Adapt<ScheduleInput>();
+        input.UsersIds = [invalidUser.UserId];
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateStartIsPastOnUpdate()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        var input = schedule.Adapt<ScheduleInput>();
+        input.DateStart = GetDate().AddMinutes(-10);
+        input.DateEnd = GetDate().AddMinutes(10);
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateEndBeforeDateStartOnUpdate()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        var input = schedule.Adapt<ScheduleInput>();
+        input.DateEnd = input.DateStart.AddHours(-1);
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateEndCrossesDayBoundaryOnUpdate()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        DateTime scheduleDate = GetDate().AddDays(1).Date.AddHours(23).AddMinutes(30);
+
+        var input = schedule.Adapt<ScheduleInput>();
+        input.DateStart = scheduleDate;
+        input.DateEnd = scheduleDate.AddHours(12);
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenCompanyOrClientNotFound()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        var input = schedule.Adapt<ScheduleInput>();
+        input.CompanyId = Guid.NewGuid(); // Empresa inválida;
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task CheckForObservations_ShouldReturnObservationsOnUpdate()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        var scheduleOutput = schedule.Adapt<ScheduleOutput>();
+        scheduleOutput.DateStart = GetDate().AddDays(-1); // Data passada;
+        scheduleOutput.DateEnd = default; // Sem data final;
+
+        List<string> observations = await sut.CheckForObservations(scheduleOutput);
+        Assert.NotNull(observations);
     }
 
     #region helpers
