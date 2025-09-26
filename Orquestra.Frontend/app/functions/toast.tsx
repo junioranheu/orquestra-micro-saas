@@ -2,16 +2,16 @@ import { CSSProperties } from 'react';
 import { toast as ToastSonner } from 'sonner';
 
 interface iProps {
+    title?: string;
     content: string;
     ms?: number;
-    title?: string;
     triggerFunction?: () => void;
     isClosable?: boolean;
 }
 
 export default function toast(props: iProps): number {
 
-    const { content, ms = 5000, title = '', triggerFunction = () => null, isClosable = true } = props;
+    const { title = '', content, ms = 5000, triggerFunction = () => null, isClosable = true } = props;
     const isSmallScreen = window.innerWidth <= 600;
 
     const style = {
