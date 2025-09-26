@@ -27,13 +27,11 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            Date = GetDate().AddDays(1).AddHours(10),
+            DateStart = GetDate().AddDays(1).AddHours(10),
             DateEnd = GetDate().AddDays(1).AddHours(10).AddHours(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
-
-        input.DurationMinutes = GetDatesDiffInMinutes(start: input.Date, end: input.DateEnd); 
 
         CreateSchedule sut = CreateSut(context, user);
 
@@ -45,14 +43,10 @@ public sealed class CreateScheduleTests
         Assert.Equal(input.CompanyId, result.CompanyId);
         Assert.Equal(input.ClientId, result.ClientId);
         Assert.Equal(input.UsersIds.Length, result.UsersOutput?.Length);
-        Assert.Equal(input.DurationMinutes, result.DurationMinutes);
 
         // Confirma que foi salvo no contexto;
         Schedule? saved = await context.Schedules.FindAsync(result.ScheduleId);
         Assert.NotNull(saved);
-        Assert.Equal(input.DurationMinutes, saved.DurationMinutes);
-        Assert.Equal(input.Date.AddMinutes(input.DurationMinutes), saved.Date.AddMinutes(saved.DurationMinutes));
-        Assert.Equal(input.Date.AddMinutes(input.DurationMinutes), result.DateEnd);
     }
 
     [Fact]
@@ -65,7 +59,7 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            Date = GetDate().AddDays(1).AddHours(10),
+            DateStart = GetDate().AddDays(1).AddHours(10),
             DateEnd = GetDate().AddDays(1).AddHours(10).AddHours(-22),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
@@ -85,8 +79,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            Date = GetDate().AddDays(1).AddHours(10),
-            DurationMinutes = 1,
+            DateStart = GetDate().AddDays(1).AddHours(10),
+            DateEnd = GetDate().AddDays(1).AddHours(10).AddHours(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled,
             CustomUrl = "aea"
@@ -98,7 +92,7 @@ public sealed class CreateScheduleTests
     }
 
     [Fact]
-    public async Task Execute_ShouldThrow_WhenDurationMinutesIsZeroOrNegative()
+    public async Task Execute_ShouldThrow_WhenDataEndIsBeforeDateStart()
     {
         (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
 
@@ -106,8 +100,30 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            Date = GetDate().AddDays(1).AddHours(10),
-            DurationMinutes = 0, // Inválido;
+            DateStart = GetDate().AddDays(1).AddHours(10),
+            DateEnd = GetDate().AddDays(-10), // Inválido;
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateStartIsPastCurrentTimeInDay()
+    {
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        DateTime scheduleDate = GetDate().AddMinutes(-30);
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = scheduleDate,
+            DateEnd = scheduleDate.AddMinutes(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
@@ -129,8 +145,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            Date = scheduleDate,
-            DurationMinutes = 90, // Ultrapassa meia-noite;
+            DateStart = scheduleDate,
+            DateEnd = scheduleDate.AddMinutes(90),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
@@ -168,8 +184,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            Date = GetDate().AddDays(1),
-            DurationMinutes = 1,
+            DateStart = GetDate().AddDays(1),
+            DateEnd = GetDate().AddDays(1).AddMinutes(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };

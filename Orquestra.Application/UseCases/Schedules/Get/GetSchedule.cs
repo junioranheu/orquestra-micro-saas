@@ -26,7 +26,6 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         var output = result.Adapt<ScheduleOutput>();
-        output.DateEnd = result.Date.AddMinutes(result.DurationMinutes);
         output.Observations = await CheckForObservations(output);
         output.UsersOutput = await GetUsers(output.UsersIds);
 

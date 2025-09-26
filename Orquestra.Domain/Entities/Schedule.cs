@@ -11,9 +11,13 @@ public sealed class Schedule : Audit
     [Key]
     public Guid ScheduleId { get; set; }
 
-    public DateTime Date { get; set; }
+    public DateTime DateStart { get; set; }
 
-    public int DurationMinutes { get; set; }
+    public string TimeStart  => DateStart.ToString("HH:mm");
+
+    public DateTime DateEnd { get; set; }
+
+    public string TimeEnd => DateEnd.ToString("HH:mm");
 
     public PaymentTypeEnum PaymentType { get; set; }
 
@@ -27,6 +31,7 @@ public sealed class Schedule : Audit
     [ForeignKey(nameof(CompanyId))]
     public Company? Company { get; set; }
 
+    #region UsersIds
     public Guid[]? UsersIds { get; set; } = []; // Não altere a ordem entre UsersIds e IsRestrictForSpecificUsers;
 
     private bool _isRestrictForSpecificUsers = false;
@@ -43,6 +48,7 @@ public sealed class Schedule : Audit
             _isRestrictForSpecificUsers = value;
         }
     }
+    #endregion
 
     public string? CustomTitle { get; set; }
 

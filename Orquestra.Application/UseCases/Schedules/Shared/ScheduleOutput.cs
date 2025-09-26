@@ -9,9 +9,13 @@ public sealed class ScheduleOutput
 {
     public Guid ScheduleId { get; set; }
 
-    public DateTime Date { get; set; }
+    public DateTime DateStart { get; set; }
 
-    public int DurationMinutes { get; set; }
+    public string TimeStart => DateStart.ToString("HH:mm");
+
+    public DateTime DateEnd { get; set; }
+
+    public string TimeEnd => DateEnd.ToString("HH:mm");
 
     public PaymentTypeEnum PaymentType { get; set; }
 
@@ -36,8 +40,6 @@ public sealed class ScheduleOutput
     public decimal? AmountReceived { get; set; } = 0;
 
     // Extras;
-    public DateTime DateEnd { get; set; }
-
     public List<string>? Observations { get; set; }
 
     public UserOutput[]? UsersOutput { get; set; } = [];

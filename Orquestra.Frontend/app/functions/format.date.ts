@@ -117,27 +117,24 @@ export function handleIsBeforeTodayWithTime(date: Date): boolean {
     return date < handleGetDateBrazil();
 }
 
-/**
- * Formata um objeto Date em uma string no formato "YYYY-MM-DD",
- * compatível com campos HTML do tipo date (`type="date"`).
- *
- * @param date - O objeto Date que será formatado.
- * @returns Uma string representando a data no formato "YYYY-MM-DD".
- */
 export function handleFormatDateToInputValue(date: Date): string {
-    return new Date(date).toISOString().split("T")[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
 }
 
 /**
- * Formata um objeto Date em uma string no formato "YYYY-MM-DDTHH:mm",
- * compatível com campos HTML do tipo datetime-local (`type="datetime-local"`).
+ * Formata um objeto Date em uma string no formato 'YYYY-MM-DDTHH:mm',
+ * compatível com campos HTML do tipo datetime-local (`type='datetime-local'`).
  *
  * @param date - O objeto Date que será formatado.
- * @returns Uma string representando a data e hora no formato "YYYY-MM-DDTHH:mm".
+ * @returns Uma string representando a data e hora no formato 'YYYY-MM-DDTHH:mm'.
  */
 export function handleFormatDateTimeToInputValue(date: Date): string {
     const d = new Date(date);
-    const pad = (n: number) => n.toString().padStart(2, "0");
+    const pad = (n: number) => n.toString().padStart(2, '0');
 
     const year = d.getFullYear();
     const month = pad(d.getMonth() + 1);
@@ -149,15 +146,15 @@ export function handleFormatDateTimeToInputValue(date: Date): string {
 }
 
 /**
- * Formata um objeto Date em uma string no formato "HH:mm",
- * compatível com campos HTML do tipo time (`type="time"`).
+ * Formata um objeto Date em uma string no formato 'HH:mm',
+ * compatível com campos HTML do tipo time (`type='time'`).
  *
  * @param date - O objeto Date que será formatado.
- * @returns Uma string representando a hora no formato "HH:mm".
+ * @returns Uma string representando a hora no formato 'HH:mm'.
  */
 export function handleFormatTimeToInputValue(date: Date): string {
     const d = new Date(date);
-    const pad = (n: number) => n.toString().padStart(2, "0");
+    const pad = (n: number) => n.toString().padStart(2, '0');
 
     const hours = pad(d.getHours());
     const minutes = pad(d.getMinutes());
@@ -166,13 +163,13 @@ export function handleFormatTimeToInputValue(date: Date): string {
 }
 
 /**
- * Converts a string in "YYYY-MM-DD" format into a JavaScript Date object.
+ * Converts a string in 'YYYY-MM-DD' format into a JavaScript Date object.
  * The time is set to midnight (00:00:00) in the local timezone.
  *
- * @param dateString - The string representing the date (format: "YYYY-MM-DD").
+ * @param dateString - The string representing the date (format: 'YYYY-MM-DD').
  * @returns A Date object representing the given date.
  */
 export function handleParseDateFromString(dateString: string): Date {
-    const [year, month, day] = dateString.split("-").map(Number);
+    const [year, month, day] = dateString.split('-').map(Number);
     return new Date(year, month - 1, day);
 }

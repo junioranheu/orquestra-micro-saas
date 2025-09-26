@@ -19,7 +19,6 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         Schedule schedule = await Update(input);
 
         var output = schedule.Adapt<ScheduleOutput>();
-        output.DateEnd = output.Date.AddMinutes(output.DurationMinutes);
         output.Observations = await CheckForObservations(output);
         output.UsersOutput = await GetUsers(output.UsersIds);
 
@@ -34,10 +33,8 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
                              Where(x => x.ScheduleId == input.ScheduleId).
                              FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
 
-        int diffMinutes = GetDatesDiffInMinutes(start: input.Date, end: input.DateEnd);
-
-        schedule.Date = input.Date;
-        schedule.DurationMinutes = diffMinutes;
+        schedule.DateStart = input.DateStart;
+        schedule.DateEnd = input.DateEnd;
         schedule.PaymentType = input.PaymentType;
         schedule.ScheduleStatus = input.ScheduleStatus;
         schedule.ClientId = input.ClientId;

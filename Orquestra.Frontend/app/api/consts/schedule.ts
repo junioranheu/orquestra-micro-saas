@@ -15,8 +15,10 @@ export const CONSTS_SCHEDULE = {
 
 export default interface iSchedule {
     scheduleId: Guid;
-    date: Date | string;
-    durationMinutes?: number;
+    dateStart: Date | string;
+    timeStart: string;
+    dateEnd: Date | string;
+    timeEnd: string;
     paymentType: string;
     scheduleStatus: string;
     clientId: Guid;
@@ -31,11 +33,6 @@ export default interface iSchedule {
     amountReceived: number;
 
     // Extras;
-    dateEnd: Date | string;
     observations: string[]; // Avisos do sistema;
     usersOutput?: iUserResponse[];
-
-    // Front apenas;
-    timeStart: string;
-    timeEnd: string;
 }

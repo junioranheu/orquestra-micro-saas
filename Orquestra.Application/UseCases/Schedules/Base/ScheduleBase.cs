@@ -46,20 +46,24 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             }
         }
 
-        if (input.Date <= GetDate())
+        // Normalizar as datas do input (que vêm do front-end), para ficar UTC;
+        DateTime dateStart = ConvertToUtc(input.DateStart);
+        DateTime dateEnd = ConvertToUtc(input.DateEnd);
+
+        if (dateStart <= GetDate())
         {
             throw new ArgumentException("Não é possível criar um agendamento com data e hora anterior à de hoje.");
         }
 
-        if (input.DateEnd <= input.Date)
+        if (dateEnd <= dateStart)
         {
             throw new ArgumentException("A data de finalização não pode ser inferior à de início.");
         }
 
         // Verifica se ultrapassa o mesmo dia;
-        if (input.DateEnd.Date != input.Date.Date)
+        if (dateEnd.Date != dateStart.Date)
         {
-            throw new ArgumentException($"A duração não pode ultrapassar o final do dia do agendamento em questão ({GetDateDetails(date: input.Date, withHour: false)}).");
+            throw new ArgumentException($"A duração não pode ultrapassar o final do dia do agendamento em questão ({GetDateDetails(date: input.DateStart, withHour: false)}).");
         }
 
         _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);
@@ -78,22 +82,27 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             return observations;
         }
 
-        if (schedule.Date == default || schedule.Date == DateTime.MinValue)
+        if (schedule.DateStart == default || schedule.DateStart == DateTime.MinValue)
         {
             observations.Add("Agendamento sem data definida.");
         }
 
-        if (schedule.ScheduleStatus == ScheduleStatusEnum.Scheduled && schedule.Date < GetDate())
+        if (schedule.DateEnd == default || schedule.DateEnd == DateTime.MinValue)
+        {
+            observations.Add("Agendamento sem data de encerramento definida.");
+        }
+
+        if (schedule.ScheduleStatus == ScheduleStatusEnum.Scheduled && schedule.DateStart < GetDate())
         {
             observations.Add($"Agendamento consta como {GetStatusDesc(ScheduleStatusEnum.Scheduled)}, mas já passou da data prevista.");
         }
 
-        if (schedule.ScheduleStatus == ScheduleStatusEnum.Canceled && schedule.Date < GetDate())
+        if (schedule.ScheduleStatus == ScheduleStatusEnum.Canceled && schedule.DateStart < GetDate())
         {
             observations.Add($"Agendamento consta como {GetStatusDesc(ScheduleStatusEnum.Canceled)} após a data prevista.");
         }
 
-        if (schedule.ScheduleStatus == ScheduleStatusEnum.Completed && schedule.Date > GetDate())
+        if (schedule.ScheduleStatus == ScheduleStatusEnum.Completed && schedule.DateStart > GetDate())
         {
             observations.Add($"Agendamento consta {GetStatusDesc(ScheduleStatusEnum.Completed)}, mas a data ainda não ocorreu.");
         }
@@ -102,9 +111,9 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
                         AsNoTracking().
                         Where(x =>
                            x.CompanyId == schedule.CompanyId &&
-                           x.Date.Date == schedule.Date.Date && // Mesma data;
-                           x.Date.Hour == schedule.Date.Hour && // Mesma hora;
-                           x.Date.Minute == schedule.Date.Minute && // Mesmo minuto;
+                           x.DateStart.Date == schedule.DateStart.Date && // Mesma data;
+                           x.DateStart.Hour == schedule.DateStart.Hour && // Mesma hora;
+                           x.DateStart.Minute == schedule.DateStart.Minute && // Mesmo minuto;
                            x.ScheduleStatus == ScheduleStatusEnum.Scheduled &&
                            x.ScheduleId != schedule.ScheduleId && // Ignora o próprio registro;
                            x.Status == true

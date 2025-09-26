@@ -8,11 +8,13 @@ public static class ScheduleMock
 {
     public static Schedule Create(Guid clientId, Guid companyId)
     {
+        DateTime dateStart = GetDate().AddDays(GetRandomNumber(1, 7));
+
         var input = new Schedule
         {
             ScheduleId = Guid.NewGuid(),
-            Date = GetDate().AddDays(GetRandomNumber(1, 7)),
-            DurationMinutes = GetRandomNumber(1, 5),
+            DateStart = dateStart,
+            DateEnd = dateStart.AddHours(1),
             PaymentType = PaymentTypeEnum.Credito,
             ScheduleStatus = ScheduleStatusEnum.Scheduled,
             ClientId = clientId,

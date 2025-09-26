@@ -184,7 +184,8 @@ public sealed class EndToEndTests
         // Verifica schedule persistido;
         Schedule? dbSchedule = await context.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == schedule.ScheduleId);
         Assert.NotNull(dbSchedule);
-        Assert.Equal(schedule.Date, dbSchedule.Date);
+        Assert.Equal(schedule.DateStart, dbSchedule.DateStart);
+        Assert.Equal(schedule.DateEnd, dbSchedule.DateEnd);
         Assert.Equal(dbCustomer.ClientId, dbSchedule.ClientId);
 
         // ---------- 6) CRIA UM INVOICE via CreateCompanyInvoice;

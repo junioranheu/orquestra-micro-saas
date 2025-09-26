@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Base;
+using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Schedules.Update;
 using Orquestra.Domain.Entities;
@@ -24,7 +25,6 @@ public sealed class UpdateScheduleTests
         (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
 
         ScheduleInput input = schedule.Adapt<ScheduleInput>();
-        input.DateEnd = input.Date.AddHours(1);
 
         UpdateSchedule sut = CreateSut(context, user);
 
@@ -32,30 +32,17 @@ public sealed class UpdateScheduleTests
 
         Assert.NotNull(result);
         Assert.Equal(input.ScheduleId, result.ScheduleId);
-        Assert.Equal(input.Date, result.Date);
+        Assert.Equal(input.DateStart, result.DateStart);
         Assert.Equal(input.PaymentType, result.PaymentType);
 
         Schedule? saved = await context.Schedules.FindAsync(schedule.ScheduleId);
         Assert.NotNull(saved);
-        Assert.Equal(input.Date, saved.Date);
+        Assert.Equal(input.DateStart, saved.DateStart);
         Assert.Equal(input.PaymentType, saved.PaymentType);
     }
 
     [Fact]
-    public async Task Execute_ShouldThrow_WhenDateEndIsInvalid()
-    {
-        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
-
-        ScheduleInput input = schedule.Adapt<ScheduleInput>();
-        input.DateEnd = input.Date.AddHours(-1);
-
-        UpdateSchedule sut = CreateSut(context, user);
-
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
-    }
-
-    [Fact]
-    public async Task Execute_ShouldThrow_WhenDurationMinutesIsZeroOrNegative()
+    public async Task Execute_ShouldThrow_WhenDateEndIsBeforeDateStart()
     {
         (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
 
@@ -64,11 +51,33 @@ public sealed class UpdateScheduleTests
             ScheduleId = schedule.ScheduleId,
             CompanyId = schedule.CompanyId,
             ClientId = schedule.ClientId,
-            Date = schedule.Date.AddDays(1).AddHours(10),
-            DurationMinutes = 0,
+            DateStart = schedule.DateStart.AddDays(1).AddHours(10),
+            DateEnd = schedule.DateEnd.AddYears(-1),
             UsersIds = schedule.UsersIds,
             PaymentType = schedule.PaymentType,
             ScheduleStatus = schedule.ScheduleStatus
+        };
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateStartIsPastCurrentTimeInDay()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        DateTime scheduleDate = GetDate().AddMinutes(-30);
+
+        ScheduleInput input = new()
+        {
+            CompanyId = schedule.CompanyId,
+            ClientId = schedule.ClientId,
+            DateStart = scheduleDate,
+            DateEnd = scheduleDate.AddMinutes(1),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
 
         UpdateSchedule sut = CreateSut(context, user);
@@ -88,8 +97,8 @@ public sealed class UpdateScheduleTests
             ScheduleId = schedule.ScheduleId,
             CompanyId = schedule.CompanyId,
             ClientId = schedule.ClientId,
-            Date = scheduleDate,
-            DurationMinutes = 90, // ultrapassa meia-noite
+            DateStart = scheduleDate,
+            DateEnd = scheduleDate.AddMinutes(90), // Ultrapassa meia-noite;
             UsersIds = schedule.UsersIds,
             PaymentType = schedule.PaymentType,
             ScheduleStatus = schedule.ScheduleStatus
@@ -110,7 +119,7 @@ public sealed class UpdateScheduleTests
             ScheduleId = Guid.NewGuid(),
             CompanyId = Guid.NewGuid(),
             ClientId = Guid.NewGuid(),
-            Date = GetDate().AddDays(1),
+            DateStart = GetDate().AddDays(1),
             DateEnd = GetDate().AddDays(1).AddHours(1),
             UsersIds = []
         };
@@ -147,8 +156,8 @@ public sealed class UpdateScheduleTests
             ScheduleId = schedule.ScheduleId,
             CompanyId = schedule.CompanyId,
             ClientId = schedule.ClientId,
-            Date = schedule.Date.AddDays(1),
-            DurationMinutes = 60,
+            DateStart = schedule.DateStart.AddDays(1),
+            DateEnd = schedule.DateEnd.AddDays(1),
             UsersIds = schedule.UsersIds,
             PaymentType = schedule.PaymentType,
             ScheduleStatus = schedule.ScheduleStatus

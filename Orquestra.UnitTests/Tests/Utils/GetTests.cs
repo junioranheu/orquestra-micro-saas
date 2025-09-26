@@ -21,6 +21,48 @@ public sealed class GetTests
     }
 
     [Fact]
+    public void ConvertToUtc_WhenDateIsUtc_ReturnsSameDate()
+    {
+        // Arrange;
+        DateTime utcDate = new(2025, 9, 29, 21, 0, 0, DateTimeKind.Utc);
+
+        // Act;
+        DateTime result = ConvertToUtc(utcDate);
+
+        // Assert;
+        Assert.Equal(utcDate, result);
+        Assert.Equal(DateTimeKind.Utc, result.Kind);
+    }
+
+    [Fact]
+    public void ConvertToUtc_WhenDateIsLocal_ConvertsToUtc()
+    {
+        // Arrange;
+        DateTime localDate = new(2025, 9, 29, 21, 0, 0, DateTimeKind.Local);
+
+        // Act;
+        DateTime result = ConvertToUtc(localDate);
+
+        // Assert;
+        Assert.Equal(DateTimeKind.Utc, result.Kind);
+        Assert.Equal(localDate.ToUniversalTime(), result);
+    }
+
+    [Fact]
+    public void ConvertToUtc_WhenDateIsUnspecified_AssumesLocalAndConverts()
+    {
+        // Arrange;
+        DateTime unspecifiedDate = new(2025, 9, 29, 21, 0, 0, DateTimeKind.Unspecified);
+
+        // Act;
+        DateTime result = ConvertToUtc(unspecifiedDate);
+
+        // Assert;
+        Assert.Equal(DateTimeKind.Utc, result.Kind);
+        Assert.Equal(DateTime.SpecifyKind(unspecifiedDate, DateTimeKind.Local).ToUniversalTime(), result);
+    }
+
+    [Fact]
     public void GetEnumDesc_ShouldReturn_EnumDescription()
     {
         // Act;

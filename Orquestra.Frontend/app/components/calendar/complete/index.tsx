@@ -270,7 +270,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): iEvent[] {
     return schedules.map((schedule) => {
         // console.log('handleMapSchedulesToEvents', schedule);
-        const start = new Date(schedule.date);
+        const start = new Date(schedule.dateStart);
         const end = schedule.dateEnd ? new Date(schedule.dateEnd) : start;
 
         let title = schedule.customTitle ? schedule.customTitle : '';

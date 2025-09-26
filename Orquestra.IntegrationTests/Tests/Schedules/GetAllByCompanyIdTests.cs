@@ -44,28 +44,28 @@ public sealed class GetAllByCompanyIdTests
 
         // Datas: fev, mar, abr de 2025;
         Schedule feb = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        feb.Date = new DateTime(2025, 2, 10, 10, 0, 0);
+        feb.DateStart = new DateTime(2025, 2, 10, 10, 0, 0);
         feb.Status = true;
         await Fixture.Save(context, feb);
 
         Schedule mar = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        mar.Date = new DateTime(2025, 3, 15, 14, 0, 0);
+        mar.DateStart = new DateTime(2025, 3, 15, 14, 0, 0);
         mar.Status = true;
         await Fixture.Save(context, mar);
 
         Schedule apr = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        apr.Date = new DateTime(2025, 4, 20, 9, 0, 0);
+        apr.DateStart = new DateTime(2025, 4, 20, 9, 0, 0);
         apr.Status = true;
         await Fixture.Save(context, apr);
 
         // Fora do range: jan/2025 e mai/2025;
         Schedule jan = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        jan.Date = new DateTime(2025, 1, 5, 8, 0, 0);
+        jan.DateStart = new DateTime(2025, 1, 5, 8, 0, 0);
         jan.Status = true;
         await Fixture.Save(context, jan);
 
         Schedule may = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        may.Date = new DateTime(2025, 5, 1, 11, 0, 0);
+        may.DateStart = new DateTime(2025, 5, 1, 11, 0, 0);
         may.Status = true;
         await Fixture.Save(context, may);
 
@@ -148,7 +148,7 @@ public sealed class GetAllByCompanyIdTests
 
         // Cria um schedule em 2024;
         Schedule s = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        s.Date = new DateTime(2024, 6, 1);
+        s.DateStart = new DateTime(2024, 6, 1);
         s.Status = true;
         await Fixture.Save(context, s);
 
@@ -172,12 +172,12 @@ public sealed class GetAllByCompanyIdTests
         await Fixture.Save(context, client);
 
         Schedule s2025 = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        s2025.Date = new DateTime(2025, 7, 1);
+        s2025.DateStart = new DateTime(2025, 7, 1);
         s2025.Status = true;
         await Fixture.Save(context, s2025);
 
         Schedule s2024 = ScheduleMock.Create(client.ClientId, company.CompanyId);
-        s2024.Date = new DateTime(2024, 12, 1);
+        s2024.DateStart = new DateTime(2024, 12, 1);
         s2024.Status = true;
         await Fixture.Save(context, s2024);
 
@@ -188,7 +188,7 @@ public sealed class GetAllByCompanyIdTests
 
         // Assert;
         Assert.NotNull(result);
-        Assert.All(result, r => Assert.Equal(2025, r.Date.Year));
+        Assert.All(result, r => Assert.Equal(2025, r.DateStart.Year));
     }
 
     #region helpers

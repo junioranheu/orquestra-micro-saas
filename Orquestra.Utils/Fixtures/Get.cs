@@ -19,6 +19,28 @@ public static class Get
     }
 
     /// <summary>
+    /// Converte um DateTime qualquer para o formato UTC, tratando automaticamente o DateTimeKind.
+    /// Se o DateTime estiver em Local, será convertido usando o fuso horário local.
+    /// Se estiver em Unspecified, assumirá como horário local antes de converter.
+    /// </summary>
+    /// <param name="date">A data a ser convertida.</param>
+    /// <returns>Um DateTime representando a mesma data/hora em UTC.</returns>
+    public static DateTime ConvertToUtc(DateTime date)
+    {
+        if (date.Kind == DateTimeKind.Utc)
+        {
+            return date;
+        }
+
+        if (date.Kind == DateTimeKind.Unspecified)
+        {
+            date = DateTime.SpecifyKind(date, DateTimeKind.Local);
+        }
+
+        return date.ToUniversalTime();
+    }
+
+    /// <summary>
     /// Obtém a descrição de um enum;
     /// </summary>
     public static string GetEnumDesc(Enum enumVal)

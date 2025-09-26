@@ -38,11 +38,11 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
             DateTime start = prev;
             DateTime end = next.AddMonths(1).AddTicks(-1); // Fim do próximo mês;
 
-            query = query.Where(x => x.Date >= start && x.Date <= end);
+            query = query.Where(x => x.DateStart >= start && x.DateStart <= end);
         }
         else if ((year.HasValue && year.Value > 0) && (month == 0 || month is null)) // Se foi passado apenas year, pegue apenas o ano alvo;
         {
-            query = query.Where(x => x.Date.Year == year);
+            query = query.Where(x => x.DateStart.Year == year);
         }
 
         List<Schedule> result = await query.ToListAsync();
@@ -56,7 +56,6 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
 
         foreach (var item in output)
         {
-            item.DateEnd = item.Date.AddMinutes(item.DurationMinutes);
             item.Observations = await CheckForObservations(item);
             item.UsersOutput = await GetUsers(item.UsersIds);
         }
