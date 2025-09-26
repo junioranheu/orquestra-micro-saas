@@ -286,10 +286,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                         <h1 className={styles.inputTitle}>{formData?.customTitle ? formData?.customTitle : event?.title}</h1>
                     </div>
 
-                    {
-                        type === 'edit' && (
-                            <div className={styles.modalHeaderRight}>
-                                <div className={styles.metaRow}>
+                    <div className={styles.modalHeaderRight}>
+                        <div className={styles.metaRow}>
+                            {
+                                type === 'edit' ? (
                                     <Tags
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO_SEM_SEGUNDOS), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
@@ -298,10 +298,16 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                             { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' },
                                         ]}
                                     />
-                                </div>
-                            </div>
-                        )
-                    }
+                                ) : (
+                                    <Tags
+                                        tags={[
+                                            { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' },
+                                        ]}
+                                    />
+                                )
+                            }
+                        </div>
+                    </div>
                 </header>
 
                 <main className={styles.modalContent}>
