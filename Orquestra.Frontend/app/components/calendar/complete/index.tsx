@@ -6,6 +6,7 @@ import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import { DATE_STYLE, handleFormatDate, handleParseDateFromString } from '@/app/functions/format.date';
+import { handleTruncate } from '@/app/functions/format.string';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
@@ -285,17 +286,16 @@ export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): 
             // const endNormalized = handleFormatDate(end, DATE_STYLE.HORA_MINUTO);
             // title = `${startNormalized} - ${endNormalized} - ${title}`;
 
+            title = handleTruncate(title);
             title = `${startNormalized} - ${title}`;
         }
-
-        const isAllDay = start.getHours() === 0 && start.getMinutes() === 0 && start.getSeconds() === 0 && end.getHours() === 23 && end.getMinutes() === 59;
 
         return {
             schedule,
             title: title,
             start: start,
             end: end,
-            allDay: isAllDay
+            allDay: false
         };
     })
 }

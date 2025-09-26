@@ -582,6 +582,8 @@ input:-webkit-autofill {
 
     // Quadrados;
     .rbc-row-bg {
+        // background-color: tomato !important;
+        background-color: var(--white);
         width: 100% !important;
     }
 
@@ -597,8 +599,7 @@ input:-webkit-autofill {
         border: none !important;
         background-color: var(--main);
         padding: 0.25rem 0.5rem;
-        // border-radius: var(--border-radius);
-        border-radius: 1rem;
+        border-radius: 0;
         width: 100%;
 
         display: flex;
@@ -647,9 +648,12 @@ input:-webkit-autofill {
 
         .rbc-event {
             // background-color: purple !important;
-            // width: 100%;
-            width: 101%;
-            margin-left: -1px;
+
+            width: 100.5%;
+            // width: 95%;
+            // margin: auto;
+            // border-radius: var(--border-radius);
+            // border-radius: 1rem;
 
             display: flex;
             justify-content: flex-start;
