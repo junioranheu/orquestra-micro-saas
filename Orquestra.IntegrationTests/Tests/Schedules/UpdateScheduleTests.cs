@@ -1,11 +1,11 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Base;
-using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Schedules.Update;
 using Orquestra.Domain.Entities;
@@ -13,6 +13,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
@@ -68,17 +69,8 @@ public sealed class UpdateScheduleTests
     {
         (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
 
-        DateTime scheduleDate = GetDate().AddMinutes(-30);
-
-        ScheduleInput input = new()
-        {
-            CompanyId = schedule.CompanyId,
-            ClientId = schedule.ClientId,
-            DateStart = scheduleDate,
-            DateEnd = scheduleDate.AddMinutes(1),
-            UsersIds = [user.UserId],
-            ScheduleStatus = ScheduleStatusEnum.Scheduled
-        };
+        ScheduleInput input = schedule.Adapt<ScheduleInput>();
+        input.DateEnd = input.DateStart.AddMinutes(-30);
 
         UpdateSchedule sut = CreateSut(context, user);
 

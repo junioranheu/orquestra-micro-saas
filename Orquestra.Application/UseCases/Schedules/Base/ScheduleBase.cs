@@ -27,7 +27,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
     private readonly IGetClient _getClient = deps.GetClient;
     private readonly IGetCompany _getCompany = deps.GetCompany;
 
-    public async Task Validate(ScheduleInput input, Guid userIdAuth, bool isCreate)
+    public async Task Validate(ScheduleInput input, Guid userIdAuth, bool isCreate, bool mustValidateDate = true)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: false);
 
@@ -46,24 +46,27 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             }
         }
 
-        // Normalizar as datas do input (que vêm do front-end), para ficar UTC;
-        DateTime dateStart = ConvertToUtc(input.DateStart);
-        DateTime dateEnd = ConvertToUtc(input.DateEnd);
-
-        if (dateStart <= GetDate())
+        if (mustValidateDate)
         {
-            throw new ArgumentException("Não é possível criar um agendamento com data e hora anterior à de hoje.");
-        }
+            // Normalizar as datas do input (que vêm do front-end), para ficar UTC;
+            DateTime dateStart = ConvertToUtc(input.DateStart);
+            DateTime dateEnd = ConvertToUtc(input.DateEnd);
 
-        if (dateEnd <= dateStart)
-        {
-            throw new ArgumentException("A data de finalização não pode ser inferior à de início.");
-        }
+            if (dateStart <= GetDate())
+            {
+                throw new ArgumentException("Não é possível criar um agendamento com data e hora anterior à de hoje.");
+            }
 
-        // Verifica se ultrapassa o mesmo dia;
-        if (dateEnd.Date != dateStart.Date)
-        {
-            throw new ArgumentException($"A duração não pode ultrapassar o final do dia do agendamento em questão ({GetDateDetails(date: input.DateStart, withHour: false)}).");
+            if (dateEnd <= dateStart)
+            {
+                throw new ArgumentException("A data de finalização não pode ser inferior à de início.");
+            }
+
+            // Verifica se ultrapassa o mesmo dia;
+            if (dateEnd.Date != dateStart.Date)
+            {
+                throw new ArgumentException($"A duração não pode ultrapassar o final do dia do agendamento em questão ({GetDateDetails(date: input.DateStart, withHour: false)}).");
+            }
         }
 
         _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);

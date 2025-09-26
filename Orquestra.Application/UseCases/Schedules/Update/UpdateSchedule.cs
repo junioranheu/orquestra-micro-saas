@@ -15,8 +15,17 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
 
     public async Task<ScheduleOutput> Execute(Guid userIdAuth, ScheduleInput input)
     {
-        await Validate(input, userIdAuth, isCreate: false);
-        Schedule schedule = await Update(input);
+        Schedule? schedule = await _context.Schedules.
+                             // AsNoTracking(). // Propositalmente sem AsNoTracking;
+                             Where(x => x.ScheduleId == input.ScheduleId).
+                             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
+
+        // Deve validar as datas apenas se o usuário alterou alguma delas;
+        // Caso não tenha alterado, deve-se permitir que ele altere qualquer outra prop;
+        bool mustValidateDate = !(schedule.DateStart == ConvertToUtc(input.DateStart) && schedule.DateEnd == ConvertToUtc(input.DateEnd));
+
+        await Validate(input, userIdAuth, isCreate: false, mustValidateDate: mustValidateDate);
+        await Update(input, schedule);
 
         var output = schedule.Adapt<ScheduleOutput>();
         output.Observations = await CheckForObservations(output);
@@ -26,13 +35,8 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     }
 
     #region extras
-    private async Task<Schedule> Update(ScheduleInput input)
+    private async Task<Schedule> Update(ScheduleInput input, Schedule schedule)
     {
-        Schedule? schedule = await _context.Schedules.
-                             // AsNoTracking(). // Propositalmente sem AsNoTracking;
-                             Where(x => x.ScheduleId == input.ScheduleId).
-                             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
-
         schedule.DateStart = input.DateStart;
         schedule.DateEnd = input.DateEnd;
         schedule.PaymentType = input.PaymentType;
