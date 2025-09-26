@@ -286,7 +286,7 @@ export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): 
             // const endNormalized = handleFormatDate(end, DATE_STYLE.HORA_MINUTO);
             // title = `${startNormalized} - ${endNormalized} - ${title}`;
 
-            title = handleTruncate(title);
+            title = handleTruncate(title, getTruncateLength());
             title = `${startNormalized} - ${title}`;
         }
 
@@ -298,4 +298,26 @@ export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): 
             allDay: false
         };
     })
+
+    function getTruncateLength(): number {
+        const width = typeof window !== 'undefined' ? window.innerWidth : 1366;
+
+        if (width <= 1024) {
+            return 3; // Notebook menor;
+        }
+
+        if (width <= 1366) {
+            return 10; // Notebook padrão;
+        }
+
+        if (width <= 1536) {
+            return 14;
+        }
+
+        if (width <= 1920) {
+            return 22; // Full HD;
+        }
+
+        return 25; // Telas maiores;
+    }
 }
