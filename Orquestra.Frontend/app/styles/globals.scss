@@ -639,7 +639,7 @@ input:-webkit-autofill {
         }
     }
 
-    // Tipo mês;
+    // Tipo mês (1);
     .rbc-month-view {
         // background-color: tomato !important;
         border: 1px solid var(--gray-light);
@@ -689,7 +689,7 @@ input:-webkit-autofill {
         }
     }
 
-    // Tipo semana e dia;
+    // Tipo semana (2) e dia (3);
     .rbc-time-view {
         // background-color: orange;
         border: 1px solid var(--gray-light);
@@ -733,15 +733,17 @@ input:-webkit-autofill {
         }
     }
 
-    // Tipo agenda;
+    // Tipo agenda (4);
     .rbc-agenda-view {
         // background-color: orange;
-        border: 1px solid var(--gray-light);
+        // border: 1px solid var(--gray-light);
+        border: 1px solid rgba(236, 232, 232, 0.5);
         border-radius: var(--border-radius);
 
         .rbc-agenda-table {
             // background-color: orange;
-            border: 1px solid var(--gray-light);
+            // border: 1px solid var(--gray-light);
+            border: 1px solid rgba(236, 232, 232, 0.5);
 
             .rbc-agenda-date-cell {
                 // background-color: orange !important;
@@ -750,7 +752,8 @@ input:-webkit-autofill {
 
             .rbc-agenda-time-cell {
                 // background-color: orange !important;
-                border: 1px solid var(--gray-light);
+                // border: 1px solid var(--gray-light);
+                border: 1px solid rgba(236, 232, 232, 0.5);
             }
         }
 
@@ -770,6 +773,7 @@ input:-webkit-autofill {
         }
 
         .rbc-btn-group {
+            // background-color: orange !important;
             border-radius: var(--border-radius);
 
             .rbc-active {
@@ -781,8 +785,20 @@ input:-webkit-autofill {
 
             button {
                 // background-color: orange;
-                transition: 0.3s;
                 border: 1px solid var(--gray-light) !important;
+                transition: 0.3s;
+
+                &:first-child {
+                    // background-color: tomato;
+                    border-top-left-radius: var(--border-radius);
+                    border-bottom-left-radius: var(--border-radius);
+                }
+
+                &:last-child {
+                    // background-color: blue;
+                    border-top-right-radius: var(--border-radius);
+                    border-bottom-right-radius: var(--border-radius);
+                }
 
                 &:hover {
                     background-color: #f5f5f5;

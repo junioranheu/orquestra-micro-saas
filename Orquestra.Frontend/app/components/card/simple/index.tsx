@@ -13,7 +13,16 @@ export type iProps = {
     className?: string;
 }
 
-export default function CardSimple({ img, isImgInsideOfCard = true, title, description, buttonLabel, buttonDisabled = false, buttonFunction, className }: iProps) {
+export default function CardSimple({
+    img,
+    isImgInsideOfCard = true,
+    title,
+    description,
+    buttonLabel,
+    buttonDisabled = false,
+    buttonFunction,
+    className
+}: iProps) {
     return (
         <div className={styles.wrapper}>
             {

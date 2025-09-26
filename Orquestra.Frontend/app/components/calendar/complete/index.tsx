@@ -4,6 +4,7 @@ import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
+import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import { DATE_STYLE, handleFormatDate, handleParseDateFromString } from '@/app/functions/format.date';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
@@ -198,55 +199,57 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     return (
         <Fragment>
             <div className={styles.main}>
-                <Calendar
-                    localizer={localizer}
-                    events={events}
-                    startAccessor='start'
-                    endAccessor='end'
-                    date={date}
-                    view={view}
-                    onNavigate={setDate}
-                    onView={setView}
-                    views={availableViews}
-                    style={{ height: customElementHeight || '85vh' }}
-                    culture='pt-BR'
-                    messages={messages}
-                    formats={formats}
-                    selectable={true}
-                    onSelectSlot={(e) => handleAddNewEvent(e)}
-                    onSelectEvent={(e) => handleCheckEvent(e)}
-                    dayPropGetter={(date) => { // Quadrados;
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
+                <CardSimpleWithChildren style={{ height: customElementHeight || '85vh' }}>
+                    <Calendar
+                        localizer={localizer}
+                        events={events}
+                        startAccessor='start'
+                        endAccessor='end'
+                        date={date}
+                        view={view}
+                        onNavigate={setDate}
+                        onView={setView}
+                        views={availableViews}
+                        // style={{ height: customElementHeight || '85vh' }}
+                        culture='pt-BR'
+                        messages={messages}
+                        formats={formats}
+                        selectable={true}
+                        onSelectSlot={(e) => handleAddNewEvent(e)}
+                        onSelectEvent={(e) => handleCheckEvent(e)}
+                        dayPropGetter={(date) => { // Quadrados;
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
 
-                        const day = new Date(date);
-                        day.setHours(0, 0, 0, 0);
+                            const day = new Date(date);
+                            day.setHours(0, 0, 0, 0);
 
-                        if (day < today) {
-                            return {
-                                style: {
-                                    cursor: 'not-allowed',
-                                    backgroundColor: '#f5f5f5'
+                            if (day < today) {
+                                return {
+                                    style: {
+                                        cursor: 'not-allowed',
+                                        backgroundColor: '#f5f5f5'
+                                    }
                                 }
                             }
-                        }
 
-                        return {};
-                    }}
-                    eventPropGetter={(event) => { // Eventos;
-                        const today = new Date();
-                        const eventEnd = new Date(event.end);
+                            return {};
+                        }}
+                        eventPropGetter={(event) => { // Eventos;
+                            const today = new Date();
+                            const eventEnd = new Date(event.end);
 
-                        // Se o evento terminou antes de hoje → cor diferenciada;
-                        if (eventEnd < today) {
-                            return {
-                                className: 'rbc-event-past'
-                            };
-                        }
+                            // Se o evento terminou antes de hoje → cor diferenciada;
+                            if (eventEnd < today) {
+                                return {
+                                    className: 'rbc-event-past'
+                                };
+                            }
 
-                        return {};
-                    }}
-                />
+                            return {};
+                        }}
+                    />
+                </CardSimpleWithChildren>
             </div>
 
             <ModalCalendarView
