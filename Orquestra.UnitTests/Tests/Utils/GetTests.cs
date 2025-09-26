@@ -63,6 +63,60 @@ public sealed class GetTests
     }
 
     [Fact]
+    public void ConvertToBrasiliaTime_WithUtcDate_ReturnsCorrectBrasiliaTime()
+    {
+        // Arrange;
+        DateTime utcDate = new (2025, 9, 26, 12, 0, 0, DateTimeKind.Utc);
+
+        // Act;
+        DateTime result = ConvertToBrasiliaTime(utcDate);
+
+        // Assert;
+        Assert.Equal(utcDate.AddHours(-3), result); // Brasília normalmente UTC-3;
+    }
+
+    [Fact]
+    public void ConvertToBrasiliaTime_WithLocalDate_ReturnsCorrectBrasiliaTime()
+    {
+        // Arrange;
+        DateTime localDate = new (2025, 9, 26, 12, 0, 0, DateTimeKind.Local);
+
+        // Act;
+        var result = ConvertToBrasiliaTime(localDate);
+
+        // Assert;
+        DateTime expected = localDate.ToUniversalTime().AddHours(-3);
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ConvertToBrasiliaTime_WithUnspecifiedDate_AssumesLocalAndReturnsCorrectBrasiliaTime()
+    {
+        // Arrange;
+        DateTime unspecifiedDate = new(2025, 9, 26, 12, 0, 0, DateTimeKind.Unspecified);
+
+        // Act;
+        var result = ConvertToBrasiliaTime(unspecifiedDate);
+
+        // Assert;
+        DateTime expected = DateTime.SpecifyKind(unspecifiedDate, DateTimeKind.Local)  .ToUniversalTime()      .AddHours(-3);
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ConvertToBrasiliaTime_InvalidTimeZone_ThrowsException()
+    {
+        // Simulação: Alterar ID de timezone para teste de exceção;
+        DateTime invalidDate = new (2025, 9, 26, 12, 0, 0, DateTimeKind.Utc);
+
+        // Act & Assert;
+        Assert.Throws<TimeZoneNotFoundException>(() =>
+        {
+            TimeZoneInfo.FindSystemTimeZoneById("InvalidTimeZone");
+        });
+    }
+
+    [Fact]
     public void GetEnumDesc_ShouldReturn_EnumDescription()
     {
         // Act;

@@ -146,7 +146,7 @@ public sealed class CreateScheduleTests
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
             DateStart = scheduleDate,
-            DateEnd = scheduleDate.AddMinutes(90),
+            DateEnd = scheduleDate.AddDays(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };

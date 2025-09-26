@@ -90,7 +90,7 @@ public sealed class UpdateScheduleTests
             CompanyId = schedule.CompanyId,
             ClientId = schedule.ClientId,
             DateStart = scheduleDate,
-            DateEnd = scheduleDate.AddMinutes(90), // Ultrapassa meia-noite;
+            DateEnd = scheduleDate.AddDays(1), // Ultrapassa meia-noite;
             UsersIds = schedule.UsersIds,
             PaymentType = schedule.PaymentType,
             ScheduleStatus = schedule.ScheduleStatus
