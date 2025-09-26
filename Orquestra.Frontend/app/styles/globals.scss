@@ -597,7 +597,8 @@ input:-webkit-autofill {
         border: none !important;
         background-color: var(--main);
         padding: 0.25rem 0.5rem;
-        border-radius: var(--border-radius);
+        // border-radius: var(--border-radius);
+        border-radius: 1rem;
         width: 100%;
 
         display: flex;
@@ -611,6 +612,8 @@ input:-webkit-autofill {
             display: flex;
             justify-content: flex-start;
             align-items: center;
+
+            white-space: nowrap;
         }
 
         &:focus,
@@ -643,7 +646,9 @@ input:-webkit-autofill {
 
         .rbc-event {
             // background-color: purple !important;
-            width: 100%;
+            // width: 100%;
+            width: 101%;
+            margin-left: -1px;
 
             display: flex;
             justify-content: flex-start;
@@ -789,6 +794,19 @@ input:-webkit-autofill {
                     transition: 0.3s;
                 }
             }
+        }
+    }
+
+    .rbc-event-past {
+        // background-color: tomato !important;
+        background-color: var(--gray) !important;
+        color: var(--black) !important;
+        opacity: 0.75 !important;
+
+        &:hover {
+            background-color: var(--gray) !important;
+            color: var(--black) !important;
+            opacity: 0.75 !important;
         }
     }
 }

@@ -240,11 +240,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                         // Se o evento terminou antes de hoje → cor diferenciada;
                         if (eventEnd < today) {
                             return {
-                                style: {
-                                    backgroundColor: 'var(--gray)',
-                                    color: 'var(--black)',
-                                    opacity: '0.75'
-                                }
+                                className: 'rbc-event-past'
                             };
                         }
 
