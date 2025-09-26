@@ -1,4 +1,4 @@
-.calendar {
+.main {
     // background-color: orange !important;
     // O height é definido pelo tsx (não alterar!);
     border-radius: var(--border-radius);
@@ -15,7 +15,7 @@
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1281px) {
-    .calendar {
+    .main {
         // background-color: tomato !important;
         max-width: 89vw;
     }

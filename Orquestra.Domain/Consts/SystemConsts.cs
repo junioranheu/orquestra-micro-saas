@@ -12,6 +12,7 @@ public static class SystemConsts
     public const int OneMinuteInSec = 60;
     public const int TenMinutesInSec = 600;
     public const int OneHourInSec = 3600;
+    public const int HalfDayInSec = 43200;
     public const int OneDayInSec = 86400;
     public const int OneMonthInSec = 2629800;
 

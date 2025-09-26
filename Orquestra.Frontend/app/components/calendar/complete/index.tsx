@@ -197,7 +197,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
     return (
         <Fragment>
-            <div className={styles.calendar}>
+            <div className={styles.main}>
                 <Calendar
                     localizer={localizer}
                     events={events}
