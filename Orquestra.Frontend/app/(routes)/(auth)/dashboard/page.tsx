@@ -20,7 +20,7 @@ export default function Dashboard() {
 
     const router = useRouter();
     const [auth,] = useUserContext();
-    const me = useApiGetMe();
+    const me = useApiGetMe({});
 
     // Verificar se o usuário autenticado pelo back e front são o mesmo;
     useEffect(() => {

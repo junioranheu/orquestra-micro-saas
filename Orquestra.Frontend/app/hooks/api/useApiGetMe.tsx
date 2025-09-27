@@ -2,7 +2,12 @@ import { CONSTS_AUTH, iMe } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import { useEffect, useState } from 'react';
 
-export default function useApiGetMe(isFetch: boolean = true): iMe | undefined {
+interface iProps {
+    isFetch?: boolean;
+    trigger?: Date | undefined;
+}
+
+export default function useApiGetMe({ isFetch = true, trigger = undefined }: iProps): iMe | undefined {
 
     const [me, setMe] = useState<iMe>();
 
@@ -15,7 +20,7 @@ export default function useApiGetMe(isFetch: boolean = true): iMe | undefined {
         if (isFetch) {
             handleFetch();
         }
-    }, [isFetch]);
+    }, [isFetch, trigger]);
 
     return me;
 

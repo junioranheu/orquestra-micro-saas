@@ -15,7 +15,7 @@ import styles from './index.module.scss';
 
 export default function CardCalendar() {
 
-    const me = useApiGetMe();
+    const me = useApiGetMe({});
     const router = useRouter();
     const windowSize = useWindowSize();
     const [hasAccessToSchedule, setHasAccessToSchedule] = useState<boolean>(false);

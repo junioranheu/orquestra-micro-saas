@@ -12,7 +12,7 @@ export default function EmpresaAgendamentos() {
     useTitle('Agendamentos');
     useDisableScroll();
 
-    const me = useApiGetMe();
+    const me = useApiGetMe({});
     const [events, setEvents] = useState<iEvent[]>([]);
 
     const sectionRef = useRef<HTMLElement>(null);

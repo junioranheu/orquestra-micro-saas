@@ -76,7 +76,7 @@ interface iPropsProfileMenu {
 
 export function ProfileMenu({ setModalIsOpen }: iPropsProfileMenu): JSX.Element {
 
-    const me = useApiGetMe();
+    const me = useApiGetMe({});
     const router = useRouter();
 
     function handleRedirect(route: (typeof ROUTES)[keyof typeof ROUTES]) {

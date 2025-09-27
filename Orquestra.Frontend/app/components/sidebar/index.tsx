@@ -21,7 +21,7 @@ export default function Sidebar() {
 
     const router = useRouter();
     const pathname = usePathname();
-    const me = useApiGetMe();
+    const me = useApiGetMe({});
     const versionBuild = useApiGetBuildVersion();
     const [active, setActive] = useState<string>('');
 

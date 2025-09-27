@@ -19,7 +19,7 @@ export default function UsuarioConfiguracoes() {
 
     const [auth,] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
-    const me = useApiGetMe();
+    const me = useApiGetMe({});
     const [modules, setModules] = useState<iCalculatePriceModuleCompanyOutput[]>([]);
 
     async function handleXD() {

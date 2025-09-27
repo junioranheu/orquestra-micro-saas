@@ -1,11 +1,15 @@
 'use client';
 import iCompanySimpleOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
+import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
+import { Fetch } from '@/app/api/fetch';
 import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
@@ -16,10 +20,35 @@ import styles from './page.module.scss';
 export default function EmpresaGerenciar() {
 
     const router = useRouter();
-    const me = useApiGetMe();
 
+    const [trigger, setTrigger] = useState<Date>(new Date());
+    const me = useApiGetMe({ trigger: trigger });
     const [companies, setCompanies] = useState<iCompanySimpleOutput[]>();
-    useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`, setter: setCompanies });
+
+    useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({
+        apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`,
+        setter: setCompanies,
+        trigger: trigger
+    });
+
+    function handleClick(company: iCompanySimpleOutput) {
+        swal({
+            content: `Você deseja selecionar a empresa <b>${company.name}</b> como a sua principal?`,
+            icon: 'question',
+            cancelBtnText: 'Cancelar',
+            confirmBtnText: 'Sim, continuar',
+            confirmFunction: async () => {
+                if (company.companyId === me?.currentMainCompany?.companyId) {
+                    swal({ content: 'Essa já é sua empresa principal.', icon: 'warning' });
+                    return;
+                }
+
+                await Fetch.put({ url: `${CONSTS_COMPANY_USER.updateCurrentMainCompanyUser}?companyId=${company.companyId}` });
+                toast({ content: `A empresa "${company.name}" agora é a sua principal!` });
+                setTrigger(new Date());
+            }
+        });
+    }
 
     return (
         <section className={styles.main}>
@@ -44,7 +73,11 @@ export default function EmpresaGerenciar() {
             <div className={styles.grid}>
                 {
                     companies?.sort((a, b) => a.name.localeCompare(b.name)).map((company) => (
-                        <article key={company.companyId.toString()} className={styles.card}>
+                        <article
+                            key={company.companyId.toString()}
+                            className={styles.card}
+                            onClick={() => handleClick(company)}
+                        >
                             <header className={styles.header}>
                                 <div className={styles.avatar}>
                                     {
@@ -57,8 +90,6 @@ export default function EmpresaGerenciar() {
                                 </div>
 
                                 <div className={styles.info}>
-
-
                                     <h3>{company.name}</h3>
                                     <p className={styles.type}>{company.companyType}</p>
                                 </div>
