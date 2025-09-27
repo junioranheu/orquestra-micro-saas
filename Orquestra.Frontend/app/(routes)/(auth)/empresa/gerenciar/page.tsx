@@ -10,7 +10,8 @@ import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
-import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
+import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
 import { useRouter } from 'next/navigation';
@@ -22,7 +23,8 @@ export default function EmpresaGerenciar() {
     const router = useRouter();
 
     const [trigger, setTrigger] = useState<Date>(new Date());
-    const me = useApiGetMe({ trigger: trigger });
+    const me = useApiGetMeSimple();
+    const currentMainCompany = useApiGetCurrentMainCompany({ trigger: trigger });
     const [companies, setCompanies] = useState<iCompanySimpleOutput[]>();
 
     useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({
@@ -38,7 +40,7 @@ export default function EmpresaGerenciar() {
             cancelBtnText: 'Cancelar',
             confirmBtnText: 'Sim, continuar',
             confirmFunction: async () => {
-                if (company.companyId === me?.currentMainCompany?.companyId) {
+                if (company.companyId === currentMainCompany?.companyId) {
                     swal({ content: 'Essa já é sua empresa principal.', icon: 'warning' });
                     return;
                 }
@@ -57,7 +59,7 @@ export default function EmpresaGerenciar() {
                     <CardSimple
                         img={SvgUserArrow}
                         title={`${handleGetFirstName(me?.userName)}, atualmente você faz parte de ${companies?.length} empresa${companies?.length > 1 ? 's' : ''}.`}
-                        description={`A sua empresa principal é a <b>${me?.currentMainCompany?.name}</b>.<br/>Caso exista essa possibilidade, você pode escolher abaixo uma outra empresa para ser a sua principal.<br/>Você também pode alterar essa escolha a qualquer momento!`}
+                        description={`A sua empresa principal é a <b>${currentMainCompany?.name}</b>.<br/>Caso exista essa possibilidade, você pode escolher abaixo uma outra empresa para ser a sua principal.<br/>Você também pode alterar essa escolha a qualquer momento!`}
                     />
                 ) : (
                     <CardSimple
@@ -95,7 +97,7 @@ export default function EmpresaGerenciar() {
                                 </div>
 
                                 {
-                                    me?.currentMainCompany?.companyId == company.companyId && (
+                                    currentMainCompany?.companyId == company.companyId && (
                                         <span className={styles.badge}>Principal</span>
                                     )
                                 }

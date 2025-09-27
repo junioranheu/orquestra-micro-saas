@@ -138,6 +138,18 @@ public class AuthController(
         return Ok(output);
     }
 
+    [AuthorizeFilter]
+    [HttpGet("Me/CurrentMainCompany")]
+    public async Task<ActionResult> MeCurrentMainCompany()
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+
+        (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
+        CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
+
+        return Ok(currentMainCompanySimple);
+    }
+
     [AllowAnonymous]
     [HttpGet("Me/Modules")]
     public async Task<ActionResult> MeModules(Guid? userId)
