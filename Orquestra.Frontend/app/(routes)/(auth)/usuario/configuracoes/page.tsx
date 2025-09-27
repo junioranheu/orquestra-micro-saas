@@ -1,5 +1,5 @@
 'use client';
-import iMe, { CONSTS_AUTH } from '@/app/api/consts/auth';
+import { CONSTS_AUTH, iMe } from '@/app/api/consts/auth';
 import { CONSTS_COMPANY, iCalculatePriceModuleCompanyOutput } from '@/app/api/consts/company';
 import { CONSTS_LOG } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';

@@ -44,7 +44,7 @@ export default function CardSimple({
                             <div className={styles.left}>
                                 {
                                     img && (
-                                        <Image src={img} alt='' priority={true} />
+                                        <Image src={img} alt='' priority={true} width={125} />
                                     )
                                 }
                             </div>
@@ -53,7 +53,7 @@ export default function CardSimple({
 
                     <div className={`${styles.right} ${className}`}>
                         <h3 className={styles.title}>{title}</h3>
-                        <p className={styles.description}>{description}</p>
+                        <p className={styles.description} dangerouslySetInnerHTML={{ __html: description ?? '' }} />
 
                         {
                             buttonLabel && buttonFunction && (

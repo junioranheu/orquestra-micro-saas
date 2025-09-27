@@ -68,6 +68,11 @@ public class CompanyController(
     [HttpGet("GetAllByUserId")]
     public async Task<ActionResult> GetAllByUserId(Guid userId)
     {
+        if (userId == Guid.Empty)
+        {
+            return NoContent();
+        }
+
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         (UserRoleEnum[] userRolesEnum, string[] _) = GetUserRolesAuth();
 

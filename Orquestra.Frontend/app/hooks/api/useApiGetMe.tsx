@@ -1,4 +1,4 @@
-import iMe, { CONSTS_AUTH } from '@/app/api/consts/auth';
+import { CONSTS_AUTH, iMe } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import { useEffect, useState } from 'react';
 

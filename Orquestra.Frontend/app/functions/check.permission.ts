@@ -1,4 +1,4 @@
-import iMe from '@/app/api/consts/auth';
+import { iMe } from '@/app/api/consts/auth';
 import { Module } from '@/app/consts/modules';
 
 // Verificar se o usuário tem a permissão para visualizar um elemento;

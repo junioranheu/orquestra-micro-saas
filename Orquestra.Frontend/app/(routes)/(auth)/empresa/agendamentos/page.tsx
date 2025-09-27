@@ -6,7 +6,6 @@ import useDisableScroll from '@/app/hooks/useDisableScroll';
 import useTitle from '@/app/hooks/useTitle';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import styles from './page.module.scss';
 
 export default function EmpresaAgendamentos() {
 
@@ -34,7 +33,7 @@ export default function EmpresaAgendamentos() {
     }, []);
 
     return (
-        <section className={`${styles.main} ${SYSTEM.ANIMATE}`} ref={sectionRef}>
+        <section className={SYSTEM.ANIMATE} ref={sectionRef}>
             {
                 availableHeight && me && me?.currentMainCompany ? (
                     <CalendarComplete

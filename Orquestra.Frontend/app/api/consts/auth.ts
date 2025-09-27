@@ -12,13 +12,16 @@ export const CONSTS_AUTH = {
     logout: `${BASE}/${controller}`
 };
 
-export default interface iMe {
+export interface iMeSimple {
     isAuth: boolean;
     userId: string;
     userName: string;
     email: string;
     roles: string[];
     rolesStr: UserRoleEnum[];
+}
+
+export interface iMe extends iMeSimple {
     currentMainCompany: iCompanySimpleOutput;
     tokenExpirationDate: Date;
     refreshTokenExpirationDate: Date;
