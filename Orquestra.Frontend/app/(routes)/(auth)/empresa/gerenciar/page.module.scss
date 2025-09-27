@@ -76,14 +76,7 @@
             border-radius: var(--border-radius);
             font-weight: 500;
             color: var(--white);
-
-            &.approved {
-                background: var(--main);
-            }
-
-            &.denied {
-                background: var(--red);
-            }
+            background: var(--main);
         }
 
         .content {

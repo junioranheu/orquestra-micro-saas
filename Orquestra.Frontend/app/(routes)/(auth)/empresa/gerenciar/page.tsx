@@ -5,8 +5,8 @@ import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import { handleGetNameInitials } from '@/app/functions/get.formatUserName';
-import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
+import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
 import { useRouter } from 'next/navigation';
@@ -16,10 +16,10 @@ import styles from './page.module.scss';
 export default function EmpresaGerenciar() {
 
     const router = useRouter();
-    const meSimple = useApiGetMeSimple();
+    const me = useApiGetMe();
 
     const [companies, setCompanies] = useState<iCompanySimpleOutput[]>();
-    useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${meSimple?.userId ?? Guid.EMPTY}`, setter: setCompanies });
+    useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`, setter: setCompanies });
 
     return (
         <section className={styles.main}>
@@ -27,13 +27,13 @@ export default function EmpresaGerenciar() {
                 (companies && companies?.length) ? (
                     <CardSimple
                         img={SvgUserArrow}
-                        title={`Atualmente você faz parte de ${companies?.length} empresa${companies?.length > 1 ? 's' : ''}.`}
-                        description='Escolha uma empresa abaixo para ser a sua principal.<br/>Você pode alterar essa escolha a qualquer momento!'
+                        title={`${handleGetFirstName(me?.userName)}, atualmente você faz parte de ${companies?.length} empresa${companies?.length > 1 ? 's' : ''}.`}
+                        description={`A sua empresa principal é a <b>${me?.currentMainCompany?.name}</b>.<br/>Caso exista essa possibilidade, você pode escolher abaixo uma outra empresa para ser a sua principal.<br/>Você também pode alterar essa escolha a qualquer momento!`}
                     />
                 ) : (
                     <CardSimple
                         img={SvgUserArrow}
-                        title='Tudo parece tão vazio por aqui...'
+                        title={`${handleGetFirstName(me?.userName)}, tudo parece tão vazio por aqui...`}
                         description='Aparentemente você não faz parte de nenhuma empresa.<br/>Por que não cadastra a sua agora mesmo?'
                         buttonLabel={`Cadastrar sua empresa no ${SYSTEM.NAME}`}
                         buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
@@ -57,13 +57,17 @@ export default function EmpresaGerenciar() {
                                 </div>
 
                                 <div className={styles.info}>
+
+
                                     <h3>{company.name}</h3>
                                     <p className={styles.type}>{company.companyType}</p>
                                 </div>
 
-                                <span className={`${styles.badge} ${company.companySituation === 'Approved' ? styles.approved : styles.denied}`}    >
-                                    {company.companySituation}
-                                </span>
+                                {
+                                    me?.currentMainCompany?.companyId == company.companyId && (
+                                        <span className={styles.badge}>Principal</span>
+                                    )
+                                }
                             </header>
 
                             <div className={styles.content}>
@@ -80,6 +84,10 @@ export default function EmpresaGerenciar() {
                                         </p>
                                     )
                                 }
+
+                                <p>
+                                    <Icon icon='info' size='small' /> {company.companySituation}
+                                </p>
 
                                 <div className={styles.modules}>
                                     {
