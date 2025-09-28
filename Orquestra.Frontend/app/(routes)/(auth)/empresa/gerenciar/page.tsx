@@ -5,6 +5,7 @@ import { Fetch } from '@/app/api/fetch';
 import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
+import Button from '@/app/components/input/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
@@ -13,6 +14,7 @@ import toast from '@/app/functions/toast';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
+import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -22,20 +24,15 @@ export default function EmpresaGerenciar() {
 
     const router = useRouter();
 
-    const [trigger, setTrigger] = useState<Date>(new Date());
     const me = useApiGetMeSimple();
-    const currentMainCompany = useApiGetCurrentMainCompany({ trigger: trigger });
+    const currentMainCompany = useApiGetCurrentMainCompany({});
     const [companies, setCompanies] = useState<iCompanySimpleOutput[]>();
 
-    useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({
-        apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`,
-        setter: setCompanies,
-        trigger: trigger
-    });
+    useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`, setter: setCompanies, });
 
-    function handleClick(company: iCompanySimpleOutput) {
+    function handleSetCurrentMainCompany(company: iCompanySimpleOutput) {
         swal({
-            content: `Você deseja selecionar a empresa <b>${company.name}</b> como a sua principal?`,
+            content: `Você deseja selecionar <b>${company.name}</b> como sua empresa principal?`,
             icon: 'question',
             cancelBtnText: 'Cancelar',
             confirmBtnText: 'Sim, continuar',
@@ -47,7 +44,7 @@ export default function EmpresaGerenciar() {
 
                 await Fetch.put({ url: `${CONSTS_COMPANY_USER.updateCurrentMainCompanyUser}?companyId=${company.companyId}` });
                 toast({ content: `A empresa "${company.name}" agora é a sua principal!` });
-                setTrigger(new Date());
+                window.location.reload();
             }
         });
     }
@@ -75,11 +72,7 @@ export default function EmpresaGerenciar() {
             <div className={styles.grid}>
                 {
                     companies?.sort((a, b) => a.name.localeCompare(b.name)).map((company) => (
-                        <article
-                            key={company.companyId.toString()}
-                            className={styles.card}
-                            onClick={() => handleClick(company)}
-                        >
+                        <article key={company.companyId.toString()} className={styles.card}>
                             <header className={styles.header}>
                                 <div className={styles.avatar}>
                                     {
@@ -97,8 +90,12 @@ export default function EmpresaGerenciar() {
                                 </div>
 
                                 {
-                                    currentMainCompany?.companyId == company.companyId && (
-                                        <span className={styles.badge}>Principal</span>
+                                    currentMainCompany?.companyId === company.companyId && (
+                                        <Tippy content='Essa é sua empresa princial atualmente'>
+                                            <span className={styles.badge}>
+                                                <Icon icon='star' size='small' />
+                                            </span>
+                                        </Tippy>
                                     )
                                 }
                             </header>
@@ -122,15 +119,45 @@ export default function EmpresaGerenciar() {
                                     <Icon icon='info' size='small' /> {company.companySituation}
                                 </p>
 
-                                <div className={styles.modules}>
-                                    {
-                                        company.modulesStr?.map((m) => (
-                                            <span key={m} className={styles.module}>
-                                                {m}
-                                            </span>
-                                        ))
-                                    }
-                                </div>
+                                <p>
+                                    <Icon icon='users' size='small' /> {company.amountOfClients} cliente{company.amountOfClients === 0 ? '' : 's'}
+                                </p>
+
+                                {
+                                    currentMainCompany?.companyId == company.companyId && (
+                                        <p><Icon icon='star' size='small' /> Principal</p>
+                                    )
+                                }
+
+                                {
+                                    currentMainCompany?.isAdm && (
+                                        <p><Icon icon='shield' size='small' /> Administador</p>
+                                    )
+                                }
+                            </div>
+
+                            {
+                                company.modulesStr?.length > 0 && (
+                                    <div className={styles.modules}>
+                                        {
+                                            company.modulesStr.map((m) => (
+                                                <span key={m} className={styles.module}>
+                                                    {m}
+                                                </span>
+                                            ))
+                                        }
+                                    </div>
+                                )
+                            }
+
+                            <div className={styles.actions}>
+                                <Button label='Sair' isStyleSimple={true} isDisabled={true} />
+
+                                {
+                                    currentMainCompany?.companyId !== company.companyId && (
+                                        <Button label='Tornar principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
+                                    )
+                                }
                             </div>
                         </article>
                     ))

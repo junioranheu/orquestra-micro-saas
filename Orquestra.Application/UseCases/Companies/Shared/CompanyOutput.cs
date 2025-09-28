@@ -63,6 +63,8 @@ public sealed class CompanyOutput
     public DateTime CreatedDate { get; set; }
 
     public IEnumerable<CompanyUserOutput>? CompanyUsers { get; init; }
+
+    public int AmountOfClients { get; set; } = 0;
     #endregion
 }
 

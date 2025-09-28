@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Caching.Memory;
 using Orquestra.API.Filters;
-using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Logout;
@@ -29,8 +27,7 @@ public class AuthController(
         IGetRefreshToken getRefreshToken,
         IGetCurrentMainCompanyUser getCurrentMainCompanyUser,
         IGetModuleCompanyUser getModuleCompanyUser,
-        ILogoutUser logoutUser,
-        IMemoryCache cache
+        ILogoutUser logoutUser
     ) : BaseController<AuthController>
 {
     private readonly ICreateToken _createToken = createToken;
@@ -39,7 +36,6 @@ public class AuthController(
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
     private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;
     private readonly ILogoutUser _logoutUser = logoutUser;
-    private readonly IMemoryCache _cache = cache;
 
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
@@ -85,12 +81,6 @@ public class AuthController(
     {
         // Misc;
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        string cacheKey = $"Key_Auth_Me_{userIdAuth}";
-
-        if (_cache.TryGetValue(cacheKey, out MeOutput? cachedOutput))
-        {
-            return Ok(cachedOutput);
-        }
 
         const bool isAuth = true;
         string nameAuth = GetUserNameAuth();
@@ -133,8 +123,6 @@ public class AuthController(
             output.CurrentMainCompany.UserModulesStr = modulesStr;
         }
 
-        _cache.Set(cacheKey, output, TimeSpan.FromSeconds(30));
-
         return Ok(output);
     }
 
@@ -144,8 +132,9 @@ public class AuthController(
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
 
-        (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
         CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
+        currentMainCompanySimple.IsAdm = isUserAdm;
 
         return Ok(currentMainCompanySimple);
     }
@@ -159,18 +148,9 @@ public class AuthController(
             throw new UnauthorizedAccessException("O usuário da requisição é inválido.");
         }
 
-        string cacheKey = $"Key_Auth_Me_Modules_{userId}";
-
-        if (_cache.TryGetValue(cacheKey, out ModuleEnum[]? cachedOutput))
-        {
-            return Ok(cachedOutput);
-        }
-
         // Current main company;
         (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.Execute(userId.GetValueOrDefault());
         ModuleEnum[]? output = currentMainCompany?.Modules ?? [];
-
-        _cache.Set(cacheKey, output, TimeSpan.FromSeconds(30));
 
         return Ok(output);
     }

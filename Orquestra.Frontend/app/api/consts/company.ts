@@ -14,6 +14,7 @@ export const CONSTS_COMPANY = {
     getModulesInfo: `${BASE}/${controller}/Module/GetInfo`
 };
 
+// Essa interface é uma mistura de CompanyOutput e CompanySimpleOutput do back-end. Boa sorte!
 export default interface iCompanySimpleOutput {
     companyId: Guid;
     name: string;
@@ -26,9 +27,13 @@ export default interface iCompanySimpleOutput {
     planStartDate: Date;
     planEndDate: Date;
     modules: string[];
+
+    // Extras;
     modulesStr: string[];
     userModules: string[];
     userModulesStr: string[];
+    isAdm: boolean;
+    amountOfClients: number;
 }
 
 export interface iCalculatePriceModuleCompanyOutput {
