@@ -120,18 +120,18 @@ export default function EmpresaGerenciar() {
                                 </p>
 
                                 <p>
-                                    <Icon icon='users' size='small' /> {company.amountOfClients} cliente{company.amountOfClients === 0 ? '' : 's'}
+                                    <Icon icon='users' size='small' /> {company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}
                                 </p>
 
                                 {
                                     currentMainCompany?.companyId == company.companyId && (
-                                        <p><Icon icon='star' size='small' /> Principal</p>
+                                        <p><Icon icon='star' size='small' /> Empresa principal</p>
                                     )
                                 }
 
                                 {
                                     currentMainCompany?.isAdm && (
-                                        <p><Icon icon='shield' size='small' /> Administador</p>
+                                        <p><Icon icon='shield' size='small' /> Você é um dministador</p>
                                     )
                                 }
                             </div>
