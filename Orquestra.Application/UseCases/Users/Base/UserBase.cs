@@ -64,13 +64,12 @@ public partial class UserBase(IGetUser getUser)
     }
 
     #region extras
-    // A valid full name must have at least two parts, each with at least 3 letters (case-insensitive);
     private static bool IsFullNameValid(string fullName)
     {
         return RegexName().IsMatch(fullName);
     }
 
-    // Minimum requirements: 8+ characters, at least 1 digit OR 1 special character;
+    // Pelo menos 8 caracteres, 1 digito OU 1 caracter especial;
     private static bool IsPasswordValid(string password)
     {
         return RegexPassword().IsMatch(password);

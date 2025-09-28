@@ -25,6 +25,9 @@ public sealed class Client : Audit
 
     public DateTime DateOfBirth { get; set; }
 
+    [MaxLength(12)]
+    public string Phone { get; set; } = string.Empty;
+
     [MaxLength(512)]
     public string Notes { get; set; } = string.Empty;
 

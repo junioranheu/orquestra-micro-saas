@@ -11,13 +11,13 @@ public static class CompanyMock
         return new Company
         {
             CompanyId = Guid.NewGuid(),
-            Name = GetRandomString(GetRandomNumber(5, 15), false),
-            Email = $"{GetRandomString(GetRandomNumber(5, 15), false)}@gmail.com",
+            Name = GetRandomString(charLength: GetRandomNumber(5, 15)),
+            Email = $"{GetRandomString(charLength: GetRandomNumber(5, 15))}@gmail.com",
             Phone = $"12 9827163{GetRandomNumber(2, 2)}",
             CompanyType = CompanyTypeEnum.ClinicaOdontologia,
-            Address = GetRandomString(GetRandomNumber(5, 15), false),
-            City = GetRandomString(GetRandomNumber(5, 15), false),
-            State = GetRandomString(GetRandomNumber(5, 15), false),
+            Address = GetRandomString(charLength: GetRandomNumber(5, 15)),
+            City = GetRandomString(charLength: GetRandomNumber(5, 15)),
+            State = GetRandomString(charLength: GetRandomNumber(5, 15)),
             ZipCode = string.Empty,
             Country = "Brasil",
             LogoUrl = "https://placehold.co/200x200",

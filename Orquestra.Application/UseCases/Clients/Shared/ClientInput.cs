@@ -17,6 +17,8 @@ public sealed class ClientInput
 
     public DateTime DateOfBirth { get; set; }
 
+    public string Phone { get; set; } = string.Empty;
+
     public string Notes { get; set; } = string.Empty;
 
     public Guid CompanyId { get; set; }

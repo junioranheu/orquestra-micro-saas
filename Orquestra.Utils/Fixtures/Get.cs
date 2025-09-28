@@ -63,7 +63,7 @@ public static class Get
         try
         {
             // Windows
-            brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"); 
+            brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
         }
         catch (TimeZoneNotFoundException)
         {
@@ -103,11 +103,22 @@ public static class Get
     /// <summary>
     /// Gera uma string aleatória com base na quantidade de caracteres desejados;
     /// </summary>
-    public static string GetRandomString(int charLength, bool onlyUpper)
+    public static string GetRandomString(int charLength, bool onlyUpper = false, bool onlyLetters = false)
     {
         Random random = new();
-        string chars = (onlyUpper ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-        string? randomStr = new([.. Enumerable.Repeat(chars, charLength).Select(s => s[random.Next(s.Length)])]);
+
+        string chars;
+
+        if (onlyLetters)
+        {
+            chars = onlyUpper ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        }
+        else
+        {
+            chars = onlyUpper ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        }
+
+        string randomStr = new([.. Enumerable.Repeat(chars, charLength).Select(s => s[random.Next(s.Length)])]);
 
         return randomStr;
     }

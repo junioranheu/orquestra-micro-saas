@@ -33,9 +33,8 @@ public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUse
         client.CPF = input.CPF ?? client.CPF;
         client.Address = input.Address ?? client.Address;
         client.DateOfBirth = input.DateOfBirth > DateTime.MinValue ? input.DateOfBirth : client.DateOfBirth;
+        client.Phone = input.Phone ?? client.Phone;
         client.Notes = input.Notes ?? client.Notes;
-        client.FullName = input.FullName ?? client.FullName;
-        client.FullName = input.FullName ?? client.FullName;
 
         _context.Update(client);
         await _context.SaveChangesAsync();

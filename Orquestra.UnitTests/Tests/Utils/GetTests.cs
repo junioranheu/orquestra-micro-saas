@@ -159,19 +159,37 @@ public sealed class GetTests
     }
 
     [Theory]
-    [InlineData(10, true)]
-    [InlineData(15, false)]
-    public void GetRandomString_ShouldReturn_CorrectLength(int length, bool onlyUpper)
+    [InlineData(10, true, true)] // Só maiúsculas;
+    [InlineData(12, false, true)] // Maiúsculas + minúsculas;
+    [InlineData(15, true, false)] // Maiúsculas + números;
+    [InlineData(20, false, false)] // Maiúsculas + minúsculas + números;
+    public void GetRandomString_ShouldReturn_CorrectLength_AndRespectFlags(int length, bool onlyUpper, bool onlyLetters)
     {
         // Act;
-        string result = GetRandomString(length, onlyUpper);
+        string result = GetRandomString(length, onlyUpper, onlyLetters);
 
         // Assert;
         Assert.Equal(length, result.Length);
 
-        if (onlyUpper)
+        if (onlyUpper && onlyLetters)
         {
-            Assert.DoesNotContain(result, c => char.IsLower(c));
+            // Apenas maiúsculas;
+            Assert.All(result, c => Assert.True(char.IsUpper(c)));
+        }
+        else if (!onlyUpper && onlyLetters)
+        {
+            // Apenas letras (maiúsculas + minúsculas);
+            Assert.All(result, c => Assert.True(char.IsLetter(c)));
+        }
+        else if (onlyUpper && !onlyLetters)
+        {
+            // Maiúsculas + números;
+            Assert.All(result, c => Assert.True(char.IsUpper(c) || char.IsDigit(c)));
+        }
+        else
+        {
+            // Maiúsculas + minúsculas + números;
+            Assert.All(result, c => Assert.True(char.IsLetterOrDigit(c)));
         }
     }
 

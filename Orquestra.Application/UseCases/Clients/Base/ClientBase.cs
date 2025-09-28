@@ -16,6 +16,14 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
+        bool checkName = IsFullNameValid(input.FullName ?? string.Empty);
+
+        if (!checkName)
+        {
+            throw new ArgumentException("O nome não é válido. Insira seu nome completo, por favor.");
+        }
+
+        input.Email = input.Email?.Trim().ToLowerInvariant() ?? string.Empty;
         bool checkEmail = IsEmailValid(input.Email);
 
         if (!checkEmail)
@@ -25,10 +33,17 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
         input.Email = GetNormalizedLowerStr(input.Email);
 
+        bool checkPhone = IsPhoneValid(input.Phone);
+
+        if (!checkPhone)
+        {
+            throw new ArgumentException("O número de telefone não é válido. Insira um número válido, por favor.");
+        }
+
         if (isCreate)
         {
-            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => 
-                             x.CPF == input.CPF && 
+            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x =>
+                             x.CPF == input.CPF &&
                              x.CompanyId == input.CompanyId
                           );
 
@@ -49,17 +64,27 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
         }
     }
 
-    private static bool IsEmailValid(string email)
+    #region extras
+    private static bool IsFullNameValid(string fullName)
     {
-        if (string.IsNullOrWhiteSpace(email))
+        return RegexName().IsMatch(fullName);
+    }
+
+    private static bool IsPhoneValid(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
         {
             return false;
         }
 
-        return RegexEmail().IsMatch(email);
+        return RegexPhone().IsMatch(phone);
     }
 
     // Regex;
-    [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]
-    private static partial Regex RegexEmail();
+    [GeneratedRegex(@"^(?i)[A-Za-zÀ-ÿ]{3,}(?:\s+(?:de|da|dos|das))?\s+[A-Za-zÀ-ÿ]{3,}$")]
+    private static partial Regex RegexName();
+
+    [GeneratedRegex(@"^\d{2} ?9?\d{8}$")]
+    private static partial Regex RegexPhone();
+    #endregion
 }

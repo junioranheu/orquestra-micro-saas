@@ -12,9 +12,9 @@ public static class UserMock
         var input = new User
         {
             UserId = Guid.NewGuid(),
-            FullName = GetRandomString(GetRandomNumber(5, 15), false),
-            Email = $"{GetRandomString(GetRandomNumber(5, 15), false)}@gmail.com",
-            Password = EncryptPassword(GetRandomString(11, false)),
+            FullName = $"{GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)} {GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)}",
+            Email = $"{GetRandomString(charLength: GetRandomNumber(5, 15))}@gmail.com",
+            Password = EncryptPassword(GetRandomString(charLength: 11)),
             Role = UserRoleEnum.Common
         };
 
@@ -28,7 +28,7 @@ public static class UserMock
             UserId = Guid.NewGuid(),
             FullName = fullName,
             Email = email,
-            Password = EncryptPassword(GetRandomString(11, false)),
+            Password = EncryptPassword(GetRandomString(charLength: 11)),
             Role = role
         };
     }

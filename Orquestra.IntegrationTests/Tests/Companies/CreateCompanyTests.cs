@@ -229,7 +229,7 @@ public sealed class CreateCompanyTests
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
-        var emailService = Fixture.CreateEmailService();
+        Mock<IEmailService> emailService = Fixture.CreateEmailService();
 
         CreateCompany sut = CreateSut(context, user, emailService);
 
