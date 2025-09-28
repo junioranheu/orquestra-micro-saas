@@ -113,9 +113,28 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
             return;
         }
 
+        List<Guid> companyIds = [.. output.Select(c => c.CompanyId)];
+
+        var aea = await _context.Clients.ToListAsync();
+
+        var clientsCount = await _context.Clients.
+                           AsNoTracking().
+                           Where(c => companyIds.Contains(c.CompanyId)).
+                           GroupBy(c => c.CompanyId).
+                           Select(g => new { CompanyId = g.Key, Count = g.Count() }).
+                           ToListAsync();
+
+        if (clientsCount is null || clientsCount.Count == 0)
+        {
+            return;
+        }
+
+        // Dicionário pra lookup O(1);
+        Dictionary<Guid, int> countDict = clientsCount.ToDictionary(x => x.CompanyId, x => x.Count);
+
         foreach (var company in output)
         {
-            company.AmountOfClients = await _context.Clients.AsNoTracking().Where(x => x.CompanyId == company.CompanyId).CountAsync();
+            company.AmountOfClients = countDict.TryGetValue(company.CompanyId, out int count) ? count : 0;
         }
     }
     #endregion

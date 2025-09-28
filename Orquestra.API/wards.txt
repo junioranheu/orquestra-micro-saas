@@ -1,2 +1,4 @@
 resolver os "TO DO"
 atualizar o sistema para o .NET 10
+
+adicionar teste unitário para clientes

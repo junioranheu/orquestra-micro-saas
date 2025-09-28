@@ -30,6 +30,32 @@ public sealed class GetCompanyTests
     }
 
     [Fact]
+    public async Task Execute_ById_ShouldReturnCompany_WhenCompanyExistsAndIsActiveAndHasClients()
+    {
+        // Arrange;
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync(status: true);
+
+        // Adicionar cliente;
+        Client client = ClientMock.Create();
+        await context.AddAsync(client);
+        await context.SaveChangesAsync();
+
+        client.CompanyId = company.CompanyId;
+        context.Update(client);
+        await context.SaveChangesAsync();
+
+        GetCompany sut = CreateSut(context, user);
+
+        // Act;
+        CompanyOutput result = await sut.Execute(user.UserId, company.CompanyId);
+
+        // Assert;
+        Assert.Equal(company.CompanyId, result.CompanyId);
+        Assert.Equal(company.Name, result.Name);
+        Assert.True(result.AmountOfClients > 0);
+    }
+
+    [Fact]
     public async Task Execute_ById_ShouldThrow_WhenCompanyIsInactiveAndThrowIfStatusFalseIsTrue()
     {
         // Arrange;
