@@ -2,6 +2,8 @@
 import iCompanySimpleOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import { Fetch } from '@/app/api/fetch';
+import SvgOne from '@/app/assets/svg/one.svg';
+import SvgTwo from '@/app/assets/svg/two.svg';
 import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
@@ -14,6 +16,7 @@ import toast from '@/app/functions/toast';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
+import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Image from 'next/image';
@@ -23,6 +26,7 @@ import styles from './page.module.scss';
 
 export default function EmpresaGerenciar() {
 
+    useTitle('Gerenciar empresas');
     const router = useRouter();
 
     const me = useApiGetMeSimple();
@@ -54,11 +58,23 @@ export default function EmpresaGerenciar() {
         <section className={styles.main}>
             {
                 (companies && companies?.length) ? (
-                    <CardSimple
-                        img={SvgUserArrow}
-                        title={`${handleGetFirstName(me?.userName)}, atualmente você faz parte de ${companies?.length} empresa${companies?.length > 1 ? 's' : ''}.`}
-                        description={`A sua empresa principal é a <b>${currentMainCompany?.name}</b>.<br/>Caso exista essa possibilidade, você pode escolher abaixo uma outra empresa para ser a sua principal.<br/>Você também pode alterar essa escolha a qualquer momento!`}
-                    />
+                    <div className={styles.flex}>
+                        <CardSimple
+                            img={SvgOne}
+                            title={`${handleGetFirstName(me?.userName)}, <span class="mainColor">${currentMainCompany?.name}</span> é sua empresa principal.`}
+                            description={`Que legal! Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length >= 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
+                            style={{ minHeight: '100%' }}
+                        />
+
+                        <CardSimple
+                            img={SvgTwo}
+                            title='Se quiser, cadastre uma nova empresa!'
+                            description={`Tem ou faz parte de outra empresa?<br/>Cadastre-a agora mesmo no ${SYSTEM.NAME}.`}
+                            buttonLabel='Cadastrar nova empresa'
+                            buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
+                            style={{ minHeight: '100%' }}
+                        />
+                    </div>
                 ) : (
                     <CardSimple
                         img={SvgUserArrow}

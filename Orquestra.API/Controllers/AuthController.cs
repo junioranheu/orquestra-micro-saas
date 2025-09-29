@@ -134,7 +134,11 @@ public class AuthController(
 
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
         CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
-        currentMainCompanySimple.IsAdm = isUserAdm;
+
+        if (currentMainCompanySimple is not null)
+        {
+            currentMainCompanySimple.IsAdm = isUserAdm;
+        }
 
         return Ok(currentMainCompanySimple);
     }

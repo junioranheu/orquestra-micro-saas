@@ -136,6 +136,10 @@ svg {
     cursor: pointer;
 }
 
+.mainColor {
+    color: var(--main);
+}
+
 .contrastOnHover {
     // background-color: orange;
     transition: 0.3s;

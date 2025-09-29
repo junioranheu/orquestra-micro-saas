@@ -5,6 +5,19 @@
     gap: 1rem;
     margin-top: 1rem;
 
+    .flex {
+        // background-color: purple;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+
+        >* {
+            flex: 1 1 calc(50% - 0.5rem);
+            box-sizing: border-box;
+        }
+    }
+
     .grid {
         display: grid;
         gap: 1rem;
@@ -132,6 +145,16 @@
                     padding: 0.8rem;
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 1281px) {
+    .main {
+        // background-color: orange;
+
+        .flex>* {
+            flex: 0 0 100%;
         }
     }
 }

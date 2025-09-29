@@ -1,5 +1,6 @@
 import Button from '@/app/components/input/button';
 import Image, { StaticImageData } from 'next/image';
+import { CSSProperties } from 'react';
 import styles from './index.module.scss';
 
 export type iProps = {
@@ -11,6 +12,7 @@ export type iProps = {
     buttonDisabled?: boolean;
     buttonFunction?: () => void;
     className?: string;
+    style?: CSSProperties;
 }
 
 export default function CardSimple({
@@ -21,7 +23,8 @@ export default function CardSimple({
     buttonLabel,
     buttonDisabled = false,
     buttonFunction,
-    className
+    className,
+    style
 }: iProps) {
     return (
         <div className={styles.wrapper}>
@@ -37,7 +40,7 @@ export default function CardSimple({
                 )
             }
 
-            <article className={styles.card}>
+            <article className={styles.card} style={style}>
                 <div className={styles.inner}>
                     {
                         isImgInsideOfCard && (
@@ -52,7 +55,7 @@ export default function CardSimple({
                     }
 
                     <div className={`${styles.right} ${className}`}>
-                        <h3 className={styles.title}>{title}</h3>
+                        <h3 className={styles.title} dangerouslySetInnerHTML={{ __html: title ?? '' }} />
                         <p className={styles.description} dangerouslySetInnerHTML={{ __html: description ?? '' }} />
 
                         {
