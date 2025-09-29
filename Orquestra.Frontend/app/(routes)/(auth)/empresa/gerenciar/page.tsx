@@ -16,6 +16,7 @@ import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from './page.module.scss';
@@ -77,7 +78,7 @@ export default function EmpresaGerenciar() {
                                 <div className={styles.avatar}>
                                     {
                                         company.logoUrl ? (
-                                            <img src={company.logoUrl} alt={company.name} />
+                                            <Image src={company.logoUrl} alt={company.name} priority={true} />
                                         ) : (
                                             <span>{handleGetNameInitials(company.name)}</span>
                                         )
