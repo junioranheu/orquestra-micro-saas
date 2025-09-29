@@ -1,0 +1,10 @@
+Se algum dia eu voltar a ter o erro 409 (conflito)
+na publicação (CI/CD) do front-end na Azure, 
+basta entrar no KUDU SERVICES (do front-end na Azure),
+navegar até o SSH (https://orquestra-web.scm.azurewebsites.net/webssh/host), 
+e escrever os seguintes comandos:
+
+cd site/wwwroot
+rm -rf *
+
+E aí, só re-rodar o job do CI/CD, e GG

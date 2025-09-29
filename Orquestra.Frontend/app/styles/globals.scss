@@ -583,7 +583,9 @@ input:-webkit-autofill {
     // Quadrados;
     .rbc-row-bg {
         // background-color: tomato !important;
-        background-color: var(--white);
+        // background-color: var(--white);
+        background-color: #FFFFFF;
+        cursor: copy;
         width: 100% !important;
     }
 
