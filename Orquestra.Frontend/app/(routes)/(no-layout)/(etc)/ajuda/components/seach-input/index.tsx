@@ -1,8 +1,6 @@
 import InputMask from '@/app/components/input/text';
 import Lupa from '@/app/components/svg/lupa/lupa';
 import ROUTES from '@/app/consts/routes';
-import handleGetPropName from '@/app/functions/get.propName';
-import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import toast from '@/app/functions/toast';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useState } from 'react';
@@ -43,12 +41,13 @@ export default function AjudaSearchInput({ keySearch }: iProps) {
         <div className={styles.search}>
             <InputMask
                 title='Busque aqui :)'
+                fieldName='key'
                 type='text'
+                formData={formData}
+                setFormData={setFormData}
                 style={{ padding: 0 }}
-                objectFormData={handleGetPropName(formData, x => x.key ?? '')}
                 placeholder='Procure por um tópico como "agendamento" ou "empresa", por exemplo'
-                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
-                handleKeyDown={(e) => handleKeyDown(e)}
+                handleKeyDown={handleKeyDown}
             />
 
             <div

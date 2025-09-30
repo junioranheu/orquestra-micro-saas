@@ -8,8 +8,7 @@ import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
-import handleGetPropName from '@/app/functions/get.propName';
-import { handleClearFormData, handleInputFormStateChange } from '@/app/functions/set.formState';
+import { handleClearFormData } from '@/app/functions/set.formState';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -181,17 +180,16 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
                 <main className={styles.modalContent}>
                     <div className={styles.grid}>
-                        {/* <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} /> */}
-                        <InputMask title='Nome da empresa' objectFormData={handleGetPropName(formData, x => x.name ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='E-mail' objectFormData={handleGetPropName(formData, x => x.email ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Tipo' objectFormData={handleGetPropName(formData, x => x.companyType ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Situação' objectFormData={handleGetPropName(formData, x => x.companySituation ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Logo' objectFormData={handleGetPropName(formData, x => x.logoUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <InputMask title='Cor' objectFormData={handleGetPropName(formData, x => x.color ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <InputMask title='Plano' objectFormData={handleGetPropName(formData, x => x.planType ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <InputMask title='Início do plano' type='date' objectFormData={handleGetPropName(formData, x => x.planStartDate ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <InputMask title='Fim do plano' type='date' objectFormData={handleGetPropName(formData, x => x.planEndDate ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <InputMask title='Módulos' objectFormData={handleGetPropName(formData, x => x.modules ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
+                        <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
+                        <InputMask title='Tipo' fieldName='companyType' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
+                        <InputMask title='Situação' fieldName='companySituation' formData={formData} setFormData={setFormData} isDisabled />
+                        <InputMask title='Logo' fieldName='logoUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Cor' fieldName='color' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Plano' fieldName='planType' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled />
+                        <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled />
+                        <InputMask title='Módulos' fieldName='modules' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                     </div>
                 </main>
 

@@ -15,7 +15,7 @@ import { DATE_STYLE, handleFormatDate, handleFormatDateToInputValue, handleForma
 import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeGuidArrayField, handleNormalizeGuidField } from '@/app/functions/normalize.guid';
-import { handleClearFormData, handleInputFormStateChange, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
@@ -313,10 +313,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                     <div className={styles.grid}>
                         <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Status' options={CONSTS_SCHEDULE_STATUS} selectedOption={CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === formData.scheduleStatus)?.value)} setSelectedOption={setScheduleStatusOption} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Data de início' type='date' objectFormData={handleGetPropName(formData, x => x.dateStart ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Hora de início' type='time' objectFormData={handleGetPropName(formData, x => x.timeStart ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Data e hora de encerramento' type='date' objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Hora de encerramento' type='time' objectFormData={handleGetPropName(formData, x => x.timeEnd ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Data de início' type='date' fieldName='dateStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
+                        <InputMask title='Hora de início' type='time' fieldName='timeStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
+                        <InputMask title='Data e hora de encerramento' type='date' fieldName='dateEnd' formData={formData} setFormData={setFormData} isDisabled isObligatory />
+                        <InputMask title='Hora de encerramento' type='time' fieldName='timeEnd' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
                         <Dropdown title='Membros da equipe' options={companyUsersDropDown ?? []} multiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
 
                         <div className={styles.div}>
@@ -324,10 +324,10 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                             <input type='text' value={formData?.usersIds?.length > 0 ? `Sim, para ${formData?.usersIds?.length} membro${formData?.usersIds?.length > 1 ? 's' : ''}` : 'Não — Liberado para qualquer membro'} readOnly={true} disabled={true} />
                         </div>
 
-                        <InputMask title='Valor recebido' type='number' objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Valor recebido' type='number' fieldName='amountReceived' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Tipo de pagamento' options={CONSTS_PAYMENT_TYPE} selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
-                        <InputMask title='Título customizado' objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <InputMask title='URL' objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Título customizado' fieldName='customTitle' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='URL' fieldName='customUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
                         <div className={styles.div}>
                             <label>Observações da equipe</label>

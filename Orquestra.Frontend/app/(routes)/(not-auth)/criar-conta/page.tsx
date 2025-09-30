@@ -8,9 +8,7 @@ import InputMask from '@/app/components/input/text';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
-import handleGetPropName from '@/app/functions/get.propName';
 import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
-import { handleInputFormStateChange } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
@@ -93,27 +91,30 @@ export default function CriarConta() {
                         <div className={styles.flex}>
                             <InputMask
                                 title='Nome completo'
-                                objectFormData={handleGetPropName(formData, x => x.fullName ?? '')}
+                                fieldName='fullName'
+                                formData={formData}
+                                setFormData={setFormData}
                                 isDisabled={isIncognito}
-                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
-                                handleKeyDown={(e) => handleKeyDown(e)}
+                                handleKeyDown={handleKeyDown}
                             />
 
                             <InputMask
                                 title='E-mail'
-                                objectFormData={handleGetPropName(formData, x => x.email ?? '')}
+                                fieldName='email'
+                                formData={formData}
+                                setFormData={setFormData}
                                 isDisabled={isIncognito}
-                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
-                                handleKeyDown={(e) => handleKeyDown(e)}
+                                handleKeyDown={handleKeyDown}
                             />
 
                             <InputMask
                                 title='Senha'
-                                objectFormData={handleGetPropName(formData, x => x.password ?? '')}
+                                fieldName='password'
                                 type='password'
+                                formData={formData}
+                                setFormData={setFormData}
                                 isDisabled={isIncognito}
-                                handleChange={(e) => handleInputFormStateChange(e, setFormData)}
-                                handleKeyDown={(e) => handleKeyDown(e)}
+                                handleKeyDown={handleKeyDown}
                             />
 
                             <Button
