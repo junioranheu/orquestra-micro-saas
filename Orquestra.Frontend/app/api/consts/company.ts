@@ -24,8 +24,8 @@ export default interface iCompanySimpleOutput {
     logoUrl?: string;
     color?: string;
     planType: string;
-    planStartDate: Date;
-    planEndDate: Date;
+    planStartDate?: Date | string;
+    planEndDate?: Date | string;
     modules?: string[];
 
     // Extras;

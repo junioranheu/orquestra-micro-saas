@@ -3,13 +3,17 @@ import iCompanySimpleOutput from '@/app/api/consts/company';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
+import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
 import { iDropdownOption } from '@/app/components/input/drop-down';
+import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
-import { handleClearFormData } from '@/app/functions/set.formState';
+import { handleFormatDateToInputValue } from '@/app/functions/format.date';
+import handleGetPropName from '@/app/functions/get.propName';
+import { handleClearFormData, handleInputFormStateChange } from '@/app/functions/set.formState';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -70,16 +74,16 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
             setFormData({
                 companyId: company?.companyId!,
-                name: company?.name!,
-                email: company?.email!,
-                companyType: company?.companyType!,
-                companySituation: company?.companySituation!,
-                logoUrl: company?.logoUrl!,
-                color: company?.color!,
-                planType: company?.planType!,
-                planStartDate: company?.planStartDate!,
-                planEndDate: company?.planEndDate!,
-                modules: company?.modules!,
+                name: company?.name ?? '',
+                email: company?.email ?? '',
+                companyType: company?.companyType ?? '',
+                companySituation: company?.companySituation ?? '',
+                logoUrl: company?.logoUrl ?? '',
+                color: company?.color ?? '',
+                planType: company?.planType ?? '',
+                planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
+                planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
+                modules: company?.modules ?? []
             });
         }
     }, [isOpen, company, setModalIsOpen, handleClose]);
@@ -182,7 +186,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
-                        <h1 className={styles.inputTitle}>{formData?.name}</h1>
+                        <h1 className={styles.inputTitle}><ContentLoaderText text={formData?.name} /></h1>
                     </div>
 
                     <div className={styles.modalHeaderRight}>
@@ -198,22 +202,17 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
                 <main className={styles.modalContent}>
                     <div className={styles.grid}>
-                        {/* <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Data de início' type='date' objectFormData={handleGetPropName(formData, x => x.dateStart ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Hora de início' type='time' objectFormData={handleGetPropName(formData, x => x.timeStart ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Data e hora de encerramento' type='date' objectFormData={handleGetPropName(formData, x => x.dateEnd ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <InputMask title='Hora de encerramento' type='time' objectFormData={handleGetPropName(formData, x => x.timeEnd ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
-                        <Dropdown title='Membros da equipe' options={companyUsersDropDown ?? []} multiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
-
-                        <InputMask title='Valor recebido' type='number' objectFormData={handleGetPropName(formData, x => x.amountReceived ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <Dropdown title='Tipo de pagamento' options={CONSTS_PAYMENT_TYPE} selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
-                        <InputMask title='Título customizado' objectFormData={handleGetPropName(formData, x => x.customTitle ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-                        <InputMask title='URL' objectFormData={handleGetPropName(formData, x => x.customUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
-
-                        <div className={styles.div}>
-                            <label>Observações da equipe</label>
-                            <textarea className={styles.textarea} rows={3} value={formData.observation ?? ''} readOnly={!editing} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
-                        </div> */}
+                        {/* <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} /> */}
+                        <InputMask title='Nome da empresa' objectFormData={handleGetPropName(formData, x => x.name ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='E-mail' objectFormData={handleGetPropName(formData, x => x.email ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Tipo' objectFormData={handleGetPropName(formData, x => x.companyType ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Situação' objectFormData={handleGetPropName(formData, x => x.companySituation ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} isObligatory={true} />
+                        <InputMask title='Logo' objectFormData={handleGetPropName(formData, x => x.logoUrl ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Cor' objectFormData={handleGetPropName(formData, x => x.color ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Plano' objectFormData={handleGetPropName(formData, x => x.planType ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Início do plano' type='date' objectFormData={handleGetPropName(formData, x => x.planStartDate ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Fim do plano' type='date' objectFormData={handleGetPropName(formData, x => x.planEndDate ?? '')} isDisabled={true} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
+                        <InputMask title='Módulos' objectFormData={handleGetPropName(formData, x => x.modules ?? '')} isDisabled={!editing} handleChange={(e) => handleInputFormStateChange(e, setFormData)} />
                     </div>
                 </main>
 
