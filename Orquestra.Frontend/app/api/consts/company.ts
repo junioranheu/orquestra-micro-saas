@@ -34,6 +34,8 @@ export default interface iCompanySimpleOutput {
     userModulesStr: string[];
     isAdm: boolean;
     amountOfClients: number;
+    companyTypeStr: string;
+    companySituationStr: string;
 }
 
 export interface iCalculatePriceModuleCompanyOutput {

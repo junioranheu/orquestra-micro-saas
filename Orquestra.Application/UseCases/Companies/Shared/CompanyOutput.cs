@@ -65,6 +65,10 @@ public sealed class CompanyOutput
     public IEnumerable<CompanyUserOutput>? CompanyUsers { get; init; }
 
     public int AmountOfClients { get; set; } = 0;
+
+    public string? CompanyTypeStr { get; set; }
+
+    public string? CompanySituationStr { get; set; }
     #endregion
 }
 

@@ -32,6 +32,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         FillModulesStr([output]);
         await GetAmounfOfClients([output]);
+        GetEnumsDesc([output]);
 
         return output;
     }
@@ -48,6 +49,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         FillModulesStr(output);
         await GetAmounfOfClients(output);
+        GetEnumsDesc(output);
 
         return output;
     }
@@ -76,6 +78,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         FillModulesStr(output);
         await GetAmounfOfClients(output);
+        GetEnumsDesc(output);
 
         return output;
     }
@@ -115,8 +118,6 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         List<Guid> companyIds = [.. output.Select(c => c.CompanyId)];
 
-        var aea = await _context.Clients.ToListAsync();
-
         var clientsCount = await _context.Clients.
                            AsNoTracking().
                            Where(c => companyIds.Contains(c.CompanyId)).
@@ -135,6 +136,20 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         foreach (var company in output)
         {
             company.AmountOfClients = countDict.TryGetValue(company.CompanyId, out int count) ? count : 0;
+        }
+    }
+
+    private static void GetEnumsDesc(List<CompanyOutput>? output)
+    {
+        if (output is null || output.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var company in output)
+        {
+            company.CompanyTypeStr = GetEnumDesc(company.CompanyType);
+            company.CompanySituationStr = GetEnumDesc(company.CompanySituation);
         }
     }
     #endregion

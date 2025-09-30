@@ -124,16 +124,18 @@ export default function EmpresaGerenciar() {
 
                                 {
                                     company.planStartDate && company.planEndDate && (
-                                        <p>
-                                            <Icon icon='calendar' size='small' />{' '}
-                                            {new Date(company.planStartDate).toLocaleDateString()} →{' '}
-                                            {new Date(company.planEndDate).toLocaleDateString()}
-                                        </p>
+                                        <Tippy content='Vigência do plano atual'>
+                                            <p>
+                                                <Icon icon='calendar' size='small' />{' '}
+                                                {new Date(company.planStartDate).toLocaleDateString()} →{' '}
+                                                {new Date(company.planEndDate).toLocaleDateString()}
+                                            </p>
+                                        </Tippy>
                                     )
                                 }
 
                                 <p>
-                                    <Icon icon='info' size='small' /> {company.companySituation}
+                                    <Icon icon='info' size='small' /> {company.companySituationStr}
                                 </p>
 
                                 <p>
@@ -148,7 +150,13 @@ export default function EmpresaGerenciar() {
 
                                 {
                                     currentMainCompany?.isAdm && (
-                                        <p><Icon icon='shield' size='small' /> Você é um dministador</p>
+                                        <p><Icon icon='shield' size='small' /> Você é um administador</p>
+                                    )
+                                }
+
+                                {
+                                    company.modulesStr?.length > 0 && (
+                                        <p><Icon icon='layers' size='small' /> {company.modulesStr?.length} módulo{company.modulesStr?.length === 1 ? '' : 's'}</p>
                                     )
                                 }
                             </div>
