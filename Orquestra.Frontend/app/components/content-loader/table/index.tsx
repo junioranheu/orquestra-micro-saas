@@ -6,8 +6,8 @@ export default function ContentLoaderTable() {
             width='100%'
             height='100%'
             viewBox='0 0 1000 550'
-            backgroundColor='var(--gray-light)'
-            foregroundColor='var(--gray)'
+            backgroundColor='#eee'
+            foregroundColor='#ddd'
             speed={1.75}
             title=''
         >

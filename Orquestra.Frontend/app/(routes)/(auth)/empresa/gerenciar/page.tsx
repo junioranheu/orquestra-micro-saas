@@ -70,7 +70,7 @@ export default function EmpresaGerenciar() {
         return (
             <section className={styles.main}>
                 <ContentLoaderCardGrid />
-                <ContentLoaderGrid />
+                <ContentLoaderGrid row={1} />
             </section>
         )
     }

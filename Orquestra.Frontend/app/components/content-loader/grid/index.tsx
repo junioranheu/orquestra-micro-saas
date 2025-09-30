@@ -63,10 +63,9 @@ export default function ContentLoaderGrid({
             width='100%'
             height={height}
             {...props}
-
             preserveAspectRatio='none'
-            backgroundColor='var(--gray-light)'
-            foregroundColor='var(--gray)'
+            backgroundColor='#eee'
+            foregroundColor='#ddd'
             speed={1.75}
             title=''
         >

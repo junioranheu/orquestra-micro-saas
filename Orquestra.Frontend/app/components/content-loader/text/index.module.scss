@@ -1,0 +1,58 @@
+.main {
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+
+    .skeleton {
+        display: inline-block;
+        height: 1em;
+        width: 6ch;
+        background: linear-gradient(90deg, #eee, #ddd, #eee);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        animation-delay: 1s;
+        /* delay antes da animação iniciar */
+        opacity: 0;
+        /* inicia invisível */
+        animation-fill-mode: forwards;
+        /* mantém o estado após delay */
+        border-radius: var(--border-radius);
+
+        /* visibilidade controlada com fade */
+        animation: shimmer 1.5s infinite, skeletonFadeIn 0s linear 1.2s forwards;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    @keyframes skeletonFadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+.fadeIn {
+    animation: fadeInEffect 0.5s ease forwards;
+}
+
+@keyframes fadeInEffect {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

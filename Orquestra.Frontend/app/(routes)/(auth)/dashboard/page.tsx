@@ -3,6 +3,7 @@ import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import SvgUserEnvelope from '@/app/assets/svg/user-envelope.svg';
 import CardCalendar from '@/app/components/card/calendar';
 import CardSimple from '@/app/components/card/simple';
+import ContentLoaderText from '@/app/components/content-loader/text';
 import Footer from '@/app/components/footer';
 import ROUTES from '@/app/consts/routes';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
@@ -33,7 +34,7 @@ export default function Dashboard() {
 
     return (
         <section className={styles.main}>
-            <span className={styles.hello}>Olá, {handleGetFirstName(auth?.fullName)}</span>
+            <span className={styles.hello}>Olá, <ContentLoaderText text={handleGetFirstName(auth?.fullName)} /></span>
 
             <div className={styles.flex}>
                 <CardCalendar />

@@ -2,11 +2,13 @@ import Icon from '@/app/components/icon';
 import { iModalCustomPosition } from '@/app/components/modal/generic';
 import ModalSettings from '@/app/components/navbar/modal/settings';
 import ROUTES from '@/app/consts/routes';
+import SYSTEM from '@/app/consts/system';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
+import ContentLoaderText from '../../content-loader/text';
 import styles from './index.module.scss';
 
 export default function Navbar() {
@@ -48,7 +50,7 @@ export default function Navbar() {
                     <div className={styles.left}>
                     </div>
 
-                    <div className={styles.right}>
+                    <div className={`${styles.right} ${SYSTEM.ANIMATE}`}>
                         <Tippy content='Gerencie suas empresas ou cadastre a sua'>
                             <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}><Icon icon='briefcase' weight='bold' /><span className={styles.hideIfSmall}>Empresas</span></span>
                         </Tippy>
@@ -71,7 +73,11 @@ export default function Navbar() {
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
-                                <span className={styles.hideIfSmall}>{(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : me?.userName}</span><Icon icon='chevron-down' weight='bold' />
+                                <span className={styles.hideIfSmall}>
+                                    <ContentLoaderText text={(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : me?.userName} />
+                                </span>
+
+                                <Icon icon='chevron-down' weight='bold' />
                             </span>
                         </Tippy>
                     </div>
