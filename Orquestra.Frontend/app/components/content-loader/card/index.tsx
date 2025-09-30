@@ -4,11 +4,13 @@ import styles from './index.module.scss';
 
 type iProps = {
     showHeader?: boolean
+    id?: string;
 }
 
-export function ContentLoaderCard({ showHeader = false }: iProps) {
+export function ContentLoaderCard({ showHeader = false, id = "default" }: iProps) {
     return (
         <ContentLoader
+            uniqueKey={`content-loader-card-${id}`}
             viewBox='0 0 400 300'
             width='100%'
             height='100%'
@@ -38,7 +40,7 @@ export function ContentLoaderCard({ showHeader = false }: iProps) {
 
 export function ContentLoaderCardGrid() {
     return (
-        <div className={styles.grid}>
+        <div className={styles.grid} suppressHydrationWarning={true}>
             <ContentLoaderCard />
             <ContentLoaderCard />
         </div>

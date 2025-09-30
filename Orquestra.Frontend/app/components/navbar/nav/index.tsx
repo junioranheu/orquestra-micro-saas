@@ -1,3 +1,4 @@
+import ContentLoaderText from '@/app/components/content-loader/text';
 import Icon from '@/app/components/icon';
 import { iModalCustomPosition } from '@/app/components/modal/generic';
 import ModalSettings from '@/app/components/navbar/modal/settings';
@@ -8,7 +9,6 @@ import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
-import ContentLoaderText from '../../content-loader/text';
 import styles from './index.module.scss';
 
 export default function Navbar() {

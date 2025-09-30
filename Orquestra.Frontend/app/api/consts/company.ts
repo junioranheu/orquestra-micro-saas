@@ -26,16 +26,16 @@ export default interface iCompanySimpleOutput {
     planType: string;
     planStartDate: Date;
     planEndDate: Date;
-    modules: string[];
+    modules?: string[];
 
     // Extras;
-    modulesStr: string[];
-    userModules: string[];
-    userModulesStr: string[];
-    isAdm: boolean;
-    amountOfClients: number;
-    companyTypeStr: string;
-    companySituationStr: string;
+    modulesStr?: string[];
+    userModules?: string[];
+    userModulesStr?: string[];
+    isAdm?: boolean;
+    amountOfClients?: number;
+    companyTypeStr?: string;
+    companySituationStr?: string;
 }
 
 export interface iCalculatePriceModuleCompanyOutput {

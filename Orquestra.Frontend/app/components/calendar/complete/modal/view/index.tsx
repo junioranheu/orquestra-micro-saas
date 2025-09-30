@@ -65,8 +65,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
     const windowSize = useWindowSize();
 
     const [canEdit,] = useState<boolean>(true);
-    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
+    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -294,13 +294,13 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO_SEM_SEGUNDOS), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
                                             { label: CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === event.schedule?.scheduleStatus)?.value)?.label ?? '' },
                                             { label: event.schedule?.paymentType },
-                                            { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' },
+                                            { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                         ]}
                                     />
                                 ) : (
                                     <Tags
                                         tags={[
-                                            { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' },
+                                            { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                         ]}
                                     />
                                 )

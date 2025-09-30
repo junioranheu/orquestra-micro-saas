@@ -24,7 +24,8 @@ import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import ModalEmpresaGerenciarView from './modal/view';
 import styles from './page.module.scss';
 
 export default function EmpresaGerenciar() {
@@ -66,6 +67,14 @@ export default function EmpresaGerenciar() {
         });
     }
 
+    const [companyClicked, setCompanyClicked] = useState<iCompanySimpleOutput | undefined>(undefined);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    function handleOpenModalEdit(company: iCompanySimpleOutput) {
+        setCompanyClicked(company);
+        setIsModalOpen(true);
+    }
+
     if (!companies || isLoading) {
         return (
             <section className={styles.main}>
@@ -76,139 +85,153 @@ export default function EmpresaGerenciar() {
     }
 
     return (
-        <section className={styles.main}>
-            {
-                (companies && companies?.length) ? (
-                    <div className={styles.flex}>
-                        <CardSimple
-                            img={SvgOne}
-                            title={`${handleGetFirstName(me?.userName)}, <span class="mainColor">${currentMainCompany?.name}</span> é sua empresa principal.`}
-                            description={`Que legal! Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length >= 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
-                            style={{ minHeight: '100%' }}
-                        />
-
-                        <CardSimple
-                            img={SvgTwo}
-                            title='Se quiser, cadastre uma nova empresa!'
-                            description={`Tem ou faz parte de outra empresa?<br/>Cadastre-a agora mesmo no ${SYSTEM.NAME}.`}
-                            buttonLabel='Cadastrar nova empresa'
-                            buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
-                            style={{ minHeight: '100%' }}
-                        />
-                    </div>
-                ) : (
-                    <CardSimple
-                        img={SvgUserArrow}
-                        title={`${handleGetFirstName(me?.userName)}, tudo parece tão vazio por aqui...`}
-                        description='Aparentemente você não faz parte de nenhuma empresa.<br/>Por que não cadastra a sua agora mesmo?'
-                        buttonLabel={`Cadastrar sua empresa no ${SYSTEM.NAME}`}
-                        buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
-                    />
-                )
-            }
-
-            <div className={styles.grid}>
+        <Fragment>
+            <section className={styles.main}>
                 {
-                    companies?.sort((a, b) => a.name.localeCompare(b.name)).map((company) => (
-                        <article key={company.companyId.toString()} className={styles.card}>
-                            <header className={styles.header}>
-                                <div className={styles.avatar}>
+                    (companies && companies?.length) ? (
+                        <div className={styles.flex}>
+                            <CardSimple
+                                img={SvgOne}
+                                title={`${handleGetFirstName(me?.userName)}, <span class="mainColor">${currentMainCompany?.name}</span> é sua empresa principal.`}
+                                description={`Que legal! Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length >= 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
+                                style={{ minHeight: '100%' }}
+                            />
+
+                            <CardSimple
+                                img={SvgTwo}
+                                title='Se quiser, cadastre uma nova empresa!'
+                                description={`Tem ou faz parte de outra empresa?<br/>Cadastre-a agora mesmo no ${SYSTEM.NAME}.`}
+                                buttonLabel='Cadastrar nova empresa'
+                                buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
+                                style={{ minHeight: '100%' }}
+                            />
+                        </div>
+                    ) : (
+                        <CardSimple
+                            img={SvgUserArrow}
+                            title={`${handleGetFirstName(me?.userName)}, tudo parece tão vazio por aqui...`}
+                            description='Aparentemente você não faz parte de nenhuma empresa.<br/>Por que não cadastra a sua agora mesmo?'
+                            buttonLabel={`Cadastrar sua empresa no ${SYSTEM.NAME}`}
+                            buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
+                        />
+                    )
+                }
+
+                <div className={styles.grid}>
+                    {
+                        companies?.sort((a, b) => a.name.localeCompare(b.name)).map((company) => (
+                            <article key={company.companyId.toString()} className={styles.card}>
+                                <header className={styles.header}>
+                                    <div className={styles.avatar}>
+                                        {
+                                            company.logoUrl ? (
+                                                <Image src={company.logoUrl} alt={company.name} priority={true} />
+                                            ) : (
+                                                <span>{handleGetNameInitials(company.name)}</span>
+                                            )
+                                        }
+                                    </div>
+
+                                    <div className={styles.info}>
+                                        <h3>{company.name}</h3>
+                                        <p className={styles.type}>{company.companyTypeStr}</p>
+                                    </div>
+
                                     {
-                                        company.logoUrl ? (
-                                            <Image src={company.logoUrl} alt={company.name} priority={true} />
-                                        ) : (
-                                            <span>{handleGetNameInitials(company.name)}</span>
+                                        currentMainCompany?.companyId === company.companyId && (
+                                            <Tippy content='Essa é sua empresa princial atualmente'>
+                                                <span className={styles.badge}>
+                                                    <Icon icon='star' size='small' />
+                                                </span>
+                                            </Tippy>
+                                        )
+                                    }
+                                </header>
+
+                                <div className={styles.content}>
+                                    <p>
+                                        <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
+                                    </p>
+
+                                    {
+                                        company.planStartDate && company.planEndDate && (
+                                            <Tippy content='Vigência do plano atual'>
+                                                <p>
+                                                    <Icon icon='calendar' size='small' />{' '}
+                                                    {new Date(company.planStartDate).toLocaleDateString()} →{' '}
+                                                    {new Date(company.planEndDate).toLocaleDateString()}
+                                                </p>
+                                            </Tippy>
+                                        )
+                                    }
+
+                                    <p>
+                                        <Icon icon='info' size='small' /> {company.companySituationStr}
+                                    </p>
+
+                                    <p>
+                                        <Icon icon='users' size='small' /> {company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}
+                                    </p>
+
+                                    {
+                                        currentMainCompany?.companyId == company.companyId && (
+                                            <p><Icon icon='star' size='small' /> Empresa principal</p>
+                                        )
+                                    }
+
+                                    {
+                                        currentMainCompany?.isAdm && (
+                                            <p><Icon icon='shield' size='small' /> Você é um administador</p>
+                                        )
+                                    }
+
+                                    {
+                                        company?.modulesStr && company?.modulesStr?.length > 0 && (
+                                            <p><Icon icon='layers' size='small' /> {company.modulesStr?.length} módulo{company.modulesStr?.length === 1 ? '' : 's'}</p>
                                         )
                                     }
                                 </div>
 
-                                <div className={styles.info}>
-                                    <h3>{company.name}</h3>
-                                    <p className={styles.type}>{company.companyTypeStr}</p>
+                                {
+                                    company?.modulesStr && company?.modulesStr?.length > 0 && (
+                                        <div className={styles.modules}>
+                                            {
+                                                company?.modulesStr?.map((m) => (
+                                                    <span key={m} className={styles.module}>
+                                                        {m}
+                                                    </span>
+                                                ))
+                                            }
+                                        </div>
+                                    )
+                                }
+
+                                <div className={styles.actions}>
+                                    {/* <Button label='Sair' isStyleSimple={true} isDisabled={true} /> */}
+
+                                    {
+                                        currentMainCompany?.isAdm && (
+                                            <Button label='Editar' handleFunction={() => handleOpenModalEdit(company)} isStyleSimple={true} />
+                                        )
+                                    }
+
+                                    {
+                                        currentMainCompany?.companyId !== company.companyId && (
+                                            <Button label='Tornar principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
+                                        )
+                                    }
                                 </div>
+                            </article>
+                        ))
+                    }
+                </div>
+            </section>
 
-                                {
-                                    currentMainCompany?.companyId === company.companyId && (
-                                        <Tippy content='Essa é sua empresa princial atualmente'>
-                                            <span className={styles.badge}>
-                                                <Icon icon='star' size='small' />
-                                            </span>
-                                        </Tippy>
-                                    )
-                                }
-                            </header>
-
-                            <div className={styles.content}>
-                                <p>
-                                    <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
-                                </p>
-
-                                {
-                                    company.planStartDate && company.planEndDate && (
-                                        <Tippy content='Vigência do plano atual'>
-                                            <p>
-                                                <Icon icon='calendar' size='small' />{' '}
-                                                {new Date(company.planStartDate).toLocaleDateString()} →{' '}
-                                                {new Date(company.planEndDate).toLocaleDateString()}
-                                            </p>
-                                        </Tippy>
-                                    )
-                                }
-
-                                <p>
-                                    <Icon icon='info' size='small' /> {company.companySituationStr}
-                                </p>
-
-                                <p>
-                                    <Icon icon='users' size='small' /> {company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}
-                                </p>
-
-                                {
-                                    currentMainCompany?.companyId == company.companyId && (
-                                        <p><Icon icon='star' size='small' /> Empresa principal</p>
-                                    )
-                                }
-
-                                {
-                                    currentMainCompany?.isAdm && (
-                                        <p><Icon icon='shield' size='small' /> Você é um administador</p>
-                                    )
-                                }
-
-                                {
-                                    company.modulesStr?.length > 0 && (
-                                        <p><Icon icon='layers' size='small' /> {company.modulesStr?.length} módulo{company.modulesStr?.length === 1 ? '' : 's'}</p>
-                                    )
-                                }
-                            </div>
-
-                            {
-                                company.modulesStr?.length > 0 && (
-                                    <div className={styles.modules}>
-                                        {
-                                            company.modulesStr.map((m) => (
-                                                <span key={m} className={styles.module}>
-                                                    {m}
-                                                </span>
-                                            ))
-                                        }
-                                    </div>
-                                )
-                            }
-
-                            <div className={styles.actions}>
-                                <Button label='Sair' isStyleSimple={true} isDisabled={true} />
-
-                                {
-                                    currentMainCompany?.companyId !== company.companyId && (
-                                        <Button label='Tornar principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
-                                    )
-                                }
-                            </div>
-                        </article>
-                    ))
-                }
-            </div>
-        </section>
+            <ModalEmpresaGerenciarView
+                isOpen={isModalOpen}
+                setModalIsOpen={setIsModalOpen}
+                company={companyClicked}
+            />
+        </Fragment>
     )
 }

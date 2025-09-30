@@ -1,5 +1,15 @@
-import { Fragment } from 'react';
+'use client';
+import { Fragment, JSX, useMemo } from 'react';
 import ContentLoader from 'react-content-loader';
+
+interface iProps {
+    width?: number;
+    heading?: { width: number; height: number };
+    row?: number;
+    column?: number;
+    padding?: number;
+    borderRadius?: number;
+}
 
 export default function ContentLoaderGrid({
     width = 1366,
@@ -9,73 +19,78 @@ export default function ContentLoaderGrid({
     padding = 12,
     borderRadius = 4,
     ...props
-}) {
-    const list = []
+}: iProps) {
 
-    let height;
+    const { list, height } = useMemo(() => {
+        const tempList: JSX.Element[] = [];
+        let calcHeight = 0;
 
-    for (let i = 1; i <= row; i++) {
-        for (let j = 0; j < column; j++) {
-            const itemWidth = (width - padding * (column + 1)) / column;
-            const x = padding + j * (itemWidth + padding);
-            const height1 = itemWidth;
-            const height2 = 20;
-            const height3 = 20;
-            const space = padding + height1 + (padding / 2 + height2) + height3 + padding * 4;
-            const y1 = padding + heading.height + padding * 2 + space * (i - 1);
-            const y2 = y1 + padding + height1;
-            const y3 = y2 + padding / 2 + height2;
+        for (let i = 1; i <= row; i++) {
+            for (let j = 0; j < column; j++) {
+                const itemWidth = (width - padding * (column + 1)) / column;
+                const x = padding + j * (itemWidth + padding);
+                const height1 = itemWidth;
+                const height2 = 20;
+                const height3 = 20;
+                const space = padding + height1 + (padding / 2 + height2) + height3 + padding * 4;
+                const y1 = padding + heading.height + padding * 2 + space * (i - 1);
+                const y2 = y1 + padding + height1;
+                const y3 = y2 + padding / 2 + height2;
 
-            list.push(
-                <Fragment>
-                    <rect
-                        x={x}
-                        y={y1}
-                        rx={borderRadius}
-                        ry={borderRadius}
-                        width={itemWidth}
-                        height={height1}
-                    />
+                tempList.push(
+                    <Fragment key={`row-${i}-col-${j}`}>
+                        <rect
+                            x={x}
+                            y={y1}
+                            rx={borderRadius}
+                            ry={borderRadius}
+                            width={itemWidth}
+                            height={height1}
+                        />
 
-                    <rect x={x} y={y2} rx={0} ry={0} width={itemWidth} height={height2} />
+                        <rect
+                            x={x}
+                            y={y2}
+                            width={itemWidth}
+                            height={height2}
+                        />
 
-                    <rect
-                        x={x}
-                        y={y3}
-                        rx={0}
-                        ry={0}
-                        width={itemWidth * 0.6}
-                        height={height3}
-                    />
-                </Fragment>
-            )
+                        <rect
+                            x={x}
+                            y={y3}
+                            width={itemWidth * 0.6}
+                            height={height3}
+                        />
+                    </Fragment>
+                );
 
-            if (i === row) {
-                height = y3 + height3;
+                if (i === row) {
+                    calcHeight = y3 + height3;
+                }
             }
         }
-    }
+
+        return { list: tempList, height: calcHeight };
+    }, [row, column, width, padding, heading.height, heading.width, borderRadius]);
 
     return (
         <ContentLoader
+            uniqueKey={`content-loader-grid-${row}-${column}-${width}`}
             viewBox={`0 0 ${width} ${height}`}
-            // width={width}
             width='100%'
             height={height}
-            {...props}
             preserveAspectRatio='none'
             backgroundColor='#eee'
             foregroundColor='#ddd'
             speed={1.75}
             title=''
+            {...props}
         >
             {
                 heading && (
                     <rect
                         x={padding}
                         y={padding}
-                        rx={0}
-                        ry={0}
                         width={heading.width}
                         height={heading.height}
                     />
