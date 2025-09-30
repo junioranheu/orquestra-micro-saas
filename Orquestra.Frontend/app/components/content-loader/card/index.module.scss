@@ -1,0 +1,14 @@
+.grid {
+    display: flex;
+    gap: 1rem;
+
+    >* {
+        flex: 1;
+    }
+}
+
+@media (max-width: 1281px) {
+    .grid {
+        flex-direction: column;
+    }
+}

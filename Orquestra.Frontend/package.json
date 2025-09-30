@@ -28,6 +28,7 @@
         "rc-table": "^7.51.1",
         "react": "19.1.0",
         "react-big-calendar": "^1.19.4",
+        "react-content-loader": "^7.1.1",
         "react-dom": "19.1.0",
         "react-imask": "^7.6.1",
         "react-modal": "^3.16.3",

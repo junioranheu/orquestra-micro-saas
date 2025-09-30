@@ -6,11 +6,14 @@ import SvgOne from '@/app/assets/svg/one.svg';
 import SvgTwo from '@/app/assets/svg/two.svg';
 import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import CardSimple from '@/app/components/card/simple';
+import { ContentLoaderCardGrid } from '@/app/components/content-loader/card';
+import ContentLoaderGrid from '@/app/components/content-loader/grid';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
@@ -21,7 +24,7 @@ import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function EmpresaGerenciar() {
@@ -34,6 +37,15 @@ export default function EmpresaGerenciar() {
     const [companies, setCompanies] = useState<iCompanySimpleOutput[]>();
 
     useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`, setter: setCompanies, });
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, handleGetRandomNumber(500, 1500));
+
+        return () => clearTimeout(timer);
+    }, []);
 
     function handleSetCurrentMainCompany(company: iCompanySimpleOutput) {
         swal({
@@ -52,6 +64,15 @@ export default function EmpresaGerenciar() {
                 window.location.reload();
             }
         });
+    }
+
+    if (!companies || isLoading) {
+        return (
+            <section className={styles.main}>
+                <ContentLoaderCardGrid />
+                <ContentLoaderGrid />
+            </section>
+        )
     }
 
     return (
