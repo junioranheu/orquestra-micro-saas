@@ -102,6 +102,7 @@ public static class DependencyInjection
         services.AddControllers(x =>
         {
             x.Filters.Add<ErrorFilter>();
+            x.Filters.Add<RequestFilter>();
         }).
            AddJsonOptions(x =>
            {
