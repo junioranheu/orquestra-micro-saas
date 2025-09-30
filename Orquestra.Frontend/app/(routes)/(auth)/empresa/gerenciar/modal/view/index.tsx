@@ -1,20 +1,15 @@
-import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
 import iCompanySimpleOutput from '@/app/api/consts/company';
-import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
-import { iUser } from '@/app/api/consts/user';
-import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
-import { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleInputFormStateChange } from '@/app/functions/set.formState';
-import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -27,9 +22,6 @@ interface iProps {
 export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, company }: iProps) {
 
     const windowSize = useWindowSize();
-
-    const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
-    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -60,32 +52,19 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
             return;
         }
 
-        handleGetData();
-
-        async function handleGetData() {
-            const companyUsers = await Fetch.get({ url: `${CONSTS_COMPANY_USER.getAllByCompanyId}?companyId=${company?.companyId}` }) as iUser[];
-            const clients = await Fetch.get({ url: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${company?.companyId}` }) as iClient[];
-
-            const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
-            setCompanyUsersDropDown(optionsCompanyUsers);
-
-            const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
-            setClientsDropDown(optionsClients);
-
-            setFormData({
-                companyId: company?.companyId!,
-                name: company?.name ?? '',
-                email: company?.email ?? '',
-                companyType: company?.companyType ?? '',
-                companySituation: company?.companySituation ?? '',
-                logoUrl: company?.logoUrl ?? '',
-                color: company?.color ?? '',
-                planType: company?.planType ?? '',
-                planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
-                planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
-                modules: company?.modules ?? []
-            });
-        }
+        setFormData({
+            companyId: company?.companyId!,
+            name: company?.name ?? '',
+            email: company?.email ?? '',
+            companyType: company?.companyType ?? '',
+            companySituation: company?.companySituation ?? '',
+            logoUrl: company?.logoUrl ?? '',
+            color: company?.color ?? '',
+            planType: company?.planType ?? '',
+            planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
+            planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
+            modules: company?.modules ?? []
+        });
     }, [isOpen, company, setModalIsOpen, handleClose]);
 
     // const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -225,6 +204,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                         {
                             !editing ? (
                                 <Fragment>
+                                    <Button label='Visualizar membros' handleFunction={() => window.open(ROUTES.EMPRESA_MEMBROS, '_blank')} isStyleSimple={true} />
+                                    <Button label='Visualizar clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} />
                                     <Button label='Editar' handleFunction={() => setEditing(true)} />
                                 </Fragment>
                             ) : (

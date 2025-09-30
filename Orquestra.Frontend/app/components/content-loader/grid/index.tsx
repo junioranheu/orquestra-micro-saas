@@ -71,7 +71,7 @@ export default function ContentLoaderGrid({
         }
 
         return { list: tempList, height: calcHeight };
-    }, [row, column, width, padding, heading.height, heading.width, borderRadius]);
+    }, [row, column, width, padding, heading.height, borderRadius]);
 
     return (
         <ContentLoader
