@@ -124,7 +124,7 @@ export default function EmpresaGerenciar() {
 
                                 <div className={styles.info}>
                                     <h3>{company.name}</h3>
-                                    <p className={styles.type}>{company.companyType}</p>
+                                    <p className={styles.type}>{company.companyTypeStr}</p>
                                 </div>
 
                                 {
@@ -140,7 +140,7 @@ export default function EmpresaGerenciar() {
 
                             <div className={styles.content}>
                                 <p>
-                                    <Icon icon='mail' size='small' /> {company.email}
+                                    <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
                                 </p>
 
                                 {

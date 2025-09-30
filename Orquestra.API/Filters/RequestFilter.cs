@@ -60,15 +60,23 @@ public sealed class RequestFilter(ICreateLog createLog) : ActionFilterAttribute
     #region extras
     private static string GetRequestParameters(ActionExecutingContext context)
     {
-        object parameters = context.ActionArguments.FirstOrDefault().Value ?? string.Empty;
+        if (context.ActionArguments.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        object? parameters = context.ActionArguments.First().Value;
+
+        if (parameters is null)
+        {
+            return string.Empty;
+        }
 
         try
         {
-            string serializedParameters = !string.IsNullOrEmpty(parameters.ToString())   ? JsonSerializer.Serialize(parameters) : string.Empty;
-
-            return serializedParameters;
+            return parameters is string str ? str : JsonSerializer.Serialize(parameters);
         }
-        catch (Exception)
+        catch
         {
             return string.Empty;
         }
@@ -76,34 +84,33 @@ public sealed class RequestFilter(ICreateLog createLog) : ActionFilterAttribute
 
     private static string NormalizeParameters(string parameters)
     {
+        if (string.IsNullOrWhiteSpace(parameters))
+        {
+            return string.Empty;
+        }
+
         try
         {
-            if (!string.IsNullOrEmpty(parameters))
+            JsonNode? json = JsonNode.Parse(parameters);
+
+            if (json is null)
             {
-                string[] keysToHide = ["Senha", "Password"];
-                bool needsToHideKeys = keysToHide.Any(x => parameters.Contains($"\"{x}\":", StringComparison.OrdinalIgnoreCase));
-
-                if (needsToHideKeys)
-                {
-                    JsonNode? parametersJson = JsonNode.Parse(parameters);
-
-                    foreach (var key in keysToHide)
-                    {
-                        HideKeyInParameter(parametersJson, key);
-                    }
-
-                    string? parametersJsonStr = parametersJson?.ToJsonString(new JsonSerializerOptions
-                    {
-                        WriteIndented = false
-                    });
-
-                    return parametersJsonStr ?? string.Empty;
-                }
+                return parameters;
             }
 
-            return parameters;
+            string[] keysToHide = ["Senha", "Password"];
+
+            foreach (var key in keysToHide)
+            {
+                HideKeyInParameter(json, key);
+            }
+
+            return json.ToJsonString(new JsonSerializerOptions
+            {
+                WriteIndented = false
+            });
         }
-        catch (Exception)
+        catch
         {
             return string.Empty;
         }
@@ -111,7 +118,7 @@ public sealed class RequestFilter(ICreateLog createLog) : ActionFilterAttribute
 
     private static void HideKeyInParameter(JsonNode? parameterJson, string key)
     {
-        if (parameterJson is JsonObject obj && obj.ContainsKey(key))
+        if (parameterJson is JsonObject obj)
         {
             obj.Remove(key);
         }
