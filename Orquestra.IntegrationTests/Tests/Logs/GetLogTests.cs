@@ -16,19 +16,19 @@ public sealed class GetLogTests
         // Arrange;
         Context context = Fixture.CreateContext();
 
-        User user1 = UserMock.Create("User One", "one@test.com", UserRoleEnum.Administrator);
-        User user2 = UserMock.Create("User Two", "two@test.com", UserRoleEnum.Common);
+        User user1 = UserMock.Create("Junior Souza", "one@test.com", UserRoleEnum.Administrator);
+        User user2 = UserMock.Create("Mariana Scalzaretto", "two@test.com", UserRoleEnum.Common);
 
         await Fixture.Save(context, user1);
         await Fixture.Save(context, user2);
 
-        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), UserId = user1.UserId, Description = "Log 1 U1", Status = 200 });
-        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), UserId = user1.UserId, Description = "Log 2 U1", Status = 200 });
-        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), UserId = user2.UserId, Description = "Log 3 U2", Status = 500 });
+        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), LogType = LogTypeEnum.Request, UserId = user1.UserId, Description = "Log 1 U1", Status = 200 });
+        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), LogType = LogTypeEnum.Request, UserId = user1.UserId, Description = "Log 2 U1", Status = 200 });
+        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), LogType = LogTypeEnum.Request, UserId = user2.UserId, Description = "Log 3 U2", Status = 500 });
 
         GetLog sut = CreateSut(context);
 
-        PaginationInput pagination = new () { Index = 0, Limit = 10 };
+        PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
         (IEnumerable<Log> output, int count) = await sut.Execute(pagination, null);
@@ -44,19 +44,19 @@ public sealed class GetLogTests
         // Arrange;
         Context context = Fixture.CreateContext();
 
-        User user1 = UserMock.Create("User One", "one@test.com", UserRoleEnum.Administrator);
-        User user2 = UserMock.Create("User Two", "two@test.com", UserRoleEnum.Common);
+        User user1 = UserMock.Create("Junior Souza", "one@test.com", UserRoleEnum.Administrator);
+        User user2 = UserMock.Create("Mariana Scalzaretto", "two@test.com", UserRoleEnum.Common);
 
         await Fixture.Save(context, user1);
         await Fixture.Save(context, user2);
 
-        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), UserId = user1.UserId, Description = "Log 1 U1", Status = 200 });
-        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), UserId = user1.UserId, Description = "Log 2 U1", Status = 200 });
-        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), UserId = user2.UserId, Description = "Log 3 U2", Status = 500 });
+        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), LogType = LogTypeEnum.Request, UserId = user1.UserId, Description = "Log 1 U1", Status = 200 });
+        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), LogType = LogTypeEnum.Request, UserId = user1.UserId, Description = "Log 2 U1", Status = 200 });
+        await Fixture.Save(context, new Log { LogId = Guid.NewGuid(), LogType = LogTypeEnum.Request, UserId = user2.UserId, Description = "Log 3 U2", Status = 500 });
 
         GetLog sut = CreateSut(context);
 
-        PaginationInput pagination = new () { Index = 0, Limit = 10 };
+        PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
         (IEnumerable<Log> output, int count) = await sut.Execute(pagination, user1.UserId);
@@ -73,7 +73,7 @@ public sealed class GetLogTests
         Context context = Fixture.CreateContext();
         GetLog sut = CreateSut(context);
 
-        PaginationInput pagination = new () { Index = 0, Limit = 10 };
+        PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
         (IEnumerable<Log> output, int count) = await sut.Execute(pagination, null);
@@ -97,6 +97,7 @@ public sealed class GetLogTests
             await Fixture.Save(context, new Log
             {
                 LogId = Guid.NewGuid(),
+                LogType = LogTypeEnum.Request,
                 UserId = user.UserId,
                 Description = $"Log {i}",
                 Status = 200

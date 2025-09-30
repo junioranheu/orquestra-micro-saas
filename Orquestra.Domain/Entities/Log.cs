@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Orquestra.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -8,6 +9,8 @@ public sealed class Log
 {
     [Key]
     public Guid LogId { get; set; }
+
+    public required LogTypeEnum LogType { get; set; }
 
     public string? RequestType { get; set; } = string.Empty;
 

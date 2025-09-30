@@ -2,6 +2,7 @@
 using Moq;
 using Orquestra.Application.UseCases.Logs.Create;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 
@@ -20,6 +21,7 @@ public sealed class CreateLogTests
         Log log = new()
         {
             LogId = Guid.NewGuid(),
+            LogType = LogTypeEnum.Request,
             RequestType = "GET",
             Endpoint = "/api/test",
             Parameters = "{ id: 1 }",

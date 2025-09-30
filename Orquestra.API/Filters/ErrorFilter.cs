@@ -40,6 +40,7 @@ public sealed class ErrorFilter(ILogger<ErrorFilter> logger, ICreateLog createLo
     {
         Log log = new()
         {
+            LogType = LogTypeEnum.Exception,
             RequestType = context.HttpContext.Request.Method ?? string.Empty,
             Endpoint = context.HttpContext.Request.Path.ToString() ?? string.Empty,
             Parameters = string.Empty,

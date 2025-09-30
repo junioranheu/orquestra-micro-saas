@@ -13,16 +13,15 @@ public sealed class RequestFilter(ICreateLog createLog) : ActionFilterAttribute
 {
     private readonly ICreateLog _createLog = createLog;
 
-    public override async Task OnActionExecutionAsync(ActionExecutingContext filterContextExecuting, ActionExecutionDelegate next)
+    public override async Task OnActionExecutionAsync(ActionExecutingContext contextExecuting, ActionExecutionDelegate next)
     {
-        if (filterContextExecuting.HttpContext.RequestAborted.IsCancellationRequested)
+        if (contextExecuting.HttpContext.RequestAborted.IsCancellationRequested)
         {
-            filterContextExecuting.Result = new StatusCodeResult(StatusCodes.Status400BadRequest);
+            contextExecuting.Result = new StatusCodeResult(StatusCodes.Status400BadRequest);
             return;
         }
 
-        ActionExecutedContext filterContextExecuted = await next();
-        HttpRequest request = filterContextExecuted.HttpContext.Request;
+        HttpRequest request = contextExecuting.HttpContext.Request;
 
         if (HttpMethods.IsGet(request.Method))
         {
@@ -30,10 +29,12 @@ public sealed class RequestFilter(ICreateLog createLog) : ActionFilterAttribute
             return;
         }
 
-        int? statusCode = (filterContextExecuted.Result as ObjectResult)?.StatusCode;
-        (Guid? userId, string _, UserRoleEnum[] _) = new BaseFilter().GetUserInfo(filterContextExecuted);
+        ActionExecutedContext contextExecuted = await next();
+        int? statusCode = (contextExecuted.Result as ObjectResult)?.StatusCode;
 
-        string parameters = GetRequestParameters(filterContextExecuting);
+        (Guid? userId, string _, UserRoleEnum[] _) = new BaseFilter().GetUserInfo(contextExecuted);
+
+        string parameters = GetRequestParameters(contextExecuting);
         string parametersNormalized = NormalizeParameters(parameters);
 
         await CreateLog(request, parametersNormalized, statusCode, userId);
@@ -43,12 +44,13 @@ public sealed class RequestFilter(ICreateLog createLog) : ActionFilterAttribute
     {
         Log log = new()
         {
+            LogType = LogTypeEnum.Request,
             RequestType = request.Method ?? string.Empty,
             Endpoint = request.Path.ToString() ?? string.Empty,
             Parameters = parameters,
             Exception = string.Empty,
-            Description = "Request log",
-            Status = statusCode > 0 ? (int)statusCode : StatusCodes.Status500InternalServerError,
+            Description = string.Empty,
+            Status = statusCode is null ? StatusCodes.Status204NoContent : statusCode > 0 ? (int)statusCode : StatusCodes.Status500InternalServerError,
             UserId = userId is null || userId == Guid.Empty ? null : userId
         };
 
