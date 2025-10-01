@@ -6,6 +6,7 @@ using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.GetModule;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.Companies.Update;
 using Orquestra.Application.UseCases.Companies.UpdateModule;
 using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Domain.Consts;
@@ -21,6 +22,7 @@ public class CompanyController(
         IEnvService env,
         ICreateCompany create,
         IGetCompany get,
+        IUpdateCompany update,
         IVerifyCompany verify,
         IGetModuleCompany getModuleCompany,
         IUpdateModuleCompany updateModuleCompany,
@@ -30,6 +32,7 @@ public class CompanyController(
     private readonly IEnvService _env = env;
     private readonly ICreateCompany _create = create;
     private readonly IGetCompany _get = get;
+    private readonly IUpdateCompany _update = update;
     private readonly IVerifyCompany _verify = verify;
     private readonly IGetModuleCompany _getModuleCompany = getModuleCompany;
     private readonly IUpdateModuleCompany _updateModuleCompany = updateModuleCompany;
@@ -37,7 +40,7 @@ public class CompanyController(
 
     [AuthorizeFilter]
     [HttpPost]
-    public async Task<ActionResult> Create([FromForm] CompanyInput input)
+    public async Task<ActionResult> Create(CompanyInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         CompanyOutput output = await _create.Execute(userIdAuth, input);
@@ -51,6 +54,16 @@ public class CompanyController(
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         CompanyOutput? output = await _get.Execute(userIdAuth, companyId);
+
+        return Ok(output);
+    }
+
+    [AuthorizeFilter]
+    [HttpPut]
+    public async Task<ActionResult> Update(CompanyInput input)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        CompanyOutput output = await _update.Execute(userIdAuth, input);
 
         return Ok(output);
     }

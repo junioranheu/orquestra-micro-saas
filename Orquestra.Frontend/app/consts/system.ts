@@ -22,7 +22,9 @@ const SYSTEM = {
     ANIMATE_PULSE_INFINITE: 'animate__animated animate__pulse animate__slower animate__infinite',
 
     EMPTY_GUID: Guid.parse('00000000-0000-0000-0000-000000000000'),
-    EMPTY_DATE: new Date(-62135596800000)
+    EMPTY_DATE: new Date(-62135596800000),
+
+    WARN_FILL_OBLIGATORY_FIELDS: 'Preencha todos os campos obrigatórios (*) antes de prosseguir com esta ação.'
 };
 
 export default SYSTEM;

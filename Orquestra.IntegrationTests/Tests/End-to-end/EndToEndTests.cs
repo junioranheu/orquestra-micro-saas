@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Shared;
@@ -238,15 +239,25 @@ public sealed class EndToEndTests
         // Monta as dependências usadas pelo CreateCompany (repete padrão que você tem nos outros testes)
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(createdUser);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetUser getUser = new(context);
-        var getCompany = new Application.UseCases.Companies.Get.GetCompany(context, checkIfUserIsLinked);
-        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinked, getUser, getCompany, emailServiceMock.Object);
-        UpdateCurrentMainCompanyUser updateCurrentMain = new(context, checkIfUserIsLinked);
-        CalculatePriceModuleCompany calculatePrice = new(context, checkIfUserIsLinked);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinked, calculatePrice, envService, emailServiceMock.Object);
+        var getCompany = new Application.UseCases.Companies.Get.GetCompany(context, checkIfUserIsLinkedCompanyUser);
+        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
+        UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
+        CalculatePriceModuleCompany calculatePrice = new(context, checkIfUserIsLinkedCompanyUser);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePrice, envService, emailServiceMock.Object);
 
-        CreateCompany createCompany = new(context, envService, createVerification, inviteCompanyUser, updateCurrentMain, getUser, emailServiceMock.Object, checkIfUserIsLinked, createCompanyInvoice);
+        CreateCompany createCompany = new(new CompanyBaseDependencies(
+           context,
+           envService,
+           createVerification,
+           inviteCompanyUser,
+           updateCurrentMainCompanyUser,
+           getUser,
+           emailServiceMock.Object,
+           checkIfUserIsLinkedCompanyUser,
+           createCompanyInvoice
+       ));
 
         return createCompany;
     }

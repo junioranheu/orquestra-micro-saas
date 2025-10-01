@@ -2,7 +2,6 @@
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
-using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.Users.Get;
@@ -19,26 +18,16 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
 
-public sealed class CreateCompany(
-        Context context,
-        IEnvService env,
-        ICreateVerification createVerification,
-        IInviteCompanyUser inviteCompanyUser,
-        IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
-        IGetUser getUser,
-        IEmailService emailService,
-        ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
-        ICreateCompanyInvoice createCompanyInvoice
-    ) : CompanyBase(context, checkIfUserIsLinkedCompanyUser), ICreateCompany
+public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(deps), ICreateCompany
 {
-    private readonly Context _context = context;
-    private readonly IEnvService _env = env;
-    private readonly ICreateVerification _createVerification = createVerification;
-    private readonly IInviteCompanyUser _inviteCompanyUser = inviteCompanyUser;
-    private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
-    private readonly IGetUser _getUser = getUser;
-    private readonly IEmailService _emailService = emailService;
-    private readonly ICreateCompanyInvoice _createCompanyInvoice = createCompanyInvoice;
+    private readonly Context _context = deps.Context;
+    private readonly IEnvService _env = deps.Env;
+    private readonly ICreateVerification _createVerification = deps.CreateVerification;
+    private readonly IInviteCompanyUser _inviteCompanyUser = deps.InviteCompanyUser;
+    private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = deps.UpdateCurrentMainCompanyUser;
+    private readonly IGetUser _getUser = deps.GetUser;
+    private readonly IEmailService _emailService = deps.EmailService;
+    private readonly ICreateCompanyInvoice _createCompanyInvoice = deps.CreateCompanyInvoice;
 
     public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
     {

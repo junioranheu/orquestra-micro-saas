@@ -1,21 +1,40 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.CompanyUsers.Invite;
+using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
+using Orquestra.Application.UseCases.Users.Get;
+using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Env;
 using System.Text.RegularExpressions;
 
 namespace Orquestra.Application.UseCases.Companies.Base;
 
-public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser)
+public record CompanyBaseDependencies(
+    Context Context,
+    IEnvService Env,
+    ICreateVerification CreateVerification,
+    IInviteCompanyUser InviteCompanyUser,
+    IUpdateCurrentMainCompanyUser UpdateCurrentMainCompanyUser,
+    IGetUser GetUser,
+    IEmailService EmailService,
+    ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
+    ICreateCompanyInvoice CreateCompanyInvoice
+);
+
+public partial class CompanyBase(CompanyBaseDependencies deps)
 {
-    private readonly Context _context = context;
-    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
+    private readonly Context _context = deps.Context;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
 
     public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate)
     {
-        string warn = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.Email}.";
+        string warnAlreadyExist = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.Email}.";
 
         #region basic
         if (!isCreate)
@@ -30,18 +49,18 @@ public partial class CompanyBase(Context context, ICheckIfUserIsLinkedCompanyUse
             throw new ArgumentException("O nome da empresa não é válido.");
         }
 
-        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name.ToLower() == input.Name);
+        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name.ToLower() == input.Name.ToLower());
 
         if (checkNameAlreadyExist)
         {
-            throw new InvalidOperationException($"Já existe uma empresa registrada com esse nome. {warn}");
+            throw new InvalidOperationException($"Já existe uma empresa registrada com esse nome. {warnAlreadyExist}");
         }
 
-        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email.ToLower() == input.Email);
+        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email.ToLower() == input.Email.ToLower());
 
         if (checkEmailAlreadyExist)
         {
-            throw new InvalidOperationException($"Já existe uma empresa registrada com esse e-mail. {warn}");
+            throw new InvalidOperationException($"Já existe uma empresa registrada com esse e-mail. {warnAlreadyExist}");
         }
 
         bool checkEmail = IsEmailValid(input.Email);

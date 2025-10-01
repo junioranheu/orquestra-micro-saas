@@ -1,4 +1,5 @@
-import iCompanySimpleOutput from '@/app/api/consts/company';
+import iCompanySimpleOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
+import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
@@ -11,7 +12,8 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
-import { handleClearFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
+import swal from '@/app/functions/swal';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -76,80 +78,29 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
     const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
-        //     if (!formData.clientId || !formData.dateStart || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus) {
-        //         swal({ content: 'Preencha todos os campos obrigatórios (*) antes de prosseguir com esta ação.', icon: 'warning' });
-        //         return;
-        //     }
+        if (!formData.name || !formData.email || !formData.companyType) {
+            swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
+            return;
+        }
 
-        //     if (formData.dateStart) {
-        //         const dateStart = new Date(formData.dateStart);
+        setEditing(false);
+        setSaving(true);
 
-        //         if (dateStart.getHours() === 0 && dateStart.getMinutes() === 0) {
-        //             const result = await Swal.fire({
-        //                 text: 'Tem certeza de que deseja agendar para meia-noite?',
-        //                 icon: 'warning',
-        //                 showCancelButton: true,
-        //                 confirmButtonText: 'Confirmar',
-        //                 cancelButtonText: 'Voltar',
-        //                 reverseButtons: true
-        //             });
+        const data = handleLoopFormData(formData);
+        const input = data.json as iCompanySimpleOutput;
 
-        //             if (!result.isConfirmed) {
-        //                 return;
-        //             }
-        //         }
-        //     }
+        const schedule = await Fetch.put({ url: CONSTS_COMPANY.put, body: input }) as iSchedule;
 
-        //     setEditing(false);
-        //     setSaving(true);
+        if (schedule) {
+            toast({ content: 'Agendamento atualizado com sucesso.' });
+            handleGetSchedules();
+            handleClose();
+            return;
+        }
 
-        //     const data = handleLoopFormData(formData);
-        //     const input = data.json as iSchedule;
-
-        //     //#region Normalizar props
-        //     // @ts-ignore;
-        //     const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_BACKEND?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus?.label)?.value) ?? formData.scheduleStatus;
-        //     // @ts-ignore; 
-        //     formData.scheduleStatus = scheduleStatusNormalized;
-
-        //     input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
-        //     input.clientId = handleNormalizeGuidField(input.clientId);
-        //     input.companyId = companyId;
-
-        //     input.dateStart = new Date(`${input.dateStart}T${input.timeStart}`);
-        //     input.dateEnd = new Date(`${input.dateEnd}T${input.timeEnd}`);
-        //     input.dateStart = handleToBrazilDate(input.dateStart);
-        //     input.dateEnd = handleToBrazilDate(input.dateEnd);
-        //     // console.log('input', input);
-        //     // #endregion
-
-        //     if (type === 'create') {
-        //         const schedule = await Fetch.post({ url: CONSTS_SCHEDULE.post, body: input }) as iSchedule;
-
-        //         if (schedule) {
-        //             toast({ content: 'Agendamento criado com sucesso.' });
-        //             handleGetSchedules();
-        //             handleClose();
-        //             return;
-        //         }
-
-        //         setEditing(true);
-        //         setSaving(false);
-        //         return;
-        //     }
-
-        //     const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.put, body: input }) as iSchedule;
-
-        //     if (schedule) {
-        //         toast({ content: 'Agendamento atualizado com sucesso.' });
-        //         handleGetSchedules();
-        //         handleClose();
-        //         return;
-        //     }
-
-        //     setEditing(true);
-        //     setSaving(false);
-        //     return;
+        setEditing(true);
+        setSaving(false);
+        return;
     }
 
     if (!isOpen) {

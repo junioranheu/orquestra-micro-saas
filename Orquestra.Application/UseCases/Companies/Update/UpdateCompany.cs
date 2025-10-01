@@ -1,0 +1,50 @@
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.Companies.Base;
+using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
+using Orquestra.Infrastructure.Data;
+
+namespace Orquestra.Application.UseCases.Companies.Update;
+
+public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(deps), IUpdateCompany
+{
+    private readonly Context _context = deps.Context;
+
+    public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
+    {
+        Company? company = await _context.Companies.
+                           // AsNoTracking(). // Propositalmente sem AsNoTracking;
+                           Where(x => x.CompanyId == input.CompanyId).
+                           FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
+
+        await Validate(input, userIdAuth, isCreate: false);
+        await Update(input, company);
+
+        var output = company.Adapt<CompanyOutput>();
+
+        return output;
+    }
+
+    #region extras
+    private async Task<Company> Update(CompanyInput input, Company company)
+    {
+        company.Name = input.Name;
+        company.Email = input.Email;
+        company.Phone = input.Phone;
+        company.CompanyType = input.CompanyType;
+        company.Address = input.Address;
+        company.City = input.City;
+        company.State = input.State;
+        company.ZipCode = input.ZipCode;
+        company.Country = input.Country;
+        company.LogoUrl = input.LogoUrl;
+
+        _context.Update(company);
+        await _context.SaveChangesAsync();
+
+        return company;
+    }
+    #endregion
+}

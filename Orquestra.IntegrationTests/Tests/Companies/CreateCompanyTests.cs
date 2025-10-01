@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
@@ -264,7 +265,7 @@ public sealed class CreateCompanyTests
         CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany, envService, emailServiceMock.Object);
 
-        CreateCompany createCompany = new(
+        CreateCompany createCompany = new(new CompanyBaseDependencies(
             context,
             envService,
             createVerification,
@@ -274,7 +275,7 @@ public sealed class CreateCompanyTests
             emailServiceMock.Object,
             checkIfUserIsLinkedCompanyUser,
             createCompanyInvoice
-        );
+        ));
 
         return createCompany;
     }
