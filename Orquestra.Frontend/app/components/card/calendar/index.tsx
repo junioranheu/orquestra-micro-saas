@@ -21,7 +21,7 @@ export default function CardCalendar() {
     const [hasAccessToSchedule, setHasAccessToSchedule] = useState<boolean>(false);
 
     useEffect(() => {
-        const hasAccess = handleCheckShowElement(me, [MODULES.Scheduling]);
+        const hasAccess = handleCheckShowElement({ me, rolesRequired: [MODULES.Scheduling] });
         setHasAccessToSchedule(hasAccess);
     }, [me]);
 

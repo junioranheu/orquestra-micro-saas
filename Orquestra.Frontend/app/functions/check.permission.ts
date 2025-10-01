@@ -1,8 +1,24 @@
 import { iMe } from '@/app/api/consts/auth';
 import { Module } from '@/app/consts/modules';
 
+interface iProps {
+    me: iMe | undefined;
+    rolesRequired: Module[];
+    mustBeSystemAdmin?: boolean;
+}
+
 // Verificar se o usuário tem a permissão para visualizar um elemento;
-export function handleCheckShowElement(me: iMe | undefined, rolesRequired: Module[]): boolean {
+export function handleCheckShowElement({ me, rolesRequired, mustBeSystemAdmin = false }: iProps): boolean {
+    const systemAdmin = 1000;
+
+    if (mustBeSystemAdmin) {
+        if (me && me.roles?.map(x => x.toString()).includes(systemAdmin.toString())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     if (!me || !me?.isAuth || !me?.currentMainCompany) {
         return false;
     }

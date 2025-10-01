@@ -6,6 +6,7 @@ const ROUTES = {
     RECUPERAR_SENHA: '/recuperar-senha',
     CRIAR_CONTA: '/criar-conta',
     LOGOUT: '/logout',
+    LOGS: '/logs',
     ERRO_403: '/erro/403',
     ERRO_404: '/erro/404',
     USUARIO_VERIFICADO: '/usuario/verificado',
