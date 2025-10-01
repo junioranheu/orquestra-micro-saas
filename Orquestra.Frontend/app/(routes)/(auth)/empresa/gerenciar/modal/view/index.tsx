@@ -9,6 +9,7 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import { handleClearFormData } from '@/app/functions/set.formState';
+import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -21,6 +22,12 @@ interface iProps {
 export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, company }: iProps) {
 
     const windowSize = useWindowSize();
+
+    const companySituationEnum = useApiGetCompanySituationEnum();
+
+    useEffect(() => {
+        console.log(companySituationEnum);
+    }, [companySituationEnum]);
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);

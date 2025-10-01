@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.Application.UseCases.Locations.Cities.Get;
 using Orquestra.Application.UseCases.Locations.States.Get;
+using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -62,8 +63,8 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
 
     [ResponseCache(Duration = SystemConsts.OneHourInSec)]
     [AllowAnonymous]
-    [HttpGet("GetModules")]
-    public ActionResult GetModules()
+    [HttpGet("GetModuleEnum")]
+    public ActionResult GetModuleEnum()
     {
         var output = Enum.GetValues<ModuleEnum>().
             Select(x => new
@@ -77,5 +78,46 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
             }).ToList();
 
         return Ok(output);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("GetEnum")]
+    public ActionResult GetEnum(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return BadRequest("Nome do enum inválido.");
+        }
+
+        List<Type?> allEnums = [.. AppDomain.CurrentDomain.GetAssemblies().
+            SelectMany(asm =>
+            {
+                try
+                {
+                    return asm.GetTypes();
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    return ex.Types.Where(t => t is not null);
+                }
+            }).Where(t => t is not null && t.IsEnum&& t.Name.EndsWith("Enum", StringComparison.OrdinalIgnoreCase) && !t.Name.Contains('_') && t.Name != "VarEnum" && t.Name != "ColumnEnum")];
+
+        Type? enumType = allEnums.FirstOrDefault(t => t!.Name.Equals(name, StringComparison.OrdinalIgnoreCase) || (t.FullName?.Equals(name, StringComparison.OrdinalIgnoreCase) ?? false));
+
+        if (enumType is null)
+        {
+            string validEnums = string.Join(", ", allEnums.Select(t => t!.Name).OrderBy(x => x));
+            return BadRequest($"O enum '{name}' não foi encontrado. Enums disponíveis: {validEnums}");
+        }
+
+        List<DropdownOptionOutput<int>> values = [.. Enum.GetValues(enumType).
+            Cast<Enum>().
+            Select(x => new DropdownOptionOutput<int>
+            {
+                Value = Convert.ToInt32(x),
+                Label = GetEnumDesc(x)
+            })];
+
+        return Ok(values);
     }
 }
