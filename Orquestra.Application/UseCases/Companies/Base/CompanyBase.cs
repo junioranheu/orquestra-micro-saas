@@ -32,7 +32,7 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
     private readonly Context _context = deps.Context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
 
-    public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate)
+    public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate, bool mustValidateIfNameAlreadyExist, bool mustValidateIfEmailAlreadyExist)
     {
         string warnAlreadyExist = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.Email}.";
 
@@ -49,25 +49,32 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
             throw new ArgumentException("O nome da empresa não é válido.");
         }
 
-        bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name.ToLower() == input.Name.ToLower());
-
-        if (checkNameAlreadyExist)
-        {
-            throw new InvalidOperationException($"Já existe uma empresa registrada com esse nome. {warnAlreadyExist}");
-        }
-
-        bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email.ToLower() == input.Email.ToLower());
-
-        if (checkEmailAlreadyExist)
-        {
-            throw new InvalidOperationException($"Já existe uma empresa registrada com esse e-mail. {warnAlreadyExist}");
-        }
 
         bool checkEmail = IsEmailValid(input.Email);
 
         if (!checkEmail)
         {
             throw new ArgumentException("O e-mail da empresa não é válido. Insira um e-mail válido, por favor.");
+        }
+
+        if (mustValidateIfNameAlreadyExist)
+        {
+            bool checkNameAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Name.ToLower() == input.Name.ToLower());
+
+            if (checkNameAlreadyExist)
+            {
+                throw new InvalidOperationException($"Já existe uma empresa registrada com esse nome. {warnAlreadyExist}");
+            }
+        }
+
+        if (mustValidateIfEmailAlreadyExist)
+        {
+            bool checkEmailAlreadyExist = await _context.Companies.AsNoTracking().AnyAsync(x => x.Email.ToLower() == input.Email.ToLower());
+
+            if (checkEmailAlreadyExist)
+            {
+                throw new InvalidOperationException($"Já existe uma empresa registrada com esse e-mail. {warnAlreadyExist}");
+            }
         }
 
         bool checkPhone = IsPhoneValid(input.Phone);

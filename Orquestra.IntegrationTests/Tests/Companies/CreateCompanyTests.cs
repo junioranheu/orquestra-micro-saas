@@ -248,6 +248,68 @@ public sealed class CreateCompanyTests
         Assert.True(invoice.Amount > 0);
     }
 
+    [Theory]
+    [InlineData(UserRoleEnum.Common)]
+    [InlineData(UserRoleEnum.Maintainer)]
+    [InlineData(UserRoleEnum.Administrator)]
+    public async Task Execute_ShouldThrow_WhenCompanyNameAlreadyExists(UserRoleEnum role)
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        user.Role = role;
+        await Fixture.Save(context, user);
+
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompany sut = CreateSut(context, user, emailServiceMock);
+
+        // Empresa já existente;
+        Company existingCompany = CompanyMock.Create();
+        existingCompany.Name = "Empresa Repetida";
+        await Fixture.Save(context, existingCompany);
+
+        // Tentativa de criar outra com mesmo nome;
+        Company company = CompanyMock.Create();
+        CompanyInput input = company.Adapt<CompanyInput>();
+        input.Name = existingCompany.Name; // Duplicado;
+
+        // Act & Assert;
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, input));
+        Assert.Contains("já existe", ex.Message.ToLowerInvariant());
+    }
+
+    [Theory]
+    [InlineData(UserRoleEnum.Common)]
+    [InlineData(UserRoleEnum.Maintainer)]
+    [InlineData(UserRoleEnum.Administrator)]
+    public async Task Execute_ShouldThrow_WhenCompanyEmailAlreadyExists(UserRoleEnum role)
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        user.Role = role;
+        await Fixture.Save(context, user);
+
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        CreateCompany sut = CreateSut(context, user, emailServiceMock);
+
+        // Empresa já existente;
+        Company existingCompany = CompanyMock.Create();
+        existingCompany.Email = "empresa@teste.com";
+        await Fixture.Save(context, existingCompany);
+
+        // Tentativa de criar outra com mesmo email;
+        Company company = CompanyMock.Create();
+        CompanyInput input = company.Adapt<CompanyInput>();
+        input.Email = existingCompany.Email; // Duplicado;
+
+        // Act & Assert;
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, input));
+        Assert.Contains("já existe", ex.Message.ToLowerInvariant());
+    }
+
     #region helper
     private static CreateCompany CreateSut(Context context, User user, Mock<IEmailService> emailServiceMock)
     {

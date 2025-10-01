@@ -32,7 +32,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
     public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
     {
         // Validar;
-        await Validate(input, userIdAuth, isCreate: true);
+        await Validate(input, userIdAuth, isCreate: true, mustValidateIfNameAlreadyExist: true, mustValidateIfEmailAlreadyExist: true);
 
         // Criar;
         Company company = await Save(input);

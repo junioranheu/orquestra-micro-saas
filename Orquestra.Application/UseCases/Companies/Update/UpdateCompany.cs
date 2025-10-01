@@ -19,7 +19,10 @@ public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(de
                            Where(x => x.CompanyId == input.CompanyId).
                            FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
 
-        await Validate(input, userIdAuth, isCreate: false);
+        bool mustValidateIfNameAlreadyExist = company.Name != input.Name;
+        bool mustValidateIfEmailAlreadyExist = company.Email != input.Email;
+
+        await Validate(input, userIdAuth, isCreate: false, mustValidateIfNameAlreadyExist, mustValidateIfEmailAlreadyExist);
         await Update(input, company);
 
         var output = company.Adapt<CompanyOutput>();
