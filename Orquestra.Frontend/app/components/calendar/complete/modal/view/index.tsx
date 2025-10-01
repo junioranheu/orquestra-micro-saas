@@ -37,20 +37,6 @@ interface iProps {
     handleGetSchedules: () => Promise<void>;
 }
 
-export const CONSTS_SCHEDULE_STATUS = [
-    { value: 1, label: 'Marcado' },
-    { value: 2, label: 'Remarcado' },
-    { value: 3, label: 'Concluído' },
-    { value: 4, label: 'Cancelado' }
-] as iDropdownOption[];
-
-export const CONSTS_SCHEDULE_STATUS_BACKEND = [
-    { value: 1, label: 'Scheduled' },
-    { value: 2, label: 'Rescheduled' },
-    { value: 3, label: 'Completed' },
-    { value: 4, label: 'Canceled' }
-] as iDropdownOption[];
-
 export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyId, companyUsers, clients, handleGetSchedules }: iProps) {
 
     const router = useRouter();
@@ -64,6 +50,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
     const [saving, setSaving] = useState<boolean>(false);
 
     const paymentTypeEnum = useApiGetCompanySituationEnum({ enumName: 'PaymentTypeEnum' });
+    const scheduleStatusEnum = useApiGetCompanySituationEnum({ enumName: 'ScheduleStatusEnum' });
 
     const [formData, setFormData] = useState<iSchedule>({
         scheduleId: SYSTEM.EMPTY_GUID,
@@ -130,8 +117,11 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         if (type === 'create') {
             handleClearFormData(setFormData);
 
+            const scheduleStatus = scheduleStatusEnum?.find(x => x.label === 'Marcado')?.value?.toString() ?? '';
+
             setFormData(prev => ({
                 ...prev,
+                scheduleStatus: scheduleStatus,
                 dateStart: handleFormatDateToInputValue(event?.start ?? new Date())
             }));
 
@@ -207,11 +197,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         const input = data.json as iSchedule;
 
         //#region Normalizar props
-        // @ts-ignore;
-        const scheduleStatusNormalized = CONSTS_SCHEDULE_STATUS_BACKEND?.find(x => x.value === CONSTS_SCHEDULE_STATUS?.find(y => y.label === formData.scheduleStatus?.label)?.value) ?? formData.scheduleStatus;
-        // @ts-ignore; 
-        formData.scheduleStatus = scheduleStatusNormalized;
-
         input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
         input.clientId = handleNormalizeGuidField(input.clientId);
         input.companyId = companyId;
@@ -286,7 +271,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                                     <Tags
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO_SEM_SEGUNDOS), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
-                                            { label: CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === event.schedule?.scheduleStatus)?.value)?.label ?? '' },
+                                            { label: scheduleStatusEnum?.find(x => x.value.toString() === formData.scheduleStatus?.toString())?.label ?? '' },
                                             { label: event.schedule?.paymentType },
                                             { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                         ]}
@@ -306,7 +291,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                 <main className={styles.modalContent}>
                     <div className={styles.grid}>
                         <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
-                        <Dropdown title='Status' options={CONSTS_SCHEDULE_STATUS} selectedOption={CONSTS_SCHEDULE_STATUS?.find(x => x.value === CONSTS_SCHEDULE_STATUS_BACKEND?.find(y => y.label === formData.scheduleStatus)?.value)} setSelectedOption={setScheduleStatusOption} isDisabled={!editing} isObligatory={true} />
+                        <Dropdown title='Status' options={scheduleStatusEnum ?? []} selectedOption={scheduleStatusEnum?.find(x => x.value.toString() === formData.scheduleStatus?.toString())} setSelectedOption={setScheduleStatusOption} isDisabled={!editing || (type === 'create')} isObligatory={true} />
                         <InputMask title='Data de início' type='date' fieldName='dateStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
                         <InputMask title='Hora de início' type='time' fieldName='timeStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
                         <InputMask title='Data e hora de encerramento' type='date' fieldName='dateEnd' formData={formData} setFormData={setFormData} isDisabled isObligatory />
