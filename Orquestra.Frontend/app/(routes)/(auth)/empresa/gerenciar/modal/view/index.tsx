@@ -1,6 +1,7 @@
 import iCompanySimpleOutput from '@/app/api/consts/company';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
+import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
@@ -8,7 +9,8 @@ import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
-import { handleClearFormData } from '@/app/functions/set.formState';
+import handleGetPropName from '@/app/functions/get.propName';
+import { handleClearFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -23,11 +25,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
     const windowSize = useWindowSize();
 
-    const companySituationEnum = useApiGetCompanySituationEnum();
-
-    useEffect(() => {
-        console.log(companySituationEnum);
-    }, [companySituationEnum]);
+    const companyTypeEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyTypeEnum' });
+    const companySituationEnum = useApiGetCompanySituationEnum({ enumName: 'CompanySituationEnum' });
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -73,8 +72,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
         });
     }, [isOpen, company, setModalIsOpen, handleClose]);
 
+    const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     // const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
-    // const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     // const setPaymentTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.paymentType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     // const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
@@ -187,15 +186,16 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
                 <main className={styles.modalContent}>
                     <div className={styles.grid}>
-                        <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
-                        <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
-                        <InputMask title='Tipo' fieldName='companyType' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
-                        <InputMask title='Situação' fieldName='companySituation' formData={formData} setFormData={setFormData} isDisabled />
+                        <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Tipo' fieldName='companyType' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.label.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Situação' fieldName='companySituation' formData={formData} setFormData={setFormData} isDisabled={true} />
                         <InputMask title='Logo' fieldName='logoUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Cor' fieldName='color' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Plano' fieldName='planType' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled />
-                        <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled />
+                        <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
+                        <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
                         <InputMask title='Módulos' fieldName='modules' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                     </div>
                 </main>

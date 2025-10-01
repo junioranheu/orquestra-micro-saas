@@ -3,18 +3,25 @@ import { Fetch } from '@/app/api/fetch';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import { useEffect, useState } from 'react';
 
-export default function useApiGetCompanySituationEnum(): iDropdownOption[] | undefined {
+interface iProps {
+    enumName: 'CompanyInvoiceSituationEnum' | 'CompanySituationEnum' | 'CompanyTypeEnum' |
+    'CompanyUserRoleEnum' | 'LogTypeEnum' | 'ModuleEnum' |
+    'PaymentTypeEnum' | 'ScheduleStatusEnum' | 'UserRoleEnum' |
+    'VerificationTypeEnum'; // Sempre que necessário, adicionar os novos enums aqui;
+}
+
+export default function useApiGetCompanySituationEnum({ enumName }: iProps): iDropdownOption[] | undefined {
 
     const [list, setList] = useState<iDropdownOption[]>();
 
     useEffect(() => {
         async function handleFetch() {
-            const result = await Fetch.get({ url: `${CONSTS_UTILITY.getEnum}?name=CompanyTypeEnum` }) as iDropdownOption[];
+            const result = await Fetch.get({ url: `${CONSTS_UTILITY.getEnum}?name=${enumName}` }) as iDropdownOption[];
             setList(result);
         }
 
         handleFetch();
-    }, []);
+    }, [enumName]);
 
     return list;
 
