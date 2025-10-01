@@ -16,8 +16,8 @@ const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [
 export const MODULES_PERMISSIONS: Record<string, string[]> = {
     [ROUTES.EMPRESA_CLIENTES]: ['*'],
     [ROUTES.EMPRESA_MEMBROS]: ['*'],
-    [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULES.Scheduling],
-    [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales]
+    [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULES.Scheduling.toString()],
+    [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales.toString()]
 };
 
 export async function middleware(request: NextRequest) {
@@ -93,7 +93,7 @@ async function handleCheckUserAccess(token: string, pathname: string): Promise<b
 
         // #4 - Checagem: verificar se o usuário tem qualquer permissão necessária (especificamente);
         const specificModules = mustModulePermissions.filter(role => role !== '*');
-        const hasAccess = specificModules.length === 0 ? true : specificModules.some(role => userModules.includes(role));
+        const hasAccess = specificModules.length === 0 ? true : specificModules.some(role => userModules.includes(Number(role)));
         // console.log('hasAccess', hasAccess);
 
         return hasAccess;

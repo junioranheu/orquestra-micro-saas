@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import styles from './index.module.scss';
 
-export interface iDropdownOption<T = Guid | number> {
+export interface iDropdownOption<T = string | Guid | number> {
     value: T;
     label: string;
 }

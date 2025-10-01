@@ -154,7 +154,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             amountReceived: event.schedule.amountReceived,
             observations: event.schedule.observations
         });
-    }, [isOpen, type, event, companyUsers, clients, router, setModalIsOpen, handleClose]);
+    }, [isOpen, type, event, companyUsers, clients, scheduleStatusEnum, router, setModalIsOpen, handleClose]);
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;

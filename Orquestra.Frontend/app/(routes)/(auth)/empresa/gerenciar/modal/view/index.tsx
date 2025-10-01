@@ -6,6 +6,7 @@ import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
+import { COLORS } from '@/app/consts/colors';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
@@ -73,9 +74,6 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
     }, [isOpen, company, setModalIsOpen, handleClose]);
 
     const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
-    // const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
-    // const setPaymentTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.paymentType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
-    // const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
         //     if (!formData.clientId || !formData.dateStart || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus) {
@@ -191,7 +189,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                         <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.value.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
                         <InputMask title='Logo' fieldName='logoUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Cor' fieldName='color' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} isDisabled={!editing} />
                         <InputMask title='Plano' fieldName='planType' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
                         <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
