@@ -107,7 +107,7 @@ public static class DependencyInjection
            AddJsonOptions(x =>
            {
                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-               x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+               // x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); // Exibir, por exemplo, "ClinicaOdontologia" em vez de "1";
                x.JsonSerializerOptions.WriteIndented = env.IsDevelopment();
                x.JsonSerializerOptions.Converters.Add(new BrasiliaDateTimeConverter());
            });

@@ -188,9 +188,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                     <div className={styles.grid}>
                         <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Tipo' fieldName='companyType' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.label.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Situação' fieldName='companySituation' formData={formData} setFormData={setFormData} isDisabled={true} />
+                        <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.value.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
+                        <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
                         <InputMask title='Logo' fieldName='logoUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Cor' fieldName='color' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Plano' fieldName='planType' formData={formData} setFormData={setFormData} isDisabled={!editing} />

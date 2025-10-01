@@ -13,7 +13,7 @@ interface iProps {
     options: iDropdownOption[];
     multiple?: boolean;
     selectedOption: iDropdownOption | iDropdownOption[] | null | undefined;
-    setSelectedOption: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
+    setSelectedOption?: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
     className?: string;
     showDefaultOption0?: boolean;
     placeholder?: string;
