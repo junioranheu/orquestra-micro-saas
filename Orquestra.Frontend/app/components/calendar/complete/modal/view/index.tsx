@@ -19,6 +19,7 @@ import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
+import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
 import { useRouter } from 'next/navigation';
@@ -35,15 +36,6 @@ interface iProps {
     clients: iClient[] | undefined;
     handleGetSchedules: () => Promise<void>;
 }
-
-export const CONSTS_PAYMENT_TYPE = [
-    { value: 1, label: 'Dinheiro' },
-    { value: 2, label: 'Credito' },
-    { value: 3, label: 'Debito' },
-    { value: 4, label: 'Pix' },
-    { value: 5, label: 'TED' },
-    { value: 6, label: 'Outro' }
-] as iDropdownOption[];
 
 export const CONSTS_SCHEDULE_STATUS = [
     { value: 1, label: 'Marcado' },
@@ -70,6 +62,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
+
+    const paymentTypeEnum = useApiGetCompanySituationEnum({ enumName: 'PaymentTypeEnum' });
 
     const [formData, setFormData] = useState<iSchedule>({
         scheduleId: SYSTEM.EMPTY_GUID,
@@ -325,7 +319,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
                         </div>
 
                         <InputMask title='Valor recebido' type='number' fieldName='amountReceived' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <Dropdown title='Tipo de pagamento' options={CONSTS_PAYMENT_TYPE} selectedOption={CONSTS_PAYMENT_TYPE.find(x => x.label === formData.paymentType)!} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
+                        <Dropdown title='Tipo de pagamento' options={paymentTypeEnum ?? []} selectedOption={paymentTypeEnum?.find(x => x.value.toLocaleString() === formData.paymentType?.toString())} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
                         <InputMask title='Título customizado' fieldName='customTitle' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='URL' fieldName='customUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
