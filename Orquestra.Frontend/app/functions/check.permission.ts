@@ -12,7 +12,8 @@ export function handleCheckShowElement(me: iMe | undefined, rolesRequired: Modul
     }
 
     const modules = me?.currentMainCompany?.modules as string[];
-    // console.log(modules);
+    // console.log('user', modules);
+    // console.log('rolesRequired', rolesRequired);
 
     if (!modules || !modules?.length) {
         return false;
@@ -22,7 +23,7 @@ export function handleCheckShowElement(me: iMe | undefined, rolesRequired: Modul
 
     modules?.forEach(x => {
         rolesRequired.forEach(required => {
-            if ((x === required) && !isShowElement) {
+            if ((x.toString() === required.toString()) && !isShowElement) {
                 isShowElement = true;
             }
         });

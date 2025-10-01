@@ -101,7 +101,8 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
             {
                 Value = Convert.ToInt32(x),
                 Label = GetEnumDesc(x)
-            })];
+            }).
+            OrderBy(x => x.Label)];
 
         return Ok(values);
     }
