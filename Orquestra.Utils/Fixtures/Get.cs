@@ -546,4 +546,23 @@ public static class Get
 
         return output;
     }
+
+    /// <summary>
+    /// Verifica se o tamanho de um array de bytes ultrapassa o limite permitido em megabytes.
+    /// Lança uma exceção se o tamanho for excedido.
+    /// </summary>
+    /// <param name="input">Array de bytes a ser validado.</param>
+    /// <param name="maxMegabytes">Limite máximo em MB permitido.</param>
+    /// <exception cref="InvalidOperationException">Lançada quando o array excede o tamanho permitido.</exception>
+    public static void ValidateMaxSizeBytes(byte[]? input, int maxMegabytes)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+
+        long maxBytes = maxMegabytes * 1024L * 1024L;
+
+        if (input.Length > maxBytes)
+        {
+            throw new InvalidOperationException($"O arquivo excede o limite de {maxMegabytes}MBs.");
+        }
+    }
 }

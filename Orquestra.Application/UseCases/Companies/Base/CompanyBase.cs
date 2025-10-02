@@ -111,6 +111,13 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         }
         #endregion
 
+        #region customization
+        if (input.Logo is not null)
+        {
+            ValidateMaxSizeBytes(input: input.Logo, maxMegabytes: 3);
+        } 
+        #endregion
+
         #region status
         if (!isCreate)
         {

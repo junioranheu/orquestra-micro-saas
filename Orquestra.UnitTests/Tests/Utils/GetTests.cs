@@ -558,6 +558,42 @@ public sealed class GetTests
         Assert.Equal(expected, result);
     }
 
+    [Fact]
+    public void Should_NotThrow_When_SizeIsWithinLimit()
+    {
+        // Arrange;
+        var bytes = new byte[512 * 1024]; // 0.5 MB;
+        Action CreateSut() => () => ValidateMaxSizeBytes(bytes, 1);
+
+        // Act;
+        Action act = CreateSut();
+
+        // Assert;
+        act(); // Não deve lançar exceção;
+    }
+
+    [Fact]
+    public void Should_ThrowInvalidOperation_When_SizeExceedsLimit()
+    {
+        // Arrange;
+        var bytes = new byte[2 * 1024 * 1024]; // 2 MB;
+        Action CreateSut() => () => ValidateMaxSizeBytes(bytes, 1);
+
+        // Act & assert;
+        Assert.Throws<InvalidOperationException>(CreateSut());
+    }
+
+    [Fact]
+    public void Should_ThrowArgumentNull_When_InputIsNull()
+    {
+        // Arrange;
+        byte[]? bytes = null;
+        Action CreateSut() => () => ValidateMaxSizeBytes(bytes, 1);
+
+        // Act & assert;
+        Assert.Throws<ArgumentNullException>(CreateSut());
+    }
+
     #region helpers
     private enum TestEnum
     {
