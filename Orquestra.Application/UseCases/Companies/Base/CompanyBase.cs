@@ -111,15 +111,6 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         }
         #endregion
 
-        #region customization
-        bool checkLogoUrl = IsLogoUrlValid(input.LogoUrl);
-
-        if (!checkLogoUrl)
-        {
-            throw new ArgumentException("A logo não é válida. Insira uma logo válida, por favor.");
-        }
-        #endregion
-
         #region status
         if (!isCreate)
         {
@@ -186,17 +177,6 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         bool isValid = countries.Any(c => NormalizeTextRemoveAccentsAndLower(c) == normalizedInput);
 
         return isValid;
-    }
-
-    // Customization;
-    private static bool IsLogoUrlValid(string? logoUrl)
-    {
-        if (string.IsNullOrWhiteSpace(logoUrl))
-        {
-            return true;
-        }
-
-        return RegexLogoUrl().IsMatch(logoUrl);
     }
 
     // Regex;

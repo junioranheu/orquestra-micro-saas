@@ -20,7 +20,7 @@ public static class CompanyMock
             State = GetRandomString(charLength: GetRandomNumber(5, 15)),
             ZipCode = string.Empty,
             Country = "Brasil",
-            LogoUrl = "https://placehold.co/200x200",
+            Logo = [137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 12, 73, 68, 65, 84, 8, 153, 99, 96, 0, 0, 0, 2, 0, 1, 226, 33, 189, 167, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130],
             Color = "#FFFFFF",
             CompanySituation = CompanySituationEnum.Approved,
             PlanStartDate = GetDate(),

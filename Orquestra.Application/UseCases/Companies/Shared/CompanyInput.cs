@@ -12,7 +12,7 @@ public sealed class CompanyInput
     public string Email { get; set; } = string.Empty;
 
     public string Phone { get; set; } = string.Empty;
-
+     
     public CompanyTypeEnum CompanyType { get; set; }
     #endregion
 
@@ -29,7 +29,7 @@ public sealed class CompanyInput
     #endregion
 
     #region customization
-    public string? LogoUrl { get; set; } = string.Empty;
+    public byte[]? Logo { get; set; }
 
     public string? Color { get; set; } = string.Empty;
 

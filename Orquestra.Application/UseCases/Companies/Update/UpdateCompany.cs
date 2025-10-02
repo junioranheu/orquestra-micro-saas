@@ -42,7 +42,7 @@ public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         company.State = input.State;
         company.ZipCode = input.ZipCode;
         company.Country = input.Country;
-        company.LogoUrl = input.LogoUrl;
+        company.Logo = input.Logo;
 
         _context.Update(company);
         await _context.SaveChangesAsync();

@@ -42,7 +42,7 @@ public sealed class Company: Audit
     #endregion
 
     #region customization
-    public string? LogoUrl { get; set; } = string.Empty;
+    public byte[]? Logo { get; set; }
 
     [MaxLength(20)]
     public string? Color { get; set; } = string.Empty;
