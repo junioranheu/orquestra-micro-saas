@@ -15,6 +15,7 @@ public static class SystemConsts
     public const int HalfDayInSec = 43200;
     public const int OneDayInSec = 86400;
     public const int OneMonthInSec = 2629800;
+    public const int OneYearInSec = 31536000;
 
     public const int PlanDurationInDays = 30;
 

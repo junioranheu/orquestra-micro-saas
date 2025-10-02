@@ -11,7 +11,10 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
+using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Base;
 
@@ -93,27 +96,6 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         #endregion
 
         #region location
-        bool checkAddress = IsStreetAddressValid(input.Address);
-
-        if (!checkAddress)
-        {
-            throw new ArgumentException("O endereço não é válido. Insira um endereço válido, por favor.");
-        }
-
-        bool checkCity = IsCityValid(input.City);
-
-        if (!checkCity)
-        {
-            throw new ArgumentException("A cidade não é válida. Insira uma cidade válida, por favor.");
-        }
-
-        bool checkState = IsStateValid(input.State);
-
-        if (!checkState)
-        {
-            throw new ArgumentException("O estado não é válido. Insira um estado válido, por favor.");
-        }
-
         bool checkZipCode = IsZipCodeValid(input.ZipCode);
 
         if (!checkZipCode)
@@ -182,21 +164,6 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
     }
 
     // Location;
-    private static bool IsStreetAddressValid(string streetAddress)
-    {
-        return !string.IsNullOrWhiteSpace(streetAddress);
-    }
-
-    private static bool IsCityValid(string city)
-    {
-        return !string.IsNullOrWhiteSpace(city);
-    }
-
-    private static bool IsStateValid(string state)
-    {
-        return !string.IsNullOrWhiteSpace(state);
-    }
-
     private static bool IsZipCodeValid(string? zipCode)
     {
         if (string.IsNullOrWhiteSpace(zipCode))
@@ -209,7 +176,16 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
 
     private static bool IsCountryValid(string country)
     {
-        return !string.IsNullOrWhiteSpace(country);
+        if (string.IsNullOrWhiteSpace(country))
+        {
+            return true;
+        }
+
+        List<string> countries = GetCountries();
+        string normalizedInput = NormalizeTextRemoveAccentsAndLower(country);
+        bool isValid = countries.Any(c => NormalizeTextRemoveAccentsAndLower(c) == normalizedInput);
+
+        return isValid;
     }
 
     // Customization;

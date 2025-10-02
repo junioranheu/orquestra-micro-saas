@@ -66,9 +66,18 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
             email: company?.email ?? '',
             phone: company?.phone ?? '',
             companyType: company?.companyType ?? '',
-            companySituation: company?.companySituation ?? '',
+
+            streetAdress: company?.streetAdress ?? '',
+            city: company?.city ?? '',
+            state: company?.state ?? '',
+            zipCode: company?.zipCode ?? '',
+            country: company?.country ?? '',
+
             logoUrl: company?.logoUrl ?? '',
             color: company?.color ?? '',
+
+            companySituation: company?.companySituation ?? '',
+
             planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
             planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
             modulesStr: company?.modulesStr ?? []
@@ -138,6 +147,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                 </header>
 
                 <main className={styles.modalContent}>
+                    <h1>{formData.companyId.toString()}</h1>
+
                     <div className={styles.grid}>
                         <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
@@ -148,6 +159,27 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
                         <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
                         <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
+
+                        {/* companyId: company?.companyId,
+            name: company?.name ?? '',
+            email: company?.email ?? '',
+            phone: company?.phone ?? '',
+            companyType: company?.companyType ?? '',
+
+            streetAdress: company?.streetAdress ?? '',
+            city: company?.city ?? '',
+            state: company?.state ?? '',
+            zipCode: company?.zipCode ?? '',
+            country: company?.country ?? '',
+
+            logoUrl: company?.logoUrl ?? '',
+            color: company?.color ?? '',
+
+            companySituation: company?.companySituation ?? '',
+
+            planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
+            planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
+            modulesStr: company?.modulesStr ?? [] */}
 
                         <div className={styles.div}>
                             <label>Módulos</label>

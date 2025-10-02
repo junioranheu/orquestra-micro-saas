@@ -6,6 +6,7 @@ export const CONSTS_UTILITY = {
     getBuildVersion: `${BASE}/${controller}/GetBuildVersion`,
     getState: `${BASE}/${controller}/GetState`,
     getCity: `${BASE}/${controller}/GetCity`,
+    getCountry: `${BASE}/${controller}/GetCountry`,
     getModuleEnum: `${BASE}/${controller}/GetModuleEnum`,
     getEnum: `${BASE}/${controller}/GetEnum`,
 };

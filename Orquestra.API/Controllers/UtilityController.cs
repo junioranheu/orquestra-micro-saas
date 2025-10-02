@@ -42,7 +42,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(build);
     }
 
-    [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
+    [ResponseCache(Duration = SystemConsts.OneYearInSec)]
     [AllowAnonymous]
     [HttpGet("GetState")]
     public async Task<ActionResult> GetState()
@@ -52,12 +52,22 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(output);
     }
 
-    [ResponseCache(Duration = SystemConsts.OneMonthInSec)]
+    [ResponseCache(Duration = SystemConsts.OneYearInSec)]
     [AllowAnonymous]
     [HttpGet("GetCity")]
     public async Task<ActionResult> GetCity()
     {
         List<LocationCity>? output = await _getCity.Execute();
+
+        return Ok(output);
+    }
+
+    [ResponseCache(Duration = SystemConsts.OneYearInSec)]
+    [AllowAnonymous]
+    [HttpGet("GetCountry")]
+    public ActionResult GetCountry()
+    {
+        List<string> output = GetCountries();
 
         return Ok(output);
     }
@@ -85,7 +95,8 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     [HttpGet("GetEnum")]
     public ActionResult GetEnum(string name)
     {
-        if (string.IsNullOrWhiteSpace(name)) { 
+        if (string.IsNullOrWhiteSpace(name))
+        {
             return BadRequest("Nome do enum inválido.");
         }
 

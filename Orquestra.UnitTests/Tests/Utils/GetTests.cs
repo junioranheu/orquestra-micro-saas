@@ -66,7 +66,7 @@ public sealed class GetTests
     public void ConvertToBrasiliaTime_WithUtcDate_ReturnsCorrectBrasiliaTime()
     {
         // Arrange;
-        DateTime utcDate = new (2025, 9, 26, 12, 0, 0, DateTimeKind.Utc);
+        DateTime utcDate = new(2025, 9, 26, 12, 0, 0, DateTimeKind.Utc);
 
         // Act;
         DateTime result = ConvertToBrasiliaTime(utcDate);
@@ -79,7 +79,7 @@ public sealed class GetTests
     public void ConvertToBrasiliaTime_WithLocalDate_ReturnsCorrectBrasiliaTime()
     {
         // Arrange;
-        DateTime localDate = new (2025, 9, 26, 12, 0, 0, DateTimeKind.Local);
+        DateTime localDate = new(2025, 9, 26, 12, 0, 0, DateTimeKind.Local);
 
         // Act;
         var result = ConvertToBrasiliaTime(localDate);
@@ -99,7 +99,7 @@ public sealed class GetTests
         var result = ConvertToBrasiliaTime(unspecifiedDate);
 
         // Assert;
-        DateTime expected = DateTime.SpecifyKind(unspecifiedDate, DateTimeKind.Local)  .ToUniversalTime()      .AddHours(-3);
+        DateTime expected = DateTime.SpecifyKind(unspecifiedDate, DateTimeKind.Local).ToUniversalTime().AddHours(-3);
         Assert.Equal(expected, result);
     }
 
@@ -107,7 +107,7 @@ public sealed class GetTests
     public void ConvertToBrasiliaTime_InvalidTimeZone_ThrowsException()
     {
         // Simulação: Alterar ID de timezone para teste de exceção;
-        DateTime invalidDate = new (2025, 9, 26, 12, 0, 0, DateTimeKind.Utc);
+        DateTime invalidDate = new(2025, 9, 26, 12, 0, 0, DateTimeKind.Utc);
 
         // Act & Assert;
         Assert.Throws<TimeZoneNotFoundException>(() =>
@@ -495,6 +495,67 @@ public sealed class GetTests
 
         // Assert;
         Assert.Equal(1, result); // Truncou o 1,98 min;
+    }
+
+    [Fact]
+    public void GetCountries_ShouldNotReturnEmpty()
+    {
+        // Act;
+        List<string> countries = GetCountries();
+
+        // Assert;
+        Assert.NotEmpty(countries);
+    }
+
+    [Fact]
+    public void GetCountries_ShouldContainBrazil()
+    {
+        // Act;
+        List<string> countries = GetCountries();
+
+        // Assert;
+        Assert.Contains("Brasil", countries);
+    }
+
+    [Fact]
+    public void GetCountries_ShouldBeAlphabeticallyOrdered()
+    {
+        // Act;
+        List<string> countries = GetCountries();
+
+        // Assert;
+        List<string> ordered = countries.OrderBy(x => x).ToList();
+        Assert.Equal(ordered, countries);
+    }
+
+    [Fact]
+    public void GetCountries_ShouldNotHaveDuplicates()
+    {
+        // Act;
+        List<string> countries = GetCountries();
+
+        // Assert;
+        Assert.Equal(countries.Count, countries.Distinct().Count());
+    }
+
+    [Theory]
+    [InlineData("Brasil", "brasil")]
+    [InlineData("BRASIL", "brasil")]
+    [InlineData("brásil", "brasil")]
+    [InlineData(" BRÁSil ", "brasil")]
+    [InlineData("Árvore", "arvore")]
+    [InlineData("Êxemplo", "exemplo")]
+    [InlineData("Çapim", "capim")]
+    [InlineData("", "")]
+    [InlineData(null, "")]
+    [InlineData("   ", "")]
+    public void NormalizeTextRemoveAccentsAndLower_ShouldNormalizeCorrectly(string? input, string expected)
+    {
+        // Act;
+        string result = NormalizeTextRemoveAccentsAndLower(input);
+
+        // Assert;
+        Assert.Equal(expected, result);
     }
 
     #region helpers
