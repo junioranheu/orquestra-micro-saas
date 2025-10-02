@@ -89,7 +89,7 @@ public class AuthController(
 
         // Current main company;
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
-        CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
+        CompanyOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanyOutput>();
 
         // Token;
         string? token = Request.Cookies[SystemConsts.CookieName];
@@ -133,7 +133,7 @@ public class AuthController(
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
 
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
-        CompanySimpleOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanySimpleOutput>();
+        CompanyOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanyOutput>();
 
         if (currentMainCompanySimple is not null)
         {

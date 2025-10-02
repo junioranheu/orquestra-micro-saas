@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
-import iCompanySimpleOutput from './company';
+import iCompanyOutput from './company';
 
 const controller = 'api/Client';
 
@@ -19,5 +19,5 @@ export default interface iClient {
     dateOfBirth?: Date;
     notes?: string;
     companyId: Guid;
-    company: iCompanySimpleOutput;
+    company: iCompanyOutput;
 }

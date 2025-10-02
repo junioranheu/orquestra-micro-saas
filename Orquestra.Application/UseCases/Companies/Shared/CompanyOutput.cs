@@ -69,46 +69,18 @@ public sealed class CompanyOutput
     public string? CompanyTypeStr { get; set; }
 
     public string? CompanySituationStr { get; set; }
-    #endregion
-}
-
-public sealed class CompanySimpleOutput
-{
-    public Guid CompanyId { get; set; }
-
-    public string Name { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
-
-    public CompanyTypeEnum CompanyType { get; set; }
-
-    public string? LogoUrl { get; set; } = string.Empty;
-
-    public string? Color { get; set; } = string.Empty;
-
-    public CompanySituationEnum CompanySituation { get; set; }
-
-    public DateTime PlanStartDate { get; set; }
-
-    public DateTime PlanEndDate { get; set; }
-
-    public bool Status { get; set; }
-
-    public ModuleEnum[]? Modules { get; set; } = [];
-
-    // Extras;
-    public List<string> ModulesStr { get; set; } = [];
 
     public ModuleEnum[]? UserModules { get; set; } = [];
 
     public List<string> UserModulesStr { get; set; } = [];
 
     public bool IsAdm { get; set; } = false;
+    #endregion
 }
 
 public sealed class CompanyModulesOutput
 {
-    public required CompanySimpleOutput Company { get; set; }
+    public required CompanyOutput Company { get; set; }
     public ModuleEnum[]? Modules { get; set; } = [];
     public List<string> ModulesStr { get; set; } = [];
 }

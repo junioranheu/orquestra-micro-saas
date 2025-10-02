@@ -118,11 +118,13 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             handleClearFormData(setFormData);
 
             const scheduleStatus = scheduleStatusEnum?.find(x => x.label === 'Marcado')?.value?.toString() ?? '';
+            const dateStart = handleFormatDateToInputValue(event?.start ?? new Date());
 
             setFormData(prev => ({
                 ...prev,
                 scheduleStatus: scheduleStatus,
-                dateStart: handleFormatDateToInputValue(event?.start ?? new Date())
+                dateStart: dateStart,
+                dateEnd: dateStart // Igual ao start;
             }));
 
             setEditing(true);
@@ -200,6 +202,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
         input.clientId = handleNormalizeGuidField(input.clientId);
         input.companyId = companyId;
+        input.scheduleStatus = Number(input.scheduleStatus);
 
         input.dateStart = new Date(`${input.dateStart}T${input.timeStart}`);
         input.dateEnd = new Date(`${input.dateEnd}T${input.timeEnd}`);
@@ -236,14 +239,6 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
         setSaving(false);
         return;
     }
-
-    // Forçar a copia da data inicial para a prop de data final;
-    useEffect(() => {
-        setFormData(prev => ({
-            ...prev,
-            dateEnd: formData.dateStart
-        }));
-    }, [formData.dateStart]);
 
     if (!isOpen || !event) {
         return;

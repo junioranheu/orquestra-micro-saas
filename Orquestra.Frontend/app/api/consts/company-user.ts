@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
-import iCompanySimpleOutput from './company';
+import iCompanyOutput from './company';
 import { iUser } from './user';
 
 const controller = 'api/CompanyUser';
@@ -16,7 +16,7 @@ export const CONSTS_COMPANY_USER = {
 export default interface iCompanyUser {
     companyUserId: Guid;
     companyId: Guid;
-    company: iCompanySimpleOutput;
+    company: iCompanyOutput;
     userId: Guid;
     user: iUser;
     companyUserRole: string;

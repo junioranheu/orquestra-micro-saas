@@ -1,4 +1,4 @@
-import iCompanySimpleOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
+import iCompanyOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
@@ -21,7 +21,7 @@ import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } 
 interface iProps {
     isOpen: boolean;
     setModalIsOpen: Dispatch<SetStateAction<boolean>>;
-    company: iCompanySimpleOutput | undefined;
+    company: iCompanyOutput | undefined;
 }
 
 export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, company }: iProps) {
@@ -34,15 +34,15 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
-    const [formData, setFormData] = useState<iCompanySimpleOutput>({
+    const [formData, setFormData] = useState<iCompanyOutput>({
         companyId: SYSTEM.EMPTY_GUID,
         name: '',
         email: '',
+        phone: '',
         companyType: '',
         companySituation: '',
         logoUrl: '',
         color: '',
-        planType: '',
         planStartDate: SYSTEM.EMPTY_DATE,
         planEndDate: SYSTEM.EMPTY_DATE,
         modules: []
@@ -61,21 +61,22 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
         }
 
         setFormData({
-            companyId: company?.companyId!,
+            companyId: company?.companyId,
             name: company?.name ?? '',
             email: company?.email ?? '',
+            phone: company?.phone ?? '',
             companyType: company?.companyType ?? '',
             companySituation: company?.companySituation ?? '',
             logoUrl: company?.logoUrl ?? '',
             color: company?.color ?? '',
-            planType: company?.planType ?? '',
             planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
             planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
-            modules: company?.modules ?? []
+            modulesStr: company?.modulesStr ?? []
         });
     }, [isOpen, company, setModalIsOpen, handleClose]);
 
     const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
         if (!formData.name || !formData.email || !formData.companyType) {
@@ -87,13 +88,16 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
         setSaving(true);
 
         const data = handleLoopFormData(formData);
-        const input = data.json as iCompanySimpleOutput;
+        const input = data.json as iCompanyOutput;
 
-        const schedule = await Fetch.put({ url: CONSTS_COMPANY.put, body: input }) as iSchedule;
+        const company = await Fetch.put({ url: CONSTS_COMPANY.put, body: input }) as iCompanyOutput;
 
-        if (schedule) {
-            toast({ content: 'Agendamento atualizado com sucesso.' });
-            handleGetSchedules();
+        if (company) {
+            swal({
+                content: 'Agendamento atualizado com sucesso.',
+                confirmFunction: () => window.location.reload()
+            });
+
             handleClose();
             return;
         }
@@ -137,14 +141,18 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                     <div className={styles.grid}>
                         <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} mask='(00) 00000-0000' />
                         <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.value.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
                         <InputMask title='Logo' fieldName='logoUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} isDisabled={!editing} />
-                        <InputMask title='Plano' fieldName='planType' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
                         <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
                         <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
-                        <InputMask title='Módulos' fieldName='modules' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+
+                        <div className={styles.div}>
+                            <label>Módulos</label>
+                            <textarea className={styles.textarea} rows={3} value={formData.modulesStr?.join('\n') ?? ''} readOnly={true} />
+                        </div>
                     </div>
                 </main>
 
@@ -157,8 +165,9 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                         {
                             !editing ? (
                                 <Fragment>
-                                    <Button label='Visualizar membros' handleFunction={() => window.open(ROUTES.EMPRESA_MEMBROS, '_blank')} isStyleSimple={true} />
-                                    <Button label='Visualizar clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} />
+                                    <Button label='Módulos' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} isStyleSimple={true} />
+                                    <Button label='Membros' handleFunction={() => window.open(ROUTES.EMPRESA_MEMBROS, '_blank')} isStyleSimple={true} />
+                                    <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} />
                                     <Button label='Editar' handleFunction={() => setEditing(true)} />
                                 </Fragment>
                             ) : (

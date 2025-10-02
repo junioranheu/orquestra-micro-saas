@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { UserRoleEnum } from '@/app/enums/userRoleEnum';
-import iCompanySimpleOutput from './company';
+import iCompanyOutput from './company';
 
 const controller = 'api/Auth';
 
@@ -23,7 +23,7 @@ export interface iMeSimple {
 }
 
 export interface iMe extends iMeSimple {
-    currentMainCompany: iCompanySimpleOutput;
+    currentMainCompany: iCompanyOutput;
     tokenExpirationDate: Date;
     refreshTokenExpirationDate: Date;
     isUserAdmOfCurrentMainCompany: boolean;

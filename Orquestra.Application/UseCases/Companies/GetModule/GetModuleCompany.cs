@@ -36,7 +36,7 @@ public sealed class GetModuleCompany(Context context, ICheckIfUserIsLinkedCompan
             modulesStr.Add(GetEnumDesc(module));
         }
 
-        var company = result.Adapt<CompanySimpleOutput>();
+        var company = result.Adapt<CompanyOutput>();
 
         CompanyModulesOutput output = new()
         {

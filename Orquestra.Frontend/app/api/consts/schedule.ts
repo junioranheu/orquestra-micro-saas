@@ -1,7 +1,7 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
 import iClient from './client';
-import iCompanySimpleOutput from './company';
+import iCompanyOutput from './company';
 import { iUserResponse } from './user';
 
 const controller = 'api/Schedule';
@@ -20,11 +20,11 @@ export default interface iSchedule {
     dateEnd: Date | string;
     timeEnd: string;
     paymentType: string;
-    scheduleStatus: string;
+    scheduleStatus: string | number;
     clientId: Guid;
     client?: iClient;
     companyId?: Guid;
-    company?: iCompanySimpleOutput;
+    company?: iCompanyOutput;
     usersIds: Guid[];
     isRestrictForSpecificUsers: boolean;
     customTitle: string;

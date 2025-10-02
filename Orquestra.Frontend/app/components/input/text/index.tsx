@@ -6,7 +6,7 @@ import styles from './index.module.scss';
 interface iProps<T> {
     fieldName: keyof T;
     formData: T;
-    setFormData: Dispatch<SetStateAction<T>>;
+    setFormData?: Dispatch<SetStateAction<T>>;
 
     title?: string;
     type?: 'text' | 'password' | 'email' | 'number' | 'datetime-local' | 'date' | 'time';
@@ -54,7 +54,7 @@ export default function InputMask<T>({
     const svgDefaultProps = { width: 20 };
 
     const defaultHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev: T) => ({
+        setFormData && setFormData((prev: T) => ({
             ...prev,
             [fieldName]: e.target.value as T[keyof T],
         }));

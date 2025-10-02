@@ -1,5 +1,5 @@
 'use client';
-import iCompanySimpleOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
+import iCompanyOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import { Fetch } from '@/app/api/fetch';
 import SvgOne from '@/app/assets/svg/one.svg';
@@ -35,9 +35,9 @@ export default function EmpresaGerenciar() {
 
     const me = useApiGetMeSimple();
     const currentMainCompany = useApiGetCurrentMainCompany({});
-    const [companies, setCompanies] = useState<iCompanySimpleOutput[]>();
+    const [companies, setCompanies] = useState<iCompanyOutput[]>();
 
-    useApiRequestToSetterOnUrlChange<iCompanySimpleOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`, setter: setCompanies, });
+    useApiRequestToSetterOnUrlChange<iCompanyOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`, setter: setCompanies });
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export default function EmpresaGerenciar() {
         return () => clearTimeout(timer);
     }, []);
 
-    function handleSetCurrentMainCompany(company: iCompanySimpleOutput) {
+    function handleSetCurrentMainCompany(company: iCompanyOutput) {
         swal({
             content: `Você deseja selecionar <b>${company.name}</b> como sua empresa principal?`,
             icon: 'question',
@@ -67,10 +67,10 @@ export default function EmpresaGerenciar() {
         });
     }
 
-    const [companyClicked, setCompanyClicked] = useState<iCompanySimpleOutput | undefined>(undefined);
+    const [companyClicked, setCompanyClicked] = useState<iCompanyOutput | undefined>(undefined);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    function handleOpenModalEdit(company: iCompanySimpleOutput) {
+    function handleOpenModalEdit(company: iCompanyOutput) {
         setCompanyClicked(company);
         setIsModalOpen(true);
     }

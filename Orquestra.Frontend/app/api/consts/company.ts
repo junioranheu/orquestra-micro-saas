@@ -1,11 +1,13 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
+import iCompanyUser from './company-user';
 
 const controller = 'api/Company';
 
 export const CONSTS_COMPANY = {
     post: `${BASE}/${controller}`,
     get: `${BASE}/${controller}`,
+    put: `${BASE}/${controller}`,
     getAll: `${BASE}/${controller}/GetAll`,
     getAllByUserId: `${BASE}/${controller}/GetAllByUserId`,
     verify: `${BASE}/${controller}/Verify`,
@@ -14,28 +16,39 @@ export const CONSTS_COMPANY = {
     getModulesInfo: `${BASE}/${controller}/Module/GetInfo`
 };
 
-// Essa interface é uma mistura de CompanyOutput e CompanySimpleOutput do back-end. Boa sorte!
-export default interface iCompanySimpleOutput {
+export default interface iCompanyOutput {
     companyId: Guid;
+
     name: string;
     email: string;
+    phone?: string;
     companyType: string;
-    companySituation: string;
+
+    streetAdress?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    country?: string;
+
     logoUrl?: string;
     color?: string;
-    planType: string;
+
+    companySituation?: string;
     planStartDate?: Date | string;
     planEndDate?: Date | string;
     modules?: string[];
 
     // Extras;
     modulesStr?: string[];
-    userModules?: string[];
-    userModulesStr?: string[];
-    isAdm?: boolean;
+    status?: boolean;
+    createdDate?: Date;
+    companyUsers?: iCompanyUser[];
     amountOfClients?: number;
     companyTypeStr?: string;
     companySituationStr?: string;
+    userModules?: string[];
+    userModulesStr?: string[];
+    isAdm?: boolean;
 }
 
 export interface iCalculatePriceModuleCompanyOutput {
