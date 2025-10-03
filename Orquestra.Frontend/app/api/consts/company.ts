@@ -30,7 +30,7 @@ export default interface iCompanyOutput {
     zipCode?: string;
     country?: string;
 
-    logoUrl?: string;
+    logo?: number[];
     color?: string;
 
     companySituation?: string;

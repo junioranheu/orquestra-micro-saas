@@ -40,9 +40,18 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
         email: '',
         phone: '',
         companyType: '',
-        companySituation: '',
-        logoUrl: '',
+
+        streetAdress: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
+
+        logo: [],
         color: '',
+
+        companySituation: '',
+
         planStartDate: SYSTEM.EMPTY_DATE,
         planEndDate: SYSTEM.EMPTY_DATE,
         modules: []
@@ -73,7 +82,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
             zipCode: company?.zipCode ?? '',
             country: company?.country ?? '',
 
-            logoUrl: company?.logoUrl ?? '',
+            logo: company?.logo ?? [],
             color: company?.color ?? '',
 
             companySituation: company?.companySituation ?? '',
@@ -147,15 +156,13 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                 </header>
 
                 <main className={styles.modalContent}>
-                    <h1>{formData.companyId.toString()}</h1>
-
                     <div className={styles.grid}>
                         <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} mask='(00) 00000-0000' />
                         <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.value.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
-                        <InputMask title='Logo' fieldName='logoUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Logo TEM QUE SER UM INPUT SELECT' fieldName='logo' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
                         <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
                         <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
