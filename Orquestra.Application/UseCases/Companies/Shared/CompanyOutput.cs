@@ -1,4 +1,5 @@
-﻿using Orquestra.Application.UseCases.CompanyUsers.Shared;
+﻿using Microsoft.AspNetCore.Http;
+using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
@@ -39,7 +40,9 @@ public sealed class CompanyOutput
     #endregion
 
     #region customization
-    public byte[]? Logo { get; set; }
+    public string? LogoBase64 { get; set; } // Base64;
+
+    public string? LogoContentType { get; set; }
 
     [MaxLength(20)]
     public string? Color { get; set; } = string.Empty;

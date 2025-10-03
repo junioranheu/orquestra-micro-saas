@@ -1,4 +1,5 @@
-﻿using Orquestra.Domain.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.Companies.Shared;
 
@@ -29,7 +30,9 @@ public sealed class CompanyInput
     #endregion
 
     #region customization
-    public byte[]? Logo { get; set; }
+    public IFormFile? LogoFormFile { get; set; }
+
+    public string? LogoContentType { get; set; }
 
     public string? Color { get; set; } = string.Empty;
 

@@ -48,7 +48,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
         zipCode: '',
         country: '',
 
-        logo: [],
+        logoFormFile: null,
+        logoBase64: '',
         color: '',
 
         companySituation: '',
@@ -83,7 +84,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
             zipCode: company?.zipCode ?? '',
             country: company?.country ?? '',
 
-            logo: company?.logo ?? [],
+            logoFormFile: company?.logoFormFile ?? null,
             color: company?.color ?? '',
 
             companySituation: company?.companySituation ?? '',
@@ -108,6 +109,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
         const data = handleLoopFormData(formData);
         const input = data.json as iCompanyOutput;
+        console.log(input);
 
         const company = await Fetch.put({ url: CONSTS_COMPANY.put, body: input }) as iCompanyOutput;
 
@@ -169,7 +171,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='País' fieldName='country' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
-                        <InputImage title='Logo' fieldName='logo' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
 
                         <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />

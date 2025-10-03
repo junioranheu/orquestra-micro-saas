@@ -42,7 +42,14 @@ public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         company.State = input.State;
         company.ZipCode = input.ZipCode;
         company.Country = input.Country;
-        company.Logo = input.Logo;
+
+        if (input.LogoFormFile is not null)
+        {
+            using MemoryStream ms = new();
+            await input.LogoFormFile.CopyToAsync(ms);
+            company.Logo = ms.ToArray();
+            company.LogoContentType = input.LogoFormFile.ContentType;
+        }
 
         _context.Update(company);
         await _context.SaveChangesAsync();

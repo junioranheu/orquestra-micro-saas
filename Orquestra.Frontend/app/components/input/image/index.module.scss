@@ -9,7 +9,7 @@
         font-size: 0.75rem;
         font-weight: 500;
         margin-right: auto;
-        margin-bottom: 1px;
+        margin-bottom: -5px;
 
         .obligatory {
             // background-color: orange;
@@ -39,27 +39,26 @@
             &:hover {
                 background-color: var(--main-dark);
                 box-shadow: var(--box-shadow);
-                transform: translateY(-1px);
             }
         }
 
-        .removeButton {
-            padding: 8px 12px;
-            background: var(--red);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
+        .simpleButton {
+            padding: 10px 16px;
             cursor: pointer;
-            transition: background 0.2s ease;
+            border-radius: var(--border-radius);
+            background-color: transparent !important;
+            border: 1px solid var(--gray) !important;
+            color: var(--gray-dark) !important;
+            transition: 0.3s !important;
 
             &:hover {
-                background: var(--red);
-            }
+                border: 1px solid var(--contrast) !important;
+                color: var(--contrast) !important;
+                transition: 0.3s !important;
 
-            &:disabled {
-                background: #ccc;
-                cursor: not-allowed;
+                svg {
+                    transition: 0.3s !important;
+                }
             }
         }
 
@@ -72,28 +71,6 @@
                 box-shadow: none;
                 transform: translateY(0px);
             }
-        }
-    }
-
-    .fileName {
-        font-size: 13px;
-        color: var(--text-secondary);
-        margin-top: 4px;
-        word-break: break-all;
-    }
-
-    .preview {
-        margin-top: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-
-        img {
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            object-fit: cover;
-            width: 120px;
-            height: 120px;
         }
     }
 }

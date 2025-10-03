@@ -11,8 +11,6 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
-using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -112,9 +110,9 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         #endregion
 
         #region customization
-        if (input.Logo is not null)
+        if (input.LogoFormFile is not null)
         {
-            ValidateMaxSizeBytes(input: input.Logo, maxMegabytes: 3);
+            ValidateMaxSizeFile(file: input.LogoFormFile, maxMegabytes: 3);
         } 
         #endregion
 

@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { CSSProperties, ChangeEvent, Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react';
+import Swal from 'sweetalert2';
 import styles from './index.module.scss';
 
 interface iProps<T> {
@@ -38,20 +38,22 @@ export default function InputImage<T>({
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const defaultHandleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const defaultHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (!file) return;
+
+        if (!file) {
+            return;
+        }
 
         setFileName(file.name);
 
-        const arrayBuffer = await file.arrayBuffer();
-        const bytes = Array.from(new Uint8Array(arrayBuffer));
-
+        // salva o próprio File no formData
         setFormData && setFormData((prev: T) => ({
             ...prev,
-            [fieldName]: bytes as T[keyof T],
+            [fieldName]: file as T[keyof T],
         }));
 
+        // gera preview
         const objectUrl = URL.createObjectURL(file);
         setPreview(objectUrl);
     };
@@ -103,15 +105,36 @@ export default function InputImage<T>({
                         style={style}
                         disabled={isDisabled}
                         onChange={defaultHandleChange}
-                        hidden
+                        hidden={true}
                     />
                 </label>
+
+                {
+                    showPreview && fileName && (
+                        <button
+                            type='button'
+                            className={styles.simpleButton}
+                            onClick={() => {
+                                if (preview) {
+                                    Swal.fire({
+                                        imageUrl: preview,
+                                        imageAlt: 'Preview',
+                                        titleText: fileName,
+                                        showConfirmButton: false
+                                    });
+                                }
+                            }}
+                        >
+                            Visualizar {fileName}
+                        </button>
+                    )
+                }
 
                 {
                     fileName && !isDisabled && (
                         <button
                             type='button'
-                            className={styles.removeButton}
+                            className={styles.simpleButton}
                             onClick={removeImage}
                         >
                             Remover
@@ -119,16 +142,6 @@ export default function InputImage<T>({
                     )
                 }
             </div>
-
-            {fileName && <span className={styles.fileName}>{fileName}</span>}
-
-            {
-                showPreview && preview && (
-                    <div className={styles.preview}>
-                        <Image src={preview} alt='preview' width={120} height={120} />
-                    </div>
-                )
-            }
         </div>
     )
 }

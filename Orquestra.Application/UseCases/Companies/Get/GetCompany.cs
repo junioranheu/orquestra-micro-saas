@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -33,6 +34,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         FillModulesStr([output]);
         await GetAmounfOfClients([output]);
         GetEnumsDesc([output]);
+        NormalizeLogo([result], [output]);
 
         return output;
     }
@@ -50,6 +52,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         FillModulesStr(output);
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
+        NormalizeLogo(result, output);
 
         return output;
     }
@@ -79,6 +82,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         FillModulesStr(output);
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
+        NormalizeLogo(result, output);
 
         return output;
     }
@@ -150,6 +154,30 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         {
             company.CompanyTypeStr = GetEnumDesc(company.CompanyType);
             company.CompanySituationStr = GetEnumDesc(company.CompanySituation);
+        }
+    }
+
+    private static void NormalizeLogo(List<Company>? result, List<CompanyOutput>? output)
+    {
+        if (result is null || result.Count == 0)
+        {
+            return;
+        }
+
+        if (output is null || output.Count == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < result.Count; i++)
+        {
+            Company company = result[i];
+            CompanyOutput? companyOutput = output.ElementAtOrDefault(i);
+
+            if (companyOutput != null && company.Logo is not null && company.Logo.Length > 0)
+            {
+                companyOutput.LogoBase64 = ConvertBytesToBase64(bytes: company.Logo, contentType: company.LogoContentType);
+            }
         }
     }
     #endregion

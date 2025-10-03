@@ -44,6 +44,8 @@ public sealed class Company: Audit
     #region customization
     public byte[]? Logo { get; set; }
 
+    public string? LogoContentType { get; set; }
+
     [MaxLength(20)]
     public string? Color { get; set; } = string.Empty;
     #endregion

@@ -69,6 +69,14 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
             company.PlanEndDate = GetDate().AddDays(SystemConsts.PlanDurationInDays);
         }
 
+        if (input.LogoFormFile is not null)
+        {
+            using MemoryStream ms = new();
+            await input.LogoFormFile.CopyToAsync(ms);
+            company.Logo = ms.ToArray();
+            company.LogoContentType = input.LogoFormFile.ContentType;
+        }
+
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
 

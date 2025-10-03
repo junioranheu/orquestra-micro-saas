@@ -1,4 +1,5 @@
-﻿using Orquestra.Domain.Consts;
+﻿using Microsoft.AspNetCore.Http;
+using Orquestra.Domain.Consts;
 using System.ComponentModel;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -592,6 +593,97 @@ public sealed class GetTests
 
         // Act & assert;
         Assert.Throws<ArgumentNullException>(CreateSut());
+    }
+
+    [Fact]
+    public void ValidateMaxSizeFile_FileIsNull_ThrowsArgumentNullException()
+    {
+        IFormFile? file = null;
+
+        ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => ValidateMaxSizeFile(file, 1));
+
+        Assert.Equal("file", ex.ParamName);
+    }
+
+    [Fact]
+    public void ValidateMaxSizeFile_FileExceedsLimit_ThrowsInvalidOperationException()
+    {
+        // Criar arquivo fake maior que o limite;
+        byte[] fileContent = new byte[6 * 1024 * 1024]; // 6MB;
+        IFormFile file = new FormFile(new MemoryStream(fileContent), 0, fileContent.Length, "Data", "test.png");
+
+        Assert.Throws<InvalidOperationException>(() => ValidateMaxSizeFile(file, 5)); // Limite: 5MB;
+    }
+
+    [Fact]
+    public void ValidateMaxSizeFile_FileWithinLimit_DoesNotThrow()
+    {
+        byte[] fileContent = new byte[2 * 1024 * 1024]; // 2MB;
+        IFormFile file = new FormFile(new MemoryStream(fileContent), 0, fileContent.Length, "Data", "test.png");
+
+        Exception? ex = Record.Exception(() => ValidateMaxSizeFile(file, 5)); // Limite: 5MB;
+
+        Assert.Null(ex); // Não deve lançar exceção;
+    }
+
+    [Fact]
+    public void Deve_Converter_Bytes_Para_Base64_Com_ContentType_Valido()
+    {
+        // Arrange;
+        byte[] bytes = [1, 2, 3];
+        string contentType = "image/png";
+
+        // Act;
+        string result = ConvertBytesToBase64(bytes, contentType);
+
+        // Assert;
+        Assert.StartsWith("data:image/png;base64,", result);
+        Assert.Contains(Convert.ToBase64String(bytes), result);
+    }
+
+    [Fact]
+    public void Deve_Usar_OctetStream_Quando_ContentType_For_Null()
+    {
+        // Arrange;
+        byte[] bytes = [1, 2, 3];
+
+        // Act;
+        string result = ConvertBytesToBase64(bytes, null);
+
+        // Assert;
+        Assert.StartsWith("data:application/octet-stream;base64,", result);
+        Assert.Contains(Convert.ToBase64String(bytes), result);
+    }
+
+    [Fact]
+    public void Deve_Usar_OctetStream_Quando_ContentType_For_Vazio()
+    {
+        // Arrange;
+        byte[] bytes = [4, 5, 6];
+
+        // Act;
+        string result = ConvertBytesToBase64(bytes, "");
+
+        // Assert;
+        Assert.StartsWith("data:application/octet-stream;base64,", result);
+        Assert.Contains(Convert.ToBase64String(bytes), result);
+    }
+
+    [Fact]
+    public void Deve_Lancar_Excecao_Quando_Bytes_For_Null()
+    {
+        // Act & Assert;
+        Assert.Throws<ArgumentException>(() => ConvertBytesToBase64(null!, "image/png"));
+    }
+
+    [Fact]
+    public void Deve_Lancar_Excecao_Quando_Bytes_For_Vazio()
+    {
+        // Arrange;
+        byte[] vazio = [];
+
+        // Act & Assert;
+        Assert.Throws<ArgumentException>(() => ConvertBytesToBase64(vazio, "image/png"));
     }
 
     #region helpers

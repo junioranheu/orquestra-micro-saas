@@ -124,8 +124,11 @@ export default function EmpresaGerenciar() {
                                 <header className={styles.header}>
                                     <div className={styles.avatar}>
                                         {
-                                            company.logoUrl ? (
-                                                <Image src={company.logoUrl} alt={company.name} priority={true} />
+                                            company.logoBase64 ? (
+                                                <Fragment>
+                                                    <Image src={company.logoBase64} alt={company.name} priority={true} />
+                                                    <h1>{company.logoBase64}</h1>
+                                                </Fragment>
                                             ) : (
                                                 <span>{handleGetNameInitials(company.name)}</span>
                                             )

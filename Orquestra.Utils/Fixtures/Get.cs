@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -564,5 +566,54 @@ public static class Get
         {
             throw new InvalidOperationException($"O arquivo excede o limite de {maxMegabytes}MBs.");
         }
+    }
+
+    /// <summary>
+    /// Verifica se o tamanho de um arquivo enviado (IFormFile) ultrapassa o limite permitido em megabytes.
+    /// Lança uma exceção se o tamanho for excedido.
+    /// </summary>
+    /// <param name="file">Arquivo a ser validado.</param>
+    /// <param name="maxMegabytes">Limite máximo em MB permitido.</param>
+    /// <exception cref="InvalidOperationException">Lançada quando o arquivo excede o tamanho permitido.</exception>
+    public static void ValidateMaxSizeFile(IFormFile? file, int maxMegabytes)
+    {
+        if (file is null)
+        {
+            throw new ArgumentNullException(nameof(file), "Arquivo não pode ser nulo.");
+        }
+
+        long maxBytes = maxMegabytes * 1024L * 1024L;
+
+        if (file.Length > maxBytes)
+        {
+            throw new InvalidOperationException($"O arquivo excede o limite de {maxMegabytes} MBs.");
+        }
+    }
+
+    /// <summary>
+    /// Converte um array de bytes em uma string Base64 no formato Data URI.
+    /// Útil para exibir arquivos binários (como imagens) diretamente no front-end
+    /// sem a necessidade de salvar em disco ou expor um endpoint de download.
+    /// </summary>
+    /// <param name="bytes">Array de bytes representando o conteúdo do arquivo.</param>
+    /// <param name="contentType">
+    /// Tipo MIME do conteúdo (exemplo: "image/png", "image/jpeg", "application/pdf").
+    /// Se for <c>null</c> ou vazio, será usado <c>application/octet-stream</c>.
+    /// </param>
+    /// <returns>
+    /// Uma string no formato <c>data:[contentType];base64,[dados]</c> que pode ser usada
+    /// diretamente como valor em atributos como <c>src</c> de uma tag HTML <c>&lt;img&gt;</c>.
+    /// </returns>
+    public static string ConvertBytesToBase64(byte[] bytes, string? contentType)
+    {
+        if (bytes is null || bytes.Length == 0)
+        {
+            throw new ArgumentException("O array de bytes não pode ser nulo ou vazio.", nameof(bytes));
+        }
+
+        string finalContentType = string.IsNullOrWhiteSpace(contentType) ? "application/octet-stream" : contentType;
+        string base64 = $"data:{finalContentType};base64,{Convert.ToBase64String(bytes)}";
+
+        return base64;
     }
 }
