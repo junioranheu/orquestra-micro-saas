@@ -10,85 +10,26 @@
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
 
+    .title {
+        color: var(--black);
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-right: auto;
+        margin-bottom: 1px;
+
+        .obligatory {
+            // background-color: orange;
+            color: var(--main);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+    }
+
     input {
         // background-color: orange !important;
         // Tamanho do dropdown do react-select;
         height: 2.5rem !important;
         font-size: 0.8rem !important;
         font-family: inherit !important;
-    }
-
-    .wrapperTop {
-        // background-color: blue;
-        display: flex;
-        justify-content: space-between;
-        padding-left: 0.025rem;
-        padding-right: 0.05rem;
-
-        .title {
-            // background-color: orange;
-            color: var(--black);
-            font-size: 0.75rem;
-            font-weight: 500;
-            font-family: inherit !important;
-            margin-right: auto;
-            margin-bottom: 1px;
-
-            .obligatory {
-                // background-color: orange;
-                color: var(--main);
-                font-weight: 600;
-                font-size: 1rem;
-            }
-        }
-
-        .successIcon,
-        .errorIcon {
-            display: flex;
-            justify-content: center;
-            align-content: center;
-            padding-top: 0.05rem;
-            margin-left: auto;
-
-            border-radius: 50%;
-            width: 0.85rem;
-            height: 0.85rem;
-            color: var(--white);
-            font-size: 0.5rem;
-            font-weight: 400;
-        }
-
-        .successIcon {
-            background-color: green;
-        }
-
-        .errorIcon {
-            background-color: tomato;
-        }
-    }
-
-    .wrapper {
-        // background-color: orange;
-        position: relative;
-
-        &.wrapSvg {
-            // background-color: orange;
-
-            svg,
-            &svg,
-            img {
-                // background-color: orange !important;
-                position: absolute;
-                left: 0.25rem;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 1rem;
-            }
-
-            input,
-            &input {
-                padding-left: 1.75rem !important;
-            }
-        }
     }
 }

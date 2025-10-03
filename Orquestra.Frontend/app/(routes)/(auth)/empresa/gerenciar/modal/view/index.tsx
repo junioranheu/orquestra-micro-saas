@@ -3,6 +3,7 @@ import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import InputImage from '@/app/components/input/image';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
@@ -168,7 +169,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='País' fieldName='country' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
-                        <InputMask title='Logo (TEM QUE SER UM INPUT DE IMAGEM)' fieldName='logo' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputImage title='Logo' fieldName='logo' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
 
                         <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
