@@ -60,7 +60,7 @@ public class CompanyController(
 
     [AuthorizeFilter]
     [HttpPut]
-    public async Task<ActionResult> Update(CompanyInput input)
+    public async Task<ActionResult> Update([FromForm] CompanyInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         CompanyOutput output = await _update.Execute(userIdAuth, input);

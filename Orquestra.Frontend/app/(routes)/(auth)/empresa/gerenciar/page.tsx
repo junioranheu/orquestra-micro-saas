@@ -125,10 +125,7 @@ export default function EmpresaGerenciar() {
                                     <div className={styles.avatar}>
                                         {
                                             company.logoBase64 ? (
-                                                <Fragment>
-                                                    <Image src={company.logoBase64} alt={company.name} priority={true} />
-                                                    <h1>{company.logoBase64}</h1>
-                                                </Fragment>
+                                                <Image src={decodeURIComponent(company.logoBase64)} alt={company.name} priority={true} width={0} height={0} />
                                             ) : (
                                                 <span>{handleGetNameInitials(company.name)}</span>
                                             )
@@ -193,6 +190,10 @@ export default function EmpresaGerenciar() {
                                             <p><Icon icon='layers' size='small' /> {company.modulesStr?.length} módulo{company.modulesStr?.length === 1 ? '' : 's'}</p>
                                         )
                                     }
+
+                                    <p>
+                                        <Icon icon='info' size='small' /> {company.status ? 'Validado' : 'Não validado'}
+                                    </p>
                                 </div>
 
                                 {

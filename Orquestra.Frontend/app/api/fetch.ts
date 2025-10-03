@@ -30,20 +30,20 @@ const HTTP = {
 export const BASE = process.env.NEXT_PUBLIC_API_URL_BASE as string;
 
 export const Fetch = {
-    async get({ url, blobExportName = '', setIsRequestLoading }: iFetchProps) {
-        return this.handleRequestAPI({ url, method: HTTP.GET, body: null, blobExportName, isFormData: false, setIsRequestLoading });
+    async get({ url, blobExportName = '', isFormData = false, setIsRequestLoading }: iFetchProps) {
+        return this.handleRequestAPI({ url, method: HTTP.GET, body: null, blobExportName, isFormData: isFormData, setIsRequestLoading });
     },
 
-    async post({ url, body = null, setIsRequestLoading }: iFetchProps) {
-        return this.handleRequestAPI({ url, method: HTTP.POST, body, blobExportName: '', isFormData: false, setIsRequestLoading });
+    async post({ url, body = null, isFormData = false, setIsRequestLoading }: iFetchProps) {
+        return this.handleRequestAPI({ url, method: HTTP.POST, body, blobExportName: '', isFormData: isFormData, setIsRequestLoading });
     },
 
-    async put({ url, body = null, setIsRequestLoading }: iFetchProps) {
-        return this.handleRequestAPI({ url, method: HTTP.PUT, body, blobExportName: '', isFormData: false, setIsRequestLoading });
+    async put({ url, body = null, isFormData = false, setIsRequestLoading }: iFetchProps) {
+        return this.handleRequestAPI({ url, method: HTTP.PUT, body, blobExportName: '', isFormData: isFormData, setIsRequestLoading });
     },
 
-    async delete({ url, body = null, setIsRequestLoading }: iFetchProps) {
-        return this.handleRequestAPI({ url, method: HTTP.DELETE, body, blobExportName: '', isFormData: false, setIsRequestLoading });
+    async delete({ url, body = null, isFormData = false, setIsRequestLoading }: iFetchProps) {
+        return this.handleRequestAPI({ url, method: HTTP.DELETE, body, blobExportName: '', isFormData: isFormData, setIsRequestLoading });
     },
 
     async postIFormFile({ url, body, setIsRequestLoading }: iFetchProps & { body: FormData }) {

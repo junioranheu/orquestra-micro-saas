@@ -56,7 +56,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
         planStartDate: SYSTEM.EMPTY_DATE,
         planEndDate: SYSTEM.EMPTY_DATE,
-        modules: []
+        modulesStr: [],
+        status: false
     });
 
     const handleClose = useCallback(() => {
@@ -91,7 +92,8 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
             planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
             planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
-            modulesStr: company?.modulesStr ?? []
+            modulesStr: company?.modulesStr ?? [],
+            status: company?.status
         });
     }, [isOpen, company, setModalIsOpen, handleClose]);
 
@@ -109,14 +111,31 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
 
         const data = handleLoopFormData(formData);
         const input = data.json as iCompanyOutput;
-        console.log(input);
+        // console.log(input);
 
-        const company = await Fetch.put({ url: CONSTS_COMPANY.put, body: input }) as iCompanyOutput;
+        const formDataInput = new FormData();
+        formDataInput.append('CompanyId', input.companyId.toString());
+        formDataInput.append('Name', input.name);
+        formDataInput.append('Email', input.email);
+        if (input.phone) formDataInput.append('Phone', input.phone);
+        formDataInput.append('CompanyType', input.companyType);
+        if (input.streetAdress) formDataInput.append('Address', input.streetAdress);
+        if (input.city) formDataInput.append('City', input.city);
+        if (input.state) formDataInput.append('State', input.state);
+        if (input.zipCode) formDataInput.append('ZipCode', input.zipCode);
+        if (input.country) formDataInput.append('Country', input.country);
+        if (input.color) formDataInput.append('Color', input.color);
+        if (input.logoFormFile) formDataInput.append('LogoFormFile', input.logoFormFile as Blob, input.logoFormFile.name);
+        formDataInput.append('Status', input.status?.toString() ?? 'false');
+
+        // console.log('formDataInput', formDataInput);
+        const company = await Fetch.put({ url: CONSTS_COMPANY.put, body: formDataInput, isFormData: true }) as iCompanyOutput;
 
         if (company) {
             swal({
                 content: 'Agendamento atualizado com sucesso.',
-                confirmFunction: () => window.location.reload()
+                confirmFunction: () => window.location.reload(),
+                icon: 'success'
             });
 
             handleClose();

@@ -89,24 +89,6 @@ public sealed class CreateUserTests
         CreateUser sut = CreateSut(context, emailServiceMock);
 
         await Assert.ThrowsAsync<NotImplementedException>(() => sut.Execute(input));
-
-        //// Act;
-        //UserOutput output = await sut.Execute(input);
-
-        //// Assert: Usuário criado corretamente;
-        //User? userInDb = await context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == output.UserId);
-
-        //Assert.NotNull(userInDb);
-        //Assert.Equal(input.FullName, userInDb!.FullName);
-        //Assert.Equal(input.Email, userInDb.Email);
-        //Assert.False(userInDb.Status); // Status inicial false;
-
-        //// Assert: E-mail enviado com token correto;
-        //Assert.NotNull(capturedValues);
-        //Assert.Equal("Junior", capturedValues!["[UserName]"]);
-        //Assert.Contains("/User/Verify/", capturedValues["[VerifyUrl]"]);
-
-        //emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Once);
     }
 
     [Fact]

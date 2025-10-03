@@ -159,22 +159,16 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
     private static void NormalizeLogo(List<Company>? result, List<CompanyOutput>? output)
     {
-        if (result is null || result.Count == 0)
+        if (result is null || result.Count == 0 || output is null || output.Count == 0)
         {
             return;
         }
 
-        if (output is null || output.Count == 0)
-        {
-            return;
-        }
+        Dictionary<Guid, CompanyOutput> outputById = output.Where(x => x.CompanyId != Guid.Empty).ToDictionary(x => x.CompanyId);
 
-        for (int i = 0; i < result.Count; i++)
+        foreach (var company in result)
         {
-            Company company = result[i];
-            CompanyOutput? companyOutput = output.ElementAtOrDefault(i);
-
-            if (companyOutput != null && company.Logo is not null && company.Logo.Length > 0)
+            if (company.Logo is not null && company.Logo.Length > 0 && outputById.TryGetValue(company.CompanyId, out CompanyOutput? companyOutput))
             {
                 companyOutput.LogoBase64 = ConvertBytesToBase64(bytes: company.Logo, contentType: company.LogoContentType);
             }
