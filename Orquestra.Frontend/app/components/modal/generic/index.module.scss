@@ -106,10 +106,12 @@
             // background: orange !important;
             background: var(--white);
             padding: 1.5rem;
+            max-height: 70vh;
             display: flex;
             flex-direction: column;
             gap: 24px;
             flex: 1;
+            overflow-y: scroll;
 
             .grid {
                 // background-color: orange;
@@ -190,6 +192,7 @@
             padding: 1.5rem 2rem;
             border-radius: 0 0 16px 16px;
             border-top: 1px solid #e9ecef;
+            margin-top: -1px;
 
             .buttonsRow {
                 // background: tomato !important;
