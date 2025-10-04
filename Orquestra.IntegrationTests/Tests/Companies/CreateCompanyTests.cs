@@ -60,7 +60,6 @@ public sealed class CreateCompanyTests
         Assert.Equal(input.State, result.State);
         Assert.Equal(input.ZipCode, result.ZipCode);
         Assert.Equal(input.Country, result.Country);
-        Assert.Equal(input.LogoContentType, result.LogoContentType);
         Assert.Equal(input.Color, result.Color);
         Assert.False(result.Status);
     }

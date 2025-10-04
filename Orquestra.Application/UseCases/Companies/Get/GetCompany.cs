@@ -39,12 +39,12 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         return output;
     }
 
-    public async Task<List<CompanyOutput>?> Execute()
+    public async Task<List<CompanyOutput>?> Execute(bool onlyStatusTrue)
     {
         var result = await _context.Companies.
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
-                     Where(x => x.Status == true).
+                     Where(x => (!onlyStatusTrue || x.Status == true)).
                      ToListAsync();
 
         var output = result.Adapt<List<CompanyOutput>>();
@@ -57,7 +57,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         return output;
     }
 
-    public async Task<List<CompanyOutput>?> Execute(Guid userId)
+    public async Task<List<CompanyOutput>?> Execute(Guid userId, bool onlyStatusTrue)
     {
         var companiesIds = await _context.CompanyUsers.
                            AsNoTracking().
@@ -74,8 +74,10 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         var result = await _context.Companies.
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
-                     Where(x => companiesIds.Contains(x.CompanyId) && x.Status == true).
-                     ToListAsync();
+                     Where(x => 
+                        companiesIds.Contains(x.CompanyId) && 
+                        (!onlyStatusTrue || x.Status == true)
+                     ).ToListAsync();
 
         var output = result.Adapt<List<CompanyOutput>>();
 

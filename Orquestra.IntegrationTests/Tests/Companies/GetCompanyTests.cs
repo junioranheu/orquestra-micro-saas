@@ -93,7 +93,7 @@ public sealed class GetCompanyTests
         GetCompany sut = CreateSut(context1, user1);
 
         // Act;
-        List<CompanyOutput>? result = await sut.Execute();
+        List<CompanyOutput>? result = await sut.Execute(onlyStatusTrue: true);
 
         // Assert;
         Assert.NotNull(result);
@@ -145,7 +145,7 @@ public sealed class GetCompanyTests
         GetCompany sut = CreateSut(context, user);
 
         // Act;
-        List<CompanyOutput>? result = await sut.Execute(user.UserId);
+        List<CompanyOutput>? result = await sut.Execute(user.UserId, onlyStatusTrue: true);
 
         // Assert;
         Assert.NotNull(result);
@@ -166,7 +166,7 @@ public sealed class GetCompanyTests
         GetCompany sut = CreateSut(context, user);
 
         // Act
-        List<CompanyOutput>? result = await sut.Execute(user.UserId);
+        List<CompanyOutput>? result = await sut.Execute(user.UserId, onlyStatusTrue: true);
 
         // Assert
         Assert.NotNull(result);

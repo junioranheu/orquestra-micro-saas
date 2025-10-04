@@ -27,8 +27,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            DateStart = GetDate().AddDays(1).AddHours(10),
-            DateEnd = GetDate().AddDays(1).AddHours(10).AddHours(1),
+            DateStart = GetDate().AddDays(1),
+            DateEnd = GetDate().AddDays(1).AddHours(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };

@@ -10,7 +10,6 @@ import { ContentLoaderCardGrid } from '@/app/components/content-loader/card';
 import ContentLoaderGrid from '@/app/components/content-loader/grid';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
-import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
@@ -23,7 +22,6 @@ import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import ModalEmpresaGerenciarView from './modal/view';
 import styles from './page.module.scss';
@@ -31,13 +29,12 @@ import styles from './page.module.scss';
 export default function EmpresaGerenciar() {
 
     useTitle('Gerenciar empresas');
-    const router = useRouter();
 
     const me = useApiGetMeSimple();
     const currentMainCompany = useApiGetCurrentMainCompany({});
     const [companies, setCompanies] = useState<iCompanyOutput[]>();
 
-    useApiRequestToSetterOnUrlChange<iCompanyOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}`, setter: setCompanies });
+    useApiRequestToSetterOnUrlChange<iCompanyOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}&onlyStatusTrue=false`, setter: setCompanies });
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -69,8 +66,10 @@ export default function EmpresaGerenciar() {
 
     const [companyClicked, setCompanyClicked] = useState<iCompanyOutput | undefined>(undefined);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [typeModal, setTypeModal] = useState<('edit' | 'create')>('create');
 
-    function handleOpenModalEdit(company: iCompanyOutput) {
+    function handleOpenModal(company: iCompanyOutput | undefined) {
+        setTypeModal(company ? 'edit' : 'create');
         setCompanyClicked(company);
         setIsModalOpen(true);
     }
@@ -102,7 +101,7 @@ export default function EmpresaGerenciar() {
                                 title='Se quiser, cadastre uma nova empresa!'
                                 description={`Tem ou faz parte de outra empresa?<br/>Cadastre-a agora mesmo no ${SYSTEM.NAME}.`}
                                 buttonLabel='Cadastrar nova empresa'
-                                buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
+                                buttonFunction={() => handleOpenModal(undefined)}
                                 style={{ minHeight: '100%' }}
                             />
                         </div>
@@ -112,7 +111,7 @@ export default function EmpresaGerenciar() {
                             title={`${handleGetFirstName(me?.userName)}, tudo parece tão vazio por aqui...`}
                             description='Aparentemente você não faz parte de nenhuma empresa.<br/>Por que não cadastra a sua agora mesmo?'
                             buttonLabel={`Cadastrar sua empresa no ${SYSTEM.NAME}`}
-                            buttonFunction={() => router.push(ROUTES.EMPRESA_CADASTRAR)}
+                            buttonFunction={() => handleOpenModal(undefined)}
                         />
                     )
                 }
@@ -192,7 +191,7 @@ export default function EmpresaGerenciar() {
                                     }
 
                                     <p>
-                                        <Icon icon='info' size='small' /> {company.status ? 'Validado' : 'Não validado'}
+                                        <Icon icon='info' size='small' /> {company.status ? 'Validado' : 'Não validado REDDDDDDDDDDDDDDDDD'}
                                     </p>
                                 </div>
 
@@ -215,7 +214,7 @@ export default function EmpresaGerenciar() {
 
                                     {
                                         currentMainCompany?.isAdm && (
-                                            <Button label='Editar' handleFunction={() => handleOpenModalEdit(company)} isStyleSimple={true} />
+                                            <Button label='Editar' handleFunction={() => handleOpenModal(company)} isStyleSimple={true} />
                                         )
                                     }
 
@@ -234,7 +233,7 @@ export default function EmpresaGerenciar() {
             <ModalEmpresaGerenciarView
                 isOpen={isModalOpen}
                 setModalIsOpen={setIsModalOpen}
-                type='edit'
+                type={typeModal}
                 company={companyClicked}
             />
         </Fragment>

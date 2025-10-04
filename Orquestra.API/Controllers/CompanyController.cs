@@ -40,7 +40,7 @@ public class CompanyController(
 
     [AuthorizeFilter]
     [HttpPost]
-    public async Task<ActionResult> Create(CompanyInput input)
+    public async Task<ActionResult> Create([FromForm] CompanyInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         CompanyOutput output = await _create.Execute(userIdAuth, input);
@@ -70,16 +70,16 @@ public class CompanyController(
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet("GetAll")]
-    public async Task<ActionResult> GetAll()
+    public async Task<ActionResult> GetAll(bool onlyStatusTrue)
     {
-        List<CompanyOutput>? output = await _get.Execute();
+        List<CompanyOutput>? output = await _get.Execute(onlyStatusTrue);
 
         return Ok(output);
     }
 
     [AuthorizeFilter]
     [HttpGet("GetAllByUserId")]
-    public async Task<ActionResult> GetAllByUserId(Guid userId)
+    public async Task<ActionResult> GetAllByUserId(Guid userId, bool onlyStatusTrue = true)
     {
         if (userId == Guid.Empty)
         {
@@ -94,7 +94,7 @@ public class CompanyController(
             throw new UnauthorizedAccessException("Você só pode visualizar a sua relação de empresas.");
         }
 
-        List<CompanyOutput>? output = await _get.Execute(userId);
+        List<CompanyOutput>? output = await _get.Execute(userId, onlyStatusTrue);
 
         return Ok(output);
     }

@@ -18,6 +18,7 @@ import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from
 import swal from '@/app/functions/swal';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useWindowSize from '@/app/hooks/useWindowSize';
+import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iProps {
@@ -70,7 +71,16 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
     }, [setModalIsOpen]);
 
     useEffect(() => {
-        if (!isOpen || !company || type !== 'edit') {
+        handleClearFormData(setFormData);
+        setSaving(false);
+        setEditing(false);
+
+        if (type === 'create') {
+            setEditing(true);
+            return;
+        }
+
+        if (!isOpen || !company) {
             return;
         }
 
@@ -104,7 +114,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
     const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
-        if (!formData.name || !formData.email || !formData.companyType) {
+        if (!formData.name || !formData.email || !formData.phone || !formData.companyType) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
         }
@@ -117,7 +127,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
         // console.log(input);
 
         const formDataInput = new FormData();
-        formDataInput.append('CompanyId', input.companyId.toString());
+        formDataInput.append('CompanyId', input.companyId ? input.companyId.toString() : Guid.create().toString());
         formDataInput.append('Name', input.name);
         formDataInput.append('Email', input.email);
 
@@ -142,11 +152,31 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
         formDataInput.append('Status', input.status?.toString() ?? 'false');
 
         // console.log('formDataInput', formDataInput);
+
+        if (type === 'create') {
+            const company = await Fetch.post({ url: CONSTS_COMPANY.post, body: formDataInput, isFormData: true }) as iCompanyOutput;
+
+            if (company) {
+                swal({
+                    content: 'Empresa registrada com sucesso. Além disso, ela foi definida como sua empresa principal.',
+                    confirmFunction: () => window.location.reload(),
+                    icon: 'success'
+                });
+
+                handleClose();
+                return;
+            }
+
+            setEditing(true);
+            setSaving(false);
+            return;
+        }
+
         const company = await Fetch.put({ url: CONSTS_COMPANY.put, body: formDataInput, isFormData: true }) as iCompanyOutput;
 
         if (company) {
             swal({
-                content: 'Agendamento atualizado com sucesso.',
+                content: 'Empresa atualizada com sucesso.',
                 confirmFunction: () => window.location.reload(),
                 icon: 'success'
             });
@@ -176,7 +206,9 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
-                        <h1 className={styles.inputTitle}><ContentLoaderText text={formData?.name} /></h1>
+                        <h1 className={styles.inputTitle}>
+                            {type === 'create' ? (formData.name ?? 'Nova empresa') : <ContentLoaderText text={formData?.name} />}
+                        </h1>
                     </div>
 
                     <div className={styles.modalHeaderRight}>
@@ -206,14 +238,20 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
                         <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar logo' />
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
 
-                        <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
-                        <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
-                        <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
+                        {
+                            type === 'edit' && (
+                                <Fragment>
+                                    <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
+                                    <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
+                                    <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
 
-                        <div className={styles.div}>
-                            <label>Módulos</label>
-                            <textarea className={styles.textarea} rows={3} value={formData.modulesStr?.join('\n') ?? ''} readOnly={true} />
-                        </div>
+                                    <div className={styles.div}>
+                                        <label>Módulos</label>
+                                        <textarea className={styles.textarea} rows={3} value={formData.modulesStr?.join('\n') ?? ''} readOnly={true} />
+                                    </div>
+                                </Fragment>
+                            )
+                        }
                     </div>
                 </main>
 
@@ -222,23 +260,31 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
                         <Button label='Fechar' handleFunction={() => handleClose()} isStyleSimple={true} />
                     </div>
 
-                    <div className={styles.buttonsRow}>
-                        {
-                            !editing ? (
-                                <Fragment>
-                                    <Button label='Módulos' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} isStyleSimple={true} />
-                                    <Button label='Membros' handleFunction={() => window.open(ROUTES.EMPRESA_MEMBROS, '_blank')} isStyleSimple={true} />
-                                    <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} />
-                                    <Button label='Editar' handleFunction={() => setEditing(true)} />
-                                </Fragment>
-                            ) : (
-                                <Fragment>
-                                    <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
-                                    <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
-                                </Fragment>
-                            )
-                        }
-                    </div>
+                    {
+                        type === 'create' ? (
+                            <div className={styles.buttonsRow}>
+                                <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
+                            </div>
+                        ) : (
+                            <div className={styles.buttonsRow}>
+                                {
+                                    !editing ? (
+                                        <Fragment>
+                                            <Button label='Módulos' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} isStyleSimple={true} />
+                                            <Button label='Membros' handleFunction={() => window.open(ROUTES.EMPRESA_MEMBROS, '_blank')} isStyleSimple={true} />
+                                            <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} />
+                                            <Button label='Editar' handleFunction={() => setEditing(true)} />
+                                        </Fragment>
+                                    ) : (
+                                        <Fragment>
+                                            <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
+                                            <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
+                                        </Fragment>
+                                    )
+                                }
+                            </div>
+                        )
+                    }
                 </footer>
             </div>
         </ModalGeneric>
