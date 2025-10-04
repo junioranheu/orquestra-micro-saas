@@ -234,6 +234,7 @@ export default function EmpresaGerenciar() {
             <ModalEmpresaGerenciarView
                 isOpen={isModalOpen}
                 setModalIsOpen={setIsModalOpen}
+                type='edit'
                 company={companyClicked}
             />
         </Fragment>

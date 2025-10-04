@@ -32,7 +32,7 @@ export default function InputImage<T>({
     svg_component = null,
 }: iProps<T>) {
 
-    const value_formData = formData?.[fieldName] as unknown as number[] | null;
+    const value_formData = formData?.[fieldName] as File | string | number[] | null;
     const [preview, setPreview] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string | null>(null);
 
@@ -47,13 +47,13 @@ export default function InputImage<T>({
 
         setFileName(file.name);
 
-        // salva o próprio File no formData
+        // Salva o próprio File no formData;
         setFormData && setFormData((prev: T) => ({
             ...prev,
             [fieldName]: file as T[keyof T],
         }));
 
-        // gera preview
+        // Gera preview;
         const objectUrl = URL.createObjectURL(file);
         setPreview(objectUrl);
     };
@@ -67,16 +67,38 @@ export default function InputImage<T>({
             [fieldName]: [] as unknown as T[keyof T],
         }));
 
-        // Resetar o input pra permitir selecionar mesma imagem de novo
+        // Resetar o input pra permitir selecionar mesma imagem de novo;
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
     };
 
     useEffect(() => {
-        if (!value_formData || value_formData.length === 0) {
+        if (!value_formData) {
             setPreview(null);
             setFileName(null);
+            return;
+        }
+
+        // Se já for um File;
+        if (value_formData instanceof File) {
+            setFileName(value_formData.name);
+            setPreview(URL.createObjectURL(value_formData));
+            return;
+        }
+
+        // Se for base64 string;
+        if (typeof value_formData === 'string' && value_formData.startsWith('data:')) {
+            setFileName('preview.png');
+            setPreview(value_formData);
+            return;
+        }
+
+        // Se for byte array (number[]);
+        if (Array.isArray(value_formData) && value_formData.length > 0) {
+            const blob = new Blob([new Uint8Array(value_formData)], { type: 'image/png' });
+            setFileName('preview.png');
+            setPreview(URL.createObjectURL(blob));
             return;
         }
     }, [value_formData]);
@@ -119,7 +141,6 @@ export default function InputImage<T>({
                                     Swal.fire({
                                         imageUrl: preview,
                                         imageAlt: 'Preview',
-                                        titleText: fileName,
                                         showConfirmButton: false
                                     });
                                 }

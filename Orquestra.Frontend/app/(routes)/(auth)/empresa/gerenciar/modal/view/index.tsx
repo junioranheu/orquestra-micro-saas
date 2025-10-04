@@ -11,6 +11,7 @@ import Tags from '@/app/components/tags';
 import { COLORS } from '@/app/consts/colors';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import handleConvertBase64ToFile from '@/app/functions/convert.base64ToFile';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -22,10 +23,11 @@ import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } 
 interface iProps {
     isOpen: boolean;
     setModalIsOpen: Dispatch<SetStateAction<boolean>>;
+    type: 'edit' | 'create';
     company: iCompanyOutput | undefined;
 }
 
-export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, company }: iProps) {
+export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type, company }: iProps) {
 
     const windowSize = useWindowSize();
 
@@ -42,7 +44,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
         phone: '',
         companyType: '',
 
-        streetAdress: '',
+        address: '',
         city: '',
         state: '',
         zipCode: '',
@@ -68,7 +70,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
     }, [setModalIsOpen]);
 
     useEffect(() => {
-        if (!isOpen || !company) {
+        if (!isOpen || !company || type !== 'edit') {
             return;
         }
 
@@ -79,13 +81,14 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
             phone: company?.phone ?? '',
             companyType: company?.companyType ?? '',
 
-            streetAdress: company?.streetAdress ?? '',
+            address: company?.address ?? '',
             city: company?.city ?? '',
             state: company?.state ?? '',
             zipCode: company?.zipCode ?? '',
             country: company?.country ?? '',
 
-            logoFormFile: company?.logoFormFile ?? null,
+            logoBase64: company?.logoBase64 ?? '',
+            logoFormFile: company?.logoBase64 ? handleConvertBase64ToFile(company?.logoBase64, 'logo') : null,
             color: company?.color ?? '',
 
             companySituation: company?.companySituation ?? '',
@@ -95,7 +98,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
             modulesStr: company?.modulesStr ?? [],
             status: company?.status
         });
-    }, [isOpen, company, setModalIsOpen, handleClose]);
+    }, [isOpen, type, company, setModalIsOpen, handleClose]);
 
     const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -117,15 +120,25 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
         formDataInput.append('CompanyId', input.companyId.toString());
         formDataInput.append('Name', input.name);
         formDataInput.append('Email', input.email);
-        if (input.phone) formDataInput.append('Phone', input.phone);
+
+        if (input.phone) {
+            const cleanedPhone = input.phone.replace(/[()\s-]/g, '');
+            formDataInput.append('Phone', cleanedPhone);
+        }
+
         formDataInput.append('CompanyType', input.companyType);
-        if (input.streetAdress) formDataInput.append('Address', input.streetAdress);
+        if (input.address) formDataInput.append('Address', input.address);
         if (input.city) formDataInput.append('City', input.city);
         if (input.state) formDataInput.append('State', input.state);
-        if (input.zipCode) formDataInput.append('ZipCode', input.zipCode);
+
+        if (input.zipCode) {
+            const cleanedZipCode = input.zipCode.replace(/[()\s-]/g, '');
+            formDataInput.append('ZipCode', cleanedZipCode);
+        }
+
         if (input.country) formDataInput.append('Country', input.country);
         if (input.color) formDataInput.append('Color', input.color);
-        if (input.logoFormFile) formDataInput.append('LogoFormFile', input.logoFormFile as Blob, input.logoFormFile.name);
+        if (input.logoFormFile && input.logoFormFile instanceof File) formDataInput.append('LogoFormFile', input.logoFormFile as Blob, input.logoFormFile.name);
         formDataInput.append('Status', input.status?.toString() ?? 'false');
 
         // console.log('formDataInput', formDataInput);
@@ -184,13 +197,13 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, comp
                         <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} mask='(00) 00000-0000' />
                         <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.value.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
 
-                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Rua' fieldName='streetAdress' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' />
+                        <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='País' fieldName='country' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
-                        <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar logo' />
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
 
                         <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />

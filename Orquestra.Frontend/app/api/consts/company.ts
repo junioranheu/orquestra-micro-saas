@@ -1,5 +1,4 @@
 import { BASE } from '@/app/api/fetch';
-import { File } from 'buffer';
 import { Guid } from 'guid-typescript';
 import iCompanyUser from './company-user';
 
@@ -25,14 +24,14 @@ export default interface iCompanyOutput {
     phone?: string;
     companyType: string;
 
-    streetAdress?: string;
+    address?: string;
     city?: string;
     state?: string;
     zipCode?: string;
     country?: string;
 
     // logo?: number[]; // Entidade;
-    logoFormFile?: File | null; // Input;
+    logoFormFile?: globalThis.File | null; // Input;
     logoBase64?: string; // Output;
     logoContentType?: string;
     color?: string;

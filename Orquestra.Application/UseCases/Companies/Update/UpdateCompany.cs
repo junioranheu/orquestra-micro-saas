@@ -42,6 +42,7 @@ public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         company.State = input.State;
         company.ZipCode = input.ZipCode;
         company.Country = input.Country;
+        company.Color = input.Color;
 
         if (input.LogoFormFile is not null)
         {
@@ -49,6 +50,11 @@ public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(de
             await input.LogoFormFile.CopyToAsync(ms);
             company.Logo = ms.ToArray();
             company.LogoContentType = input.LogoFormFile.ContentType;
+        }
+        else
+        {
+            company.Logo = null;
+            company.LogoContentType = null;
         }
 
         _context.Update(company);

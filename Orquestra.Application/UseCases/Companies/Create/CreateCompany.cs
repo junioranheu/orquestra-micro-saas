@@ -76,6 +76,11 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
             company.Logo = ms.ToArray();
             company.LogoContentType = input.LogoFormFile.ContentType;
         }
+        else
+        {
+            company.Logo = null;
+            company.LogoContentType = null;
+        }
 
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();

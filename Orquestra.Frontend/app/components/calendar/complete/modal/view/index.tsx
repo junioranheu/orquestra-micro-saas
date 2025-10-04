@@ -29,7 +29,7 @@ import Swal from 'sweetalert2';
 interface iProps {
     isOpen: boolean;
     setModalIsOpen: Dispatch<SetStateAction<boolean>>;
-    type: 'edit' | 'create' | undefined;
+    type: 'edit' | 'create';
     event: iEvent | undefined;
     companyId: Guid;
     companyUsers: iUser[] | undefined;
