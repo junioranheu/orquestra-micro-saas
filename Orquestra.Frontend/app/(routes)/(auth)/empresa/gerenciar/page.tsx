@@ -190,9 +190,18 @@ export default function EmpresaGerenciar() {
                                         )
                                     }
 
-                                    <p>
-                                        <Icon icon='info' size='small' /> {company.status ? 'Validado' : 'Não validado REDDDDDDDDDDDDDDDDD'}
-                                    </p>
+                                    {
+                                        company.status ? (
+                                            <p>
+                                                <Icon icon='check-circle' size='small' /> Empresa validada
+                                            </p>
+                                        ) : (
+                                            <p>
+                                                <Icon icon='x-circle' size='small' /> <b>Empresa pendente de validação</b>
+                                            </p>
+                                        )
+                                    }
+
                                 </div>
 
                                 {
