@@ -100,13 +100,14 @@
 
             .content {
                 // background-color: purple;
-                flex: 1;
 
                 p {
+                    // background-color: tomato;
+                    width: fit-content;
                     display: flex;
                     align-items: center;
                     gap: 0.4rem;
-                    margin: 0.3rem 0;
+                    margin-top: 0.35rem;
                     font-size: 0.9rem;
                     color: var(--gray-dark);
 
@@ -122,6 +123,7 @@
                 flex-wrap: wrap;
                 gap: 0.4rem;
                 margin-top: 1rem;
+                margin-bottom: 1rem;
 
                 .module {
                     background: var(--contrast-light);
@@ -137,7 +139,6 @@
                 margin-top: auto;
                 display: flex;
                 justify-content: flex-end;
-                margin-top: 1rem;
                 gap: 1rem;
 
                 button {

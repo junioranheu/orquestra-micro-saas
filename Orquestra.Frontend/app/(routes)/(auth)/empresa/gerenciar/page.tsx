@@ -148,11 +148,7 @@ export default function EmpresaGerenciar() {
                                 </header>
 
                                 <div className={styles.content}>
-                                    <p>
-                                        <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
-                                    </p>
-
-                                    {
+                                    {/* {
                                         company.planStartDate && company.planEndDate && (
                                             <Tippy content='Vigência do plano atual'>
                                                 <p>
@@ -162,10 +158,30 @@ export default function EmpresaGerenciar() {
                                                 </p>
                                             </Tippy>
                                         )
-                                    }
+                                    } */}
 
                                     <p>
                                         <Icon icon='info' size='small' /> {company.companySituationStr}
+                                    </p>
+
+                                    {
+                                        company.status ? (
+                                            <p>
+                                                <Icon icon='check-circle' size='small' /> Empresa validada
+                                            </p>
+                                        ) : (
+                                            <Tippy content={currentMainCompany?.isAdm
+                                                ? 'Verifique o e-mail enviado para concluir a validação da empresa.'
+                                                : 'Pendente de validação. Peça ao administrador para que verifique o e-mail enviado para concluir a validação da empresa.'}>
+                                                <p>
+                                                    <Icon icon='x-circle' size='small' /> <b>Empresa pendente de validação</b>
+                                                </p>
+                                            </Tippy>
+                                        )
+                                    }
+
+                                    <p>
+                                        <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
                                     </p>
 
                                     <p>
@@ -174,34 +190,29 @@ export default function EmpresaGerenciar() {
 
                                     {
                                         currentMainCompany?.companyId == company.companyId && (
-                                            <p><Icon icon='star' size='small' /> Empresa principal</p>
+                                            <p>
+                                                <Icon icon='star' size='small' /> Empresa principal
+                                            </p>
                                         )
                                     }
 
                                     {
                                         currentMainCompany?.isAdm && (
-                                            <p><Icon icon='shield' size='small' /> Você é um administador</p>
+                                            <p>
+                                                <Icon icon='shield' size='small' /> Você é um administrador
+                                            </p>
                                         )
                                     }
 
                                     {
                                         company?.modulesStr && company?.modulesStr?.length > 0 && (
-                                            <p><Icon icon='layers' size='small' /> {company.modulesStr?.length} módulo{company.modulesStr?.length === 1 ? '' : 's'}</p>
+                                            <Tippy content={company.modulesStr.join('; ')}>
+                                                <p>
+                                                    <Icon icon='layers' size='small' /> {company.modulesStr?.length} módulo{company.modulesStr?.length === 1 ? '' : 's'}
+                                                </p>
+                                            </Tippy>
                                         )
                                     }
-
-                                    {
-                                        company.status ? (
-                                            <p>
-                                                <Icon icon='check-circle' size='small' /> Empresa validada
-                                            </p>
-                                        ) : (
-                                            <p>
-                                                <Icon icon='x-circle' size='small' /> <b>Empresa pendente de validação</b>
-                                            </p>
-                                        )
-                                    }
-
                                 </div>
 
                                 {
