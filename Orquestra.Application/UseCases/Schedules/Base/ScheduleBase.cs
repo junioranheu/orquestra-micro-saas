@@ -70,7 +70,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         // Verifica se os dias (início e fim) estão diferentes;
         if (dateStartBr.Date != dateEndBr.Date)
         {
-            throw new ArgumentException($"O agendamento deve terminar até 23:59 do dia {{({GetDateDetails(date: input.DateStart, withHour: false)}).");
+            throw new ArgumentException($"O agendamento deve terminar até 23:59 do dia {GetDateDetails(date: input.DateStart, withHour: false)}.");
         }
 
         _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);

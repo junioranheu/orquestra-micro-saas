@@ -27,8 +27,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            DateStart = GetDate().AddDays(1),
-            DateEnd = GetDate().AddDays(1).AddHours(1),
+            DateStart = GetDate().AddDays(1).Date,
+            DateEnd = GetDate().AddDays(1).Date.AddHours(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
@@ -184,8 +184,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            DateStart = GetDate().AddDays(1),
-            DateEnd = GetDate().AddDays(1).AddMinutes(1),
+            DateStart = GetDate().AddDays(1).Date,
+            DateEnd = GetDate().AddDays(1).Date.AddMinutes(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
@@ -226,8 +226,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            DateStart = GetDate().AddDays(1),
-            DateEnd = GetDate().AddDays(1).AddHours(1),
+            DateStart = GetDate().AddDays(1).Date,
+            DateEnd = GetDate().AddDays(1).Date.AddHours(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Completed
         };
@@ -249,8 +249,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            DateStart = GetDate().AddDays(1),
-            DateEnd = GetDate().AddDays(1).AddHours(1),
+            DateStart = GetDate().AddDays(1).Date,
+            DateEnd = GetDate().AddDays(1).Date.AddHours(1),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
@@ -272,8 +272,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            DateStart = GetDate().AddDays(1),
-            DateEnd = GetDate().AddDays(1).AddHours(1),
+            DateStart = GetDate().AddDays(1).Date,
+            DateEnd = GetDate().AddDays(1).Date.AddHours(1),
             UsersIds = [invalidUser.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };
