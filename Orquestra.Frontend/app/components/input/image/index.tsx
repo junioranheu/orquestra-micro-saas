@@ -48,10 +48,12 @@ export default function InputImage<T>({
         setFileName(file.name);
 
         // Salva o próprio File no formData;
-        setFormData && setFormData((prev: T) => ({
-            ...prev,
-            [fieldName]: file as T[keyof T],
-        }));
+        if (setFormData) {
+            setFormData((prev: T) => ({
+                ...prev,
+                [fieldName]: file as T[keyof T],
+            }));
+        }
 
         // Gera preview;
         const objectUrl = URL.createObjectURL(file);
@@ -62,10 +64,12 @@ export default function InputImage<T>({
         setPreview(null);
         setFileName(null);
 
-        setFormData && setFormData((prev: T) => ({
-            ...prev,
-            [fieldName]: [] as unknown as T[keyof T],
-        }));
+        if (setFormData) {
+            setFormData((prev: T) => ({
+                ...prev,
+                [fieldName]: [] as unknown as T[keyof T],
+            }));
+        }
 
         // Resetar o input pra permitir selecionar mesma imagem de novo;
         if (fileInputRef.current) {

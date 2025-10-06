@@ -54,10 +54,12 @@ export default function InputMask<T>({
     const svgDefaultProps = { width: 20 };
 
     const defaultHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormData && setFormData((prev: T) => ({
-            ...prev,
-            [fieldName]: e.target.value as T[keyof T],
-        }));
+        if (setFormData) {
+            setFormData((prev: T) => ({
+                ...prev,
+                [fieldName]: e.target.value as T[keyof T],
+            }));
+        }
     };
 
     useEffect(() => {
