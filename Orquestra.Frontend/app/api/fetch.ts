@@ -207,8 +207,8 @@ export function handleCheckApiError(result: any): [boolean, string] {
         return [false, ''];
     }
 
-    const isError = (result?.error || result?.status !== 200 || result?.code !== 200) as boolean;
+    const hasError = (result?.error || result?.status !== 200 || result?.code !== 200) as boolean;
     const msg = result?.messages?.[0] || result?.error;
 
-    return [isError, msg];
+    return [hasError, msg];
 }

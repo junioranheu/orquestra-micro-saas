@@ -19,13 +19,13 @@ public sealed class ErrorFilter(ILogger<ErrorFilter> logger, ICreateLog createLo
         string errorDetailed = $"Ocorreu um erro ao processar sua requisição. Data: {GetDateDetails()}. Caminho: {context.HttpContext.Request.Path}. {(!string.IsNullOrEmpty(ex.InnerException?.Message) ? $"Mais informações: {ex.InnerException.Message}" : $"Mais informações: {ex.Message}")}";
         string errorSimple = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
 
-        var result = new BadRequestObjectResult(new
+        BadRequestObjectResult result = new(new
         {
             Code = StatusCodes.Status500InternalServerError,
             Date = GetDateDetails(),
             context.HttpContext.Request.Path,
             Messages = new string[] { errorSimple },
-            IsError = true
+            HasError = true
         });
 
         (Guid? userId, string _, UserRoleEnum[] _) = new BaseFilter().GetUserInfo(context);

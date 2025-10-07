@@ -145,7 +145,7 @@ public static class DependencyInjection
                              Date = GetDateDetails(),
                              context.HttpContext.Request.Path,
                              Messages = message,
-                             IsError = true
+                             HasError = true
                          });
 
                          return context.Response.WriteAsync(result);

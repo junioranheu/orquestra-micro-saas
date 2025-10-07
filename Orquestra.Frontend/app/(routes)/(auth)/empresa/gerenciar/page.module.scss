@@ -21,7 +21,7 @@
     .grid {
         display: grid;
         gap: 1rem;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
 
         .card {
             background: #ffffff;
@@ -118,12 +118,11 @@
             }
 
             .modules {
-                // background-color: orange !important;
+                // background-color: tomato !important;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 0.4rem;
                 margin-top: 1rem;
-                margin-bottom: 1rem;
 
                 .module {
                     background: var(--contrast-light);
@@ -140,6 +139,7 @@
                 display: flex;
                 justify-content: flex-end;
                 gap: 1rem;
+                margin-top: 1rem;
 
                 button {
                     // background-color: orange !important;
@@ -151,17 +151,50 @@
     }
 }
 
-@media (max-width: 1281px) {
+// Media queries
+@media (max-width: 1536px) {
     .main {
-        // background-color: orange;
+        // background-color: blue !important;
 
         .flex>* {
             flex: 0 0 100%;
         }
 
         .grid {
-            // background-color: orange !important;
+            // background-color: tomato !important;
             grid-template-columns: repeat(3, 1fr);
         }
     }
 }
+
+@media (max-width: 1281px) {
+    .main {
+        // background-color: orange;
+
+        .grid {
+            // background-color: tomato !important;
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
+
+// big landscape tablets, laptops, and desktops 
+@media (max-width:1025px) {}
+
+// tablet, landscape iPad, lo-res laptops ands desktops 
+@media (max-width:801px) {
+    .main {
+        // background-color: orange;
+
+        .grid {
+            // background-color: purple !important;
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+}
+
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+@media (max-width:600px) {}
+
+// smartphones, Android phones, landscape iPhone
+@media (max-width:480px) {}
