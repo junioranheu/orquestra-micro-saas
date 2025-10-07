@@ -188,9 +188,9 @@ public static class DependencyAppConfiguration
 
     private static async Task HandleDbInitialize(WebApplication app)
     {
-        bool isApplyReset = false;
-        bool isApplyMigrations = false;
-        bool isApplySeed = false;
+        bool isApplyReset = true;
+        bool isApplyMigrations = true;
+        bool isApplySeed = true;
 
         if (!isApplyReset && !isApplyMigrations && !isApplySeed)
         {
@@ -201,6 +201,6 @@ public static class DependencyAppConfiguration
         IServiceProvider services = scope.ServiceProvider;
         Context context = services.GetRequiredService<Context>();
 
-        await DbInitializer.Initialize(context, isApplyReset, isApplyMigrations, isApplySeed);
+        await DbInitializer.Initialize(context, isDev: app.Environment.IsDevelopment(), isApplyReset, isApplyMigrations, isApplySeed);
     }
 }

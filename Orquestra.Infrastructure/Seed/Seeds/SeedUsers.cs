@@ -13,7 +13,7 @@ public sealed class SeedUsers
         #region seed
         if (!await context.Users.AsNoTracking().AnyAsync())
         {
-            await context.Users.AddAsync(new User() { UserId = Guid.NewGuid(),  FullName = "Adm", Email = "adm", Password = EncryptPassword("123"), Role = UserRoleEnum.Administrator });
+            await context.Users.AddAsync(new User() { UserId = Guid.NewGuid(),  FullName = "Sys Admin", Email = "adm@gmail.com", Password = EncryptPassword("123456"), Role = UserRoleEnum.Administrator });
         }
         #endregion
     }
