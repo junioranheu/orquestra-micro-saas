@@ -66,10 +66,11 @@ export default function CriarConta() {
 
         try {
             await handleSetCookieAndLogin({ type: 'create', user: user, setAuth: setAuth, router: router });
+            setIsRequestLoading(false);
             router.push(ROUTES.LOGIN);
 
             swal({
-                content: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta usando o e-mail que foi enviado para ${formData.email}</b>.`,
+                content: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta</b> usando o e-mail que foi enviado para ${formData.email}.`,
                 icon: 'success'
             });
         } catch {

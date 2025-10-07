@@ -82,6 +82,9 @@ public enum CompanyTypeEnum
     [Description("Fotógrafo")]
     Fotografo = 26,
 
+    [Description("Freelancer")]
+    Freelancer = 27,
+
     [Description("Outro")]
     Outro = 99
 }

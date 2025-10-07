@@ -58,7 +58,7 @@ export default function CardCalendar() {
                                         title='Não perca mais tempo!'
                                         description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação abaixo:'
                                         buttonLabel='Gerenciar situação da empresa'
-                                        buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
+                                        buttonFunction={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s} />
                                 )
                             }

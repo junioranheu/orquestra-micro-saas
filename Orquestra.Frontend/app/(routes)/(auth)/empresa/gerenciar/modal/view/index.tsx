@@ -242,13 +242,20 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
                             type === 'edit' && (
                                 <Fragment>
                                     <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
-                                    <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
-                                    <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
 
-                                    <div className={styles.div}>
-                                        <label>Módulos</label>
-                                        <textarea className={styles.textarea} rows={3} value={formData.modulesStr?.join('\n') ?? ''} readOnly={true} />
-                                    </div>
+                                    {
+                                        formData.companySituation?.toString() !== '1' && (
+                                            <Fragment>
+                                                <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
+                                                <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
+
+                                                <div className={styles.div}>
+                                                    <label>Módulos</label>
+                                                    <textarea className={styles.textarea} rows={3} value={formData.modulesStr?.join('\n') ?? ''} readOnly={true} />
+                                                </div>
+                                            </Fragment>
+                                        )
+                                    }
                                 </Fragment>
                             )
                         }
