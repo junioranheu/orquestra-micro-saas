@@ -1,4 +1,5 @@
 resolver os "TO DO"
 atualizar o sistema para o .NET 10
 
+RETESTAR TUDO DO 0 E IR ARRUMANDO OS BUGS
 QUANDO MARCAR UM SCHEDULE, MANDAR EMAIL PRO CLIENTE E PRO PROFISSIONAL INSERIDO (se for nulo manda pra todos)

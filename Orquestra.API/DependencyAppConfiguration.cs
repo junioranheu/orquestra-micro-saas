@@ -188,9 +188,9 @@ public static class DependencyAppConfiguration
 
     private static async Task HandleDbInitialize(WebApplication app)
     {
-        bool isApplyReset = true;
-        bool isApplyMigrations = true;
-        bool isApplySeed = true;
+        bool isApplyReset = false;
+        bool isApplyMigrations = false;
+        bool isApplySeed = false;
 
         if (!isApplyReset && !isApplyMigrations && !isApplySeed)
         {
