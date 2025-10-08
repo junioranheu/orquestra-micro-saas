@@ -17,6 +17,7 @@ import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
+import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -31,7 +32,9 @@ export default function Login() {
     const router = useRouter();
     const [, setAuth] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
+
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
+    useIsSupportedBrowser();
 
     const refButton = useRef<HTMLButtonElement>(null);
 

@@ -13,6 +13,7 @@ import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
+import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -24,7 +25,10 @@ export default function CriarConta() {
     const router = useRouter();
     const [, setAuth] = useUserContext();
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
+
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
+    useIsSupportedBrowser();
+
     const [token, setToken] = useState('');
 
     const refButton = useRef<HTMLButtonElement>(null);
