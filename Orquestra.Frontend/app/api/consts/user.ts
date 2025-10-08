@@ -26,7 +26,7 @@ export interface iUser {
     refreshTokenExpirationDate: string;
 }
 
-export interface iUserResponse {
-    linq: iUser[];
+export interface iUserPaginated {
+    output: iUser[];
     count: number;
 }

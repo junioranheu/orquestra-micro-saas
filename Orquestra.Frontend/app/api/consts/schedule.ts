@@ -2,7 +2,7 @@ import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
 import iClient from './client';
 import iCompanyOutput from './company';
-import { iUserResponse } from './user';
+import { iUserPaginated } from './user';
 
 const controller = 'api/Schedule';
 
@@ -34,5 +34,5 @@ export default interface iSchedule {
 
     // Extras;
     observations: string[]; // Avisos do sistema;
-    usersOutput?: iUserResponse[];
+    usersOutput?: iUserPaginated[];
 }
