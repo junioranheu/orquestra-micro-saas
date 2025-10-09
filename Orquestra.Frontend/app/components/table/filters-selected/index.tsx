@@ -1,6 +1,5 @@
 'use client';
 import Tag from '@/app/components/tag';
-import handleNormalizeFetchUrl from '@/app/functions/normalize.fetch-url';
 import { handleLoopFormData } from '@/app/functions/set.formState';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';
@@ -24,49 +23,56 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
 
     useEffect(() => {
         function handleGetBaseUrl() {
-            const baseUrl = apiUrlRequest.substring(0, apiUrlRequest.indexOf('?'));
+            let baseUrl = apiUrlRequest;
+
+            const [path, queryString] = apiUrlRequest.split('?');
+
+            if (queryString) {
+                // tenta achar algo tipo "companyId=123" ou "userId=abc";
+                const match = queryString.match(/([a-zA-Z]+Id)=[^&]+/);
+
+                if (match) {
+                    // mantém até o primeiro parâmetro que termina com Id;
+                    baseUrl = `${path}?${match[0]}`;
+                } else {
+                    // se não tem nada com Id, remove tudo após o ?;
+                    baseUrl = path;
+                }
+            }
+
             setApiUrlBase(baseUrl);
         }
 
+        if (apiUrlRequest) {
+            handleGetBaseUrl();
+        }
+    }, [apiUrlRequest]);
+
+    useEffect(() => {
         function handleCheckSelectedFilters() {
-            console.clear();
             const data = handleLoopFormData(modalFilterFormData, 'label');
-            const url = handleNormalizeFetchUrl(apiUrlRequest, data);
-            console.log('data', data);
-            console.log('url', url);
 
-            const cleanedQueryString = apiUrlRequest.replace(/^\?/, '');
-            const cleanedQueryStringAfterQuestionMark = cleanedQueryString.substring(cleanedQueryString.indexOf('?') + 1);
-            // console.log('cleanedQueryString', cleanedQueryString);
-            // console.log('cleanedQueryStringAfterQuestionMark', cleanedQueryStringAfterQuestionMark);
-
-            if (!cleanedQueryStringAfterQuestionMark) {
+            if (!data.url) {
+                setApiUrlRequest(apiUrlBase);
                 setFiltersInternal([]);
+                return;
             }
 
-            const keyValuePairs = cleanedQueryStringAfterQuestionMark.split('&');
-            const result: iFilter[] = [];
+            const params = new URLSearchParams(data.url);
 
-            keyValuePairs.forEach(pair => {
-                const [key, value] = pair.split('=');
-
-                if (key && value) {
-                    const keyDecoded = decodeURIComponent(key);
-                    const valueDeconded = decodeURIComponent(value);
-
-                    result.push({ name: keyDecoded, value: valueDeconded });
-                }
-            });
+            const result = Array.from(params.entries()).map(([key, value]) => ({
+                name: decodeURIComponent(key),
+                value: decodeURIComponent(value)
+            }));
 
             // console.log('handleCheckSelectedFilters', result);
             setFiltersInternal(result);
         }
 
-        if (apiUrlRequest) {
-            handleGetBaseUrl();
+        if (apiUrlBase && modalFilterFormData) {
             handleCheckSelectedFilters();
         }
-    }, [apiUrlRequest, modalFilterFormData]);
+    }, [apiUrlBase, modalFilterFormData]);
 
     function handleRemoveFilter(filterClickedToRemove: iFilter) {
         // Remover filtro visualmente;
