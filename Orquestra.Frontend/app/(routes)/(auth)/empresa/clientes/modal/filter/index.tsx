@@ -54,6 +54,7 @@ export default function EmpresaClientesModalFilters({
             title='Filtre seus clientes'
             overlayColor={0.5}
             allowCloseOutsideClick={false}
+            style={{ width: '50rem' }}
         >
             <div className='modal-layout-grid'>
                 <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />

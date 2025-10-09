@@ -326,7 +326,7 @@ export default function TableGeneric({
                     (apiUrlRequest && setApiUrlRequest) && (
                         <div className={styles.bottom}>
                             <FiltersSelected
-                                modalFilterformData={modalFilterFormData}
+                                modalFilterFormData={modalFilterFormData}
                                 setModalFilterFormData={setModalFilterFormData}
                                 apiUrlRequest={apiUrlRequest}
                                 setApiUrlRequest={setApiUrlRequest}

@@ -1,10 +1,12 @@
 'use client';
 import Tag from '@/app/components/tag';
+import handleNormalizeFetchUrl from '@/app/functions/normalize.fetch-url';
+import { handleLoopFormData } from '@/app/functions/set.formState';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
-    modalFilterformData?: any;
+    modalFilterFormData?: any;
     setModalFilterFormData?: Dispatch<SetStateAction<any>>;
     apiUrlRequest: string;
     setApiUrlRequest: Dispatch<SetStateAction<string>>;
@@ -15,7 +17,7 @@ interface iFilter {
     value: string | number;
 }
 
-export default function FiltersSelected({ modalFilterformData, setModalFilterFormData, apiUrlRequest, setApiUrlRequest }: iProps) {
+export default function FiltersSelected({ modalFilterFormData, setModalFilterFormData, apiUrlRequest, setApiUrlRequest }: iProps) {
 
     const [apiUrlBase, setApiUrlBase] = useState<string>('');
     const [filtersInternal, setFiltersInternal] = useState<iFilter[]>([]);
@@ -27,8 +29,16 @@ export default function FiltersSelected({ modalFilterformData, setModalFilterFor
         }
 
         function handleCheckSelectedFilters() {
+            console.clear();
+            const data = handleLoopFormData(modalFilterFormData, 'label');
+            const url = handleNormalizeFetchUrl(apiUrlRequest, data);
+            console.log('data', data);
+            console.log('url', url);
+
             const cleanedQueryString = apiUrlRequest.replace(/^\?/, '');
             const cleanedQueryStringAfterQuestionMark = cleanedQueryString.substring(cleanedQueryString.indexOf('?') + 1);
+            // console.log('cleanedQueryString', cleanedQueryString);
+            // console.log('cleanedQueryStringAfterQuestionMark', cleanedQueryStringAfterQuestionMark);
 
             if (!cleanedQueryStringAfterQuestionMark) {
                 setFiltersInternal([]);
@@ -56,7 +66,7 @@ export default function FiltersSelected({ modalFilterformData, setModalFilterFor
             handleGetBaseUrl();
             handleCheckSelectedFilters();
         }
-    }, [apiUrlRequest]);
+    }, [apiUrlRequest, modalFilterFormData]);
 
     function handleRemoveFilter(filterClickedToRemove: iFilter) {
         // Remover filtro visualmente;
@@ -64,14 +74,14 @@ export default function FiltersSelected({ modalFilterformData, setModalFilterFor
         setFiltersInternal(updatedFilters);
 
         // Remover filtro programaticamente;
-        if (modalFilterformData) {
+        if (modalFilterFormData) {
             // console.clear();
             const propertyName = filterClickedToRemove.name;
 
             // console.log('Clicked:', filterClickedToRemove);
             // console.log('Current filters properties:', Object.keys(modalFilterformData));
 
-            if (modalFilterformData.hasOwnProperty(propertyName)) {
+            if (modalFilterFormData.hasOwnProperty(propertyName)) {
                 if (setModalFilterFormData) {
                     // console.log(`Removing property "${propertyName}" from filters.`);
 

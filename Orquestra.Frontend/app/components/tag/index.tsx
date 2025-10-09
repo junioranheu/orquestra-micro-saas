@@ -19,16 +19,15 @@ export default function Tag({ text, handleRemoveFunction, fixCapitalizeStr = tru
 
         input = input.replace(/_/g, ' ');
 
-        // Separar em antes e depois do ':'
+        // Separar em antes e depois do ':';
         const [beforeColon, ...afterColonParts] = input.split(':');
 
-        // Se o beforeColon for todo maiúsculo, não altera
+        // Se o beforeColon for todo maiúsculo, não altera;
         if (beforeColon === beforeColon.toUpperCase()) {
             return afterColonParts.length > 0 ? `${beforeColon}: ${afterColonParts.join(':').trim()}` : beforeColon;
         }
 
         const words = beforeColon.trim().split(/(?=[A-Z])| /);
-
         let transformedBeforeColon: string;
 
         if (capitalizeAll) {
