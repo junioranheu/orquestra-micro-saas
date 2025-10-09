@@ -21,3 +21,8 @@ export default interface iClient {
     companyId: Guid;
     company: iCompanyOutput;
 }
+
+export interface iClientPaginated {
+    output: iClient[];
+    count: number;
+}

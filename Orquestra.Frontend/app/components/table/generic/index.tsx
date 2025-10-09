@@ -173,6 +173,16 @@ export default function TableGeneric({
         setSortOrder(newSortOrder);
     }
 
+    function handleGetValueCaseInsensitive(record: any, key: string) {
+        if (!record || !key) {
+            return undefined;
+        }
+
+        const lowerKey = key.toLowerCase();
+        const match = Object.keys(record).find(k => k.toLowerCase() === lowerKey);
+        return match ? record[match] : undefined;
+    }
+
     const enhancedColumns = columns.map(col => ({
         ...col,
         title: (
@@ -186,8 +196,12 @@ export default function TableGeneric({
                 cursor: 'pointer',
                 textDecoration: sortColumn === col.dataIndex ? 'underline' : 'none'
             }
-        })
-    }));
+        }),
+        render: (value: any, record: any, index: number) => {
+            const val = handleGetValueCaseInsensitive(record, col.dataIndex);
+            return col.render ? col.render(val, record, index) : val;
+        }
+    }))
 
     // Add managing options column if managingOptions is provided;
     if (managingOptions?.length > 0) {

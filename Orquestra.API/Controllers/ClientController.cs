@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Clients.Create;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Shared;
+using Orquestra.Application.UseCases.Shared;
 
 namespace Orquestra.API.Controllers;
 
@@ -41,11 +42,16 @@ public class ClientController(
 
     [AuthorizeFilter]
     [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult> GetAllByCompanyId(Guid companyId)
+    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, Guid companyId)
     {
-        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        List<ClientOutput>? output = await _getClientByCompanyId.Execute(userIdAuth, companyId);
+        if (companyId == Guid.Empty)
+        {
+            return NoContent();
+        }
 
-        return Ok(output);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        (IEnumerable<ClientOutput> output, int count) = await _getClientByCompanyId.Execute(paginationInput, userIdAuth, companyId);
+
+        return Ok(new { output, count });
     }
 }
