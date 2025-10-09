@@ -128,6 +128,16 @@ public sealed class GetTests
     }
 
     [Fact]
+    public void GetEnumDesc_ShouldReturn_EnumWithoutDescription()
+    {
+        // Act;
+        string desc = GetEnumDesc(TestEnum.Third);
+
+        // Assert;
+        Assert.Equal("Third", desc);
+    }
+
+    [Fact]
     public void GetDateDetails_ShouldReturn_FormattedDate_UsingExistentDate()
     {
         // Act;
@@ -693,7 +703,9 @@ public sealed class GetTests
         First,
 
         [Description("Segundo valor")]
-        Second
+        Second,
+
+        Third
     }
     #endregion
 }

@@ -84,7 +84,14 @@ public static class Get
         MemberInfo[] memInfo = enumVal.GetType().GetMember(enumVal.ToString());
         DescriptionAttribute? attribute = CustomAttributeExtensions.GetCustomAttribute<DescriptionAttribute>(memInfo[0]);
 
-        return attribute!.Description;
+        string? description = attribute?.Description;
+
+        if (string.IsNullOrEmpty(description))
+        {
+            return enumVal.ToString();
+        }
+
+        return description;
     }
 
     /// <summary>
