@@ -2,6 +2,8 @@
 import { CONSTS_LOG, iLog, iLogPaginated } from '@/app/api/consts/log';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import SYSTEM from '@/app/consts/system';
+import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
+import { handleGetDateBrazil } from '@/app/functions/get.date.brazil';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
@@ -17,7 +19,7 @@ export default function Logs() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [logs, setLogs] = useState<iLogPaginated>();
     const [logsNormalized, setLogsNormalized] = useState<iLog[]>([]);
-    useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: 10 });
+    useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: 15 });
 
     useEffect(() => {
         if (logTypeEnum && logs) {
@@ -73,7 +75,7 @@ export default function Logs() {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={logs?.count}
-                title={`Logs do ${SYSTEM.NAME}`}
+                title={`Logs do ${SYSTEM.NAME}. Última atualização: hoje às ${handleFormatDate(handleGetDateBrazil(), DATE_STYLE.HORA_MINUTO_SEGUNDO)}`}
             />
         </section>
     )

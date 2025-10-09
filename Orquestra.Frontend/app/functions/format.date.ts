@@ -9,7 +9,8 @@ export const DATE_STYLE = {
     DIA_DA_SEMANA: 'DIA_DA_SEMANA',
     DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO: 'DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO',
     DIA_MES_ANO_HORA_MINUTO_SEGUNDO: 'DIA_MES_ANO_HORA_MINUTO_SEGUNDO',
-    HORA_MINUTO: 'HORA_MINUTO'
+    HORA_MINUTO: 'HORA_MINUTO',
+    HORA_MINUTO_SEGUNDO: 'HORA_MINUTO_SEGUNDO'
 } as const;
 
 export function handleFormatDate(date: Date | string | undefined, style: keyof typeof DATE_STYLE): string {
@@ -84,6 +85,10 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
 
             case DATE_STYLE.HORA_MINUTO:
                 dateFormatted = dataObj.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false });
+                break;
+
+            case DATE_STYLE.HORA_MINUTO_SEGUNDO:
+                dateFormatted = dataObj.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: 'numeric', hour12: false });
                 break;
 
             default:

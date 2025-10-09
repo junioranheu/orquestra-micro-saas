@@ -15,7 +15,7 @@ export default function EmpresaClientes() {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [clients, setClients] = useState<iClientPaginated>();
-    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 10 });
+    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15 });
 
     const columns = [
         {
