@@ -23,7 +23,7 @@ export default function Logs() {
         if (logTypeEnum && logs) {
             const normalized = logs?.output?.map(log => ({
                 ...log,
-                logType: logTypeEnum?.find(x => x.value.toString() === log.logType.toString())?.label ?? log.logType
+                logType: logTypeEnum?.find(x => x.value === log.logType)?.label ?? log.logType
             })) ?? [];
 
             setLogsNormalized(normalized);
