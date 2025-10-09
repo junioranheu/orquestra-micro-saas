@@ -11,9 +11,9 @@ export default function Logs() {
 
     useTitle('Logs');
 
-    const [currentPage, setCurrentPage] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const [logs, setLogs] = useState<iLogPaginated>();
-    useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs });
+    useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: 10 });
 
     const columns = [
         {
@@ -36,6 +36,11 @@ export default function Logs() {
             title: 'Endpoint',
             dataIndex: 'endpoint',
             key: 'endpoint'
+        },
+        {
+            title: 'Parameters',
+            dataIndex: 'parameters',
+            key: 'parameters'
         },
         {
             title: 'Descrição',

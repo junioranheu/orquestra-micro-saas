@@ -309,6 +309,7 @@ input:-webkit-autofill {
 // Tables (rc-table, rc-pagination)
 .rc-table {
     overflow-x: auto !important;
+    font-family: inherit !important;
 
     td,
     th {
@@ -324,13 +325,11 @@ input:-webkit-autofill {
         &:first-of-type {
             // background-color: orange !important;
             border-top-left-radius: var(--border-radius) !important;
-            border-bottom-left-radius: var(--border-radius) !important;
         }
 
         &:last-of-type {
             // background-color: orange !important;
             border-top-right-radius: var(--border-radius) !important;
-            border-bottom-right-radius: var(--border-radius) !important;
         }
     }
 
@@ -350,10 +349,30 @@ input:-webkit-autofill {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
+    font-family: inherit !important;
+
+    .rc-pagination-item-active {
+        // background-color: purple !important;
+        border: 1px solid var(--main) !important;
+        text-decoration: underline !important;
+        text-decoration-color: var(--main) !important;
+        text-decoration-thickness: 1px !important;
+        text-underline-offset: 2px !important;
+    }
 
     li,
-    button {
+    button,
+    a {
+        // background-color: orange !important;
         border-radius: 50% !important;
+        color: var(--black) !important;
+        font-size: 0.75rem !important;
+        text-decoration: none !important;
+
+        &:hover {
+            // background-color: tomato !important;
+            border: 1px solid rgba(11, 153, 111, 0.3) !important;
+        }
     }
 }
 

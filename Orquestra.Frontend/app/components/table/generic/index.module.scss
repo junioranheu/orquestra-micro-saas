@@ -1,7 +1,9 @@
 .main {
     // background-color: orange !important;
-    background-color: var(--white);
+    background-color: #FFFFFF;
     border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    width: 100%;
 
     .container {
         display: flex;
