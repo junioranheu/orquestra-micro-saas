@@ -6,7 +6,8 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { Guid } from 'guid-typescript';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
+import EmpresaClientesModalFilters, { iClientFormModalFilterData } from './modal/filter';
 import styles from './page.module.scss';
 
 export default function EmpresaClientes() {
@@ -16,7 +17,15 @@ export default function EmpresaClientes() {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [clients, setClients] = useState<iClientPaginated>();
-    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15 });
+
+    const [apiUrlRequest, setApiUrlRequest] = useState<string>(`${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`);
+    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequest, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15 });
+
+    const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
+
+    const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormModalFilterData>({
+        fullName: null, email: null, CPF: null, address: null, dateOfBirth: null, notes: null
+    });
 
     function handleAddNew() {
         alert('xd');
@@ -65,18 +74,39 @@ export default function EmpresaClientes() {
     ] as iTableManagingOptions[];
 
     return (
-        <section className={styles.main}>
-            <TableGeneric
-                idPropName='clientId'
-                columns={columns}
-                data={clients?.output ?? []}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                totalRowsCount={clients?.count}
+        <Fragment>
+            <h1>{apiUrlRequest}</h1>
 
-                title={`Clientes cadastrados em ${me?.currentMainCompany.name}`}
-                managingOptions={managingOptions}
+            <section className={styles.main}>
+                <TableGeneric
+                    idPropName='clientId'
+                    columns={columns}
+                    data={clients?.output ?? []}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalRowsCount={clients?.count}
+
+                    title={`Clientes cadastrados em ${me?.currentMainCompany.name ?? ''}`}
+                    managingOptions={managingOptions}
+                    btn_filter_label='Filtrar'
+                    btn_filter_function={(e) => setIsModalFilterOpen(true)}
+
+                    modalFilterFormData={modalFilterFormData}
+                    setModalFilterFormData={setModalFilterFormData}
+                    apiUrlRequest={apiUrlRequest}
+                    setApiUrlRequest={setApiUrlRequest}
+                />
+            </section>
+
+            <EmpresaClientesModalFilters
+                isModalFilterOpen={isModalFilterOpen}
+                setIsModalFilterOpen={setIsModalFilterOpen}
+                modalFilterFormData={modalFilterFormData}
+                setModalFilterFormData={setModalFilterFormData}
+                apiUrlRequest={apiUrlRequest}
+                setApiUrlRequest={setApiUrlRequest}
+                setCurrentPage={setCurrentPage}
             />
-        </section>
+        </Fragment>
     )
 }

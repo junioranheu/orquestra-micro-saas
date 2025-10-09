@@ -1,7 +1,7 @@
 'use client';
 import ImgDownload from '@/app/assets/svg/download.svg';
-import ImgFilter from '@/app/assets/svg/filter.svg';
 import ImgUpload from '@/app/assets/svg/upload.svg';
+import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import FiltersSelected from '@/app/components/table/filters-selected';
 import SYSTEM from '@/app/consts/system';
@@ -84,7 +84,7 @@ export default function TableGeneric({
     btn_export_function,
     btn_filter_label,
     btn_filter_function,
-    modalFilterFormData: modalFilterformData,
+    modalFilterFormData,
     setModalFilterFormData,
     apiUrlRequest,
     setApiUrlRequest
@@ -314,7 +314,7 @@ export default function TableGeneric({
                                 <Button
                                     label={btn_filter_label}
                                     handleFunction={btn_filter_function}
-                                    svg_staticImageData={ImgFilter}
+                                    icone_feather={<Icon icon='search' size='small' />}
                                     style={{ fontSize: '0.75rem' }}
                                 />
                             )
@@ -326,7 +326,7 @@ export default function TableGeneric({
                     (apiUrlRequest && setApiUrlRequest) && (
                         <div className={styles.bottom}>
                             <FiltersSelected
-                                modalFilterformData={modalFilterformData}
+                                modalFilterformData={modalFilterFormData}
                                 setModalFilterFormData={setModalFilterFormData}
                                 apiUrlRequest={apiUrlRequest}
                                 setApiUrlRequest={setApiUrlRequest}
