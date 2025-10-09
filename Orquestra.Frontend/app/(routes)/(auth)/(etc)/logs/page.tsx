@@ -1,6 +1,6 @@
 'use client';
 import { CONSTS_LOG, iLog, iLogPaginated } from '@/app/api/consts/log';
-import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
+import TableGeneric, { iTableColumn, iTableExtraItems } from '@/app/components/table/generic';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil } from '@/app/functions/get.date.brazil';
@@ -66,6 +66,10 @@ export default function Logs() {
         }
     ] as iTableColumn[];
 
+    const tableExtraItems = [
+        { title: 'Última atualização', label: `Hoje às ${handleFormatDate(handleGetDateBrazil(), DATE_STYLE.HORA_MINUTO_SEGUNDO)}` }
+    ] as iTableExtraItems[];
+
     return (
         <section className={styles.main}>
             <TableGeneric
@@ -75,7 +79,8 @@ export default function Logs() {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={logs?.count}
-                title={`Logs do ${SYSTEM.NAME}. Última atualização: hoje às ${handleFormatDate(handleGetDateBrazil(), DATE_STYLE.HORA_MINUTO_SEGUNDO)}`}
+                title={`Logs do ${SYSTEM.NAME}`}
+                extraItems={tableExtraItems}
             />
         </section>
     )

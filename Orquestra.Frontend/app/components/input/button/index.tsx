@@ -12,7 +12,7 @@ interface iProps {
     handleFunction?: ((param?: any) => void) | null;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
-    icone_feather?: JSX.Element;
+    icone_feather?: JSX.Element | null;
     refBtn?: RefObject<HTMLButtonElement | null>;
     isDisabled?: boolean;
     isStyleSimple?: boolean;

@@ -5,12 +5,13 @@ import ImgUpload from '@/app/assets/svg/upload.svg';
 import Button from '@/app/components/input/button';
 import FiltersSelected from '@/app/components/table/filters-selected';
 import SYSTEM from '@/app/consts/system';
+import Tippy from '@tippyjs/react';
 import Image, { StaticImageData } from 'next/image';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import Table, { ColumnType as RcTableColumnType } from 'rc-table';
 import 'rc-table/assets/index.css';
-import { Dispatch, MouseEvent, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 export interface iTableColumn extends RcTableColumnType<any> {
@@ -26,7 +27,7 @@ export interface iTableExtraItems {
 export interface iTableManagingOptions {
     label: string;
     function: (record: any) => void;
-    icon: StaticImageData;
+    icon: StaticImageData | ReactElement;
     isButton?: boolean;
 }
 
@@ -213,28 +214,39 @@ export default function TableGeneric({
             render: (record: any) => (
                 <div className={styles.column_actions}>
                     {
-                        managingOptions?.map((option: iTableManagingOptions, index: number) => (
-                            option.isButton ? (
-                                <Button
-                                    key={index}
-                                    label={option.label}
-                                    handleFunction={() => option.function(record)}
-                                    svg_staticImageData={option.icon}
-                                    isStyleSimple={false}
-                                />
-                            ) : (
-                                <span
-                                    key={index}
-                                    title={option.label}
-                                    onClick={() => option.function(record)}
-                                >
-                                    <Image src={option.icon} alt={option.label} />
-                                </span>
-                            )
-                        ))
+                        managingOptions?.map((option: iTableManagingOptions, index: number) => {
+                            // Verifica se é um botão ou um ícone normal;
+                            if (option.isButton) {
+                                return (
+                                    <Button
+                                        key={index}
+                                        label={option.label}
+                                        handleFunction={() => option.function(record)}
+                                        svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
+                                        icone_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
+                                        isStyleSimple={false}
+                                    />
+                                )
+                            } else {
+                                return (
+                                    <Tippy key={index} content={option.label}>
+                                        <span onClick={() => option.function(record)}>
+                                            {
+                                                // Verifica se o ícone é um componente React ou uma imagem estática;
+                                                isValidElement(option.icon) ? (
+                                                    option.icon // Se for um componente React, renderiza ele;
+                                                ) : (
+                                                    <Image src={option.icon} alt={option.label} /> // Caso contrário, trata como uma imagem;
+                                                )
+                                            }
+                                        </span>
+                                    </Tippy>
+                                )
+                            }
+                        })
                     }
                 </div>
-            ),
+            )
         });
     }
 

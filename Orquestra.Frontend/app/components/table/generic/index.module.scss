@@ -66,6 +66,8 @@
     .column_actions {
         // background-color: orange !important;
         display: flex;
+        justify-content: flex-start;
+        align-items: center;
         gap: 1rem;
 
         button {

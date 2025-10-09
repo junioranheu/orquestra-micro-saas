@@ -1,6 +1,7 @@
 'use client';
 import { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
-import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
+import Icon from '@/app/components/icon';
+import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
@@ -16,6 +17,10 @@ export default function EmpresaClientes() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [clients, setClients] = useState<iClientPaginated>();
     useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15 });
+
+    function handleAddNew() {
+        alert('xd');
+    }
 
     const columns = [
         {
@@ -51,6 +56,14 @@ export default function EmpresaClientes() {
         }
     ] as iTableColumn[];
 
+    const managingOptions = [
+        {
+            label: 'Cadastrar novo cliente',
+            function: () => handleAddNew(),
+            icon: <Icon icon='user-plus' />
+        }
+    ] as iTableManagingOptions[];
+
     return (
         <section className={styles.main}>
             <TableGeneric
@@ -60,7 +73,9 @@ export default function EmpresaClientes() {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={clients?.count}
-                title='Clientes'
+
+                title={`Clientes cadastrados em ${me?.currentMainCompany.name}`}
+                managingOptions={managingOptions}
             />
         </section>
     )
