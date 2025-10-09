@@ -17,6 +17,7 @@ export default interface iClient {
     CPF: string;
     address: Guid;
     dateOfBirth?: Date;
+    phone?: string;
     notes?: string;
     companyId: Guid;
     company: iCompanyOutput;

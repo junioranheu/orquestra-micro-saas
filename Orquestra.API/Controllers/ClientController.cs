@@ -42,15 +42,15 @@ public class ClientController(
 
     [AuthorizeFilter]
     [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, Guid companyId)
+    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, [FromQuery] ClientInput input)
     {
-        if (companyId == Guid.Empty)
+        if (input.CompanyId == Guid.Empty)
         {
             return NoContent();
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        (IEnumerable<ClientOutput> output, int count) = await _getClientByCompanyId.Execute(paginationInput, userIdAuth, companyId);
+        (IEnumerable<ClientOutput> output, int count) = await _getClientByCompanyId.Execute(paginationInput, input, userIdAuth, companyId: input.CompanyId);
 
         return Ok(new { output, count });
     }

@@ -29,15 +29,24 @@ public sealed class GetClientByCompanyId(Context context, ICheckIfUserIsLinkedCo
         return output;
     }
 
-    public async Task<(IEnumerable<ClientOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId)
+    public async Task<(IEnumerable<ClientOutput> output, int count)> Execute(PaginationInput pagination, ClientInput input, Guid userIdAuth, Guid companyId)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         var query = _context.Clients.
                     Include(x => x.Company).
                     AsNoTracking().
-                    Where(x => x.CompanyId == companyId && x.Status == true).
-                    OrderBy(x => x.FullName);
+                    Where(x =>
+                        x.CompanyId == companyId &&
+                        x.Status == true &&
+                        (string.IsNullOrEmpty(input.FullName) || x.FullName.ToLower().Contains(input.FullName.ToLower())) &&
+                        (string.IsNullOrEmpty(input.Email) || x.Email.ToLower().Contains(input.Email.ToLower())) &&
+                        (string.IsNullOrEmpty(input.CPF) || x.CPF.ToLower().Contains(input.CPF.ToLower())) &&
+                        (string.IsNullOrEmpty(input.Address) || x.Address!.ToLower().Contains(input.Address.ToLower())) &&
+                        (!input.DateOfBirth.HasValue || (x.DateOfBirth.Day == input.DateOfBirth.Value.Day && x.DateOfBirth.Month == input.DateOfBirth.Value.Month && x.DateOfBirth.Year == input.DateOfBirth.Value.Year)) &&
+                        (string.IsNullOrEmpty(input.Phone) || x.Phone.ToLower().Contains(input.Phone.ToLower())) &&
+                        (string.IsNullOrEmpty(input.Notes) || x.Notes.ToLower().Contains(input.Notes.ToLower()))
+                    ).OrderBy(x => x.FullName);
 
         (IEnumerable<Client> linq, int count) = await PagedQuery.Execute(query, pagination);
         var output = linq.Adapt<List<ClientOutput>>();

@@ -22,6 +22,7 @@ export interface iClientFormModalFilterData {
     CPF: string | null;
     address: string | null;
     dateOfBirth: string | null;
+    phone: string | null;
     notes: string | null;
 }
 
@@ -58,9 +59,11 @@ export default function EmpresaClientesModalFilters({
                 <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='CPF' fieldName='CPF' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+                <InputMask title='Telefone' fieldName='phone' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='Endereço' fieldName='address' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                <InputMask title='Data de aniversário' fieldName='dateOfBirth' formData={modalFilterFormData} setFormData={setModalFilterFormData} mask='00/00/0000' />
+                <InputMask type='date' title='Data de aniversário' fieldName='dateOfBirth' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='Anotações' fieldName='notes' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+                <div />
 
                 <Button
                     label='Limpar filtros'
@@ -70,7 +73,7 @@ export default function EmpresaClientesModalFilters({
                 />
 
                 <Button
-                    label='Cadastrar'
+                    label='Filtrar'
                     handleFunction={() => handleSubmit()}
                     style={{ fontSize: '0.75rem' }}
                 />

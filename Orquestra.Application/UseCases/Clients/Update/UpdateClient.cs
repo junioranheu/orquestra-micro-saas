@@ -37,7 +37,12 @@ public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUse
         client.Email = input.Email ?? client.Email;
         client.CPF = input.CPF ?? client.CPF;
         client.Address = input.Address ?? client.Address;
-        client.DateOfBirth = input.DateOfBirth > DateTime.MinValue ? input.DateOfBirth : client.DateOfBirth;
+
+        if (input.DateOfBirth.HasValue && input.DateOfBirth.Value > DateTime.MinValue)
+        {
+            client.DateOfBirth = input.DateOfBirth.Value;
+        }
+
         client.Phone = input.Phone ?? client.Phone;
         client.Notes = input.Notes ?? client.Notes;
 

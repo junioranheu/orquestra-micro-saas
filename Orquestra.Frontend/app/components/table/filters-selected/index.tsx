@@ -100,11 +100,12 @@ export default function FiltersSelected({ modalFilterformData, setModalFilterFor
     return (
         <section className={styles.main}>
             {
-                filtersInternal?.map((x: iFilter, i: number) => (
+                filtersInternal?.filter(x => !x.name.includes('Id'))?.map((x: iFilter, i: number) => (
                     <Tag
                         key={i}
                         text={`${x.name}: ${x.value}`}
-                        handleFunction={() => handleRemoveFilter(x)}
+                        handleRemoveFunction={() => handleRemoveFilter(x)}
+                        tippyContent='Remover filtro'
                     />
                 ))
             }

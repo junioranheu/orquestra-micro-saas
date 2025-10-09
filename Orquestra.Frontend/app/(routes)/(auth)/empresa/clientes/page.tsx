@@ -5,8 +5,7 @@ import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/compone
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
-import { Guid } from 'guid-typescript';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import EmpresaClientesModalFilters, { iClientFormModalFilterData } from './modal/filter';
 import styles from './page.module.scss';
 
@@ -18,13 +17,19 @@ export default function EmpresaClientes() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [clients, setClients] = useState<iClientPaginated>();
 
-    const [apiUrlRequest, setApiUrlRequest] = useState<string>(`${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`);
+    const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_CLIENT.getAllByCompanyId);
     useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequest, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15 });
+
+    useEffect(() => {
+        if (me && me?.currentMainCompany?.companyId) {
+            setApiUrlRequest(`${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}`);
+        }
+    }, [me]);
 
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 
     const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormModalFilterData>({
-        fullName: null, email: null, CPF: null, address: null, dateOfBirth: null, notes: null
+        fullName: null, email: null, CPF: null, address: null, dateOfBirth: null, notes: null, phone: null
     });
 
     function handleAddNew() {
@@ -75,8 +80,6 @@ export default function EmpresaClientes() {
 
     return (
         <Fragment>
-            <h1>{apiUrlRequest}</h1>
-
             <section className={styles.main}>
                 <TableGeneric
                     idPropName='clientId'
@@ -89,7 +92,7 @@ export default function EmpresaClientes() {
                     title={`Clientes cadastrados em ${me?.currentMainCompany.name ?? ''}`}
                     managingOptions={managingOptions}
                     btn_filter_label='Filtrar'
-                    btn_filter_function={(e) => setIsModalFilterOpen(true)}
+                    btn_filter_function={() => setIsModalFilterOpen(true)}
 
                     modalFilterFormData={modalFilterFormData}
                     setModalFilterFormData={setModalFilterFormData}

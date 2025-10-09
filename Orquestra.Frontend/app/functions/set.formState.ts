@@ -67,7 +67,7 @@ export function handleLoopFormData(formData: any, dropDownWhichValue: 'value' | 
         }
     } else {
         if (!hideNull) {
-            console.log(formData);
+            console.error(formData);
         }
     }
 
