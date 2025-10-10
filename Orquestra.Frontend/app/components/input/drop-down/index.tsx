@@ -50,12 +50,12 @@ export default function Dropdown({
             // console.log('handleChange/multiple', e);
             const ids = e.map(x => x.value);
 
-            // @ts-ignore;
+            // @ts-expect-error: o tipo genérico de setSelectedOption não aceita array aqui;
             setSelectedOption(ids);
         } else {
             // console.log('handleChange/single', e);
 
-            // @ts-ignore;
+            // @ts-expect-error: o tipo genérico de setSelectedOption não aceita valor único aqui;
             setSelectedOption(e);
         }
     }

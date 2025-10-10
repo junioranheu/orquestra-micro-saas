@@ -28,7 +28,7 @@ export function handleSetDropdownOption<T>(formData: T, setForm: Dispatch<SetSta
 
 // Helpers extras;
 export function handleClearFormData<T>(setForm: Dispatch<SetStateAction<T>>) {
-    // @ts-ignore
+    // @ts-expect-error: necessário porque o tipo genérico T não garante que null é um valor permitido para todas as chaves;
     setForm((prevState) => ({ ...Object.keys(prevState).reduce((acc, key) => ({ ...acc, [key]: null }), {}) }));
 }
 
@@ -38,7 +38,7 @@ export interface iFormDataLoopResult {
 }
 
 export function handleLoopFormData(formData: any, dropDownWhichValue: 'value' | 'label' = 'value', log: boolean = false, hideNull: boolean = true): iFormDataLoopResult {
-    let jsonObject: any = {};
+    const jsonObject: any = {};
     let urlString = '';
 
     if (typeof formData === 'object' && formData !== null) {

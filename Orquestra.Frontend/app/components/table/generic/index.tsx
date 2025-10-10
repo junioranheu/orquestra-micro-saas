@@ -1,6 +1,4 @@
 'use client';
-import ImgDownload from '@/app/assets/svg/download.svg';
-import ImgUpload from '@/app/assets/svg/upload.svg';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import FiltersSelected from '@/app/components/table/filters-selected';
@@ -48,6 +46,8 @@ interface iProps {
     title?: string;
     managingOptions?: iTableManagingOptions[];
     extraItems?: iTableExtraItems[] | null;
+    btn_add_label?: string;
+    btn_add_function?: (e: MouseEvent<HTMLDivElement>) => void;
     btn_import_label?: string;
     btn_import_function?: (e: MouseEvent<HTMLDivElement>) => void;
     btn_export_label?: string;
@@ -78,6 +78,8 @@ export default function TableGeneric({
     title,
     managingOptions = [],
     extraItems = null,
+    btn_add_label,
+    btn_add_function,
     btn_import_label,
     btn_import_function,
     btn_export_label,
@@ -206,7 +208,7 @@ export default function TableGeneric({
 
     // Add managing options column if managingOptions is provided;
     if (managingOptions?.length > 0) {
-        // @ts-ignore;
+        // @ts-expect-error: a definição de tipo de iTableColumn não permite esse render customizado, mas é intencional aqui;
         enhancedColumns.push({
             title: (<span>Ações</span>),
             key: 'actions',
@@ -286,12 +288,24 @@ export default function TableGeneric({
                         }
 
                         {
+                            (btn_filter_label && btn_filter_function) && (
+                                <Button
+                                    label={btn_filter_label}
+                                    handleFunction={btn_filter_function}
+                                    isStyleSimple={true}
+                                    icone_feather={<Icon icon='search' size='small' />}
+                                    style={{ fontSize: '0.75rem' }}
+                                />
+                            )
+                        }
+
+                        {
                             (btn_import_label && btn_import_function) && (
                                 <Button
                                     label={btn_import_label}
                                     handleFunction={btn_import_function}
                                     isStyleSimple={true}
-                                    svg_staticImageData={ImgUpload}
+                                    icone_feather={<Icon icon='upload' size='small' />}
                                     style={{ fontSize: '0.75rem' }}
                                 />
                             )
@@ -303,18 +317,18 @@ export default function TableGeneric({
                                     label={btn_export_label}
                                     handleFunction={btn_export_function}
                                     isStyleSimple={true}
-                                    svg_staticImageData={ImgDownload}
+                                    icone_feather={<Icon icon='download' size='small' />}
                                     style={{ fontSize: '0.75rem' }}
                                 />
                             )
                         }
 
                         {
-                            (btn_filter_label && btn_filter_function) && (
+                            (btn_add_label && btn_add_function) && (
                                 <Button
-                                    label={btn_filter_label}
-                                    handleFunction={btn_filter_function}
-                                    icone_feather={<Icon icon='search' size='small' />}
+                                    label={btn_add_label}
+                                    handleFunction={btn_add_function}
+                                    icone_feather={<Icon icon='plus-circle' size='small' />}
                                     style={{ fontSize: '0.75rem' }}
                                 />
                             )

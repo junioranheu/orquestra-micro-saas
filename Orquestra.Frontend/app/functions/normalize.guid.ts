@@ -17,7 +17,7 @@ import { Guid } from 'guid-typescript';
  * // Retorna: [Guid, Guid]
  */
 export function handleNormalizeGuidArrayField(field: Guid[]): Guid[] {
-    // @ts-ignore;
+    // @ts-expect-error: Guid.value _|_;
     const normalized = field?.map(u => u.value);
 
     if (!normalized || !normalized?.length || normalized.every(x => x === null) || Array.isArray(normalized) && normalized.length === 1 && (normalized[0] === null || normalized[0] === undefined)) {
@@ -28,7 +28,7 @@ export function handleNormalizeGuidArrayField(field: Guid[]): Guid[] {
 }
 
 export function handleNormalizeGuidField(field: Guid): Guid {
-    // @ts-ignore;
+    // @ts-expect-error: Guid.value _|_;
     const normalized = field?.value;
 
     if (!normalized || !normalized?.length) {

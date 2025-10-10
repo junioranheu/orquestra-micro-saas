@@ -72,7 +72,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
         if (apiUrlBase && modalFilterFormData) {
             handleCheckSelectedFilters();
         }
-    }, [apiUrlBase, modalFilterFormData]);
+    }, [apiUrlBase, modalFilterFormData, setApiUrlRequest]);
 
     function handleRemoveFilter(filterClickedToRemove: iFilter) {
         // Remover filtro visualmente;

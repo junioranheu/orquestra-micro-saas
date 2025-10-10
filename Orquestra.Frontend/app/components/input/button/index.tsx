@@ -82,7 +82,7 @@ export default function Button({
             disabled={isDisabledInternal || isDisabled}
         >
             {icone_feather && cloneElement(icone_feather)}
-            {/* @ts-ignore */}
+            {/* @ts-expect-error: svg_component pode não ter props compatíveis; */}
             {svg_component && cloneElement(svg_component, svgDefaultProps)}
             {svg_staticImageData && <Image src={svg_staticImageData} width={20} alt='' />}
             {label}
