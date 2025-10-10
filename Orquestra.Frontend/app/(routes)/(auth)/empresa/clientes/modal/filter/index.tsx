@@ -2,7 +2,7 @@
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
-import handleNormalizeFetchUrl from '@/app/functions/normalize.fetch-url';
+import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -39,8 +39,9 @@ export default function EmpresaClientesModalFilters({
     function handleSubmit() {
         const data = handleLoopFormData(modalFilterFormData, 'label');
         const url = handleNormalizeFetchUrl(apiUrlRequest, data);
+        const urlNormalized = handleRemoveDuplicateQueryParams(url);
 
-        setApiUrlRequest(url);
+        setApiUrlRequest(urlNormalized);
         setCurrentPage(1);
         setIsModalFilterOpen(false);
     }
