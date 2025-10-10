@@ -1,4 +1,5 @@
 import iCompanyOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
+import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
@@ -18,6 +19,7 @@ import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -35,6 +37,9 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
     const companyTypeEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyTypeEnum' });
     const companySituationEnum = useApiGetCompanySituationEnum({ enumName: 'CompanySituationEnum' });
+
+    const [countries, setCountries] = useState<string[] | undefined>([]);
+    useApiRequestToSetterOnUrlChange<string[]>({ apiUrlRequest: CONSTS_UTILITY.getCountry, setter: setCountries });
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -112,6 +117,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
     }, [isModalOpen, type, company, setIsModalOpen, handleClose]);
 
     const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setCountryOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.country ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
@@ -235,8 +241,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                         <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='País' fieldName='country' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-
+                        <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
                         <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar logo' />
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
 
