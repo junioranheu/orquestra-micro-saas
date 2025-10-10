@@ -29,8 +29,8 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(14)
-                        .HasColumnType("character varying(14)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("CPF")
                         .IsRequired()
@@ -46,11 +46,10 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -66,12 +65,10 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
@@ -83,8 +80,7 @@ namespace Orquestra.Infrastructure.Migrations
                     b.HasIndex("CompanyId", "CPF")
                         .IsUnique();
 
-                    b.HasIndex("CompanyId", "Email")
-                        .IsUnique();
+                    b.HasIndex("CompanyId", "Email");
 
                     b.ToTable("Clients");
                 });

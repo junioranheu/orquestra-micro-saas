@@ -26,6 +26,11 @@ public static class DbInitializer
                 "END LOOP; END $$;"
             );
 
+            await context.Database.ExecuteSqlRawAsync(@"
+                DROP SCHEMA public CASCADE;
+                CREATE SCHEMA public;
+            ");
+
             await context.Database.EnsureCreatedAsync();
         }
 

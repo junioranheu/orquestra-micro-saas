@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Orquestra.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class RestartMigrations : Migration
+    public partial class InitMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,18 +20,19 @@ namespace Orquestra.Infrastructure.Migrations
                     Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Phone = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
+                    CompanyType = table.Column<int>(type: "integer", nullable: false),
                     Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     State = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     ZipCode = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: true),
                     Country = table.Column<string>(type: "character varying(56)", maxLength: 56, nullable: false),
-                    LogoUrl = table.Column<string>(type: "text", nullable: true),
+                    Logo = table.Column<byte[]>(type: "bytea", nullable: true),
+                    LogoContentType = table.Column<string>(type: "text", nullable: true),
                     Color = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     CompanySituation = table.Column<int>(type: "integer", nullable: false),
-                    PlanType = table.Column<int>(type: "integer", nullable: false),
-                    PlanStartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PlanEndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PlanStartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    PlanEndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Modules = table.Column<int[]>(type: "integer[]", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
                     LastModificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -79,16 +80,39 @@ namespace Orquestra.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Verifications",
+                columns: table => new
+                {
+                    VerificationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Token = table.Column<string>(type: "character varying(44)", maxLength: 44, nullable: false),
+                    EntityType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    EntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VerificationType = table.Column<int>(type: "integer", nullable: false),
+                    Reference = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Used = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModificationBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    Status = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Verifications", x => x.VerificationId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Clients",
                 columns: table => new
                 {
                     ClientId = table.Column<Guid>(type: "uuid", nullable: false),
                     FullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     CPF = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
                     Address = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Notes = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Phone = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: true),
+                    Notes = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
                     CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
@@ -101,6 +125,34 @@ namespace Orquestra.Infrastructure.Migrations
                     table.PrimaryKey("PK_Clients", x => x.ClientId);
                     table.ForeignKey(
                         name: "FK_Clients_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanyInvoices",
+                columns: table => new
+                {
+                    CompanyInvoiceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    InvoiceNumber = table.Column<long>(type: "bigint", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Modules = table.Column<int[]>(type: "integer[]", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    CompanyInvoiceSituation = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModificationBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    Status = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyInvoices", x => x.CompanyInvoiceId);
+                    table.ForeignKey(
+                        name: "FK_CompanyInvoices_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "CompanyId",
@@ -136,8 +188,9 @@ namespace Orquestra.Infrastructure.Migrations
                     CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CompanyUserRole = table.Column<int>(type: "integer", nullable: false),
-                    IsAccountVerified = table.Column<bool>(type: "boolean", nullable: false),
+                    Modules = table.Column<int[]>(type: "integer[]", nullable: true),
                     IsCurrentMainCompanyUser = table.Column<bool>(type: "boolean", nullable: false),
+                    InviterUserId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
                     LastModificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -154,6 +207,12 @@ namespace Orquestra.Infrastructure.Migrations
                         principalColumn: "CompanyId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_CompanyUsers_Users_InviterUserId",
+                        column: x => x.InviterUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_CompanyUsers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
@@ -166,6 +225,7 @@ namespace Orquestra.Infrastructure.Migrations
                 columns: table => new
                 {
                     LogId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LogType = table.Column<int>(type: "integer", nullable: false),
                     RequestType = table.Column<string>(type: "text", nullable: true),
                     Endpoint = table.Column<string>(type: "text", nullable: true),
                     Parameters = table.Column<string>(type: "text", nullable: true),
@@ -213,13 +273,18 @@ namespace Orquestra.Infrastructure.Migrations
                 columns: table => new
                 {
                     ScheduleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     PaymentType = table.Column<int>(type: "integer", nullable: false),
                     ScheduleStatus = table.Column<int>(type: "integer", nullable: false),
                     ClientId = table.Column<Guid>(type: "uuid", nullable: false),
                     CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
                     UsersIds = table.Column<Guid[]>(type: "uuid[]", nullable: true),
                     IsRestrictForSpecificUsers = table.Column<bool>(type: "boolean", nullable: false),
+                    CustomTitle = table.Column<string>(type: "text", nullable: true),
+                    CustomUrl = table.Column<string>(type: "text", nullable: true),
+                    Observation = table.Column<string>(type: "text", nullable: true),
+                    AmountReceived = table.Column<decimal>(type: "numeric", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
                     LastModificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -244,19 +309,15 @@ namespace Orquestra.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_CompanyId",
+                name: "IX_Clients_CompanyId_CPF",
                 table: "Clients",
-                column: "CompanyId");
+                columns: new[] { "CompanyId", "CPF" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_CPF",
+                name: "IX_Clients_CompanyId_Email",
                 table: "Clients",
-                column: "CPF");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Clients_Email",
-                table: "Clients",
-                column: "Email");
+                columns: new[] { "CompanyId", "Email" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Companies_Email",
@@ -269,9 +330,19 @@ namespace Orquestra.Infrastructure.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompanyInvoices_CompanyId",
+                table: "CompanyInvoices",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CompanyUsers_CompanyId_UserId",
                 table: "CompanyUsers",
                 columns: new[] { "CompanyId", "UserId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanyUsers_InviterUserId",
+                table: "CompanyUsers",
+                column: "InviterUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CompanyUsers_UserId",
@@ -313,6 +384,9 @@ namespace Orquestra.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CompanyInvoices");
+
+            migrationBuilder.DropTable(
                 name: "CompanyUsers");
 
             migrationBuilder.DropTable(
@@ -326,6 +400,9 @@ namespace Orquestra.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Schedules");
+
+            migrationBuilder.DropTable(
+                name: "Verifications");
 
             migrationBuilder.DropTable(
                 name: "LocationStates");

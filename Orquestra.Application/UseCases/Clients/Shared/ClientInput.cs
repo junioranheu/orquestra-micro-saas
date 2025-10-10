@@ -1,10 +1,7 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Orquestra.Application.UseCases.Clients.Shared;
+﻿namespace Orquestra.Application.UseCases.Clients.Shared;
 
 public sealed class ClientInput
 {
-    [JsonIgnore]
     public Guid? ClientId { get; set; }
 
     public string? FullName { get; set; } = string.Empty;
@@ -21,5 +18,5 @@ public sealed class ClientInput
 
     public string? Notes { get; set; } = string.Empty;
 
-    public Guid CompanyId { get; set; }
+    public Guid? CompanyId { get; set; }
 }

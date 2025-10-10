@@ -40,12 +40,12 @@ public sealed class GetClientByCompanyId(Context context, ICheckIfUserIsLinkedCo
                         x.CompanyId == companyId &&
                         x.Status == true &&
                         (string.IsNullOrEmpty(input.FullName) || x.FullName.ToLower().Contains(input.FullName.ToLower())) &&
-                        (string.IsNullOrEmpty(input.Email) || x.Email.ToLower().Contains(input.Email.ToLower())) &&
+                        (string.IsNullOrEmpty(input.Email) || x.Email!.ToLower().Contains(input.Email.ToLower())) &&
                         (string.IsNullOrEmpty(input.CPF) || x.CPF.ToLower().Contains(input.CPF.ToLower())) &&
                         (string.IsNullOrEmpty(input.Address) || x.Address!.ToLower().Contains(input.Address.ToLower())) &&
-                        (!input.DateOfBirth.HasValue || (x.DateOfBirth.Day == input.DateOfBirth.Value.Day && x.DateOfBirth.Month == input.DateOfBirth.Value.Month && x.DateOfBirth.Year == input.DateOfBirth.Value.Year)) &&
-                        (string.IsNullOrEmpty(input.Phone) || x.Phone.ToLower().Contains(input.Phone.ToLower())) &&
-                        (string.IsNullOrEmpty(input.Notes) || x.Notes.ToLower().Contains(input.Notes.ToLower()))
+                        (!input.DateOfBirth.HasValue || (x.DateOfBirth.GetValueOrDefault().Day == input.DateOfBirth.Value.Day && x.DateOfBirth.GetValueOrDefault().Month == input.DateOfBirth.Value.Month && x.DateOfBirth.GetValueOrDefault().Year == input.DateOfBirth.Value.Year)) &&
+                        (string.IsNullOrEmpty(input.Phone) || x.Phone!.ToLower().Contains(input.Phone.ToLower())) &&
+                        (string.IsNullOrEmpty(input.Notes) || x.Notes!.ToLower().Contains(input.Notes.ToLower()))
                     ).OrderBy(x => x.FullName);
 
         (IEnumerable<Client> linq, int count) = await PagedQuery.Execute(query, pagination);

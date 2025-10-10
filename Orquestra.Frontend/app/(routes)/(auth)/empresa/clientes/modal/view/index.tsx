@@ -1,6 +1,7 @@
 'use client';
 import { iClientFormDataModalFilter } from '@/app/(routes)/(auth)/empresa/clientes/modal/filter';
-import iClient from '@/app/api/consts/client';
+import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
@@ -10,6 +11,7 @@ import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iModalFilterParams {
@@ -17,9 +19,10 @@ interface iModalFilterParams {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
     client: iClient | undefined;
+    companyId: Guid | undefined;
 }
 
-export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, type, client }: iModalFilterParams) {
+export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, type, client, companyId }: iModalFilterParams) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -57,7 +60,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
     }, [isModalOpen, type, client, setIsModalOpen, handleClose]);
 
     async function handleSave() {
-        if (!formData.name || !formData.email || !formData.phone || !formData.companyType) {
+        if (!formData.fullName || !formData.CPF) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
         }
@@ -66,38 +69,24 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         setSaving(true);
 
         const data = handleLoopFormData(formData);
-        const input = data.json as iCompanyOutput;
-        // console.log(input);
-
-        const formDataInput = new FormData();
-        formDataInput.append('CompanyId', input.companyId ? input.companyId.toString() : Guid.create().toString());
-        formDataInput.append('Name', input.name);
-        formDataInput.append('Email', input.email);
+        const input = data.json as iClient;
 
         if (input.phone) {
             const cleanedPhone = input.phone.replace(/[()\s-]/g, '');
-            formDataInput.append('Phone', cleanedPhone);
+            input.phone = cleanedPhone;
         }
 
-        formDataInput.append('CompanyType', input.companyType);
-        if (input.address) formDataInput.append('Address', input.address);
-        if (input.city) formDataInput.append('City', input.city);
-        if (input.state) formDataInput.append('State', input.state);
-
-        if (input.zipCode) {
-            const cleanedZipCode = input.zipCode.replace(/[()\s-]/g, '');
-            formDataInput.append('ZipCode', cleanedZipCode);
+        if (!companyId) {
+            swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamnete, e se o erro persistir, contate o suporte.', icon: 'error' });
+            return;
         }
 
-        if (input.country) formDataInput.append('Country', input.country);
-        if (input.color) formDataInput.append('Color', input.color);
-        if (input.logoFormFile && input.logoFormFile instanceof File) formDataInput.append('LogoFormFile', input.logoFormFile as Blob, input.logoFormFile.name);
-        formDataInput.append('Status', input.status?.toString() ?? 'false');
+        input.companyId = companyId;
 
-        // console.log('formDataInput', formDataInput);
+        // console.log(input);
 
         if (type === 'create') {
-            const company = await Fetch.post({ url: CONSTS_COMPANY.post, body: formDataInput, isFormData: true }) as iCompanyOutput;
+            const company = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as iClient;
 
             if (company) {
                 swal({
@@ -115,7 +104,13 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
             return;
         }
 
-        const company = await Fetch.put({ url: CONSTS_COMPANY.put, body: formDataInput, isFormData: true }) as iCompanyOutput;
+        if (!client?.clientId) {
+            swal({ content: 'Erro interno: O ID do cliente está vazio. Tente novamnete, e se o erro persistir, contate o suporte.', icon: 'error' });
+            return;
+        }
+
+        input.clientId = client.clientId;
+        const company = await Fetch.put({ url: CONSTS_CLIENT.put, body: input }) as iClient;
 
         if (company) {
             swal({
@@ -150,7 +145,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            {type === 'create' ? (formData.fullName ?? 'Cadastrar novo cliente') : <ContentLoaderText text={(`Editar cliente: ${formData?.fullName ?? client?.fullName}`)} />}
+                            {type === 'create' ? (formData.fullName ? `Novo cliente: ${formData.fullName}` : 'Cadastrar novo cliente') : <ContentLoaderText text={(`Editar cliente: ${formData?.fullName ?? client?.fullName}`)} />}
                         </h1>
                     </div>
 
@@ -167,10 +162,10 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
 
                 <main className={styles.modalContent}>
                     <div className='modal-layout-grid'>
-                        <InputMask title='Nome' fieldName='fullName' formData={formData} setFormData={setFormData} />
-                        <InputMask title='CPF' fieldName='CPF' formData={formData} setFormData={setFormData} />
+                        <InputMask title='Nome' fieldName='fullName' formData={formData} setFormData={setFormData} isObligatory={true} />
+                        <InputMask title='CPF' fieldName='CPF' formData={formData} setFormData={setFormData} isObligatory={true} />
                         <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} />
-                        <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} />
+                        <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} mask='(00) 00000-0000' />
                         <InputMask title='Endereço' fieldName='address' formData={formData} setFormData={setFormData} />
                         <InputMask type='date' title='Data de aniversário' fieldName='dateOfBirth' formData={formData} setFormData={setFormData} />
                         <InputMask title='Anotações' fieldName='notes' formData={formData} setFormData={setFormData} />

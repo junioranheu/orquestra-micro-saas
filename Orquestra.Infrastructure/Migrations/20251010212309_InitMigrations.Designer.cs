@@ -12,8 +12,8 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250907135931_AddModulesInCompanyInvoice")]
-    partial class AddModulesInCompanyInvoice
+    [Migration("20251010212309_InitMigrations")]
+    partial class InitMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,11 +49,10 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -69,9 +68,12 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
@@ -81,8 +83,7 @@ namespace Orquestra.Infrastructure.Migrations
                     b.HasIndex("CompanyId", "CPF")
                         .IsUnique();
 
-                    b.HasIndex("CompanyId", "Email")
-                        .IsUnique();
+                    b.HasIndex("CompanyId", "Email");
 
                     b.ToTable("Clients");
                 });
@@ -135,7 +136,10 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModificationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("LogoUrl")
+                    b.Property<byte[]>("Logo")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("LogoContentType")
                         .HasColumnType("text");
 
                     b.PrimitiveCollection<int[]>("Modules")
@@ -151,10 +155,10 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
-                    b.Property<DateTime>("PlanEndDate")
+                    b.Property<DateTime?>("PlanEndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("PlanStartDate")
+                    b.Property<DateTime?>("PlanStartDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("State")
@@ -202,6 +206,9 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<long>("InvoiceNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid?>("LastModificationBy")
                         .HasColumnType("uuid");
@@ -340,6 +347,9 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<string>("Exception")
                         .HasColumnType("text");
 
+                    b.Property<int>("LogType")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Parameters")
                         .HasColumnType("text");
 
@@ -394,6 +404,9 @@ namespace Orquestra.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<decimal?>("AmountReceived")
+                        .HasColumnType("numeric");
+
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
@@ -406,7 +419,16 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<string>("CustomTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomUrl")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DateStart")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsRestrictForSpecificUsers")
@@ -417,6 +439,9 @@ namespace Orquestra.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastModificationDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Observation")
+                        .HasColumnType("text");
 
                     b.Property<int>("PaymentType")
                         .HasColumnType("integer");

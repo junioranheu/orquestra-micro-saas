@@ -88,7 +88,7 @@ export default function EmpresaClientes() {
                     totalRowsCount={clients?.count}
                     handleTableRowClick={(e) => handleOpenModalView(e)}
 
-                    title={`Clientes cadastrados em ${me?.currentMainCompany.name ?? ''}`}
+                    title={`Clientes cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
                     btn_add_label='Cadastrar novo'
                     btn_add_function={() => handleOpenModalView(undefined)}
                     btn_filter_label='Filtrar'
@@ -116,6 +116,7 @@ export default function EmpresaClientes() {
                 setIsModalOpen={setIsModalViewOpen}
                 type={typeModal}
                 client={clientClicked}
+                companyId={me?.currentMainCompany?.companyId}
             />
         </Fragment>
     )

@@ -24,14 +24,19 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
         }
 
         input.Email = input.Email?.Trim().ToLowerInvariant() ?? string.Empty;
-        bool checkEmail = IsEmailValid(input.Email);
 
-        if (!checkEmail)
+        // Segundo o Gongo, deveria ser possível cadastrar um cliente sem um e-mail;
+        if (!string.IsNullOrEmpty(input.Email))
         {
-            throw new ArgumentException("O e-mail do cliente não é válido. Insira um e-mail válido, por favor.");
-        }
+            bool checkEmail = IsEmailValid(input.Email);
 
-        input.Email = GetNormalizedLowerStr(input.Email);
+            if (!checkEmail)
+            {
+                throw new ArgumentException("O e-mail do cliente não é válido. Insira um e-mail válido, por favor.");
+            }
+
+            input.Email = GetNormalizedLowerStr(input.Email);
+        }
 
         bool checkPhone = IsPhoneValid(input.Phone);
 
@@ -42,24 +47,21 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
         if (isCreate)
         {
-            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x =>
-                             x.CPF == input.CPF &&
-                             x.CompanyId == input.CompanyId
-                          );
+            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId);
 
             if (anyCPF)
             {
                 throw new InvalidOperationException($"O CPF {input.CPF} já está registrado nesta empresa como cliente.");
             }
 
-            bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x =>
-                                x.Email.ToLower() == input.Email &&
-                                x.CompanyId == input.CompanyId
-                            );
-
-            if (anyEmail)
+            if (!string.IsNullOrEmpty(input.Email))
             {
-                throw new InvalidOperationException($"O e-mail {input.Email} já está registrado nesta empresa como cliente.");
+                bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email.ToLower() == input.Email && x.CompanyId == input.CompanyId);
+
+                if (anyEmail)
+                {
+                    throw new InvalidOperationException($"O e-mail {input.Email} já está registrado nesta empresa como cliente.");
+                }
             }
         }
     }
@@ -70,11 +72,11 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
         return RegexName().IsMatch(fullName);
     }
 
-    private static bool IsPhoneValid(string phone)
+    private static bool IsPhoneValid(string? phone)
     {
         if (string.IsNullOrWhiteSpace(phone))
         {
-            return false;
+            return true; // É possível cadastrar sem telefone;
         }
 
         return RegexPhone().IsMatch(phone);

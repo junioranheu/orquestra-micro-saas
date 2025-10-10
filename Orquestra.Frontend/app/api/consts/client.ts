@@ -6,6 +6,7 @@ const controller = 'api/Client';
 
 export const CONSTS_CLIENT = {
     post: `${BASE}/${controller}`,
+    put: `${BASE}/${controller}`,
     get: `${BASE}/${controller}`,
     getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`
 };
