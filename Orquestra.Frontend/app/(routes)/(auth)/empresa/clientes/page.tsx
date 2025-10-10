@@ -5,7 +5,8 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { Fragment, useEffect, useState } from 'react';
-import EmpresaClientesModalFilters, { iClientFormModalFilterData } from './modal/filter';
+import EmpresaClientesModalAdd from './modal/add';
+import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
 import styles from './page.module.scss';
 
 export default function EmpresaClientes() {
@@ -26,14 +27,11 @@ export default function EmpresaClientes() {
     }, [me]);
 
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
+    const [isModalAddOpen, setIsModalAddOpen] = useState<boolean>(false);
 
-    const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormModalFilterData>({
+    const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormDataModalFilter>({
         fullName: null, email: null, CPF: null, address: null, dateOfBirth: null, notes: null, phone: null
     });
-
-    function handleAddNew() {
-        alert('xd');
-    }
 
     const columns = [
         {
@@ -42,14 +40,14 @@ export default function EmpresaClientes() {
             key: 'fullName'
         },
         {
-            title: 'E-mail',
-            dataIndex: 'email',
-            key: 'email'
-        },
-        {
             title: 'CPF',
             dataIndex: 'cpf',
             key: 'cpf'
+        },
+        {
+            title: 'E-mail',
+            dataIndex: 'email',
+            key: 'email'
         },
         {
             title: 'Endereço',
@@ -82,7 +80,7 @@ export default function EmpresaClientes() {
 
                     title={`Clientes cadastrados em ${me?.currentMainCompany.name ?? ''}`}
                     btn_add_label='Cadastrar novo'
-                    btn_add_function={() => handleAddNew()}
+                    btn_add_function={() => setIsModalAddOpen(true)}
                     btn_filter_label='Filtrar'
                     btn_filter_function={() => setIsModalFilterOpen(true)}
 
@@ -94,13 +92,18 @@ export default function EmpresaClientes() {
             </section>
 
             <EmpresaClientesModalFilters
-                isModalFilterOpen={isModalFilterOpen}
-                setIsModalFilterOpen={setIsModalFilterOpen}
+                isModalOpen={isModalFilterOpen}
+                setIsModalOpen={setIsModalFilterOpen}
                 modalFilterFormData={modalFilterFormData}
                 setModalFilterFormData={setModalFilterFormData}
                 apiUrlRequest={apiUrlRequest}
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
+            />
+
+            <EmpresaClientesModalAdd
+                isModalOpen={isModalAddOpen}
+                setIsModalOpen={setIsModalAddOpen}
             />
         </Fragment>
     )

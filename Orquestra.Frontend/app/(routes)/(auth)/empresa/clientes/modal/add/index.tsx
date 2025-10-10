@@ -1,48 +1,24 @@
 'use client';
+import { iClientFormDataModalFilter } from '@/app/(routes)/(auth)/empresa/clientes/modal/filter';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
-import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
-import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 interface iModalFilterParams {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-    modalFilterFormData: iClientFormDataModalFilter;
-    setModalFilterFormData: Dispatch<SetStateAction<iClientFormDataModalFilter>>;
-    apiUrlRequest: string;
-    setApiUrlRequest: Dispatch<SetStateAction<string>>;
-    setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
-export interface iClientFormDataModalFilter {
-    fullName: string | null;
-    email: string | null;
-    CPF: string | null;
-    address: string | null;
-    dateOfBirth: string | null;
-    phone: string | null;
-    notes: string | null;
-}
+export default function EmpresaClientesModalAdd({ isModalOpen, setIsModalOpen }: iModalFilterParams) {
 
-export default function EmpresaClientesModalFilters({
-    isModalOpen,
-    setIsModalOpen,
-    modalFilterFormData,
-    setModalFilterFormData,
-    apiUrlRequest,
-    setApiUrlRequest,
-    setCurrentPage
-}: iModalFilterParams) {
+    const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormDataModalFilter>({
+        fullName: null, email: null, CPF: null, address: null, dateOfBirth: null, notes: null, phone: null
+    });
 
     function handleSubmit() {
-        const data = handleLoopFormData(modalFilterFormData, 'label');
-        const url = handleNormalizeFetchUrl(apiUrlRequest, data);
-        const urlNormalized = handleRemoveDuplicateQueryParams(url);
+        // const data = handleLoopFormData(modalFilterFormData, 'label');
 
-        setApiUrlRequest(urlNormalized);
-        setCurrentPage(1);
         setIsModalOpen(false);
     }
 
@@ -52,7 +28,7 @@ export default function EmpresaClientesModalFilters({
             setModalIsOpen={setIsModalOpen}
             onRequestClose={() => setIsModalOpen(false)}
             showCloseButton={true}
-            title='Filtre seus clientes'
+            title='Cadastre um novo cliente'
             overlayColor={0.5}
             allowCloseOutsideClick={false}
             style={{ width: '50rem' }}
@@ -66,16 +42,10 @@ export default function EmpresaClientesModalFilters({
                 <InputMask type='date' title='Data de aniversário' fieldName='dateOfBirth' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='Anotações' fieldName='notes' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <div />
+                <div />
 
                 <Button
-                    label='Limpar filtros'
-                    handleFunction={() => handleClearFormData(setModalFilterFormData)}
-                    isStyleSimple={true}
-                    style={{ fontSize: '0.75rem' }}
-                />
-
-                <Button
-                    label='Filtrar'
+                    label='Cadastrar'
                     handleFunction={() => handleSubmit()}
                     style={{ fontSize: '0.75rem' }}
                 />
