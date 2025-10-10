@@ -11,8 +11,8 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
-using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.RegexPatterns;
 
 namespace Orquestra.Application.UseCases.Companies.Base;
 
@@ -183,18 +183,5 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
 
         return isValid;
     }
-
-    // Regex;
-    [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]
-    private static partial Regex RegexEmail();
-
-    [GeneratedRegex(@"^\d{2} ?9?\d{8}$")]
-    private static partial Regex RegexPhone();
-
-    [GeneratedRegex(@"^https?:\/\/[^\s]+$")]
-    private static partial Regex RegexLogoUrl();
-
-    [GeneratedRegex(@"^\d{8}$")]
-    private static partial Regex RegexZipCode();
     #endregion
 }

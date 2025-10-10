@@ -68,7 +68,10 @@
                 }
 
                 .actions {
+                    // background-color: tomato !important;
                     margin-top: 1rem;
+                    display: flex;
+                    justify-content: flex-start;
                 }
             }
         }
@@ -98,19 +101,6 @@
 
         .card {
             min-height: 15rem;
-
-            .inner {
-                // background-color: tomato;
-
-                .right {
-
-                    .actions {
-                        // background-color: purple;
-                        display: flex;
-                        justify-content: flex-end;
-                    }
-                }
-            }
         }
     }
 }
@@ -120,16 +110,6 @@
     .wrapper {
         .card {
             min-height: 15rem;
-
-            .inner {
-                .right {
-                    .actions {
-                        // background-color: purple;
-                        display: flex;
-                        justify-content: flex-start;
-                    }
-                }
-            }
         }
     }
 }

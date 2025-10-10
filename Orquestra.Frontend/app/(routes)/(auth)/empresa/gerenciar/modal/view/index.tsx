@@ -13,6 +13,7 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleConvertBase64ToFile from '@/app/functions/convert.base64ToFile';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
+import { handleGetOnlyNumbers } from '@/app/functions/format.string';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
@@ -132,7 +133,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         formDataInput.append('Email', input.email);
 
         if (input.phone) {
-            const cleanedPhone = input.phone.replace(/[()\s-]/g, '');
+            const cleanedPhone = handleGetOnlyNumbers(input.phone);
             formDataInput.append('Phone', cleanedPhone);
         }
 
@@ -142,7 +143,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         if (input.state) formDataInput.append('State', input.state);
 
         if (input.zipCode) {
-            const cleanedZipCode = input.zipCode.replace(/[()\s-]/g, '');
+            const cleanedZipCode = handleGetOnlyNumbers(input.zipCode);
             formDataInput.append('ZipCode', cleanedZipCode);
         }
 

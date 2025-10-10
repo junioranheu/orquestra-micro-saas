@@ -15,8 +15,8 @@ export default interface iClient {
     clientId: Guid;
     fullName: string;
     email: string;
-    CPF: string;
-    address: Guid;
+    cpf: string;
+    address: string;
     dateOfBirth?: Date;
     phone?: string;
     notes?: string;

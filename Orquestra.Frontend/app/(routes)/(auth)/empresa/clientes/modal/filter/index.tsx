@@ -19,9 +19,9 @@ interface iModalFilterParams {
 export interface iClientFormDataModalFilter {
     fullName: string | null;
     email: string | null;
-    CPF: string | null;
+    cpf: string | null;
     address: string | null;
-    dateOfBirth: string | null;
+    dateOfBirth: Date | string | null;
     phone: string | null;
     notes: string | null;
 }
@@ -59,7 +59,7 @@ export default function EmpresaClientesModalFilters({
         >
             <div className='modal-layout-grid'>
                 <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                <InputMask title='CPF' fieldName='CPF' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+                <InputMask title='CPF' fieldName='cpf' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='Telefone' fieldName='phone' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='Endereço' fieldName='address' formData={modalFilterFormData} setFormData={setModalFilterFormData} />

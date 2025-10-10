@@ -30,7 +30,7 @@ public class ClientController(
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _create.Execute(userIdAuth, input);
 
-        return NoContent();
+        return Ok(true);
     }
 
     [AuthorizeFilter]
@@ -40,7 +40,7 @@ public class ClientController(
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _update.Execute(userIdAuth, input);
 
-        return NoContent();
+        return Ok(true);
     }
 
     [AuthorizeFilter]

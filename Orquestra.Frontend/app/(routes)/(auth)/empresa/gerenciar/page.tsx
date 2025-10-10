@@ -251,7 +251,7 @@ export default function EmpresaGerenciar() {
             </section>
 
             <ModalEmpresaGerenciarView
-                isOpen={isModalOpen}
+                isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 type={typeModal}
                 company={companyClicked}

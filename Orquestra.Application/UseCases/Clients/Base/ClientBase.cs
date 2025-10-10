@@ -2,8 +2,8 @@
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Infrastructure.Data;
-using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.RegexPatterns;
 
 namespace Orquestra.Application.UseCases.Clients.Base;
 
@@ -56,7 +56,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
             if (!string.IsNullOrEmpty(input.Email))
             {
-                bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email.ToLower() == input.Email && x.CompanyId == input.CompanyId);
+                bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email!.ToLower() == input.Email && x.CompanyId == input.CompanyId);
 
                 if (anyEmail)
                 {
@@ -81,12 +81,5 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
         return RegexPhone().IsMatch(phone);
     }
-
-    // Regex;
-    [GeneratedRegex(@"^(?i)[A-Za-zÀ-ÿ]{3,}(?:\s+(?:de|da|dos|das))?\s+[A-Za-zÀ-ÿ]{3,}$")]
-    private static partial Regex RegexName();
-
-    [GeneratedRegex(@"^\d{2} ?9?\d{8}$")]
-    private static partial Regex RegexPhone();
     #endregion
 }

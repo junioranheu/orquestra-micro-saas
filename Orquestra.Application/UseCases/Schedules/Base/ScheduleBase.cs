@@ -8,8 +8,8 @@ using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.RegexPatterns;
 
 namespace Orquestra.Application.UseCases.Schedules.Base;
 
@@ -207,8 +207,5 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         return RegexCustomUrl().IsMatch(url);
     }
-
-    [GeneratedRegex(@"^https?:\/\/[^\s]+$")]
-    private static partial Regex RegexCustomUrl();
     #endregion
 }

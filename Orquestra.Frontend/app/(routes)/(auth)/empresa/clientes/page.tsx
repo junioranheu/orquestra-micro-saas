@@ -29,7 +29,7 @@ export default function EmpresaClientes() {
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 
     const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormDataModalFilter>({
-        fullName: null, email: null, CPF: null, address: null, dateOfBirth: null, notes: null, phone: null
+        fullName: null, email: null, cpf: null, address: null, dateOfBirth: null, notes: null, phone: null
     });
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);

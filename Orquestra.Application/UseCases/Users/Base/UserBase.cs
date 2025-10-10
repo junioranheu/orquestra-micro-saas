@@ -1,7 +1,7 @@
 ﻿using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
-using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.RegexPatterns;
 
 namespace Orquestra.Application.UseCases.Users.Base;
 
@@ -74,12 +74,5 @@ public partial class UserBase(IGetUser getUser)
     {
         return RegexPassword().IsMatch(password);
     }
-
-    // Regex;
-    [GeneratedRegex(@"^(?i)[A-Za-zÀ-ÿ]{3,}(?:\s+(?:de|da|dos|das))?\s+[A-Za-zÀ-ÿ]{3,}$")]
-    private static partial Regex RegexName();
-
-    [GeneratedRegex(@"^(?=.*[\d@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")]
-    private static partial Regex RegexPassword();
     #endregion
 }
