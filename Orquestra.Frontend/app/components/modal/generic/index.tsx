@@ -6,7 +6,7 @@ import styles from './index.module.scss';
 
 interface iProps {
     isOpen: boolean;
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>
     onRequestClose?: () => void;
     width?: string | number;
     height?: string | number;
@@ -28,7 +28,7 @@ export interface iModalCustomPosition {
 
 export default function ModalGeneric({
     isOpen,
-    setModalIsOpen,
+    setIsModalOpen,
     onRequestClose,
     width = 'auto',
     height = 'auto',
@@ -43,14 +43,14 @@ export default function ModalGeneric({
     children
 }: iProps) {
 
-    useKeyPress('Escape', () => setModalIsOpen(false));
+    useKeyPress('Escape', () => setIsModalOpen(false));
 
     function handleClose(isCloseIconClick: boolean = false) {
         if (!allowCloseOutsideClick && !isCloseIconClick) {
             return;
         }
 
-        setModalIsOpen(false);
+        setIsModalOpen(false);
 
         if (onRequestClose) {
             onRequestClose();

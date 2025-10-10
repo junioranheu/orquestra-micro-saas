@@ -10,7 +10,7 @@ import styles from './index.module.scss';
 
 interface iProps {
     isOpen: boolean;
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>;
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     customPosition: iModalCustomPosition;
 }
 
@@ -22,7 +22,7 @@ interface iPropsMenuItem {
     handleFunction?: ((param?: any) => void) | null;
 }
 
-export default function ModalSettings({ isOpen, setModalIsOpen, customPosition }: iProps) {
+export default function ModalSettings({ isOpen, setIsModalOpen, customPosition }: iProps) {
 
     const [showContent, setShowContent] = useState<boolean>(false);
 
@@ -42,13 +42,13 @@ export default function ModalSettings({ isOpen, setModalIsOpen, customPosition }
     return (
         <ModalGeneric
             isOpen={isOpen}
-            setModalIsOpen={setModalIsOpen}
+            setIsModalOpen={setIsModalOpen}
             customPosition={customPosition}
             showCloseButton={false}
             overlayColor={0}
             style={{ padding: 0, visibility: showContent ? 'visible' : 'hidden' }}
         >
-            <ProfileMenu setModalIsOpen={setModalIsOpen} />
+            <ProfileMenu setIsModalOpen={setIsModalOpen} />
         </ModalGeneric>
     )
 }
@@ -71,16 +71,16 @@ export function MenuItem({ icon, label, desc, badge, handleFunction }: iPropsMen
 }
 
 interface iPropsProfileMenu {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>;
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function ProfileMenu({ setModalIsOpen }: iPropsProfileMenu): JSX.Element {
+export function ProfileMenu({ setIsModalOpen }: iPropsProfileMenu): JSX.Element {
 
     const me = useApiGetMe({});
     const router = useRouter();
 
     function handleRedirect(route: (typeof ROUTES)[keyof typeof ROUTES]) {
-        setModalIsOpen(false);
+        setIsModalOpen(false);
         router.push(route);
     }
 

@@ -1,5 +1,5 @@
 'use client';
-import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
@@ -137,8 +137,8 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     }, [date, companyId, view, setEvents, setIsRequestLoading, handleGetSchedules]);
 
     // Clientes;
-    const [clients, setClients] = useState<iClient[]>();
-    useApiRequestToSetterOnUrlChange<iClient[]>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${companyId}`, setter: setClients });
+    const [clients, setClients] = useState<iClientPaginated>();
+    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${companyId}`, setter: setClients });
 
     // CompanyUser;
     const [companyUsers, setCompanyUsers] = useState<iUser[]>();
@@ -255,12 +255,12 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
             <ModalCalendarView
                 isOpen={isModalOpen}
-                setModalIsOpen={setIsModalOpen}
+                setIsModalOpen={setIsModalOpen}
                 type={typeModal}
                 event={eventClicked}
                 companyId={companyId}
                 companyUsers={companyUsers}
-                clients={clients}
+                clients={clients?.output as iClient[]}
                 handleGetSchedules={() => handleGetSchedules(companyId, date.getFullYear(), date.getMonth() + 1, view)}
             />
         </Fragment>

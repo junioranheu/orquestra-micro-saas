@@ -49,7 +49,7 @@ export default function EmpresaClientesModalFilters({
     return (
         <ModalGeneric
             isOpen={isModalOpen}
-            setModalIsOpen={setIsModalOpen}
+            setIsModalOpen={setIsModalOpen}
             onRequestClose={() => setIsModalOpen(false)}
             showCloseButton={true}
             title='Filtre seus clientes'

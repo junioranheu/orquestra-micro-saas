@@ -22,13 +22,13 @@ import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iProps {
-    isOpen: boolean;
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>;
+    isModalOpen: boolean;
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
     company: iCompanyOutput | undefined;
 }
 
-export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type, company }: iProps) {
+export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen, type, company }: iProps) {
 
     const windowSize = useWindowSize();
 
@@ -66,9 +66,9 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
     const handleClose = useCallback(() => {
         setSaving(false);
         setEditing(false);
-        setModalIsOpen(false);
+        setIsModalOpen(false);
         handleClearFormData(setFormData);
-    }, [setModalIsOpen]);
+    }, [setIsModalOpen]);
 
     useEffect(() => {
         handleClearFormData(setFormData);
@@ -80,7 +80,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
             return;
         }
 
-        if (!isOpen || !company) {
+        if (!isModalOpen || !company) {
             return;
         }
 
@@ -108,7 +108,7 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
             modulesStr: company?.modulesStr ?? [],
             status: company?.status
         });
-    }, [isOpen, type, company, setModalIsOpen, handleClose]);
+    }, [isModalOpen, type, company, setIsModalOpen, handleClose]);
 
     const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -190,14 +190,15 @@ export default function ModalEmpresaGerenciarView({ isOpen, setModalIsOpen, type
         return;
     }
 
-    if (!isOpen) {
+    if (!isModalOpen) {
         return;
     }
 
     return (
         <ModalGeneric
-            isOpen={isOpen}
-            setModalIsOpen={handleClose}
+            isOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            onRequestClose={handleClose}
             showCloseButton={false}
             allowCloseOutsideClick={false}
             width={windowSize.width <= 1281 ? '85%' : '55%'}

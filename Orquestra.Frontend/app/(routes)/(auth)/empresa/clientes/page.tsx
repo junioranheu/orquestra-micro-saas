@@ -1,12 +1,12 @@
 'use client';
-import { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
+import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { Fragment, useEffect, useState } from 'react';
-import EmpresaClientesModalAdd from './modal/add';
 import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
+import EmpresaClientesModalView from './modal/view';
 import styles from './page.module.scss';
 
 export default function EmpresaClientes() {
@@ -27,11 +27,20 @@ export default function EmpresaClientes() {
     }, [me]);
 
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
-    const [isModalAddOpen, setIsModalAddOpen] = useState<boolean>(false);
 
     const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormDataModalFilter>({
         fullName: null, email: null, CPF: null, address: null, dateOfBirth: null, notes: null, phone: null
     });
+
+    const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
+    const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);
+    const [typeModal, setTypeModal] = useState<('edit' | 'create')>('create');
+
+    function handleOpenModalView(client: iClient | undefined) {
+        setTypeModal(client ? 'edit' : 'create');
+        setClientClicked(client);
+        setIsModalViewOpen(true);
+    }
 
     const columns = [
         {
@@ -77,10 +86,11 @@ export default function EmpresaClientes() {
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={clients?.count}
+                    handleTableRowClick={(e) => handleOpenModalView(e)}
 
                     title={`Clientes cadastrados em ${me?.currentMainCompany.name ?? ''}`}
                     btn_add_label='Cadastrar novo'
-                    btn_add_function={() => setIsModalAddOpen(true)}
+                    btn_add_function={() => handleOpenModalView(undefined)}
                     btn_filter_label='Filtrar'
                     btn_filter_function={() => setIsModalFilterOpen(true)}
 
@@ -101,9 +111,11 @@ export default function EmpresaClientes() {
                 setCurrentPage={setCurrentPage}
             />
 
-            <EmpresaClientesModalAdd
-                isModalOpen={isModalAddOpen}
-                setIsModalOpen={setIsModalAddOpen}
+            <EmpresaClientesModalView
+                isModalOpen={isModalViewOpen}
+                setIsModalOpen={setIsModalViewOpen}
+                type={typeModal}
+                client={clientClicked}
             />
         </Fragment>
     )

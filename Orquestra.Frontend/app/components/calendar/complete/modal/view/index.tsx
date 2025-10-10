@@ -28,7 +28,7 @@ import Swal from 'sweetalert2';
 
 interface iProps {
     isOpen: boolean;
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>;
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
     event: iEvent | undefined;
     companyId: Guid;
@@ -37,7 +37,7 @@ interface iProps {
     handleGetSchedules: () => Promise<void>;
 }
 
-export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event, companyId, companyUsers, clients, handleGetSchedules }: iProps) {
+export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event, companyId, companyUsers, clients, handleGetSchedules }: iProps) {
 
     const router = useRouter();
     const windowSize = useWindowSize();
@@ -75,9 +75,9 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
     const handleClose = useCallback(() => {
         setSaving(false);
         setEditing(false);
-        setModalIsOpen(false);
+        setIsModalOpen(false);
         handleClearFormData(setFormData);
-    }, [setModalIsOpen]);
+    }, [setIsModalOpen]);
 
     useEffect(() => {
         if (!isOpen) {
@@ -156,7 +156,7 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
             amountReceived: event.schedule.amountReceived,
             observations: event.schedule.observations
         });
-    }, [isOpen, type, event, companyUsers, clients, scheduleStatusEnum, router, setModalIsOpen, handleClose]);
+    }, [isOpen, type, event, companyUsers, clients, scheduleStatusEnum, router, setIsModalOpen, handleClose]);
 
     const setCompanyUsersIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.usersIds)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -247,7 +247,8 @@ export default function ModalCalendarView({ isOpen, setModalIsOpen, type, event,
     return (
         <ModalGeneric
             isOpen={isOpen}
-            setModalIsOpen={handleClose}
+            setIsModalOpen={setIsModalOpen}
+            onRequestClose={handleClose}
             showCloseButton={false}
             allowCloseOutsideClick={false}
             width={windowSize.width <= 1281 ? '85%' : '55%'}

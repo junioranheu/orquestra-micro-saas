@@ -84,7 +84,7 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            <ModalSettings isOpen={isMenuOpen} setModalIsOpen={setIsMenuOpen} customPosition={modalPosition} />
+            <ModalSettings isOpen={isMenuOpen} setIsModalOpen={setIsMenuOpen} customPosition={modalPosition} />
         </Fragment>
     )
 }
