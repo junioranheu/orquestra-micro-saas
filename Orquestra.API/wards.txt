@@ -1,4 +1,13 @@
-resolver os "TO DO"
-atualizar o sistema para o .NET 10
+﻿⦁	Etc
+Resolver os "TO DO";
+Atualizar o sistema para o .NET 10;
 
-QUANDO MARCAR UM SCHEDULE, MANDAR EMAIL PRO CLIENTE E PRO PROFISSIONAL INSERIDO (se for nulo manda pra todos)
+⦁	Cliente
+Converter as tags de inglês para português;
+
+⦁	Empresa
+Dropdown dos países;
+Fazer o negócio do CEP;
+
+⦁	Schedule
+Quando uma Schedule é marcada ou edita, deve-se mandar um e-mail para o cliente e para os profissionals;
