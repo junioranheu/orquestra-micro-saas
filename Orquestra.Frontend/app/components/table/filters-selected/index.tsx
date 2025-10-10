@@ -106,9 +106,12 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             }
         }
 
+        console.clear();
+
         // Recriar query;
         const queryString = updatedFilters.map(f => `${f.name}=${f.value}`).join('&');
-        const queryStringNormalized = queryString ? `?${queryString}` : '';
+        const mark = apiUrlBase.includes('?') ? '&' : '?';
+        const queryStringNormalized = queryString ? `${mark}${queryString}` : '';
         const url = `${apiUrlBase}${queryStringNormalized}`;
         setApiUrlRequest(url);
     }
