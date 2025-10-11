@@ -24,6 +24,7 @@ interface iProps<T> {
     handleExtraValidation?: () => boolean | null;
     handleKeyDown?: KeyboardEventHandler<HTMLInputElement>;
     handleBlur?: FocusEventHandler<HTMLInputElement>;
+    handleOnChange?: KeyboardEventHandler<HTMLInputElement>;
 }
 
 export default function InputMask<T>({
@@ -45,7 +46,8 @@ export default function InputMask<T>({
     svg_staticImageData = null,
     handleExtraValidation = () => null,
     handleKeyDown = () => null,
-    handleBlur = () => null
+    handleBlur = () => null,
+    handleOnChange = () => null
 }: iProps<T>) {
 
     const value_formData = formData?.[fieldName] ?? '';
@@ -126,6 +128,7 @@ export default function InputMask<T>({
                     value={value_formData?.toString() ?? ''}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
+                    onChange={handleOnChange}
                     inputRef={(input) => {
                         if (!input) {
                             return;

@@ -13,6 +13,7 @@ import { COLORS } from '@/app/consts/colors';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleConvertBase64ToFile from '@/app/functions/convert.base64ToFile';
+import { handleFetchCEP } from '@/app/functions/fetch.CEP';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import { handleGetOnlyNumbers } from '@/app/functions/format.string';
 import handleGetPropName from '@/app/functions/get.propName';
@@ -22,7 +23,7 @@ import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompan
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, Fragment, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iProps {
     isModalOpen: boolean;
@@ -197,6 +198,21 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         return;
     }
 
+    async function handleGetCEP(e: KeyboardEvent<HTMLInputElement>) {
+        const cep = e.currentTarget.value;
+        const cepRegex = /^\d{5}-\d{3}$/;
+
+        if (!cepRegex.test(cep)) {
+            return;
+        }
+
+        const data = await handleFetchCEP(cep);
+
+        if (data) {
+            setFormData(prev => ({ ...prev, ...data }));
+        }
+    }
+
     if (!isModalOpen) {
         return;
     }
@@ -237,7 +253,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                         <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} mask='(00) 00000-0000' />
                         <Dropdown title='Tipo' options={companyTypeEnum ?? []} selectedOption={companyTypeEnum?.find(x => x.value.toString() === formData.companyType?.toString())} setSelectedOption={setCompanyTypeOption} isDisabled={!editing} isObligatory={true} />
 
-                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' />
+                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' handleOnChange={(e) => handleGetCEP(e)} />
                         <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
