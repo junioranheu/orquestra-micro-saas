@@ -26,19 +26,22 @@ public sealed class Company: Audit
 
     #region location
     [MaxLength(255)]
-    public string Address { get; set; } = string.Empty;
+    public string? Address { get; set; } = string.Empty;
+
+    [MaxLength(5)]
+    public string? AddressNumber { get; set; } = string.Empty;
 
     [MaxLength(100)]
-    public string City { get; set; } = string.Empty;
+    public string? City { get; set; } = string.Empty;
 
     [MaxLength(100)]
-    public string State { get; set; } = string.Empty;
+    public string? State { get; set; } = string.Empty;
 
     [MaxLength(9)]
     public string? ZipCode { get; set; } = string.Empty;
 
     [MaxLength(56)]
-    public string Country { get; set; } = string.Empty;
+    public string? Country { get; set; } = string.Empty;
     #endregion
 
     #region customization

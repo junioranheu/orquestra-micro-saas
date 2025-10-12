@@ -10,7 +10,19 @@ public sealed class ClientInput
 
     public string? CPF { get; set; } = string.Empty;
 
+    #region location
     public string? Address { get; set; } = string.Empty;
+
+    public string? AddressNumber { get; set; } = string.Empty;
+
+    public string? City { get; set; } = string.Empty;
+
+    public string? State { get; set; } = string.Empty;
+
+    public string? ZipCode { get; set; } = string.Empty;
+
+    public string? Country { get; set; } = string.Empty;
+    #endregion
 
     public DateTime? DateOfBirth { get; set; }
 

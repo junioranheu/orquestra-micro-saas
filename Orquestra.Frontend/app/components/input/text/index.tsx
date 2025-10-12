@@ -59,7 +59,7 @@ export default function InputMask<T>({
         if (setFormData) {
             setFormData((prev: T) => ({
                 ...prev,
-                [fieldName]: e.target.value as T[keyof T],
+                [fieldName]: e.target.value as T[keyof T]
             }));
         }
     };

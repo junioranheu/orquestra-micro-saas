@@ -38,6 +38,7 @@ public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         company.Phone = input.Phone;
         company.CompanyType = input.CompanyType;
         company.Address = input.Address;
+        company.AddressNumber = input.AddressNumber;
         company.City = input.City;
         company.State = input.State;
         company.ZipCode = input.ZipCode;

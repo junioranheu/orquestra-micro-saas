@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Orquestra.Application.UseCases.CompanyUsers.Shared;
+﻿using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace Orquestra.Application.UseCases.Companies.Shared;
 
@@ -10,33 +8,27 @@ public sealed class CompanyOutput
     public Guid CompanyId { get; set; }
 
     #region basic
-    [MaxLength(255)]
     public string Name { get; set; } = string.Empty;
 
-    [MaxLength(150)]
     public string Email { get; set; } = string.Empty;
 
-    [MaxLength(12)]
     public string Phone { get; set; } = string.Empty;
 
     public CompanyTypeEnum CompanyType { get; set; }
     #endregion
 
     #region location
-    [MaxLength(255)]
-    public string Address { get; set; } = string.Empty;
+    public string? Address { get; set; } = string.Empty;
 
-    [MaxLength(100)]
-    public string City { get; set; } = string.Empty;
+    public string? AddressNumber { get; set; } = string.Empty;
 
-    [MaxLength(100)]
-    public string State { get; set; } = string.Empty;
+    public string? City { get; set; } = string.Empty;
 
-    [MaxLength(9)]
+    public string? State { get; set; } = string.Empty;
+
     public string? ZipCode { get; set; } = string.Empty;
 
-    [MaxLength(100)]
-    public string Country { get; set; } = string.Empty;
+    public string? Country { get; set; } = string.Empty;
     #endregion
 
     #region customization
@@ -44,7 +36,6 @@ public sealed class CompanyOutput
 
     public string? LogoContentType { get; set; }
 
-    [MaxLength(20)]
     public string? Color { get; set; } = string.Empty;
     #endregion
 

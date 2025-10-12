@@ -25,12 +25,13 @@ export default interface iCompanyOutput {
     companyType: string;
 
     address?: string;
+    addressNumber?: string;
     city?: string;
     state?: string;
     zipCode?: string;
     country?: string;
 
-    // logo?: number[]; // Entidade;
+    // logo?: number[]; // Entity;
     logoFormFile?: globalThis.File | null; // Input;
     logoBase64?: string; // Output;
     logoContentType?: string;

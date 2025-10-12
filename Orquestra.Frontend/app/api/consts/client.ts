@@ -16,7 +16,12 @@ export default interface iClient {
     fullName: string;
     email: string;
     cpf: string;
-    address: string;
+    address?: string;
+    addressNumber?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    country?: string;
     dateOfBirth?: Date;
     phone?: string;
     notes?: string;

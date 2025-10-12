@@ -6,8 +6,6 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Orquestra.Application.UseCases.Clients.Update;
 
@@ -36,7 +34,12 @@ public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUse
         client.FullName = input.FullName ?? client.FullName;
         client.Email = input.Email ?? client.Email;
         client.CPF = input.CPF ?? client.CPF;
-        client.Address = input.Address ?? client.Address;
+        client.Address = input.Address;
+        client.AddressNumber = input.AddressNumber;
+        client.City = input.City;
+        client.State = input.State;
+        client.ZipCode = input.ZipCode;
+        client.Country = input.Country;
 
         if (input.DateOfBirth.HasValue && input.DateOfBirth.Value > DateTime.MinValue)
         {

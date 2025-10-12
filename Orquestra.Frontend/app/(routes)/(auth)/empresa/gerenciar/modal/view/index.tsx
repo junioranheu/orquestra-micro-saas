@@ -53,6 +53,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         companyType: '',
 
         address: '',
+        addressNumber: '',
         city: '',
         state: '',
         zipCode: '',
@@ -99,6 +100,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
             companyType: company?.companyType ?? '',
 
             address: company?.address ?? '',
+            addressNumber: company?.addressNumber ?? '',
             city: company?.city ?? '',
             state: company?.state ?? '',
             zipCode: company?.zipCode ?? '',
@@ -122,6 +124,8 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
     const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
+        alert(formData.name + ' | ' + formData.phone);
+
         if (!formData.name || !formData.email || !formData.phone || !formData.companyType) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
@@ -146,6 +150,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
         formDataInput.append('CompanyType', input.companyType);
         if (input.address) formDataInput.append('Address', input.address);
+        if (input.addressNumber) formDataInput.append('AddressNumber', input.addressNumber);
         if (input.city) formDataInput.append('City', input.city);
         if (input.state) formDataInput.append('State', input.state);
 
@@ -199,6 +204,8 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
     }
 
     async function handleGetCEP(e: KeyboardEvent<HTMLInputElement>) {
+        setFormData(prev => ({ ...prev, address: '', addressNumber: '', city: '', state: '', country: '' }));
+
         const cep = e.currentTarget.value;
         const cepRegex = /^\d{5}-\d{3}$/;
 
@@ -255,10 +262,11 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
                         <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' handleOnChange={(e) => handleGetCEP(e)} />
                         <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Número do endereço' fieldName='addressNumber' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
-                        <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar logo' />
+                        <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar logo da empresa' />
                         <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
 
                         {
