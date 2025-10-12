@@ -1,6 +1,7 @@
 'use client';
 import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
-import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
+import Icon from '@/app/components/icon';
+import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
@@ -81,6 +82,14 @@ export default function EmpresaClientes() {
         }
     ] as iTableColumn[];
 
+    const managingOptions = [
+        {
+            label: 'Editar cliente',
+            function: (e) => handleOpenModalView(e),
+            icon: <Icon icon='edit' />
+        }
+    ] as iTableManagingOptions[];
+
     return (
         <Fragment>
             <section className={styles.main}>
@@ -94,6 +103,7 @@ export default function EmpresaClientes() {
                     handleTableRowClick={(e) => handleOpenModalView(e)}
 
                     title={`Clientes cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
+                    managingOptions={managingOptions}
                     btn_add_label='Cadastrar novo'
                     btn_add_function={() => handleOpenModalView(undefined)}
                     btn_filter_label='Filtrar'
