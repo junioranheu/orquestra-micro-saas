@@ -5,10 +5,6 @@ Atualizar o sistema para o .NET 10;
 
 ⦁	Client
 Converter as tags de inglês para português;
-Refatorar cliente... tem que ter CEP, endereço, número do endereço, estado, país
-
-⦁	Company
-Adocopmar número do endereço
 
 ⦁	Schedule
 Quando uma Schedule é marcada ou editada, deve-se mandar um e-mail para o cliente e para os profissionals;
