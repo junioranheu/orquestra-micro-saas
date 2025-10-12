@@ -21,6 +21,11 @@ export interface iClientFormDataModalFilter {
     email: string | null;
     cpf: string | null;
     address: string | null;
+    addressNumber: string | null;
+    city: string | null;
+    state: string | null;
+    zipCode: string | null;
+    country: string | null;
     dateOfBirth: Date | string | null;
     phone: string | null;
     notes: string | null;

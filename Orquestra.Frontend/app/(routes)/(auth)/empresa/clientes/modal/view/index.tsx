@@ -1,20 +1,25 @@
 'use client';
 import { iClientFormDataModalFilter } from '@/app/(routes)/(auth)/empresa/clientes/modal/filter';
 import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
+import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
+import { handleFetchCEP } from '@/app/functions/fetch.CEP';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import { handleFormatCPF, handleGetOnlyNumbers } from '@/app/functions/format.string';
-import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
+import handleGetPropName from '@/app/functions/get.propName';
+import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, Fragment, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iModalFilterParams {
     isModalOpen: boolean;
@@ -33,11 +38,19 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         fullName: null,
         email: null,
         cpf: null,
-        address: null,
+        address: '',
+        addressNumber: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
         dateOfBirth: null,
         notes: null,
         phone: null
     });
+
+    const [countries, setCountries] = useState<string[] | undefined>([]);
+    useApiRequestToSetterOnUrlChange<string[]>({ apiUrlRequest: CONSTS_UTILITY.getCountry, setter: setCountries });
 
     const handleClose = useCallback(() => {
         setSaving(false);
@@ -64,12 +77,19 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
             fullName: client ? client.fullName : null,
             email: client ? client.email : null,
             cpf: client ? handleFormatCPF(client.cpf) : null,
-            address: client ? client.address : null,
+            address: client && client.address ? client.address : null,
+            addressNumber: client && client.addressNumber ? client.addressNumber : null,
+            city: client && client.city ? client.city : null,
+            state: client && client.state ? client.state : null,
+            zipCode: client && client.zipCode ? client.zipCode : null,
+            country: client && client.country ? client.country : null,
             dateOfBirth: client && client?.dateOfBirth ? handleFormatDateToInputValue(new Date(client?.dateOfBirth)) : null,
             notes: client && client?.notes ? client.notes : null,
             phone: client && client?.phone ? client.phone : null
         });
     }, [isModalOpen, type, client, setIsModalOpen, handleClose]);
+
+    const setCountryOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.country ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
         if (!formData.fullName || !formData.cpf) {
@@ -143,6 +163,24 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         return;
     }
 
+    async function handleGetCEP(e: KeyboardEvent<HTMLInputElement>) {
+        setFormData(prev => ({ ...prev, address: '', addressNumber: '', city: '', state: '', country: '' }));
+
+        const cep = e.currentTarget.value;
+        const cepRegex = /^\d{5}-\d{3}$/;
+
+        if (!cepRegex.test(cep)) {
+            return;
+        }
+
+        const data = await handleFetchCEP(cep);
+
+        if (data) {
+            setFormData(prev => ({ ...prev, ...data }));
+        }
+    }
+
+
     if (!isModalOpen) {
         return;
     }
@@ -181,7 +219,12 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
                         <InputMask title='CPF' fieldName='cpf' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000000-00' isObligatory={true} />
                         <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='(00) 00000-0000' />
-                        <InputMask title='Endereço' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' handleOnChange={(e) => handleGetCEP(e)} />
+                        <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Número do endereço' fieldName='addressNumber' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
                         <InputMask type='date' title='Data de aniversário' fieldName='dateOfBirth' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Anotações' fieldName='notes' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                     </div>

@@ -124,8 +124,6 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
     const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
-        alert(formData.name + ' | ' + formData.phone);
-
         if (!formData.name || !formData.email || !formData.phone || !formData.companyType) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;

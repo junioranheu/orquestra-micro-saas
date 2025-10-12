@@ -55,14 +55,55 @@ export default function InputMask<T>({
     const [showErrorIcon, setShowErrorIcon] = useState<boolean>(true);
     const svgDefaultProps = { width: 20 };
 
-    const defaultHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (setFormData) {
-            setFormData((prev: T) => ({
-                ...prev,
-                [fieldName]: e.target.value as T[keyof T]
-            }));
+    // function handleDefaultHandleChange(e: ChangeEvent<HTMLInputElement>) {
+    //     if (setFormData) {
+    //         setFormData((prev: T) => ({
+    //             ...prev,
+    //             [fieldName]: e.target.value as T[keyof T]
+    //         }));
+    //     }
+    // }
+
+    function handleDefaultHandleChange(e: ChangeEvent<HTMLInputElement>) {
+        if (!setFormData) {
+            return;
         }
-    };
+
+        let value = e.target.value;
+
+        if (mask && mask?.length > 0) {
+            // Extrai apenas os dígitos;
+            let digits = (value.match(/\d/g) || []).join('');
+
+            // Conta quantos dígitos a máscara permite;
+            const maxDigits = (mask.match(/0/g) || []).length;
+            if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
+
+            // Reconstrói o valor formatado conforme a máscara;
+            let formatted = '';
+            let digitIndex = 0;
+
+            for (let i = 0; i < mask.length; i++) {
+                if (mask[i] === '0') {
+                    formatted += digits[digitIndex] ?? '';
+                    digitIndex++;
+                } else {
+                    // Mantém o caractere da máscara;
+                    if (digitIndex < digits.length) {
+                        formatted += mask[i];
+                    }
+                }
+            }
+
+            value = formatted;
+        }
+
+        // Salva no state;
+        setFormData(prev => ({
+            ...prev,
+            [fieldName]: value as T[keyof T]
+        }));
+    }
 
     useEffect(() => {
         function handleCheckErrorIcon() {
@@ -136,7 +177,7 @@ export default function InputMask<T>({
 
                         input.oninput = (e: Event) => {
                             const target = e.target as HTMLInputElement;
-                            defaultHandleChange({ target } as ChangeEvent<HTMLInputElement>);
+                            handleDefaultHandleChange({ target } as ChangeEvent<HTMLInputElement>);
                         };
                     }}
                 />

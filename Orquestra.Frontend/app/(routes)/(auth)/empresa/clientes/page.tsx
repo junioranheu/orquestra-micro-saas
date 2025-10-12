@@ -29,7 +29,7 @@ export default function EmpresaClientes() {
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 
     const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormDataModalFilter>({
-        fullName: null, email: null, cpf: null, address: null, dateOfBirth: null, notes: null, phone: null
+        fullName: null, email: null, cpf: null, address: null, addressNumber: null, city: null, state: null, zipCode: null, country: null, dateOfBirth: null, notes: null, phone: null
     });
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
@@ -57,6 +57,11 @@ export default function EmpresaClientes() {
             title: 'E-mail',
             dataIndex: 'email',
             key: 'email'
+        },
+        {
+            title: 'CEP',
+            dataIndex: 'zipCode',
+            key: 'zipCode'
         },
         {
             title: 'Endereço',
