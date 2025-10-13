@@ -16,9 +16,10 @@ export default function useIsSupportedBrowser() {
             setIsSupported(false);
 
             swal({
-                title: 'Navegador não suportado',
-                content: `O ${SYSTEM.NAME} só é suportado nos navegadores Chrome e Edge.`,
+                title: 'Navegador não suportado.',
+                content: `O ${SYSTEM.NAME} atualmente só é suportado nos navegadores Chrome e Edge.`,
                 confirmBtnText: 'Entendi',
+                confirmFunction: () => location.reload(),
                 icon: 'error',
                 allowOutsideClick: false
             });
