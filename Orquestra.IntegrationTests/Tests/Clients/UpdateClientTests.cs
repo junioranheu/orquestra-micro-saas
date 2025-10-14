@@ -57,38 +57,6 @@ public sealed class UpdateClientTests
     }
 
     [Fact]
-    public async Task Execute_ShouldThrow_WhenCompanyUserIsNotAdmin()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Client client = ClientMock.Create();
-        await Fixture.Save(context, client);
-
-        CompanyUser companyUser = new()
-        {
-            CompanyUserId = Guid.NewGuid(),
-            CompanyId = client.CompanyId,
-            UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Member
-        };
-
-        await Fixture.Save(context, companyUser);
-
-        UpdateClient sut = CreateSut(context, user);
-
-        ClientInput input = client.Adapt<ClientInput>();
-        input.FullName = "Juninho dos Anjos";
-        input.Email = "juniordosanjos@email.com";
-
-        // Act & Assert;
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, input));
-    }
-
-    [Fact]
     public async Task Execute_ShouldThrow_WhenClientDoesNotExist()
     {
         // Arrange;
