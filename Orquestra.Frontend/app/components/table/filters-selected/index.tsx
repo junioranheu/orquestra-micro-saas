@@ -28,7 +28,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             const [path, queryString] = apiUrlRequest.split('?');
 
             if (queryString) {
-                // tenta achar algo tipo "companyId=123" ou "userId=abc";
+                // tenta achar algo tipo 'companyId=123' ou 'userId=abc';
                 const match = queryString.match(/([a-zA-Z]+Id)=[^&]+/);
 
                 if (match) {
@@ -89,7 +89,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
 
             if (modalFilterFormData.hasOwnProperty(propertyName)) {
                 if (setModalFilterFormData) {
-                    // console.log(`Removing property "${propertyName}" from filters.`);
+                    // console.log(`Removing property '${propertyName}' from filters.`);
 
                     setModalFilterFormData((prevFilters: any) => {
                         if (propertyName in prevFilters) {
@@ -106,8 +106,6 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             }
         }
 
-        console.clear();
-
         // Recriar query;
         const queryString = updatedFilters.map(f => `${f.name}=${f.value}`).join('&');
         const mark = apiUrlBase.includes('?') ? '&' : '?';
@@ -116,13 +114,40 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
         setApiUrlRequest(url);
     }
 
+    function handleWorkaroundTranslation(content: string): string {
+        const dictionary: Record<string, string> = {
+            clientId: 'ID do Cliente',
+            fullName: 'Nome Completo',
+            email: 'E-mail',
+            cpf: 'CPF',
+            address: 'Endereço',
+            addressNumber: 'Número',
+            city: 'Cidade',
+            state: 'Estado',
+            zipCode: 'CEP',
+            country: 'País',
+            dateOfBirth: 'Data de Nascimento',
+            phone: 'Telefone',
+            notes: 'Observações',
+            companyId: 'ID da Empresa',
+            company: 'Empresa'
+        };
+
+        if (dictionary[content]) {
+            return dictionary[content];
+        }
+
+        console.warn(`Nenhuma tradução encontrada para a propriedade "${content}".`);
+        return content;
+    }
+
     return (
         <section className={styles.main}>
             {
                 filtersInternal?.filter(x => !x.name.includes('Id'))?.map((x: iFilter, i: number) => (
                     <Tag
                         key={i}
-                        text={`${x.name}: ${x.value}`}
+                        text={`${handleWorkaroundTranslation(x.name)}: ${x.value}`}
                         handleRemoveFunction={() => handleRemoveFilter(x)}
                         tippyContent='Remover filtro'
                     />
