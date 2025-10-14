@@ -68,10 +68,6 @@ export default function EmpresaMembros() {
         setIsModalViewOpen(true);
     }
 
-    useEffect(() => {
-        console.log(membersNormalized);
-    }, [membersNormalized]);
-
     const columns = [
         {
             title: 'Nome completo',

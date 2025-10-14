@@ -43,7 +43,7 @@ export default function EmpresaMembrosModalFilters({
     const setModuleOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.modules)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     function handleSubmit() {
-        const data = handleLoopFormData(modalFilterFormData, 'label');
+        const data = handleLoopFormData(modalFilterFormData, 'value');
         const url = handleNormalizeFetchUrl(apiUrlRequest, data);
         const urlNormalized = handleRemoveDuplicateQueryParams(url);
 
@@ -66,7 +66,8 @@ export default function EmpresaMembrosModalFilters({
             <div className='modal-layout-flex'>
                 <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                <Dropdown title='Tipo' options={companyUserRoleEnum ?? []} selectedOption={companyUserRoleEnum?.find(x => x.value.toString() === modalFilterFormData.companyUserRole?.toString())} setSelectedOption={setCompanyUserRoleOption} />
+                {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
+                <Dropdown title='Tipo' options={companyUserRoleEnum ?? []} selectedOption={companyUserRoleEnum?.find(x => x.value.toString() === modalFilterFormData.companyUserRole?.value.toString())} setSelectedOption={setCompanyUserRoleOption} />
                 <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={moduleEnum?.find(x => x.value.toString() === modalFilterFormData.modules?.toString())} setSelectedOption={setModuleOption} multiple={true} />
 
                 <Button
