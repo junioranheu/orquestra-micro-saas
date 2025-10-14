@@ -41,4 +41,10 @@ public static class SystemConsts
     public const string ScreenUserHasBeenVerified = "usuario/verificado";
     public const string ScreenCompanyHasBeenVerified = "empresa/verificada";
     public const string ScreenCompanyUserHasBeenVerified = "usuario/verificado";
+
+    public const string TemplateEmailSchedule = "EmailSchedule.html";
+    public const string TemplateEmailVerifyCompany = "EmailVerifyCompany.html";
+    public const string TemplateEmailCreateInvoice = "EmailCreateInvoice.html";
+    public const string TemplateEmailVerifyUser = "EmailVerifyUser.html";
+    public const string TemplateEmailVerifyCompanyUser = "EmailVerifyCompanyUser.html";
 }

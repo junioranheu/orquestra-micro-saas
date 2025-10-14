@@ -110,7 +110,7 @@ public sealed class CreateCompanyInvoice(
             { "[PaymentUrl]", paymentUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate("EmailCreateInvoice.html", values);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailCreateInvoice, values);
         await _emailService.SendEmail(to: company.Email, subject: $"Nova fatura — {company.Name} — {SystemConsts.NameApp}", body: bodyHtml);
     }
     #endregion

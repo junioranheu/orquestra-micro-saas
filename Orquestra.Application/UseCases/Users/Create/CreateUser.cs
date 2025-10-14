@@ -95,7 +95,7 @@ public sealed class CreateUser(
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate("EmailVerifyUser.html", values);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailVerifyUser, values);
         await _emailService.SendEmail(to: user.Email, subject: $"Bem-vindo ao {SystemConsts.NameApp} — Verifique sua conta!", body: bodyHtml);
     }
     #endregion

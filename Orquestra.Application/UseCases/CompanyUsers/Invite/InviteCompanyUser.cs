@@ -130,7 +130,7 @@ public sealed class InviteCompanyUser(
             { "[VerifyUrl]", verifyUrl },
         };
 
-        string bodyHtml = _emailService.RenderTemplate("EmailVerifyCompanyUser.html", values);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailVerifyCompanyUser, values);
         await _emailService.SendEmail(to: user.Email, subject: $"{company.Name} — Bem-vindo ao {SystemConsts.NameApp} — Verifique sua conta!", body: bodyHtml);
     }
     #endregion

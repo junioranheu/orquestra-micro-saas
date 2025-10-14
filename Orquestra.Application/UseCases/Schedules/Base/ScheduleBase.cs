@@ -226,7 +226,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             title = isCreate ? $"{schedule.CustomTitle} — {date} — {client}" : $"Atualização — {schedule.CustomTitle} — {date} — {client}";
         }
 
-        string bodyHtml = _emailService.RenderTemplate("EmailSchedule.html", values);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailSchedule, values);
         await _emailService.SendEmail(to: schedule.Company!.Email, subject: title, body: bodyHtml, cc: membersEmails);
     }
 

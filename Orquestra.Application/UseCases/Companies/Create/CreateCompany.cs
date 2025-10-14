@@ -119,7 +119,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate("EmailVerifyCompany.html", values);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailVerifyCompany, values);
         await _emailService.SendEmail(to: company.Email, subject: $"Bem-vindo ao {SystemConsts.NameApp} — Verifique sua empresa!", body: bodyHtml, cc: [user.Email]);
     }
     #endregion

@@ -32,7 +32,7 @@ public sealed class EmailServiceTests
     public void RenderTemplate_ShouldReplacePlaceholders_Correctly()
     {
         // Arrange;
-        string templateName = "EmailVerifyCompany.html";
+        string templateName = SystemConsts.TemplateEmailVerifyCompany;
         const string userName = "Junior Souza";
 
         Dictionary<string, string> values = new()
@@ -59,5 +59,24 @@ public sealed class EmailServiceTests
 
         // Act & Assert;
         Assert.Throws<FileNotFoundException>(() => _emailService.RenderTemplate(templateName, values));
+    }
+
+    [Theory]
+    [InlineData(SystemConsts.TemplateEmailSchedule)]
+    [InlineData(SystemConsts.TemplateEmailVerifyCompany)]
+    [InlineData(SystemConsts.TemplateEmailCreateInvoice)]
+    [InlineData(SystemConsts.TemplateEmailVerifyUser)]
+    [InlineData(SystemConsts.TemplateEmailVerifyCompanyUser)]
+    public void EmailTemplateFile_ShouldExist_ForAllConstants(string templateFileName)
+    {
+        // Arrange;
+        string basePath = Path.Combine(AppContext.BaseDirectory, "Services", "Email", "Templates");
+        string templatePath = Path.Combine(basePath, templateFileName);
+
+        // Act;
+        bool exists = File.Exists(templatePath);
+
+        // Assert;
+        Assert.True(exists, $"O template '{templateFileName}' não foi encontrado em '{templatePath}'.");
     }
 }
