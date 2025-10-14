@@ -30,11 +30,11 @@ public sealed class UpdateModuleCompanyUser(
         var result = await _context.CompanyUsers.
                      // AsNoTracking(). // Propositalmente sem AsNoTracking;
                      Where(x => x.CompanyId == input.CompanyId && x.UserId == input.UserId).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_User);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
         if (!result.Status)
         {
-            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_User);
+            throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyUser);
         }
 
         CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(companyModulesOutput, newModules: input.Modules);

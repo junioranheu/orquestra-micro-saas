@@ -77,9 +77,9 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             throw new ArgumentException($"O agendamento deve terminar até 23:59 do dia {GetDateDetails(date: input.DateStart, withHour: false)}.");
         }
 
-        _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);
+        _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundClient);
 
-        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
+        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
         await ValidateUsersAndRemoveNotLinkedOnes(input);
     }
@@ -207,7 +207,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         Dictionary<string, string> values = new()
         {
-            { "[NameApp]", SystemConsts.NameApp },
+            { "[NameApp]", SystemConsts.App.NameApp },
             { "[ClientName]", client},
             { "[ProfessionalName]", membersNames.Count != 0 ? string.Join(", ", membersNames) : "Profissional específico não definido" },
             { "[ScheduleDateTime]",date },
@@ -226,7 +226,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             title = isCreate ? $"{schedule.CustomTitle} — {date} — {client}" : $"Atualização — {schedule.CustomTitle} — {date} — {client}";
         }
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailSchedule, values);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailSchedule, values);
         await _emailService.SendEmail(to: schedule.Company!.Email, subject: title, body: bodyHtml, cc: membersEmails);
     }
 

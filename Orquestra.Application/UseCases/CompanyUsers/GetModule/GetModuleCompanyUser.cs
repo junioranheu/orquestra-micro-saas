@@ -21,11 +21,11 @@ public sealed class GetModuleCompanyUser(Context context, ICheckIfUserIsLinkedCo
                      Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId && x.UserId == userIdAuth).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_User);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
         if (!result.Status || result.User is null || (result.User is not null && !result.User.Status))
         {
-            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_User);
+            throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyUser);
         }
 
         ModuleEnum[] modules = result.Modules ?? [];

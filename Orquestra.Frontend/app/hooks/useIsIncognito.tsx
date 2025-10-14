@@ -25,7 +25,7 @@ export default function useIsIncognito({ mustShowModalIfIncognito }: iProps) {
                 content: `Não é possível acessar o ${SYSTEM.NAME} em modo anônimo.`,
                 confirmBtnText: 'Ok',
                 cancelBtnText: 'Saiba mais',
-                confirmFunction: () => { },
+                confirmFunction: () => { window.location.reload() },
                 cancelFunction: () => {
                     swal({
                         title: 'Por que não é permitido o modo anônimo?',
@@ -33,6 +33,7 @@ export default function useIsIncognito({ mustShowModalIfIncognito }: iProps) {
                             'Isso significa que sua sessão pode ser perdida a qualquer momento, e você não conseguiria acessar suas informações de forma segura. ' +
                             '<b>Para garantir que tudo funcione corretamente, use o navegador no modo normal.</b>',
                         confirmBtnText: 'Ok',
+                        confirmFunction: () => { window.location.reload() },
                         icon: 'info'
                     });
                 },

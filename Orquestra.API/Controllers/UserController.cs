@@ -73,7 +73,7 @@ public class UserController(
         await _verify.Execute(token);
 
         EnvOutput env = _env.GetUrls();
-        string url = $"{env.UrlFrontend}/{SystemConsts.ScreenUserHasBeenVerified}";
+        string url = $"{env.UrlFrontend}/{SystemConsts.Screens.UserVerified}";
 
         return Redirect(url);
     }

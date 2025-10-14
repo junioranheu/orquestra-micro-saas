@@ -13,7 +13,7 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (!context.Request.Cookies.TryGetValue(SystemConsts.CookieName, out string? token) || string.IsNullOrEmpty(token))
+        if (!context.Request.Cookies.TryGetValue(SystemConsts.Cookies.Auth, out string? token) || string.IsNullOrEmpty(token))
         {
             await _next(context);
             return;
@@ -28,7 +28,7 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
         catch
         {
             // Cookie inválido: limpa e segue;
-            context.Response.Cookies.Delete(SystemConsts.CookieName);
+            context.Response.Cookies.Delete(SystemConsts.Cookies.Auth);
             await _next(context);
             return;
         }
@@ -45,7 +45,7 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
 
         if (string.IsNullOrEmpty(userIdClaim))
         {
-            context.Response.Cookies.Delete(SystemConsts.CookieName);
+            context.Response.Cookies.Delete(SystemConsts.Cookies.Auth);
             await _next(context);
             return;
         }
@@ -59,14 +59,14 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
             (string newJwtToken, CookieOptions cookieOptions) = await createRefreshToken.RefreshToken(userIdAuth);
 
             // Escreve cookie pra próxima requisição do browser com o novo refresh token;
-            context.Response.Cookies.Append(key: SystemConsts.CookieName, value: newJwtToken, cookieOptions);
+            context.Response.Cookies.Append(key: SystemConsts.Cookies.Auth, value: newJwtToken, cookieOptions);
 
             // Guarda o token renovado no Items (expira depois dessa request) para o JwtBearer usar nesta mesma request;
-            context.Items[SystemConsts.CookieRefreshedTokenName] = newJwtToken;
+            context.Items[SystemConsts.Cookies.Refresh] = newJwtToken;
         }
         catch (Exception)
         {
-            context.Response.Cookies.Delete(SystemConsts.CookieName);
+            context.Response.Cookies.Delete(SystemConsts.Cookies.Auth);
         }
 
         await _next(context);

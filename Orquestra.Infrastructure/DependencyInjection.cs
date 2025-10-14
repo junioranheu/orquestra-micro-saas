@@ -95,16 +95,16 @@ public static class DependencyInjection
                      OnMessageReceived = context =>
                      {
                          // Se o middleware renovou o token (e agora tem um refresh token), use-o nesta mesma request;
-                         if (context.HttpContext.Items.TryGetValue(SystemConsts.CookieRefreshedTokenName, out object? refreshed) && refreshed is string refreshedToken && !string.IsNullOrEmpty(refreshedToken))
+                         if (context.HttpContext.Items.TryGetValue(SystemConsts.Cookies.Refresh, out object? refreshed) && refreshed is string refreshedToken && !string.IsNullOrEmpty(refreshedToken))
                          {
                              context.Token = refreshedToken;
                              return Task.CompletedTask;
                          }
 
                          // Se não tem um refresh token, ou seja, tem apenas um token original, use-o;
-                         if (context.Request.Cookies.ContainsKey(SystemConsts.CookieName))
+                         if (context.Request.Cookies.ContainsKey(SystemConsts.Cookies.Auth))
                          {
-                             context.Token = context.Request.Cookies[SystemConsts.CookieName];
+                             context.Token = context.Request.Cookies[SystemConsts.Cookies.Auth];
                              return Task.CompletedTask;
                          }
 

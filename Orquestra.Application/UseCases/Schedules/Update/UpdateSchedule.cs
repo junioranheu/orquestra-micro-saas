@@ -18,7 +18,7 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         Schedule? schedule = await _context.Schedules.
                              // AsNoTracking(). // Propositalmente sem AsNoTracking;
                              Where(x => x.ScheduleId == input.ScheduleId).
-                             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Schedule);
+                             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundSchedule);
 
         // Deve validar as datas apenas se o usuário alterou alguma delas;
         // Caso não tenha alterado, deve-se permitir que ele altere qualquer outra prop;

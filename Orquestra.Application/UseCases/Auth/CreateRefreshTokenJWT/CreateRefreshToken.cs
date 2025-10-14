@@ -117,7 +117,7 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         var user = await _context.Users.
                    AsNoTracking().
                    Where(x => x.UserId == userIdAuth).
-                   FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_User);
+                   FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
         if (!user.Status)
         {

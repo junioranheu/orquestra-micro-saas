@@ -85,7 +85,7 @@ public static class Fixture
     {
         Mock<IWebHostEnvironment> envMock = new();
         envMock.SetupGet(x => x.EnvironmentName).Returns("Development");
-        envMock.SetupGet(x => x.ApplicationName).Returns(SystemConsts.NameApp);
+        envMock.SetupGet(x => x.ApplicationName).Returns(SystemConsts.App.NameApp);
         envMock.SetupGet(x => x.ContentRootPath).Returns(AppContext.BaseDirectory);
         envMock.SetupGet(x => x.WebRootPath).Returns(AppContext.BaseDirectory);
 
@@ -137,8 +137,8 @@ public static class Fixture
         {
             TokenExpiryMinutes = 10,
             RefreshTokenExpiryMinutes = 30,
-            Issuer = $"{SystemConsts.NameApp}.Test",
-            Audience = $"{SystemConsts.NameApp}.TestAudience",
+            Issuer = $"{SystemConsts.App.NameApp}.Test",
+            Audience = $"{SystemConsts.App.NameApp}.TestAudience",
         };
 
         IOptions<JwtSettings> jwtOptions = Options.Create(jwtSettings);

@@ -43,7 +43,7 @@ public static class DependencyAppConfiguration
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.NameApi);
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", SystemConsts.App.NameApi);
                 c.DocExpansion(DocExpansion.None);
 
                 if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows())
@@ -113,13 +113,13 @@ public static class DependencyAppConfiguration
 
     private static void AddObservability(WebApplication app)
     {
-        ActivitySource activitySource = new(SystemConsts.NameApi);
+        ActivitySource activitySource = new(SystemConsts.App.NameApi);
 
         ILogger<Program> logger = app.Services.GetRequiredService<ILogger<Program>>();
 
         ActivityListener listener = new()
         {
-            ShouldListenTo = source => source.Name == "Microsoft.AspNetCore" || source.Name == SystemConsts.NameApi,
+            ShouldListenTo = source => source.Name == "Microsoft.AspNetCore" || source.Name == SystemConsts.App.NameApi,
             Sample = (ref ActivityCreationOptions<ActivityContext> options) => ActivitySamplingResult.AllDataAndRecorded,
             ActivityStopped = activity =>
             {

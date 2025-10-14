@@ -35,7 +35,7 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
 
     public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate, bool mustValidateIfNameAlreadyExist, bool mustValidateIfEmailAlreadyExist)
     {
-        string warnAlreadyExist = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.Email}.";
+        string warnAlreadyExist = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.App.Email}.";
 
         #region basic
         if (!isCreate)
@@ -121,7 +121,7 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         {
             if (!input.Status)
             {
-                throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
+                throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyCompany);
             }
         }
         #endregion
@@ -170,7 +170,7 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         return RegexZipCode().IsMatch(zipCode);
     }
 
-    private static bool IsCountryValid(string country)
+    private static bool IsCountryValid(string? country)
     {
         if (string.IsNullOrWhiteSpace(country))
         {

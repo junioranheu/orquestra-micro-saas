@@ -66,7 +66,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         {
             company.CompanySituation = CompanySituationEnum.PendingPayment;
             company.PlanStartDate = GetDate();
-            company.PlanEndDate = GetDate().AddDays(SystemConsts.PlanDurationInDays);
+            company.PlanEndDate = GetDate().AddDays(SystemConsts.Time.PlanDurationDays);
         }
 
         if (input.LogoFormFile is not null)
@@ -113,14 +113,14 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
 
         Dictionary<string, string> values = new()
         {
-            { "[NameApp]", SystemConsts.NameApp },
+            { "[NameApp]", SystemConsts.App.NameApp },
             { "[CompanyName]", company.Name },
             { "[UserName]", GetFirstWord(user.FullName) },
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailVerifyCompany, values);
-        await _emailService.SendEmail(to: company.Email, subject: $"Bem-vindo ao {SystemConsts.NameApp} — Verifique sua empresa!", body: bodyHtml, cc: [user.Email]);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values);
+        await _emailService.SendEmail(to: company.Email, subject: $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua empresa!", body: bodyHtml, cc: [user.Email]);
     }
     #endregion
 }

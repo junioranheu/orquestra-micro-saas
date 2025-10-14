@@ -31,11 +31,11 @@ public sealed class UpdateModuleCompany(
         var result = await _context.Companies.
                      // AsNoTracking(). // Propositalmente sem AsNoTracking;
                      Where(x => x.CompanyId == input.CompanyId).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
         if (!result.Status)
         {
-            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
+            throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyCompany);
         }
 
         // #1 - Criar cobrança, obrigatoriamente antes de normalizar o input.Modules;
@@ -76,7 +76,7 @@ public sealed class UpdateModuleCompany(
         // Atualizar dados da empresa;
         company.CompanySituation = input.Modules?.Length >= 1 ? CompanySituationEnum.PendingPayment : CompanySituationEnum.RegisteredButWithoutAnyModules;
         company.PlanStartDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate() : company.PlanStartDate;
-        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(SystemConsts.PlanDurationInDays) : company.PlanEndDate;
+        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(SystemConsts.Time.PlanDurationDays) : company.PlanEndDate;
         company.Modules = input.Modules;
 
         _context.Update(company);

@@ -32,7 +32,7 @@ public class TestController() : BaseController<TestController>
     #endregion
 
     [AllowAnonymous]
-    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
+    [EnableRateLimiting(SystemConsts.Policies.RateLimiting)]
     [HttpGet("GetAnonymous")]
     public ActionResult GetAnonymous()
     {
@@ -40,7 +40,7 @@ public class TestController() : BaseController<TestController>
     }
 
     [AuthorizeFilter]
-    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
+    [EnableRateLimiting(SystemConsts.Policies.RateLimiting)]
     [HttpGet("GetAuth")]
     public ActionResult GetAuth()
     {

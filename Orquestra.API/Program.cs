@@ -3,7 +3,7 @@ using Orquestra.Application;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure;
 
-Console.Title = SystemConsts.NameApi;
+Console.Title = SystemConsts.App.NameApi;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 {

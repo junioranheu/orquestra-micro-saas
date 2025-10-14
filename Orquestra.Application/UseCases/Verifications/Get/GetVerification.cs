@@ -15,7 +15,7 @@ public sealed class GetVerification(Context context) : IGetVerification
         var verification = await _context.Verifications.
                            AsNoTracking().
                            Where(x => x.Token == token && x.VerificationType == verificationType && x.Status == true).
-                           FirstOrDefaultAsync() ?? throw new InvalidOperationException(SystemConsts.Warn_VerifyToken_Invalid);
+                           FirstOrDefaultAsync() ?? throw new InvalidOperationException(SystemConsts.Warnings.VerifyTokenInvalid);
 
         if (verification.Used)
         {
@@ -30,7 +30,7 @@ public sealed class GetVerification(Context context) : IGetVerification
         var verification = await _context.Verifications.
                            AsNoTracking().
                            Where(x => x.VerificationId == verificationId && x.Status == true).
-                           FirstOrDefaultAsync() ?? throw new InvalidOperationException(SystemConsts.Warn_VerifyToken_Invalid);
+                           FirstOrDefaultAsync() ?? throw new InvalidOperationException(SystemConsts.Warnings.VerifyTokenInvalid);
 
         if (verification.Used)
         {

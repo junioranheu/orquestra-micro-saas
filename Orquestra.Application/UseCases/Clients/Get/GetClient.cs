@@ -18,7 +18,7 @@ public sealed class GetClient(Context context, ICheckIfUserIsLinkedCompanyUser c
                      Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.ClientId == clientId && x.Status == true).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundClient);
 
         Guid companyId = result.CompanyId;
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);

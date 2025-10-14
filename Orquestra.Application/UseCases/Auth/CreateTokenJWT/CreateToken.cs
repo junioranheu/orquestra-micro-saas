@@ -45,7 +45,7 @@ public sealed class CreateToken(
         await _createRefreshToken.Save(refreshToken);
 
         // Escrever cookie;
-        _httpContextAccessor?.HttpContext?.Response.Cookies.Append(key: SystemConsts.CookieName, value: token, cookieOptions);
+        _httpContextAccessor?.HttpContext?.Response.Cookies.Append(key: SystemConsts.Cookies.Auth, value: token, cookieOptions);
 
         // Normalizar propriedade extra;
         user.RefreshTokenExpirationDate = cookieOptions.Expires;

@@ -17,11 +17,11 @@ public sealed class UpdateCurrentMainCompanyUser(Context context, ICheckIfUserIs
 
         List<CompanyUser> listCompanyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                             Where(x => x.UserId == userIdAuth).
-                                            ToListAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_Invalid_LinkedCompanyUser);
+                                            ToListAsync() ?? throw new KeyNotFoundException(SystemConsts.Templates.EmailSchedule);
 
         CompanyUser companyUser = await _context.CompanyUsers. // Propositalmente sem AsNoTracking;
                                   Where(x => x.CompanyId == companyId && x.UserId == userIdAuth && x.Status == true).
-                                  FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_Invalid_LinkedCompanyUser);
+                                  FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.InvalidLinkedCompanyUser);
 
         if (!companyUser.IsCurrentMainCompanyUser)
         {

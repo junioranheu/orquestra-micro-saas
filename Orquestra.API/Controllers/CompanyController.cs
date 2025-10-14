@@ -106,7 +106,7 @@ public class CompanyController(
         await _verify.Execute(token);
 
         EnvOutput env = _env.GetUrls();
-        string url = $"{env.UrlFrontend}/{SystemConsts.ScreenCompanyHasBeenVerified}";
+        string url = $"{env.UrlFrontend}/{SystemConsts.Screens.CompanyVerified}";
 
         return Redirect(url);
     }

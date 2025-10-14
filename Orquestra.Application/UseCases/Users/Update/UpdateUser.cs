@@ -27,7 +27,7 @@ public sealed class UpdateUser(Context context,IGetUser getUser) : UserBase(getU
     #region extras
     private async Task<User> Update(Guid userIdAuth, UserInput input)
     {
-        User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == userIdAuth && x.Status == true).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_User);
+        User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == userIdAuth && x.Status == true).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
         user.FullName = input.FullName ?? user.FullName;
         user.Email = input.Email ?? user.Email;

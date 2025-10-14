@@ -123,15 +123,15 @@ public sealed class InviteCompanyUser(
 
         Dictionary<string, string> values = new()
         {
-            { "[NameApp]", SystemConsts.NameApp },
+            { "[NameApp]", SystemConsts.App.NameApp },
             { "[CompanyName]", company.Name },
             { "[UserName]", userHasAccount ? GetFirstWord(user.FullName) : user.Email },
             { "[CompanyUserRole]", GetEnumDesc(companyUserRole).ToLowerInvariant() },
             { "[VerifyUrl]", verifyUrl },
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailVerifyCompanyUser, values);
-        await _emailService.SendEmail(to: user.Email, subject: $"{company.Name} — Bem-vindo ao {SystemConsts.NameApp} — Verifique sua conta!", body: bodyHtml);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompanyUser, values);
+        await _emailService.SendEmail(to: user.Email, subject: $"{company.Name} — Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua conta!", body: bodyHtml);
     }
     #endregion
 }

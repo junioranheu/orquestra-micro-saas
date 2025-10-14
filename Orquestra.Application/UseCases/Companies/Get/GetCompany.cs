@@ -22,11 +22,11 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
         if (throwIfStatusFalse && !result.Status)
         {
-            throw new InvalidOperationException(SystemConsts.Warn_NeedToVerify_Company);
+            throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyCompany);
         }
 
         var output = result.Adapt<CompanyOutput>();

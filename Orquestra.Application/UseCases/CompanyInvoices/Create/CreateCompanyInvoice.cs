@@ -65,7 +65,7 @@ public sealed class CreateCompanyInvoice(
     #region extras
     private async Task<(Company? company, ModuleEnum[] newModules)> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules, bool isCreateCompany)
     {
-        Company? company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
+        Company? company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
         if (isCreateCompany)
         {
@@ -101,7 +101,7 @@ public sealed class CreateCompanyInvoice(
 
         Dictionary<string, string> values = new()
         {
-            { "[NameApp]", SystemConsts.NameApp },
+            { "[NameApp]", SystemConsts.App.NameApp },
             { "[CompanyName]", company.Name },
             { "[InvoiceNumber]", invoice.InvoiceNumber.ToString() },
             { "[InvoiceDate]", GetDateDetails(withHour: false) },
@@ -110,8 +110,8 @@ public sealed class CreateCompanyInvoice(
             { "[PaymentUrl]", paymentUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailCreateInvoice, values);
-        await _emailService.SendEmail(to: company.Email, subject: $"Nova fatura — {company.Name} — {SystemConsts.NameApp}", body: bodyHtml);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailCreateInvoice, values);
+        await _emailService.SendEmail(to: company.Email, subject: $"Nova fatura — {company.Name} — {SystemConsts.App.NameApp}", body: bodyHtml);
     }
     #endregion
 }

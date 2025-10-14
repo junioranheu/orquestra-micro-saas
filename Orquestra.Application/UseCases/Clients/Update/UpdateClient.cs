@@ -29,7 +29,7 @@ public sealed class UpdateClient(Context context, ICheckIfUserIsLinkedCompanyUse
         Client? client = await _context.Clients.
                          // AsNoTracking(). // Propositalmente sem AsNoTracking;
                          Where(x => x.ClientId == input.ClientId).
-                         FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Client);
+                         FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundClient);
 
         client.FullName = input.FullName ?? client.FullName;
         client.Email = input.Email ?? client.Email;

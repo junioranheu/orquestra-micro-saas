@@ -20,7 +20,7 @@ public sealed class CalculatePriceModuleCompany(Context context, ICheckIfUserIsL
 
         Company? company = await _context.Companies.AsNoTracking().
                            Where(x => x.CompanyId == companyId).
-                           FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
+                           FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
         // Se por param não vier nenhum módulo, busque todos;
         if (modules is null || modules.Length == 0)

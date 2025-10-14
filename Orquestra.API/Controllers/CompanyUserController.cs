@@ -63,7 +63,7 @@ public class CompanyUserController(
         await _verify.Execute(token);
 
         EnvOutput env = _env.GetUrls();
-        string url = $"{env.UrlFrontend}/{SystemConsts.ScreenCompanyUserHasBeenVerified}";
+        string url = $"{env.UrlFrontend}/{SystemConsts.Screens.CompanyUserVerified}";
 
         return Redirect(url);
     }

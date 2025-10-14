@@ -32,12 +32,12 @@ public sealed class EmailServiceTests
     public void RenderTemplate_ShouldReplacePlaceholders_Correctly()
     {
         // Arrange;
-        string templateName = SystemConsts.TemplateEmailVerifyCompany;
+        string templateName = SystemConsts.Templates.EmailVerifyCompany;
         const string userName = "Junior Souza";
 
         Dictionary<string, string> values = new()
         {
-            { "[NameApp]", SystemConsts.NameApp },
+            { "[NameApp]", SystemConsts.App.NameApp },
             { "[UserName]", userName },
             { "[CompanyName]", "Anheu" },
             { "[ConfirmLink]", "https://anheu.vercel.app/" }
@@ -62,11 +62,11 @@ public sealed class EmailServiceTests
     }
 
     [Theory]
-    [InlineData(SystemConsts.TemplateEmailSchedule)]
-    [InlineData(SystemConsts.TemplateEmailVerifyCompany)]
-    [InlineData(SystemConsts.TemplateEmailCreateInvoice)]
-    [InlineData(SystemConsts.TemplateEmailVerifyUser)]
-    [InlineData(SystemConsts.TemplateEmailVerifyCompanyUser)]
+    [InlineData(SystemConsts.Templates.EmailSchedule)]
+    [InlineData(SystemConsts.Templates.EmailVerifyCompany)]
+    [InlineData(SystemConsts.Templates.EmailCreateInvoice)]
+    [InlineData(SystemConsts.Templates.EmailVerifyUser)]
+    [InlineData(SystemConsts.Templates.EmailVerifyCompanyUser)]
     public void EmailTemplateFile_ShouldExist_ForAllConstants(string templateFileName)
     {
         // Arrange;

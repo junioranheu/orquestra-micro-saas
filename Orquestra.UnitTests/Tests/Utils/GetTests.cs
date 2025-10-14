@@ -267,13 +267,13 @@ public sealed class GetTests
     public void GetFirstPart_ShouldReturn_WholeString_WhenNoDelimiterFound()
     {
         // Arrange;
-        string input = SystemConsts.NameApp;
+        string input = SystemConsts.App.NameApp;
 
         // Act;
         string result = GetFirstWord(input);
 
         // Assert;
-        Assert.Equal(SystemConsts.NameApp, result);
+        Assert.Equal(SystemConsts.App.NameApp, result);
     }
 
     [Fact]

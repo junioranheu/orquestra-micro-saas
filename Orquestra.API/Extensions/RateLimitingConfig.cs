@@ -10,7 +10,7 @@ public static class RateLimitingConfig
     {
         services.AddRateLimiter(options =>
         {
-            options.AddPolicy(SystemConsts.PolicyRateLimiting, httpContext =>
+            options.AddPolicy(SystemConsts.Policies.RateLimiting, httpContext =>
             {
                 string userId = httpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? httpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? "anon";
                 string path = httpContext.Request.Path.Value?.ToLower() ?? "";

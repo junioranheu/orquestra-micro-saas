@@ -17,7 +17,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
     const string _smtpHost = "smtp-relay.brevo.com";
     const int _smtpPort = 587;
     const string _senderName = "Orquestra";
-    const string _senderEmail = SystemConsts.Email;
+    const string _senderEmail = SystemConsts.App.Email;
     const string _username = "953807001@smtp-brevo.com";
     const bool _enableSsl = true;
     #endregion
@@ -57,7 +57,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 
         mailMessage.HeadersEncoding = Encoding.UTF8;
 
-        if (_isDevelopment && SystemConsts.DO_NOT_SEND_EMAIL_IF_ENV_DEV)
+        if (_isDevelopment && SystemConsts.App.DoNotSendEmailIfDev)
         {
             return;
         }

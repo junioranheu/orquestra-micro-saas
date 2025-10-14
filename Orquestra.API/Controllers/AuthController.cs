@@ -38,7 +38,7 @@ public class AuthController(
     private readonly ILogoutUser _logoutUser = logoutUser;
 
     [AllowAnonymous]
-    [EnableRateLimiting(SystemConsts.PolicyRateLimiting)]
+    [EnableRateLimiting(SystemConsts.Policies.RateLimiting)]
     [HttpPost]
     public async Task<ActionResult> Auth(AuthInput input)
     {
@@ -92,7 +92,7 @@ public class AuthController(
         CompanyOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanyOutput>();
 
         // Token;
-        string? token = Request.Cookies[SystemConsts.CookieName];
+        string? token = Request.Cookies[SystemConsts.Cookies.Auth];
         JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
         (_, _, DateTime validTo) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
 

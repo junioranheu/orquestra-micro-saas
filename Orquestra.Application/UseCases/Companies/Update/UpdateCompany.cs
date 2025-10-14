@@ -17,7 +17,7 @@ public sealed class UpdateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         Company? company = await _context.Companies.
                            // AsNoTracking(). // Propositalmente sem AsNoTracking;
                            Where(x => x.CompanyId == input.CompanyId).
-                           FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_Company);
+                           FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
         bool mustValidateIfNameAlreadyExist = company.Name != input.Name;
         bool mustValidateIfEmailAlreadyExist = company.Email != input.Email;

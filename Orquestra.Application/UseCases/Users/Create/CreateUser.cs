@@ -90,13 +90,13 @@ public sealed class CreateUser(
 
         Dictionary<string, string> values = new()
         {
-            { "[NameApp]", SystemConsts.NameApp },
+            { "[NameApp]", SystemConsts.App.NameApp },
             { "[UserName]", GetFirstWord(user.FullName) },
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.TemplateEmailVerifyUser, values);
-        await _emailService.SendEmail(to: user.Email, subject: $"Bem-vindo ao {SystemConsts.NameApp} — Verifique sua conta!", body: bodyHtml);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyUser, values);
+        await _emailService.SendEmail(to: user.Email, subject: $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua conta!", body: bodyHtml);
     }
     #endregion
 }

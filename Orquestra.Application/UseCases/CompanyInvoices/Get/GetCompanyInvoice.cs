@@ -19,7 +19,7 @@ public sealed class GetCompanyInvoice(Context context, ICheckIfUserIsLinkedCompa
         var result = await _context.CompanyInvoices.
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_CompanyInvoice);
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompanyInvoice);
 
         return result;
     }
@@ -33,7 +33,7 @@ public sealed class GetCompanyInvoice(Context context, ICheckIfUserIsLinkedCompa
                      Where(x => 
                         x.CompanyId == companyId && 
                         (companyInvoiceSituationEnum == null || x.CompanyInvoiceSituation == companyInvoiceSituationEnum)
-                     ).ToListAsync() ?? throw new KeyNotFoundException(SystemConsts.Warn_NotFound_CompanyInvoice);
+                     ).ToListAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompanyInvoice);
 
         return result;
     }

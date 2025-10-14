@@ -39,7 +39,7 @@ public static class DependencyInjection
         {
             c.SwaggerDoc("v1", new()
             {
-                Title = SystemConsts.NameApi,
+                Title = SystemConsts.App.NameApi,
                 Version = "v1"
             });
         });
@@ -120,7 +120,7 @@ public static class DependencyInjection
         /// OpenTelemetry.Extensions.Hosting;
         /// OpenTelemetry.Instrumentation.AspNetCore;
         services.AddOpenTelemetry().
-            ConfigureResource(resource => resource.AddService(SystemConsts.NameApi)).
+            ConfigureResource(resource => resource.AddService(SystemConsts.App.NameApi)).
             WithTracing(tracing => tracing.
                 AddAspNetCoreInstrumentation()
             );

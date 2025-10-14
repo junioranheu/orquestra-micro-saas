@@ -10,6 +10,7 @@ import { ContentLoaderCardGrid } from '@/app/components/content-loader/card';
 import ContentLoaderGrid from '@/app/components/content-loader/grid';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
@@ -22,6 +23,7 @@ import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
 import ModalEmpresaGerenciarView from './modal/view';
 import styles from './page.module.scss';
@@ -160,9 +162,11 @@ export default function EmpresaGerenciar() {
                                         )
                                     } */}
 
-                                    <p>
-                                        <Icon icon='info' size='small' /> {company.companySituationStr}
-                                    </p>
+                                    <Tippy content='Gerenciar plano'>
+                                        <p>
+                                            <Icon icon='info' size='small' /> <Link href={ROUTES.EMPRESA_USO_E_PLANO}>{company.companySituationStr}</Link>
+                                        </p>
+                                    </Tippy>
 
                                     {
                                         company.status ? (
@@ -184,9 +188,11 @@ export default function EmpresaGerenciar() {
                                         <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
                                     </p>
 
-                                    <p>
-                                        <Icon icon='users' size='small' /> {company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}
-                                    </p>
+                                    <Tippy content='Gerenciar clientes'>
+                                        <p>
+                                            <Icon icon='users' size='small' /> <Link href={ROUTES.EMPRESA_CLIENTES}>{company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}</Link>
+                                        </p>
+                                    </Tippy>
 
                                     {
                                         currentMainCompany?.companyId == company.companyId && (

@@ -34,7 +34,7 @@ public class CompanyInvoiceController(IEnvService env, IGetCompanyInvoice get) :
         // await _pay.Execute(invoiceNumber);
 
         EnvOutput env = _env.GetUrls();
-        string url = $"{env.UrlFrontend}/{SystemConsts.ScreenDashboard}";
+        string url = $"{env.UrlFrontend}/{SystemConsts.Screens.Dashboard}";
 
         return Redirect(url);
     }

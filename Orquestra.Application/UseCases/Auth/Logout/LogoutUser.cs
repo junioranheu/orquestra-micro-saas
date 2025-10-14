@@ -18,7 +18,7 @@ namespace Orquestra.Application.UseCases.Auth.Logout
         public async Task Execute(Guid userIdAuth)
         {
             CookieOptions cookieOptions = _jwtTokenGenerator.GetCookieOptions();
-            _httpContextAccessor?.HttpContext?.Response.Cookies.Delete(SystemConsts.CookieName, cookieOptions);
+            _httpContextAccessor?.HttpContext?.Response.Cookies.Delete(SystemConsts.Cookies.Auth, cookieOptions);
 
             await _createRefreshToken.Update(userIdAuth, mustCheckForValidRefreshTokens: true);
         }

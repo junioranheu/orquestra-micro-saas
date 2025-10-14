@@ -19,7 +19,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     private readonly IGetState _getState = getState;
     private readonly IGetCity _getCity = getCity;
 
-    [ResponseCache(Duration = SystemConsts.HalfDayInSec)]
+    [ResponseCache(Duration = SystemConsts.Time.HalfDay)]
     [AllowAnonymous]
     [HttpGet("GetBuildVersion")]
     public ActionResult GetBuildVersion()
@@ -42,7 +42,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(build);
     }
 
-    [ResponseCache(Duration = SystemConsts.OneYearInSec)]
+    [ResponseCache(Duration = SystemConsts.Time.OneYear)]
     [AllowAnonymous]
     [HttpGet("GetState")]
     public async Task<ActionResult> GetState()
@@ -52,7 +52,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(output);
     }
 
-    [ResponseCache(Duration = SystemConsts.OneYearInSec)]
+    [ResponseCache(Duration = SystemConsts.Time.OneYear)]
     [AllowAnonymous]
     [HttpGet("GetCity")]
     public async Task<ActionResult> GetCity()
@@ -62,7 +62,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(output);
     }
 
-    [ResponseCache(Duration = SystemConsts.OneYearInSec)]
+    [ResponseCache(Duration = SystemConsts.Time.OneYear)]
     [AllowAnonymous]
     [HttpGet("GetCountry")]
     public ActionResult GetCountry()
@@ -72,7 +72,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(output);
     }
 
-    [ResponseCache(Duration = SystemConsts.OneHourInSec)]
+    [ResponseCache(Duration = SystemConsts.Time.OneHour)]
     [AllowAnonymous]
     [HttpGet("GetModuleEnum")]
     public ActionResult GetModuleEnum()
