@@ -66,5 +66,6 @@ public static class SystemConsts
         public const string NotFoundClient = "O cliente não foi encontrado na base de dados.";
         public const string NotFoundUser = "O usuário não foi encontrado na base de dados.";
         public const string NotFoundSchedule = "O agendamento não foi encontrado na base de dados.";
+        public const string NotFoundVerification = "O código de verificação não foi encontrado na base de dados.";
     }
 }

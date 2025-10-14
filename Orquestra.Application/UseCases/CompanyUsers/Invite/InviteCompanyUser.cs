@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.Base;
@@ -70,7 +71,7 @@ public sealed class InviteCompanyUser(
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: company.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        Verification verification = await SaveVerification(companyUserId: Guid.Empty);
+        Verification verification = await SaveVerification(companyUserId: Guid.Empty, companyId: company.CompanyId);
         UserOutput user = new() { Email = email };
 
         await SendEmail(company, user, companyUserRole: CompanyUserRoleEnum.Member, verification);
@@ -78,11 +79,25 @@ public sealed class InviteCompanyUser(
 
     private async Task InviteUserWhoAlreadyHaveAccount(Guid userIdAuth, CompanyOutput company, UserOutput user, bool isFirstAdministrator)
     {
+        bool alreadyIsMember = await _context.CompanyUsers.
+                               Include(x => x.User).
+                               AsNoTracking().
+                               AnyAsync(x =>
+                                  x.CompanyId == company.CompanyId &&
+                                  x.User!.Email.ToLower() == user.Email.ToLower() &&
+                                  x.Status == true
+                               );
+
+        if (alreadyIsMember)
+        {
+            throw new InvalidOperationException($"Este e-mail já faz parte dos membros desta empresa.");
+        }
+
         CompanyUserInput input = new()
         {
             CompanyId = company.CompanyId,
             UserId = isFirstAdministrator ? userIdAuth : user.UserId,
-            CompanyUserRole = isFirstAdministrator ? CompanyUserRoleEnum.Administrator : CompanyUserRoleEnum.Member,  
+            CompanyUserRole = isFirstAdministrator ? CompanyUserRoleEnum.Administrator : CompanyUserRoleEnum.Member,
             Modules = []
         };
 
@@ -103,14 +118,14 @@ public sealed class InviteCompanyUser(
             return;
         }
 
-        Verification verification = await SaveVerification(companyUserId: companyUser.CompanyUserId);
+        Verification verification = await SaveVerification(companyUserId: companyUser.CompanyUserId, companyId: company.CompanyId);
         await SendEmail(company, user, companyUserRole: companyUser.CompanyUserRole, verification);
     }
 
-    private async Task<Verification> SaveVerification(Guid companyUserId)
+    private async Task<Verification> SaveVerification(Guid companyUserId, Guid companyId)
     {
-        Verification verification = await _createVerification.Execute<CompanyUser>(entityId: companyUserId, verificationType: VerificationTypeEnum.CompanyUser);
-
+        Verification verification = await _createVerification.Execute<CompanyUser>(entityId: companyUserId, verificationType: VerificationTypeEnum.CompanyUser, reference: companyId.ToString());
+         
         return verification;
     }
 

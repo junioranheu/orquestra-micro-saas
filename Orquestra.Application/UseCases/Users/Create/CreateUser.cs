@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Users.Base;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
@@ -32,25 +33,26 @@ public sealed class CreateUser(
     {
         await Validate(input, userIdAuth: Guid.Empty, isCreate: true);
 
-        User user = await Save(input);
+        bool isInvite = !string.IsNullOrEmpty(input.InviteToken);
+        User user = await Save(input, isInvite);
 
-        Verification verification = await SaveVerification(user);
-
-        await SendEmail(user, verification);
-
-        if (!string.IsNullOrEmpty(input.InviteToken))
+        if (!isInvite)
         {
-            // Encontrar empresa e vincular o usuário;
-            throw new NotImplementedException();
+            Verification verification = await SaveVerification(user);
+            await SendEmail(user, verification);
+        }
+        else
+        {
+            await LinkUser(user, input.InviteToken!);
         }
 
-        var output = user.Adapt<UserOutput>(); 
+        var output = user.Adapt<UserOutput>();
 
         return output;
     }
 
     #region extras
-    private async Task<User> Save(UserInput input)
+    private async Task<User> Save(UserInput input, bool isInvite)
     {
         if (string.IsNullOrEmpty(input.FullName) || string.IsNullOrEmpty(input.Email) || string.IsNullOrEmpty(input.Password))
         {
@@ -68,10 +70,13 @@ public sealed class CreateUser(
         await _context.AddAsync(user);
         await _context.SaveChangesAsync();
 
-        // Forçar a atualização para o false (burlar o Context/SaveChangesAsync);
-        user.Status = false;
-        _context.Update(user);
-        await _context.SaveChangesAsync();
+        // Forçar a atualização para o false caso NÃO SEJA invite (burlar o Context/SaveChangesAsync);
+        if (!isInvite)
+        {
+            user.Status = false;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+        }
 
         return user;
     }
@@ -97,6 +102,37 @@ public sealed class CreateUser(
 
         string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyUser, values);
         await _emailService.SendEmail(to: user.Email, subject: $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua conta!", body: bodyHtml);
+    }
+
+    private async Task LinkUser(User user, string inviteToken)
+    {
+        if (string.IsNullOrEmpty(inviteToken))
+        {
+            throw new ArgumentException($"O parâmetro {nameof(inviteToken)} está vazio.");
+        }
+
+        Verification? verification = await _context.Verifications.AsNoTracking().Where(x => x.Token == inviteToken).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundVerification);
+
+        if (string.IsNullOrEmpty(verification.Reference))
+        {
+            throw new ArgumentException($"O parâmetro {nameof(verification.Reference)} está vazio.");
+        }
+
+        User? inviter = await _context.Users.AsNoTracking().Where(x => x.UserId == verification.CreatedBy).FirstOrDefaultAsync();
+        Guid companyId = Guid.Parse(verification.Reference);
+
+        CompanyUser input = new()
+        {
+            CompanyId = companyId,
+            UserId = user.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member,
+            Modules = [],
+            IsCurrentMainCompanyUser = true,
+            InviterUserId = inviter is not null ? inviter.UserId : Guid.Empty
+        };
+
+        await _context.AddAsync(input);
+        await _context.SaveChangesAsync();
     }
     #endregion
 }

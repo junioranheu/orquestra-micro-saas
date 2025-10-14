@@ -107,6 +107,7 @@ export default function Dropdown({
                 isMulti={multiple}
                 placeholder={(placeholder ?? 'Selecione')}
                 styles={customStyle}
+                menuPortalTarget={document.body}
                 noOptionsMessage={() => 'Nenhuma opção encontrada'}
                 className={`${styles.dropdown} ${className && className}`}
                 isDisabled={isDisabled}

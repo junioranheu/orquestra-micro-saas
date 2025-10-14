@@ -38,6 +38,11 @@ export default function CriarConta() {
         const token = params.get('token');
 
         if (token) {
+            swal({
+                content: `Finalize o seu cadastro para aceitar o convite e participar do ${SYSTEM.NAME}.`,
+                icon: 'info'
+            });
+
             setToken(token);
         }
     }, []);
@@ -73,10 +78,17 @@ export default function CriarConta() {
             setIsRequestLoading(false);
             router.push(ROUTES.LOGIN);
 
-            swal({
-                content: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta</b> usando o e-mail que foi enviado para ${formData.email}.`,
-                icon: 'success'
-            });
+            if (!token) {
+                swal({
+                    content: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta</b> usando o e-mail que foi enviado para ${formData.email}.`,
+                    icon: 'success'
+                });
+            } else {
+                swal({
+                    content: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!`,
+                    icon: 'success'
+                });
+            }
         } catch {
             setFormData(x => ({ ...x, password: '' }));
             setIsRequestLoading(false);

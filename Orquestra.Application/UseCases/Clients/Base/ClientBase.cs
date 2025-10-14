@@ -14,7 +14,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
     public async Task Validate(ClientInput input, Guid userIdAuth, bool isCreate)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: false);
 
         bool checkName = IsFullNameValid(input.FullName ?? string.Empty);
 
