@@ -20,10 +20,9 @@ public class PagedQuery
     {
         int count = isCount ? list.Count : 0;
 
-        IEnumerable<T> linq = list.
+        IEnumerable<T> linq = [.. list.
                               Skip(pagination.IsSelectAll ? 0 : pagination.Index * pagination.Limit).
-                              Take(pagination.IsSelectAll ? int.MaxValue : pagination.Limit).
-                              ToList();
+                              Take(pagination.IsSelectAll ? int.MaxValue : pagination.Limit)];
 
         return (linq, count);
     }

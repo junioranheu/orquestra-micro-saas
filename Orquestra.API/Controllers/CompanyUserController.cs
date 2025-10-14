@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
-using Orquestra.Application.UseCases.Companies.UpdateModule;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
+using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
@@ -44,16 +44,17 @@ public class CompanyUserController(
 
     [AuthorizeFilter]
     [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult> GetAllByCompanyId(Guid companyId)
+    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, [FromQuery] CompanyUserFilterInput input)
     {
-        if (companyId == Guid.Empty)
+        if (input.CompanyId == Guid.Empty)
         {
-            throw new ArgumentException($"O parâmetro {nameof(companyId)} não pode estar vazio.");
+            return NoContent();
         }
 
-        List<CompanyUserOutput>? output = await _getCompanyUserByCompanyId.Execute(companyId);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        (IEnumerable<CompanyUserOutput> output, int count) = await _getCompanyUserByCompanyId.Execute(paginationInput, input, userIdAuth, companyId: input.CompanyId);
 
-        return Ok(output);
+        return Ok(new { output, count });
     }
 
     [AllowAnonymous]

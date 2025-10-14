@@ -176,14 +176,25 @@ export default function TableGeneric({
         setSortOrder(newSortOrder);
     }
 
-    function handleGetValueCaseInsensitive(record: any, key: string) {
+    function handleGetValue(record: any, key: string): any {
         if (!record || !key) {
             return undefined;
         }
 
-        const lowerKey = key.toLowerCase();
-        const match = Object.keys(record).find(k => k.toLowerCase() === lowerKey);
-        return match ? record[match] : undefined;
+        const parts = key.split('.');
+        let current = record;
+
+        for (const part of parts) {
+            if (current == null) {
+                return undefined;
+            }
+
+            const match = Object.keys(current).find(k => k.toLowerCase() === part.toLowerCase());
+
+            current = match ? current[match] : undefined;
+        }
+
+        return current;
     }
 
     const enhancedColumns = columns.map(col => ({
@@ -201,7 +212,7 @@ export default function TableGeneric({
             }
         }),
         render: (value: any, record: any, index: number) => {
-            const val = handleGetValueCaseInsensitive(record, col.dataIndex);
+            const val = handleGetValue(record, col.dataIndex);
             return col.render ? col.render(val, record, index) : val;
         }
     }))

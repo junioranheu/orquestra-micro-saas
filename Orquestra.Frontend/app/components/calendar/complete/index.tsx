@@ -2,7 +2,7 @@
 import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
-import { iUser } from '@/app/api/consts/user';
+import { iUserPaginated } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import { DATE_STYLE, handleFormatDate, handleParseDateFromString } from '@/app/functions/format.date';
@@ -141,8 +141,8 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${companyId}`, setter: setClients });
 
     // CompanyUser;
-    const [companyUsers, setCompanyUsers] = useState<iUser[]>();
-    useApiRequestToSetterOnUrlChange<iUser[]>({ apiUrlRequest: `${CONSTS_COMPANY_USER.getAllByCompanyId}?companyId=${companyId}`, setter: setCompanyUsers });
+    const [companyUsers, setCompanyUsers] = useState<iUserPaginated>();
+    useApiRequestToSetterOnUrlChange<iUserPaginated>({ apiUrlRequest: `${CONSTS_COMPANY_USER.getAllByCompanyId}?companyId=${companyId}`, setter: setCompanyUsers, hasPaginationInput: true, isSelectAll: true });
 
     // Buscar a query data na URL; caso exista: abra o modal de novo evento na data;
     useEffect(() => {
@@ -261,7 +261,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                 type={typeModal}
                 event={eventClicked}
                 companyId={companyId}
-                companyUsers={companyUsers}
+                companyUsers={companyUsers?.output ?? []}
                 clients={clients?.output as iClient[]}
                 handleGetSchedules={() => handleGetSchedules(companyId, date.getFullYear(), date.getMonth() + 1, view)}
             />

@@ -2,3 +2,12 @@
 Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
+
+Criar novo testes de integração para:
+	CompanyUsers:
+		GetAllByCompanyId;
+		GetCurrentMain;
+		GetModule;
+		UpdateCurrentMain;
+
+Quando o usuário for convidado, já seta a empresa como principal!

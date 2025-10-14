@@ -13,18 +13,23 @@ export const CONSTS_COMPANY_USER = {
     updateModules: `${BASE}/${controller}/updateModules`
 };
 
-export default interface iCompanyUser {
+export interface iCompanyUser {
     companyUserId: Guid;
     companyId: Guid;
     company: iCompanyOutput;
     userId: Guid;
     user: iUser;
     companyUserRole: string;
-    modules: string[];
+    modules: string[] | string;
     isCurrentMainCompanyUser: boolean;
     createdDate: Date;
     inviterUserId: Guid;
     inviterUser: iUser;
     status: boolean;
     isOwner: boolean;
+}
+
+export interface iCompanyUserPaginated {
+    output: iCompanyUser[];
+    count: number;
 }

@@ -56,7 +56,7 @@ public static class SystemConsts
 
     public static class Warnings
     {
-        public const string InvalidLinkedCompanyUser = "Você não faz parte de nenhuma empresa.";
+        public const string InvalidLinkedCompanyUser = "Você não tem permissão para prosseguir porque não faz parte dessa empresa.";
         public const string NotAuthSimpleUser = "Usuário não autenticado.";
         public const string NeedToVerifyUser = "A sua conta ainda não foi verificada ou está desativada. Verifique-a e tente novamente.";
         public const string NeedToVerifyCompany = "Antes de prosseguir com qualquer alteração, por favor, verifique a autenticidade de sua empresa seguindo as instruções enviadas por e-mail.";

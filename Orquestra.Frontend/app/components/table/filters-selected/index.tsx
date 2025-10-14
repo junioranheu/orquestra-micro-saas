@@ -130,7 +130,10 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             phone: 'Telefone',
             notes: 'Observações',
             companyId: 'ID da Empresa',
-            company: 'Empresa'
+            company: 'Empresa',
+
+            companyUserRole: 'Tipo de membro',
+            modules: 'Módulos atribuídos'
         };
 
         if (dictionary[content]) {
