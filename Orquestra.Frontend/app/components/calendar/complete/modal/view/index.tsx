@@ -240,16 +240,34 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
         return;
     }
 
+    async function handleDisable(event: iEvent) {
+        swal({
+            content: 'Você tem certeza que deseja excluir este agendamento?',
+            confirmBtnText: 'Sim, desejo excluir',
+            confirmFunction: async () => {
+                const input = { scheduleId: event.schedule.scheduleId };
+                const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.disable, body: input });
+
+                if (schedule) {
+                    toast({ content: 'Agendamento excluído com sucesso.' });
+                    handleGetSchedules();
+                    handleClose();
+                    return;
+                }
+
+                toast({ content: 'Não foi possível excluir este agendamento.' });
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'question'
+        });
+    }
+
     useEffect(() => {
         setFormData(prev => ({
             ...prev,
             dateEnd: prev.dateStart
         }));
     }, [formData.dateStart]);
-
-    async function handleDisable(event: iEvent) {
-        alert(event.schedule.scheduleId);
-    }
 
     if (!isOpen || !event) {
         return;

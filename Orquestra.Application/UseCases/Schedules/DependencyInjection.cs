@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Create;
+using Orquestra.Application.UseCases.Schedules.Delete;
 using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Update;
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<IGetScheduleByCompanyId, GetScheduleByCompanyId>();
         services.AddScoped<ICreateSchedule, CreateSchedule>();
         services.AddScoped<IUpdateSchedule, UpdateSchedule>();
+        services.AddScoped<IDeleteSchedule, DeleteSchedule>();
 
         services.AddScoped(x => new ScheduleBaseDependencies(
            x.GetRequiredService<Context>(),

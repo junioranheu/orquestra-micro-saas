@@ -9,6 +9,7 @@ const controller = 'api/Schedule';
 export const CONSTS_SCHEDULE = {
     post: `${BASE}/${controller}`,
     put: `${BASE}/${controller}`,
+    disable: `${BASE}/${controller}/Disable`,
     get: `${BASE}/${controller}`,
     getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`
 };

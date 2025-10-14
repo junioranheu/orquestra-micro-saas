@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Schedules.Create;
+using Orquestra.Application.UseCases.Schedules.Delete;
 using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Shared;
@@ -14,13 +15,15 @@ public class ScheduleController(
         IGetSchedule get,
         IGetScheduleByCompanyId getScheduleByCompanyId,
         ICreateSchedule create,
-        IUpdateSchedule update
+        IUpdateSchedule update,
+        IDeleteSchedule delete
     ) : BaseController<ScheduleController>
 {
     private readonly IGetSchedule _get = get;
     private readonly IGetScheduleByCompanyId _getScheduleByCompanyId = getScheduleByCompanyId;
     private readonly ICreateSchedule _create = create;
     private readonly IUpdateSchedule _update = update;
+    private readonly IDeleteSchedule _delete = delete;
 
     [AuthorizeFilter]
     [HttpPost]
@@ -40,6 +43,21 @@ public class ScheduleController(
         ScheduleOutput output = await _update.Execute(userIdAuth, input);
 
         return Ok(output);
+    }
+
+    [AuthorizeFilter]
+    [HttpPut("Disable")]
+    public async Task<ActionResult> Disable(ScheduleInput input)
+    {
+        if (input.ScheduleId == Guid.Empty || input.ScheduleId is null)
+        {
+            throw new ArgumentException($"O parâmetro {nameof(input.ScheduleId)} está vazio.");
+        }
+
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _delete.Execute(userIdAuth, input.ScheduleId.GetValueOrDefault());
+
+        return Ok(true);
     }
 
     [AuthorizeFilter]
