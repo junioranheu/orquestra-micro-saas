@@ -192,6 +192,8 @@ export default function CalendarComplete({ events, customElementHeight, companyI
 
     // Visualizar evento;
     function handleCheckEvent(event: iEvent) {
+        // console.log(event);
+
         setTypeModal('edit');
         setEventClicked(event);
         setIsModalOpen(true);

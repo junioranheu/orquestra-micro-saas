@@ -192,7 +192,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             schedule.Company = companySearch;
         }
 
-        string date = GetDateDetails(schedule.DateStart);
+        string scheduleDateTime = $"Dia {schedule.DateStart.Day}/{schedule.DateStart.Month}, das {schedule.DateStart.ToShortTimeString()} até às {schedule.DateEnd.ToShortTimeString()}";
         string client = schedule.Client?.FullName ?? string.Empty;
 
         List<string> membersNames = [];
@@ -210,20 +210,20 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             { "[NameApp]", SystemConsts.App.NameApp },
             { "[ClientName]", client},
             { "[ProfessionalName]", membersNames.Count != 0 ? string.Join(", ", membersNames) : "Profissional específico não definido" },
-            { "[ScheduleDateTime]",date },
+            { "[ScheduleDateTime]", scheduleDateTime },
             { "[LocationAddress]", schedule.Company?.Address ?? "Local não informado" },
             { "[ScheduleUrl]", schedule.CustomUrl ?? string.Empty },
-            { "[ScheduleDateCreated]", GetDateDetails(schedule.CreatedDate) },
-            { "[Value]", $"R$ {schedule.AmountReceived?.ToString("0.##")}" ?? string.Empty },
-            { "[PaymentType]", schedule.PaymentType > 0 ? GetEnumDesc(schedule.PaymentType) : string.Empty },
-            { "[Observations]", schedule.Observation ?? string.Empty }
+            { "[ScheduleDateCreated]", GetDateDetails(ConvertToBrasiliaTime(schedule.LastModificationDate.HasValue ? schedule.LastModificationDate.GetValueOrDefault() : schedule.CreatedDate.GetValueOrDefault())) },
+            { "[Value]", schedule.AmountReceived is not null ? $"R$ {schedule.AmountReceived?.ToString("0.##")}" : "-" },
+            { "[PaymentType]", schedule.PaymentType > 0 ? GetEnumDesc(schedule.PaymentType) : "-" },
+            { "[Observations]", schedule.Observation ?? "-" }
         };
 
-        string title = isCreate ? $"Novo agendamento — {date} — {client}" : $"Atualização de agendamento — {date} — {client}";
+        string title = isCreate ? $"Novo agendamento — {scheduleDateTime} — {client}" : $"Atualização de agendamento — {scheduleDateTime} — {client}";
 
         if (!string.IsNullOrEmpty(schedule.CustomTitle))
         {
-            title = isCreate ? $"{schedule.CustomTitle} — {date} — {client}" : $"Atualização — {schedule.CustomTitle} — {date} — {client}";
+            title = isCreate ? $"{schedule.CustomTitle} — {scheduleDateTime} — {client}" : $"Atualização — {schedule.CustomTitle} — {scheduleDateTime} — {client}";
         }
 
         string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailSchedule, values);

@@ -247,6 +247,10 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
         }));
     }, [formData.dateStart]);
 
+    async function handleDisable(event: iEvent) {
+        alert(event.schedule.scheduleId);
+    }
+
     if (!isOpen || !event) {
         return;
     }
@@ -320,7 +324,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
                             type === 'edit' && (
                                 <div className={styles.div}>
                                     <label>Observações do sistema</label>
-                                    <textarea className={styles.textarea} rows={3} value={formData.observations} readOnly={true} />
+                                    <textarea className={styles.textarea} rows={3} value={(formData.observations ?? []).join('\n')} readOnly={true} />
                                 </div>
                             )
                         }
@@ -343,6 +347,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
                                     canEdit && (
                                         !editing ? (
                                             <Fragment>
+                                                <Button label='Excluir' handleFunction={() => handleDisable(event)} isStyleSimple={true} />
                                                 <Button label='Editar' handleFunction={() => setEditing(true)} />
                                             </Fragment>
                                         ) : (
