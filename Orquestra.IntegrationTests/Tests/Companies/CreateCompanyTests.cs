@@ -142,7 +142,7 @@ public sealed class CreateCompanyTests
         Assert.Equal(user.FullName.Split(" ")[0], capturedValues!["[UserName]"]);
         Assert.Contains("/Company/Verify/", capturedValues!["[VerifyUrl]"]);
 
-        emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, It.IsAny<IEnumerable<string>>()), Times.Once);
+        emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, It.IsAny<List<string>>()), Times.Once);
     }
 
     [Theory]

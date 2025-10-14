@@ -27,6 +27,8 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         await Validate(input, userIdAuth, isCreate: false, mustValidateDate: mustValidateDate);
         await Update(input, schedule);
 
+        await SendEmail(schedule, isCreate: false);
+
         var output = schedule.Adapt<ScheduleOutput>();
         output.Observations = await CheckForObservations(output);
         output.UsersOutput = await GetUsers(output.UsersIds);

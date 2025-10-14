@@ -22,7 +22,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
     const bool _enableSsl = true;
     #endregion
 
-    public async Task SendEmail(string to, string subject, string body, bool isHtml = true, IEnumerable<string>? cc = null)
+    public async Task SendEmail(string to, string subject, string body, bool isHtml = true, List<string>? cc = null)
     {
         using SmtpClient client = new(_smtpHost, _smtpPort)
         {
@@ -47,7 +47,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 
         mailMessage.To.Add(to);
 
-        if (cc is not null && cc.Any())
+        if (cc is not null && cc.Count != 0)
         {
             foreach (var c in cc)
             {

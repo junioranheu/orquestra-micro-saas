@@ -3,7 +3,6 @@ using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Create;
 
@@ -15,6 +14,8 @@ public sealed class CreateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     {
         await Validate(input, userIdAuth, isCreate: true);
         Schedule schedule = await Save(input);
+
+        await SendEmail(schedule, isCreate: true);
 
         var output = schedule.Adapt<ScheduleOutput>();
         output.Observations = await CheckForObservations(output);

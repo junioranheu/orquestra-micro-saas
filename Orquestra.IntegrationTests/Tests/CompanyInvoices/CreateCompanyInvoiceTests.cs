@@ -305,7 +305,7 @@ public sealed class CreateCompanyInvoiceTests
                 It.IsAny<string>(),        // subject;
                 It.IsAny<string>(),        // body;
                 It.IsAny<bool>(),          // cc;
-                It.IsAny<IEnumerable<string>>()  // ccList;
+                It.IsAny<List<string>>()   // ccList;
             ),
             Times.Once
         );

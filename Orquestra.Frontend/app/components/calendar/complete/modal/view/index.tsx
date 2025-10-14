@@ -240,6 +240,13 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
         return;
     }
 
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            dateEnd: prev.dateStart
+        }));
+    }, [formData.dateStart]);
+
     if (!isOpen || !event) {
         return;
     }

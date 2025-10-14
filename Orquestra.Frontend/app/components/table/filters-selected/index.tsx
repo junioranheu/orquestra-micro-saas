@@ -28,14 +28,14 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             const [path, queryString] = apiUrlRequest.split('?');
 
             if (queryString) {
-                // tenta achar algo tipo 'companyId=123' ou 'userId=abc';
+                // Tenta achar algo tipo 'companyId=123' ou 'userId=abc';
                 const match = queryString.match(/([a-zA-Z]+Id)=[^&]+/);
 
                 if (match) {
-                    // mantém até o primeiro parâmetro que termina com Id;
+                    // Mantém até o primeiro parâmetro que termina com Id;
                     baseUrl = `${path}?${match[0]}`;
                 } else {
-                    // se não tem nada com Id, remove tudo após o ?;
+                    // Se não tem nada com Id, remove tudo após o ?;
                     baseUrl = path;
                 }
             }

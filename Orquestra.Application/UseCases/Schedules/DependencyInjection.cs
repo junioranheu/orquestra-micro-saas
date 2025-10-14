@@ -8,6 +8,7 @@ using Orquestra.Application.UseCases.Schedules.Get;
 using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Update;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Email;
 
 namespace Orquestra.Application.UseCases.Schedules;
 
@@ -24,7 +25,8 @@ public static class DependencyInjection
            x.GetRequiredService<Context>(),
            x.GetRequiredService<ICheckIfUserIsLinkedCompanyUser>(),
            x.GetRequiredService<IGetClient>(),
-           x.GetRequiredService<IGetCompany>()
+           x.GetRequiredService<IGetCompany>(),
+           x.GetRequiredService<IEmailService>()
         ));
 
         return services;

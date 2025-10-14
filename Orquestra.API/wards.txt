@@ -2,9 +2,3 @@
 Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
-
-⦁	Client
-Converter as tags de inglês para português;
-
-⦁	Schedule
-Quando uma Schedule é marcada ou editada, deve-se mandar um e-mail para o cliente e para os profissionals;

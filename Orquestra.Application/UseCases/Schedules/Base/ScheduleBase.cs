@@ -6,8 +6,10 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Email;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -17,7 +19,8 @@ public record ScheduleBaseDependencies(
     Context Context,
     ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
     IGetClient GetClient,
-    IGetCompany GetCompany
+    IGetCompany GetCompany,
+    IEmailService EmailService
 );
 
 public partial class ScheduleBase(ScheduleBaseDependencies deps)
@@ -26,6 +29,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
     private readonly IGetClient _getClient = deps.GetClient;
     private readonly IGetCompany _getCompany = deps.GetCompany;
+    private readonly IEmailService _emailService = deps.EmailService;
 
     public async Task Validate(ScheduleInput input, Guid userIdAuth, bool isCreate, bool mustValidateDate = true)
     {
@@ -157,6 +161,75 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         return [.. output];
     }
 
+    public async Task SendEmail(Schedule schedule, bool isCreate)
+    {
+        if (schedule is null)
+        {
+            throw new ArgumentException($"O agendamento ({nameof(schedule)}) não foi fornecido. Não é possível enviar os e-mails sem os dados do agendamento.");
+        }
+
+        if (schedule.Client is null)
+        {
+            Client? clientSearch = await _context.Clients.Where(x => x.ClientId == schedule.ClientId).AsNoTracking().FirstOrDefaultAsync();
+
+            if (clientSearch is null)
+            {
+                return;
+            }
+
+            schedule.Client = clientSearch;
+        }
+
+        if (schedule.Company is null)
+        {
+            Company? companySearch = await _context.Companies.Where(x => x.CompanyId == schedule.CompanyId).AsNoTracking().FirstOrDefaultAsync();
+
+            if (companySearch is null)
+            {
+                return;
+            }
+
+            schedule.Company = companySearch;
+        }
+
+        string date = GetDateDetails(schedule.DateStart);
+        string client = schedule.Client?.FullName ?? string.Empty;
+
+        List<string> membersNames = [];
+        List<string> membersEmails = [];
+
+        if (schedule.UsersIds is not null && schedule.UsersIds?.Length != 0)
+        {
+            List<User> members = await _context.Users.Where(x => schedule.UsersIds!.Contains(x.UserId)).AsNoTracking().ToListAsync();
+            membersNames = [.. members.Select(x => x.FullName).Distinct()];
+            membersEmails = [.. members.Select(x => x.Email).Distinct()];
+        }
+
+        Dictionary<string, string> values = new()
+        {
+            { "[NameApp]", SystemConsts.NameApp },
+            { "[ClientName]", client},
+            { "[ProfessionalName]", membersNames.Count != 0 ? string.Join(", ", membersNames) : "Profissional específico não definido" },
+            { "[ScheduleDateTime]",date },
+            { "[LocationAddress]", schedule.Company?.Address ?? "Local não informado" },
+            { "[ScheduleUrl]", schedule.CustomUrl ?? string.Empty },
+            { "[ScheduleDateCreated]", GetDateDetails(schedule.CreatedDate) },
+            { "[Value]", $"R$ {schedule.AmountReceived?.ToString("0.##")}" ?? string.Empty },
+            { "[PaymentType]", schedule.PaymentType > 0 ? GetEnumDesc(schedule.PaymentType) : string.Empty },
+            { "[Observations]", schedule.Observation ?? string.Empty }
+        };
+
+        string title = isCreate ? $"Novo agendamento — {date} — {client}" : $"Atualização de agendamento — {date} — {client}";
+
+        if (!string.IsNullOrEmpty(schedule.CustomTitle))
+        {
+            title = isCreate ? $"{schedule.CustomTitle} — {date} — {client}" : $"Atualização — {schedule.CustomTitle} — {date} — {client}";
+        }
+
+        string bodyHtml = _emailService.RenderTemplate("EmailSchedule.html", values);
+        await _emailService.SendEmail(to: schedule.Company!.Email, subject: title, body: bodyHtml, cc: membersEmails);
+    }
+
     #region extras
     private static string GetStatusDesc(ScheduleStatusEnum status)
     {
@@ -188,7 +261,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         if (validUsers is null || validUsers.Count == 0)
         {
-            string msg = usersIds.Length == 1 ? 
+            string msg = usersIds.Length == 1 ?
                 "O usuário que você referenciou para o agendamento não é válido ou não está vinculado à empresa." :
                 $"Os {usersIds.Length} usuários que você referenciou para o agendamento não são válidos ou não estão vinculados à empresa.";
 
