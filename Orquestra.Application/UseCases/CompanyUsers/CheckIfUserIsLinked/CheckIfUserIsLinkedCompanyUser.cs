@@ -28,7 +28,7 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId ge
     {
         if (_httpContextAccessor.HttpContext is null)
         {
-            throw new Exception("HttpContext não disponível.");
+            throw new InvalidOperationException("HttpContext não disponível.");
         }
 
         string cacheKey = $"Key_CheckIfUserIsLinkedCompanyUser_{companyId}_{userId}_{needCompanyAdmin}";

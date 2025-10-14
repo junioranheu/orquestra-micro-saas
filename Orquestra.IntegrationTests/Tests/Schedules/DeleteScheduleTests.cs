@@ -13,6 +13,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
 
@@ -110,6 +111,21 @@ public sealed class DeleteScheduleTests
         DeleteSchedule sut = CreateSut(context, user);
 
         await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, Guid.NewGuid()));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenScheduleIsInThePast()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        // Força o agendamento para o passado;
+        schedule.DateStart = GetDate().AddDays(-1);
+        context.Schedules.Update(schedule);
+        await context.SaveChangesAsync();
+
+        DeleteSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, schedule.ScheduleId));
     }
 
     #region helpers

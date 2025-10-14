@@ -4,6 +4,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.Delete;
 
@@ -17,6 +18,11 @@ public sealed class DeleteSchedule(ScheduleBaseDependencies deps) : ScheduleBase
                              // AsNoTracking(). // Propositalmente sem AsNoTracking;
                              Where(x => x.ScheduleId == scheduleId).
                              FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundSchedule);
+
+        if (schedule.DateStart < GetDate())
+        {
+            throw new InvalidOperationException("Não é possível excluir um agendamento que já ocorreu.");
+        }
 
         CompanyUser? user = await _context.CompanyUsers.
                             AsNoTracking().
