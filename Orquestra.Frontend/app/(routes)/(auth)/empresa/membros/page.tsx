@@ -125,7 +125,7 @@ export default function EmpresaMembros() {
 
                     title={`Membros cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
                     managingOptions={managingOptions}
-                    btn_add_label='Cadastrar novo'
+                    btn_add_label='Convidar novo membro'
                     btn_add_function={() => handleOpenModalView(undefined)}
                     btn_filter_label='Filtrar'
                     btn_filter_function={() => setIsModalFilterOpen(true)}
@@ -150,8 +150,6 @@ export default function EmpresaMembros() {
             <EmpresaMembrosModalView
                 isModalOpen={isModalViewOpen}
                 setIsModalOpen={setIsModalViewOpen}
-                type={typeModal}
-                member={memberClicked}
                 companyId={me?.currentMainCompany?.companyId}
             />
         </Fragment>

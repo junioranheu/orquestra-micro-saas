@@ -34,12 +34,12 @@ public class CompanyUserController(
 
     [AuthorizeFilter]
     [HttpPost("InviteUser")]
-    public async Task<ActionResult> InviteUser(Guid companyId, string email)
+    public async Task<ActionResult> InviteUser(CompanyUserInviteInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        await _invite.Execute(userIdAuth, companyId, email, isFirstAdministrator: false);
+        await _invite.Execute(userIdAuth, companyId: input.CompanyId, email: input.Email, isFirstAdministrator: false);
 
-        return NoContent();
+        return Ok(true);
     }
 
     [AuthorizeFilter]
