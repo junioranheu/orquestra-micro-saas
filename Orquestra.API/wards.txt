@@ -10,3 +10,7 @@ Criar novo testes de integração para:
 		GetModule;
 		UpdateCurrentMain;
 		DeleteCompanyUser;
+
+⦁	CompanyUser
+Na tela dos membros, devo poder atribuir roles e alterar o role
+Apenas administradores podem convidar novos usuários

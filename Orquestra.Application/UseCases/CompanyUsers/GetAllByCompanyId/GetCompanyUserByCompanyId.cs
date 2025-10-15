@@ -6,7 +6,6 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using System;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 
@@ -23,7 +22,7 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
                      Where(x =>
                         (companyId == Guid.Empty || x.CompanyId == companyId) &&
                         ((userId == Guid.Empty || userId == null) || x.UserId == userId)
-                     // x.Status == true // Essa query NÃO deve buscar por Status true, porque senão pode cagar tudo;
+                        // x.Status == true // Essa query NÃO deve buscar por Status true, porque senão pode cagar tudo;
                      ).
                      GroupBy(x => new { x.CompanyId, x.UserId, x.CompanyUserRole }).
                      Select(g => g.FirstOrDefault()).

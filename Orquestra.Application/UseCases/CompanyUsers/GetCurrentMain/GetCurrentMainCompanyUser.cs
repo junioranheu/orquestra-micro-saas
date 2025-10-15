@@ -17,7 +17,7 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
         var output = await _context.CompanyUsers.
                      Include(x => x.Company).
                      AsNoTracking().
-                     Where(x => x.UserId == userId && x.IsCurrentMainCompanyUser && x.Status).
+                     Where(x => x.UserId == userId && x.IsCurrentMainCompanyUser == true && x.Status == true).
                      FirstOrDefaultAsync();
 
         if (output is null)
@@ -39,6 +39,13 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
             foreach (var module in modules)
             {
                 outputAdapt.ModulesStr.Add(GetEnumDesc(module));
+            }
+
+            ModuleEnum[] userModules = outputAdapt.UserModules ?? [];
+
+            foreach (var module in userModules)
+            {
+                outputAdapt.UserModulesStr.Add(GetEnumDesc(module));
             }
         }
 
