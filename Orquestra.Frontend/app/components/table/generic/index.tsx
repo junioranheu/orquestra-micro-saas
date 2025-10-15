@@ -140,7 +140,9 @@ export default function TableGeneric({
         if (data?.length) {
             handlePagination();
         } else {
-            setPaginatedData([]);
+            setTimeout(() => {
+                setPaginatedData([]);
+            }, 10);
         }
     }, [data, currentPage, totalRowsCount, maxPageSize, pageSize]);
 

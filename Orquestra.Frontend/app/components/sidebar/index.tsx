@@ -27,10 +27,10 @@ export default function Sidebar() {
 
     const menuItems = [
         { label: 'Início', icon: 'home', route: ROUTES.DASHBOARD, hasAccess: true },
+        { label: 'Membros', icon: 'users', route: ROUTES.EMPRESA_MEMBROS, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
         { label: 'Clientes', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
         { label: 'Agendamentos', icon: 'calendar', route: ROUTES.EMPRESA_AGENDAMENTOS, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Scheduling] }) },
         { label: 'Financeiro', icon: 'dollar-sign', route: ROUTES.EMPRESA_FINANCEIRO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Sales] }) },
-        { label: 'Membros', icon: 'users', route: ROUTES.EMPRESA_MEMBROS, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
         { label: 'Logs', icon: 'file-text', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, rolesRequired: [], mustBeSystemAdmin: true }) }
     ] as iMenuItem[];
 

@@ -4,7 +4,9 @@ using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using System;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 
@@ -21,7 +23,7 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
                      Where(x =>
                         (companyId == Guid.Empty || x.CompanyId == companyId) &&
                         ((userId == Guid.Empty || userId == null) || x.UserId == userId)
-                        // x.Status == true // Essa query NÃO deve buscar por Status true, porque senão pode cagar tudo;
+                     // x.Status == true // Essa query NÃO deve buscar por Status true, porque senão pode cagar tudo;
                      ).
                      GroupBy(x => new { x.CompanyId, x.UserId, x.CompanyUserRole }).
                      Select(g => g.FirstOrDefault()).
@@ -53,14 +55,32 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
             throw new UnauthorizedAccessException(SystemConsts.Warnings.InvalidLinkedCompanyUser);
         }
 
+        #region convert
+        CompanyUserRoleEnum? companyUserRoleNormalized = null;
+        ModuleEnum[] moduleNormalized = [];
+
+        if (!string.IsNullOrEmpty(input.CompanyUserRole))
+        {
+            if (Enum.TryParse(input.CompanyUserRole, ignoreCase: true, out CompanyUserRoleEnum parsedRole))
+            {
+                companyUserRoleNormalized = parsedRole;
+            }
+        }
+
+        if (input.Modules is { Length: > 0 })
+        {
+            moduleNormalized = [.. input.Modules.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(x => Enum.TryParse(x, out ModuleEnum parsed) ? parsed : (ModuleEnum?)null).Where(x => x.HasValue).Select(x => x!.Value)];
+        }
+        #endregion
+
         var query = _context.CompanyUsers.
                     Include(x => x.User).
                     AsNoTracking().
                     Where(x =>
                         x.CompanyId == companyId &&
                         x.Status == true &&
-                        (input.CompanyUserRole == null || x.CompanyUserRole == input.CompanyUserRole) &&
-                        ((input.Modules == null || !input.Modules.Any()) || x.Modules!.Intersect(input.Modules).Any()) &&
+                        (companyUserRoleNormalized == null || x.CompanyUserRole == companyUserRoleNormalized) &&
+                        ((moduleNormalized == null || !moduleNormalized.Any()) || x.Modules!.Intersect(moduleNormalized).Any()) &&
                         (string.IsNullOrEmpty(input.FullName) || x.User!.FullName.ToLower().Contains(input.FullName.ToLower())) &&
                         (string.IsNullOrEmpty(input.Email) || x.User!.Email!.ToLower().Contains(input.Email.ToLower()))
                     ).OrderBy(x => x.User!.FullName);

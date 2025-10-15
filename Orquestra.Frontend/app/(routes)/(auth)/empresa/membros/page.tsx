@@ -34,7 +34,7 @@ export default function EmpresaMembros() {
     }, [me]);
 
     useEffect(() => {
-        if (moduleEnum && companyUserRoleEnum && members) {
+        if (moduleEnum && companyUserRoleEnum) {
             const normalized = members?.output?.map(member => {
                 const moduleLabels = (member.modules as (number | string)[] | undefined)?.map(mod => {
                     const modNumber = Number(mod);

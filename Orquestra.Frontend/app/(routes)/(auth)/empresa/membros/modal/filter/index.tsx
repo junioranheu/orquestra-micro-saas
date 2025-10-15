@@ -68,7 +68,8 @@ export default function EmpresaMembrosModalFilters({
                 <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
                 <Dropdown title='Tipo' options={companyUserRoleEnum ?? []} selectedOption={companyUserRoleEnum?.find(x => x.value.toString() === modalFilterFormData.companyUserRole?.value.toString())} setSelectedOption={setCompanyUserRoleOption} />
-                <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={moduleEnum?.find(x => x.value.toString() === modalFilterFormData.modules?.toString())} setSelectedOption={setModuleOption} multiple={true} />
+                {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
+                <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={moduleEnum?.find(x => x.value.toString() === modalFilterFormData.modules?.value.toString())} setSelectedOption={setModuleOption} multiple={false} />
 
                 <Button
                     label='Limpar filtros'

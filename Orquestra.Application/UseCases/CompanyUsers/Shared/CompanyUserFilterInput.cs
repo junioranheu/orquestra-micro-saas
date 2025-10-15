@@ -1,14 +1,12 @@
-﻿using Orquestra.Domain.Enums;
-
-namespace Orquestra.Application.UseCases.CompanyUsers.Shared;
+﻿namespace Orquestra.Application.UseCases.CompanyUsers.Shared;
 
 public sealed class CompanyUserFilterInput
 {
     public Guid CompanyId { get; set; }
 
-    public CompanyUserRoleEnum? CompanyUserRole { get; set; }
+    public string? CompanyUserRole { get; set; } // Posteriormente convertido a CompanyUserRoleEnum;
 
-    public ModuleEnum[]? Modules { get; set; } = [];
+    public string? Modules { get; set; } = string.Empty; // Posteriormente convertido a ModuleEnum;
 
     public string? FullName { get; set; } = string.Empty;
 

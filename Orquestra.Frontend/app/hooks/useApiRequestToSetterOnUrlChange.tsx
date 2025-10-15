@@ -42,7 +42,7 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>):
                 const result = await Fetch.get({ url: url, blobExportName: blobExportName }) as T;
 
                 // console.clear();
-                // console.log(url, result);
+                // console.log(`hasPaginationInput: ${hasPaginationInput}`, url, result);
 
                 if (!result) {
                     if (setIsRequestLoading) {

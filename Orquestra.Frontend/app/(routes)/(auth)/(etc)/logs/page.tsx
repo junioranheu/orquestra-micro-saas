@@ -25,7 +25,7 @@ export default function Logs() {
     useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: 15 });
 
     useEffect(() => {
-        if (logTypeEnum && logs) {
+        if (logTypeEnum) {
             const normalized = logs?.output?.map(log => ({
                 ...log,
                 logType: logTypeEnum?.find(x => x.value === log.logType)?.label ?? log.logType

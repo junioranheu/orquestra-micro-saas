@@ -50,8 +50,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
 
     useEffect(() => {
         function handleCheckSelectedFilters() {
-            // const data = handleLoopFormData(modalFilterFormData, 'label');
-            const data = handleLoopFormData(modalFilterFormData, 'value');
+            const data = handleLoopFormData(modalFilterFormData, 'label');
 
             if (!data.url) {
                 setApiUrlRequest(apiUrlBase);
