@@ -36,7 +36,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         await GetAmounfOfClients([output]);
         GetEnumsDesc([output]);
         NormalizeLogo([result], [output]);
-        NormalizeOtherProps([output]);
+        await NormalizeIsAdm([output], userId: userIdAuth);
 
         return output;
     }
@@ -55,7 +55,6 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
         NormalizeLogo(result, output);
-        NormalizeOtherProps(output);
 
         return output;
     }
@@ -77,8 +76,8 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         var result = await _context.Companies.
                      Include(x => x.CompanyUsers)!.ThenInclude(x => x.User).
                      AsNoTracking().
-                     Where(x => 
-                        companiesIds.Contains(x.CompanyId) && 
+                     Where(x =>
+                        companiesIds.Contains(x.CompanyId) &&
                         (!onlyStatusTrue || x.Status == true)
                      ).ToListAsync();
 
@@ -88,11 +87,11 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
         NormalizeLogo(result, output);
-        NormalizeOtherProps(output);
+        await NormalizeIsAdm(output, userId);
 
         return output;
     }
-     
+
     #region extras
     private static void FillModulesStr(List<CompanyOutput>? output)
     {
@@ -181,16 +180,28 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         }
     }
 
-    private static void NormalizeOtherProps(List<CompanyOutput>? output)
+    private async Task NormalizeIsAdm(List<CompanyOutput>? output, Guid userId)
     {
         if (output is null || output.Count == 0)
         {
             return;
         }
 
+        var companyUsers = await _context.CompanyUsers.AsNoTracking().Where(x => x.UserId == userId && x.Status).Select(x => new { x.CompanyId, x.CompanyUserRole }).ToListAsync();
+
+        if (companyUsers is null || companyUsers.Count == 0)
+        {
+            return;
+        }
+
+        Dictionary<Guid, CompanyUserRoleEnum> userRolesByCompany = companyUsers.ToDictionary(x => x.CompanyId, x => x.CompanyUserRole);
+
         foreach (var company in output)
         {
-            company.IsAdm = company.Use == CompanyUserRoleEnum.Administrator;
+            if (userRolesByCompany.TryGetValue(company.CompanyId, out CompanyUserRoleEnum role))
+            {
+                company.IsAdm = role == CompanyUserRoleEnum.Administrator;
+            }
         }
     }
     #endregion

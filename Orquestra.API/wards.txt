@@ -10,5 +10,3 @@ Criar novo testes de integração para:
 		GetModule;
 		UpdateCurrentMain;
 		DeleteCompanyUser;
-
-Ao terminar DeleteCompanyUser, colocar ele na lista de empresas também pro proprio usuario sair

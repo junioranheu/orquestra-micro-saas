@@ -121,14 +121,18 @@ export default function EmpresaMembros() {
                 const schedule = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });
 
                 if (schedule) {
-                    toast({ content: isSameUser ? 'Até mais. Você saiu desta empresa.' : 'Membro removido da equipe com sucesso.' });
+                    if (!isSameUser) {
+                        toast({ content: 'Membro removido da equipe com sucesso.' });
+                    }
 
                     if (isSameUser) {
                         router.push(ROUTES.DASHBOARD);
 
-                        setTimeout(() => {
-                            window.location.reload()
-                        }, 2000);
+                        swal({
+                            content: 'Você saiu desta empresa.',
+                            confirmFunction: () => window.location.reload(),
+                            icon: 'success'
+                        });
 
                         return;
                     }
