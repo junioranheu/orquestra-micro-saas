@@ -10,7 +10,8 @@ export const CONSTS_COMPANY_USER = {
     getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`,
     verify: `${BASE}/${controller}/Verify`,
     updateCurrentMainCompanyUser: `${BASE}/${controller}/UpdateCurrentMainCompanyUser`,
-    updateModules: `${BASE}/${controller}/updateModules`
+    updateModules: `${BASE}/${controller}/UpdateModules`,
+    disable: `${BASE}/${controller}/Disable`,
 };
 
 export interface iCompanyUser {

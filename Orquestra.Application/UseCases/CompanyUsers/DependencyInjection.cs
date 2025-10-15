@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.CompanyUsers.Delete;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.GetModule;
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IInviteCompanyUser, InviteCompanyUser>();
         services.AddScoped<IGetModuleCompanyUser, GetModuleCompanyUser>();
         services.AddScoped<IUpdateModuleCompanyUser, UpdateModuleCompanyUser>();
+        services.AddScoped<IDeleteCompanyUser, DeleteCompanyUser>();     
 
         return services;
     }

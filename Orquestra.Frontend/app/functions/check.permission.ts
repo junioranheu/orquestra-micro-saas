@@ -9,7 +9,7 @@ interface iProps {
 
 // Verificar se o usuário tem a permissão para visualizar um elemento;
 export function handleCheckShowElement({ me, rolesRequired, mustBeSystemAdmin = false }: iProps): boolean {
-    const systemAdmin = 1000;
+    const systemAdmin = 1000; // Back-end;
 
     if (mustBeSystemAdmin) {
         if (me && me.roles?.map(x => x.toString()).includes(systemAdmin.toString())) {
@@ -27,17 +27,17 @@ export function handleCheckShowElement({ me, rolesRequired, mustBeSystemAdmin = 
         return true;
     }
 
-    const modules = me?.currentMainCompany?.modules as string[];
-    // console.log('user', modules);
+    const userModules = me?.currentMainCompany?.userModules as string[];
+    // console.log('user', userModules);
     // console.log('rolesRequired', rolesRequired);
 
-    if (!modules || !modules?.length) {
+    if (!userModules || !userModules?.length) {
         return false;
     }
 
     let isShowElement = false;
 
-    modules?.forEach(x => {
+    userModules?.forEach(x => {
         rolesRequired.forEach(required => {
             if ((x.toString() === required.toString()) && !isShowElement) {
                 isShowElement = true;

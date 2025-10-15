@@ -58,7 +58,7 @@ export default function Logs() {
             key: 'endpoint'
         },
         {
-            title: 'Parameters',
+            title: 'Parâmetros',
             dataIndex: 'parameters',
             key: 'parameters'
         },

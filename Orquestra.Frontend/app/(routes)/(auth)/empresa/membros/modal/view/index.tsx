@@ -10,7 +10,7 @@ import SYSTEM from '@/app/consts/system';
 import { handleClearFormData } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, SetStateAction, useCallback, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
 interface iModalFilterParams {
     isModalOpen: boolean;
@@ -24,7 +24,6 @@ interface iFormData {
 
 export default function EmpresaMembrosModalView({ isModalOpen, setIsModalOpen, companyId }: iModalFilterParams) {
 
-    const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
     const [formData, setFormData] = useState<iFormData>({
@@ -33,7 +32,6 @@ export default function EmpresaMembrosModalView({ isModalOpen, setIsModalOpen, c
 
     const handleClose = useCallback(() => {
         setSaving(false);
-        setEditing(false);
         setIsModalOpen(false);
         handleClearFormData(setFormData);
     }, [setIsModalOpen]);
@@ -44,7 +42,6 @@ export default function EmpresaMembrosModalView({ isModalOpen, setIsModalOpen, c
             return;
         }
 
-        setEditing(false);
         setSaving(true);
 
         if (!companyId) {
@@ -65,7 +62,6 @@ export default function EmpresaMembrosModalView({ isModalOpen, setIsModalOpen, c
             return;
         }
 
-        setEditing(true);
         setSaving(false);
         return;
     }
@@ -104,7 +100,7 @@ export default function EmpresaMembrosModalView({ isModalOpen, setIsModalOpen, c
 
                 <main className={styles.modalContent}>
                     <div className='modal-layout-flex'>
-                        <InputMask title='E-mail do membro a ser convidado' fieldName='inviteEmail' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='E-mail do novo membro da equipe a ser convidado' fieldName='inviteEmail' formData={formData} setFormData={setFormData} isObligatory={true} />
                     </div>
                 </main>
 
@@ -114,18 +110,7 @@ export default function EmpresaMembrosModalView({ isModalOpen, setIsModalOpen, c
                     </div>
 
                     <div className={styles.buttonsRow}>
-                        {
-                            !editing ? (
-                                <Fragment>
-                                    <Button label='Convidar novo membro' handleFunction={() => setEditing(true)} />
-                                </Fragment>
-                            ) : (
-                                <Fragment>
-                                    <Button label='Cancelar' handleFunction={() => setEditing(false)} isStyleSimple={true} />
-                                    <Button label={saving ? 'Convidando...' : 'Enviar convite'} handleFunction={() => handleSave()} isDisabled={saving} />
-                                </Fragment>
-                            )
-                        }
+                        <Button label={saving ? 'Convidando...' : 'Enviar convite'} handleFunction={() => handleSave()} isDisabled={saving} />
                     </div>
                 </footer>
             </div>

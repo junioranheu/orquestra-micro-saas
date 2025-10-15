@@ -117,10 +117,20 @@ public class AuthController(
         // Módulos;
         if (currentMainCompany is not null)
         {
-            (ModuleEnum[] modules, List<string> modulesStr) = await _getModuleCompanyUser.Execute(userIdAuth, companyId: currentMainCompany.CompanyId);
+            currentMainCompanySimple.IsAdm = isUserAdm;
 
-            output.CurrentMainCompany.UserModules = modules;
-            output.CurrentMainCompany.UserModulesStr = modulesStr;
+            if (isUserAdm)
+            {
+                output.CurrentMainCompany.UserModules = currentMainCompanySimple.Modules;
+                output.CurrentMainCompany.UserModulesStr = currentMainCompanySimple.ModulesStr;
+            }
+            else
+            {
+                (ModuleEnum[] modules, List<string> modulesStr) = await _getModuleCompanyUser.Execute(userIdAuth, companyId: currentMainCompany.CompanyId);
+
+                output.CurrentMainCompany.UserModules = modules;
+                output.CurrentMainCompany.UserModulesStr = modulesStr;
+            }
         }
 
         return Ok(output);
@@ -153,8 +163,8 @@ public class AuthController(
         }
 
         // Current main company;
-        (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.Execute(userId.GetValueOrDefault());
-        ModuleEnum[]? output = currentMainCompany?.Modules ?? [];
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userId.GetValueOrDefault());
+        ModuleEnum[]? output = isUserAdm ? (currentMainCompany?.Modules ?? []) : (currentMainCompany?.UserModules ?? []);
 
         return Ok(output);
     }

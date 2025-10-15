@@ -9,7 +9,8 @@ Criar novo testes de integração para:
 		GetCurrentMain;
 		GetModule;
 		UpdateCurrentMain;
+		DeleteCompanyUser;
 
-Quando o usuário for convidado, já seta a empresa como principal!
+Ao terminar DeleteCompanyUser, colocar ele na lista de empresas também pro proprio usuario sair
 
-Fazer o excluir UserCompany
+Tentar mudar os dois updates pra delete xd

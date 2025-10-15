@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
+using Orquestra.Application.UseCases.CompanyUsers.Delete;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
+using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Env;
@@ -22,7 +24,8 @@ public class CompanyUserController(
         IGetCompanyUserByCompanyId getCompanyUserByCompanyId,
         IVerifyCompanyUser verify,
         IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
-        IUpdateModuleCompanyUser updateModuleCompanyUser
+        IUpdateModuleCompanyUser updateModuleCompanyUser,
+        IDeleteCompanyUser delete
     ) : BaseController<CompanyUserController>
 {
     private readonly IEnvService _env = env;
@@ -31,6 +34,7 @@ public class CompanyUserController(
     private readonly IVerifyCompanyUser _verify = verify;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
     private readonly IUpdateModuleCompanyUser _updateModuleCompanyUser = updateModuleCompanyUser;
+    private readonly IDeleteCompanyUser _delete = delete;
 
     [AuthorizeFilter]
     [HttpPost("InviteUser")]
@@ -87,5 +91,20 @@ public class CompanyUserController(
         await _updateModuleCompanyUser.Execute(userIdAuth, input);
 
         return NoContent();
+    }
+
+    [AuthorizeFilter]
+    [HttpPut("Disable")]
+    public async Task<ActionResult> Disable(CompanyUserInput input)
+    {
+        if (input.CompanyId == Guid.Empty || input.UserId == Guid.Empty)
+        {
+            throw new ArgumentException($"Os parâmetros {nameof(input.CompanyId)} ou {nameof(input.UserId)} estão vazios.");
+        }
+
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _delete.Execute(userIdAuth, companyId: input.CompanyId, userId: input.UserId);
+
+        return Ok(true);
     }
 }

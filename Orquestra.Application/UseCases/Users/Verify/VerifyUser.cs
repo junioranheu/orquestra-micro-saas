@@ -32,7 +32,7 @@ public sealed class VerifyUser(
         _context.Update(result);
         await _context.SaveChangesAsync();
 
-        // Atualizar status da veriicação;
+        // Atualizar status da verificação;
         await _updateVerification.Execute(verificationId: verification.VerificationId);
     }
 }

@@ -1,11 +1,17 @@
 'use client';
 import { CONSTS_COMPANY_USER, iCompanyUser, iCompanyUserPaginated } from '@/app/api/consts/company-user';
+import { iUser } from '@/app/api/consts/user';
+import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
+import ROUTES from '@/app/consts/routes';
+import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
+import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import EmpresaMembrosModalFilters, { iCompanyUserFormDataModalFilter } from './modal/filter';
 import EmpresaMembrosModalView from './modal/view';
@@ -14,6 +20,7 @@ import styles from './page.module.scss';
 export default function EmpresaMembros() {
 
     useTitle('Membros da empresa');
+    const router = useRouter();
     const me = useApiGetMe({});
 
     const companyUserRoleEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyUserRoleEnum' });
@@ -23,8 +30,9 @@ export default function EmpresaMembros() {
     const [members, setMembers] = useState<iCompanyUserPaginated>();
     const [membersNormalized, setMembersNormalized] = useState<iCompanyUser[]>([]);
 
+    const [trigger, setTrigger] = useState<Date>(new Date());
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_COMPANY_USER.getAllByCompanyId);
-    useApiRequestToSetterOnUrlChange<iCompanyUserPaginated>({ apiUrlRequest: apiUrlRequest, setter: setMembers, hasPaginationInput: true, index: currentPage, limit: 15 });
+    useApiRequestToSetterOnUrlChange<iCompanyUserPaginated>({ apiUrlRequest: apiUrlRequest, setter: setMembers, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
 
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
@@ -97,10 +105,39 @@ export default function EmpresaMembros() {
     const managingOptions = [
         {
             label: 'Remover membro',
-            function: () => alert('xddd'),
+            function: (e) => handleDisable(e),
             icon: <Icon icon='user-x' />
         }
     ] as iTableManagingOptions[];
+
+    async function handleDisable(member: iUser) {
+        const isSameUser = member.userId === me?.userId;
+
+        swal({
+            content: isSameUser ? 'Você tem certeza que deseja sair desta empresa?' : 'Você tem certeza que deseja remover este membro?',
+            confirmBtnText: 'Sim, desejo remover',
+            confirmFunction: async () => {
+                const input = { companyId: me?.currentMainCompany?.companyId, userId: member.userId };
+                const schedule = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });
+
+                if (schedule) {
+                    toast({ content: isSameUser ? 'Até mais. Você saiu desta empresa.' : 'Membro removido da equipe com sucesso.' });
+
+                    if (isSameUser) {
+                        router.push(ROUTES.DASHBOARD);
+                        return;
+                    }
+
+                    setTrigger(new Date());
+                    return;
+                }
+
+                toast({ content: isSameUser ? 'Não foi possível sair desta empresa. Tente novamente mais tarde.' : 'Não foi possível remover este membro da equipe. Tente novamente mais tarde.' });
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'question'
+        });
+    }
 
     return (
         <Fragment>
