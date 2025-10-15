@@ -21,7 +21,7 @@ interface iModalFilterParams {
 
 export interface iCompanyUserFormDataModalFilter {
     companyUserRole: string | null;
-    modules: string[] | null;
+    modules: string | null;
     fullName: string | null;
     email: string | null;
 }
@@ -67,9 +67,9 @@ export default function EmpresaMembrosModalFilters({
                 <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
-                <Dropdown title='Tipo' options={companyUserRoleEnum ?? []} selectedOption={companyUserRoleEnum?.find(x => x.value.toString() === modalFilterFormData.companyUserRole?.value.toString())} setSelectedOption={setCompanyUserRoleOption} />
+                <Dropdown title='Tipo' options={companyUserRoleEnum ?? []} selectedOption={modalFilterFormData.companyUserRole ?? undefined} setSelectedOption={setCompanyUserRoleOption} />
                 {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
-                <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={moduleEnum?.find(x => x.value.toString() === modalFilterFormData.modules?.value.toString())} setSelectedOption={setModuleOption} multiple={false} />
+                <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={modalFilterFormData.modules ?? undefined} setSelectedOption={setModuleOption} />
 
                 <Button
                     label='Limpar filtros'
