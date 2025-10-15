@@ -1,6 +1,5 @@
 'use client';
 import { CONSTS_COMPANY_USER, iCompanyUser, iCompanyUserPaginated } from '@/app/api/consts/company-user';
-import { iUser } from '@/app/api/consts/user';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
@@ -59,14 +58,6 @@ export default function EmpresaMembros() {
     });
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
-    const [memberClicked, setMemberClicked] = useState<iUser | undefined>(undefined);
-    const [typeModal, setTypeModal] = useState<('edit' | 'create')>('create');
-
-    function handleOpenModalView(member: iUser | undefined) {
-        setTypeModal(member ? 'edit' : 'create');
-        setMemberClicked(member);
-        setIsModalViewOpen(true);
-    }
 
     const columns = [
         {
@@ -105,9 +96,9 @@ export default function EmpresaMembros() {
 
     const managingOptions = [
         {
-            label: 'Editar membro',
-            function: (e) => handleOpenModalView(e),
-            icon: <Icon icon='edit' />
+            label: 'Remover membro',
+            function: () => alert('xddd'),
+            icon: <Icon icon='user-x' />
         }
     ] as iTableManagingOptions[];
 
@@ -121,12 +112,11 @@ export default function EmpresaMembros() {
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={members?.count}
-                    handleTableRowClick={(e) => handleOpenModalView(e)}
 
                     title={`Membros cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
                     managingOptions={managingOptions}
                     btn_add_label='Convidar novo membro'
-                    btn_add_function={() => handleOpenModalView(undefined)}
+                    btn_add_function={() => setIsModalViewOpen(true)}
                     btn_filter_label='Filtrar'
                     btn_filter_function={() => setIsModalFilterOpen(true)}
 

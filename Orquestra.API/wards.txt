@@ -11,3 +11,5 @@ Criar novo testes de integração para:
 		UpdateCurrentMain;
 
 Quando o usuário for convidado, já seta a empresa como principal!
+
+Fazer o excluir UserCompany
