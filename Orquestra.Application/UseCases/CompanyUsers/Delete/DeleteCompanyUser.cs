@@ -35,7 +35,9 @@ public sealed class DeleteCompanyUser(Context context, ICheckIfUserIsLinkedCompa
 
         CompanyUser userAim = await GetUser(companyId, userId: userId);
 
-        _context.Remove(userAim);
+        userAim.Status = false;
+        _context.Update(userAim);
+
         await _context.SaveChangesAsync();
     }
 

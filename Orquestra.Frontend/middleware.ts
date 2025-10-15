@@ -77,7 +77,6 @@ async function handleCheckUserAccess(token: string, pathname: string): Promise<b
         };
 
         const res = await fetch(`${CONSTS_AUTH.meModules}?userId=${tokenJson.userId}`, { method: 'GET', headers });
-        // console.log(res);
 
         if (!res.ok) {
             return false;

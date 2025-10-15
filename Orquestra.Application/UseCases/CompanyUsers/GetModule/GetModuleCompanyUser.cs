@@ -21,6 +21,7 @@ public sealed class GetModuleCompanyUser(Context context, ICheckIfUserIsLinkedCo
                      Include(x => x.Company).
                      AsNoTracking().
                      Where(x => x.CompanyId == companyId && x.UserId == userIdAuth).
+                     OrderByDescending(x => x.CreatedDate).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
         if (!result.Status || result.User is null || (result.User is not null && !result.User.Status))

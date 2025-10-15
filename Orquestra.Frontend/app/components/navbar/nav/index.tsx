@@ -74,7 +74,7 @@ export default function Navbar() {
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
                                 <span className={styles.hideIfSmall}>
-                                    <ContentLoaderText text={(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : me?.userName} />
+                                    <ContentLoaderText text={(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : `Olá, ${me?.userName ?? ''}`} />
                                 </span>
 
                                 <Icon icon='chevron-down' weight='bold' />

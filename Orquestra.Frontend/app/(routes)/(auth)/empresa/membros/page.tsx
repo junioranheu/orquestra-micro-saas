@@ -125,6 +125,11 @@ export default function EmpresaMembros() {
 
                     if (isSameUser) {
                         router.push(ROUTES.DASHBOARD);
+
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 2000);
+
                         return;
                     }
 

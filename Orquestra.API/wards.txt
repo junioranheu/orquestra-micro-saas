@@ -12,5 +12,3 @@ Criar novo testes de integração para:
 		DeleteCompanyUser;
 
 Ao terminar DeleteCompanyUser, colocar ele na lista de empresas também pro proprio usuario sair
-
-Tentar mudar os dois updates pra delete xd
