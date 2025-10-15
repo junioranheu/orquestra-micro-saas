@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -35,6 +36,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         await GetAmounfOfClients([output]);
         GetEnumsDesc([output]);
         NormalizeLogo([result], [output]);
+        NormalizeOtherProps([output]);
 
         return output;
     }
@@ -53,6 +55,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
         NormalizeLogo(result, output);
+        NormalizeOtherProps(output);
 
         return output;
     }
@@ -85,10 +88,11 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
         NormalizeLogo(result, output);
+        NormalizeOtherProps(output);
 
         return output;
     }
-
+     
     #region extras
     private static void FillModulesStr(List<CompanyOutput>? output)
     {
@@ -174,6 +178,19 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
             {
                 companyOutput.LogoBase64 = ConvertBytesToBase64(bytes: company.Logo, contentType: company.LogoContentType);
             }
+        }
+    }
+
+    private static void NormalizeOtherProps(List<CompanyOutput>? output)
+    {
+        if (output is null || output.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var company in output)
+        {
+            company.IsAdm = company.Use == CompanyUserRoleEnum.Administrator;
         }
     }
     #endregion

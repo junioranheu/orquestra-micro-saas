@@ -115,7 +115,7 @@ export default function EmpresaMembros() {
 
         swal({
             content: isSameUser ? 'Você tem certeza que deseja sair desta empresa?' : 'Você tem certeza que deseja remover este membro?',
-            confirmBtnText: 'Sim, desejo remover',
+            confirmBtnText: isSameUser ? 'Sim, desejo sair' : 'Sim, desejo remover',
             confirmFunction: async () => {
                 const input = { companyId: me?.currentMainCompany?.companyId, userId: member.userId };
                 const schedule = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });

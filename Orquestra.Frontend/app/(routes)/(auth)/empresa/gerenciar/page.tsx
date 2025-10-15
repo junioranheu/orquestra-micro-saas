@@ -24,6 +24,7 @@ import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import ModalEmpresaGerenciarView from './modal/view';
 import styles from './page.module.scss';
@@ -32,7 +33,9 @@ export default function EmpresaGerenciar() {
 
     useTitle('Gerenciar empresas');
 
+    const router = useRouter();
     const me = useApiGetMeSimple();
+
     const currentMainCompany = useApiGetCurrentMainCompany({});
     const [companies, setCompanies] = useState<iCompanyOutput[]>();
 
@@ -74,6 +77,32 @@ export default function EmpresaGerenciar() {
         setTypeModal(company ? 'edit' : 'create');
         setCompanyClicked(company);
         setIsModalOpen(true);
+    }
+
+    async function handleLeave(company: iCompanyOutput) {
+        swal({
+            content: 'Você tem certeza que deseja sair desta empresa?',
+            confirmBtnText: 'Sim, desejo sair',
+            confirmFunction: async () => {
+                const input = { companyId: company.companyId, userId: me?.userId };
+                const schedule = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });
+
+                if (schedule) {
+                    toast({ content: 'Até mais. Você saiu desta empresa.' });
+                    router.push(ROUTES.DASHBOARD);
+
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 2000);
+
+                    return;
+                }
+
+                toast({ content: 'Não foi possível sair desta empresa. Tente novamente mais tarde.' });
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'question'
+        });
     }
 
     if (!companies || isLoading) {
@@ -236,7 +265,11 @@ export default function EmpresaGerenciar() {
                                 }
 
                                 <div className={styles.actions}>
-                                    {/* <Button label='Sair' isStyleSimple={true} isDisabled={true} /> */}
+                                    {
+                                        !company.isAdm && (
+                                            <Button label='Sair' handleFunction={() => handleLeave(company)} isStyleSimple={true} />
+                                        )
+                                    }
 
                                     {
                                         currentMainCompany?.isAdm && (
