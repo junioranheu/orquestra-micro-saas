@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.Clients.Create;
+using Orquestra.Application.UseCases.Clients.Delete;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Update;
@@ -14,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<IGetClientByCompanyId, GetClientByCompanyId>();
         services.AddScoped<ICreateClient, CreateClient>();
         services.AddScoped<IUpdateClient, UpdateClient>();
+        services.AddScoped<IDeleteClient, DeleteClient>();
 
         return services;
     }

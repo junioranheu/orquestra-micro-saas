@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Clients.Create;
+using Orquestra.Application.UseCases.Clients.Delete;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.Clients.Update;
+using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Shared;
 
 namespace Orquestra.API.Controllers;
@@ -15,13 +17,15 @@ public class ClientController(
         IGetClient get,
         IGetClientByCompanyId getClientByCompanyId,
         ICreateClient create,
-        IUpdateClient update
+        IUpdateClient update,
+        IDeleteClient delete
     ) : BaseController<ClientController>
 {
     private readonly IGetClient _get = get;
     private readonly IGetClientByCompanyId _getClientByCompanyId = getClientByCompanyId;
     private readonly ICreateClient _create = create;
     private readonly IUpdateClient _update = update;
+    private readonly IDeleteClient _delete = delete;
 
     [AuthorizeFilter]
     [HttpPost]
@@ -31,7 +35,7 @@ public class ClientController(
         await _create.Execute(userIdAuth, input);
 
         return Ok(true);
-    }
+    } 
 
     [AuthorizeFilter]
     [HttpPut]
@@ -39,6 +43,22 @@ public class ClientController(
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _update.Execute(userIdAuth, input);
+
+        return Ok(true);
+    }
+
+
+    [AuthorizeFilter]
+    [HttpPut("Disable")]
+    public async Task<ActionResult> Disable(ClientInput input)
+    {
+        if (input.ClientId == Guid.Empty || input.ClientId is null)
+        {
+            throw new ArgumentException($"O parâmetro {nameof(input.ClientId)} está vazio.");
+        }
+
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _delete.Execute(userIdAuth, input.ClientId.GetValueOrDefault());
 
         return Ok(true);
     }

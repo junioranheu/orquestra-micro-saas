@@ -53,26 +53,16 @@ public sealed class InviteCompanyUser(
         }
 
         email = GetNormalizedLowerStr(email);
-
-        //CompanyUserRoleEnum userAuthRole = await _context.CompanyUsers.AsNoTracking().Where(x => x.UserId == userIdAuth && x.CompanyId == companyId && x.Status == true).Select(x => x.CompanyUserRole).FirstOrDefaultAsync();
-
-        //if (userAuthRole == 0)
-        //{
-        //    throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
-        //}
-
-        //if (userAuthRole != CompanyUserRoleEnum.Administrator)
-        //{
-        //    throw new InvalidOperationException("Apenas administradores podem convidar novos membros para a equipe.");
-        //}
         #endregion
+
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
         CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId, throwIfStatusFalse: !isFirstAdministrator);
         UserOutput user = await _getUser.Execute(userId: Guid.Empty, email: email, throwIfStatusFalse: false);
 
         if (!isFirstAdministrator && (user is null || user.UserId == Guid.Empty))
         {
-            await InviteUserWhoDoesntHaveAccount(userIdAuth, company, email);
+            await InviteUserWhoDoesntHaveAccount(company, email);
             return;
         }
 
@@ -80,10 +70,8 @@ public sealed class InviteCompanyUser(
     }
 
     #region extras
-    private async Task InviteUserWhoDoesntHaveAccount(Guid userIdAuth, CompanyOutput company, string email)
+    private async Task InviteUserWhoDoesntHaveAccount(CompanyOutput company, string email)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: company.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
-
         Verification verification = await SaveVerification(companyUserId: Guid.Empty, companyId: company.CompanyId);
         UserOutput user = new() { Email = email };
 

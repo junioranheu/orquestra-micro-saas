@@ -16,7 +16,7 @@ public sealed class DeleteSchedule(ScheduleBaseDependencies deps) : ScheduleBase
     {
         Schedule? schedule = await _context.Schedules.
                              // AsNoTracking(). // Propositalmente sem AsNoTracking;
-                             Where(x => x.ScheduleId == scheduleId).
+                             Where(x => x.ScheduleId == scheduleId && x.Status == true).
                              FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundSchedule);
 
         if (schedule.DateStart < GetDate())

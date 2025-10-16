@@ -11,7 +11,7 @@ export const CONSTS_COMPANY_USER = {
     verify: `${BASE}/${controller}/Verify`,
     updateCurrentMainCompanyUser: `${BASE}/${controller}/UpdateCurrentMainCompanyUser`,
     updateModules: `${BASE}/${controller}/UpdateModules`,
-    disable: `${BASE}/${controller}/Disable`,
+    disable: `${BASE}/${controller}/Disable`
 };
 
 export interface iCompanyUser {

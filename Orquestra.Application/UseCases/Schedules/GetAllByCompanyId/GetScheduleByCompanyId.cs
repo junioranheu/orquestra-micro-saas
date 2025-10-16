@@ -21,12 +21,12 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
                     Include(x => x.Client).
                     Include(x => x.Company).
                     AsNoTracking().
-                    Where(x => x.CompanyId == companyId && x.Status == true);
+                    Where(x => x.CompanyId == companyId && x.Status == true && x.Client!.Status == true);
 
         if ((year.HasValue && year.Value > 0) && (month.HasValue && month.Value > 0)) // Se foi passado year e month, deve pegar o intervalo de: mês anterior, mês alvo e mês posterior;
         {
             // Ano alvo;
-            DateTime targetDate = new (year.Value, month.Value, 1);
+            DateTime targetDate = new(year.Value, month.Value, 1);
 
             // Mês anterior;
             DateTime prev = targetDate.AddMonths(-1);

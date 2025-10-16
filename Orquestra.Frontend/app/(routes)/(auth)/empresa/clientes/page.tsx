@@ -1,7 +1,10 @@
 'use client';
 import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
+import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
+import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
@@ -88,8 +91,34 @@ export default function EmpresaClientes() {
             label: 'Editar cliente',
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />
+        },
+        {
+            label: 'Remover membro',
+            function: (e) => handleDisable(e),
+            icon: <Icon icon='user-x' />
         }
     ] as iTableManagingOptions[];
+
+    async function handleDisable(member: iClient) {
+        swal({
+            content: 'Você tem certeza que deseja remover este cliente?',
+            confirmBtnText: 'Sim, desejo remover',
+            confirmFunction: async () => {
+                const input = { clientId: member.clientId };
+                const schedule = await Fetch.put({ url: CONSTS_CLIENT.disable, body: input });
+
+                if (schedule) {
+                    toast({ content: 'Cliente removido com sucesso.' });
+                    setTrigger(new Date());
+                    return;
+                }
+
+                toast({ content: 'Não foi possível remover este cliente. Tente novamente mais tarde.' });
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'question'
+        });
+    }
 
     return (
         <Fragment>
@@ -101,7 +130,6 @@ export default function EmpresaClientes() {
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={clients?.count}
-                    handleTableRowClick={(e) => handleOpenModalView(e)}
 
                     title={`Clientes cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
                     managingOptions={managingOptions}

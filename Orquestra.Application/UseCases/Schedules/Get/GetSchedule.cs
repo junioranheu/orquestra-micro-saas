@@ -19,7 +19,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
                      Include(x => x.Client).
                      Include(x => x.Company).
                      AsNoTracking().
-                     Where(x => x.ScheduleId == scheduleId && x.Status == true).
+                     Where(x => x.ScheduleId == scheduleId && x.Status == true && x.Client!.Status == true).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundSchedule);
 
         Guid companyId = result.CompanyId;
