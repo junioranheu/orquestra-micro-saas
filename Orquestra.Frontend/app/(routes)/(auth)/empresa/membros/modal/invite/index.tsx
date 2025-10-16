@@ -12,7 +12,7 @@ import swal from '@/app/functions/swal';
 import { Guid } from 'guid-typescript';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
-interface iModalFilterParams {
+interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     companyId: Guid | undefined;
@@ -22,7 +22,7 @@ interface iFormData {
     inviteEmail: string | null;
 }
 
-export default function EmpresaMembrosModalView({ isModalOpen, setIsModalOpen, companyId }: iModalFilterParams) {
+export default function EmpresaMembrosModalInvite({ isModalOpen, setIsModalOpen, companyId }: iProps) {
 
     const [saving, setSaving] = useState<boolean>(false);
 

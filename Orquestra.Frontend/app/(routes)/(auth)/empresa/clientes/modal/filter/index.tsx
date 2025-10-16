@@ -6,7 +6,7 @@ import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import { Dispatch, SetStateAction } from 'react';
 
-interface iModalFilterParams {
+interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     modalFilterFormData: iClientFormDataModalFilter;
@@ -39,7 +39,7 @@ export default function EmpresaClientesModalFilters({
     apiUrlRequest,
     setApiUrlRequest,
     setCurrentPage
-}: iModalFilterParams) {
+}: iProps) {
 
     function handleSubmit() {
         const data = handleLoopFormData(modalFilterFormData, 'label');

@@ -1,6 +1,7 @@
 'use client';
 import { iClientFormDataModalFilter } from '@/app/(routes)/(auth)/empresa/clientes/modal/filter';
 import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import { iUser } from '@/app/api/consts/user';
 import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
@@ -24,13 +25,12 @@ import { Dispatch, Fragment, KeyboardEvent, SetStateAction, useCallback, useEffe
 interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-    type: 'edit' | 'create';
-    client: iClient | undefined;
+    user: iUser | undefined;
     companyId: Guid | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
-export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, type, client, companyId, setTrigger }: iProps) {
+export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, user, companyId, setTrigger }: iProps) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);

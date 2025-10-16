@@ -3,12 +3,16 @@ export function handleGetNameInitials(name: string | undefined, defaultStr: stri
         return defaultStr;
     }
 
-    const words = name.trim().split(/\s+/);
-    let initials = '';
+    const words = name.trim().split(/\s+/).filter(w => w.length > 0);
 
-    for (let i = 0; i < Math.min(2, words.length); i++) {
-        initials += words[i][0].toUpperCase();
+    if (words.length === 0) {
+        return defaultStr;
     }
+
+    const first = words[0];
+    const lastValid = [...words].reverse().find(w => w.length >= 3) ?? first;
+
+    const initials = (first[0] + lastValid[0]).toUpperCase();
 
     return initials;
 }

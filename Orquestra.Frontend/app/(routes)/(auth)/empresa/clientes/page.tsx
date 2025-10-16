@@ -37,16 +37,6 @@ export default function EmpresaClientes() {
         fullName: null, email: null, cpf: null, address: null, addressNumber: null, city: null, state: null, zipCode: null, country: null, dateOfBirth: null, notes: null, phone: null
     });
 
-    const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
-    const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);
-    const [typeModal, setTypeModal] = useState<('edit' | 'create')>('create');
-
-    function handleOpenModalView(client: iClient | undefined) {
-        setTypeModal(client ? 'edit' : 'create');
-        setClientClicked(client);
-        setIsModalViewOpen(true);
-    }
-
     const columns = [
         {
             title: 'Nome completo',
@@ -98,6 +88,17 @@ export default function EmpresaClientes() {
             icon: <Icon icon='user-x' />
         }
     ] as iTableManagingOptions[];
+
+    const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
+    const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);
+    const [typeModal, setTypeModal] = useState<('edit' | 'create')>('create');
+
+    function handleOpenModalView(client: iClient | undefined) {
+        setTypeModal(client ? 'edit' : 'create');
+        setClientClicked(client);
+        setIsModalViewOpen(true);
+    }
+
 
     async function handleDisable(member: iClient) {
         swal({

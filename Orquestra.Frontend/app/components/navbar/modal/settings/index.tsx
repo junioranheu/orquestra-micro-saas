@@ -1,7 +1,7 @@
 import Icon from '@/app/components/icon';
 import ModalGeneric, { iModalCustomPosition } from '@/app/components/modal/generic';
 import ROUTES from '@/app/consts/routes';
-import { handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
@@ -90,7 +90,7 @@ export function ProfileMenu({ setIsModalOpen }: iPropsProfileMenu): JSX.Element 
                 <div className={styles.avatar}>{handleGetNameInitials(me?.userName)}</div>
 
                 <div className={styles.userInfo}>
-                    <div className={styles.name}>{me?.userName}</div>
+                    <div className={styles.name}>{handleGetFirstName(me?.userName)}</div>
                     <div className={styles.email}>{me?.email}</div>
                 </div>
             </div>

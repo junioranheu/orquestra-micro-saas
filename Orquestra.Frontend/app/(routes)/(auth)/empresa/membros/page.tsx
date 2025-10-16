@@ -13,8 +13,9 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterO
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
+import EmpresaMembrosModalEdit from './modal/edit';
 import EmpresaMembrosModalFilters, { iCompanyUserFormDataModalFilter } from './modal/filter';
-import EmpresaMembrosModalView from './modal/view';
+import EmpresaMembrosModalInvite from './modal/invite';
 import styles from './page.module.scss';
 
 export default function EmpresaMembros() {
@@ -65,8 +66,6 @@ export default function EmpresaMembros() {
         companyUserRole: null, modules: null, fullName: null, email: null
     });
 
-    const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
-
     const columns = [
         {
             title: 'Nome completo',
@@ -104,11 +103,25 @@ export default function EmpresaMembros() {
 
     const managingOptions = [
         {
+            label: 'Editar cliente',
+            function: (e) => handleOpenModalView(e),
+            icon: <Icon icon='edit' />
+        },
+        {
             label: 'Remover membro',
             function: (e) => handleDisable(e),
             icon: <Icon icon='user-x' />
         }
     ] as iTableManagingOptions[];
+
+    const [isModalInviteOpen, setIsModalInviteOpen] = useState<boolean>(false);
+    const [isModalEditOpen, setIsModalEditOpen] = useState<boolean>(false);
+    const [userClicked, setUserClicked] = useState<iUser | undefined>(undefined);
+
+    function handleOpenModalView(user: iUser | undefined) {
+        setUserClicked(user);
+        setIsModalEditOpen(true);
+    }
 
     async function handleDisable(member: iUser) {
         const isSameUser = member.userId === me?.userId;
@@ -164,7 +177,7 @@ export default function EmpresaMembros() {
 
                     {... (me?.currentMainCompany?.isAdm ? {
                         btn_add_label: 'Convidar novo membro',
-                        btn_add_function: () => setIsModalViewOpen(true)
+                        btn_add_function: () => setIsModalInviteOpen(true)
                     } : {})}
 
                     btn_filter_label='Filtrar'
@@ -187,9 +200,17 @@ export default function EmpresaMembros() {
                 setCurrentPage={setCurrentPage}
             />
 
-            <EmpresaMembrosModalView
-                isModalOpen={isModalViewOpen}
-                setIsModalOpen={setIsModalViewOpen}
+            <EmpresaMembrosModalEdit
+                isModalOpen={isModalEditOpen}
+                setIsModalOpen={setIsModalEditOpen}
+                user={userClicked}
+                companyId={me?.currentMainCompany?.companyId}
+                setTrigger={setTrigger}
+            />
+
+            <EmpresaMembrosModalInvite
+                isModalOpen={isModalInviteOpen}
+                setIsModalOpen={setIsModalInviteOpen}
                 companyId={me?.currentMainCompany?.companyId}
             />
         </Fragment>

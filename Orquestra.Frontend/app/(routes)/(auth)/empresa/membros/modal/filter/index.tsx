@@ -9,7 +9,7 @@ import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import { Dispatch, SetStateAction } from 'react';
 
-interface iModalFilterParams {
+interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     modalFilterFormData: iCompanyUserFormDataModalFilter;
@@ -34,7 +34,7 @@ export default function EmpresaMembrosModalFilters({
     apiUrlRequest,
     setApiUrlRequest,
     setCurrentPage
-}: iModalFilterParams) {
+}: iProps) {
 
     const companyUserRoleEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyUserRoleEnum' });
     const moduleEnum = useApiGetCompanySituationEnum({ enumName: 'ModuleEnum' });
