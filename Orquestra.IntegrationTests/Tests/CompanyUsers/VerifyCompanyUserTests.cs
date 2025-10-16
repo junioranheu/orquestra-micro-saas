@@ -23,7 +23,7 @@ public sealed class VerifyCompanyUserTests
             UserId = Guid.NewGuid(),
             CompanyUserRole = CompanyUserRoleEnum.Member,
             Status = false,
-            Modules = [ModuleEnum.Sales]
+            UserModules = [ModuleEnum.Sales]
         };
 
         await Fixture.Save(context, companyUser);
@@ -68,7 +68,7 @@ public sealed class VerifyCompanyUserTests
             UserId = Guid.NewGuid(),
             CompanyUserRole = CompanyUserRoleEnum.Member,
             Status = false,
-            Modules = [ModuleEnum.Sales]
+            UserModules = [ModuleEnum.Sales]
         };
 
         await Fixture.Save(context, companyUser);
@@ -102,7 +102,7 @@ public sealed class VerifyCompanyUserTests
             UserId = Guid.NewGuid(),
             CompanyUserRole = CompanyUserRoleEnum.Member,
             Status = false,
-            Modules = [ModuleEnum.Sales]
+            UserModules = [ModuleEnum.Sales]
         };
 
         await Fixture.Save(context, companyUser);

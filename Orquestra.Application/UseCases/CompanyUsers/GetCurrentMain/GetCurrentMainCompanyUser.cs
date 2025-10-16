@@ -26,6 +26,7 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
         }
 
         CompanyOutput outputAdapt = output.Company.Adapt<CompanyOutput>();
+        outputAdapt.UserModules = output.UserModules;
 
         if (outputAdapt is null)
         {
@@ -34,11 +35,11 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
 
         if (outputAdapt is not null)
         {
-            ModuleEnum[] modules = outputAdapt.Modules ?? [];
+            ModuleEnum[] modules = outputAdapt.CompanyModules ?? [];
 
             foreach (var module in modules)
             {
-                outputAdapt.ModulesStr.Add(GetEnumDesc(module));
+                outputAdapt.CompanyModulesStr.Add(GetEnumDesc(module));
             }
 
             ModuleEnum[] userModules = outputAdapt.UserModules ?? [];

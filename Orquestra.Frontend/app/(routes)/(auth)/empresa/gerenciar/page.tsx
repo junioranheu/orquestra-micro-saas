@@ -241,10 +241,10 @@ export default function EmpresaGerenciar() {
                                     }
 
                                     {
-                                        company?.modulesStr && company?.modulesStr?.length > 0 && (
-                                            <Tippy content={company.modulesStr.join('; ')}>
+                                        company?.companyModulesStr && company?.companyModulesStr?.length > 0 && (
+                                            <Tippy content={company.companyModulesStr.join('; ')}>
                                                 <p>
-                                                    <Icon icon='layers' size='small' /> {company.modulesStr?.length} módulo{company.modulesStr?.length === 1 ? '' : 's'}
+                                                    <Icon icon='layers' size='small' /> {company.companyModulesStr?.length} módulo{company.companyModulesStr?.length === 1 ? '' : 's'}
                                                 </p>
                                             </Tippy>
                                         )
@@ -252,10 +252,10 @@ export default function EmpresaGerenciar() {
                                 </div>
 
                                 {
-                                    company?.modulesStr && company?.modulesStr?.length > 0 && (
+                                    company?.companyModulesStr && company?.companyModulesStr?.length > 0 && (
                                         <div className={styles.modules}>
                                             {
-                                                company?.modulesStr?.map((m) => (
+                                                company?.companyModulesStr?.map((m) => (
                                                     <span key={m} className={styles.module}>
                                                         {m}
                                                     </span>

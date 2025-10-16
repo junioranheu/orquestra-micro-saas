@@ -29,7 +29,6 @@ export default function UsuarioConfiguracoes() {
 
         const modules = await Fetch.get({ url: `${CONSTS_COMPANY.getModulesInfo}?companyId=${test.currentMainCompany.companyId}` }) as iCalculatePriceModuleCompanyOutput[];
         setModules(modules);
-        console.log('modules', modules);
     }
 
     async function handleLog() {
@@ -55,7 +54,7 @@ export default function UsuarioConfiguracoes() {
                 {
                     modules?.map((m, index) => (
                         <div key={index}>
-                            <h2>{m.moduleStr}</h2>
+                            <h2>{m.companyModuleStr}</h2>
                             <p>Já possui: {m.companyAlreadyHasThisModule ? 'Sim' : 'Não'}</p>
                             <p>Preço original: R$ {m.originalPrice.toFixed(2)}</p>
                             <p>Desconto: {m.discountPercentage}%</p>

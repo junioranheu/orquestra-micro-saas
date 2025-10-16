@@ -5,8 +5,8 @@ namespace Orquestra.Application.UseCases.Companies.Shared;
 
 public sealed class CalculatePriceModuleCompanyOutput
 {
-    public required ModuleEnum Module { get; set; }
-    public required string ModuleStr { get; set; }
+    public required ModuleEnum CompanyModule { get; set; }
+    public required string CompanyModuleStr { get; set; }
     public required bool CompanyAlreadyHasThisModule { get; set; }
 
     [Description("Valor original do módulo.")]

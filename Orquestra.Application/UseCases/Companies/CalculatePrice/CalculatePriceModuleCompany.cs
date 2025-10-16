@@ -54,9 +54,9 @@ public sealed class CalculatePriceModuleCompany(Context context, ICheckIfUserIsL
 
             CalculatePriceModuleCompanyOutput calculate = new()
             {
-                Module = item,
-                ModuleStr = GetEnumDesc(item),
-                CompanyAlreadyHasThisModule = company.Modules is not null && company.Modules.Length != 0 && company.Modules.Any(x => x == item),
+                CompanyModule = item,
+                CompanyModuleStr = GetEnumDesc(item),
+                CompanyAlreadyHasThisModule = company.CompanyModules is not null && company.CompanyModules.Length != 0 && company.CompanyModules.Any(x => x == item),
                 OriginalPrice = originalPrice,
                 DiscountPercentage = discountPercent,
                 DiscountedPrice = discountedPrice,

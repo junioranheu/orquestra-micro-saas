@@ -67,7 +67,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
         planStartDate: SYSTEM.EMPTY_DATE,
         planEndDate: SYSTEM.EMPTY_DATE,
-        modulesStr: [],
+        companyModulesStr: [],
         status: false
     });
 
@@ -114,7 +114,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
             planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
             planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
-            modulesStr: company?.modulesStr ?? [],
+            companyModulesStr: company?.companyModulesStr ?? [],
             status: company?.status
         });
     }, [isModalOpen, type, company, setIsModalOpen, handleClose]);
@@ -280,7 +280,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
                                                 <div className={styles.div}>
                                                     <label>Módulos</label>
-                                                    <textarea className={styles.textarea} rows={3} value={formData.modulesStr?.join('\n') ?? ''} readOnly={true} />
+                                                    <textarea className={styles.textarea} rows={3} value={formData.companyModulesStr?.join('\n') ?? ''} readOnly={true} />
                                                 </div>
                                             </Fragment>
                                         )

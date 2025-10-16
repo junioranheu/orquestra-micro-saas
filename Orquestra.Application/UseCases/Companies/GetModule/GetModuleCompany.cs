@@ -28,7 +28,7 @@ public sealed class GetModuleCompany(Context context, ICheckIfUserIsLinkedCompan
             throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyCompany);
         }
 
-        ModuleEnum[] modules = result.Modules ?? [];
+        ModuleEnum[] modules = result.CompanyModules ?? [];
         List<string> modulesStr = [];
 
         foreach (var module in modules)
@@ -41,8 +41,8 @@ public sealed class GetModuleCompany(Context context, ICheckIfUserIsLinkedCompan
         CompanyModulesOutput output = new()
         {
             Company = company,
-            Modules = modules,
-            ModulesStr = modulesStr
+            CompanyModules = modules,
+            CompanyModulesStr = modulesStr
         };
 
         return output;

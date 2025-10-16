@@ -37,7 +37,7 @@ public sealed class UpdateModuleCompanyTests
         await Fixture.Save(context, user);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         // Usuários membros da empresa (CompanyUser);
@@ -49,7 +49,7 @@ public sealed class UpdateModuleCompanyTests
             CompanyId = company.CompanyId,
             UserId = memberUser1.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            UserModules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
             Status = true
         };
 
@@ -61,7 +61,7 @@ public sealed class UpdateModuleCompanyTests
             CompanyId = company.CompanyId,
             UserId = memberUser2.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [ModuleEnum.Sales],
+            UserModules = [ModuleEnum.Sales],
             Status = true
         };
 
@@ -73,7 +73,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Sales] // Remove Scheduling;
+            CompanyModules = [ModuleEnum.Sales] // Remove Scheduling;
         };
 
         if (role is not UserRoleEnum.Common)
@@ -84,18 +84,18 @@ public sealed class UpdateModuleCompanyTests
             // Assert;
             Company? updatedCompany = await context.Companies.FindAsync(company.CompanyId);
             Assert.NotNull(updatedCompany);
-            Assert.Equal(input.Modules, updatedCompany!.Modules);
+            Assert.Equal(input.CompanyModules, updatedCompany!.CompanyModules);
 
             List<CompanyUser> updatedMembers = await context.CompanyUsers.Where(x => x.CompanyId == company.CompanyId).ToListAsync();
 
             // Member1 perdeu Scheduling;
             CompanyUser member1Updated = updatedMembers.First(x => x.UserId == memberUser1.UserId);
-            Assert.Contains(ModuleEnum.Sales, member1Updated.Modules ?? []);
-            Assert.DoesNotContain(ModuleEnum.Scheduling, member1Updated.Modules ?? []);
+            Assert.Contains(ModuleEnum.Sales, member1Updated.UserModules ?? []);
+            Assert.DoesNotContain(ModuleEnum.Scheduling, member1Updated.UserModules ?? []);
 
             // Member2 manteve Sales;
             CompanyUser member2Updated = updatedMembers.First(x => x.UserId == memberUser2.UserId);
-            Assert.Contains(ModuleEnum.Sales, member2Updated.Modules ?? []);
+            Assert.Contains(ModuleEnum.Sales, member2Updated.UserModules ?? []);
         }
         else
         {
@@ -114,7 +114,7 @@ public sealed class UpdateModuleCompanyTests
         await Fixture.Save(context, adminUser);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         UpdateModuleCompany sut = CreateSut(context, adminUser);
@@ -122,7 +122,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Sales] // Remove Scheduling;
+            CompanyModules = [ModuleEnum.Sales] // Remove Scheduling;
         };
 
         // Act
@@ -132,7 +132,7 @@ public sealed class UpdateModuleCompanyTests
         Assert.Null(exception);
 
         Company? updatedCompany = await context.Companies.FindAsync(company.CompanyId);
-        Assert.Equal(input.Modules, updatedCompany!.Modules);
+        Assert.Equal(input.CompanyModules, updatedCompany!.CompanyModules);
     }
 
     [Fact]
@@ -149,7 +149,7 @@ public sealed class UpdateModuleCompanyTests
         await context.SaveChangesAsync();
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         CompanyUser member = new()
@@ -157,7 +157,7 @@ public sealed class UpdateModuleCompanyTests
             CompanyId = company.CompanyId,
             UserId = adminUser.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Administrator,
-            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            UserModules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
             Status = true
         };
 
@@ -168,7 +168,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [] // Remove todos;
+            CompanyModules = [] // Remove todos;
         };
 
         // Act;
@@ -176,10 +176,10 @@ public sealed class UpdateModuleCompanyTests
 
         // Assert;
         CompanyUser? updatedMember = await context.CompanyUsers.FindAsync(member.CompanyUserId);
-        Assert.Empty(updatedMember!.Modules ?? []);
+        Assert.Empty(updatedMember!.UserModules ?? []);
 
         Company? updatedCompany = await context.Companies.FindAsync(company.CompanyId);
-        Assert.Empty(updatedCompany!.Modules ?? []);
+        Assert.Empty(updatedCompany!.CompanyModules ?? []);
     }
 
     [Fact]
@@ -192,7 +192,7 @@ public sealed class UpdateModuleCompanyTests
         await Fixture.Save(context, adminUser);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         CompanyUser member = new()
@@ -200,7 +200,7 @@ public sealed class UpdateModuleCompanyTests
             CompanyId = company.CompanyId,
             UserId = adminUser.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Administrator,
-            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            UserModules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
             Status = true
         };
 
@@ -211,7 +211,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [] // Remove todos;
+            CompanyModules = [] // Remove todos;
         };
 
         // Act;
@@ -219,10 +219,10 @@ public sealed class UpdateModuleCompanyTests
 
         // Assert;
         CompanyUser? updatedMember = await context.CompanyUsers.FindAsync(member.CompanyUserId);
-        Assert.NotEmpty(updatedMember!.Modules ?? []);
+        Assert.NotEmpty(updatedMember!.UserModules ?? []);
 
         Company? updatedCompany = await context.Companies.FindAsync(company.CompanyId);
-        Assert.NotEmpty(updatedCompany!.Modules ?? []);
+        Assert.NotEmpty(updatedCompany!.CompanyModules ?? []);
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = Guid.NewGuid(),
-            Modules = [ModuleEnum.Sales]
+            CompanyModules = [ModuleEnum.Sales]
         };
 
         // Act & Assert;
@@ -268,7 +268,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Sales]
+            CompanyModules = [ModuleEnum.Sales]
         };
 
         // Act & Assert;
@@ -286,7 +286,7 @@ public sealed class UpdateModuleCompanyTests
         await Fixture.Save(context, user);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         UpdateModuleCompany sut = CreateSut(context, user);
@@ -294,7 +294,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Sales] // Tenta remover Scheduling;
+            CompanyModules = [ModuleEnum.Sales] // Tenta remover Scheduling;
         };
 
         // Act;
@@ -302,8 +302,8 @@ public sealed class UpdateModuleCompanyTests
 
         // Assert → Scheduling não foi removido;
         Company updatedCompany = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
-        Assert.Contains(ModuleEnum.Sales, updatedCompany?.Modules ?? []);
-        Assert.Contains(ModuleEnum.Scheduling, updatedCompany?.Modules ?? []);
+        Assert.Contains(ModuleEnum.Sales, updatedCompany?.CompanyModules ?? []);
+        Assert.Contains(ModuleEnum.Scheduling, updatedCompany?.CompanyModules ?? []);
     }
 
     [Fact]
@@ -317,7 +317,7 @@ public sealed class UpdateModuleCompanyTests
         await Fixture.Save(context, admin);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales];
+        company.CompanyModules = [ModuleEnum.Sales];
         await Fixture.Save(context, company);
 
         UpdateModuleCompany sut = CreateSut(context, admin);
@@ -325,7 +325,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [] // Remove todos;
+            CompanyModules = [] // Remove todos;
         };
 
         // Act;
@@ -333,7 +333,7 @@ public sealed class UpdateModuleCompanyTests
 
         // Assert;
         Company updatedCompany = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
-        Assert.Empty(updatedCompany?.Modules ?? []);
+        Assert.Empty(updatedCompany?.CompanyModules ?? []);
         Assert.Equal(CompanySituationEnum.RegisteredButWithoutAnyModules, updatedCompany?.CompanySituation);
     }
 
@@ -348,7 +348,7 @@ public sealed class UpdateModuleCompanyTests
         await Fixture.Save(context, admin);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         // CompanyUsers;
@@ -360,7 +360,7 @@ public sealed class UpdateModuleCompanyTests
             CompanyId = company.CompanyId,
             UserId = member1.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            UserModules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
             Status = true
         };
 
@@ -371,7 +371,7 @@ public sealed class UpdateModuleCompanyTests
         CompanyUpdateModuleInput input = new()
         {
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Sales] // Remove Scheduling;
+            CompanyModules = [ModuleEnum.Sales] // Remove Scheduling;
         };
 
         // Act;
@@ -379,8 +379,8 @@ public sealed class UpdateModuleCompanyTests
 
         // Assert;
         CompanyUser updatedMember = await context.CompanyUsers.FirstAsync(x => x.CompanyUserId == cu1.CompanyUserId);
-        Assert.Contains(ModuleEnum.Sales, updatedMember?.Modules ?? []);
-        Assert.DoesNotContain(ModuleEnum.Scheduling, updatedMember?.Modules ?? []);
+        Assert.Contains(ModuleEnum.Sales, updatedMember?.UserModules ?? []);
+        Assert.DoesNotContain(ModuleEnum.Scheduling, updatedMember?.UserModules ?? []);
     }
 
     #region helpers

@@ -10,5 +10,5 @@ public sealed class CompanyUserInput
 
     public CompanyUserRoleEnum CompanyUserRole { get; set; }
 
-    public ModuleEnum[]? Modules { get; set; } = [];
+    public ModuleEnum[]? UserModules { get; set; } = [];
 }

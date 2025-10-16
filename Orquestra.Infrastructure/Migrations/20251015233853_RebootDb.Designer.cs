@@ -12,8 +12,8 @@ using Orquestra.Infrastructure.Data;
 namespace Orquestra.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20251010212309_InitMigrations")]
-    partial class InitMigrations
+    [Migration("20251015233853_RebootDb")]
+    partial class RebootDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,16 +32,28 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(14)
-                        .HasColumnType("character varying(14)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("AddressNumber")
+                        .HasMaxLength(5)
+                        .HasColumnType("character varying(5)");
 
                     b.Property<string>("CPF")
                         .IsRequired()
                         .HasMaxLength(14)
                         .HasColumnType("character varying(14)");
 
+                    b.Property<string>("City")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(56)
+                        .HasColumnType("character varying(56)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uuid");
@@ -75,8 +87,16 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
+                    b.Property<string>("State")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("ZipCode")
+                        .HasMaxLength(9)
+                        .HasColumnType("character varying(9)");
 
                     b.HasKey("ClientId");
 
@@ -95,12 +115,14 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("AddressNumber")
+                        .HasMaxLength(5)
+                        .HasColumnType("character varying(5)");
+
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -115,7 +137,6 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasMaxLength(56)
                         .HasColumnType("character varying(56)");
 
@@ -162,7 +183,6 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 

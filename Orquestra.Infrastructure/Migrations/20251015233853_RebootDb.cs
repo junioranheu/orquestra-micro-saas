@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Orquestra.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitMigrations : Migration
+    public partial class RebootDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,11 +21,12 @@ namespace Orquestra.Infrastructure.Migrations
                     Email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Phone = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
                     CompanyType = table.Column<int>(type: "integer", nullable: false),
-                    Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    State = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    AddressNumber = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
+                    City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    State = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     ZipCode = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: true),
-                    Country = table.Column<string>(type: "character varying(56)", maxLength: 56, nullable: false),
+                    Country = table.Column<string>(type: "character varying(56)", maxLength: 56, nullable: true),
                     Logo = table.Column<byte[]>(type: "bytea", nullable: true),
                     LogoContentType = table.Column<string>(type: "text", nullable: true),
                     Color = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
@@ -109,7 +110,12 @@ namespace Orquestra.Infrastructure.Migrations
                     FullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     CPF = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
-                    Address = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: true),
+                    Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    AddressNumber = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
+                    City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    State = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    ZipCode = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: true),
+                    Country = table.Column<string>(type: "character varying(56)", maxLength: 56, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Phone = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: true),
                     Notes = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),

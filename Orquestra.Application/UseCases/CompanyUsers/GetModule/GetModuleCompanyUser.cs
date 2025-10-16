@@ -29,7 +29,7 @@ public sealed class GetModuleCompanyUser(Context context, ICheckIfUserIsLinkedCo
             throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyUser);
         }
 
-        ModuleEnum[] modules = result.Modules ?? [];
+        ModuleEnum[] modules = result.UserModules ?? [];
         List<string> modulesStr = [];
 
         foreach (var module in modules)

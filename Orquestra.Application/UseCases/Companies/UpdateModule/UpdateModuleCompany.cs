@@ -39,7 +39,7 @@ public sealed class UpdateModuleCompany(
         }
 
         // #1 - Criar cobrança, obrigatoriamente antes de normalizar o input.Modules;
-        await _createCompanyInvoice.Execute(userIdAuth, companyId: input.CompanyId, modules: input.Modules ?? []);
+        await _createCompanyInvoice.Execute(userIdAuth, companyId: input.CompanyId, modules: input.CompanyModules ?? []);
 
         // #2 - Se o usuário for ADM do sistema, ele pode remover os módulos;
         // Se o usuário não for ADM do sistema, ele NÃO pode remover, e aí automaticamente o input é normalizado;
@@ -61,23 +61,23 @@ public sealed class UpdateModuleCompany(
         }
 
         // Usuário comum normaliza o input, NÃO permitindo remover módulos;
-        ModuleEnum[]? newModules = input.Modules;
-        ModuleEnum[]? existentModules = company.Modules;
+        ModuleEnum[]? newModules = input.CompanyModules;
+        ModuleEnum[]? existentModules = company.CompanyModules;
         ModuleEnum[]? output = existentModules?.Concat(newModules ?? []).Distinct().ToArray();
 
-        input.Modules = output;
+        input.CompanyModules = output;
     }
 
     private async Task UpdateCompanyData(Company company, CompanyUpdateModuleInput input)
     {
         // Atualizar os módulos dos funcionário dessa empresa, removendo os módulos não válidos;
-        await UpdateAllModulesFromUsersOfThisCompany(oldModules: company.Modules, newModules: input.Modules, companyId: input.CompanyId);
+        await UpdateAllModulesFromUsersOfThisCompany(oldModules: company.CompanyModules, newModules: input.CompanyModules, companyId: input.CompanyId);
 
         // Atualizar dados da empresa;
-        company.CompanySituation = input.Modules?.Length >= 1 ? CompanySituationEnum.PendingPayment : CompanySituationEnum.RegisteredButWithoutAnyModules;
+        company.CompanySituation = input.CompanyModules?.Length >= 1 ? CompanySituationEnum.PendingPayment : CompanySituationEnum.RegisteredButWithoutAnyModules;
         company.PlanStartDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate() : company.PlanStartDate;
         company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(SystemConsts.Time.PlanDurationDays) : company.PlanEndDate;
-        company.Modules = input.Modules;
+        company.CompanyModules = input.CompanyModules;
 
         _context.Update(company);
         await _context.SaveChangesAsync();
@@ -104,8 +104,8 @@ public sealed class UpdateModuleCompany(
 
         foreach (var item in result)
         {
-            ModuleEnum[] validModules = [.. (item.Modules ?? []).Except(invalidModules ?? [])];
-            item.Modules = [.. validModules.Distinct()];
+            ModuleEnum[] validModules = [.. (item.UserModules ?? []).Except(invalidModules ?? [])];
+            item.UserModules = [.. validModules.Distinct()];
         }
 
         _context.UpdateRange(result);

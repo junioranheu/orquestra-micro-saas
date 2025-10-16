@@ -98,7 +98,7 @@ public sealed class InviteCompanyUser(
             CompanyId = company.CompanyId,
             UserId = isFirstAdministrator ? userIdAuth : user.UserId,
             CompanyUserRole = isFirstAdministrator ? CompanyUserRoleEnum.Administrator : CompanyUserRoleEnum.Member,
-            Modules = []
+            UserModules = []
         };
 
         await Validate(input: input, userIdAuth, isCreate: true);

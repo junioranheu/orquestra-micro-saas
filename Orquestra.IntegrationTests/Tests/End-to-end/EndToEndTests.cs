@@ -98,7 +98,7 @@ public sealed class EndToEndTests
             ZipCode = "02726090",
             Country = "Brasil",
             CompanyType = CompanyTypeEnum.Academia,
-            Modules = [ModuleEnum.Scheduling]
+            CompanyModules = [ModuleEnum.Scheduling]
         };
 
         CompanyOutput createdCompanyOutput = await createCompany.Execute(createdUser.UserId, companyInput);
@@ -107,7 +107,7 @@ public sealed class EndToEndTests
         Company? dbCompany = await context.Companies.AsNoTracking().FirstOrDefaultAsync(c => c.Name == companyInput.Name);
         Assert.NotNull(dbCompany);
         Assert.Equal(companyInput.Email, dbCompany.Email);
-        Assert.Contains(ModuleEnum.Scheduling, dbCompany.Modules ?? []);
+        Assert.Contains(ModuleEnum.Scheduling, dbCompany.CompanyModules ?? []);
 
         // Verify CompanyUser (first admin) exists and is linked;
         CompanyUser? dbCompanyUser = await context.CompanyUsers.FirstOrDefaultAsync(cu => cu.CompanyId == dbCompany.CompanyId && cu.UserId == createdUser.UserId);

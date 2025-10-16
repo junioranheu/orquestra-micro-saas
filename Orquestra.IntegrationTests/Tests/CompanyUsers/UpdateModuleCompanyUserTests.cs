@@ -33,7 +33,7 @@ public sealed class UpdateModuleCompanyUserTests
 
         // Empresa;
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         // Vínculo do usuário alvo;
@@ -42,7 +42,7 @@ public sealed class UpdateModuleCompanyUserTests
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            UserModules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
             Status = true
         };
 
@@ -54,7 +54,7 @@ public sealed class UpdateModuleCompanyUserTests
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
-            Modules = [ModuleEnum.Sales] // Remove Scheduling;
+            UserModules = [ModuleEnum.Sales] // Remove Scheduling;
         };
 
         // Act;
@@ -63,8 +63,8 @@ public sealed class UpdateModuleCompanyUserTests
         // Assert;
         CompanyUser? updated = await context.CompanyUsers.FindAsync(targetCompanyUser.CompanyUserId);
         Assert.NotNull(updated);
-        Assert.Contains(ModuleEnum.Sales, updated!.Modules ?? []);
-        Assert.DoesNotContain(ModuleEnum.Scheduling, updated.Modules ?? []);
+        Assert.Contains(ModuleEnum.Sales, updated!.UserModules ?? []);
+        Assert.DoesNotContain(ModuleEnum.Scheduling, updated.UserModules ?? []);
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public sealed class UpdateModuleCompanyUserTests
         await Fixture.Save(context, targetUser);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales];
+        company.CompanyModules = [ModuleEnum.Sales];
         await Fixture.Save(context, company);
 
         CompanyUser targetCompanyUser = new()
@@ -88,7 +88,7 @@ public sealed class UpdateModuleCompanyUserTests
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [ModuleEnum.Sales],
+            UserModules = [ModuleEnum.Sales],
             Status = true
         };
 
@@ -100,7 +100,7 @@ public sealed class UpdateModuleCompanyUserTests
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
-            Modules = [ModuleEnum.Sales]
+            UserModules = [ModuleEnum.Sales]
         };
 
         // Act & Assert;
@@ -121,7 +121,7 @@ public sealed class UpdateModuleCompanyUserTests
         await Fixture.Save(context, targetUser);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales]; // Somente Sales;
+        company.CompanyModules = [ModuleEnum.Sales]; // Somente Sales;
         await Fixture.Save(context, company);
 
         CompanyUser targetCompanyUser = new()
@@ -129,7 +129,7 @@ public sealed class UpdateModuleCompanyUserTests
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [ModuleEnum.Sales],
+            UserModules = [ModuleEnum.Sales],
             Status = true
         };
 
@@ -141,7 +141,7 @@ public sealed class UpdateModuleCompanyUserTests
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
-            Modules = [ModuleEnum.Scheduling] // Módulo inválido;
+            UserModules = [ModuleEnum.Scheduling] // Módulo inválido;
         };
 
         // Act & Assert;
@@ -162,7 +162,7 @@ public sealed class UpdateModuleCompanyUserTests
         await Fixture.Save(context, targetUser);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales];
+        company.CompanyModules = [ModuleEnum.Sales];
         await Fixture.Save(context, company);
 
         UpdateModuleCompanyUser sut = CreateSut(context, adminUser);
@@ -171,7 +171,7 @@ public sealed class UpdateModuleCompanyUserTests
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
-            Modules = [ModuleEnum.Sales]
+            UserModules = [ModuleEnum.Sales]
         };
 
         // Act & Assert;

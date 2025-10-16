@@ -44,7 +44,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         await SendEmail(company, verification, user);
 
         // Criar cobrança;
-        await _createCompanyInvoice.Execute(userIdAuth, companyId: company.CompanyId, modules: input.Modules ?? [], isCreateCompany: true);
+        await _createCompanyInvoice.Execute(userIdAuth, companyId: company.CompanyId, modules: input.CompanyModules ?? [], isCreateCompany: true);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -56,7 +56,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
     {
         var company = input.Adapt<Company>();
 
-        if (input.Modules is null || input.Modules.Length == 0)
+        if (input.CompanyModules is null || input.CompanyModules.Length == 0)
         {
             company.CompanySituation = CompanySituationEnum.RegisteredButWithoutAnyModules;
             company.PlanStartDate = null;

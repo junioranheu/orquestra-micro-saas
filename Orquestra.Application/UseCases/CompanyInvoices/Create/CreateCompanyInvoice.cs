@@ -72,7 +72,7 @@ public sealed class CreateCompanyInvoice(
             return (company, modules);
         }
 
-        HashSet<ModuleEnum> existingCompanyModules = [.. company?.Modules ?? []];
+        HashSet<ModuleEnum> existingCompanyModules = [.. company?.CompanyModules ?? []];
         ModuleEnum[] newModules = [.. modules.Where(x => !existingCompanyModules.Contains(x))];
 
         return (company, newModules);
@@ -87,7 +87,7 @@ public sealed class CreateCompanyInvoice(
 
         foreach (var item in output)
         {
-            modulesStr.Add(item.ModuleStr);
+            modulesStr.Add(item.CompanyModuleStr);
             finalPriceUsingProportionalPrice += item.ProportionalPrice;
         }
 

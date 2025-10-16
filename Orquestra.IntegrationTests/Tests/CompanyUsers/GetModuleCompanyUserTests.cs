@@ -30,7 +30,7 @@ public sealed class GetModuleCompanyUserTests
             CompanyId = company.CompanyId,
             UserId = user.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
+            UserModules = [ModuleEnum.Sales, ModuleEnum.Scheduling],
             Status = true
         };
 
@@ -44,8 +44,8 @@ public sealed class GetModuleCompanyUserTests
         // Assert;
         Assert.NotNull(modules);
         Assert.NotNull(modulesStr);
-        Assert.Equal(companyUser.Modules.Length, modules.Length);
-        Assert.Equal(companyUser.Modules.Select(x => GetEnumDesc(x)), modulesStr);
+        Assert.Equal(companyUser.UserModules.Length, modules.Length);
+        Assert.Equal(companyUser.UserModules.Select(x => GetEnumDesc(x)), modulesStr);
     }
 
     [Fact]

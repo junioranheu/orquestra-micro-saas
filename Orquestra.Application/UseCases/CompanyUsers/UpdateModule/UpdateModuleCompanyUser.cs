@@ -29,18 +29,13 @@ public sealed class UpdateModuleCompanyUser(
 
         var result = await _context.CompanyUsers.
                      // AsNoTracking(). // Propositalmente sem AsNoTracking;
-                     Where(x => x.CompanyId == input.CompanyId && x.UserId == input.UserId).
+                     Where(x => x.CompanyId == input.CompanyId && x.UserId == input.UserId && x.Status == true).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
-        if (!result.Status)
-        {
-            throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyUser);
-        }
-
-        CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(companyModulesOutput, newModules: input.Modules);
+        CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(companyModulesOutput, newModules: input.UserModules);
 
         // Atualizar/sobrescrever;
-        result.Modules = [.. input.Modules?.Distinct() ?? []];
+        result.UserModules = [.. input.UserModules?.Distinct() ?? []];
 
         _context.Update(result);
         await _context.SaveChangesAsync();
@@ -49,7 +44,7 @@ public sealed class UpdateModuleCompanyUser(
     #region extras
     private static void CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(CompanyModulesOutput companyModulesOutput, ModuleEnum[]? newModules)
     {
-        ModuleEnum[] companiesModules = companyModulesOutput.Modules ?? [];
+        ModuleEnum[] companiesModules = companyModulesOutput.CompanyModules ?? [];
 
         if (newModules is null || newModules.Length == 0)
         {

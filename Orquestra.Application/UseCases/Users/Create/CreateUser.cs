@@ -126,7 +126,7 @@ public sealed class CreateUser(
             CompanyId = companyId,
             UserId = user.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member,
-            Modules = [],
+            UserModules = [],
             IsCurrentMainCompanyUser = true,
             InviterUserId = inviter is not null ? inviter.UserId : Guid.Empty
         };

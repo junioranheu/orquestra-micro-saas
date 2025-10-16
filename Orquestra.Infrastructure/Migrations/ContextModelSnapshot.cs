@@ -127,6 +127,9 @@ namespace Orquestra.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.PrimitiveCollection<int[]>("CompanyModules")
+                        .HasColumnType("integer[]");
+
                     b.Property<int>("CompanySituation")
                         .HasColumnType("integer");
 
@@ -159,9 +162,6 @@ namespace Orquestra.Infrastructure.Migrations
 
                     b.Property<string>("LogoContentType")
                         .HasColumnType("text");
-
-                    b.PrimitiveCollection<int[]>("Modules")
-                        .HasColumnType("integer[]");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -277,14 +277,14 @@ namespace Orquestra.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModificationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.PrimitiveCollection<int[]>("Modules")
-                        .HasColumnType("integer[]");
-
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
+
+                    b.PrimitiveCollection<int[]>("UserModules")
+                        .HasColumnType("integer[]");
 
                     b.HasKey("CompanyUserId");
 

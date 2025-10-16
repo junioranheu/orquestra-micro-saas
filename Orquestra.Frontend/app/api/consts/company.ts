@@ -40,10 +40,10 @@ export default interface iCompanyOutput {
     companySituation?: string;
     planStartDate?: Date | string;
     planEndDate?: Date | string;
-    modules?: string[];
+    companyModules?: string[];
 
     // Extras;
-    modulesStr?: string[];
+    companyModulesStr?: string[];
     status?: boolean;
     createdDate?: Date;
     companyUsers?: iCompanyUser[];
@@ -56,8 +56,8 @@ export default interface iCompanyOutput {
 }
 
 export interface iCalculatePriceModuleCompanyOutput {
-    module: string;
-    moduleStr: string;
+    companyModule: string;
+    companyModuleStr: string;
     companyAlreadyHasThisModule: boolean;
     originalPrice: number;
     discountPercentage: number;

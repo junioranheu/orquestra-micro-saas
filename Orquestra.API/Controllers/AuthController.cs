@@ -121,8 +121,8 @@ public class AuthController(
 
             if (isUserAdm)
             {
-                output.CurrentMainCompany.UserModules = currentMainCompanySimple.Modules;
-                output.CurrentMainCompany.UserModulesStr = currentMainCompanySimple.ModulesStr;
+                output.CurrentMainCompany.UserModules = currentMainCompanySimple.CompanyModules;
+                output.CurrentMainCompany.UserModulesStr = currentMainCompanySimple.CompanyModulesStr;
             }
             else
             {
@@ -164,7 +164,7 @@ public class AuthController(
 
         // Current main company;
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userId.GetValueOrDefault());
-        ModuleEnum[]? output = isUserAdm ? (currentMainCompany?.Modules ?? []) : (currentMainCompany?.UserModules ?? []);
+        ModuleEnum[]? output = isUserAdm ? (currentMainCompany?.CompanyModules ?? []) : (currentMainCompany?.UserModules ?? []);
 
         return Ok(output);
     }

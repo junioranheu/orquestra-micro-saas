@@ -46,11 +46,11 @@ public sealed class CompanyOutput
 
     public DateTime? PlanEndDate { get; set; }
 
-    public ModuleEnum[]? Modules { get; set; } = [];
+    public ModuleEnum[]? CompanyModules { get; set; } = [];
     #endregion
 
     #region extras
-    public List<string> ModulesStr { get; set; } = [];
+    public List<string> CompanyModulesStr { get; set; } = [];
 
     public bool Status { get; set; }
 
@@ -75,6 +75,6 @@ public sealed class CompanyOutput
 public sealed class CompanyModulesOutput
 {
     public required CompanyOutput Company { get; set; }
-    public ModuleEnum[]? Modules { get; set; } = [];
-    public List<string> ModulesStr { get; set; } = [];
+    public ModuleEnum[]? CompanyModules { get; set; } = [];
+    public List<string> CompanyModulesStr { get; set; } = [];
 }

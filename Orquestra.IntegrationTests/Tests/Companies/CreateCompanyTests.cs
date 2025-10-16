@@ -190,11 +190,11 @@ public sealed class CreateCompanyTests
         CreateCompany sut = CreateSut(context, user, emailService);
 
         Company company = CompanyMock.Create();
-        company.Modules = [];
+        company.CompanyModules = [];
 
         if (withModules)
         {
-            company.Modules = [ModuleEnum.Sales];
+            company.CompanyModules = [ModuleEnum.Sales];
         }
 
         var input = company.Adapt<CompanyInput>();
@@ -234,7 +234,7 @@ public sealed class CreateCompanyTests
         CreateCompany sut = CreateSut(context, user, emailService);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Scheduling];
         var input = company.Adapt<CompanyInput>();
 
         // Act;

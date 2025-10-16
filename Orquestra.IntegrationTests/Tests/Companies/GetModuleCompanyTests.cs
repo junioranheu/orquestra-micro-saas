@@ -23,7 +23,7 @@ public sealed class GetModuleCompanyTests
         await Fixture.Save(context, user);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         CompanyUser companyUser = new()
@@ -43,8 +43,8 @@ public sealed class GetModuleCompanyTests
         // Assert;
         Assert.NotNull(result);
         Assert.Equal(company.CompanyId, result.Company.CompanyId);
-        Assert.Equal(company.Modules.Length, result.Modules?.Length);
-        Assert.Equal(company.Modules.Select(m => GetEnumDesc(m)), result.ModulesStr);
+        Assert.Equal(company.CompanyModules.Length, result.CompanyModules?.Length);
+        Assert.Equal(company.CompanyModules.Select(m => GetEnumDesc(m)), result.CompanyModulesStr);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public sealed class GetModuleCompanyTests
         await Fixture.Save(context, user);
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         company.Status = false;

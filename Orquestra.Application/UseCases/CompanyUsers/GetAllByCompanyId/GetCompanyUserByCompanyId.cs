@@ -66,9 +66,9 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
             }
         }
 
-        if (input.Modules is { Length: > 0 })
+        if (input.UserModules is { Length: > 0 })
         {
-            moduleNormalized = [.. input.Modules.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(x => Enum.TryParse(x, out ModuleEnum parsed) ? parsed : (ModuleEnum?)null).Where(x => x.HasValue).Select(x => x!.Value)];
+            moduleNormalized = [.. input.UserModules.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(x => Enum.TryParse(x, out ModuleEnum parsed) ? parsed : (ModuleEnum?)null).Where(x => x.HasValue).Select(x => x!.Value)];
         }
         #endregion
 
@@ -79,7 +79,7 @@ public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUser
                         x.CompanyId == companyId &&
                         x.Status == true &&
                         (companyUserRoleNormalized == null || x.CompanyUserRole == companyUserRoleNormalized) &&
-                        ((moduleNormalized == null || !moduleNormalized.Any()) || x.Modules!.Intersect(moduleNormalized).Any()) &&
+                        ((moduleNormalized == null || !moduleNormalized.Any()) || x.UserModules!.Intersect(moduleNormalized).Any()) &&
                         (string.IsNullOrEmpty(input.FullName) || x.User!.FullName.ToLower().Contains(input.FullName.ToLower())) &&
                         (string.IsNullOrEmpty(input.Email) || x.User!.Email!.ToLower().Contains(input.Email.ToLower()))
                     ).OrderBy(x => x.User!.FullName);

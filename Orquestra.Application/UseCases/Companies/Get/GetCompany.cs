@@ -102,19 +102,19 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         foreach (var company in output)
         {
-            if (company.Modules is null || company.Modules.Length == 0)
+            if (company.CompanyModules is null || company.CompanyModules.Length == 0)
             {
                 continue;
             }
 
             List<string> modulesStr = [];
 
-            foreach (var module in company.Modules)
+            foreach (var module in company.CompanyModules)
             {
                 modulesStr.Add(GetEnumDesc(module));
             }
 
-            company.ModulesStr = modulesStr;
+            company.CompanyModulesStr = modulesStr;
         }
     }
 

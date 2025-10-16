@@ -6,7 +6,7 @@ public sealed class CompanyUserFilterInput
 
     public string? CompanyUserRole { get; set; } // Posteriormente convertido a CompanyUserRoleEnum;
 
-    public string? Modules { get; set; } = string.Empty; // Posteriormente convertido a ModuleEnum;
+    public string? UserModules { get; set; } = string.Empty; // Posteriormente convertido a ModuleEnum;
 
     public string? FullName { get; set; } = string.Empty;
 

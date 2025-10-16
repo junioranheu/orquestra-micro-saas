@@ -178,7 +178,7 @@ public sealed class CreateCompanyInvoiceTests
         Context context = Fixture.CreateContext();
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales];
+        company.CompanyModules = [ModuleEnum.Sales];
         await Fixture.Save(context, company);
 
         User adminUser = UserMock.Create();
@@ -216,7 +216,7 @@ public sealed class CreateCompanyInvoiceTests
         Context context = Fixture.CreateContext();
 
         Company company = CompanyMock.Create();
-        company.Modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
         await Fixture.Save(context, company);
 
         User adminUser = UserMock.Create();

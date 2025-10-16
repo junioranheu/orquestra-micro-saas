@@ -21,7 +21,7 @@ export interface iCompanyUser {
     userId: Guid;
     user: iUser;
     companyUserRole: string;
-    modules: string[] | string;
+    userModules: string[] | string;
     isCurrentMainCompanyUser: boolean;
     createdDate: Date;
     inviterUserId: Guid;
