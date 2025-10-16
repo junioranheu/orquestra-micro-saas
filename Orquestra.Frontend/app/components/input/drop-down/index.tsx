@@ -11,7 +11,7 @@ export interface iDropdownOption<T = string | Guid | number> {
 interface iProps {
     title?: string;
     options: iDropdownOption[];
-    multiple?: boolean;
+    isMultiple?: boolean;
     selectedOption: iDropdownOption | iDropdownOption[] | null | undefined;
     setSelectedOption?: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
     className?: string;
@@ -26,7 +26,7 @@ interface iProps {
 export default function Dropdown({
     title,
     options,
-    multiple = false,
+    isMultiple = false,
     selectedOption,
     setSelectedOption,
     className = '',
@@ -104,7 +104,7 @@ export default function Dropdown({
                 options={uniqueOptions}
                 value={selectedOption}
                 onChange={(e) => handleChange(e)}
-                isMulti={multiple}
+                isMulti={isMultiple}
                 placeholder={(placeholder ?? 'Selecione')}
                 styles={customStyle}
                 menuPortalTarget={document.body}

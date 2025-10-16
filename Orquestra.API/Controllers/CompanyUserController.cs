@@ -84,12 +84,12 @@ public class CompanyUserController(
 
     [AuthorizeFilter]
     [HttpPut]
-    public async Task<IActionResult> UpdateModules([FromBody] CompanyUserInput input)
+    public async Task<IActionResult> Update(CompanyUserInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _updateModuleCompanyUser.Execute(userIdAuth, input);
 
-        return NoContent();
+        return Ok(true);
     }
 
     [AuthorizeFilter]

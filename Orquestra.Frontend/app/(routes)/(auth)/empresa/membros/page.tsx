@@ -103,8 +103,8 @@ export default function EmpresaMembros() {
 
     const managingOptions = [
         {
-            label: 'Editar cliente',
-            function: (e) => handleOpenModalView(e),
+            label: 'Editar membro',
+            function: (e) => handleOpenModalEdit(e),
             icon: <Icon icon='edit' />
         },
         {
@@ -116,9 +116,14 @@ export default function EmpresaMembros() {
 
     const [isModalInviteOpen, setIsModalInviteOpen] = useState<boolean>(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState<boolean>(false);
-    const [userClicked, setUserClicked] = useState<iUser | undefined>(undefined);
+    const [userClicked, setUserClicked] = useState<iCompanyUser | undefined>(undefined);
 
-    function handleOpenModalView(user: iUser | undefined) {
+    function handleOpenModalEdit(user: iCompanyUser | undefined) {
+        if (!me?.currentMainCompany?.isAdm) {
+            toast({ content: 'Apenas os administradores da empresa podem realizar modificações nos membros.' });
+            return;
+        }
+
         setUserClicked(user);
         setIsModalEditOpen(true);
     }
@@ -204,7 +209,6 @@ export default function EmpresaMembros() {
                 isModalOpen={isModalEditOpen}
                 setIsModalOpen={setIsModalEditOpen}
                 user={userClicked}
-                companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
             />
 

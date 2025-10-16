@@ -67,7 +67,7 @@ export default function EmpresaMembrosModalFilters({
                 <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
-                <Dropdown title='Tipo' options={companyUserRoleEnum ?? []} selectedOption={modalFilterFormData.companyUserRole ?? undefined} setSelectedOption={setCompanyUserRoleOption} />
+                <Dropdown title='Tipo de membro' options={companyUserRoleEnum ?? []} selectedOption={modalFilterFormData.companyUserRole ?? undefined} setSelectedOption={setCompanyUserRoleOption} />
                 {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
                 <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={modalFilterFormData.modules ?? undefined} setSelectedOption={setModuleOption} />
 

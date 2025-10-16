@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.GetModule;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
@@ -33,6 +34,11 @@ public sealed class UpdateCompanyUser(
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
         CheckIfAnyModuleIsNotValidAccordingToCompaniesModules(companyModulesOutput, newModules: input.UserModules);
+
+        if (result.CompanyUserRole == CompanyUserRoleEnum.Administrator && input.CompanyUserRole == CompanyUserRoleEnum.Member && (result.InviterUserId is null || result.InviterUserId == Guid.Empty))
+        {
+            throw new InvalidOperationException("Você é o proprietário dessa empresa, portanto não pode remover a sua permissão de administrador.");
+        }
 
         // Atualizar/sobrescrever;
         result.UserModules = [.. input.UserModules?.Distinct() ?? []];
