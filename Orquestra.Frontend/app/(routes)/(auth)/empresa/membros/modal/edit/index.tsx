@@ -1,6 +1,7 @@
 'use client';
 import { iClientFormDataModalFilter } from '@/app/(routes)/(auth)/empresa/clientes/modal/filter';
-import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import iClient from '@/app/api/consts/client';
+import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import { iUser } from '@/app/api/consts/user';
 import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
@@ -121,32 +122,13 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
 
         // console.log(input);
 
-        if (type === 'create') {
-            const output = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as iClient;
-
-            if (output) {
-                swal({
-                    content: 'Cliente registrado com sucesso.',
-                    confirmFunction: () => window.location.reload(),
-                    icon: 'success'
-                });
-
-                handleClose();
-                return;
-            }
-
-            setEditing(true);
-            setSaving(false);
-            return;
-        }
-
         if (!client?.clientId) {
             swal({ content: 'Erro interno: O ID do cliente está vazio. Tente novamnete, e se o erro persistir, contate o suporte.', icon: 'error' });
             return;
         }
 
         input.clientId = client.clientId;
-        const output = await Fetch.put({ url: CONSTS_CLIENT.put, body: input }) as iClient;
+        const output = await Fetch.put({ url: CONSTS_COMPANY_USER.put, body: input }) as iClient;
 
         if (output) {
             swal({
