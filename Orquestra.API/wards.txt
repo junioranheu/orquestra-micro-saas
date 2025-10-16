@@ -10,13 +10,10 @@ Criar novo testes de integração para:
 		GetModule;
 		UpdateCurrentMain;
 		DeleteCompanyUser;
+		UpdateRole;
 
 	Clients:
 		DeleteClient;
 
 ⦁	CompanyUser
 Na tela dos membros, devo poder atribuir roles e alterar o role (apenas ADM)
-Apenas administradores podem convidar novos usuários
-
-⦁	Bug
-Se o usuário convidar um novo membro, e este novo membro usar o mesmo navegador (o que é estranho em prod), buga algo... (?)

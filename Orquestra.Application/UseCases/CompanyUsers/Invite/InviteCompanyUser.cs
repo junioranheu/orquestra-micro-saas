@@ -110,19 +110,19 @@ public sealed class InviteCompanyUser(
         companyUser.InviterUserId = isFirstAdministrator ? null : userIdAuth;
         companyUser.IsCurrentMainCompanyUser = isFirstAdministrator;
 
-
         // Salvar;
         await _context.AddAsync(companyUser);
-        await _context.SaveChangesAsync();
-
-        companyUser.Status = false;
-        _context.Update(companyUser);
         await _context.SaveChangesAsync();
 
         if (isFirstAdministrator)
         {
             return;
         }
+
+        // Se não for o primeiro administrador, set automaticamente o Status para false para forçar a necessidade verificação de conta;
+        companyUser.Status = false;
+        _context.Update(companyUser);
+        await _context.SaveChangesAsync();
 
         Verification verification = await SaveVerification(companyUserId: companyUser.CompanyUserId, companyId: company.CompanyId);
         await SendEmail(company, user, companyUserRole: companyUser.CompanyUserRole, verification);

@@ -5,10 +5,9 @@ using Orquestra.Application.UseCases.CompanyUsers.Delete;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
+using Orquestra.Application.UseCases.CompanyUsers.Update;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
-using Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
-using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Env;
@@ -24,7 +23,7 @@ public class CompanyUserController(
         IGetCompanyUserByCompanyId getCompanyUserByCompanyId,
         IVerifyCompanyUser verify,
         IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
-        IUpdateModuleCompanyUser updateModuleCompanyUser,
+        IUpdateCompanyUser updateModuleCompanyUser,
         IDeleteCompanyUser delete
     ) : BaseController<CompanyUserController>
 {
@@ -33,7 +32,7 @@ public class CompanyUserController(
     private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
     private readonly IVerifyCompanyUser _verify = verify;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
-    private readonly IUpdateModuleCompanyUser _updateModuleCompanyUser = updateModuleCompanyUser;
+    private readonly IUpdateCompanyUser _updateModuleCompanyUser = updateModuleCompanyUser;
     private readonly IDeleteCompanyUser _delete = delete;
 
     [AuthorizeFilter]
@@ -84,8 +83,8 @@ public class CompanyUserController(
     }
 
     [AuthorizeFilter]
-    [HttpPut("Module")]
-    public async Task<IActionResult> UpdateModules([FromBody] CompanyUserUpdateModuleInput input)
+    [HttpPut]
+    public async Task<IActionResult> UpdateModules([FromBody] CompanyUserInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _updateModuleCompanyUser.Execute(userIdAuth, input);

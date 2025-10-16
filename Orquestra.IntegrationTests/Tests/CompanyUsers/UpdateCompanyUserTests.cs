@@ -3,7 +3,7 @@ using Orquestra.Application.UseCases.Companies.GetModule;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
-using Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
+using Orquestra.Application.UseCases.CompanyUsers.Update;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -12,7 +12,7 @@ using Orquestra.IntegrationTests.Fixtures.Mocks;
 
 namespace Orquestra.IntegrationTests.Tests.CompanyUsers;
 
-public sealed class UpdateModuleCompanyUserTests
+public sealed class UpdateCompanyUserTests
 {
     [Theory]
     [InlineData(UserRoleEnum.Administrator)]
@@ -48,9 +48,9 @@ public sealed class UpdateModuleCompanyUserTests
 
         await Fixture.Save(context, targetCompanyUser);
 
-        UpdateModuleCompanyUser sut = CreateSut(context, adminUser);
+        UpdateCompanyUser sut = CreateSut(context, adminUser);
 
-        CompanyUserUpdateModuleInput input = new()
+        CompanyUserInput input = new()
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
@@ -94,9 +94,9 @@ public sealed class UpdateModuleCompanyUserTests
 
         await Fixture.Save(context, targetCompanyUser);
 
-        UpdateModuleCompanyUser sut = CreateSut(context, commonUser);
+        UpdateCompanyUser sut = CreateSut(context, commonUser);
 
-        CompanyUserUpdateModuleInput input = new()
+        CompanyUserInput input = new()
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
@@ -135,9 +135,9 @@ public sealed class UpdateModuleCompanyUserTests
 
         await Fixture.Save(context, targetCompanyUser);
 
-        UpdateModuleCompanyUser sut = CreateSut(context, adminUser);
+        UpdateCompanyUser sut = CreateSut(context, adminUser);
 
-        CompanyUserUpdateModuleInput input = new()
+        CompanyUserInput input = new()
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
@@ -165,9 +165,9 @@ public sealed class UpdateModuleCompanyUserTests
         company.CompanyModules = [ModuleEnum.Sales];
         await Fixture.Save(context, company);
 
-        UpdateModuleCompanyUser sut = CreateSut(context, adminUser);
+        UpdateCompanyUser sut = CreateSut(context, adminUser);
 
-        CompanyUserUpdateModuleInput input = new()
+        CompanyUserInput input = new()
         {
             CompanyId = company.CompanyId,
             UserId = targetUser.UserId,
@@ -179,14 +179,14 @@ public sealed class UpdateModuleCompanyUserTests
     }
 
     #region helpers
-    private static UpdateModuleCompanyUser CreateSut(Context context, User user)
+    private static UpdateCompanyUser CreateSut(Context context, User user)
     {
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetModuleCompany getModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
-        UpdateModuleCompanyUser updateModuleCompanyUser = new(context, checkIfUserIsLinkedCompanyUser, getModuleCompany);
+        UpdateCompanyUser updateModuleCompanyUser = new(context, checkIfUserIsLinkedCompanyUser, getModuleCompany);
 
         return updateModuleCompanyUser;
     }

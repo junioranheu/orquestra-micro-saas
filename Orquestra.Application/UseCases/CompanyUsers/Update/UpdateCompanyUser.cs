@@ -8,19 +8,19 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
-namespace Orquestra.Application.UseCases.CompanyUsers.UpdateModule;
+namespace Orquestra.Application.UseCases.CompanyUsers.Update;
 
-public sealed class UpdateModuleCompanyUser(
+public sealed class UpdateCompanyUser(
         Context context,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IGetModuleCompany getModuleCompany
-    ) : IUpdateModuleCompanyUser
+    ) : IUpdateCompanyUser
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
     private readonly IGetModuleCompany _getModuleCompany = getModuleCompany;
 
-    public async Task Execute(Guid userIdAuth, CompanyUserUpdateModuleInput input)
+    public async Task Execute(Guid userIdAuth, CompanyUserInput input)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: input.UserId, needCompanyAdmin: false);
@@ -36,6 +36,7 @@ public sealed class UpdateModuleCompanyUser(
 
         // Atualizar/sobrescrever;
         result.UserModules = [.. input.UserModules?.Distinct() ?? []];
+        result.CompanyUserRole = input.CompanyUserRole > 0 ? input.CompanyUserRole : result.CompanyUserRole;
 
         _context.Update(result);
         await _context.SaveChangesAsync();
