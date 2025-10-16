@@ -18,8 +18,9 @@ export default function EmpresaClientes() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [clients, setClients] = useState<iClientPaginated>();
 
+    const [trigger, setTrigger] = useState<Date>(new Date());
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_CLIENT.getAllByCompanyId);
-    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequest, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15 });
+    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequest, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
 
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
@@ -132,6 +133,7 @@ export default function EmpresaClientes() {
                 type={typeModal}
                 client={clientClicked}
                 companyId={me?.currentMainCompany?.companyId}
+                setTrigger={setTrigger}
             />
         </Fragment>
     )

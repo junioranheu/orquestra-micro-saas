@@ -27,9 +27,10 @@ interface iModalFilterParams {
     type: 'edit' | 'create';
     client: iClient | undefined;
     companyId: Guid | undefined;
+    setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
-export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, type, client, companyId }: iModalFilterParams) {
+export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, type, client, companyId, setTrigger }: iModalFilterParams) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -150,7 +151,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         if (output) {
             swal({
                 content: 'Cliente atualizado com sucesso.',
-                confirmFunction: () => window.location.reload(),
+                confirmFunction: () => setTrigger(new Date()),
                 icon: 'success'
             });
 

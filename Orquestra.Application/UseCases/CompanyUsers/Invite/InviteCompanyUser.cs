@@ -39,7 +39,7 @@ public sealed class InviteCompanyUser(
 
     public async Task Execute(Guid userIdAuth, Guid companyId, string email, bool isFirstAdministrator)
     {
-        // Validar;
+        #region validations
         if (string.IsNullOrEmpty(email))
         {
             throw new ArgumentException("O e-mail não pode ser vazio.");
@@ -53,6 +53,19 @@ public sealed class InviteCompanyUser(
         }
 
         email = GetNormalizedLowerStr(email);
+
+        //CompanyUserRoleEnum userAuthRole = await _context.CompanyUsers.AsNoTracking().Where(x => x.UserId == userIdAuth && x.CompanyId == companyId && x.Status == true).Select(x => x.CompanyUserRole).FirstOrDefaultAsync();
+
+        //if (userAuthRole == 0)
+        //{
+        //    throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
+        //}
+
+        //if (userAuthRole != CompanyUserRoleEnum.Administrator)
+        //{
+        //    throw new InvalidOperationException("Apenas administradores podem convidar novos membros para a equipe.");
+        //}
+        #endregion
 
         CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId, throwIfStatusFalse: !isFirstAdministrator);
         UserOutput user = await _getUser.Execute(userId: Guid.Empty, email: email, throwIfStatusFalse: false);
@@ -125,7 +138,7 @@ public sealed class InviteCompanyUser(
     private async Task<Verification> SaveVerification(Guid companyUserId, Guid companyId)
     {
         Verification verification = await _createVerification.Execute<CompanyUser>(entityId: companyUserId, verificationType: VerificationTypeEnum.CompanyUser, reference: companyId.ToString());
-         
+
         return verification;
     }
 

@@ -12,11 +12,11 @@ Criar novo testes de integração para:
 		DeleteCompanyUser;
 
 ⦁	CompanyUser
-Na tela dos membros, devo poder atribuir roles e alterar o role
+Na tela dos membros, devo poder atribuir roles e alterar o role (apenas ADM)
 Apenas administradores podem convidar novos usuários
 
 ⦁	Bug
 Se o usuário convidar um novo membro, e este novo membro usar o mesmo navegador (o que é estranho em prod), buga algo... (?)
 
 ⦁	Cliente
-Ao cadastrar um novo cliente, em vez de reload, só chama o GET de novo
+Criar Desativar usuário

@@ -161,8 +161,12 @@ export default function EmpresaMembros() {
 
                     title={`Membros cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
                     managingOptions={managingOptions}
-                    btn_add_label='Convidar novo membro'
-                    btn_add_function={() => setIsModalViewOpen(true)}
+
+                    {... (me?.currentMainCompany?.isAdm ? {
+                        btn_add_label: 'Convidar novo membro',
+                        btn_add_function: () => setIsModalViewOpen(true)
+                    } : {})}
+
                     btn_filter_label='Filtrar'
                     btn_filter_function={() => setIsModalFilterOpen(true)}
 
