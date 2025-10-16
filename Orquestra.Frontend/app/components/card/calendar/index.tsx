@@ -1,4 +1,5 @@
 'use client';
+import { iMe } from '@/app/api/consts/auth';
 import SvgOne from '@/app/assets/svg/one.svg';
 import SvgTwo from '@/app/assets/svg/two.svg';
 import CalendarSimple from '@/app/components/calendar/simple';
@@ -7,15 +8,17 @@ import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
-import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
-export default function CardCalendar() {
+interface iProps {
+    me: iMe | undefined;
+}
 
-    const me = useApiGetMe({});
+export default function CardCalendar({ me }: iProps) {
+
     const router = useRouter();
     const windowSize = useWindowSize();
     const [hasAccessToSchedule, setHasAccessToSchedule] = useState<boolean>(false);

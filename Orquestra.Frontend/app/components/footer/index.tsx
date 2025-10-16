@@ -2,7 +2,7 @@ import Icon from '@/app/components/icon';
 import SYSTEM from '@/app/consts/system';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
-import Styles from './index.module.scss';
+import styles from './index.module.scss';
 
 interface iProps {
     resetBorderRadius?: boolean;
@@ -11,24 +11,37 @@ interface iProps {
 export default function Footer({ resetBorderRadius = false }: iProps) {
     return (
         <footer
-            className={Styles.footer}
+            className={styles.footer}
             style={resetBorderRadius ? { borderRadius: 0 } : {}}
         >
-            <div className={Styles.wrapper}>
-                <span>
-                    Copyright © {new Date().getFullYear()} — {SYSTEM.NAME} — Desenvolvido por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>
+            <div className={styles.wrapper}>
+                <span className={styles.content}>
+                    <span>{SYSTEM.NAME}: {SYSTEM.DESCRIPTION}.</span>
+                    <span>Copyright © {new Date().getFullYear()} — Pensado, desenvolvido e publicado por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>.</span>
                 </span>
 
-                <div className={Styles.right}>
-                    <div className={Styles.icons}>
+                <div className={styles.right}>
+                    <div className={styles.icons}>
+                        <Tippy content='Contatar suporte'>
+                            <Link
+                                href='#'
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    window.location.href = `mailto:${SYSTEM.EMAIL_SUPPORT}`;
+                                }}
+                            >
+                                <Icon icon='mail' color='var(--gray-dark)' className='contrastOnHover' />
+                            </Link>
+                        </Tippy>
+
                         <Tippy content='GitHub'>
-                            <Link href={SYSTEM.URL_GITHUB} target='_blank'>
+                            <Link href={SYSTEM.URL_GITHUB} target='_blank' rel='noopener noreferrer'>
                                 <Icon icon='github' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>
 
                         <Tippy content='LinkedIn'>
-                            <Link href={SYSTEM.URL_LINKEDIN} target='_blank'>
+                            <Link href={SYSTEM.URL_LINKEDIN} target='_blank' rel='noopener noreferrer'>
                                 <Icon icon='linkedin' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>

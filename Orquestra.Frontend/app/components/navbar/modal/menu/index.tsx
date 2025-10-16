@@ -1,8 +1,8 @@
+import { iMe } from '@/app/api/consts/auth';
 import Icon from '@/app/components/icon';
 import ModalGeneric, { iModalCustomPosition } from '@/app/components/modal/generic';
 import ROUTES from '@/app/consts/routes';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
-import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, JSX, SetStateAction, useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ interface iProps {
     isOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     customPosition: iModalCustomPosition;
+    me: iMe | undefined;
 }
 
 interface iPropsMenuItem {
@@ -22,7 +23,7 @@ interface iPropsMenuItem {
     handleFunction?: ((param?: any) => void) | null;
 }
 
-export default function ModalSettings({ isOpen, setIsModalOpen, customPosition }: iProps) {
+export default function ModalMenu({ isOpen, setIsModalOpen, customPosition, me }: iProps) {
 
     const [showContent, setShowContent] = useState<boolean>(false);
 
@@ -48,7 +49,7 @@ export default function ModalSettings({ isOpen, setIsModalOpen, customPosition }
             overlayColor={0}
             style={{ padding: 0, visibility: showContent ? 'visible' : 'hidden' }}
         >
-            <ProfileMenu setIsModalOpen={setIsModalOpen} />
+            <ProfileMenu setIsModalOpen={setIsModalOpen} me={me} />
         </ModalGeneric>
     )
 }
@@ -72,11 +73,11 @@ export function MenuItem({ icon, label, desc, badge, handleFunction }: iPropsMen
 
 interface iPropsProfileMenu {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+    me: iMe | undefined;
 }
 
-export function ProfileMenu({ setIsModalOpen }: iPropsProfileMenu): JSX.Element {
+export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Element {
 
-    const me = useApiGetMe({});
     const router = useRouter();
 
     function handleRedirect(route: (typeof ROUTES)[keyof typeof ROUTES]) {

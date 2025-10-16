@@ -1,7 +1,7 @@
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Icon from '@/app/components/icon';
 import { iModalCustomPosition } from '@/app/components/modal/generic';
-import ModalSettings from '@/app/components/navbar/modal/settings';
+import ModalMenu from '@/app/components/navbar/modal/menu';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
@@ -84,7 +84,7 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            <ModalSettings isOpen={isMenuOpen} setIsModalOpen={setIsMenuOpen} customPosition={modalPosition} />
+            <ModalMenu isOpen={isMenuOpen} setIsModalOpen={setIsMenuOpen} customPosition={modalPosition} me={me} />
         </Fragment>
     )
 }

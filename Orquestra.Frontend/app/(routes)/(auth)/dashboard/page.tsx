@@ -37,7 +37,7 @@ export default function Dashboard() {
             <span className={styles.hello}>Olá, <ContentLoaderText text={handleGetFirstName(auth?.fullName)} /></span>
 
             <div className={styles.flex}>
-                <CardCalendar />
+                <CardCalendar me={me} />
             </div>
 
             <div className={styles.flex}>
