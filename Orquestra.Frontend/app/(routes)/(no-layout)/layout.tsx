@@ -11,7 +11,7 @@ import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
 import { usePathname } from 'next/navigation';
 import 'nprogress/nprogress.css';
-import { ReactNode, useEffect } from 'react';
+import { Fragment, ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
 
@@ -37,16 +37,20 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
                 <main className='no-layout'>
                     {
-                        !hideHeader && (
-                            <header>
-                                <NavbarNotAuth />
-                            </header>
+                        !hideHeader ? (
+                            <Fragment>
+                                <header>
+                                    <NavbarNotAuth />
+                                </header>
+
+                                <div className='children'>
+                                    {children}
+                                </div>
+                            </Fragment>
+                        ) : (
+                            children
                         )
                     }
-
-                    <div className='children'>
-                        {children}
-                    </div>
 
                     <CookieDefault extenseButtonDescription={false} />
                 </main>

@@ -37,7 +37,7 @@ export default function LandingPage() {
             <main className={styles.main}>
                 <Hero me={me} />
                 <Features />
-                <Pricing />
+                <Pricing me={me} />
                 <Testimonials />
                 <CTA me={me} />
             </main>
@@ -172,9 +172,12 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
     const [animate, setAnimate] = useState<'in' | 'out'>('in');
 
     function handlePickRandomCompanies() {
-        if (!companyTypeEnum || companyTypeEnum.length === 0) return [];
+        if (!companyTypeEnum || companyTypeEnum.length === 0) {
+            return [];
+        }
 
         const shuffled = [...companyTypeEnum].sort(() => 0.5 - Math.random());
+
         return shuffled.slice(0, 3).map((c) => ({
             label: c.label,
             value: Number(c.value)
@@ -266,27 +269,22 @@ function Features() {
         {
             icon: 'clock',
             title: 'Agendamento inteligente',
-            text: 'Regras, buffers e lembretes automáticos — menos no-show, mais agenda cheia.'
+            text: 'Marque horários automaticamente com confirmações e lembretes para reduzir faltas e otimizar sua agenda.'
         },
         {
             icon: 'users',
-            title: 'CRM leve',
-            text: 'Ficha completa do cliente, histórico e notas rápidas.'
-        },
-        {
-            icon: 'credit-card',
-            title: 'Pagamentos automatizados',
-            text: 'Cobrança, parcelamento e integração com gateways.'
+            title: 'Gestão de clientes',
+            text: 'Tenha o histórico completo do cliente, notas rápidas e informações de contato centralizadas.'
         },
         {
             icon: 'calendar',
             title: 'Agenda multi-profissional',
-            text: 'Gerencie horários, agenda por sala e bloqueios em segundos.'
+            text: 'Gerencie horários de diferentes profissionais e bloqueios de forma rápida e visual.'
         },
         {
             icon: 'bell',
-            title: 'Notificações & SMS',
-            text: 'Lembretes configuráveis por e-mail, SMS e WhatsApp.'
+            title: 'Notificações automáticas',
+            text: 'Envie lembretes e confirmações por e-mail e WhatsApp, mantendo sua agenda sempre organizada.'
         }
     ];
 
@@ -299,22 +297,24 @@ function Features() {
                 </div>
 
                 <div className={styles.featuresGrid}>
-                    {features.map((f, i) => (
-                        <article key={f.title} className={styles.featureCard}>
-                            <div className={styles.featureIconWrap}>
-                                <Icon icon={f.icon as any} size='big' className={styles.featureIcon} />
-                            </div>
-                            <h3 className={styles.featureTitle}>{f.title}</h3>
-                            <p className={styles.featureText}>{f.text}</p>
-                        </article>
-                    ))}
+                    {
+                        features.map((f, i) => (
+                            <article key={f.title} className={styles.featureCard}>
+                                <div className={styles.featureIconWrap}>
+                                    <Icon icon={f.icon as any} size='big' className={styles.featureIcon} />
+                                </div>
+                                <h3 className={styles.featureTitle}>{f.title}</h3>
+                                <p className={styles.featureText}>{f.text}</p>
+                            </article>
+                        ))
+                    }
                 </div>
             </div>
         </section>
     )
 }
 
-function Pricing() {
+function Pricing({ me }: { me: iMeSimple | undefined }) {
 
     const plans = [
         { id: 'basic', name: 'Básico', price: '29', suffix: '/mês', desc: 'Freelancers e autônomos', perks: ['50 agendamentos/mês', 'Notificações por e-mail', 'Suporte básico'] },
@@ -334,10 +334,13 @@ function Pricing() {
                     {
                         plans.map((p) => (
                             <div key={p.id} className={`${styles.pricingCard} ${p.featured ? styles.featured : ''}`}>
-                                {p.featured && <div className={styles.badge}>Mais popular</div>}
+                                {
+                                    p.featured && <div className={styles.badge}>Mais popular</div>
+                                }
+
                                 <h3 className={styles.pricingTitle}>{p.name}</h3>
                                 <p className={styles.pricingSubtitle}>{p.desc}</p>
-                                <p className={styles.price}>R${p.price}<span className={styles.priceSuffix}>{p.suffix}</span></p>
+                                <p className={styles.price}>R$ {p.price}<span className={styles.priceSuffix}>{p.suffix}</span></p>
 
                                 <ul className={styles.featuresList}>
                                     {
@@ -347,9 +350,17 @@ function Pricing() {
                                     }
                                 </ul>
 
-                                <Link href='#' className={`${styles.fullBtn} ${p.featured ? styles.fullBtnFeatured : ''}`}>
-                                    Escolher plano
-                                </Link>
+                                {
+                                    me?.isAuth ? (
+                                        <Link href={ROUTES.EMPRESA_USO_E_PLANO} className={`${styles.fullBtn} ${p.featured ? styles.fullBtnFeatured : ''}`}>
+                                            Escolher plano {p.name.toLocaleLowerCase()}
+                                        </Link>
+                                    ) : (
+                                        <Link href={ROUTES.LOGIN} className={`${styles.fullBtn} ${p.featured ? styles.fullBtnFeatured : ''}`}>
+                                            Entrar para escolher o plano {p.name.toLocaleLowerCase()}
+                                        </Link>
+                                    )
+                                }
                             </div>
                         ))
                     }

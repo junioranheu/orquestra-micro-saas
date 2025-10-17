@@ -65,6 +65,7 @@
 /* Header */
 .header {
     // background-color: tomato !important;
+    background-color: var(--white);
     position: sticky;
     top: 0;
 }
@@ -232,7 +233,7 @@
 }
 
 .heroBody {
-    max-width: 56rem;
+    // max-width: 56rem;
     margin: 0 auto;
     text-align: left;
 }
@@ -249,6 +250,7 @@
 }
 
 .h1 {
+    // background-color: orange;
     font-size: 2.25rem;
     line-height: 1.05;
     font-weight: 800;
@@ -262,9 +264,11 @@
 }
 
 .lead {
+    // background-color: orange;
     font-size: 1.0625rem;
     color: var(--muted);
     margin-bottom: 1.5rem;
+    width: 70%;
 }
 
 .heroCTAs {
@@ -346,34 +350,6 @@
     display: none
 }
 
-.mockup {
-    width: 320px;
-    height: 220px;
-    border-radius: 12px;
-    background: linear-gradient(180deg, #fff, #f8fafc);
-    box-shadow: var(--card-shadow);
-    padding: 1rem;
-}
-
-.mockHeader {
-    height: 10px;
-    background: linear-gradient(90deg, #eef2ff, #fff);
-    border-radius: 6px;
-    margin-bottom: 0.75rem
-}
-
-.mockContent {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.mockContent>div {
-    flex: 1;
-    height: 36px;
-    background: linear-gradient(90deg, #eef2ff, #ffffff);
-    border-radius: 8px
-}
-
 /* Features */
 .featuresSection {
     padding: 3.5rem 0;
@@ -422,16 +398,16 @@
     justify-content: center;
     border-radius: 10px;
     background: rgba(37, 99, 235, 0.06);
-    margin-bottom: 0.75rem
+    margin-bottom: 0.75rem;
 }
 
 .featureTitle {
     font-weight: 700;
-    margin-bottom: 0.4rem
+    margin-bottom: 0.4rem;
 }
 
 .featureText {
-    color: var(--muted)
+    color: var(--muted);
 }
 
 /* Pricing */
@@ -447,11 +423,20 @@
 }
 
 .pricingCard {
+    // background-color: orange !important;
     padding: 1.25rem;
     border-radius: 12px;
     background: #fff;
     box-shadow: var(--card-shadow);
-    position: relative
+    position: relative;
+    width: 100%;
+
+    .featuresList {
+        // background-color: orange;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        list-style: none;
+    }
 }
 
 .badge {
@@ -463,7 +448,7 @@
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
     font-weight: 700;
-    font-size: 0.75rem
+    font-size: 0.75rem;
 }
 
 .featured {
@@ -479,41 +464,41 @@
     background: linear-gradient(90deg, var(--main), var(--main-dark));
     color: white;
     text-decoration: none;
-    font-weight: 700
+    font-weight: 700;
 }
 
 .fullBtnFeatured {
-    box-shadow: 0 14px 40px rgba(37, 99, 235, 0.12)
+    box-shadow: 0 14px 40px rgba(37, 99, 235, 0.12);
 }
 
 /* Testimonials */
 .testimonialsSection {
-    padding: 3rem 0
+    padding: 3rem 0;
 }
 
 .testimonialGrid {
     display: grid;
-    gap: 1rem
+    gap: 1rem;
 }
 
 .testimonialCard {
     padding: 1rem;
     background: #fff;
     border-radius: 12px;
-    box-shadow: var(--card-shadow)
+    box-shadow: var(--card-shadow);
 }
 
 .testimonialCard footer {
     margin-top: 0.5rem;
     color: var(--muted);
-    font-weight: 700
+    font-weight: 700;
 }
 
 /* CTA */
 .ctaSection {
     padding: 3rem 0;
     background: linear-gradient(90deg, var(--main), var(--main-dark));
-    color: #fff
+    color: #fff;
 }
 
 .ctaInner {
@@ -521,7 +506,7 @@
     gap: 2rem;
     align-items: center;
     justify-content: space-between;
-    flex-direction: column
+    flex-direction: column;
 }
 
 .ctaButton {
@@ -573,6 +558,17 @@
     }
 }
 
+@media (max-width: 1281px) {
+    .footerRight {
+        // background-color: orange !important;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
 @media (min-width: 1281px) {
     .navDesktop {
         display: flex;
@@ -596,10 +592,6 @@
 
     .heroInner {
         grid-template-columns: 1fr 420px;
-    }
-
-    .heroVisual {
-        display: block
     }
 
     .sectionHeader {
