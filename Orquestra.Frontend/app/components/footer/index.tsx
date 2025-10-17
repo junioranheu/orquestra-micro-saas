@@ -1,4 +1,5 @@
 import Icon from '@/app/components/icon';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
@@ -17,11 +18,17 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
             <div className={styles.wrapper}>
                 <span className={styles.content}>
                     <span>{SYSTEM.NAME}: {SYSTEM.DESCRIPTION}.</span>
-                    <span>Copyright © {new Date().getFullYear()} — Pensado, desenvolvido e publicado por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>.</span>
+                    <span>Todos os direitos reservados © {new Date().getFullYear()} — Pensado, desenvolvido e publicado por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>.</span>
                 </span>
 
                 <div className={styles.right}>
                     <div className={styles.icons}>
+                        <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`}>
+                            <Link href={ROUTES.LANDING_PAGE}>
+                                <Icon icon='home' color='var(--gray-dark)' className='contrastOnHover' />
+                            </Link>
+                        </Tippy>
+
                         <Tippy content='Contatar suporte'>
                             <Link
                                 href='#'

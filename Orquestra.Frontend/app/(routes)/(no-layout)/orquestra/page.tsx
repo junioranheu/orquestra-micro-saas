@@ -1,26 +1,42 @@
 'use client';
+import { iMeSimple } from '@/app/api/consts/auth';
 import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleGetFirstName } from '@/app/functions/get.formatUserName';
+import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useTitle from '@/app/hooks/useTitle';
+import Tippy from '@tippyjs/react';
 import Link from 'next/link';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function LandingPage() {
 
     useTitle(`${SYSTEM.NAME}: ${SYSTEM.DESCRIPTION}`, false);
+    const me = useApiGetMeSimple();
+
     const [open, setOpen] = useState<boolean>(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 24);
+        onScroll();
+        window.addEventListener('scroll', onScroll);
+
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     return (
         <div className={styles.page}>
-            <Header open={open} setOpen={setOpen} />
+            <Header me={me} open={open} setOpen={setOpen} scrolled={scrolled} />
 
             <main className={styles.main}>
-                <Hero />
+                <Hero me={me} />
                 <Features />
                 <Pricing />
-                <CTA />
+                <Testimonials />
+                <CTA me={me} />
             </main>
 
             <Footer />
@@ -28,7 +44,7 @@ export default function LandingPage() {
     )
 }
 
-function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
+function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, open: boolean; setOpen: (v: boolean) => void; scrolled: boolean }) {
 
     function handleScroll(e: MouseEvent<HTMLAnchorElement>, id: string) {
         e.preventDefault();
@@ -37,61 +53,85 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => voi
         if (el) {
             el.scrollIntoView({ behavior: 'smooth' });
         }
+
+        setOpen(false);
     }
 
     return (
-        <header className={styles.header}>
+        <header className={`${styles.header} ${scrolled ? styles.headerShadow : ''}`}>
             <div className={styles.container}>
-                <nav className={styles.navDesktop}>
-                    <a className={styles.navLink} href='#' onClick={(e) => handleScroll(e, 'features')}>
-                        Funcionalidades
-                    </a>
+                <div className={styles.brand}>
+                    <div className={styles.logoCircle} aria-hidden>
+                        <Icon icon='calendar' />
+                    </div>
 
-                    <a className={styles.navLink} href='#' onClick={(e) => handleScroll(e, 'pricing')}>
-                        Preços
-                    </a>
+                    <div className={styles.brandText}>
+                        <span className={styles.brandName}>{SYSTEM.NAME}</span>
 
-                    <a className={styles.navLink} href='#' onClick={(e) => handleScroll(e, 'cta')}>
-                        Contato
-                    </a>
-                </nav>
-
-                <div className={styles.actionsDesktop}>
-                    <Link className={styles.link} href={ROUTES.LOGIN}>
-                        Entrar
-                    </Link>
-
-                    <Link className={styles.cta} href={ROUTES.CRIAR_CONTA}>
-                        Criar conta
-                    </Link>
+                        {
+                            me?.isAuth ? (
+                                <small className={styles.brandTag}>{handleGetFirstName(me?.userName)}, já encontrou {SYSTEM.DESCRIPTION.toLocaleLowerCase()}? :&#41;</small>
+                            ) : (
+                                <small className={styles.brandTag}>{SYSTEM.DESCRIPTION}</small>
+                            )
+                        }
+                    </div>
                 </div>
 
-                <button
-                    className={styles.menuButton}
-                    aria-label='menu'
-                    onClick={() => setOpen(!open)}
-                    title='menu'
-                >
-                    <Icon icon='menu' />
+                <nav className={styles.navDesktop} aria-label='Main navigation'>
+                    <Link className={styles.navLink} href='#' onClick={(e) => handleScroll(e, 'features')}>
+                        Funcionalidades
+                    </Link>
+
+                    <Link className={styles.navLink} href='#' onClick={(e) => handleScroll(e, 'pricing')}>
+                        Preços
+                    </Link>
+
+                    <Link className={styles.navLink} href='#' onClick={(e) => handleScroll(e, 'cta')}>
+                        Contato
+                    </Link>
+                </nav>
+
+                {
+                    me?.isAuth ? (
+                        <div className={styles.actionsDesktop}>
+                            <Link className={styles.cta} href={ROUTES.DASHBOARD}>
+                                Voltar ao início
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className={styles.actionsDesktop}>
+                            <Link className={styles.link} href={ROUTES.LOGIN}>
+                                Entrar
+                            </Link>
+
+                            <Link className={styles.cta} href={ROUTES.CRIAR_CONTA}>
+                                Criar conta
+                            </Link>
+                        </div>
+                    )
+                }
+
+                <button className={styles.menuButton} aria-label='menu' onClick={() => setOpen(!open)} title='menu'>
+                    <Icon icon={open ? 'x' : 'menu'} />
                 </button>
             </div>
 
-            {/* Menu Mobile */}
             {
                 open && (
-                    <div className={styles.mobileMenu}>
+                    <div className={styles.mobileMenu} role='dialog' aria-modal='true'>
                         <div className={styles.mobileInner}>
-                            <a className={styles.mobileLink} href='#' onClick={(e) => handleScroll(e, 'features')}>
+                            <Link className={styles.mobileLink} href='#' onClick={(e) => handleScroll(e, 'features')}>
                                 Funcionalidades
-                            </a>
+                            </Link>
 
-                            <a className={styles.mobileLink} href='#' onClick={(e) => handleScroll(e, 'pricing')}>
+                            <Link className={styles.mobileLink} href='#' onClick={(e) => handleScroll(e, 'pricing')}>
                                 Preços
-                            </a>
+                            </Link>
 
-                            <a className={styles.mobileLink} href='#' onClick={(e) => handleScroll(e, 'cta')}>
+                            <Link className={styles.mobileLink} href='#' onClick={(e) => handleScroll(e, 'cta')}>
                                 Contato
-                            </a>
+                            </Link>
 
                             <div className={styles.mobileActions}>
                                 <Link className={styles.link} href={ROUTES.LOGIN}>
@@ -110,35 +150,65 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => voi
     )
 }
 
-function Hero() {
+function Hero({ me }: { me: iMeSimple | undefined }) {
     return (
-        <section className={styles.hero}>
+        <section className={styles.hero} aria-labelledby='hero-title'>
             <div className={styles.container}>
-                <div className={styles.heroInner} data-aos='fade-up'>
-                    <div className={styles.heroIcon}>
-                        <Icon icon='calendar' className={styles.iconWhite} />
+                <div className={styles.heroInner}>
+                    <div className={styles.heroBody}>
+                        <div className={styles.heroBadge}>Uhu! Lançamento 🎉</div>
+
+                        <h1 id='hero-title' className={styles.h1}>
+                            {SYSTEM.NAME} — <span className={styles.highlight}>{SYSTEM.DESCRIPTION}</span>
+                        </h1>
+
+                        <p className={styles.lead}>
+                            Plataforma feita pra quem presta serviço: agenda, clientes, pagamentos e confirmações automático. Tudo centralizado — sem gambiarra.
+                        </p>
+
+                        {
+                            me?.isAuth ? (
+                                <div className={styles.heroCTAs}>
+                                    <Link href={ROUTES.DASHBOARD} className={styles.primaryBtn}>
+                                        Ir para o dashboard
+                                    </Link>
+
+                                    <Link href={ROUTES.ETC_AJUDA} className={styles.secondaryBtn}>
+                                        Central de ajuda
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className={styles.heroCTAs}>
+                                    <Link href={ROUTES.CRIAR_CONTA} className={styles.primaryBtn}>
+                                        Começar teste grátis
+                                    </Link>
+
+                                    <Link href={ROUTES.ETC_AJUDA} className={styles.secondaryBtn}>
+                                        Central de ajuda
+                                    </Link>
+                                </div>
+                            )
+                        }
+
+                        <div className={styles.trustRow}>
+                            <span>Usado por</span>
+                            <div className={styles.logos} aria-hidden>
+                                <div className={styles.pill}>Clínicas</div>
+                                <div className={styles.pill}>Consultórios</div>
+                                <div className={styles.pill}>Estúdios</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <h1 className={styles.h1}>
-                        <span className={styles.highlight}>{SYSTEM.NAME}</span>
-                    </h1>
-
-                    <h2 className={styles.h2}>
-                        <span>{SYSTEM.DESCRIPTION}</span>
-                    </h2>
-
-                    <p className={styles.lead}>
-                        Eleve a experiência dos seus clientes com nossa plataforma intuitiva, criada exclusivamente para profissionais de serviços.
-                    </p>
-
-                    <div className={styles.heroCTAs}>
-                        <a href={`${ROUTES.LOGIN}`} className={styles.primaryBtn}>
-                            Começar Teste Grátis
-                        </a>
-
-                        <a href={`${ROUTES.LOGIN}`} className={styles.secondaryBtn}>
-                            Assistir Demo
-                        </a>
+                    <div className={styles.heroVisual} aria-hidden>
+                        <div className={styles.mockup}>
+                            <div className={styles.mockHeader} />
+                            <div className={styles.mockContent}>
+                                <div />
+                                <div />
+                                <div />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -147,124 +217,197 @@ function Hero() {
 }
 
 function Features() {
+
+    const features = [
+        {
+            icon: 'clock',
+            title: 'Agendamento inteligente',
+            text: 'Regras, buffers e lembretes automáticos — menos no-show, mais agenda cheia.'
+        },
+        {
+            icon: 'users',
+            title: 'CRM leve',
+            text: 'Ficha completa do cliente, histórico e notas rápidas.'
+        },
+        {
+            icon: 'credit-card',
+            title: 'Pagamentos automatizados',
+            text: 'Cobrança, parcelamento e integração com gateways.'
+        },
+        {
+            icon: 'calendar',
+            title: 'Agenda multi-profissional',
+            text: 'Gerencie horários, agenda por sala e bloqueios em segundos.'
+        },
+        {
+            icon: 'bell',
+            title: 'Notificações & SMS',
+            text: 'Lembretes configuráveis por e-mail, SMS e WhatsApp.'
+        }
+    ];
+
     return (
         <section id='features' className={styles.featuresSection}>
             <div className={styles.container}>
-                <div className={styles.sectionHeader} data-aos='fade-up'>
+                <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>Funcionalidades Poderosas</h2>
-                    <p className={styles.sectionSubtitle}>
-                        Tudo que você precisa para gerenciar agendamentos, clientes e pagamentos em um só lugar.
-                    </p>
+                    <p className={styles.sectionSubtitle}>Tudo que você precisa pra rodar um serviço profissional sem complicação.</p>
                 </div>
 
                 <div className={styles.featuresGrid}>
-                    <div className={styles.featureCard} data-aos='fade-up' data-aos-delay='100'>
-                        <Icon icon='clock' size='big' className={styles.featureIcon} />
-                        <h3 className={styles.featureTitle}>Agendamento Inteligente</h3>
-                        <p className={styles.featureText}>
-                            Gerencie horários automaticamente com lembretes para clientes e equipe.
-                        </p>
-                    </div>
-
-                    <div className={styles.featureCard} data-aos='fade-up' data-aos-delay='200'>
-                        <Icon icon='users' size='big' className={styles.featureIcon} />
-                        <h3 className={styles.featureTitle}>Gestão de Clientes</h3>
-                        <p className={styles.featureText}>
-                            Tenha o histórico completo dos seus clientes em um só lugar.
-                        </p>
-                    </div>
-
-                    <div className={styles.featureCard} data-aos='fade-up' data-aos-delay='300'>
-                        <Icon icon='credit-card' size='big' className={styles.featureIcon} />
-                        <h3 className={styles.featureTitle}>Pagamentos Integrados</h3>
-                        <p className={styles.featureText}>
-                            Receba pagamentos online de forma simples e segura.
-                        </p>
-                    </div>
+                    {features.map((f, i) => (
+                        <article key={f.title} className={styles.featureCard}>
+                            <div className={styles.featureIconWrap}>
+                                <Icon icon={f.icon as any} size='big' className={styles.featureIcon} />
+                            </div>
+                            <h3 className={styles.featureTitle}>{f.title}</h3>
+                            <p className={styles.featureText}>{f.text}</p>
+                        </article>
+                    ))}
                 </div>
             </div>
         </section>
-    );
+    )
 }
 
 function Pricing() {
+
+    const plans = [
+        { id: 'basic', name: 'Básico', price: '29', suffix: '/mês', desc: 'Freelancers e autônomos', perks: ['50 agendamentos/mês', 'Notificações por e-mail', 'Suporte básico'] },
+        { id: 'pro', name: 'Profissional', price: '79', suffix: '/mês', desc: 'Pequenas equipes', perks: ['Agendamentos ilimitados', 'Notificações por SMS', 'Suporte prioritário'], featured: true },
+        { id: 'enterprise', name: 'Empresarial', price: '199', suffix: '/mês', desc: 'Grandes operações', perks: ['Integrações avançadas', 'Suporte dedicado', 'SLA customizável'] }
+    ];
+
     return (
         <section id='pricing' className={styles.pricingSection}>
             <div className={styles.container}>
-                <div className={styles.sectionHeader} data-aos='fade-up'>
+                <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>Planos e Preços</h2>
-                    <p className={styles.sectionSubtitle}>Escolha o plano que melhor se adapta ao seu negócio</p>
+                    <p className={styles.sectionSubtitle}>Cresça sem surpresas — periodicidade mensal com upgrade fácil.</p>
                 </div>
 
                 <div className={styles.pricingGrid}>
-                    <div className={styles.pricingCard} data-aos='fade-up' data-aos-delay='100'>
-                        <h3 className={styles.pricingTitle}>Básico</h3>
-                        <p className={styles.pricingSubtitle}>Ideal para profissionais individuais</p>
-                        <p className={styles.price}>R$29<span className={styles.priceSuffix}>/mês</span></p>
-                        <ul className={styles.featuresList}>
-                            <li>✔️ 50 agendamentos/mês</li>
-                            <li>✔️ Notificações por e-mail</li>
-                            <li>✔️ Suporte básico</li>
-                        </ul>
-                        <a href='#' className={styles.fullBtn}>
-                            Escolher plano
-                        </a>
-                    </div>
+                    {
+                        plans.map((p) => (
+                            <div key={p.id} className={`${styles.pricingCard} ${p.featured ? styles.featured : ''}`}>
+                                {p.featured && <div className={styles.badge}>Mais popular</div>}
+                                <h3 className={styles.pricingTitle}>{p.name}</h3>
+                                <p className={styles.pricingSubtitle}>{p.desc}</p>
+                                <p className={styles.price}>R${p.price}<span className={styles.priceSuffix}>{p.suffix}</span></p>
 
-                    <div className={`${styles.pricingCard} ${styles.featured}`} data-aos='fade-up' data-aos-delay='200'>
-                        <h3 className={styles.pricingTitle}>Profissional</h3>
-                        <p className={styles.pricingSubtitle}>Perfeito para equipes pequenas</p>
-                        <p className={styles.price}>R$79<span className={styles.priceSuffix}>/mês</span></p>
-                        <ul className={styles.featuresList}>
-                            <li>✔️ Agendamentos ilimitados</li>
-                            <li>✔️ Notificações por SMS</li>
-                            <li>✔️ Suporte prioritário</li>
-                        </ul>
-                        <a href='#' className={styles.fullBtnAlt}>
-                            Escolher plano
-                        </a>
-                    </div>
+                                <ul className={styles.featuresList}>
+                                    {
+                                        p.perks.map((perk) => (
+                                            <li key={perk}>✔️ {perk}</li>
+                                        ))
+                                    }
+                                </ul>
 
-                    <div className={styles.pricingCard} data-aos='fade-up' data-aos-delay='300'>
-                        <h3 className={styles.pricingTitle}>Empresarial</h3>
-                        <p className={styles.pricingSubtitle}>Para grandes empresas</p>
-                        <p className={styles.price}>R$199<span className={styles.priceSuffix}>/mês</span></p>
-                        <ul className={styles.featuresList}>
-                            <li>✔️ Tudo do Profissional</li>
-                            <li>✔️ Integrações avançadas</li>
-                            <li>✔️ Suporte dedicado</li>
-                        </ul>
-                        <a href='#' className={styles.fullBtn}>
-                            Escolher plano
-                        </a>
-                    </div>
+                                <Link href='#' className={`${styles.fullBtn} ${p.featured ? styles.fullBtnFeatured : ''}`}>
+                                    Escolher plano
+                                </Link>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
         </section>
-    );
+    )
 }
 
-function CTA() {
+function Testimonials() {
     return (
-        <section id='cta' className={styles.ctaSection}>
-            <div className={styles.container} data-aos='zoom-in'>
-                <h2 className={styles.sectionTitleLight}>Pronto para organizar sua agenda?</h2>
-                <p className={styles.ctaText}>Entre no {SYSTEM.NAME} agora mesmo</p>
+        <section className={styles.testimonialsSection} aria-label='Depoimentos'>
+            <div className={styles.container}>
+                <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>O que profissionais dizem</h2>
+                    <p className={styles.sectionSubtitle}>Feedback real de quem usa no dia a dia.</p>
+                </div>
 
-                <Link className={styles.ctaButton} href={ROUTES.CRIAR_CONTA}>
-                    Criar conta
-                </Link>
+                <div className={styles.testimonialGrid}>
+                    <blockquote className={styles.testimonialCard}>
+                        <p>'Reduzi o no-show em 40% e finalmente tenho tempo livre pra focar no que importa.'</p>
+                        <footer>- Dra. Carla, Clínica Odonto</footer>
+                    </blockquote>
+
+                    <blockquote className={styles.testimonialCard}>
+                        <p>'Interface limpa, suporte rápido e migração simples — recomendo.'</p>
+                        <footer>- Studio Beleza</footer>
+                    </blockquote>
+                </div>
             </div>
         </section>
-    );
+    )
+}
+
+function CTA({ me }: { me: iMeSimple | undefined }) {
+    return (
+        <section id='cta' className={styles.ctaSection}>
+            <div className={styles.container}>
+                <div className={styles.ctaInner}>
+                    <div>
+                        <h2 className={styles.sectionTitleLight}>Pronto para organizar sua agenda?</h2>
+                        <p className={styles.ctaText}>Comece um teste gratuito e veja o impacto em uma semana.</p>
+                    </div>
+
+                    {
+                        me?.isAuth ? (
+                            <Link className={styles.ctaButton} href={ROUTES.DASHBOARD}>
+                                Voltar ao início
+                            </Link>
+                        ) : (
+                            <Link className={styles.ctaButton} href={ROUTES.CRIAR_CONTA}>
+                                Criar conta
+                            </Link>
+                        )
+                    }
+                </div>
+            </div>
+        </section>
+    )
 }
 
 function Footer() {
     return (
         <footer className={styles.footer}>
             <div className={styles.container}>
-                <p>© {new Date().getFullYear()} {SYSTEM.NAME}. Todos os direitos reservados.</p>
+                <div className={styles.footerInner}>
+                    <div>
+                        <strong>{SYSTEM.NAME}.</strong>
+                        <p className={styles.footerSmall}>{SYSTEM.DESCRIPTION}.</p>
+                    </div>
+
+                    <div className={styles.footerRight}>
+                        <p>Todos os direitos reservados © {new Date().getFullYear()}</p>
+
+                        <div className={styles.icons}>
+                            <Tippy content='Contatar suporte'>
+                                <Link
+                                    href='#'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.location.href = `mailto:${SYSTEM.EMAIL_SUPPORT}`;
+                                    }}
+                                >
+                                    <Icon icon='mail' color='var(--gray-dark)' className='contrastOnHover' />
+                                </Link>
+                            </Tippy>
+
+                            <Tippy content='GitHub'>
+                                <Link href={SYSTEM.URL_GITHUB} target='_blank' rel='noopener noreferrer'>
+                                    <Icon icon='github' color='var(--gray-dark)' className='contrastOnHover' />
+                                </Link>
+                            </Tippy>
+
+                            <Tippy content='LinkedIn'>
+                                <Link href={SYSTEM.URL_LINKEDIN} target='_blank' rel='noopener noreferrer'>
+                                    <Icon icon='linkedin' color='var(--gray-dark)' className='contrastOnHover' />
+                                </Link>
+                            </Tippy>
+                        </div>
+                    </div>
+                </div>
             </div>
         </footer>
-    );
+    )
 }

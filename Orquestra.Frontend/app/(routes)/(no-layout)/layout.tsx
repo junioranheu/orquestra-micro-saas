@@ -9,6 +9,7 @@ import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
+import { usePathname } from 'next/navigation';
 import 'nprogress/nprogress.css';
 import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
@@ -18,6 +19,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
     useStandardIntructions();
     useShowNProgressOnPageLoad();
+
+    const pathname = usePathname();
+    const hideHeader = pathname?.includes('/orquestra');
 
     useEffect(() => {
         feather.replace();
@@ -32,9 +36,13 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                 <UpNav />
 
                 <main className='no-layout'>
-                    <header>
-                        <NavbarNotAuth />
-                    </header>
+                    {
+                        !hideHeader && (
+                            <header>
+                                <NavbarNotAuth />
+                            </header>
+                        )
+                    }
 
                     <div className='children'>
                         {children}

@@ -10,10 +10,7 @@ Criar novo testes de integração para:
 		GetModule;
 		UpdateCurrentMain;
 		DeleteCompanyUser;
-		Update;
+		UpdateCompanyUser;
 
 	Clients:
 		DeleteClient;
-
-⦁	CompanyUser
-Na tela dos membros, devo poder atribuir roles e alterar o role (apenas ADM)
