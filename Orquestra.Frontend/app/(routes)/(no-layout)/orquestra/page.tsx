@@ -371,24 +371,53 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
 }
 
 function Testimonials() {
+
+    const testimonials = [
+        {
+            text: 'Reduzi o no-show em 40% e finalmente tenho tempo livre pra focar no que importa.',
+            author: 'Dra. Carla',
+            company: 'Clínica Odonto'
+        },
+        {
+            text: 'Interface limpa, suporte rápido e migração simples — recomendo.',
+            author: 'Equipe',
+            company: 'Studio Beleza'
+        },
+        {
+            text: 'A agenda inteligente salvou minha rotina. Nunca mais marquei paciente em cima do outro!',
+            author: 'Dr. Felipe',
+            company: 'Orto+'
+        }
+    ]
+
+    const [visible, setVisible] = useState(2)
+
+    useEffect(() => {
+        const timer = setTimeout(() => setVisible(3), 1000)
+        return () => clearTimeout(timer)
+    }, [])
+
     return (
-        <section className={styles.testimonialsSection} aria-label='Depoimentos'>
+        <section className={styles.testimonialsSection}>
             <div className={styles.container}>
-                <div className={styles.sectionHeader}>
+                <header className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>O que profissionais dizem</h2>
-                    <p className={styles.sectionSubtitle}>Feedback real de quem usa no dia a dia.</p>
-                </div>
+                    <p className={styles.sectionSubtitle}>Feedback real de quem usa o Orquestra no dia a dia.</p>
+                </header>
 
                 <div className={styles.testimonialGrid}>
-                    <blockquote className={styles.testimonialCard}>
-                        <p>'Reduzi o no-show em 40% e finalmente tenho tempo livre pra focar no que importa.'</p>
-                        <footer>- Dra. Carla, Clínica Odonto</footer>
-                    </blockquote>
+                    {
+                        testimonials.slice(0, visible).map((t, i) => (
+                            <blockquote key={i} className={styles.testimonialCard}>
+                                <p className={styles.quote}>“{t.text}”</p>
 
-                    <blockquote className={styles.testimonialCard}>
-                        <p>'Interface limpa, suporte rápido e migração simples — recomendo.'</p>
-                        <footer>- Studio Beleza</footer>
-                    </blockquote>
+                                <footer>
+                                    <strong>{t.author}</strong>
+                                    <span>{t.company}</span>
+                                </footer>
+                            </blockquote>
+                        ))
+                    }
                 </div>
             </div>
         </section>
