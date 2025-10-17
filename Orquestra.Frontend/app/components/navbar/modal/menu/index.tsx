@@ -116,7 +116,7 @@ export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Elem
                 <MenuItem icon='settings' label='Configurações' handleFunction={() => handleRedirect(ROUTES.USUARIO_CONFIGURACOES)} />
 
                 <div className={styles.separator} />
-                <MenuItem icon='log-out' label='Sair' handleFunction={() => handleRedirect(ROUTES.LOGOUT)} />
+                <MenuItem icon='log-out' label='Finalizar sessão' handleFunction={() => handleRedirect(ROUTES.LOGOUT)} />
             </div>
         </div>
     )

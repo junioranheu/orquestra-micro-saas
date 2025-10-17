@@ -116,13 +116,13 @@
 
 .navDesktop {
     display: none;
-    gap: 1.25rem;
+    gap: 1rem;
 }
 
 .navLink {
     color: #334155;
     text-decoration: none;
-    padding: 0.5rem 0.25rem;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
     transition: color .18s ease, background .18s ease, transform .18s ease;
 }
@@ -160,6 +160,14 @@
     border: none;
     display: inline-flex;
     align-items: center;
+    transition: 0.3s;
+    cursor: pointer;
+
+    &:hover {
+        // background-color: tomato;
+        color: var(--contrast);
+        transition: 0.3s;
+    }
 }
 
 .mobileMenu {
@@ -565,7 +573,7 @@
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1281px) {
     .navDesktop {
         display: flex;
     }

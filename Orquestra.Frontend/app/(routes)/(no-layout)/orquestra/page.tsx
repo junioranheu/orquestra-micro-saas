@@ -8,6 +8,7 @@ import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useTitle from '@/app/hooks/useTitle';
+import useWindowSize from '@/app/hooks/useWindowSize';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { MouseEvent, useEffect, useState } from 'react';
@@ -48,6 +49,8 @@ export default function LandingPage() {
 
 function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, open: boolean; setOpen: (v: boolean) => void; scrolled: boolean }) {
 
+    const windowSize = useWindowSize();
+
     function handleScroll(e: MouseEvent<HTMLAnchorElement>, id: string) {
         e.preventDefault();
         const el = document.getElementById(id);
@@ -58,6 +61,12 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, op
 
         setOpen(false);
     }
+
+    useEffect(() => {
+        if (windowSize.width > 0) {
+            setOpen(false);
+        }
+    }, [windowSize]);
 
     return (
         <header className={`${styles.header} ${scrolled ? styles.headerShadow : ''}`}>
@@ -97,6 +106,10 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, op
                 {
                     me?.isAuth ? (
                         <div className={styles.actionsDesktop}>
+                            <Link className={styles.link} href={ROUTES.LOGOUT}>
+                                Finalizar sessão
+                            </Link>
+
                             <Link className={styles.cta} href={ROUTES.DASHBOARD}>
                                 Voltar ao início
                             </Link>
@@ -114,7 +127,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, op
                     )
                 }
 
-                <button className={styles.menuButton} aria-label='menu' onClick={() => setOpen(!open)} title='menu'>
+                <button className={styles.menuButton} aria-label='menu' onClick={() => setOpen(!open)}>
                     <Icon icon={open ? 'x' : 'menu'} />
                 </button>
             </div>
@@ -182,18 +195,18 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
     }
 
     return (
-        <section className={styles.hero} aria-labelledby="hero-title">
+        <section className={styles.hero} aria-labelledby='hero-title'>
             <div className={styles.container}>
                 <div className={styles.heroInner}>
                     <div className={styles.heroBody}>
                         <div className={styles.heroBadge}>Uhu! Lançamento 🎉</div>
 
-                        <h1 id="hero-title" className={styles.h1}>
+                        <h1 id='hero-title' className={styles.h1}>
                             {SYSTEM.NAME} — <span className={styles.highlight}>{SYSTEM.DESCRIPTION}</span>
                         </h1>
 
                         <p className={styles.lead}>
-                            Plataforma feita pra quem presta serviço: agenda, clientes, pagamentos e confirmações automático. Tudo
+                            Plataforma feita pra quem presta serviço: agenda, clientes, pagamentos, integração com WhatsApp e confirmações automáticas. Tudo
                             centralizado — sem gambiarra.
                         </p>
 
@@ -203,6 +216,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                                     <Link href={ROUTES.DASHBOARD} className={styles.primaryBtn}>
                                         Ir para o dashboard
                                     </Link>
+
                                     <Link href={ROUTES.ETC_AJUDA} className={styles.secondaryBtn}>
                                         Central de ajuda
                                     </Link>
@@ -212,6 +226,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                                     <Link href={ROUTES.CRIAR_CONTA} className={styles.primaryBtn}>
                                         Começar teste grátis
                                     </Link>
+
                                     <Link href={ROUTES.ETC_AJUDA} className={styles.secondaryBtn}>
                                         Central de ajuda
                                     </Link>
