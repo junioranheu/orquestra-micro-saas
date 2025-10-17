@@ -335,9 +335,9 @@ function Features() {
 function Pricing({ me }: { me: iMeSimple | undefined }) {
 
     const plans = [
-        { id: 'basic', name: 'Básico', price: '29', suffix: '/mês', desc: 'Freelancers e autônomos', perks: ['50 agendamentos/mês', 'Notificações por e-mail', 'Suporte básico'] },
-        { id: 'pro', name: 'Profissional', price: '79', suffix: '/mês', desc: 'Pequenas equipes', perks: ['Agendamentos ilimitados', 'Notificações por SMS', 'Suporte prioritário'], featured: true },
-        { id: 'enterprise', name: 'Empresarial', price: '199', suffix: '/mês', desc: 'Grandes operações', perks: ['Integrações avançadas', 'Suporte dedicado', 'SLA customizável'] }
+        { id: 'free', name: 'Grátis', price: '0', suffix: '/mês', desc: 'Freelancers e autônomos', perks: ['28 agendamentos/mês', 'Notificações por e-mail', 'Sem suporte!'] },
+        { id: 'basic', name: 'Básico', price: '19.99', suffix: '/mês', desc: 'Pequenas equipes', perks: ['Agendamentos ilimitados', 'Integração com o WhatsApp', 'Suporte prioritário'], featured: true },
+        { id: 'professional', name: 'Profissional', price: '49.99', suffix: '/mês', desc: 'Grandes operações', perks: ['Integrações avançadas', 'Suporte dedicado', 'SLA customizável'] }
     ];
 
     return (

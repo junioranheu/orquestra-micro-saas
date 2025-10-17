@@ -3,6 +3,8 @@ Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
 
+Criar a tabela de planos... vou ter que modificar isso de módulos;
+
 Criar novo testes de integração para:
 	CompanyUsers:
 		GetAllByCompanyId;
