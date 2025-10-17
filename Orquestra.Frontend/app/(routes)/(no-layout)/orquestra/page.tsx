@@ -14,7 +14,7 @@ import useWindowSize from '@/app/hooks/useWindowSize';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function LandingPage() {
@@ -72,7 +72,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, op
         if (windowSize.width > 0) {
             setOpen(false);
         }
-    }, [windowSize]);
+    }, [windowSize.width, setOpen]);
 
     return (
         <header className={`${styles.header} ${scrolled ? styles.headerShadow : ''}`}>
@@ -188,7 +188,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
     const [randomCompanies, setRandomCompanies] = useState<iDropdownOption[]>([]);
     const [animate, setAnimate] = useState<'in' | 'out'>('in');
 
-    function handlePickRandomCompanies() {
+    const handlePickRandomCompanies = useCallback(() => {
         if (!companyTypeEnum || companyTypeEnum.length === 0) {
             return [];
         }
@@ -199,11 +199,11 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
             label: c.label,
             value: Number(c.value)
         }));
-    }
+    }, [companyTypeEnum]);
 
     useEffect(() => {
         setRandomCompanies(handlePickRandomCompanies());
-    }, [companyTypeEnum]);
+    }, [companyTypeEnum, handlePickRandomCompanies]);
 
     function handleRefresh() {
         setAnimate('out');

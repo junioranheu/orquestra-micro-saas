@@ -226,13 +226,15 @@
     }
 
     .heroInner {
+        // background-color: tomato !important;
         display: grid;
         grid-template-columns: 1fr;
         gap: 2rem;
         align-items: center;
 
         .heroBody {
-            // max-width: 56rem;
+            // background-color: orange !important;
+            width: 100%;
             margin: 0 auto;
             text-align: left;
 
@@ -424,7 +426,7 @@
 
     .pricingGrid {
         display: grid;
-        gap: 1rem;
+        gap: 2rem;
         grid-template-columns: 1fr;
 
         .pricingCard {
