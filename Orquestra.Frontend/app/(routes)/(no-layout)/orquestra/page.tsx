@@ -1,9 +1,11 @@
 'use client';
 import { iMeSimple } from '@/app/api/consts/auth';
 import Icon from '@/app/components/icon';
+import { iDropdownOption } from '@/app/components/input/drop-down';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
+import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
@@ -151,19 +153,48 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, op
 }
 
 function Hero({ me }: { me: iMeSimple | undefined }) {
+
+    const companyTypeEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyTypeEnum' });
+    const [randomCompanies, setRandomCompanies] = useState<iDropdownOption[]>([]);
+    const [animate, setAnimate] = useState<'in' | 'out'>('in');
+
+    function handlePickRandomCompanies() {
+        if (!companyTypeEnum || companyTypeEnum.length === 0) return [];
+
+        const shuffled = [...companyTypeEnum].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, 3).map((c) => ({
+            label: c.label,
+            value: Number(c.value)
+        }));
+    }
+
+    useEffect(() => {
+        setRandomCompanies(handlePickRandomCompanies());
+    }, [companyTypeEnum]);
+
+    function handleRefresh() {
+        setAnimate('out');
+
+        setTimeout(() => {
+            setRandomCompanies(handlePickRandomCompanies());
+            setAnimate('in');
+        }, 250);
+    }
+
     return (
-        <section className={styles.hero} aria-labelledby='hero-title'>
+        <section className={styles.hero} aria-labelledby="hero-title">
             <div className={styles.container}>
                 <div className={styles.heroInner}>
                     <div className={styles.heroBody}>
                         <div className={styles.heroBadge}>Uhu! Lançamento 🎉</div>
 
-                        <h1 id='hero-title' className={styles.h1}>
+                        <h1 id="hero-title" className={styles.h1}>
                             {SYSTEM.NAME} — <span className={styles.highlight}>{SYSTEM.DESCRIPTION}</span>
                         </h1>
 
                         <p className={styles.lead}>
-                            Plataforma feita pra quem presta serviço: agenda, clientes, pagamentos e confirmações automático. Tudo centralizado — sem gambiarra.
+                            Plataforma feita pra quem presta serviço: agenda, clientes, pagamentos e confirmações automático. Tudo
+                            centralizado — sem gambiarra.
                         </p>
 
                         {
@@ -172,7 +203,6 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                                     <Link href={ROUTES.DASHBOARD} className={styles.primaryBtn}>
                                         Ir para o dashboard
                                     </Link>
-
                                     <Link href={ROUTES.ETC_AJUDA} className={styles.secondaryBtn}>
                                         Central de ajuda
                                     </Link>
@@ -182,7 +212,6 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                                     <Link href={ROUTES.CRIAR_CONTA} className={styles.primaryBtn}>
                                         Começar teste grátis
                                     </Link>
-
                                     <Link href={ROUTES.ETC_AJUDA} className={styles.secondaryBtn}>
                                         Central de ajuda
                                     </Link>
@@ -193,21 +222,21 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                         <div className={styles.trustRow}>
                             <span>Usado por</span>
                             <div className={styles.logos} aria-hidden>
-                                <div className={styles.pill}>Clínicas</div>
-                                <div className={styles.pill}>Consultórios</div>
-                                <div className={styles.pill}>Estúdios</div>
+                                {
+                                    randomCompanies.map((c) => (
+                                        <div
+                                            key={c.value.toString()}
+                                            className={`${styles.pill} ${animate === 'out' ? styles.fadeOut : styles.fadeIn}`}
+                                        >
+                                            {c.label}
+                                        </div>
+                                    ))
+                                }
                             </div>
-                        </div>
-                    </div>
 
-                    <div className={styles.heroVisual} aria-hidden>
-                        <div className={styles.mockup}>
-                            <div className={styles.mockHeader} />
-                            <div className={styles.mockContent}>
-                                <div />
-                                <div />
-                                <div />
-                            </div>
+                            <button onClick={handleRefresh} className={styles.refreshBtn}>
+                                Ver mais
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -250,7 +279,7 @@ function Features() {
         <section id='features' className={styles.featuresSection}>
             <div className={styles.container}>
                 <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>Funcionalidades Poderosas</h2>
+                    <h2 className={styles.sectionTitle}>Funcionalidades poderosas</h2>
                     <p className={styles.sectionSubtitle}>Tudo que você precisa pra rodar um serviço profissional sem complicação.</p>
                 </div>
 
@@ -282,7 +311,7 @@ function Pricing() {
         <section id='pricing' className={styles.pricingSection}>
             <div className={styles.container}>
                 <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>Planos e Preços</h2>
+                    <h2 className={styles.sectionTitle}>Planos e preços</h2>
                     <p className={styles.sectionSubtitle}>Cresça sem surpresas — periodicidade mensal com upgrade fácil.</p>
                 </div>
 
