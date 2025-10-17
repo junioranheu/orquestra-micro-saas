@@ -2,15 +2,18 @@
 import { iMeSimple } from '@/app/api/consts/auth';
 import Icon from '@/app/components/icon';
 import { iDropdownOption } from '@/app/components/input/drop-down';
+import WhatsappButton from '@/app/components/whatsapp/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
+import swal from '@/app/functions/swal';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useTitle from '@/app/hooks/useTitle';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { MouseEvent, useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
@@ -40,6 +43,8 @@ export default function LandingPage() {
                 <Pricing me={me} />
                 <Testimonials />
                 <CTA me={me} />
+
+                <WhatsappButton phone={SYSTEM.PHONE_SUPPORT} />
             </main>
 
             <Footer />
@@ -49,6 +54,7 @@ export default function LandingPage() {
 
 function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, open: boolean; setOpen: (v: boolean) => void; scrolled: boolean }) {
 
+    const router = useRouter();
     const windowSize = useWindowSize();
 
     function handleScroll(e: MouseEvent<HTMLAnchorElement>, id: string) {
@@ -106,9 +112,20 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined, op
                 {
                     me?.isAuth ? (
                         <div className={styles.actionsDesktop}>
-                            <Link className={styles.link} href={ROUTES.LOGOUT}>
-                                Finalizar sessão
-                            </Link>
+                            <Link
+                                className={styles.link}
+                                href='#'
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    swal({
+                                        content: 'Você realmente deseja finalizar sua sessão?',
+                                        confirmBtnText: 'Sim',
+                                        confirmFunction: () => router.push(ROUTES.LOGOUT),
+                                        cancelBtnText: 'Voltar',
+                                        icon: 'question'
+                                    });
+                                }}
+                            >Finalizar sessão</Link>
 
                             <Link className={styles.cta} href={ROUTES.DASHBOARD}>
                                 Voltar ao início
@@ -298,11 +315,12 @@ function Features() {
 
                 <div className={styles.featuresGrid}>
                     {
-                        features.map((f, i) => (
+                        features.map((f) => (
                             <article key={f.title} className={styles.featureCard}>
                                 <div className={styles.featureIconWrap}>
                                     <Icon icon={f.icon as any} size='big' className={styles.featureIcon} />
                                 </div>
+
                                 <h3 className={styles.featureTitle}>{f.title}</h3>
                                 <p className={styles.featureText}>{f.text}</p>
                             </article>
@@ -375,8 +393,8 @@ function Testimonials() {
     const testimonials = [
         {
             text: 'Reduzi o no-show em 40% e finalmente tenho tempo livre pra focar no que importa.',
-            author: 'Dra. Carla',
-            company: 'Clínica Odonto'
+            author: 'Dra. Izabelle',
+            company: 'Point do Sorriso'
         },
         {
             text: 'Interface limpa, suporte rápido e migração simples — recomendo.',
@@ -384,9 +402,9 @@ function Testimonials() {
             company: 'Studio Beleza'
         },
         {
-            text: 'A agenda inteligente salvou minha rotina. Nunca mais marquei paciente em cima do outro!',
-            author: 'Dr. Felipe',
-            company: 'Orto+'
+            text: `A agenda do ${SYSTEM.NAME} salvou minha rotina. Nunca mais marquei paciente em cima do outro!`,
+            author: 'Dr. Jailson Mendes',
+            company: 'Orto Orange'
         }
     ]
 
@@ -430,8 +448,8 @@ function CTA({ me }: { me: iMeSimple | undefined }) {
             <div className={styles.container}>
                 <div className={styles.ctaInner}>
                     <div>
-                        <h2 className={styles.sectionTitleLight}>Pronto para organizar sua agenda?</h2>
-                        <p className={styles.ctaText}>Comece um teste gratuito e veja o impacto em uma semana.</p>
+                        <h2>Pronto para organizar sua agenda?</h2>
+                        <p>Comece um teste gratuito e veja o impacto em uma semana.</p>
                     </div>
 
                     {

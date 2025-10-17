@@ -25,7 +25,7 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
                     <div className={styles.icons}>
                         <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`}>
                             <Link href={ROUTES.LANDING_PAGE}>
-                                <Icon icon='home' color='var(--gray-dark)' className='contrastOnHover' />
+                                <Icon icon='smile' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>
 
