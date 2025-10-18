@@ -32,7 +32,7 @@ public sealed class CreateCompanyInvoice(
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        (decimal price, int _) = PlanTypeHelper.GetValues(planType);
+        (decimal price, int _, string _, string[] _, int _) = PlanTypeHelper.GetValues(planType);
 
         Company company = await GetCompany(companyId);
 

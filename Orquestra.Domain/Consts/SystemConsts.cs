@@ -23,6 +23,7 @@ public static class SystemConsts
         public const int OneMonth = 2629800;
         public const int OneYear = 31536000;
 
+        public const int PlanDurationDaysFree = 14;
         public const int PlanDurationDays = 30;
     }
 

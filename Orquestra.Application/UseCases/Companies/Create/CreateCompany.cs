@@ -51,10 +51,12 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
     {
         var company = input.Adapt<Company>();
 
+        (decimal _, int _, string _, string[] _, int durationDays) = PlanTypeHelper.GetValues(PlanTypeEnum.Free);
+
         company.PlanType = input.PlanType;
         company.CompanySituation = CompanySituationEnum.PendingPayment;
         company.PlanStartDate = GetDate();
-        company.PlanEndDate = GetDate().AddDays(SystemConsts.Time.PlanDurationDays);
+        company.PlanEndDate = GetDate().AddDays(durationDays);
 
         if (input.LogoFormFile is not null)
         {

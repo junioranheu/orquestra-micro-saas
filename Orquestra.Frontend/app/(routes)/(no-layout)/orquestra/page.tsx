@@ -1,5 +1,6 @@
 'use client';
 import { iMeSimple } from '@/app/api/consts/auth';
+import { CONSTS_UTILITY, iPlanType } from '@/app/api/consts/utility';
 import Icon from '@/app/components/icon';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import WhatsappButton from '@/app/components/whatsapp/button';
@@ -9,6 +10,7 @@ import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import Tippy from '@tippyjs/react';
@@ -334,11 +336,8 @@ function Features() {
 
 function Pricing({ me }: { me: iMeSimple | undefined }) {
 
-    const plans = [
-        { id: 'free', name: 'Grátis', price: '0', suffix: '/mês', desc: 'Freelancers e autônomos', perks: ['28 agendamentos/mês', 'Notificações por e-mail', 'Sem suporte!'] },
-        { id: 'basic', name: 'Básico', price: '19.99', suffix: '/mês', desc: 'Pequenas equipes', perks: ['Agendamentos ilimitados', 'Integração com o WhatsApp', 'Suporte prioritário'], featured: true },
-        { id: 'professional', name: 'Profissional', price: '49.99', suffix: '/mês', desc: 'Grandes operações', perks: ['Integrações avançadas', 'Suporte dedicado', 'SLA customizável'] }
-    ];
+    const [plans, setPlans] = useState<iPlanType | undefined>();
+    useApiRequestToSetterOnUrlChange<iPlanType>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
 
     return (
         <section id='pricing' className={styles.pricingSection}>
@@ -350,15 +349,15 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
 
                 <div className={styles.pricingGrid}>
                     {
-                        plans.map((p) => (
-                            <div key={p.id} className={`${styles.pricingCard} ${p.featured ? styles.featured : ''}`}>
+                        plans?.plans?.map((p, i) => (
+                            <div key={i} className={`${styles.pricingCard} ${p.planTypeName === 'Basic' ? styles.featured : ''}`}>
                                 {
-                                    p.featured && <div className={styles.badge}>Mais popular</div>
+                                    p.planTypeName === 'Basic' && <div className={styles.badge}>Mais popular</div>
                                 }
 
-                                <h3 className={styles.pricingTitle}>{p.name}</h3>
-                                <p className={styles.pricingSubtitle}>{p.desc}</p>
-                                <p className={styles.price}>R$ {p.price}<span className={styles.priceSuffix}>{p.suffix}</span></p>
+                                <h3 className={styles.pricingTitle}>{p.planTypeDescription}</h3>
+                                <p className={styles.pricingSubtitle}>{p.description}</p>
+                                <p className={styles.price}>R$ {p.price}<span className={styles.priceSuffix}>/mês</span></p>
 
                                 <ul className={styles.featuresList}>
                                     {
@@ -370,12 +369,12 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
 
                                 {
                                     me?.isAuth ? (
-                                        <Link href={ROUTES.EMPRESA_USO_E_PLANO} className={`${styles.fullBtn} ${p.featured ? styles.fullBtnFeatured : ''}`}>
-                                            Escolher plano {p.name.toLocaleLowerCase()}
+                                        <Link href={`${ROUTES.EMPRESA_USO_E_PLANO}?plan=${p.planTypeName?.toLocaleLowerCase()}`} className={styles.fullBtn}>
+                                            Escolher plano {p.planTypeDescription.toLocaleLowerCase()}
                                         </Link>
                                     ) : (
-                                        <Link href={ROUTES.LOGIN} className={`${styles.fullBtn} ${p.featured ? styles.fullBtnFeatured : ''}`}>
-                                            Entrar para escolher o plano {p.name.toLocaleLowerCase()}
+                                        <Link href={ROUTES.LOGIN} className={styles.fullBtn}>
+                                            Entrar para escolher o plano {p.planTypeDescription.toLocaleLowerCase()}
                                         </Link>
                                     )
                                 }

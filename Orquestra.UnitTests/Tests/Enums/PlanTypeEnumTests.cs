@@ -13,7 +13,7 @@ public sealed class PlanTypeEnumTests
         foreach (var module in modules)
         {
             // Act;
-            (decimal price, int schedulingLimit) = PlanTypeHelper.GetValues(module);
+            (decimal price, int schedulingLimit, string _, string[] _, int _) = PlanTypeHelper.GetValues(module);
 
             // Obter os atributos reais do enum via reflection;
             FieldInfo field = typeof(PlanTypeEnum).GetField(module.ToString())!;
@@ -37,7 +37,7 @@ public sealed class PlanTypeEnumTests
         PlanTypeEnum module = (PlanTypeEnum)999; // Módulo inexistente;
 
         // Act;
-        (decimal price, int _) = PlanTypeHelper.GetValues(module);
+        (decimal price, int _, string _, string[] _, int _) = PlanTypeHelper.GetValues(module);
 
         // Assert;
         Assert.Equal(0m, price);

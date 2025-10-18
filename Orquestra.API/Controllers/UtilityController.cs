@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Locations.States.Get;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Registry;
 using System.Reflection;
 using static Orquestra.Utils.Fixtures.Get;
@@ -96,5 +97,39 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
             OrderBy(x => x.Label)];
 
         return Ok(values);
+    }
+
+    [ResponseCache(Duration = SystemConsts.Time.HalfDay)]
+    [AllowAnonymous]
+    [HttpGet("GetPlanType")]
+    public ActionResult GetPlanType()
+    {
+        var planTypeEnum = GetEnumListWithDescriptions<PlanTypeEnum>();
+
+        var plans = planTypeEnum.Select(x =>
+        {
+            (decimal price, int schedulingLimit, string description, string[] perks, int durationDays) = PlanTypeHelper.GetValues(x.Value);
+
+            return new
+            {
+                PlanType = x.Value,
+                PlanTypeName = x.Name,
+                PlanTypeDescription = x.Description,
+                Price = price,
+                SchedulingLimit = schedulingLimit,
+                Description = description,
+                Perks = perks,
+                DurationDays = durationDays
+            };
+        }).ToArray();
+
+        var output = new
+        {
+            SystemConsts.Time.PlanDurationDays,
+            SystemConsts.Time.PlanDurationDaysFree,
+            Plans = plans
+        };
+
+        return Ok(output);
     }
 }

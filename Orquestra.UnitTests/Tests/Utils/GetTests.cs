@@ -770,7 +770,7 @@ public sealed class GetTests
     [InlineData("")]
     [InlineData(null)]
     [InlineData(" ")]
-    [InlineData("529.982.247")] // incomplete
+    [InlineData("529.982.247")] 
     public void Should_Return_False_For_Null_Or_Invalid_Length(string? cpf)
     {
         // Act;
