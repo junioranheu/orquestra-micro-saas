@@ -136,6 +136,93 @@ public sealed class UpdateCompanyUserTests
         await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(adminUser.UserId, input));
     }
 
+    [Fact]
+    public async Task Execute_ShouldThrowInvalidOperation_WhenOwnerTriesToDemoteHimself()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User ownerUser = UserMock.Create();
+        ownerUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, ownerUser);
+
+        Company company = CompanyMock.Create();
+        company.PlanType = PlanTypeEnum.Basic;
+        await Fixture.Save(context, company);
+
+        CompanyUser ownerCompanyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = ownerUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator,
+            InviterUserId = null, // Indica proprietário;
+            Status = true
+        };
+
+        await Fixture.Save(context, ownerCompanyUser);
+
+        UpdateCompanyUser sut = CreateSut(context, ownerUser);
+
+        CompanyUserInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = ownerUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member, // Tentativa de rebaixar;
+            UserModules = [ModuleEnum.Scheduling]
+        };
+
+        // Act & Assert;
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(ownerUser.UserId, input));
+        Assert.Contains("portanto não pode remover", ex.Message);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldKeepCurrentRole_WhenInputRoleIsZero()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User adminUser = UserMock.Create();
+        adminUser.Role = UserRoleEnum.Administrator;
+        await Fixture.Save(context, adminUser);
+
+        User targetUser = UserMock.Create();
+        await Fixture.Save(context, targetUser);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        CompanyUser targetCompanyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = targetUser.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member,
+            UserModules = [ModuleEnum.Sales],
+            Status = true
+        };
+
+        await Fixture.Save(context, targetCompanyUser);
+
+        UpdateCompanyUser sut = CreateSut(context, adminUser);
+
+        CompanyUserInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = targetUser.UserId,
+            CompanyUserRole = 0, // Força teste da linha de fallback;
+            UserModules = [ModuleEnum.Scheduling]
+        };
+
+        // Act;
+        await sut.Execute(adminUser.UserId, input);
+
+        // Assert;
+        CompanyUser? updated = await context.CompanyUsers.FindAsync(targetCompanyUser.CompanyUserId);
+        Assert.NotNull(updated);
+        Assert.Equal(CompanyUserRoleEnum.Member, updated!.CompanyUserRole); // Não mudou;
+        Assert.Contains(ModuleEnum.Scheduling, updated.UserModules ?? []);
+    }
+
     #region helpers
     private static UpdateCompanyUser CreateSut(Context context, User user)
     {

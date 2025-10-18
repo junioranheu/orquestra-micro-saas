@@ -58,8 +58,8 @@ public sealed class UpdatePlanTypeCompany(
     private async Task UpdateCompanyData(Company company, PlanTypeEnum planType)
     {
         company.CompanySituation = CompanySituationEnum.PendingPayment;
-        company.PlanStartDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate() : company.PlanStartDate;
-        company.PlanEndDate = (company.PlanStartDate is null || company.PlanStartDate == DateTime.MinValue) ? GetDate().AddDays(SystemConsts.Time.PlanDurationDays) : company.PlanEndDate;
+        company.PlanStartDate = GetDate();
+        company.PlanEndDate = GetDate().AddDays(SystemConsts.Time.PlanDurationDays);
         company.PlanType = planType;
 
         _context.Update(company);

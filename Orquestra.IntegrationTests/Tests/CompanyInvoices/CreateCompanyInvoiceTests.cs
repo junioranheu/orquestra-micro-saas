@@ -13,7 +13,6 @@ using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.CompanyInvoices;
 
@@ -198,7 +197,6 @@ public sealed class CreateCompanyInvoiceTests
         emailServiceMock ??= Fixture.CreateEmailService();
 
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
-
 
         return createCompanyInvoice;
     }

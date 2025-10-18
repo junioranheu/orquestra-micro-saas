@@ -5,11 +5,6 @@ Atualizar o sistema para o .NET 10;
 Criar algum job ou trava/verifica a vigência do plano da empresa;
 
 ⦁	Testes de integração:
-Criar novo testes de integração para:
-	CompanyUsers:
-		UpdateCompanyUser;
-		UpdatePlanTypeCompany;
-
 Verificar pasta por pasta se tá faltando algum teste;
 
 ⦁	Company:
