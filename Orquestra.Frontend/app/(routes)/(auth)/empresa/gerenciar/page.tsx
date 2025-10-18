@@ -16,6 +16,7 @@ import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.f
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
+import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
@@ -35,6 +36,8 @@ export default function EmpresaGerenciar() {
 
     const router = useRouter();
     const me = useApiGetMeSimple();
+
+    const planTypeEnum = useApiGetCompanySituationEnum({ enumName: 'PlanTypeEnum' });
 
     const currentMainCompany = useApiGetCurrentMainCompany({});
     const [companies, setCompanies] = useState<iCompanyOutput[]>();
@@ -180,7 +183,13 @@ export default function EmpresaGerenciar() {
                                 </header>
 
                                 <div className={styles.content}>
-                                    {/* {
+                                    <Tippy content='Gerenciar plano'>
+                                        <p>
+                                            <Icon icon='layers' size='small' /> <Link href={ROUTES.EMPRESA_USO_E_PLANO}>Plano {planTypeEnum?.find(x => x.value.toString() === company.planType?.toString())?.label?.toLocaleLowerCase()} ({company.companySituationStr?.toLocaleLowerCase()})</Link>
+                                        </p>
+                                    </Tippy>
+
+                                    {
                                         company.planStartDate && company.planEndDate && (
                                             <Tippy content='Vigência do plano atual'>
                                                 <p>
@@ -190,13 +199,7 @@ export default function EmpresaGerenciar() {
                                                 </p>
                                             </Tippy>
                                         )
-                                    } */}
-
-                                    <Tippy content='Gerenciar plano'>
-                                        <p>
-                                            <Icon icon='info' size='small' /> <Link href={ROUTES.EMPRESA_USO_E_PLANO}>{company.companySituationStr}</Link>
-                                        </p>
-                                    </Tippy>
+                                    }
 
                                     {
                                         company.status ? (
@@ -239,31 +242,7 @@ export default function EmpresaGerenciar() {
                                             </p>
                                         )
                                     }
-
-                                    {
-                                        company?.companyModulesStr && company?.companyModulesStr?.length > 0 && (
-                                            <Tippy content={company.companyModulesStr.join('; ')}>
-                                                <p>
-                                                    <Icon icon='layers' size='small' /> {company.companyModulesStr?.length} módulo{company.companyModulesStr?.length === 1 ? '' : 's'}
-                                                </p>
-                                            </Tippy>
-                                        )
-                                    }
                                 </div>
-
-                                {
-                                    company?.companyModulesStr && company?.companyModulesStr?.length > 0 && (
-                                        <div className={styles.modules}>
-                                            {
-                                                company?.companyModulesStr?.map((m) => (
-                                                    <span key={m} className={styles.module}>
-                                                        {m}
-                                                    </span>
-                                                ))
-                                            }
-                                        </div>
-                                    )
-                                }
 
                                 <div className={styles.actions}>
                                     {

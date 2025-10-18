@@ -16,6 +16,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Auth.Token;
 using System.IdentityModel.Tokens.Jwt;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;
 
@@ -121,8 +122,10 @@ public class AuthController(
 
             if (isUserAdm)
             {
-                output.CurrentMainCompany.UserModules = currentMainCompanySimple.CompanyModules;
-                output.CurrentMainCompany.UserModulesStr = currentMainCompanySimple.CompanyModulesStr;
+                var moduleEnum = GetEnumListWithDescriptions<ModuleEnum>();
+
+                output.CurrentMainCompany.UserModules = [.. moduleEnum.Select(x => x.Value)];
+                output.CurrentMainCompany.UserModulesStr = [.. moduleEnum.Select(x => x.Description)];
             }
             else
             {
@@ -164,7 +167,16 @@ public class AuthController(
 
         // Current main company;
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userId.GetValueOrDefault());
-        ModuleEnum[]? output = isUserAdm ? (currentMainCompany?.CompanyModules ?? []) : (currentMainCompany?.UserModules ?? []);
+
+        if (isUserAdm)
+        {
+            var moduleEnum = GetEnumListWithDescriptions<ModuleEnum>();
+            ModuleEnum[] outputIsAdmin = [.. moduleEnum.Select(x => x.Value)];
+
+            return Ok(outputIsAdmin);
+        }
+
+        ModuleEnum[]? output = currentMainCompany?.UserModules ?? [];
 
         return Ok(output);
     }

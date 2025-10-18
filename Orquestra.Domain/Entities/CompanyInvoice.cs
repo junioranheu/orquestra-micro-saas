@@ -23,7 +23,7 @@ public sealed class CompanyInvoice : Audit
     [ForeignKey(nameof(CompanyId))]
     public Company? Company { get; set; }
 
-    public required ModuleEnum[] Modules { get; set; } = [];
+    public required PlanTypeEnum PlanType { get; set; }
 
     public decimal Amount { get; set; } = 0;
 

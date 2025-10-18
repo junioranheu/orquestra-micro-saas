@@ -46,12 +46,10 @@ public sealed class CompanyOutput
 
     public DateTime? PlanEndDate { get; set; }
 
-    public ModuleEnum[]? CompanyModules { get; set; } = [];
+    public PlanTypeEnum PlanType { get; set; } = PlanTypeEnum.Free;
     #endregion
 
     #region extras
-    public List<string> CompanyModulesStr { get; set; } = [];
-
     public bool Status { get; set; }
 
     public DateTime CreatedDate { get; set; }
@@ -70,11 +68,4 @@ public sealed class CompanyOutput
 
     public bool IsAdm { get; set; } = false;
     #endregion
-}
-
-public sealed class CompanyModulesOutput
-{
-    public required CompanyOutput Company { get; set; }
-    public ModuleEnum[]? CompanyModules { get; set; } = [];
-    public List<string> CompanyModulesStr { get; set; } = [];
 }

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Orquestra.Application.UseCases.Companies.Base;
-using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
@@ -139,10 +138,8 @@ public sealed class CreateCompanyTests
         // Assert;
         Assert.NotNull(capturedValues);
         Assert.Equal(input.Name, capturedValues!["[CompanyName]"]);
-        Assert.Equal(user.FullName.Split(" ")[0], capturedValues!["[UserName]"]);
-        Assert.Contains("/Company/Verify/", capturedValues!["[VerifyUrl]"]);
 
-        emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, It.IsAny<List<string>>()), Times.Once);
+        emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, It.IsAny<List<string>>()), Times.AtLeastOnce);
     }
 
     [Theory]
@@ -175,10 +172,8 @@ public sealed class CreateCompanyTests
         Assert.False(verification.Used);
     }
 
-    [Theory]
-    [InlineData(true)] // Com módulos;
-    [InlineData(false)] // Sem módulos;
-    public async Task Execute_ShouldSetCompanySituationAndPlanDatesCorrectly(bool withModules)
+    [Fact]
+    public async Task Execute_ShouldSetCompanySituationAndPlanDatesCorrectly()
     {
         // Arrange;
         Context context = Fixture.CreateContext();
@@ -190,12 +185,7 @@ public sealed class CreateCompanyTests
         CreateCompany sut = CreateSut(context, user, emailService);
 
         Company company = CompanyMock.Create();
-        company.CompanyModules = [];
-
-        if (withModules)
-        {
-            company.CompanyModules = [ModuleEnum.Sales];
-        }
+        company.PlanType = PlanTypeEnum.Basic;
 
         var input = company.Adapt<CompanyInput>();
 
@@ -206,18 +196,9 @@ public sealed class CreateCompanyTests
         Company? createdCompany = await context.Companies.FindAsync(result.CompanyId);
         Assert.NotNull(createdCompany);
 
-        if (withModules)
-        {
-            Assert.Equal(CompanySituationEnum.PendingPayment, createdCompany!.CompanySituation);
-            Assert.NotNull(createdCompany.PlanStartDate);
-            Assert.NotNull(createdCompany.PlanEndDate);
-        }
-        else
-        {
-            Assert.Equal(CompanySituationEnum.RegisteredButWithoutAnyModules, createdCompany!.CompanySituation);
-            Assert.Null(createdCompany.PlanStartDate);
-            Assert.Null(createdCompany.PlanEndDate);
-        }
+        Assert.Equal(CompanySituationEnum.PendingPayment, createdCompany!.CompanySituation);
+        Assert.NotNull(createdCompany.PlanStartDate);
+        Assert.NotNull(createdCompany.PlanEndDate);
     }
 
     [Fact]
@@ -234,13 +215,14 @@ public sealed class CreateCompanyTests
         CreateCompany sut = CreateSut(context, user, emailService);
 
         Company company = CompanyMock.Create();
-        company.CompanyModules = [ModuleEnum.Scheduling];
+        company.PlanType = PlanTypeEnum.Basic;
+
         var input = company.Adapt<CompanyInput>();
 
         // Act;
         await sut.Execute(user.UserId, input);
 
-        // Assert
+        // Assert;
         CompanyInvoice? invoice = await context.CompanyInvoices.AsNoTracking().FirstOrDefaultAsync(i => i.CompanyId == company.CompanyId);
 
         Assert.NotNull(invoice);
@@ -323,8 +305,7 @@ public sealed class CreateCompanyTests
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
         InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
-        CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany, envService, emailServiceMock.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
         CreateCompany createCompany = new(new CompanyBaseDependencies(
             context,

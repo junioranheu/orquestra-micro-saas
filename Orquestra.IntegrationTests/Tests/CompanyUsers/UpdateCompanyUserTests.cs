@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Orquestra.Application.UseCases.Companies.GetModule;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.Shared;
@@ -33,7 +32,7 @@ public sealed class UpdateCompanyUserTests
 
         // Empresa;
         Company company = CompanyMock.Create();
-        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
+        company.PlanType = PlanTypeEnum.Basic;
         await Fixture.Save(context, company);
 
         // Vínculo do usuário alvo;
@@ -80,7 +79,7 @@ public sealed class UpdateCompanyUserTests
         await Fixture.Save(context, targetUser);
 
         Company company = CompanyMock.Create();
-        company.CompanyModules = [ModuleEnum.Sales];
+        company.PlanType = PlanTypeEnum.Basic;
         await Fixture.Save(context, company);
 
         CompanyUser targetCompanyUser = new()
@@ -108,47 +107,6 @@ public sealed class UpdateCompanyUserTests
     }
 
     [Fact]
-    public async Task Execute_ShouldThrowInvalidOperation_WhenModulesNotInCompany()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        User adminUser = UserMock.Create();
-        adminUser.Role = UserRoleEnum.Administrator;
-        await Fixture.Save(context, adminUser);
-
-        User targetUser = UserMock.Create();
-        await Fixture.Save(context, targetUser);
-
-        Company company = CompanyMock.Create();
-        company.CompanyModules = [ModuleEnum.Sales]; // Somente Sales;
-        await Fixture.Save(context, company);
-
-        CompanyUser targetCompanyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = targetUser.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Member,
-            UserModules = [ModuleEnum.Sales],
-            Status = true
-        };
-
-        await Fixture.Save(context, targetCompanyUser);
-
-        UpdateCompanyUser sut = CreateSut(context, adminUser);
-
-        CompanyUserInput input = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = targetUser.UserId,
-            UserModules = [ModuleEnum.Scheduling] // Módulo inválido;
-        };
-
-        // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(adminUser.UserId, input));
-    }
-
-    [Fact]
     public async Task Execute_ShouldThrowKeyNotFound_WhenUserNotLinked()
     {
         // Arrange;
@@ -162,7 +120,7 @@ public sealed class UpdateCompanyUserTests
         await Fixture.Save(context, targetUser);
 
         Company company = CompanyMock.Create();
-        company.CompanyModules = [ModuleEnum.Sales];
+        company.PlanType = PlanTypeEnum.Basic;
         await Fixture.Save(context, company);
 
         UpdateCompanyUser sut = CreateSut(context, adminUser);
@@ -184,9 +142,8 @@ public sealed class UpdateCompanyUserTests
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-        GetModuleCompany getModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
-        UpdateCompanyUser updateModuleCompanyUser = new(context, checkIfUserIsLinkedCompanyUser, getModuleCompany);
+        UpdateCompanyUser updateModuleCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
 
         return updateModuleCompanyUser;
     }

@@ -5,7 +5,6 @@ using Orquestra.Application.UseCases.Locations.States.Get;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Registry;
 using System.Reflection;
 using static Orquestra.Utils.Fixtures.Get;
@@ -68,25 +67,6 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     public ActionResult GetCountry()
     {
         List<string> output = GetCountries();
-
-        return Ok(output);
-    }
-
-    [ResponseCache(Duration = SystemConsts.Time.OneHour)]
-    [AllowAnonymous]
-    [HttpGet("GetModuleEnum")]
-    public ActionResult GetModuleEnum()
-    {
-        var output = Enum.GetValues<ModuleEnum>().
-            Select(x => new
-            {
-                Id = (int)x,
-                Module = x,
-                Name = x.ToString(),
-                Description = GetEnumDesc(x),
-                Price = ModuleHelper.GetOriginalPrice(x),
-                Discount = ModuleHelper.GetDiscount(x)
-            }).ToList();
 
         return Ok(output);
     }

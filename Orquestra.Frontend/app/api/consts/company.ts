@@ -10,10 +10,7 @@ export const CONSTS_COMPANY = {
     put: `${BASE}/${controller}`,
     getAll: `${BASE}/${controller}/GetAll`,
     getAllByUserId: `${BASE}/${controller}/GetAllByUserId`,
-    verify: `${BASE}/${controller}/Verify`,
-    getModules: `${BASE}/${controller}/Module`,
-    updateModules: `${BASE}/${controller}/Module`,
-    getModulesInfo: `${BASE}/${controller}/Module/GetInfo`
+    verify: `${BASE}/${controller}/Verify`
 };
 
 export default interface iCompanyOutput {
@@ -40,10 +37,9 @@ export default interface iCompanyOutput {
     companySituation?: string;
     planStartDate?: Date | string;
     planEndDate?: Date | string;
-    companyModules?: string[];
+    planType?: string;
 
     // Extras;
-    companyModulesStr?: string[];
     status?: boolean;
     createdDate?: Date;
     companyUsers?: iCompanyUser[];
@@ -53,14 +49,4 @@ export default interface iCompanyOutput {
     userModules?: string[];
     userModulesStr?: string[];
     isAdm?: boolean;
-}
-
-export interface iCalculatePriceModuleCompanyOutput {
-    companyModule: string;
-    companyModuleStr: string;
-    companyAlreadyHasThisModule: boolean;
-    originalPrice: number;
-    discountPercentage: number;
-    discountedPrice: number;
-    proportionalPrice: number;
 }

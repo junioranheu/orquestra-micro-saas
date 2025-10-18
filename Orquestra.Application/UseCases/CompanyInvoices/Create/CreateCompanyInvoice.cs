@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Orquestra.Application.UseCases.Companies.CalculatePrice;
-using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
@@ -16,41 +14,34 @@ namespace Orquestra.Application.UseCases.CompanyInvoices.Create;
 public sealed class CreateCompanyInvoice(
         Context context,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
-        ICalculatePriceModuleCompany calculatePriceModuleCompany,
         IEnvService env,
         IEmailService emailService
     ) : ICreateCompanyInvoice
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
-    private readonly ICalculatePriceModuleCompany _calculatePriceModuleCompany = calculatePriceModuleCompany;
     private readonly IEnvService _env = env;
     private readonly IEmailService _emailService = emailService;
 
-    public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, ModuleEnum[] modules, bool isCreateCompany = false)
+    public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, PlanTypeEnum planType, bool isCreateCompany = false)
     {
-        if (modules is null || modules.Length == 0)
+        if (planType == 0)
         {
-            return null;
+            throw new ArgumentException($"O parâmetro {planType} está vazio.");
         }
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        (Company? company, ModuleEnum[] newModules) = await CheckIfCompanyAlreadyHasModuleOrInvoice(companyId, modules, isCreateCompany);
+        (decimal price, int _) = PlanTypeHelper.GetValues(planType);
 
-        if (company is null || newModules is null || newModules.Length == 0)
-        {
-            return null;
-        }
-
-        (List<string> modulesStr, decimal finalPriceUsingProportionalPrice) = await CalculateInvoicePriceUsingProportionalPrice(userIdAuth, companyId, newModules);
+        Company company = await GetCompany(companyId);
 
         CompanyInvoice invoice = new()
         {
             CompanyId = companyId,
-            Modules = modules,
-            Amount = finalPriceUsingProportionalPrice,
-            Description = modules.Length > 1 ? $"Adição dos módulos: {string.Join("; ", modulesStr)}" : $"Adição do módulo: {string.Join("; ", modulesStr)}",
+            PlanType = planType,
+            Amount = price,
+            Description = string.Empty,
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
         };
 
@@ -63,35 +54,11 @@ public sealed class CreateCompanyInvoice(
     }
 
     #region extras
-    private async Task<(Company? company, ModuleEnum[] newModules)> CheckIfCompanyAlreadyHasModuleOrInvoice(Guid companyId, ModuleEnum[] modules, bool isCreateCompany)
+    private async Task<Company> GetCompany(Guid companyId)
     {
-        Company? company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
+        Company company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
-        if (isCreateCompany)
-        {
-            return (company, modules);
-        }
-
-        HashSet<ModuleEnum> existingCompanyModules = [.. company?.CompanyModules ?? []];
-        ModuleEnum[] newModules = [.. modules.Where(x => !existingCompanyModules.Contains(x))];
-
-        return (company, newModules);
-    }
-
-    private async Task<(List<string> modulesStr, decimal finalPriceUsingProportionalPrice)> CalculateInvoicePriceUsingProportionalPrice(Guid userIdAuth, Guid companyId, ModuleEnum[] modules)
-    {
-        List<CalculatePriceModuleCompanyOutput> output = await _calculatePriceModuleCompany.Execute(userIdAuth, companyId, modules);
-
-        List<string> modulesStr = [];
-        decimal finalPriceUsingProportionalPrice = 0;
-
-        foreach (var item in output)
-        {
-            modulesStr.Add(item.CompanyModuleStr);
-            finalPriceUsingProportionalPrice += item.ProportionalPrice;
-        }
-
-        return (modulesStr, finalPriceUsingProportionalPrice);
+        return company;
     }
 
     private async Task SendEmail(Company company, CompanyInvoice invoice)

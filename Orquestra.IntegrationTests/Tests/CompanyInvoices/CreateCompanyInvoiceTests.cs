@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
@@ -44,103 +43,17 @@ public sealed class CreateCompanyInvoiceTests
 
         CreateCompanyInvoice sut = CreateSut(context, adminUser);
 
-        ModuleEnum[] modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
-
         // Act;
-        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
+        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, PlanTypeEnum.Basic);
 
         // Assert;
         Assert.NotNull(invoice);
 
-        List<string> modulesList = [.. modules.Select(x => GetEnumDesc(x))];
-
-        foreach (var module in modules)
-        {
-            Assert.Contains(GetEnumDesc(module), invoice.Description);
-        }
-
         Assert.Equal(company.CompanyId, invoice.CompanyId);
         Assert.Equal(CompanyInvoiceSituationEnum.Pending, invoice.CompanyInvoiceSituation);
 
-        decimal expected = ModuleHelper.GetPrice(ModuleEnum.Sales) + ModuleHelper.GetPrice(ModuleEnum.Scheduling);
-        Assert.True(invoice?.Amount <= expected, $"Esperado que {invoice.Amount} seja menor ou igual a {expected} (por descontos e valor proporcional).");
-
         CompanyInvoice? dbInvoice = await context.CompanyInvoices.FirstOrDefaultAsync(x => x.CompanyInvoiceId == invoice.CompanyInvoiceId);
         Assert.NotNull(dbInvoice);
-    }
-
-    [Fact]
-    public async Task Execute_ShouldCreateInvoice_WithSingleModule_AndProperDescription()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        User adminUser = UserMock.Create();
-        await Fixture.Save(context, adminUser);
-
-        CompanyUser adminCompanyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = adminUser.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator,
-            Status = true
-        };
-
-        await Fixture.Save(context, adminCompanyUser);
-
-        CreateCompanyInvoice sut = CreateSut(context, adminUser);
-
-        ModuleEnum[] modules = [ModuleEnum.Sales];
-
-        // Act;
-        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
-
-        List<string> modulesList = [.. modules.Select(x => GetEnumDesc(x))];
-
-        // Assert;
-        foreach (var module in modules)
-        {
-            Assert.Contains(GetEnumDesc(module), invoice?.Description);
-        }
-
-        decimal expected = ModuleHelper.GetPrice(ModuleEnum.Sales);
-        Assert.True(invoice?.Amount <= expected, $"Esperado que {invoice.Amount} seja menor ou igual a {expected} (por descontos e valor proporcional).");
-    }
-
-    [Fact]
-    public async Task Execute_ShouldReturnNull_WhenModulesAreEmpty()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
-        User adminUser = UserMock.Create();
-        await Fixture.Save(context, adminUser);
-
-        CompanyUser adminCompanyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = adminUser.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator,
-            Status = true
-        };
-
-        await Fixture.Save(context, adminCompanyUser);
-
-        CreateCompanyInvoice sut = CreateSut(context, adminUser);
-
-        ModuleEnum[] modules = [];
-
-        // Act;
-        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules);
-
-        // Act & Assert;
-        Assert.Null(invoice);
     }
 
     [Fact]
@@ -168,7 +81,7 @@ public sealed class CreateCompanyInvoiceTests
         CreateCompanyInvoice sut = CreateSut(context, memberUser);
 
         // Act & Assert;
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(memberUser.UserId, company.CompanyId, [ModuleEnum.Sales]));
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(memberUser.UserId, company.CompanyId, PlanTypeEnum.Basic));
     }
 
     [Fact]
@@ -178,7 +91,7 @@ public sealed class CreateCompanyInvoiceTests
         Context context = Fixture.CreateContext();
 
         Company company = CompanyMock.Create();
-        company.CompanyModules = [ModuleEnum.Sales];
+        company.PlanType = PlanTypeEnum.Basic;
         await Fixture.Save(context, company);
 
         User adminUser = UserMock.Create();
@@ -194,53 +107,15 @@ public sealed class CreateCompanyInvoiceTests
 
         await Fixture.Save(context, adminCompanyUser);
 
-        ModuleEnum[] modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
-
         CreateCompanyInvoice sut = CreateSut(context, adminUser);
 
         // Act;
-        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules, isCreateCompany: true);
+        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, PlanTypeEnum.Basic, isCreateCompany: true);
 
         // Assert;
         Assert.NotNull(invoice);
         Assert.Equal(company.CompanyId, invoice.CompanyId);
-        Assert.Contains(GetEnumDesc(ModuleEnum.Sales), invoice.Description);
-        Assert.Contains(GetEnumDesc(ModuleEnum.Sales), invoice.Description);
         Assert.Equal(CompanyInvoiceSituationEnum.Pending, invoice.CompanyInvoiceSituation);
-    }
-
-    [Fact]
-    public async Task Execute_ShouldReturnNull_WhenAllModulesAlreadyExist_AndIsCreateCompanyFalse()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        Company company = CompanyMock.Create();
-        company.CompanyModules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
-        await Fixture.Save(context, company);
-
-        User adminUser = UserMock.Create();
-        await Fixture.Save(context, adminUser);
-
-        CompanyUser adminCompanyUser = new()
-        {
-            CompanyId = company.CompanyId,
-            UserId = adminUser.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator,
-            Status = true
-        };
-
-        await Fixture.Save(context, adminCompanyUser);
-
-        ModuleEnum[] modules = [ModuleEnum.Sales, ModuleEnum.Scheduling];
-
-        CreateCompanyInvoice sut = CreateSut(context, adminUser);
-
-        // Act;
-        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules, isCreateCompany: false);
-
-        // Assert;
-        Assert.Null(invoice);
     }
 
     [Fact]
@@ -257,7 +132,7 @@ public sealed class CreateCompanyInvoiceTests
         CreateCompanyInvoice sut = CreateSut(context, adminUser);
 
         // Act & Assert;
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(adminUser.UserId, Guid.NewGuid(), modules));
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(adminUser.UserId, Guid.NewGuid(), PlanTypeEnum.Basic));
     }
 
     [Fact]
@@ -289,15 +164,14 @@ public sealed class CreateCompanyInvoiceTests
 
         CreateCompanyInvoice sut = CreateSut(context, adminUser, emailServiceMock);
 
-        // Act
-        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, modules, isCreateCompany: true);
+        // Act;
+        CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, PlanTypeEnum.Basic, isCreateCompany: true);
 
-        // Assert
+        // Assert;
         Assert.NotNull(invoice);
         Assert.NotNull(capturedValues);
         Assert.Equal(company.Name, capturedValues!["[CompanyName]"]);
         Assert.Equal(invoice.Amount.ToString(), capturedValues!["[Price]"]);
-        Assert.Contains(GetEnumDesc(ModuleEnum.Scheduling), capturedValues!["[ModuleDescription]"]);
 
         emailServiceMock.Verify(
             x => x.SendEmail(
@@ -320,11 +194,10 @@ public sealed class CreateCompanyInvoiceTests
         EnvService envService = new(env, config);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-        CalculatePriceModuleCompany calculatePriceModuleCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
         emailServiceMock ??= Fixture.CreateEmailService();
 
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePriceModuleCompany, envService, emailServiceMock.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
 
         return createCompanyInvoice;

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Orquestra.Application.UseCases.Companies.Base;
-using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.Verify;
@@ -63,7 +62,7 @@ public sealed class EndToEndTests
         Assert.NotNull(dbUser);
         Assert.Equal(newUserInput.FullName, dbUser.FullName);
 
-        // ---------- 1.2) VERIFY USER
+        // ---------- 1.2) VERIFY USER;
         Verification? userVerification = await context.Verifications.AsNoTracking().
         FirstOrDefaultAsync(x =>
             x.EntityType == nameof(User) &&
@@ -97,8 +96,8 @@ public sealed class EndToEndTests
             State = "SP",
             ZipCode = "02726090",
             Country = "Brasil",
-            CompanyType = CompanyTypeEnum.Academia,
-            CompanyModules = [ModuleEnum.Scheduling]
+            CompanyType = CompanyTypeEnum.Freelancer,
+            PlanType = PlanTypeEnum.Basic
         };
 
         CompanyOutput createdCompanyOutput = await createCompany.Execute(createdUser.UserId, companyInput);
@@ -107,7 +106,7 @@ public sealed class EndToEndTests
         Company? dbCompany = await context.Companies.AsNoTracking().FirstOrDefaultAsync(c => c.Name == companyInput.Name);
         Assert.NotNull(dbCompany);
         Assert.Equal(companyInput.Email, dbCompany.Email);
-        Assert.Contains(ModuleEnum.Scheduling, dbCompany.CompanyModules ?? []);
+        Assert.Equal(PlanTypeEnum.Basic, dbCompany.PlanType);
 
         // Verify CompanyUser (first admin) exists and is linked;
         CompanyUser? dbCompanyUser = await context.CompanyUsers.FirstOrDefaultAsync(cu => cu.CompanyId == dbCompany.CompanyId && cu.UserId == createdUser.UserId);
@@ -193,7 +192,7 @@ public sealed class EndToEndTests
         CreateCompanyInvoice createCompanyInvoice = CreateCompanyInvoiceSut(context, createdUserAdapt);
 
         ModuleEnum[] newModules = [ModuleEnum.Scheduling];
-        CompanyInvoice? invoice = await createCompanyInvoice.Execute(createdUser.UserId, dbCompany.CompanyId, newModules, isCreateCompany: true);
+        CompanyInvoice? invoice = await createCompanyInvoice.Execute(createdUser.UserId, dbCompany.CompanyId, dbCompany.PlanType.GetValueOrDefault(), isCreateCompany: true);
 
         // Invoice deve existir (não nulo) e persistido;
         Assert.NotNull(invoice);
@@ -204,16 +203,10 @@ public sealed class EndToEndTests
         // 7.1) Invoice amount > 0;
         Assert.True(invoice.Amount > 0, "Invoice amount should be greater than 0");
 
-        // 7.2) Invoice description contém todos os módulos;
-        foreach (var module in newModules)
-        {
-            Assert.Contains(GetEnumDesc(module), invoice.Description);
-        }
-
-        // 7.3) Verifica que foi chamado pelo menos X vezes;
+        // 7.2) Verifica que foi chamado pelo menos X vezes;
         emailServiceMock.Verify(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>?>()), Times.AtLeast(4));
 
-        // 7.4) Verifica chamada específica para invoice;
+        // 7.3) Verifica chamada específica para invoice;
         emailServiceMock.Verify(x => x.SendEmail(It.Is<string>(to => to == dbCompany.Email), It.Is<string>(subject => subject.Contains("Nova fatura")), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>?>()), Times.Once);
     }
 
@@ -244,8 +237,7 @@ public sealed class EndToEndTests
         var getCompany = new Application.UseCases.Companies.Get.GetCompany(context, checkIfUserIsLinkedCompanyUser);
         InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
-        CalculatePriceModuleCompany calculatePrice = new(context, checkIfUserIsLinkedCompanyUser);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, calculatePrice, envService, emailServiceMock.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
         CreateCompany createCompany = new(new CompanyBaseDependencies(
            context,
@@ -298,11 +290,10 @@ public sealed class EndToEndTests
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(currentUser);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
-        CalculatePriceModuleCompany calculatePrice = new(context, checkIfUserIsLinked);
         EnvService envService = new(Fixture.CreateDevelopmentEnvironment(), Fixture.CreateConfiguration());
         Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
 
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinked, calculatePrice, envService, emailServiceMock.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinked, envService, emailServiceMock.Object);
 
         return createCompanyInvoice;
     }

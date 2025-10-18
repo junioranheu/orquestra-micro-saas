@@ -7,7 +7,7 @@ interface iProps {
     enumName: 'CompanyInvoiceSituationEnum' | 'CompanySituationEnum' | 'CompanyTypeEnum' |
     'CompanyUserRoleEnum' | 'LogTypeEnum' | 'ModuleEnum' |
     'PaymentTypeEnum' | 'ScheduleStatusEnum' | 'UserRoleEnum' |
-    'VerificationTypeEnum'; // Sempre que necessário, adicionar os novos enums aqui;
+    'VerificationTypeEnum' | 'PlanTypeEnum'; // Sempre que necessário, adicionar os novos enums aqui;
 }
 
 export default function useApiGetCompanySituationEnum({ enumName }: iProps): iDropdownOption[] | undefined {

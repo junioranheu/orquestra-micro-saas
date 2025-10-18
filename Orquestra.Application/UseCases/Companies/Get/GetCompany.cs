@@ -32,7 +32,6 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         var output = result.Adapt<CompanyOutput>();
 
-        FillModulesStr([output]);
         await GetAmounfOfClients([output]);
         GetEnumsDesc([output]);
         NormalizeLogo([result], [output]);
@@ -51,7 +50,6 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         var output = result.Adapt<List<CompanyOutput>>();
 
-        FillModulesStr(output);
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
         NormalizeLogo(result, output);
@@ -83,7 +81,6 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         var output = result.Adapt<List<CompanyOutput>>();
 
-        FillModulesStr(output);
         await GetAmounfOfClients(output);
         GetEnumsDesc(output);
         NormalizeLogo(result, output);
@@ -93,31 +90,6 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
     }
 
     #region extras
-    private static void FillModulesStr(List<CompanyOutput>? output)
-    {
-        if (output is null || output.Count == 0)
-        {
-            return;
-        }
-
-        foreach (var company in output)
-        {
-            if (company.CompanyModules is null || company.CompanyModules.Length == 0)
-            {
-                continue;
-            }
-
-            List<string> modulesStr = [];
-
-            foreach (var module in company.CompanyModules)
-            {
-                modulesStr.Add(GetEnumDesc(module));
-            }
-
-            company.CompanyModulesStr = modulesStr;
-        }
-    }
-
     private async Task GetAmounfOfClients(List<CompanyOutput>? output)
     {
         if (output is null || output.Count == 0)

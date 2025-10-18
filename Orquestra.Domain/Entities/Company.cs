@@ -54,13 +54,13 @@ public sealed class Company: Audit
     #endregion
 
     #region subscription
-    public CompanySituationEnum CompanySituation { get; set; } = CompanySituationEnum.RegisteredButWithoutAnyModules;
+    public CompanySituationEnum CompanySituation { get; set; } = CompanySituationEnum.PendingPayment;
 
     public DateTime? PlanStartDate { get; set; } = null;
 
     public DateTime? PlanEndDate { get; set; } = null;
 
-    public ModuleEnum[]? CompanyModules { get; set; } = [];
+    public PlanTypeEnum? PlanType { get; set; } = PlanTypeEnum.Free;
     #endregion
 
     public IEnumerable<CompanyUser>? CompanyUsers { get; init; }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.Companies.Base;
-using Orquestra.Application.UseCases.Companies.CalculatePrice;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
-using Orquestra.Application.UseCases.Companies.GetModule;
 using Orquestra.Application.UseCases.Companies.Update;
-using Orquestra.Application.UseCases.Companies.UpdateModule;
+using Orquestra.Application.UseCases.Companies.UpdatePlanType;
 using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
@@ -27,9 +25,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateCompany, CreateCompany>();
         services.AddScoped<IUpdateCompany, UpdateCompany>();
         services.AddScoped<IVerifyCompany, VerifyCompany>();
-        services.AddScoped<IGetModuleCompany, GetModuleCompany>();
-        services.AddScoped<IUpdateModuleCompany, UpdateModuleCompany>();
-        services.AddScoped<ICalculatePriceModuleCompany, CalculatePriceModuleCompany>();
+        services.AddScoped<IUpdatePlanTypeCompany, UpdatePlanTypeCompany>();
 
         services.AddScoped(x => new CompanyBaseDependencies(
            x.GetRequiredService<Context>(),

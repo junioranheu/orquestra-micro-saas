@@ -637,7 +637,7 @@ public sealed class GetTests
     }
 
     [Fact]
-    public void Deve_Converter_Bytes_Para_Base64_Com_ContentType_Valido()
+    public void Should_Convert_Bytes_To_Base64_With_Valid_ContentType()
     {
         // Arrange;
         byte[] bytes = [1, 2, 3];
@@ -652,7 +652,7 @@ public sealed class GetTests
     }
 
     [Fact]
-    public void Deve_Usar_OctetStream_Quando_ContentType_For_Null()
+    public void Should_Use_OctetStream_When_ContentType_Is_Null()
     {
         // Arrange;
         byte[] bytes = [1, 2, 3];
@@ -666,7 +666,7 @@ public sealed class GetTests
     }
 
     [Fact]
-    public void Deve_Usar_OctetStream_Quando_ContentType_For_Vazio()
+    public void Should_Use_OctetStream_When_ContentType_Is_Empty()
     {
         // Arrange;
         byte[] bytes = [4, 5, 6];
@@ -680,20 +680,61 @@ public sealed class GetTests
     }
 
     [Fact]
-    public void Deve_Lancar_Excecao_Quando_Bytes_For_Null()
+    public void Should_Throw_Exception_When_Bytes_Are_Null()
     {
         // Act & Assert;
         Assert.Throws<ArgumentException>(() => ConvertBytesToBase64(null!, "image/png"));
     }
 
     [Fact]
-    public void Deve_Lancar_Excecao_Quando_Bytes_For_Vazio()
+    public void Should_Throw_Exception_When_Bytes_Are_Empty()
     {
         // Arrange;
-        byte[] vazio = [];
+        byte[] empty = [];
 
         // Act & Assert;
-        Assert.Throws<ArgumentException>(() => ConvertBytesToBase64(vazio, "image/png"));
+        Assert.Throws<ArgumentException>(() => ConvertBytesToBase64(empty, "image/png"));
+    }
+
+    [Fact]
+    public void Should_Return_All_Enum_Values_With_Descriptions_When_Available()
+    {
+        // Act;
+        var result = GetEnumListWithDescriptions<TestEnumWithDescription>();
+
+        // Assert;
+        Assert.Equal(3, result.Count);
+
+        Assert.Contains(result, x => x.Value == TestEnumWithDescription.First && x.Description == "First value");
+        Assert.Contains(result, x => x.Value == TestEnumWithDescription.Second && x.Description == "Second value");
+        Assert.Contains(result, x => x.Value == TestEnumWithDescription.NoDescription && x.Description == "NoDescription");
+    }
+
+    [Fact]
+    public void Should_Use_Enum_Name_As_Description_When_No_DescriptionAttribute_Is_Present()
+    {
+        // Act;
+        var result = GetEnumListWithDescriptions<TestEnumWithoutDescription>();
+
+        // Assert;
+        Assert.Equal(3, result.Count);
+
+        foreach (var (_, name, description) in result)
+        {
+            Assert.Equal(name, description);
+        }
+    }
+
+    [Fact]
+    public void Should_Maintain_Enum_Order()
+    {
+        // Act;
+        var result = GetEnumListWithDescriptions<TestEnumWithDescription>();
+
+        // Assert;
+        Assert.Equal(TestEnumWithDescription.First, result[0].Value);
+        Assert.Equal(TestEnumWithDescription.Second, result[1].Value);
+        Assert.Equal(TestEnumWithDescription.NoDescription, result[2].Value);
     }
 
     #region helpers
@@ -706,6 +747,24 @@ public sealed class GetTests
         Second,
 
         Third
+    }
+
+    private enum TestEnumWithDescription
+    {
+        [Description("First value")]
+        First,
+
+        [Description("Second value")]
+        Second,
+
+        NoDescription
+    }
+
+    private enum TestEnumWithoutDescription
+    {
+        One,
+        Two,
+        Three
     }
     #endregion
 }

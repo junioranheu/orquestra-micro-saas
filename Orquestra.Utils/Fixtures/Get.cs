@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -622,5 +621,23 @@ public static class Get
         string base64 = $"data:{finalContentType};base64,{Convert.ToBase64String(bytes)}";
 
         return base64;
+    }
+
+    /// <summary>
+    /// Retorna uma lista contendo todos os valores de um enum, juntamente com seus nomes e descrições.
+    /// </summary>
+    /// <typeparam name="TEnum">O tipo do enum a ser processado.</typeparam>
+    /// <returns>
+    /// Uma lista de tuplas no formato: (Valor, Nome, Descrição).
+    /// Caso o enum não tenha atributo <see cref="DescriptionAttribute"/>, a descrição será igual ao nome.
+    /// </returns>
+    public static List<(TEnum Value, string Name, string Description)> GetEnumListWithDescriptions<TEnum>() where TEnum : struct, Enum
+    {
+        return [.. Enum.GetValues<TEnum>().Cast<TEnum>().Select(value => {
+                  string name = value.ToString();
+                  string description = value.GetType().GetField(name)?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? name;
+
+                  return (value, name, description);
+               })];
     }
 }

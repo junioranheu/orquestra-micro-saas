@@ -7,7 +7,6 @@ export const CONSTS_UTILITY = {
     getState: `${BASE}/${controller}/GetState`,
     getCity: `${BASE}/${controller}/GetCity`,
     getCountry: `${BASE}/${controller}/GetCountry`,
-    getModuleEnum: `${BASE}/${controller}/GetModuleEnum`,
     getEnum: `${BASE}/${controller}/GetEnum`,
 };
 

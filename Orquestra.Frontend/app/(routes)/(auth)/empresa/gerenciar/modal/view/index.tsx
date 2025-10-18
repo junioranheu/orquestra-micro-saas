@@ -38,6 +38,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
     const companyTypeEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyTypeEnum' });
     const companySituationEnum = useApiGetCompanySituationEnum({ enumName: 'CompanySituationEnum' });
+    const planTypeEnum = useApiGetCompanySituationEnum({ enumName: 'PlanTypeEnum' });
 
     const [countries, setCountries] = useState<string[] | undefined>([]);
     useApiRequestToSetterOnUrlChange<string[]>({ apiUrlRequest: CONSTS_UTILITY.getCountry, setter: setCountries });
@@ -64,10 +65,10 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         color: '',
 
         companySituation: '',
-
         planStartDate: SYSTEM.EMPTY_DATE,
         planEndDate: SYSTEM.EMPTY_DATE,
-        companyModulesStr: [],
+        planType: '',
+
         status: false
     });
 
@@ -114,7 +115,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
             planStartDate: handleFormatDateToInputValue(company?.planStartDate ? new Date(company?.planStartDate) : new Date()),
             planEndDate: handleFormatDateToInputValue(company?.planEndDate ? new Date(company?.planEndDate) : new Date()),
-            companyModulesStr: company?.companyModulesStr ?? [],
+            planType: company?.planType,
             status: company?.status
         });
     }, [isModalOpen, type, company, setIsModalOpen, handleClose]);
@@ -270,6 +271,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                         {
                             type === 'edit' && (
                                 <Fragment>
+                                    <Dropdown title='Tipo do plano' options={planTypeEnum ?? []} selectedOption={planTypeEnum?.find(x => x.value.toString() === formData.planType?.toString())} isDisabled={true} />
                                     <Dropdown title='Situação' options={companySituationEnum ?? []} selectedOption={companySituationEnum?.find(x => x.value.toString() === formData.companySituation?.toString())} isDisabled={true} />
 
                                     {
@@ -277,11 +279,6 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                                             <Fragment>
                                                 <InputMask title='Início do plano' type='date' fieldName='planStartDate' formData={formData} setFormData={setFormData} isDisabled={true} />
                                                 <InputMask title='Fim do plano' type='date' fieldName='planEndDate' formData={formData} setFormData={setFormData} isDisabled={true} />
-
-                                                <div className={styles.div}>
-                                                    <label>Módulos</label>
-                                                    <textarea className={styles.textarea} rows={3} value={formData.companyModulesStr?.join('\n') ?? ''} readOnly={true} />
-                                                </div>
                                             </Fragment>
                                         )
                                     }

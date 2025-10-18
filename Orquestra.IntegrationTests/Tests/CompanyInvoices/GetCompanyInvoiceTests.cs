@@ -38,7 +38,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Scheduling],
+            PlanType = PlanTypeEnum.Premium,
             Amount = 199.90m,
             Description = "Plano Premium"
         };
@@ -111,7 +111,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Scheduling],
+            PlanType = PlanTypeEnum.Basic,
             Amount = 49.90m,
             Description = "Plano Básico"
         };
@@ -151,9 +151,9 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Scheduling],
+            PlanType = PlanTypeEnum.Basic,
             Amount = 79.90m,
-            Description = "Plano Intermediário"
+            Description = "Plano Básico"
         };
 
         await Fixture.Save(context, invoice);
@@ -190,7 +190,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Scheduling],
+            PlanType = PlanTypeEnum.Premium,
             Amount = 199.90m,
             Description = "Plano Premium",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
@@ -202,7 +202,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Sales],
+            PlanType = PlanTypeEnum.Basic,
             Amount = 49.90m,
             Description = "Plano Básico",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid
@@ -247,7 +247,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Scheduling],
+            PlanType = PlanTypeEnum.Premium,
             Amount = 199.90m,
             Description = "Plano Premium",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
@@ -259,7 +259,7 @@ public sealed class GetCompanyInvoiceTests
         {
             CompanyInvoiceId = Guid.NewGuid(),
             CompanyId = company.CompanyId,
-            Modules = [ModuleEnum.Sales],
+            PlanType = PlanTypeEnum.Basic,
             Amount = 49.90m,
             Description = "Plano Básico",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid

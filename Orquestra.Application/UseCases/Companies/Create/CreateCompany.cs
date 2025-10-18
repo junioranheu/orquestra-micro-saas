@@ -44,7 +44,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         await SendEmail(company, verification, user);
 
         // Criar cobrança;
-        await _createCompanyInvoice.Execute(userIdAuth, companyId: company.CompanyId, modules: input.CompanyModules ?? [], isCreateCompany: true);
+        await _createCompanyInvoice.Execute(userIdAuth, companyId: company.CompanyId, planType: input.PlanType, isCreateCompany: true);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -56,18 +56,10 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
     {
         var company = input.Adapt<Company>();
 
-        if (input.CompanyModules is null || input.CompanyModules.Length == 0)
-        {
-            company.CompanySituation = CompanySituationEnum.RegisteredButWithoutAnyModules;
-            company.PlanStartDate = null;
-            company.PlanEndDate = null;
-        }
-        else
-        {
-            company.CompanySituation = CompanySituationEnum.PendingPayment;
-            company.PlanStartDate = GetDate();
-            company.PlanEndDate = GetDate().AddDays(SystemConsts.Time.PlanDurationDays);
-        }
+        company.PlanType = input.PlanType;
+        company.CompanySituation = CompanySituationEnum.PendingPayment;
+        company.PlanStartDate = GetDate();
+        company.PlanEndDate = GetDate().AddDays(SystemConsts.Time.PlanDurationDays);
 
         if (input.LogoFormFile is not null)
         {

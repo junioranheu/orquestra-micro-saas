@@ -31,14 +31,16 @@ public sealed class CompanyInput
     public string? Country { get; set; } = string.Empty;
     #endregion
 
+    #region subscription
+    public PlanTypeEnum PlanType { get; set; } = PlanTypeEnum.Free;
+    #endregion
+
     #region customization
     public IFormFile? LogoFormFile { get; set; }
 
     public string? LogoContentType { get; set; }
 
     public string? Color { get; set; } = string.Empty;
-
-    public ModuleEnum[]? CompanyModules { get; set; } = [];
     #endregion
 
     public bool Status { get; set; }
