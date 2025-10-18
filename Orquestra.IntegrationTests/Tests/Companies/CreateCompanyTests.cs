@@ -201,34 +201,6 @@ public sealed class CreateCompanyTests
         Assert.NotNull(createdCompany.PlanEndDate);
     }
 
-    [Fact]
-    public async Task Execute_ShouldCallCreateCompanyInvoice()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        Mock<IEmailService> emailService = Fixture.CreateEmailService();
-
-        CreateCompany sut = CreateSut(context, user, emailService);
-
-        Company company = CompanyMock.Create();
-        company.PlanType = PlanTypeEnum.Basic;
-
-        var input = company.Adapt<CompanyInput>();
-
-        // Act;
-        await sut.Execute(user.UserId, input);
-
-        // Assert;
-        CompanyInvoice? invoice = await context.CompanyInvoices.AsNoTracking().FirstOrDefaultAsync(i => i.CompanyId == company.CompanyId);
-
-        Assert.NotNull(invoice);
-        Assert.True(invoice.Amount > 0);
-    }
-
     [Theory]
     [InlineData(UserRoleEnum.Common)]
     [InlineData(UserRoleEnum.Maintainer)]

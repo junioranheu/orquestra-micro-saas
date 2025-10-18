@@ -109,11 +109,18 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         }
         #endregion
 
+        #region subscription
+        if (input.PlanType == 0)
+        {
+            throw new ArgumentException("O tipo do plano não é válido. Insira um plano válido, por favor.");
+        }
+        #endregion
+
         #region customization
         if (input.LogoFormFile is not null)
         {
             ValidateMaxSizeFile(file: input.LogoFormFile, maxMegabytes: 3);
-        } 
+        }
         #endregion
 
         #region status

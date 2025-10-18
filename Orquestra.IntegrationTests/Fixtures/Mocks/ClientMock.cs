@@ -14,7 +14,7 @@ public static class ClientMock
             ClientId = Guid.NewGuid(),
             FullName = $"{GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)} {GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)}",
             Email = $"{GetRandomString(charLength: GetRandomNumber(5, 15))}@gmail.com",
-            CPF = GetRandomString(charLength: 11),
+            CPF = "858.136.140-44",
             Address = GetRandomString(charLength: GetRandomNumber(5, 15)),
             AddressNumber = "480",
             City = GetRandomString(charLength: GetRandomNumber(5, 15)),

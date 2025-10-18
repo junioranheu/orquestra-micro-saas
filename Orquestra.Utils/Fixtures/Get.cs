@@ -640,4 +640,50 @@ public static class Get
                   return (value, name, description);
                })];
     }
+
+    /// <summary>
+    /// Valida se um CPF (Cadastro de Pessoa Física) é válido.
+    /// O método remove todos os caracteres não numéricos, verifica se o CPF possui 11 dígitos,
+    /// descarta sequências com todos os números iguais (como 11111111111)
+    /// e calcula os dois dígitos verificadores conforme a regra oficial do CPF.
+    /// Retorna <c>true</c> se o CPF for válido ou <c>false</c> caso contrário.
+    /// </summary>
+    public static bool IsValidCPF(string? cpf)
+    {
+        if (string.IsNullOrWhiteSpace(cpf)) { 
+            return false;
+        }
+
+        // Remove everything except digits;
+        string digitsOnly = new([.. cpf.Where(char.IsDigit)]);
+
+        // Must have 11 digits; 
+        if (digitsOnly.Length != 11) { 
+            return false;
+        }
+
+        // Invalid if all digits are equal (e.g., 11111111111);
+        if (digitsOnly.Distinct().Count() == 1) { 
+            return false;
+        }
+
+        // Calculate first check digit;
+        int[] firstMultiplier = [10, 9, 8, 7, 6, 5, 4, 3, 2];
+        int[] secondMultiplier = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+
+        var tempCpf = digitsOnly[..9];
+        int sum = tempCpf.Select((t, i) => (t - '0') * firstMultiplier[i]).Sum();
+        int remainder = sum % 11;
+        int firstCheckDigit = remainder < 2 ? 0 : 11 - remainder;
+
+        tempCpf += firstCheckDigit;
+        sum = tempCpf.Select((t, i) => (t - '0') * secondMultiplier[i]).Sum();
+        remainder = sum % 11;
+        int secondCheckDigit = remainder < 2 ? 0 : 11 - remainder;
+
+        string checkDigits = $"{firstCheckDigit}{secondCheckDigit}";
+        bool isValid = digitsOnly.EndsWith(checkDigits);
+
+        return isValid;
+    }
 }

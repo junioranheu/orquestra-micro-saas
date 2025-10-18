@@ -737,6 +737,65 @@ public sealed class GetTests
         Assert.Equal(TestEnumWithDescription.NoDescription, result[2].Value);
     }
 
+    [Theory]
+    [InlineData("529.982.247-25")]
+    [InlineData("52998224725")]
+    [InlineData("111.444.777-35")]
+    [InlineData("11144477735")]
+    public void Should_Return_True_For_Valid_CPFs(string cpf)
+    {
+        // Act;
+        bool result = IsValidCPF(cpf);
+
+        // Assert;
+        Assert.True(result);
+    }
+
+    [Theory]
+    [InlineData("123.456.789-00")]
+    [InlineData("00000000000")]
+    [InlineData("11111111111")]
+    [InlineData("22222222222")]
+    [InlineData("52998224724")]
+    public void Should_Return_False_For_Invalid_CPFs(string cpf)
+    {
+        // Act;
+        bool result = IsValidCPF(cpf);
+
+        // Assert;
+        Assert.False(result);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData(" ")]
+    [InlineData("529.982.247")] // incomplete
+    public void Should_Return_False_For_Null_Or_Invalid_Length(string? cpf)
+    {
+        // Act;
+        bool result = IsValidCPF(cpf);
+
+        // Assert;
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Should_Remove_NonNumeric_Characters_Before_Validation()
+    {
+        // Arrange;
+        string formatted = "529.982.247-25";
+        string unformatted = "52998224725";
+
+        // Act;
+        bool result1 = IsValidCPF(formatted);
+        bool result2 = IsValidCPF(unformatted);
+
+        // Assert;
+        Assert.True(result1);
+        Assert.True(result2);
+    }
+
     #region helpers
     private enum TestEnum
     {

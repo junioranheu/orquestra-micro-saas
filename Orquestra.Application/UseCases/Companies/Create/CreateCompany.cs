@@ -1,7 +1,6 @@
 ﻿using Mapster;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
-using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.Users.Get;
@@ -27,7 +26,6 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = deps.UpdateCurrentMainCompanyUser;
     private readonly IGetUser _getUser = deps.GetUser;
     private readonly IEmailService _emailService = deps.EmailService;
-    private readonly ICreateCompanyInvoice _createCompanyInvoice = deps.CreateCompanyInvoice;
 
     public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
     {
@@ -42,9 +40,6 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         // E-mail;
         Verification verification = await SaveVerification(company);
         await SendEmail(company, verification, user);
-
-        // Criar cobrança;
-        await _createCompanyInvoice.Execute(userIdAuth, companyId: company.CompanyId, planType: input.PlanType, isCreateCompany: true);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -77,7 +72,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         await _context.AddAsync(company);
         await _context.SaveChangesAsync();
 
-        // Forçar a atualização para o false (burlar o Context/SaveChangesAsync);
+        // Forçar a atualização para o false;
         company.Status = false;
         _context.Update(company);
         await _context.SaveChangesAsync();

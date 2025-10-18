@@ -38,6 +38,13 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
             input.Email = GetNormalizedLowerStr(input.Email);
         }
 
+        bool checkCPF = IsValidCPF(input.CPF);
+
+        if (!checkCPF)
+        {
+            throw new ArgumentException("O CPF não é válido. Insira um CPF válido, por favor.");
+        }
+
         bool checkPhone = IsPhoneValid(input.Phone);
 
         if (!checkPhone)
