@@ -357,7 +357,13 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
 
                                 <h3 className={styles.pricingTitle}>{p.planTypeDescription}</h3>
                                 <p className={styles.pricingSubtitle}>{p.description}</p>
-                                <p className={styles.price}>R$ {p.price}<span className={styles.priceSuffix}>/mês</span></p>
+                                <p className={styles.price}>
+                                    R$ {p.price}
+
+                                    {
+                                        p.planTypeName !== 'Free' && <span className={styles.priceSuffix}>/mês</span>
+                                    }
+                                </p>
 
                                 <ul className={styles.featuresList}>
                                     {

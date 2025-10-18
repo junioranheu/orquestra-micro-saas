@@ -10,7 +10,7 @@ public enum PlanTypeEnum
     [PlanTypeHelper.Price(0.00)]
     [PlanTypeHelper.SchedulingLimit(30)]
     [PlanTypeHelper.Description("Freelancers e autônomos")]
-    [PlanTypeHelper.Perks(["28 agendamentos/mês", "Notificações por e-mail", "Sem suporte!"])]
+    [PlanTypeHelper.Perks(["30 agendamentos/mês", "Notificações por e-mail", "Teste por {PlanDurationDaysFree} dias"])]
     [PlanTypeHelper.DurationDays(SystemConsts.Time.PlanDurationDaysFree)]
     Free = 1,
 
@@ -18,7 +18,7 @@ public enum PlanTypeEnum
     [PlanTypeHelper.Price(9.99)]
     [PlanTypeHelper.SchedulingLimit(500)]
     [PlanTypeHelper.Description("Pequenas equipes")]
-    [PlanTypeHelper.Perks(["Limite de agendamentos alto", "Integração com o WhatsApp", "Suporte prioritário"])]
+    [PlanTypeHelper.Perks(["Limite de agendamentos alto (500 agendamentos/mês)", "Integração com o WhatsApp", "Suporte prioritário"])]
     [PlanTypeHelper.DurationDays(SystemConsts.Time.PlanDurationDays)]
     Basic = 2,
 
@@ -93,6 +93,7 @@ public class PlanTypeHelper()
 
         PerksAttribute? perksAttr = (PerksAttribute?)Attribute.GetCustomAttribute(field!, typeof(PerksAttribute));
         string[] perks = perksAttr?.Value ?? [];
+        perks = [.. perks.Select(x => x.Replace("{PlanDurationDaysFree}", SystemConsts.Time.PlanDurationDaysFree.ToString()))];
 
         DurationDaysAttribute? durationDaysAttr = (DurationDaysAttribute?)Attribute.GetCustomAttribute(field!, typeof(DurationDaysAttribute));
         int durationDays = durationDaysAttr?.Value ?? 0;

@@ -33,14 +33,28 @@ public sealed class UpdatePlanTypeCompany(
             throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyCompany);
         }
 
-        // #1 - Criar cobrança, obrigatoriamente antes de normalizar o input.Modules;
+        // #1 - Checar a "disponibilidade" da alteração;
+        CheckAvailability(company: result, newPlanType: planType);
+
+        // #2 - Criar cobrança, obrigatoriamente antes de normalizar o input.Modules;
         await _createCompanyInvoice.Execute(userIdAuth, companyId, planType);
 
-        // #2 - Atualizar os dados da empresa, em si;
+        // #3 - Atualizar os dados da empresa, em si;
         await UpdateCompanyData(company: result, planType);
     }
 
     #region extras
+    private static void CheckAvailability(Company company, PlanTypeEnum newPlanType)
+    {
+        (decimal _, int _, string descriptionCurrentPlan, string[] _, int _) = PlanTypeHelper.GetValues(company.PlanType.GetValueOrDefault());
+        // (decimal _, int _, string descriptionNewPlan, string[] _, int _) = PlanTypeHelper.GetValues(newPlanType);
+
+        if (company.PlanType == newPlanType)
+        {
+            throw new InvalidOperationException($"Não foi possível prosseguir pois essa empresa já está com o plano {descriptionCurrentPlan.ToLowerInvariant()} vigente.");
+        }
+    }
+
     private async Task UpdateCompanyData(Company company, PlanTypeEnum planType)
     {
         company.CompanySituation = CompanySituationEnum.PendingPayment;

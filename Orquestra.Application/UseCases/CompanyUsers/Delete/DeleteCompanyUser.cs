@@ -45,7 +45,7 @@ public sealed class DeleteCompanyUser(Context context, ICheckIfUserIsLinkedCompa
     private async Task<CompanyUser> GetUser(Guid companyId, Guid userId)
     {
         CompanyUser user = await _context.CompanyUsers.
-                           AsNoTracking().
+                           // AsNoTracking(). // Propositalmente sem AsNoTracking;
                            Where(x =>
                               x.CompanyId == companyId &&
                               x.UserId == userId &&

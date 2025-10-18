@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.Update;
+using Orquestra.Application.UseCases.Companies.UpdatePlanType;
 using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
@@ -20,7 +21,8 @@ public class CompanyController(
         ICreateCompany create,
         IGetCompany get,
         IUpdateCompany update,
-        IVerifyCompany verify
+        IVerifyCompany verify,
+        IUpdatePlanTypeCompany updatePlanType
     ) : BaseController<CompanyController>
 {
     private readonly IEnvService _env = env;
@@ -28,6 +30,7 @@ public class CompanyController(
     private readonly IGetCompany _get = get;
     private readonly IUpdateCompany _update = update;
     private readonly IVerifyCompany _verify = verify;
+    private readonly IUpdatePlanTypeCompany _updatePlanType = updatePlanType;
 
     [AuthorizeFilter]
     [HttpPost]
@@ -57,6 +60,16 @@ public class CompanyController(
         CompanyOutput output = await _update.Execute(userIdAuth, input);
 
         return Ok(output);
+    }
+
+    [AuthorizeFilter]
+    [HttpPut("UpdatePlanType")]
+    public async Task<ActionResult> UpdatePlanType([FromForm] CompanyInput input)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _updatePlanType.Execute(userIdAuth, companyId: input.CompanyId.GetValueOrDefault(), planType: input.PlanType);
+
+        return Ok(true);
     }
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]

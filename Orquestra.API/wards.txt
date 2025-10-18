@@ -1,18 +1,16 @@
-﻿⦁	Etc
+﻿⦁	Etc:
 Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
+Criar algum job ou trava/verifica a vigência do plano da empresa;
 
+⦁	Testes de integração:
 Criar novo testes de integração para:
 	CompanyUsers:
-		GetAllByCompanyId;
-		GetCurrentMain;
-		GetModule;
-		UpdateCurrentMain;
-		DeleteCompanyUser;
 		UpdateCompanyUser;
+		UpdatePlanTypeCompany;
 
-	Clients:
-		DeleteClient;
+Verificar pasta por pasta se tá faltando algum teste;
 
-TALVEZ DEVO CRIAR UM ENDPOINT PRA MODIFICAR O PLAN TYPE (E NÃO SE ESQUECER DE INCLUIR O INVOICE LÁ)
+⦁	Company:
+Chamar o novo end-point "UpdatePlanTypeCompany" no front-end;
