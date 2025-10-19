@@ -460,11 +460,11 @@ function CTA({ me }: { me: iMeSimple | undefined }) {
                     {
                         me?.isAuth ? (
                             <Link className={styles.ctaButton} href={ROUTES.DASHBOARD}>
-                                Voltar ao início
+                                Voltar ao dashboard
                             </Link>
                         ) : (
                             <Link className={styles.ctaButton} href={ROUTES.CRIAR_CONTA}>
-                                Criar conta
+                                Criar conta agora mesmo
                             </Link>
                         )
                     }

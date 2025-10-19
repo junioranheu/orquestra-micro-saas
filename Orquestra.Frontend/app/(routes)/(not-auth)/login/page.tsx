@@ -7,6 +7,7 @@ import Img4 from '@/app/assets/abstract/4.webp';
 import Carousel from '@/app/components/carousel';
 import { CookieDefault } from '@/app/components/cookie';
 import Divider from '@/app/components/divider';
+import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import ROUTES from '@/app/consts/routes';
@@ -19,6 +20,7 @@ import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
+import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useRef, useState } from 'react';
@@ -135,8 +137,18 @@ export default function Login() {
             </div>
 
             <div className={styles.bottom}>
-                <code>{versionBuild?.buildVersion ? `Build ${versionBuild?.buildVersion}` : ''}</code>
-                <code>{versionBuild?.configuration}</code>
+                <div className={styles.link}>
+                    <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`} placement='right'>
+                        <Link href={ROUTES.LANDING_PAGE}>
+                            <Icon icon='smile' color='var(--gray-dark)' className='contrastOnHover' />
+                        </Link>
+                    </Tippy>
+                </div>
+
+                <div className={styles.build}>
+                    <code>{versionBuild?.buildVersion ? `Build ${versionBuild?.buildVersion}` : ''}</code>
+                    <code>{versionBuild?.configuration}</code>
+                </div>
             </div>
 
             <CookieDefault />

@@ -5,7 +5,6 @@ import SYSTEM from '@/app/consts/system';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
-import Tippy from '@tippyjs/react';
 import feather from 'feather-icons';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -43,7 +42,7 @@ export default function Sidebar() {
         <aside className={styles.sidebar}>
             <div className={styles.brand}>
                 <Icon icon='calendar' weight='bold' />
-                <Tippy content={`Visitar a página de apresentação do ${SYSTEM.NAME}`}><span className='pointer' onClick={() => router.push(ROUTES.LANDING_PAGE)}>{SYSTEM.NAME}</span></Tippy>
+                <span>{SYSTEM.NAME}</span>
                 <small>{versionBuild?.buildVersion}</small>
             </div>
 

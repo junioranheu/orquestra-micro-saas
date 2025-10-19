@@ -1,5 +1,5 @@
 .wrapper {
-    // background-color: orange !important;
+    // background-color: tomato !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,6 +23,7 @@
     }
 
     .card {
+        // background-color: orange !important;
         background: #ffffff;
         border-radius: var(--border-radius);
         padding: 2rem 1.5rem;

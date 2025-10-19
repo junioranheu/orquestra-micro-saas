@@ -51,7 +51,7 @@ export default function CardCalendar({ me }: iProps) {
                                         img={SvgOne}
                                         isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
                                         title='Tudo certo!'
-                                        description={`A empresa ${me?.currentMainCompany?.name} já possui o módulo de Agendamento. Comece a gerenciar seus compromissos agora mesmo.`}
+                                        description={`A empresa <b>${me?.currentMainCompany?.name}</b> já possui o módulo de agendamentos.<br/>Comece a gerenciar seus compromissos agora mesmo clicando no botão do card ao lado.`}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s}
                                     />
                                 ) : (
@@ -59,7 +59,7 @@ export default function CardCalendar({ me }: iProps) {
                                         img={SvgOne}
                                         isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
                                         title='Não perca mais tempo!'
-                                        description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento. Confira sua situação abaixo:'
+                                        description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento.<br/>Confira sua situação abaixo:'
                                         buttonLabel='Gerenciar situação da empresa'
                                         buttonFunction={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s} />
@@ -70,8 +70,8 @@ export default function CardCalendar({ me }: iProps) {
                                 img={SvgTwo}
                                 isImgInsideOfCard={windowSize.width < 1281}
                                 title='Simplifique a gestão da sua empresa'
-                                description='Gestão de horários simples, rápida e sem dor de cabeça. Seu negócio afinado como uma orquestra.'
-                                buttonLabel='Agendar compromissos'
+                                description='Gestão de horários simples, rápida e sem dor de cabeça.<br/>Seu negócio afinado como uma orquestra.'
+                                buttonLabel='Agendar compromissos agora mesmo'
                                 buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
                                 buttonDisabled={!hasAccessToSchedule}
                             />

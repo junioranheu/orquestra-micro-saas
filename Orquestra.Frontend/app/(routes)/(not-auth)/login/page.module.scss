@@ -78,6 +78,18 @@ $radius: 1.25rem;
 
         display: flex;
         flex-direction: column;
+        gap: 0.5rem;
+
+        .link {
+            // background-color: tomato;
+            width: fit-content;
+        }
+
+        .build {
+            // background-color: tomato;
+            display: flex;
+            flex-direction: column;
+        }
     }
 }
 
