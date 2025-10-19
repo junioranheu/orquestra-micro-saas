@@ -8,13 +8,15 @@ public sealed class GetCity(Context context) : IGetCity
 {
     private readonly Context _context = context;
 
-    public async Task<List<LocationCity>?> Execute()
+    public async Task<List<LocationCity>?> Execute(int? locationStateId = null)
     {
         var result = await _context.LocationCities.
                      Include(x => x.LocationState).
                      AsNoTracking().
-                     Where(x => x.Status == true).
-                     ToListAsync();
+                     Where(x => 
+                        ((locationStateId <= 0 || locationStateId == null) || x.LocationStateId == locationStateId) && 
+                        x.Status == true
+                     ).ToListAsync();
 
         return result;
     }
