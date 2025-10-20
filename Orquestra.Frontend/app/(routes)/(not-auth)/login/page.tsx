@@ -138,7 +138,7 @@ export default function Login() {
 
             <div className={styles.bottom}>
                 <div className={styles.link}>
-                    <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`} placement='right'>
+                    <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`} placement='left'>
                         <Link href={ROUTES.LANDING_PAGE}>
                             <Icon icon='smile' color='var(--gray-dark)' className='contrastOnHover' />
                         </Link>

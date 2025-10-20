@@ -1,4 +1,4 @@
-import { iAjudaTopico } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
+import { iAjudaTopico } from '@/app/(routes)/(public)/(etc)/ajuda/page';
 import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';
 import { useRouter } from 'next/navigation';

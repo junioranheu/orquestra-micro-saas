@@ -1,4 +1,4 @@
-import { iAjudaTopicoItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
+import { iAjudaTopicoItem } from '@/app/(routes)/(public)/(etc)/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
 import SYSTEM from '@/app/consts/system';
 import swal from '@/app/functions/swal';

@@ -1,7 +1,7 @@
 'use client';
-import AjudaListRows from '@/app/(routes)/(no-layout)/(etc)/ajuda/components/list-rows';
-import AjudaSearchInput from '@/app/(routes)/(no-layout)/(etc)/ajuda/components/seach-input';
-import { HELP_TOPICS, iAjudaTopico, iAjudaTopicoItem } from '@/app/(routes)/(no-layout)/(etc)/ajuda/page';
+import AjudaListRows from '@/app/(routes)/(public)/(etc)/ajuda/components/list-rows';
+import AjudaSearchInput from '@/app/(routes)/(public)/(etc)/ajuda/components/seach-input';
+import { HELP_TOPICS, iAjudaTopico, iAjudaTopicoItem } from '@/app/(routes)/(public)/(etc)/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
 import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl from '@/app/functions/format.url';

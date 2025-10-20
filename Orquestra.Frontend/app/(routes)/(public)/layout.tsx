@@ -33,7 +33,10 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
             <body className={HANKEN.className}>
                 <Toaster expand={false} closeButton={false} />
-                <UpNav />
+
+                {
+                    !hideHeader && <UpNav />
+                }
 
                 <main className='no-layout'>
                     {
