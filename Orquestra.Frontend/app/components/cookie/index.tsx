@@ -50,10 +50,9 @@ const CookieWidget = (props: iCookieWidgetProps) => {
     const setCookie = useCallback(
         (cookieValue: string) => {
             let cookieSecurity = cookieSecurityProp;
-            // se cookieSecurity não foi passado, detecta via protocolo (window.location)
+
             if (cookieSecurity === undefined) {
-                cookieSecurity =
-                    typeof window !== 'undefined' ? window.location.protocol === 'https:' : true;
+                cookieSecurity = typeof window !== 'undefined' ? window.location.protocol === 'https:' : true;
             }
 
             Cookies.set(cookieConsentName, cookieValue, {

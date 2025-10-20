@@ -15,7 +15,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const [auth, setAuth] = useState<iUser | null>(null);
 
     useEffect(() => {
-        const cookieAuth = Cookies.get(SYSTEM.COOKIE_NAME);
+        const cookieAuth = Cookies.get(SYSTEM.COOKIE_AUTH_FRONT);
 
         if (cookieAuth) {
             try {

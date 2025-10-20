@@ -189,6 +189,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                                             <Link href={ROUTES.LOGIN} className='flex-1 px-4 py-2.5 text-center text-gray-700 bg-gray-100 rounded-lg font-medium'>
                                                 Entrar
                                             </Link>
+
                                             <Link
                                                 href={ROUTES.CRIAR_CONTA}
                                                 className='flex-1 px-4 py-2.5 text-center bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-semibold'

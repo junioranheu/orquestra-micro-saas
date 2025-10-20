@@ -30,7 +30,7 @@ export async function handleSetCookieAndLogin({ type, user, setAuth, router, set
     }
 
     setAuth(result);
-    Cookies.set(SYSTEM.COOKIE_NAME, JSON.stringify(result), { expires: new Date(result.refreshTokenExpirationDate), path: '/' });
+    Cookies.set(SYSTEM.COOKIE_AUTH_FRONT, JSON.stringify(result), { expires: new Date(result.refreshTokenExpirationDate), path: '/' });
     router.push(ROUTES.DASHBOARD);
 }
 
@@ -41,7 +41,7 @@ interface iRemoveProps {
 
 export async function handleRemoveCookieAndLogout({ setAuth, router }: iRemoveProps) {
     await Fetch.delete({ url: CONSTS_AUTH.logout });
-    Cookies.remove(SYSTEM.COOKIE_NAME, { path: '/' });
+    Cookies.remove(SYSTEM.COOKIE_AUTH_FRONT, { path: '/' });
     setAuth(null);
     router.push(ROUTES.LOGIN);
 }

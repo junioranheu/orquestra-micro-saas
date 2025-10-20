@@ -21,7 +21,7 @@ export const MODULES_PERMISSIONS: Record<string, string[]> = {
 };
 
 export async function middleware(request: NextRequest) {
-    const token = request.cookies.get(SYSTEM.COOKIE_NAME)?.value;
+    const token = request.cookies.get(SYSTEM.COOKIE_AUTH_FRONT)?.value;
     const pathname = request.nextUrl.pathname;
 
     const isPublicPath = PUBLIC_PATHS.some(x => pathname.startsWith(x));

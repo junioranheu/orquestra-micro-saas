@@ -11,7 +11,7 @@ const SYSTEM = {
     URL_GITHUB: 'https://github.com/junioranheu',
     URL_LINKEDIN: 'https://www.linkedin.com/in/junioranheu/',
 
-    COOKIE_NAME: 'auth_front',
+    COOKIE_AUTH_FRONT: 'cookie_auth_front',
 
     ANIMATE: 'animate__animated animate__fadeIn',
     ANIMATE_SLOW: 'animate__animated animate__fadeIn animate__slow',

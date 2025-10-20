@@ -4,9 +4,12 @@ import Loading from '@/app/components/loading';
 import Navbar from '@/app/components/navbar/nav';
 import UpNav from '@/app/components/navbar/up-nav';
 import Sidebar from '@/app/components/sidebar';
+import Splash from '@/app/components/splash';
+import SYSTEM from '@/app/consts/system';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
+import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useCheckAzureServer from '@/app/hooks/useCheckAzureServer';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
@@ -52,6 +55,8 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                                 </div>
                             </main>
                         </div>
+
+                        <Splash text={SYSTEM.NAME} isGradient={true} destroyAfterSeconds={handleGetRandomNumber(1, 1.25)} />
                     </body>
                 </GlobalContextProvider>
             </UserProvider>
