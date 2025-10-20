@@ -115,15 +115,35 @@ export const HELP_TOPICS = [
     },
     {
         topic: 'LGPD e privacidade',
-        description: `Entenda como o ${SYSTEM.NAME} protege os dados de clientes e profissionais.`,
+        description: `Saiba como o ${SYSTEM.NAME} protege os dados de clientes, profissionais e usuários, garantindo segurança, transparência e conformidade com a LGPD.`,
         items: [
             {
-                title: 'Armazenamento de dados',
-                description: 'Os dados são armazenados de forma segura, com criptografia e backups automáticos.'
+                title: 'Armazenamento seguro',
+                description: 'Todos os dados são armazenados de forma segura, com criptografia em trânsito e em repouso, além de backups automáticos regulares.'
             },
             {
-                title: 'Excluir dados pessoais',
-                description: 'É possível remover todas as informações de um cliente mediante solicitação.'
+                title: 'Exclusão de dados pessoais',
+                description: 'É possível remover todas as informações de um cliente ou usuário mediante solicitação, atendendo aos direitos previstos na LGPD.'
+            },
+            {
+                title: 'Consentimento do usuário',
+                description: 'O cadastro de clientes e usuários só é realizado com consentimento explícito para coleta e uso de dados pessoais.'
+            },
+            {
+                title: 'Compartilhamento de dados',
+                description: 'Os dados não são compartilhados com terceiros sem autorização, exceto quando exigido por lei ou para prestação de serviços contratados.'
+            },
+            {
+                title: 'Acesso restrito',
+                description: 'Somente usuários autorizados dentro da plataforma podem acessar informações sensíveis, de acordo com suas permissões.'
+            },
+            {
+                title: 'Monitoramento e auditoria',
+                description: 'Registramos acessos e alterações em dados importantes para garantir rastreabilidade e prevenção de uso indevido.'
+            },
+            {
+                title: 'Atualizações de privacidade',
+                description: 'Mantemos nossos procedimentos e políticas sempre atualizados para garantir conformidade com a LGPD e melhores práticas de segurança.'
             }
         ]
     },
@@ -168,6 +188,36 @@ export const HELP_TOPICS = [
             {
                 title: 'Atualizações de segurança',
                 description: 'Nossa plataforma recebe atualizações constantes para corrigir vulnerabilidades e manter a proteção contra ameaças emergentes.'
+            }
+        ]
+    },
+    {
+        topic: 'Termos de uso',
+        description: `Saiba o que você pode e não pode fazer ao usar o ${SYSTEM.NAME}, e entenda suas responsabilidades como usuário.`,
+        items: [
+            {
+                title: 'Aceite dos termos',
+                description: `Ao criar uma conta e utilizar o ${SYSTEM.NAME}, você concorda integralmente com estes Termos de Uso e com nossa Política de Privacidade.`
+            },
+            {
+                title: 'Responsabilidade do usuário',
+                description: 'Você é responsável pelas informações cadastradas, bem como pelo uso adequado da plataforma e dos dados de seus clientes.'
+            },
+            {
+                title: 'Uso comercial permitido',
+                description: `O ${SYSTEM.NAME} pode ser utilizado para fins profissionais e comerciais, desde que respeite as leis vigentes e os direitos de terceiros.`
+            },
+            {
+                title: 'Limitação de responsabilidade',
+                description: `O ${SYSTEM.NAME} não se responsabiliza por perdas, danos ou prejuízos decorrentes de uso indevido da plataforma ou falhas externas de rede.`
+            },
+            {
+                title: 'Encerramento de conta',
+                description: `O usuário pode solicitar o encerramento da conta a qualquer momento. A plataforma também pode suspender ou excluir contas em caso de uso indevido ou violação dos termos. Para isso, contate o e-mail "${SYSTEM.EMAIL_SUPPORT}".`
+            },
+            {
+                title: 'Alterações nos termos',
+                description: 'Os Termos de Uso podem ser atualizados periodicamente. Alterações relevantes serão comunicadas aos usuários por e-mail ou dentro da própria plataforma.'
             }
         ]
     }

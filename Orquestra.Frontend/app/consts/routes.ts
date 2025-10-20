@@ -14,6 +14,8 @@ const ROUTES = {
     USUARIO_NOTIFICACOES: '/usuario/notificacoes',
     ETC_AJUDA: '/ajuda',
     ETC_SEGURANCA: '/seguranca',
+    ETC_PRIVACIDADE: '/privacidade',
+    ETC_TERMOS_DE_USO: '/termos-de-uso',
     EMPRESA_GERENCIAR: '/empresa/gerenciar',
     EMPRESA_USO_E_PLANO: '/empresa/uso-e-plano',
     EMPRESA_MEMBROS: '/empresa/membros',

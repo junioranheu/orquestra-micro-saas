@@ -29,7 +29,7 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
                             </Link>
                         </Tippy>
 
-                        <Tippy content='Contatar suporte'>
+                        <Tippy content='Contatar suporte via e-mail'>
                             <Link
                                 href='#'
                                 onClick={(e) => {

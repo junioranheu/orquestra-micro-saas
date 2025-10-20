@@ -2,6 +2,7 @@
 import { CarouselLogin } from '@/app/(routes)/(not-auth)/login/page';
 import styles from '@/app/(routes)/(not-auth)/login/page.module.scss';
 import { iUserInput } from '@/app/api/consts/user';
+import { CONSTS_UTILITY, iPlanType } from '@/app/api/consts/utility';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
@@ -12,6 +13,7 @@ import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
 import swal from '@/app/functions/swal';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
@@ -28,6 +30,9 @@ export default function CriarConta() {
 
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
     useIsSupportedBrowser();
+
+    const [plans, setPlans] = useState<iPlanType | undefined>();
+    useApiRequestToSetterOnUrlChange<iPlanType>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
 
     const [token, setToken] = useState('');
 
@@ -135,7 +140,7 @@ export default function CriarConta() {
                             />
 
                             <Button
-                                label='Criar conta'
+                                label={(plans?.planDurationDaysFree ? `Criar conta grátis por ${plans?.planDurationDaysFree} dias` : 'Criar conta grátis')}
                                 handleFunction={() => handleCreate()}
                                 refBtn={refButton}
                                 isDisabled={isIncognito || isRequestLoading}

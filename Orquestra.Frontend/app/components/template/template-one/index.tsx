@@ -62,7 +62,7 @@ export default function LayoutTemplateOne({ svg, code, title, description, showS
                     {
                         showSupportContact && (
                             <Button
-                                label='Contatar suporte'
+                                label='Contatar suporte via e-mail'
                                 icone_feather={<Icon icon='mail' />}
                                 handleFunction={() => window.location.href = `mailto:${SYSTEM.EMAIL_SUPPORT}`}
                                 isStyleSimple={true}

@@ -6,6 +6,3 @@ Criar algum job ou trava/verifica a vigência do plano da empresa;
 
 ⦁	Company:
 Chamar o novo end-point "UpdatePlanTypeCompany" no front-end;
-
-⦁	Landing page:
-Revisar todos os textos
