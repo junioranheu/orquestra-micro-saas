@@ -37,7 +37,7 @@ export default function LandingPage() {
 
     if (!isTailwindReady) {
         return (
-            <Splash text={SYSTEM.NAME} />
+            <Splash text={SYSTEM.NAME} isGradient={true} />
         )
     }
 
@@ -237,8 +237,8 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
     return (
         <section className='relative px-4 sm:px-6 py-16 sm:py-24 max-w-6xl mx-auto overflow-hidden'>
             {/* Background Gradient */}
-            <div className='absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-[var(--main-light)]/30 to-[var(--main-light)]/20 rounded-full blur-3xl pointer-events-none' />
-            <div className='absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-[var(--main-light)]/20 to-transparent rounded-full blur-3xl pointer-events-none' />
+            {/* <div className='absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-[var(--main-light)]/30 to-[var(--main-light)]/20 rounded-full blur-3xl pointer-events-none' />
+            <div className='absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-[var(--main-light)]/20 to-transparent rounded-full blur-3xl pointer-events-none' /> */}
 
             <div className='relative z-10'>
                 {/* Badge */}

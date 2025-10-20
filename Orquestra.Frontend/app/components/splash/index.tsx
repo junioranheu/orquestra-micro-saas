@@ -6,9 +6,10 @@ import Styles from './index.module.scss';
 interface iProps {
     text: string;
     destroyAfterSeconds?: number;
+    isGradient?: boolean;
 }
 
-export default function Splash({ text, destroyAfterSeconds }: iProps) {
+export default function Splash({ text, destroyAfterSeconds, isGradient = false }: iProps) {
 
     useDisableScroll();
 
@@ -27,7 +28,9 @@ export default function Splash({ text, destroyAfterSeconds }: iProps) {
     }
 
     return (
-        <section className={Styles.splash}>
+        <section className={Styles.splash}
+            style={{ background: isGradient ? 'var(--gradient)' : 'var(--white)' }}
+        >
             <div className={`${Styles.loading} ${SYSTEM.ANIMATE}`}>
                 {
                     letters.map((letter, i) => (
