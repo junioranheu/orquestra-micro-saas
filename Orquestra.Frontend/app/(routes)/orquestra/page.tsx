@@ -9,6 +9,7 @@ import WhatsappButton from '@/app/components/whatsapp/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
+import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useInjectTailwindCDN from '@/app/hooks/useInjectTailwindCDN';
@@ -205,7 +206,9 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
 
 function Hero({ me }: { me: iMeSimple | undefined }) {
 
+    const versionBuild = useApiGetBuildVersion();
     const companyTypeEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyTypeEnum' });
+
     const [companies, setCompanies] = useState<iDropdownOption[]>([]);
     const [animate, setAnimate] = useState<'in' | 'out'>('in');
 
@@ -237,7 +240,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                     <div className='w-full lg:w-[70%]'>
                         <div className='inline-flex items-center gap-2 mb-6 px-3 py-1.5 bg-[var(--main-light)] border border-[var(--main-light)] rounded-full'>
                             <span className='w-2 h-2 bg-[var(--main)] rounded-full animate-pulse' />
-                            <span className='text-sm font-semibold text-[var(--main-dark)]'>Lançamento do {SYSTEM.NAME} 🎉</span>
+                            <span className='text-sm font-semibold text-[var(--main-dark)]'>{SYSTEM.NAME} {versionBuild?.buildVersion}</span>
                         </div>
 
                         <h1 className='text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight'>

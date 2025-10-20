@@ -3,6 +3,7 @@ import Icon from '@/app/components/icon';
 import ModalGeneric, { iModalCustomPosition } from '@/app/components/modal/generic';
 import ROUTES from '@/app/consts/routes';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import useWindowSize from '@/app/hooks/useWindowSize';
 import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, JSX, SetStateAction, useEffect, useState } from 'react';
@@ -79,6 +80,7 @@ interface iPropsProfileMenu {
 export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Element {
 
     const router = useRouter();
+    const windowSize = useWindowSize();
 
     function handleRedirect(route: (typeof ROUTES)[keyof typeof ROUTES]) {
         setIsModalOpen(false);
@@ -112,10 +114,17 @@ export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Elem
                 }
 
                 <MenuItem icon='help-circle' label='Central de ajuda' handleFunction={() => handleRedirect(ROUTES.ETC_AJUDA)} />
-                <MenuItem icon='file' label='Termos de uso' handleFunction={() => handleRedirect(ROUTES.ETC_TERMOS_DE_USO)} />
-                <MenuItem icon='lock' label='Privacidade' handleFunction={() => handleRedirect(ROUTES.ETC_PRIVACIDADE)} />
-                <MenuItem icon='shield' label='Segurança' handleFunction={() => handleRedirect(ROUTES.ETC_SEGURANCA)} />
-                <MenuItem icon='smile' label='Página de apresentação' handleFunction={() => handleRedirect(ROUTES.LANDING_PAGE)} />
+
+                {
+                    windowSize?.height > 900 && (
+                        <Fragment>
+                            <MenuItem icon='file' label='Termos de uso' handleFunction={() => handleRedirect(ROUTES.ETC_TERMOS_DE_USO)} />
+                            <MenuItem icon='lock' label='Privacidade' handleFunction={() => handleRedirect(ROUTES.ETC_PRIVACIDADE)} />
+                            <MenuItem icon='shield' label='Segurança' handleFunction={() => handleRedirect(ROUTES.ETC_SEGURANCA)} />
+                            <MenuItem icon='smile' label='Página de apresentação' handleFunction={() => handleRedirect(ROUTES.LANDING_PAGE)} />
+                        </Fragment>
+                    )
+                }
 
                 <div className={styles.separator} />
                 <MenuItem icon='settings' label='Configurações' handleFunction={() => handleRedirect(ROUTES.USUARIO_CONFIGURACOES)} />
