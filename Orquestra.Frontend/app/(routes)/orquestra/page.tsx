@@ -42,7 +42,7 @@ export default function LandingPage() {
     }
 
     return (
-        <div className={`${styles.main} min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50`}>
+        <div className={`${styles.main} min-h-screen bg-gradient-to-b from-slate-50 via-white to-[var(--main-light)]`}>
             <Header me={me} open={open} setOpen={setOpen} scrolled={scrolled} />
 
             <main>
@@ -76,15 +76,15 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
     }, [windowSize.width, setOpen]);
 
     return (
-        <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-blue-100/50' : 'bg-white/70 backdrop-blur-md'}`}>
+        <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-[var(--main-light)]/50' : 'bg-white/70 backdrop-blur-md'}`}>
             <div className='max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4'>
                 {/* Logo */}
                 <Link href='/' className='flex items-center gap-2.5 group'>
-                    <div className='w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
+                    <div className='w-10 h-10 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
                         <Icon icon='calendar' />
                     </div>
                     <div className='hidden sm:flex flex-col'>
-                        <span className='font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent'>
+                        <span className='font-bold text-gray-900 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] bg-clip-text text-transparent'>
                             {SYSTEM.NAME}
                         </span>
                         <span className='text-xs text-gray-500'>{SYSTEM.DESCRIPTION}</span>
@@ -103,10 +103,10 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                             key={item.id}
                             href={`#${item.id}`}
                             onClick={(e) => handleScroll(e as any, item.id)}
-                            className='px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors relative group'
+                            className='px-4 py-2 text-gray-700 hover:text-[var(--main)] font-medium transition-colors relative group'
                         >
                             {item.label}
-                            <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300' />
+                            <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--main)] group-hover:w-full transition-all duration-300' />
                         </a>
                     ))}
                 </nav>
@@ -140,7 +140,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                                     Entrar
                                 </Link>
 
-                                <Link href={ROUTES.CRIAR_CONTA} className='px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold'>
+                                <Link href={ROUTES.CRIAR_CONTA} className='px-5 py-2.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold'>
                                     Começar Grátis
                                 </Link>
                             </Fragment>
@@ -151,7 +151,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                 {/* Mobile Menu Button */}
                 <button
                     onClick={() => setOpen(!open)}
-                    className='lg:hidden w-10 h-10 flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors'
+                    className='lg:hidden w-10 h-10 flex items-center justify-center text-gray-700 hover:text-[var(--main)] transition-colors'
                 >
                     <Icon icon={open ? 'x' : 'menu'} />
                 </button>
@@ -160,7 +160,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
             {/* Mobile Menu */}
             {
                 open && (
-                    <div className='lg:hidden border-t border-blue-100/50 bg-white/50 backdrop-blur-md animate-in fade-in duration-200'>
+                    <div className='lg:hidden border-t border-[var(--main-light)]/50 bg-white/50 backdrop-blur-md animate-in fade-in duration-200'>
                         <div className='max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2'>
                             {[
                                 { label: 'Funcionalidades', id: 'features' },
@@ -172,13 +172,13 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                                     key={item.id}
                                     href={`#${item.id}`}
                                     onClick={(e) => handleScroll(e as any, item.id)}
-                                    className='px-4 py-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium'
+                                    className='px-4 py-2.5 text-gray-700 hover:text-[var(--main)] hover:bg-[var(--main-light)] rounded-lg transition-colors font-medium'
                                 >
                                     {item.label}
                                 </a>
                             ))}
 
-                            <div className='flex gap-2 pt-2 border-t border-blue-100/50'>
+                            <div className='flex gap-2 pt-2 border-t border-[var(--main-light)]/50'>
                                 {
                                     me?.isAuth ? (
                                         <Link href={ROUTES.DASHBOARD} className='flex-1 px-4 py-2.5 text-center text-gray-700 bg-gray-100 rounded-lg font-medium'>
@@ -191,7 +191,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                                             </Link>
                                             <Link
                                                 href={ROUTES.CRIAR_CONTA}
-                                                className='flex-1 px-4 py-2.5 text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold'
+                                                className='flex-1 px-4 py-2.5 text-center bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-semibold'
                                             >
                                                 Grátis
                                             </Link>
@@ -237,20 +237,20 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
     return (
         <section className='relative px-4 sm:px-6 py-16 sm:py-24 max-w-6xl mx-auto overflow-hidden'>
             {/* Background Gradient */}
-            <div className='absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-200/30 to-blue-100/20 rounded-full blur-3xl pointer-events-none' />
-            <div className='absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-blue-100/20 to-transparent rounded-full blur-3xl pointer-events-none' />
+            <div className='absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-[var(--main-light)]/30 to-[var(--main-light)]/20 rounded-full blur-3xl pointer-events-none' />
+            <div className='absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-[var(--main-light)]/20 to-transparent rounded-full blur-3xl pointer-events-none' />
 
             <div className='relative z-10'>
                 {/* Badge */}
-                <div className='inline-flex items-center gap-2 mb-6 px-3 py-1.5 bg-blue-50 border border-blue-200/80 rounded-full'>
-                    <span className='w-2 h-2 bg-blue-600 rounded-full animate-pulse' />
-                    <span className='text-sm font-semibold text-blue-700'>Lançamento 🎉</span>
+                <div className='inline-flex items-center gap-2 mb-6 px-3 py-1.5 bg-[var(--main-light)] border border-[var(--main-light)] rounded-full'>
+                    <span className='w-2 h-2 bg-[var(--main)] rounded-full animate-pulse' />
+                    <span className='text-sm font-semibold text-[var(--main-dark)]'>Lançamento 🎉</span>
                 </div>
 
                 {/* Headline */}
                 <h1 className='text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight'>
                     Sua agenda profissional{' '}
-                    <span className='bg-gradient-to-r from-blue-600 via-blue-500 to-blue-700 bg-clip-text text-transparent'>
+                    <span className='bg-gradient-to-r from-[var(--main)] via-[var(--main)] to-[var(--main-dark)] bg-clip-text text-transparent'>
                         sem complicações
                     </span>
                 </h1>
@@ -268,14 +268,14 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                             <Fragment>
                                 <Link
                                     href={ROUTES.DASHBOARD}
-                                    className='px-8 py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'
+                                    className='px-8 py-3.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'
                                 >
                                     Ir para Dashboard
                                     <Icon icon='arrow-right' className='group-hover:translate-x-1 transition-transform' />
                                 </Link>
                                 <Link
                                     href={ROUTES.ETC_AJUDA}
-                                    className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-blue-300 hover:bg-blue-50 transition-all inline-flex items-center justify-center'
+                                    className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'
                                 >
                                     Central de Ajuda
                                 </Link>
@@ -284,14 +284,14 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                             <Fragment>
                                 <Link
                                     href={ROUTES.CRIAR_CONTA}
-                                    className='px-8 py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'
+                                    className='px-8 py-3.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'
                                 >
                                     Começar Teste Grátis
                                     <Icon icon='arrow-right' className='group-hover:translate-x-1 transition-transform' />
                                 </Link>
                                 <Link
                                     href={ROUTES.ETC_AJUDA}
-                                    className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-blue-300 hover:bg-blue-50 transition-all inline-flex items-center justify-center'
+                                    className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'
                                 >
                                     Ver Documentação
                                 </Link>
@@ -309,7 +309,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                             companies.map((c) => (
                                 <div
                                     key={c.value.toString()}
-                                    className={`px-3.5 py-2 bg-white/60 backdrop-blur-sm border border-blue-100/80 rounded-full text-sm font-medium text-gray-700 transition-all duration-300 ${animate === 'out' ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
+                                    className={`px-3.5 py-2 bg-white/60 backdrop-blur-sm border border-[var(--main-light)]/80 rounded-full text-sm font-medium text-gray-700 transition-all duration-300 ${animate === 'out' ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
                                         }`}
                                 >
                                     {c.label}
@@ -318,7 +318,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                         }
                     </div>
 
-                    <button onClick={refresh} className='text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors'>
+                    <button onClick={refresh} className='text-sm font-semibold text-[var(--main)] hover:text-[var(--main-dark)] transition-colors'>
                         Ver mais →
                     </button>
                 </div>
@@ -364,9 +364,9 @@ function Features() {
             <div className='grid md:grid-cols-2 gap-6 sm:gap-8'>
                 {
                     features.map((f, i) => (
-                        <div key={i} className='group p-6 sm:p-8 bg-white/70 backdrop-blur-sm border border-blue-100/80 rounded-2xl hover:bg-white hover:border-blue-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1'>
-                            <div className='w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100/80 rounded-xl flex items-center justify-center mb-5 group-hover:from-blue-100 group-hover:to-blue-200 transition-colors'>
-                                <Icon icon={f.icon as any} className='w-8 h-8 text-blue-600' />
+                        <div key={i} className='group p-6 sm:p-8 bg-white/70 backdrop-blur-sm border border-[var(--main-light)]/80 rounded-2xl hover:bg-white hover:border-[var(--main-light)] hover:shadow-xl transition-all duration-300 hover:-translate-y-1'>
+                            <div className='w-16 h-16 bg-gradient-to-br from-[var(--main-light)] to-[var(--main-light)]/80 rounded-xl flex items-center justify-center mb-5 group-hover:from-[var(--main-light)] group-hover:to-[var(--main-light)] transition-colors'>
+                                <Icon icon={f.icon as any} className='w-8 h-8 text-[var(--main)]' />
                             </div>
                             <h3 className='text-xl font-bold text-gray-900 mb-3'>{f.title}</h3>
                             <p className='text-gray-600 leading-relaxed'>{f.desc}</p>
@@ -388,7 +388,7 @@ function Process() {
     ];
 
     return (
-        <section id='process' className='px-4 sm:px-6 py-16 sm:py-24 bg-gradient-to-r from-blue-50/50 to-blue-100/30'>
+        <section id='process' className='px-4 sm:px-6 py-16 sm:py-24 bg-gradient-to-r from-[var(--main-light)]/50 to-[var(--main-light)]/30'>
             <div className='max-w-6xl mx-auto'>
                 {/* Section Header */}
                 <div className='text-center mb-12 sm:mb-16'>
@@ -401,8 +401,8 @@ function Process() {
                     {
                         steps.map((step, i) => (
                             <div key={i} className='group'>
-                                <div className='p-6 sm:p-8 bg-white/80 backdrop-blur-sm border border-blue-100/80 rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300'>
-                                    <div className='text-4xl font-black text-transparent bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text mb-4'>
+                                <div className='p-6 sm:p-8 bg-white/80 backdrop-blur-sm border border-[var(--main-light)]/80 rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300'>
+                                    <div className='text-4xl font-black text-transparent bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] bg-clip-text mb-4'>
                                         {step.num}
                                     </div>
                                     <h4 className='text-lg font-bold text-gray-900 mb-2'>{step.title}</h4>
@@ -411,7 +411,7 @@ function Process() {
 
                                 {i < steps.length - 1 && (
                                     <div className='hidden lg:flex justify-center items-center py-4'>
-                                        <div className='text-blue-400 text-2xl group-hover:text-blue-600 transition-colors'>→</div>
+                                        <div className='text-[var(--main-light)] text-2xl group-hover:text-[var(--main)] transition-colors'>→</div>
                                     </div>
                                 )}
                             </div>
@@ -445,22 +445,22 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
                             className={`relative group transition-all duration-300 ${p.planTypeName === 'Basic' ? 'md:scale-105 md:z-10' : 'hover:-translate-y-1'}`}
                         >
                             {p.planTypeName === 'Basic' && (
-                                <div className='absolute -top-4 left-8 px-4 py-1.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-bold rounded-full'>
+                                <div className='absolute -top-4 left-8 px-4 py-1.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white text-sm font-bold rounded-full'>
                                     Mais Popular
                                 </div>
                             )}
 
                             <div
                                 className={`h-full p-8 rounded-2xl border transition-all duration-300 ${p.planTypeName === 'Basic'
-                                    ? 'bg-gradient-to-br from-white to-blue-50/50 border-blue-300 shadow-xl'
-                                    : 'bg-white/70 backdrop-blur-sm border-blue-100/80 hover:bg-white hover:border-blue-200 hover:shadow-lg'
+                                    ? 'bg-gradient-to-br from-white to-[var(--main-light)]/50 border-[var(--main-light)]/30 shadow-xl'
+                                    : 'bg-white/70 backdrop-blur-sm border-[var(--main-light)]/80 hover:bg-white hover:border-[var(--main-light)] hover:shadow-lg'
                                     }`}
                             >
                                 <h3 className='text-2xl font-bold text-gray-900 mb-2'>{p.planTypeDescription}</h3>
                                 <p className='text-gray-600 text-sm mb-6'>{p.description}</p>
 
                                 <div className='mb-6'>
-                                    <span className='text-4xl font-black text-transparent bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text'>
+                                    <span className='text-4xl font-black text-transparent bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] bg-clip-text'>
                                         R$ {p.price}
                                     </span>
 
@@ -471,7 +471,7 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
                                     {
                                         p.perks.map((perk) => (
                                             <li key={perk} className='flex items-center gap-3 text-gray-700'>
-                                                <span className='w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs'>✓</span>
+                                                <span className='w-5 h-5 rounded-full bg-[var(--main-light)] flex items-center justify-center text-[var(--main)] font-bold text-xs'>✓</span>
                                                 <span className='text-sm'>{perk}</span>
                                             </li>
                                         ))
@@ -479,7 +479,7 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
                                 </ul>
 
                                 <Link href={me?.isAuth ? `${ROUTES.EMPRESA_USO_E_PLANO}?plan=${p.planTypeName?.toLocaleLowerCase()}` : ROUTES.LOGIN}
-                                    className='block w-full py-3 px-4 text-center font-bold rounded-lg transition-all duration-300 text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:shadow-lg hover:-translate-y-0.5'>
+                                    className='block w-full py-3 px-4 text-center font-bold rounded-lg transition-all duration-300 text-white bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] hover:shadow-lg hover:-translate-y-0.5'>
                                     {me?.isAuth ? 'Escolher Plano' : 'Fazer Login'}
                                 </Link>
                             </div>
@@ -533,7 +533,7 @@ function Testimonials() {
             <div className='grid md:grid-cols-3 gap-6 sm:gap-8'>
                 {
                     testimonials.slice(0, visible).map((t, i) => (
-                        <div key={i} className='p-6 sm:p-8 bg-white/70 backdrop-blur-sm border border-blue-100/80 rounded-2xl hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 animate-in fade-in'>
+                        <div key={i} className='p-6 sm:p-8 bg-white/70 backdrop-blur-sm border border-[var(--main-light)]/80 rounded-2xl hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 animate-in fade-in'>
                             <p className='text-gray-700 leading-relaxed mb-6 text-lg italic'>&apos;{t.text}&apos;</p>
                             <div className='flex items-center gap-3'>
                                 <span className='text-3xl'>{t.emoji}</span>
@@ -553,7 +553,7 @@ function Testimonials() {
 function FinalCTA({ me }: { me: iMeSimple | undefined }) {
     return (
         <section className='px-4 sm:px-6 py-12 sm:py-16 max-w-6xl mx-auto'>
-            <div className='relative overflow-hidden px-6 sm:px-12 py-12 sm:py-16 rounded-3xl bg-gradient-to-r from-blue-600 via-blue-600 to-blue-700 shadow-2xl'>
+            <div className='relative overflow-hidden px-6 sm:px-12 py-12 sm:py-16 rounded-3xl bg-gradient-to-r from-[var(--main)] via-[var(--main)] to-[var(--main-dark)] shadow-2xl'>
                 {/* Background Pattern */}
                 <div className='absolute inset-0 opacity-10'>
                     <div className='absolute top-0 right-0 w-72 h-72 bg-white rounded-full blur-3xl' />
@@ -563,11 +563,11 @@ function FinalCTA({ me }: { me: iMeSimple | undefined }) {
                 {/* Content */}
                 <div className='relative z-10 text-center'>
                     <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight'>Pronto para Organizar sua Agenda?</h2>
-                    <p className='text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto'>Teste gratuitamente por 14 dias. Sem cartão de crédito necessário.</p>
+                    <p className='text-lg sm:text-xl text-[var(--main-light)] mb-8 max-w-2xl mx-auto'>Teste gratuitamente por 14 dias. Sem cartão de crédito necessário.</p>
 
                     <Link
                         href={me?.isAuth ? ROUTES.DASHBOARD : ROUTES.CRIAR_CONTA}
-                        className='inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-700 font-bold rounded-lg hover:shadow-2xl hover:-translate-y-1 transition-all text-lg'
+                        className='inline-flex items-center gap-2 px-8 py-4 bg-white text-[var(--main-dark)] font-bold rounded-lg hover:shadow-2xl hover:-translate-y-1 transition-all text-lg'
                     >
                         {me?.isAuth ? 'Acessar Dashboard' : 'Começar Agora'}
                         <Icon icon='arrow-right' className='w-5 h-5' />
@@ -586,7 +586,7 @@ function Footer() {
                     {/* Brand */}
                     <div>
                         <div className='flex items-center gap-2 mb-3'>
-                            <div className='w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white'>
+                            <div className='w-8 h-8 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-lg flex items-center justify-center text-white'>
                                 <Icon icon='calendar' className='w-4 h-4' />
                             </div>
                             <span className='font-bold text-white'>{SYSTEM.NAME}</span>
@@ -601,19 +601,19 @@ function Footer() {
 
                         <ul className='space-y-2'>
                             <li>
-                                <a href='#features' className='hover:text-blue-400 transition-colors text-sm'>
+                                <a href='#features' className='hover:text-[var(--main-light)] transition-colors text-sm'>
                                     Funcionalidades
                                 </a>
                             </li>
 
                             <li>
-                                <a href='#pricing' className='hover:text-blue-400 transition-colors text-sm'>
+                                <a href='#pricing' className='hover:text-[var(--main-light)] transition-colors text-sm'>
                                     Preços
                                 </a>
                             </li>
 
                             <li>
-                                <a href={ROUTES.ETC_AJUDA} className='hover:text-blue-400 transition-colors text-sm'>
+                                <a href={ROUTES.ETC_AJUDA} className='hover:text-[var(--main-light)] transition-colors text-sm'>
                                     Ajuda
                                 </a>
                             </li>
@@ -626,19 +626,19 @@ function Footer() {
 
                         <ul className='space-y-2'>
                             <li>
-                                <a href={`mailto:${SYSTEM.EMAIL_SUPPORT}`} className='hover:text-blue-400 transition-colors text-sm'>
+                                <a href={`mailto:${SYSTEM.EMAIL_SUPPORT}`} className='hover:text-[var(--main-light)] transition-colors text-sm'>
                                     Contato
                                 </a>
                             </li>
 
                             <li>
-                                <a href={SYSTEM.URL_GITHUB} target='_blank' rel='noopener noreferrer' className='hover:text-blue-400 transition-colors text-sm'>
+                                <a href={SYSTEM.URL_GITHUB} target='_blank' rel='noopener noreferrer' className='hover:text-[var(--main-light)] transition-colors text-sm'>
                                     GitHub
                                 </a>
                             </li>
 
                             <li>
-                                <a href={SYSTEM.URL_LINKEDIN} target='_blank' rel='noopener noreferrer' className='hover:text-blue-400 transition-colors text-sm'>
+                                <a href={SYSTEM.URL_LINKEDIN} target='_blank' rel='noopener noreferrer' className='hover:text-[var(--main-light)] transition-colors text-sm'>
                                     LinkedIn
                                 </a>
                             </li>
@@ -653,7 +653,7 @@ function Footer() {
                             <Tippy content='Email'>
                                 <a
                                     href={`mailto:${SYSTEM.EMAIL_SUPPORT}`}
-                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-blue-600 flex items-center justify-center text-gray-400 hover:text-white transition-all'
+                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
                                 >
                                     <Icon icon='mail' className='w-4 h-4' />
                                 </a>
@@ -664,7 +664,7 @@ function Footer() {
                                     href={SYSTEM.URL_GITHUB}
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-blue-600 flex items-center justify-center text-gray-400 hover:text-white transition-all'
+                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
                                 >
                                     <Icon icon='github' className='w-4 h-4' />
                                 </a>
@@ -675,7 +675,7 @@ function Footer() {
                                     href={SYSTEM.URL_LINKEDIN}
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-blue-600 flex items-center justify-center text-gray-400 hover:text-white transition-all'
+                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
                                 >
                                     <Icon icon='linkedin' className='w-4 h-4' />
                                 </a>
@@ -689,11 +689,11 @@ function Footer() {
                     <p>© {new Date().getFullYear()} {SYSTEM.NAME}. Todos os direitos reservados.</p>
 
                     <div className='flex gap-6'>
-                        <a href='#' className='hover:text-blue-400 transition-colors'>
+                        <a href='#' className='hover:text-[var(--main-light)] transition-colors'>
                             Privacidade
                         </a>
 
-                        <a href='#' className='hover:text-blue-400 transition-colors'>
+                        <a href='#' className='hover:text-[var(--main-light)] transition-colors'>
                             Termos
                         </a>
                     </div>
