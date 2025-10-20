@@ -18,6 +18,7 @@ import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Fragment, MouseEvent, useCallback, useEffect, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function LandingPage() {
 
@@ -41,7 +42,7 @@ export default function LandingPage() {
     }
 
     return (
-        <div className='min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50'>
+        <div className={`${styles.main} min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50`}>
             <Header me={me} open={open} setOpen={setOpen} scrolled={scrolled} />
 
             <main>
@@ -75,9 +76,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
     }, [windowSize.width, setOpen]);
 
     return (
-        <header
-            className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-blue-100/50' : 'bg-white/70 backdrop-blur-md'}`}
-        >
+        <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-blue-100/50' : 'bg-white/70 backdrop-blur-md'}`}>
             <div className='max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4'>
                 {/* Logo */}
                 <Link href='/' className='flex items-center gap-2.5 group'>

@@ -1,7 +1,7 @@
 .whatsappButton {
     position: fixed;
     background-color: #25d366;
-    color: var(--white);
+    color: #f7f9fc;
     border-radius: 50%;
     width: 56px;
     height: 56px;
@@ -17,7 +17,7 @@
         transform: scale(1.08);
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        color: var(--white);
+        color: #f7f9fc;
     }
 }
 

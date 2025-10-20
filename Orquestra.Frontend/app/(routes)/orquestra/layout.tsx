@@ -5,6 +5,7 @@ import { HANKEN } from '@/app/fonts/fonts';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import feather from 'feather-icons';
 import { ReactNode, useEffect } from 'react';
+import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
 

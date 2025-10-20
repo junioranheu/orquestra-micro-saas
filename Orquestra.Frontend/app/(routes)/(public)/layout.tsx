@@ -3,6 +3,7 @@ import Head from '@/app/(routes)/head';
 import { CookieDefault } from '@/app/components/cookie';
 import NavbarNotAuth from '@/app/components/navbar/nav-not-auth';
 import UpNav from '@/app/components/navbar/up-nav';
+import ROUTES from '@/app/consts/routes';
 import { HANKEN } from '@/app/fonts/fonts';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
@@ -21,7 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     useShowNProgressOnPageLoad();
 
     const pathname = usePathname();
-    const hideHeader = pathname?.includes('/orquestra');
+    const hideHeader = pathname?.includes(ROUTES.LANDING_PAGE);
 
     useEffect(() => {
         feather.replace();
