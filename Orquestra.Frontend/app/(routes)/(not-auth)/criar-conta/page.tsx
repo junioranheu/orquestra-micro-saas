@@ -5,7 +5,7 @@ import { iUserInput } from '@/app/api/consts/user';
 import { CONSTS_UTILITY, iPlanType } from '@/app/api/consts/utility';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
-import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
@@ -21,8 +21,10 @@ import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Dispatch, KeyboardEvent, SetStateAction, useEffect, useRef, useState } from 'react';
+const Dropdown = dynamic(() => import('@/app/components/input/drop-down').then(x => x.default), { ssr: false });
 
 export default function CriarConta() {
 
@@ -43,6 +45,10 @@ export default function CriarConta() {
     const refButton = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
 
