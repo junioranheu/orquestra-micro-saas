@@ -23,7 +23,6 @@ export default function useCheckAzureServer() {
         async function handleCheck() {
             try {
                 // await fetchGetFake();
-                // await Fetch.get({ url: CONSTS_UTILITY.getBuildVersion });
                 await Fetch.get({ url: CONSTS_AUTH.meSimple });
             } catch (error: unknown) {
                 const errorMsg = error instanceof Error ? error.message : String(error);

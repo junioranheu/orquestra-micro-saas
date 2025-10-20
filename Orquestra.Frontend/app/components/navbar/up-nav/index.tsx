@@ -1,29 +1,28 @@
+'use client';
 import SYSTEM from '@/app/consts/system';
 import { handleGetRandomGreeting } from '@/app/functions/get.greeting';
 import useWindowSize from '@/app/hooks/useWindowSize';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function UpNav() {
 
     const windowSize = useWindowSize();
-    const [showContent, setShowContent] = useState<boolean>(true);
+    const [showContent, setShowContent] = useState<boolean>(false);
+    const [greeting, setGreeting] = useState<string>('');
 
     useEffect(() => {
         setShowContent(windowSize.width > 801);
+        setGreeting(`Tenha ${handleGetRandomGreeting({ mustIncludeUmUma: true }).toLocaleLowerCase()} ✨`);
     }, [windowSize]);
 
-    const greeting = useMemo(() => {
-        return `Tenha ${handleGetRandomGreeting({ mustIncludeUmUma: true }).toLocaleLowerCase()} ✨`;
-    }, []);
+    if (!showContent) {
+        return null;
+    }
 
     return (
         <nav className={styles.nav}>
-            {
-                showContent && (
-                    <span>Bem-vindo ao {SYSTEM.NAME}! {greeting}</span>
-                )
-            }
+            <span>Bem-vindo ao {SYSTEM.NAME}! {greeting}</span>
         </nav>
     )
 }
