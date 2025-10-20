@@ -95,7 +95,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                 <nav className='hidden lg:flex items-center gap-1'>
                     {[
                         { label: 'Funcionalidades', id: 'features' },
-                        { label: 'Como Funciona', id: 'process' },
+                        { label: 'Como funciona', id: 'process' },
                         { label: 'Preços', id: 'pricing' },
                         { label: 'Depoimentos', id: 'testimonials' }
                     ].map((item) => (
@@ -141,7 +141,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                                 </Link>
 
                                 <Link href={ROUTES.CRIAR_CONTA} className='px-5 py-2.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold'>
-                                    Começar Grátis
+                                    Começar grátis
                                 </Link>
                             </Fragment>
                         )
@@ -266,34 +266,24 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                     {
                         me?.isAuth ? (
                             <Fragment>
-                                <Link
-                                    href={ROUTES.DASHBOARD}
-                                    className='px-8 py-3.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'
-                                >
-                                    Ir para Dashboard
+                                <Link href={ROUTES.DASHBOARD} className='px-8 py-3.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'>
+                                    Ir para dashboard
                                     <Icon icon='arrow-right' className='group-hover:translate-x-1 transition-transform' />
                                 </Link>
-                                <Link
-                                    href={ROUTES.ETC_AJUDA}
-                                    className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'
-                                >
-                                    Central de Ajuda
+
+                                <Link href={ROUTES.ETC_AJUDA} className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'>
+                                    Central de ajuda
                                 </Link>
                             </Fragment>
                         ) : (
                             <Fragment>
-                                <Link
-                                    href={ROUTES.CRIAR_CONTA}
-                                    className='px-8 py-3.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'
-                                >
-                                    Começar Teste Grátis
+                                <Link href={ROUTES.CRIAR_CONTA} className='px-8 py-3.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'>
+                                    Começar teste grátis
                                     <Icon icon='arrow-right' className='group-hover:translate-x-1 transition-transform' />
                                 </Link>
-                                <Link
-                                    href={ROUTES.ETC_AJUDA}
-                                    className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'
-                                >
-                                    Ver Documentação
+
+                                <Link href={ROUTES.ETC_AJUDA} className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'>
+                                    Ver documentação
                                 </Link>
                             </Fragment>
                         )
@@ -302,16 +292,12 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
 
                 {/* Trust Section */}
                 <div className='space-y-3'>
-                    <p className='text-sm font-semibold text-gray-500 uppercase tracking-wide'>Confiado por profissionais de</p>
+                    <p className='text-sm font-semibold text-gray-500 uppercase tracking-wide'>O {SYSTEM.NAME} pode ser usado...</p>
 
                     <div className='flex flex-wrap gap-2'>
                         {
                             companies.map((c) => (
-                                <div
-                                    key={c.value.toString()}
-                                    className={`px-3.5 py-2 bg-white/60 backdrop-blur-sm border border-[var(--main-light)]/80 rounded-full text-sm font-medium text-gray-700 transition-all duration-300 ${animate === 'out' ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
-                                        }`}
-                                >
+                                <div key={c.value.toString()} className={`px-3.5 py-2 bg-white/60 backdrop-blur-sm border border-[var(--main-light)]/80 rounded-full text-sm font-medium text-gray-700 transition-all duration-300 ${animate === 'out' ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'}`}>
                                     {c.label}
                                 </div>
                             ))
@@ -332,22 +318,22 @@ function Features() {
     const features = [
         {
             icon: 'clock',
-            title: 'Agendamento Inteligente',
+            title: 'Agendamento inteligente',
             desc: 'Confirmações automáticas e lembretes para reduzir no-shows e otimizar sua agenda.'
         },
         {
             icon: 'users',
-            title: 'Gestão de Clientes',
+            title: 'Gestão de clientes',
             desc: 'Histórico completo, notas personalizadas e todas as informações centralizadas.'
         },
         {
             icon: 'calendar',
-            title: 'Multi-Profissional',
+            title: 'Multi-profissional',
             desc: 'Gerencie múltiplas agendas e profissionais em uma única plataforma.'
         },
         {
             icon: 'bell',
-            title: 'WhatsApp Integrado',
+            title: 'WhatsApp integrado',
             desc: 'Lembretes e confirmações automáticas direto no WhatsApp dos seus clientes.'
         }
     ];
@@ -356,7 +342,7 @@ function Features() {
         <section id='features' className='px-4 sm:px-6 py-16 sm:py-24 max-w-6xl mx-auto'>
             {/* Section Header */}
             <div className='text-center mb-12 sm:mb-16'>
-                <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>Funcionalidades Poderosas</h2>
+                <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>Funcionalidades poderosas</h2>
                 <p className='text-lg text-gray-600 max-w-2xl mx-auto'>Tudo que você precisa para rodar um serviço profissional sem complicações</p>
             </div>
 
@@ -366,8 +352,9 @@ function Features() {
                     features.map((f, i) => (
                         <div key={i} className='group p-6 sm:p-8 bg-white/70 backdrop-blur-sm border border-[var(--main-light)]/80 rounded-2xl hover:bg-white hover:border-[var(--main-light)] hover:shadow-xl transition-all duration-300 hover:-translate-y-1'>
                             <div className='w-16 h-16 bg-gradient-to-br from-[var(--main-light)] to-[var(--main-light)]/80 rounded-xl flex items-center justify-center mb-5 group-hover:from-[var(--main-light)] group-hover:to-[var(--main-light)] transition-colors'>
-                                <Icon icon={f.icon as any} className='w-8 h-8 text-[var(--main)]' />
+                                <Icon icon={f.icon as any} className='text-[var(--main)]' />
                             </div>
+
                             <h3 className='text-xl font-bold text-gray-900 mb-3'>{f.title}</h3>
                             <p className='text-gray-600 leading-relaxed'>{f.desc}</p>
                         </div>
@@ -381,10 +368,10 @@ function Features() {
 function Process() {
 
     const steps = [
-        { num: '01', title: 'Cadastre seus Serviços', desc: 'Configure horários, duração e tipos de atendimento' },
-        { num: '02', title: 'Seus Clientes Agendam', desc: 'Link público ou integração com WhatsApp Business' },
-        { num: '03', title: 'Confirmações Automáticas', desc: 'Sistema valida e confirma agendamentos' },
-        { num: '04', title: 'Receba Pagamentos', desc: 'Pix, cartão e outros meios integrados' }
+        { num: '01', title: 'Cadastre seus serviços', desc: 'Configure horários, duração e tipos de atendimento' },
+        { num: '02', title: 'Seus clientes agendam', desc: 'Link público ou integração com WhatsApp Business' },
+        { num: '03', title: 'Confirmações automáticas', desc: 'Sistema valida e confirma agendamentos' },
+        { num: '04', title: 'Receba pagamentos', desc: 'Pix, cartão e outros meios integrados' }
     ];
 
     return (
@@ -392,7 +379,7 @@ function Process() {
             <div className='max-w-6xl mx-auto'>
                 {/* Section Header */}
                 <div className='text-center mb-12 sm:mb-16'>
-                    <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>Como Funciona</h2>
+                    <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>Como funciona</h2>
                     <p className='text-lg text-gray-600 max-w-2xl mx-auto'>4 passos simples para você começar</p>
                 </div>
 
@@ -409,11 +396,13 @@ function Process() {
                                     <p className='text-gray-600 text-sm leading-relaxed'>{step.desc}</p>
                                 </div>
 
-                                {i < steps.length - 1 && (
-                                    <div className='hidden lg:flex justify-center items-center py-4'>
-                                        <div className='text-[var(--main-light)] text-2xl group-hover:text-[var(--main)] transition-colors'>→</div>
-                                    </div>
-                                )}
+                                {
+                                    i < steps.length - 1 && (
+                                        <div className='hidden lg:flex justify-center items-center py-4'>
+                                            <div className='text-[var(--main-light)] text-2xl group-hover:text-[var(--main)] transition-colors'>→</div>
+                                        </div>
+                                    )
+                                }
                             </div>
                         ))
                     }
@@ -432,7 +421,7 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
         <section id='pricing' className='px-4 sm:px-6 py-16 sm:py-24 max-w-6xl mx-auto'>
             {/* Section Header */}
             <div className='text-center mb-12 sm:mb-16'>
-                <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>Planos que Crescem com Você</h2>
+                <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>Planos que crescem com você</h2>
                 <p className='text-lg text-gray-600 max-w-2xl mx-auto'>Sem contratos. Cancele quando quiser.</p>
             </div>
 
@@ -480,7 +469,7 @@ function Pricing({ me }: { me: iMeSimple | undefined }) {
 
                                 <Link href={me?.isAuth ? `${ROUTES.EMPRESA_USO_E_PLANO}?plan=${p.planTypeName?.toLocaleLowerCase()}` : ROUTES.LOGIN}
                                     className='block w-full py-3 px-4 text-center font-bold rounded-lg transition-all duration-300 text-white bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] hover:shadow-lg hover:-translate-y-0.5'>
-                                    {me?.isAuth ? 'Escolher Plano' : 'Fazer Login'}
+                                    {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
                                 </Link>
                             </div>
                         </div>
@@ -525,7 +514,7 @@ function Testimonials() {
         <section id='testimonials' className='px-4 sm:px-6 py-16 sm:py-24 max-w-6xl mx-auto'>
             {/* Section Header */}
             <div className='text-center mb-12 sm:mb-16'>
-                <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>O que Profissionais Dizem</h2>
+                <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4'>O que profissionais dizem</h2>
                 <p className='text-lg text-gray-600 max-w-2xl mx-auto'>Histórias reais de quem usa a plataforma no dia a dia</p>
             </div>
 
@@ -562,14 +551,11 @@ function FinalCTA({ me }: { me: iMeSimple | undefined }) {
 
                 {/* Content */}
                 <div className='relative z-10 text-center'>
-                    <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight'>Pronto para Organizar sua Agenda?</h2>
+                    <h2 className='text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight'>Pronto para organizar sua agenda?</h2>
                     <p className='text-lg sm:text-xl text-[var(--main-light)] mb-8 max-w-2xl mx-auto'>Teste gratuitamente por 14 dias. Sem cartão de crédito necessário.</p>
 
-                    <Link
-                        href={me?.isAuth ? ROUTES.DASHBOARD : ROUTES.CRIAR_CONTA}
-                        className='inline-flex items-center gap-2 px-8 py-4 bg-white text-[var(--main-dark)] font-bold rounded-lg hover:shadow-2xl hover:-translate-y-1 transition-all text-lg'
-                    >
-                        {me?.isAuth ? 'Acessar Dashboard' : 'Começar Agora'}
+                    <Link href={me?.isAuth ? ROUTES.DASHBOARD : ROUTES.CRIAR_CONTA} className='inline-flex items-center gap-2 px-8 py-4 bg-white text-[var(--main-dark)] font-bold rounded-lg hover:shadow-2xl hover:-translate-y-1 transition-all text-lg'>
+                        {me?.isAuth ? 'Acessar dashboard' : 'Começar agora'}
                         <Icon icon='arrow-right' className='w-5 h-5' />
                     </Link>
                 </div>
@@ -587,8 +573,9 @@ function Footer() {
                     <div>
                         <div className='flex items-center gap-2 mb-3'>
                             <div className='w-8 h-8 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-lg flex items-center justify-center text-white'>
-                                <Icon icon='calendar' className='w-4 h-4' />
+                                <Icon icon='calendar' />
                             </div>
+
                             <span className='font-bold text-white'>{SYSTEM.NAME}</span>
                         </div>
 
@@ -655,7 +642,7 @@ function Footer() {
                                     href={`mailto:${SYSTEM.EMAIL_SUPPORT}`}
                                     className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
                                 >
-                                    <Icon icon='mail' className='w-4 h-4' />
+                                    <Icon icon='mail' />
                                 </a>
                             </Tippy>
 
@@ -666,7 +653,7 @@ function Footer() {
                                     rel='noopener noreferrer'
                                     className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
                                 >
-                                    <Icon icon='github' className='w-4 h-4' />
+                                    <Icon icon='github' />
                                 </a>
                             </Tippy>
 
@@ -677,7 +664,7 @@ function Footer() {
                                     rel='noopener noreferrer'
                                     className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
                                 >
-                                    <Icon icon='linkedin' className='w-4 h-4' />
+                                    <Icon icon='linkedin' />
                                 </a>
                             </Tippy>
                         </div>
