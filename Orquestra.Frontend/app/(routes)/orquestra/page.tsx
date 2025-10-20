@@ -84,18 +84,21 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
         <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-[var(--main-light)]/50' : 'bg-white/70 backdrop-blur-md'}`}>
             <div className='max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4'>
                 {/* Logo */}
-                <Link href={ROUTES.DASHBOARD} className='flex items-center gap-2.5 group'>
-                    <div className='w-10 h-10 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
-                        <Icon icon='calendar' />
-                    </div>
+                <Tippy content='Voltar ao início'>
+                    <Link href={ROUTES.DASHBOARD} className='flex items-center gap-2.5 group'>
+                        <div className='w-10 h-10 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
+                            <Icon icon='calendar' />
+                        </div>
 
-                    <div className='hidden sm:flex flex-col'>
-                        <span className='font-bold text-gray-900 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] bg-clip-text text-transparent'>
-                            {SYSTEM.NAME}
-                        </span>
-                        <span className='text-xs text-gray-500'>{SYSTEM.DESCRIPTION}</span>
-                    </div>
-                </Link>
+                        <div className='hidden sm:flex flex-col'>
+                            <span className='font-bold text-gray-900 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] bg-clip-text text-transparent'>
+                                {SYSTEM.NAME}
+                            </span>
+
+                            <span className='text-xs text-gray-500'>{SYSTEM.DESCRIPTION}</span>
+                        </div>
+                    </Link>
+                </Tippy>
 
                 {/* Desktop Nav */}
                 <nav className='hidden lg:flex items-center gap-1'>
@@ -190,7 +193,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                                                 href={ROUTES.CRIAR_CONTA}
                                                 className='flex-1 px-4 py-2.5 text-center bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-semibold'
                                             >
-                                                Grátis
+                                                Criar conta
                                             </Link>
                                         </Fragment>
                                     )

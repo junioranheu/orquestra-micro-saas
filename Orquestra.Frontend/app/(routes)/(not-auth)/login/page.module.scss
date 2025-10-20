@@ -98,9 +98,26 @@ $radius: 1.25rem;
     // background-color: orange !important;
     display: flex;
     flex-direction: row-reverse;
+
+    .right {
+        // background-color: tomato;
+        padding: 0rem !important;
+    }
 }
 
 // Media queries
+@media (max-width:1900px) {
+    .main {
+        // background: blue !important;
+
+        .wrapper {
+            transform: scale(0.9);
+            width: 80vw;
+        }
+    }
+}
+
+
 @media (max-width:1536px) {
     .main {
         // background: orange !important;

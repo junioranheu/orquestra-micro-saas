@@ -23,7 +23,8 @@ import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { KeyboardEvent, useRef, useState } from 'react';
+import { Fragment, KeyboardEvent, useRef, useState } from 'react';
+import LoginModalRecuperarSenha from './modal/recuperar-senha';
 import styles from './page.module.scss';
 
 export default function Login() {
@@ -33,7 +34,9 @@ export default function Login() {
     const versionBuild = useApiGetBuildVersion();
     const router = useRouter();
     const [, setAuth] = useUserContext();
+
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
+    const [isModalRecuperarSenhaOpen, setIsModalRecuperarSenhaOpen] = useState<boolean>(false);
 
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
     useIsSupportedBrowser();
@@ -74,85 +77,92 @@ export default function Login() {
     }
 
     return (
-        <section className={styles.main}>
-            <div className={styles.wrapper}>
-                <div className={styles.left}>
-                    <div className={styles.form}>
-                        <div className={styles.welcome}>
-                            <span>Bem-vindo ao {SYSTEM.NAME}</span>
+        <Fragment>
+            <section className={styles.main}>
+                <div className={styles.wrapper}>
+                    <div className={styles.left}>
+                        <div className={styles.form}>
+                            <div className={styles.welcome}>
+                                <span>Bem-vindo ao {SYSTEM.NAME}</span>
+                            </div>
+
+                            <div className={styles.flex}>
+                                <InputMask
+                                    title='E-mail'
+                                    fieldName='email'
+                                    formData={formData}
+                                    setFormData={setFormData}
+                                    isDisabled={isIncognito}
+                                    handleKeyDown={handleKeyDown}
+                                />
+
+                                <InputMask
+                                    title='Senha'
+                                    fieldName='password'
+                                    type='password'
+                                    formData={formData}
+                                    setFormData={setFormData}
+                                    isDisabled={isIncognito}
+                                    handleKeyDown={handleKeyDown}
+                                />
+
+                                <Button
+                                    label={'Iniciar sessão'}
+                                    handleFunction={() => handleLogin()}
+                                    refBtn={refButton}
+                                    isDisabled={isIncognito || isRequestLoading}
+                                    style={{ fontWeight: '600', boxShadow: 'var(--box-shadow)' }}
+                                    isBig={true}
+                                />
+
+                                {
+                                    !isIncognito && <Link className={styles.forget} href='#' onClick={() => setIsModalRecuperarSenhaOpen(true)}>Esqueci minha senha</Link>
+                                }
+                            </div>
+
+                            <Divider text='Não tem uma conta?' />
+
+                            <div className={styles.flex}>
+                                <Button
+                                    label='Crie uma conta agora mesmo'
+                                    handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
+                                    isDisabled={isIncognito || isRequestLoading}
+                                    isStyleSimple={true}
+                                    isBig={true}
+                                    style={{ fontWeight: '600' }}
+                                />
+                            </div>
                         </div>
+                    </div>
 
-                        <div className={styles.flex}>
-                            <InputMask
-                                title='E-mail'
-                                fieldName='email'
-                                formData={formData}
-                                setFormData={setFormData}
-                                isDisabled={isIncognito}
-                                handleKeyDown={handleKeyDown}
-                            />
-
-                            <InputMask
-                                title='Senha'
-                                fieldName='password'
-                                type='password'
-                                formData={formData}
-                                setFormData={setFormData}
-                                isDisabled={isIncognito}
-                                handleKeyDown={handleKeyDown}
-                            />
-
-                            <Button
-                                label={'Iniciar sessão'}
-                                handleFunction={() => handleLogin()}
-                                refBtn={refButton}
-                                isDisabled={isIncognito || isRequestLoading}
-                                style={{ fontWeight: '600', boxShadow: 'var(--box-shadow)' }}
-                                isBig={true}
-                            />
-
-                            {
-                                !isIncognito && <Link className={styles.forget} href={ROUTES.RECUPERAR_SENHA}>Esqueci minha senha</Link>
-                            }
-                        </div>
-
-                        <Divider text='Não tem uma conta?' />
-
-                        <div className={styles.flex}>
-                            <Button
-                                label='Crie uma conta agora mesmo'
-                                handleFunction={() => router.push(ROUTES.CRIAR_CONTA)}
-                                isDisabled={isIncognito || isRequestLoading}
-                                isStyleSimple={true}
-                                isBig={true}
-                                style={{ fontWeight: '600' }}
-                            />
-                        </div>
+                    <div className={styles.right}>
+                        <CarouselLogin alignCaptionToRight={true} />
                     </div>
                 </div>
 
-                <div className={styles.right}>
-                    <CarouselLogin alignCaptionToRight={true} />
-                </div>
-            </div>
+                <div className={styles.bottom}>
+                    <div className={styles.link}>
+                        <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`} placement='left'>
+                            <Link href={ROUTES.LANDING_PAGE}>
+                                <Icon icon='smile' color='var(--gray-dark)' className='contrastOnHover' />
+                            </Link>
+                        </Tippy>
+                    </div>
 
-            <div className={styles.bottom}>
-                <div className={styles.link}>
-                    <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`} placement='left'>
-                        <Link href={ROUTES.LANDING_PAGE}>
-                            <Icon icon='smile' color='var(--gray-dark)' className='contrastOnHover' />
-                        </Link>
-                    </Tippy>
+                    <div className={styles.build}>
+                        <code>{versionBuild?.buildVersion ? `Build ${versionBuild?.buildVersion}` : ''}</code>
+                        <code>{versionBuild?.configuration}</code>
+                    </div>
                 </div>
 
-                <div className={styles.build}>
-                    <code>{versionBuild?.buildVersion ? `Build ${versionBuild?.buildVersion}` : ''}</code>
-                    <code>{versionBuild?.configuration}</code>
-                </div>
-            </div>
+                <CookieDefault />
+            </section>
 
-            <CookieDefault />
-        </section>
+            <LoginModalRecuperarSenha
+                isModalOpen={isModalRecuperarSenhaOpen}
+                setIsModalOpen={setIsModalRecuperarSenhaOpen}
+            />
+        </Fragment>
     )
 }
 

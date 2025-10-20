@@ -6,3 +6,7 @@ Criar algum job ou trava/verifica a vigência do plano da empresa;
 
 ⦁	Company:
 Chamar o novo end-point "UpdatePlanTypeCompany" no front-end;
+
+⦁	User:
+Criar end-point de recuperar senha;
+Chamar o novo end-point no front-end (modal);
