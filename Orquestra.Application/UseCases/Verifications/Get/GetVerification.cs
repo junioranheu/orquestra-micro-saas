@@ -28,13 +28,13 @@ public sealed class GetVerification(Context context) : IGetVerification
     public async Task<Verification> Execute(Guid verificationId)
     {
         var verification = await _context.Verifications.
-                           AsNoTracking().
+                           // AsNoTracking(). // Propositalmente sem AsNoTracking;
                            Where(x => x.VerificationId == verificationId && x.Status == true).
                            FirstOrDefaultAsync() ?? throw new InvalidOperationException(SystemConsts.Warnings.VerifyTokenInvalid);
 
         if (verification.Used)
         {
-            throw new InvalidOperationException("Este token já foi verificado anteriormente.");
+            throw new InvalidOperationException("Este token já foi verificado anteriormente, portanto não é mais válido.");
         }
 
         return verification;

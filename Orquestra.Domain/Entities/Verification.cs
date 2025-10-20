@@ -18,8 +18,11 @@ public sealed class Verification : Audit
     public required VerificationTypeEnum VerificationType { get; set; }
 
     [Display(Name = "Informação adicional", Description = "Propriedade curinga para guardar e-mail, telefone ou outro identificador útil.")]
-    [MaxLength(100)]
+    [MaxLength(150)]
     public string? Reference { get; set; }
+
+    [Display(Name = "Data de expiração", Description = "Data de expiração do convite (opcional).")]
+    public DateTime? ExpirationDate { get; set; } = null;
 
     public bool Used { get; set; } = false;
 }

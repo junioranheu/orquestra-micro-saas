@@ -48,9 +48,7 @@ public sealed class GetVerificationTests
         GetVerification sut = CreateSut(context);
 
         // Act & Assert;
-        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => sut.Execute("invalid-token", VerificationTypeEnum.Company)
-        );
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute("invalid-token", VerificationTypeEnum.Company));
 
         Assert.Equal(SystemConsts.Warnings.VerifyTokenInvalid, ex.Message);
     }
@@ -78,9 +76,7 @@ public sealed class GetVerificationTests
         await Fixture.Save(context, verification);
 
         // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            () => sut.Execute(token, VerificationTypeEnum.PasswordReset)
-        );
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(token, VerificationTypeEnum.PasswordReset));
     }
 
     [Fact]

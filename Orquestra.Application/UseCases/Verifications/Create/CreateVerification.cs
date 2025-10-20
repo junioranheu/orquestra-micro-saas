@@ -9,7 +9,7 @@ public sealed class CreateVerification(Context context) : ICreateVerification
 {
     private readonly Context _context = context;
 
-    public async Task<Verification> Execute<T>(Guid entityId, VerificationTypeEnum verificationType, string? reference = "")
+    public async Task<Verification> Execute<T>(Guid entityId, VerificationTypeEnum verificationType, string? reference = "", DateTime? expirationDate = null)
     {
         Verification verification = new()
         {
@@ -17,8 +17,9 @@ public sealed class CreateVerification(Context context) : ICreateVerification
             EntityType = typeof(T).Name,
             EntityId = entityId,
             VerificationType = verificationType,
+            Reference = reference,
+            ExpirationDate = expirationDate,
             Used = false,
-            Reference = reference
         };
 
         await _context.AddAsync(verification);
