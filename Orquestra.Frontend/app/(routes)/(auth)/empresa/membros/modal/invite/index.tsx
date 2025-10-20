@@ -77,7 +77,7 @@ export default function EmpresaMembrosModalInvite({ isModalOpen, setIsModalOpen,
             onRequestClose={handleClose}
             showCloseButton={false}
             allowCloseOutsideClick={false}
-            style={{ padding: 0, width: '50rem' }}
+            style={{ padding: 0, width: '50rem', maxWidth: '90%' }}
         >
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>

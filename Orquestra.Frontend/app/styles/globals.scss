@@ -468,6 +468,14 @@ input:-webkit-autofill {
     .swal2-icon {
         font-size: 0.65rem !important;
     }
+
+    .swal2-validation-message {
+        font-size: 0.9rem;
+    }
+
+    .swal2-checkbox {
+        accent-color: var(--main) !important;
+    }
 }
 
 // Cookie consent

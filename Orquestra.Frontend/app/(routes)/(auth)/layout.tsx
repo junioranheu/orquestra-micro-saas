@@ -56,7 +56,11 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                             </main>
                         </div>
 
-                        <Splash text={SYSTEM.NAME} isGradient={true} destroyAfterSeconds={handleGetRandomNumber(1, 1.25)} />
+                        {
+                            process.env.NODE_ENV !== 'development' && (
+                                <Splash text={SYSTEM.NAME} isGradient={true} destroyAfterSeconds={handleGetRandomNumber(1, 1.25)} />
+                            )
+                        }
                     </body>
                 </GlobalContextProvider>
             </UserProvider>

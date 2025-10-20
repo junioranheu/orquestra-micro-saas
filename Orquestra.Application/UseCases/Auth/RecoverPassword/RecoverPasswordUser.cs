@@ -14,7 +14,7 @@ using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Encrypt;
 using static Orquestra.Utils.Fixtures.Get;
 
-namespace Orquestra.Application.UseCases.Users.RecoverPassword;
+namespace Orquestra.Application.UseCases.Auth.RecoverPassword;
 
 public sealed class RecoverPasswordUser(
         Context context,
@@ -51,8 +51,9 @@ public sealed class RecoverPasswordUser(
                      Where(x => x.UserId == verification.EntityId).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"O token {token} não pertence a nenhum usuário.");
 
-        // Alterar senha (aleatória);
-        result.Password = EncryptPassword(GetRandomString(charLength: 10));
+        // Alterar senha;
+        string password = $"{result.Email.ToLowerInvariant()}";
+        result.Password = EncryptPassword(password);
 
         _context.ChangeTracker.Clear();
         _context.Update(result);
@@ -74,7 +75,7 @@ public sealed class RecoverPasswordUser(
     private async Task SendEmail(Verification verification, UserOutput user)
     {
         EnvOutput env = _env.GetUrls();
-        string verifyUrl = $"{env.UrlBackend}/User/Verify/RecoverPassword/{verification.Token}";
+        string verifyUrl = $"{env.UrlBackend}/Auth/Verify/RecoverPassword/{verification.Token}";
 
         Dictionary<string, string> values = new()
         {
@@ -84,7 +85,7 @@ public sealed class RecoverPasswordUser(
         };
 
         string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailResetPassword, values);
-        await _emailService.SendEmail(to: user.Email, subject: $"Resete sua senha no {SystemConsts.App.NameApp}", body: bodyHtml);
+        await _emailService.SendEmail(to: user.Email, subject: $"Redefina sua senha no {SystemConsts.App.NameApp}", body: bodyHtml);
     }
     #endregion
 }

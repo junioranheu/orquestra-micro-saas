@@ -8,23 +8,35 @@ interface iProps {
     confirmBtnText?: string;
     confirmFunction?: () => void;
     allowOutsideClick?: boolean;
+    mustConfirm?: boolean;
+    checkboxLabel?: string;
     icon?: undefined | 'info' | 'success' | 'error' | 'warning' | 'question';
 }
 
 export default function swal(options: iProps): Promise<any> {
     return new Promise((resolve) => {
-        const { title, content, cancelBtnText, cancelFunction, confirmBtnText = 'Ok', confirmFunction, allowOutsideClick = false, icon = undefined } = options;
+        const { title, content, cancelBtnText, cancelFunction, confirmBtnText = 'Ok', confirmFunction, allowOutsideClick = false, mustConfirm = false, checkboxLabel = 'Concordo', icon = undefined } = options;
 
         Swal.fire({
             title: title,
             html: content?.toString()?.replace(/^Error:\s*/, ''),
             icon: icon,
-            allowOutsideClick: allowOutsideClick,
+            allowOutsideClick: mustConfirm ? false : allowOutsideClick,
+            allowEscapeKey: !mustConfirm,
             reverseButtons: true,
             showConfirmButton: (confirmBtnText?.length ?? 0) > 0,
             confirmButtonText: confirmBtnText,
             showCancelButton: (cancelBtnText?.length ?? 0) > 0,
-            cancelButtonText: cancelBtnText
+            cancelButtonText: cancelBtnText,
+            input: mustConfirm ? 'checkbox' : undefined,
+            inputPlaceholder: mustConfirm ? checkboxLabel : undefined,
+            inputValidator: mustConfirm ? (value: any) => {
+                if (!value) {
+                    return 'Você precisa marcar a caixinha acima para continuar!';
+                }
+
+                return null;
+            } : undefined
         }).then((result: SweetAlertResult) => {
             if (result.isConfirmed && confirmFunction) {
                 // User clicked confirm button;

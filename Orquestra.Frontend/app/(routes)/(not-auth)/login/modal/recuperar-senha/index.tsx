@@ -1,5 +1,5 @@
 'use client';
-import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
+import { CONSTS_AUTH } from '@/app/api/consts/auth';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
@@ -22,14 +22,14 @@ interface iFormData {
 
 export default function LoginModalRecuperarSenha({ isModalOpen, setIsModalOpen }: iProps) {
 
-    const [saving, setSaving] = useState<boolean>(false);
+    const [sending, setSending] = useState<boolean>(false);
 
     const [formData, setFormData] = useState<iFormData>({
         recoverEmail: ''
     });
 
     const handleClose = useCallback(() => {
-        setSaving(false);
+        setSending(false);
         setIsModalOpen(false);
         handleClearFormData(setFormData);
     }, [setIsModalOpen]);
@@ -40,22 +40,25 @@ export default function LoginModalRecuperarSenha({ isModalOpen, setIsModalOpen }
             return;
         }
 
-        setSaving(true);
+        setSending(true);
 
-        const input = { email: formData.recoverEmail };
-        const output = await Fetch.post({ url: CONSTS_COMPANY_USER.recoverPassword, body: input });
+        const output = await Fetch.post({ url: `${CONSTS_AUTH.sendRecoverPassword}/${formData.recoverEmail}` });
 
         if (output) {
             swal({
-                content: `Um e-mail de recuperação de senha foi enviado para o e-mail ${formData.recoverEmail}. Caso necessário, cheque sua caixa de spam.`,
-                icon: 'success'
+                content: `Um e-mail de recuperação de senha foi enviado para <b>${formData.recoverEmail}</b>. Caso necessário, cheque sua caixa de spam.
+            <br/><br/><b>Atenção a um ponto importantíssimo</b>: ao redefinir a senha, ela será temporariamente definida como seu e-mail de cadastro. Por exemplo, se seu e-mail é joaozinho@gmail.com, sua nova senha será joaozinho@gmail.com.
+            <br/><br/>Faça login rapidamente e troque a senha manualmente nas configurações para manter sua conta mais segura.`,
+                icon: 'success',
+                mustConfirm: true,
+                checkboxLabel: 'Li e estou de acordo'
             });
 
             handleClose();
             return;
         }
 
-        setSaving(false);
+        setSending(false);
         return;
     }
 
@@ -71,7 +74,7 @@ export default function LoginModalRecuperarSenha({ isModalOpen, setIsModalOpen }
             showCloseButton={false}
             allowCloseOutsideClick={false}
             overlayColor={0.35}
-            style={{ padding: 0, width: '50rem' }}
+            style={{ padding: 0, width: '50rem', maxWidth: '90%' }}
         >
             <div className={styles.modalCard}>
                 <header className={styles.modalHeader}>
@@ -104,7 +107,7 @@ export default function LoginModalRecuperarSenha({ isModalOpen, setIsModalOpen }
                     </div>
 
                     <div className={styles.buttonsRow}>
-                        <Button label={saving ? 'Enviando e-mail de recuperação...' : 'Enviar e-mail de recuperação de senha'} handleFunction={() => handleSave()} isDisabled={saving} />
+                        <Button label={sending ? 'Enviando e-mail de recuperação...' : 'Enviar e-mail de recuperação de senha'} handleFunction={() => handleSave()} isDisabled={sending} />
                     </div>
                 </footer>
             </div>

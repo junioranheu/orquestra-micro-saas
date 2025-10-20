@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Orquestra.Application.UseCases.Auth.RecoverPassword;
 using Orquestra.Application.UseCases.Users.Get;
-using Orquestra.Application.UseCases.Users.RecoverPassword;
 using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Application.UseCases.Verifications.Get;
 using Orquestra.Application.UseCases.Verifications.Update;
@@ -15,7 +15,7 @@ using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using static Orquestra.Utils.Fixtures.Get;
 
-namespace Orquestra.IntegrationTests.Tests.Users;
+namespace Orquestra.IntegrationTests.Tests.Auth;
 
 public sealed class RecoverPasswordUserTests
 {

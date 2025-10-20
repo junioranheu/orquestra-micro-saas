@@ -10,7 +10,9 @@ export const CONSTS_AUTH = {
     me: `${BASE}/${controller}/Me`,
     meCurrentMainCompany: `${BASE}/${controller}/Me/CurrentMainCompany`,
     meModules: `${BASE}/${controller}/Me/Modules`,
-    logout: `${BASE}/${controller}`
+    logout: `${BASE}/${controller}`,
+    sendRecoverPassword: `${BASE}/${controller}/Send/RecoverPassword`,
+    verifyRecoverPassword: `${BASE}/${controller}/Verify/RecoverPassword`
 };
 
 export interface iMeSimple {

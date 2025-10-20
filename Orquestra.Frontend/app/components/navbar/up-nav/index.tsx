@@ -1,19 +1,27 @@
 import SYSTEM from '@/app/consts/system';
-import { handleGetGreetingDayInfo } from '@/app/functions/get.greeting';
+import { handleGetRandomGreeting } from '@/app/functions/get.greeting';
 import useWindowSize from '@/app/hooks/useWindowSize';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function UpNav() {
 
     const windowSize = useWindowSize();
+    const [showContent, setShowContent] = useState<boolean>(true);
+
+    useEffect(() => {
+        setShowContent(windowSize.width > 801);
+    }, [windowSize]);
+
+    const greeting = useMemo(() => {
+        return `Tenha ${handleGetRandomGreeting({ mustIncludeUmUma: true }).toLocaleLowerCase()} ✨`;
+    }, []);
 
     return (
         <nav className={styles.nav}>
             {
-                windowSize.width <= 801 ? (
-                    <span></span>
-                ) : (
-                    <span>Bem-vindo ao {SYSTEM.NAME}! Tenha {handleGetGreetingDayInfo({ mustIncludeUmUma: true }).toLocaleLowerCase()} ✨</span>
+                showContent && (
+                    <span>Bem-vindo ao {SYSTEM.NAME}! {greeting}</span>
                 )
             }
         </nav>

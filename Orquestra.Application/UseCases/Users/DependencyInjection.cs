@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Orquestra.Application.UseCases.Auth.RecoverPassword;
 using Orquestra.Application.UseCases.Users.Create;
 using Orquestra.Application.UseCases.Users.Get;
-using Orquestra.Application.UseCases.Users.RecoverPassword;
 using Orquestra.Application.UseCases.Users.Update;
 using Orquestra.Application.UseCases.Users.Verify;
 

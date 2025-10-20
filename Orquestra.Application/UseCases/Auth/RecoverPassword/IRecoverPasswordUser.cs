@@ -1,4 +1,6 @@
-﻿namespace Orquestra.Application.UseCases.Users.RecoverPassword;
+﻿using Orquestra.Domain.Entities;
+
+namespace Orquestra.Application.UseCases.Auth.RecoverPassword;
 
 public interface IRecoverPasswordUser
 {

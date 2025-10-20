@@ -9,6 +9,7 @@ const ROUTES = {
     ERRO_403: '/erro/403',
     ERRO_404: '/erro/404',
     USUARIO_VERIFICADO: '/usuario/verificado',
+    USUARIO_SENHA_REDEFINIDA: '/usuario/senha-redefinida',
     USUARIO_CONFIGURACOES: '/usuario/configuracoes',
     USUARIO_NOTIFICACOES: '/usuario/notificacoes',
     ETC_AJUDA: '/ajuda',

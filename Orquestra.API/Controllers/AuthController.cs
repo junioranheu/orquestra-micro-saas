@@ -6,6 +6,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
 using Orquestra.Application.UseCases.Auth.Logout;
+using Orquestra.Application.UseCases.Auth.RecoverPassword;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
@@ -15,6 +16,8 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Auth.Token;
+using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Env.Models;
 using System.IdentityModel.Tokens.Jwt;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -23,20 +26,24 @@ namespace Orquestra.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController(
+        IEnvService env,
         ICreateToken createToken,
         IJwtTokenGenerator jwtTokenGenerator,
         IGetRefreshToken getRefreshToken,
         IGetCurrentMainCompanyUser getCurrentMainCompanyUser,
         IGetModuleCompanyUser getModuleCompanyUser,
-        ILogoutUser logoutUser
+        ILogoutUser logoutUser,
+        IRecoverPasswordUser recoverPasswordUser
     ) : BaseController<AuthController>
 {
+    private readonly IEnvService _env = env;
     private readonly ICreateToken _createToken = createToken;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
     private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;
     private readonly ILogoutUser _logoutUser = logoutUser;
+    private readonly IRecoverPasswordUser _recoverPasswordUser = recoverPasswordUser;
 
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.Policies.RateLimiting)]
@@ -193,5 +200,36 @@ public class AuthController(
         await _logoutUser.Execute(userIdAuth: GetUserIdAuth());
 
         return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("Send/RecoverPassword/{email}")]
+    public async Task<IActionResult> SendRecoverPassword(string email)
+    {
+        if (IsUserAuth())
+        {
+            await _logoutUser.Execute(userIdAuth: GetUserIdAuth());
+        }
+
+        await _recoverPasswordUser.SendEmail(email);
+
+        return Ok(true);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("Verify/RecoverPassword/{token}")]
+    public async Task<IActionResult> VerifyRecoverPassword(string token)
+    {
+        if (IsUserAuth())
+        {
+            await _logoutUser.Execute(userIdAuth: GetUserIdAuth());
+        }
+
+        await _recoverPasswordUser.Verify(token);
+
+        EnvOutput env = _env.GetUrls();
+        string url = $"{env.UrlFrontend}/{SystemConsts.Screens.UserPasswordReset}";
+
+        return Redirect(url);
     }
 }

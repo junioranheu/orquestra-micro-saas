@@ -98,11 +98,6 @@ $radius: 1.25rem;
     // background-color: orange !important;
     display: flex;
     flex-direction: row-reverse;
-
-    .right {
-        // background-color: tomato;
-        padding: 0rem !important;
-    }
 }
 
 // Media queries
@@ -180,6 +175,15 @@ $radius: 1.25rem;
 
             .right {
                 flex: 0;
+            }
+        }
+
+        .invert {
+            // background-color: orange !important;
+
+            .right {
+                // background-color: tomato;
+                padding: 0rem !important;
             }
         }
     }
