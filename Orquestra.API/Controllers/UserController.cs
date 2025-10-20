@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Auth.Logout;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Application.UseCases.Users.Create;
 using Orquestra.Application.UseCases.Users.Get;
+using Orquestra.Application.UseCases.Users.RecoverPassword;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Application.UseCases.Users.Update;
 using Orquestra.Application.UseCases.Users.Verify;
@@ -23,7 +24,8 @@ public class UserController(
         ICreateUser create,
         IUpdateUser update,
         IVerifyUser verify,
-        ILogoutUser logout
+        ILogoutUser logout,
+        IRecoverPasswordUser recoverPasswordUser
     ) : BaseController<UserController>
 {
     private readonly IEnvService _env = env;
@@ -32,6 +34,7 @@ public class UserController(
     private readonly IUpdateUser _update = update;
     private readonly IVerifyUser _verify = verify;
     private readonly ILogoutUser _logout = logout;
+    private readonly IRecoverPasswordUser _recoverPasswordUser = recoverPasswordUser;
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
     [HttpGet]
@@ -76,5 +79,23 @@ public class UserController(
         string url = $"{env.UrlFrontend}/{SystemConsts.Screens.UserVerified}";
 
         return Redirect(url);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("Send/RecoverPassword/{email}")]
+    public async Task<IActionResult> SendRecoverPassword(string email)
+    {
+        await _recoverPasswordUser.SendEmail(email);
+
+        return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("Verify/RecoverPassword/{token}")]
+    public async Task<IActionResult> VerifyRecoverPassword(string token)
+    {
+        await _recoverPasswordUser.Verify(token);
+
+        return NoContent();
     }
 }

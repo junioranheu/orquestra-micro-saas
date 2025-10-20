@@ -109,11 +109,22 @@ public sealed class GetUserTests
         GetUser sut = CreateSut(context);
 
         // Act;
-        UserOutput output = await sut.Execute(Guid.NewGuid());
+        UserOutput output = await sut.Execute(Guid.NewGuid(), throwIfStatusFalse: false);
 
         // Assert;
         Assert.NotNull(output);
         Assert.Equal(Guid.Empty, output.UserId);
+    }
+
+    [Fact]
+    public async Task Execute_ById_ShouldThrow_WhenUserNotFound()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        GetUser sut = CreateSut(context);
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(Guid.NewGuid(), throwIfStatusFalse: true));
     }
 
     [Fact]

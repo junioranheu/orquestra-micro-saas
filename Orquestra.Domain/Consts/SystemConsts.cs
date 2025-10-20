@@ -53,6 +53,7 @@ public static class SystemConsts
         public const string EmailCreateInvoice = "EmailCreateInvoice.html";
         public const string EmailVerifyUser = "EmailVerifyUser.html";
         public const string EmailVerifyCompanyUser = "EmailVerifyCompanyUser.html";
+        public const string EmailResetPassword = "EmailResetPassword.html";
     }
 
     public static class Warnings

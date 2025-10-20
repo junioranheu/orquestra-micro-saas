@@ -6,7 +6,10 @@ const controller = 'api/User';
 export const CONSTS_USER = {
     get: `${BASE}/${controller}`,
     create: `${BASE}/${controller}`,
-    put: `${BASE}/${controller}`
+    put: `${BASE}/${controller}`,
+    verify: `${BASE}/${controller}`,
+    sendRecoverPassword: `${BASE}/${controller}/Send/RecoverPassword`,
+    verifyRecoverPassword: `${BASE}/${controller}/Verify/RecoverPassword`
 };
 
 export interface iUserInput {

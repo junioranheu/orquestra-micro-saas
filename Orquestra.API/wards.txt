@@ -9,5 +9,11 @@ Chamar o novo end-point "UpdatePlanTypeCompany" no front-end;
 
 ⦁	User:
 Criar end-point de recuperar senha (RecoverPassword);
+Criar teste de integração;
 Chamar o novo end-point no front-end (modal);
 Criar tela de recuperação
+
+Criar método pra trocar de senha
+
+⦁	Notificações (?)
+Desenvolver feature de notificação

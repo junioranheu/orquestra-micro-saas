@@ -61,12 +61,16 @@ public sealed class GetUser(Context context) : IGetUser
                         (string.IsNullOrEmpty(email) || x.Email.ToLower() == email)
                      ).FirstOrDefaultAsync();
 
-        if (result is null)
+        if (result is null && !throwIfStatusFalse)
         {
             return new();
         }
+        else if (result is null && throwIfStatusFalse)
+        {
+            throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
+        }
 
-        if (throwIfStatusFalse && !result.Status)
+        if (throwIfStatusFalse && !result!.Status)
         {
             throw new UnauthorizedAccessException(SystemConsts.Warnings.NeedToVerifyUser);
         }
