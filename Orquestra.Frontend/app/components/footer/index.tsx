@@ -29,6 +29,18 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
                             </Link>
                         </Tippy>
 
+                        <Tippy content='Contatar suporte via WhatsApp'>
+                            <Link
+                                href='#'
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    window.open(`https://wa.me/${SYSTEM.PHONE_SUPPORT}`, '_blank');
+                                }}
+                            >
+                                <Icon icon='message-circle' color='var(--gray-dark)' className='contrastOnHover' />
+                            </Link>
+                        </Tippy>
+
                         <Tippy content='Contatar suporte via e-mail'>
                             <Link
                                 href='#'

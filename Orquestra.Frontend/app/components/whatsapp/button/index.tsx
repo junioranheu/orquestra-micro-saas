@@ -27,7 +27,6 @@ export default function WhatsappButton({ phone, message, tippyContent = 'Suporte
                 target='_blank'
                 rel='noopener noreferrer'
                 className={`${styles.whatsappButton} ${positionClass}`}
-                aria-label='Abrir conversa no WhatsApp'
             >
                 <svg
                     xmlns='http://www.w3.org/2000/svg'

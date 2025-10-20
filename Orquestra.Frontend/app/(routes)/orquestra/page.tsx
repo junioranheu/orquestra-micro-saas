@@ -601,6 +601,19 @@ function Footer() {
                         <p className='font-semibold text-white mb-3 text-sm uppercase tracking-wide'>Links úteis</p>
 
                         <div className='flex gap-3'>
+                            <Tippy content='Contatar suporte via WhatsApp'>
+                                <Link
+                                    href='#'
+                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.open(`https://wa.me/${SYSTEM.PHONE_SUPPORT}`, '_blank');
+                                    }}
+                                >
+                                    <Icon icon='message-circle' color='var(--gray-dark)' className='contrastOnHover' />
+                                </Link>
+                            </Tippy>
+
                             <Tippy content='Contatar suporte via e-mail'>
                                 <a
                                     href={`mailto:${SYSTEM.EMAIL_SUPPORT}`}

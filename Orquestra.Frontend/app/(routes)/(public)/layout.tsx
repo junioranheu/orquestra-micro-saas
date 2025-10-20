@@ -3,7 +3,9 @@ import Head from '@/app/(routes)/head';
 import { CookieDefault } from '@/app/components/cookie';
 import NavbarNotAuth from '@/app/components/navbar/nav-not-auth';
 import UpNav from '@/app/components/navbar/up-nav';
+import WhatsappButton from '@/app/components/whatsapp/button';
 import ROUTES from '@/app/consts/routes';
+import SYSTEM from '@/app/consts/system';
 import { HANKEN } from '@/app/fonts/fonts';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
@@ -49,6 +51,8 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
                                 <div className='children'>
                                     {children}
+
+                                    <WhatsappButton phone={SYSTEM.PHONE_SUPPORT} />
                                 </div>
                             </Fragment>
                         ) : (
