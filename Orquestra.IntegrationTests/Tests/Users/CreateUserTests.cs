@@ -83,7 +83,9 @@ public sealed class CreateUserTests
             Email = "duplicado@teste.com",
             Password = "Senha123!",
             Role = UserRoleEnum.Common,
-            Status = true
+            Status = true,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = "Sandra"
         };
 
         await context.Users.AddAsync(existing);

@@ -7,9 +7,9 @@ import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/compone
 import ROUTES from '@/app/consts/routes';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
@@ -24,8 +24,8 @@ export default function EmpresaMembros() {
     const router = useRouter();
     const me = useApiGetMe({});
 
-    const companyUserRoleEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyUserRoleEnum' });
-    const moduleEnum = useApiGetCompanySituationEnum({ enumName: 'ModuleEnum' });
+    const companyUserRoleEnum = useApiGetEnum({ enumName: 'CompanyUserRoleEnum' });
+    const moduleEnum = useApiGetEnum({ enumName: 'ModuleEnum' });
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [members, setMembers] = useState<iCompanyUserPaginated>();

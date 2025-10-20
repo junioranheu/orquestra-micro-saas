@@ -30,7 +30,9 @@ public sealed class RecoverPasswordUserTests
             FullName = "Junior Test",
             Email = "recover@teste.com",
             Password = "123",
-            Status = true
+            Status = true,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = "Sandra"
         };
 
         await context.Users.AddAsync(user);
@@ -56,9 +58,9 @@ public sealed class RecoverPasswordUserTests
         // Assert: e-mail enviado;
         Assert.NotNull(capturedValues);
         Assert.Equal("Junior", capturedValues!["[UserName]"]);
-        Assert.Contains("/User/Verify/RecoverPassword/", capturedValues["[VerifyUrl]"]);
+        Assert.Contains("/Auth/Verify/RecoverPassword/", capturedValues["[VerifyUrl]"]);
 
-        emailServiceMock.Verify(x => x.SendEmail(user.Email, It.Is<string>(s => s.Contains("Resete sua senha")), It.IsAny<string>(), true, null), Times.Once);
+        emailServiceMock.Verify(x => x.SendEmail(user.Email, It.Is<string>(s => s.Contains("Redefina")), It.IsAny<string>(), true, null), Times.Once);
     }
 
     [Fact]
@@ -85,7 +87,9 @@ public sealed class RecoverPasswordUserTests
             FullName = "Junior Password",
             Email = "pass@teste.com",
             Password = "SenhaAntiga",
-            Status = true
+            Status = true,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = "Sandra"
         };
 
         await context.Users.AddAsync(user);
@@ -144,7 +148,9 @@ public sealed class RecoverPasswordUserTests
             FullName = "Junior Expirado",
             Email = "exp@teste.com",
             Password = "123",
-            Status = true
+            Status = true,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = "Sandra"
         };
 
         await context.Users.AddAsync(user);
@@ -168,6 +174,39 @@ public sealed class RecoverPasswordUserTests
 
         // Act & Assert;
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Verify(verification.Token));
+    }
+
+    [Fact]
+    public async Task Verify_ShouldThrow_WhenRecoverPasswordAnswerIsNull()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = new()
+        {
+            FullName = "Junior Test",
+            Email = "recover@teste.com",
+            Password = "123",
+            Status = true,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = string.Empty // Vazio;
+        };
+
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
+
+        Dictionary<string, string>? capturedValues = null;
+        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals =>
+        {
+            capturedValues = new Dictionary<string, string>(vals);
+        });
+
+        RecoverPasswordUser sut = CreateSut(context, emailServiceMock);
+
+        // Act & Assert;
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.SendEmail(user.Email));
+
+        Assert.Contains("não tem nenhuma resposta de recuperação de conta.", ex.Message);
     }
 
     #region helpers

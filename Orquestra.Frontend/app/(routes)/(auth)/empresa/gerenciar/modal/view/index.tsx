@@ -19,8 +19,8 @@ import { handleGetOnlyNumbers } from '@/app/functions/format.string';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -36,9 +36,9 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
     const windowSize = useWindowSize();
 
-    const companyTypeEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyTypeEnum' });
-    const companySituationEnum = useApiGetCompanySituationEnum({ enumName: 'CompanySituationEnum' });
-    const planTypeEnum = useApiGetCompanySituationEnum({ enumName: 'PlanTypeEnum' });
+    const companyTypeEnum = useApiGetEnum({ enumName: 'CompanyTypeEnum' });
+    const companySituationEnum = useApiGetEnum({ enumName: 'CompanySituationEnum' });
+    const planTypeEnum = useApiGetEnum({ enumName: 'PlanTypeEnum' });
 
     const [countries, setCountries] = useState<string[] | undefined>([]);
     useApiRequestToSetterOnUrlChange<string[]>({ apiUrlRequest: CONSTS_UTILITY.getCountry, setter: setCountries });

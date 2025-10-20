@@ -15,7 +15,9 @@ public static class UserMock
             FullName = $"{GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)} {GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)}",
             Email = $"{GetRandomString(charLength: GetRandomNumber(5, 15))}@gmail.com",
             Password = EncryptPassword(GetRandomString(charLength: 11)),
-            Role = UserRoleEnum.Common
+            Role = UserRoleEnum.Common,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = "Sandra"
         };
 
         return input;
@@ -29,7 +31,9 @@ public static class UserMock
             FullName = fullName,
             Email = email,
             Password = EncryptPassword(GetRandomString(charLength: 11)),
-            Role = role
+            Role = role,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = "Sandra"
         };
     }
 
@@ -41,7 +45,9 @@ public static class UserMock
             FullName = fullName,
             Email = email,
             Password = EncryptPassword(password),
-            Role = role
+            Role = role,
+            RecoverPasswordQuestion = RecoverPasswordQuestionEnum.MotherName,
+            RecoverPasswordAnswer = "Sandra"
         };
     }
 

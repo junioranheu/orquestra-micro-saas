@@ -8,10 +8,10 @@ import Splash from '@/app/components/splash';
 import WhatsappButton from '@/app/components/whatsapp/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useInjectTailwindCDN from '@/app/hooks/useInjectTailwindCDN';
 import useTitle from '@/app/hooks/useTitle';
 import useWindowSize from '@/app/hooks/useWindowSize';
@@ -210,7 +210,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
 function Hero({ me }: { me: iMeSimple | undefined }) {
 
     const versionBuild = useApiGetBuildVersion();
-    const companyTypeEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyTypeEnum' });
+    const companyTypeEnum = useApiGetEnum({ enumName: 'CompanyTypeEnum' });
 
     const [companies, setCompanies] = useState<iDropdownOption[]>([]);
     const [animate, setAnimate] = useState<'in' | 'out'>('in');

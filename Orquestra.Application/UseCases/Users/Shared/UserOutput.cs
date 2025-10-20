@@ -12,6 +12,10 @@ public sealed class UserOutput
 
     public UserRoleEnum Role { get; set; }
 
+    public RecoverPasswordQuestionEnum RecoverPasswordQuestion { get; set; }
+
+    public string RecoverPasswordAnswer { get; set; } = string.Empty;
+
     public bool Status { get; set; }
 
     public DateTime CreatedDate { get; set; }

@@ -11,12 +11,11 @@ export default function UsuarioSenhaRedefinida() {
 
     useEffect(() => {
         swal({
-            content: `Sua senha foi redefinida e agora ela é idêntica ao seu e-mail de cadastro.<br/><br/>
-                Por exemplo, se seu e-mail é joaozinho@gmail.com, sua nova senha será joaozinho@gmail.com.
-                <br/><br/>Faça login rapidamente e troque a senha manualmente nas configurações para manter sua conta mais segura.`,
+            content: `Sua senha foi redefinida e agora ela é idêntica à sua resposta de recuperação de senha.
+                    <br/><br/>Faça login rapidamente e troque a senha manualmente, nas configurações da sua conta, para manter sua conta mais segura.`,
             icon: 'success',
             mustConfirm: true,
-            checkboxLabel: 'Entendi!'
+            checkboxLabel: 'Li e estou de acordo'
         });
     }, []);
 

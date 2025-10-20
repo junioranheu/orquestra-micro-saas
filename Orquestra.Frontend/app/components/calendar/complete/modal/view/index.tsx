@@ -19,7 +19,7 @@ import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
 import { useRouter } from 'next/navigation';
@@ -49,8 +49,8 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
-    const paymentTypeEnum = useApiGetCompanySituationEnum({ enumName: 'PaymentTypeEnum' });
-    const scheduleStatusEnum = useApiGetCompanySituationEnum({ enumName: 'ScheduleStatusEnum' });
+    const paymentTypeEnum = useApiGetEnum({ enumName: 'PaymentTypeEnum' });
+    const scheduleStatusEnum = useApiGetEnum({ enumName: 'ScheduleStatusEnum' });
 
     const [formData, setFormData] = useState<iSchedule>({
         scheduleId: SYSTEM.EMPTY_GUID,

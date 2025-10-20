@@ -10,7 +10,7 @@ import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
-import useCheckAzureServer from '@/app/hooks/useCheckAzureServer';
+import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';

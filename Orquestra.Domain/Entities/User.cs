@@ -19,5 +19,10 @@ public sealed class User : Audit
     [MaxLength(100)]
     public string Password { get; set; } = string.Empty;
 
+    public required RecoverPasswordQuestionEnum RecoverPasswordQuestion { get;set;}
+
+    [MaxLength(100)]
+    public required string RecoverPasswordAnswer { get; set; }
+
     public UserRoleEnum Role { get; set; }
 }

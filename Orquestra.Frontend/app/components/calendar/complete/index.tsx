@@ -9,8 +9,8 @@ import { DATE_STYLE, handleFormatDate, handleParseDateFromString } from '@/app/f
 import { handleTruncate } from '@/app/functions/format.string';
 import { handleCapitalizeFirstLetter } from '@/app/functions/get.formatUserName';
 import swal from '@/app/functions/swal';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Guid } from 'guid-typescript';

@@ -14,6 +14,8 @@ export interface iUserInput {
     fullName?: string;
     email?: string;
     password?: string;
+    recoverPasswordQuestion?: string;
+    recoverPasswordAnswer?: string;
     inviteToken?: string;
 }
 

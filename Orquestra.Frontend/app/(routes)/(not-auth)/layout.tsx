@@ -4,7 +4,7 @@ import UpNav from '@/app/components/navbar/up-nav';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { HANKEN } from '@/app/fonts/fonts';
-import useCheckAzureServer from '@/app/hooks/useCheckAzureServer';
+import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';

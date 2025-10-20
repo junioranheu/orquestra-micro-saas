@@ -11,7 +11,7 @@ import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -41,8 +41,8 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
         companyId: user?.companyId
     });
 
-    const companyUserRoleEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyUserRoleEnum' });
-    const moduleEnum = useApiGetCompanySituationEnum({ enumName: 'ModuleEnum' });
+    const companyUserRoleEnum = useApiGetEnum({ enumName: 'CompanyUserRoleEnum' });
+    const moduleEnum = useApiGetEnum({ enumName: 'ModuleEnum' });
 
     const setCompanyUserRoleOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyUserRole)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setModuleOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.userModules)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;

@@ -38,6 +38,11 @@ public sealed class RecoverPasswordUser(
     {
         UserOutput user = await _getUser.Execute(userId: null, email: email, throwIfStatusFalse: true);
 
+        if (user.RecoverPasswordQuestion == 0 || string.IsNullOrEmpty(user.RecoverPasswordAnswer))
+        {
+            throw new InvalidOperationException("Aparentemente sua conta não tem nenhuma resposta de recuperação de conta. Caso necessário, contate o suporte.");
+        }
+
         Verification verification = await SaveVerification(user);
         await SendEmail(verification, user);
     }
@@ -51,9 +56,13 @@ public sealed class RecoverPasswordUser(
                      Where(x => x.UserId == verification.EntityId).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"O token {token} não pertence a nenhum usuário.");
 
+        if (result.RecoverPasswordQuestion == 0 || string.IsNullOrEmpty(result.RecoverPasswordAnswer))
+        {
+            throw new InvalidOperationException("Aparentemente sua conta não tem nenhuma resposta de recuperação de conta. Caso necessário, contate o suporte.");
+        }
+
         // Alterar senha;
-        string password = $"{result.Email.ToLowerInvariant()}";
-        result.Password = EncryptPassword(password);
+        result.Password = EncryptPassword(result.RecoverPasswordAnswer);
 
         _context.ChangeTracker.Clear();
         _context.Update(result);

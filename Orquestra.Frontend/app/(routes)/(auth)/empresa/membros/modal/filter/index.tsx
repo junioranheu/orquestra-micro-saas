@@ -6,7 +6,7 @@ import ModalGeneric from '@/app/components/modal/generic';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { Dispatch, SetStateAction } from 'react';
 
 interface iProps {
@@ -36,8 +36,8 @@ export default function EmpresaMembrosModalFilters({
     setCurrentPage
 }: iProps) {
 
-    const companyUserRoleEnum = useApiGetCompanySituationEnum({ enumName: 'CompanyUserRoleEnum' });
-    const moduleEnum = useApiGetCompanySituationEnum({ enumName: 'ModuleEnum' });
+    const companyUserRoleEnum = useApiGetEnum({ enumName: 'CompanyUserRoleEnum' });
+    const moduleEnum = useApiGetEnum({ enumName: 'ModuleEnum' });
 
     const setCompanyUserRoleOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.companyUserRole)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setModuleOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.modules)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;

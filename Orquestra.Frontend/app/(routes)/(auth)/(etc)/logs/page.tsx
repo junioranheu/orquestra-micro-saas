@@ -7,8 +7,8 @@ import handleCopyToClipboard from '@/app/functions/clipboard.copy';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil } from '@/app/functions/get.date.brazil';
 import toast from '@/app/functions/toast';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
@@ -17,7 +17,7 @@ export default function Logs() {
 
     useTitle('Logs');
 
-    const logTypeEnum = useApiGetCompanySituationEnum({ enumName: 'LogTypeEnum' });
+    const logTypeEnum = useApiGetEnum({ enumName: 'LogTypeEnum' });
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [logs, setLogs] = useState<iLogPaginated>();

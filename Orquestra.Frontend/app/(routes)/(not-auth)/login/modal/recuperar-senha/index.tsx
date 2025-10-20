@@ -47,8 +47,8 @@ export default function LoginModalRecuperarSenha({ isModalOpen, setIsModalOpen }
         if (output) {
             swal({
                 content: `Um e-mail de recuperação de senha foi enviado para <b>${formData.recoverEmail}</b>. Caso necessário, cheque sua caixa de spam.
-            <br/><br/><b>Atenção a um ponto importantíssimo</b>: ao redefinir a senha, ela será temporariamente definida como seu e-mail de cadastro. Por exemplo, se seu e-mail é joaozinho@gmail.com, sua nova senha será joaozinho@gmail.com.
-            <br/><br/>Faça login rapidamente e troque a senha manualmente nas configurações para manter sua conta mais segura.`,
+            <br/><br/><b>Atenção a um ponto importantíssimo</b>: ao redefinir a senha, <b>ela será definida como a sua resposta de recuperação</b>.
+            <br/><br/>Faça login rapidamente e troque a senha manualmente, nas configurações da sua conta, para manter sua conta mais segura.`,
                 icon: 'success',
                 mustConfirm: true,
                 checkboxLabel: 'Li e estou de acordo'

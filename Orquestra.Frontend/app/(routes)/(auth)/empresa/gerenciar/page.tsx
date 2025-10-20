@@ -16,10 +16,10 @@ import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.f
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
-import useApiGetCompanySituationEnum from '@/app/hooks/api/enums/useApiGetCompanySituationEnum';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
@@ -37,7 +37,7 @@ export default function EmpresaGerenciar() {
     const router = useRouter();
     const me = useApiGetMeSimple();
 
-    const planTypeEnum = useApiGetCompanySituationEnum({ enumName: 'PlanTypeEnum' });
+    const planTypeEnum = useApiGetEnum({ enumName: 'PlanTypeEnum' });
 
     const currentMainCompany = useApiGetCurrentMainCompany({});
     const [companies, setCompanies] = useState<iCompanyOutput[]>();

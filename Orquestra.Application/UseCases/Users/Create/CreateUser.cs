@@ -64,7 +64,9 @@ public sealed class CreateUser(
             FullName = input.FullName,
             Email = input.Email,
             Password = EncryptPassword(input.Password),
-            Role = UserRoleEnum.Common
+            Role = UserRoleEnum.Common,
+            RecoverPasswordQuestion = input.RecoverPasswordQuestion,
+            RecoverPasswordAnswer = input.RecoverPasswordAnswer
         };
 
         await _context.AddAsync(user);

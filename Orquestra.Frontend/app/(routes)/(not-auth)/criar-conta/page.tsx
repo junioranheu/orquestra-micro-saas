@@ -5,20 +5,24 @@ import { iUserInput } from '@/app/api/consts/user';
 import { CONSTS_UTILITY, iPlanType } from '@/app/api/consts/utility';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
+import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
+import handleGetPropName from '@/app/functions/get.propName';
 import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
+import { handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/useApiRequestToSetterOnUrlChange';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { Dispatch, KeyboardEvent, SetStateAction, useEffect, useRef, useState } from 'react';
 
 export default function CriarConta() {
 
@@ -59,22 +63,30 @@ export default function CriarConta() {
     }
 
     const [formData, setFormData] = useState<iUserInput>({
-        fullName: '', email: '', password: ''
+        fullName: '', email: '', password: '', recoverPasswordQuestion: '', recoverPasswordAnswer: ''
     });
+
+    const recoverPasswordQuestionEnum = useApiGetEnum({ enumName: 'RecoverPasswordQuestionEnum' });
+    const setRecoverPasswordQuestion = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.recoverPasswordQuestion!)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleCreate() {
         setIsRequestLoading(true);
 
-        if (!formData.fullName || !formData.email || !formData.password) {
+        if (!formData.fullName || !formData.email || !formData.password || !formData.recoverPasswordQuestion || !formData.recoverPasswordAnswer) {
             swal({ content: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
             setIsRequestLoading(false);
             return;
         }
 
+        // @ts-expect-error: valor dinâmico;
+        const recoverPasswordQuestion = formData.recoverPasswordQuestion?.value;
+
         const user = {
             fullName: formData.fullName,
             email: formData.email,
             password: formData.password,
+            recoverPasswordQuestion: recoverPasswordQuestion,
+            recoverPasswordAnswer: formData.recoverPasswordAnswer,
             inviteToken: token
         } as iUserInput;
 
@@ -119,27 +131,52 @@ export default function CriarConta() {
                                 formData={formData}
                                 setFormData={setFormData}
                                 isDisabled={isIncognito}
+                                isObligatory={true}
                                 handleKeyDown={handleKeyDown}
                             />
 
-                            <InputMask
-                                title='E-mail'
-                                fieldName='email'
-                                formData={formData}
-                                setFormData={setFormData}
-                                isDisabled={isIncognito}
-                                handleKeyDown={handleKeyDown}
-                            />
+                            <div className={styles.flexRow}>
+                                <InputMask
+                                    title='E-mail'
+                                    fieldName='email'
+                                    formData={formData}
+                                    setFormData={setFormData}
+                                    isDisabled={isIncognito}
+                                    isObligatory={true}
+                                    handleKeyDown={handleKeyDown}
+                                />
 
-                            <InputMask
-                                title='Senha'
-                                fieldName='password'
-                                type='password'
-                                formData={formData}
-                                setFormData={setFormData}
-                                isDisabled={isIncognito}
-                                handleKeyDown={handleKeyDown}
-                            />
+                                <InputMask
+                                    title='Senha'
+                                    fieldName='password'
+                                    type='password'
+                                    formData={formData}
+                                    setFormData={setFormData}
+                                    isDisabled={isIncognito}
+                                    isObligatory={true}
+                                    handleKeyDown={handleKeyDown}
+                                />
+                            </div>
+
+                            <div className={styles.flexRow}>
+                                <Dropdown
+                                    title='Pergunta de recuperação de conta'
+                                    options={recoverPasswordQuestionEnum ?? []} selectedOption={recoverPasswordQuestionEnum?.find(x => x.value.toString() === formData.recoverPasswordQuestion?.toString())}
+                                    setSelectedOption={setRecoverPasswordQuestion}
+                                    isDisabled={isIncognito}
+                                    isObligatory={true}
+                                />
+
+                                <InputMask
+                                    title='Resposta de recuperação de conta'
+                                    fieldName='recoverPasswordAnswer'
+                                    formData={formData}
+                                    setFormData={setFormData}
+                                    isDisabled={isIncognito}
+                                    isObligatory={true}
+                                    handleKeyDown={handleKeyDown}
+                                />
+                            </div>
 
                             <Button
                                 label={(plans?.planDurationDaysFree ? `Criar conta grátis por ${plans?.planDurationDaysFree} dias` : 'Criar conta grátis')}
