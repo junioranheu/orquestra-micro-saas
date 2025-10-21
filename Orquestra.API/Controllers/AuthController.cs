@@ -97,7 +97,6 @@ public class AuthController(
 
         // Current main company;
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
-        CompanyOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanyOutput>();
 
         // Token;
         string? token = Request.Cookies[SystemConsts.Cookies.Auth];
@@ -116,16 +115,16 @@ public class AuthController(
             Email = emailAuth,
             Roles = userRoles,
             RolesStr = userRolesStr,
-            CurrentMainCompany = currentMainCompanySimple,
+            CurrentMainCompany = currentMainCompany,
             TokenExpirationDate = validTo,
             RefreshTokenExpirationDate = refreshToken?.ExpiredDate.GetValueOrDefault() ?? DateTime.MinValue,
             IsUserAdmOfCurrentMainCompany = isUserAdm
         };
 
         // Módulos;
-        if (currentMainCompany is not null)
+        if (currentMainCompany is not null && output.CurrentMainCompany is not null)
         {
-            currentMainCompanySimple.IsAdm = isUserAdm;
+            currentMainCompany.IsAdm = isUserAdm;
 
             if (isUserAdm)
             {

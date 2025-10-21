@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 
@@ -33,6 +34,7 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
         }
 
         bool isUserAdm = output.CompanyUserRole == CompanyUserRoleEnum.Administrator;
+        outputAdapt.CompanySituationStr = GetEnumDesc(outputAdapt.CompanySituation);
 
         return (outputAdapt, isUserAdm);
     }

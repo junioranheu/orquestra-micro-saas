@@ -29,7 +29,7 @@ public class CompanyInvoiceController(IEnvService env, IGetCompanyInvoice get) :
     }
 
     [AllowAnonymous]
-    [HttpGet("Pay/{invoiceNumber}")]
+    [HttpPost("Pay/{invoiceNumber}")]
     public async Task<IActionResult> Pay(string invoiceNumber)
     {
         // TO DO;
