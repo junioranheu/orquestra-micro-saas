@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -12,29 +13,32 @@ public sealed class GetCompanyInvoice(Context context, ICheckIfUserIsLinkedCompa
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<CompanyInvoice> Execute(Guid userIdAuth, Guid companyId)
+    public async Task<CompanyInvoice> Execute(Guid userIdAuth, Guid companyInvoiceId)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
-
         var result = await _context.CompanyInvoices.
                      AsNoTracking().
-                     Where(x => x.CompanyId == companyId).
+                     Where(x => x.CompanyInvoiceId == companyInvoiceId && x.Status == true).
                      FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompanyInvoice);
+
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: result.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         return result;
     }
 
-    public async Task<List<CompanyInvoice>> Execute(Guid userIdAuth, Guid companyId, CompanyInvoiceSituationEnum? companyInvoiceSituationEnum)
+    public async Task<(IEnumerable<CompanyInvoice> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId, CompanyInvoiceSituationEnum? companyInvoiceSituationEnum)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        var result = await _context.CompanyInvoices.
-                     AsNoTracking().
-                     Where(x => 
-                        x.CompanyId == companyId && 
+        var query = _context.CompanyInvoices.
+                    AsNoTracking().
+                    Where(x =>
+                        x.CompanyId == companyId &&
+                        x.Status == true &&
                         (companyInvoiceSituationEnum == null || x.CompanyInvoiceSituation == companyInvoiceSituationEnum)
-                     ).ToListAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompanyInvoice);
+                    ).OrderByDescending(x => x.CreatedDate);
 
-        return result;
+        (IEnumerable<CompanyInvoice> output, int count) = await PagedQuery.Execute(query, pagination);
+
+        return (output, count);
     }
 }

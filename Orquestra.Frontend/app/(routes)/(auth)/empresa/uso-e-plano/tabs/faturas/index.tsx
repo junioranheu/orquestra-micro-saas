@@ -10,6 +10,8 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
     return (
         <section className={styles.main}>
             <h1>Faturas</h1>
+
+            TABELA AQUI COM AS FATURAS!
         </section>
     )
 }
