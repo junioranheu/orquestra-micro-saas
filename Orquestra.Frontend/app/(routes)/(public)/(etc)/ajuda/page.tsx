@@ -157,7 +157,7 @@ export const HELP_TOPICS = [
             },
             {
                 title: 'Quem pode gerenciar os módulos?',
-                description: 'Apenas administradores têm permissão para atribuir ou remover módulos de outros membros da equipe. Isso pode ser feito acessando "Gerenciar empresa" (/empresa/gerenciar) ou pela tela de "Uso, plano e faturas" (/empresa/uso-e-plano).'
+                description: 'Apenas administradores têm permissão para atribuir ou remover módulos de outros membros da equipe. Isso pode ser feito acessando "Gerenciar empresa" (/empresa/gerenciar) ou pela tela de "Plano e faturas" (/empresa/uso-e-plano).'
             },
             {
                 title: 'Posso ativar ou desativar módulos?',
@@ -187,7 +187,7 @@ export const HELP_TOPICS = [
             },
             {
                 title: 'Alterar ou cancelar plano',
-                description: 'O plano pode ser alterado ou cancelado a qualquer momento em "Uso, plano e faturas" (/empresa/uso-e-plano). Mudanças de plano são aplicadas imediatamente após a confirmação.'
+                description: 'O plano pode ser alterado ou cancelado a qualquer momento em "Plano e faturas" (/empresa/uso-e-plano). Mudanças de plano são aplicadas imediatamente após a confirmação.'
             }
         ]
     },
