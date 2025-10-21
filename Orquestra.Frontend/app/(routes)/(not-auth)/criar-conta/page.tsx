@@ -103,10 +103,12 @@ export default function CriarConta() {
 
             if (!token) {
                 swal({
-                    content: `${handleGetFirstName(formData.fullName)}, você foi registrado com sucesso!</br></br>Antes de fazer seu primeiro acesso, por favor, <b>valide sua conta</b> usando o e-mail que foi enviado para ${formData.email}.`,
+                    content: `${handleGetFirstName(formData.fullName)}, seu registro foi concluído com sucesso! </br></br>
+                            Antes de acessar sua conta pela primeira vez, <b>valide seu e-mail</b> clicando no link que enviamos para <b>${formData.email}</b>.</br></br>
+                            Ah, e um lembrete importante: guarde bem sua <b>pergunta e resposta de recuperação de senha</b> — elas serão essenciais caso precise redefinir sua senha futuramente.`,
                     icon: 'success',
                     mustConfirm: true,
-                    checkboxLabel: 'Irei validar minha conta verificando meu e-mail'
+                    checkboxLabel: 'Entendido. Validarei minha conta via e-mail'
                 });
             } else {
                 swal({

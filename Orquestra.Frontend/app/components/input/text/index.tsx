@@ -134,11 +134,13 @@ export default function InputMask<T>({
             {
                 (title || showIcon) && (
                     <div className={styles.wrapperTop}>
-                        {title && (
-                            <span className={styles.title}>
-                                {title} {isObligatory && <span className={styles.obligatory}>*</span>}
-                            </span>
-                        )}
+                        {
+                            title && (
+                                <span className={styles.title}>
+                                    {title} {isObligatory && <span className={styles.obligatory}>*</span>}
+                                </span>
+                            )
+                        }
 
                         {
                             showIcon && (showErrorIcon ? (

@@ -472,6 +472,12 @@ input:-webkit-autofill {
 
     .swal2-checkbox {
         accent-color: var(--main) !important;
+        background-color: var(--white) !important;
+    }
+
+    .swal2-label {
+        background-color: var(--white) !important;
+        padding-left: 0.5rem !important;
     }
 
     // Ícones;

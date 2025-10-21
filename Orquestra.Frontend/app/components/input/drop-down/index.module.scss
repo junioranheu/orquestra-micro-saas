@@ -3,8 +3,15 @@
     display: flex;
     flex-direction: column;
     gap: 0rem;
+    font-family: inherit !important;
+
+    text-rendering: optimizelegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
 
     .title {
+        // background-color: tomato;
         color: var(--black);
         font-size: 0.75rem;
         font-weight: 500;
@@ -27,7 +34,8 @@
         border-radius: 0 !important;
         color: var(--black) !important;
         font-size: 0.8rem !important;
-        height: 2.45rem !important;
+        // height: 2.5rem !important;
+        height: 40px !important;
         transition: 0.3s !important;
 
         >div:first-of-type {
@@ -42,8 +50,6 @@
         }
 
         option {
-            // background-color: orange !important;
-
             &[disabled] {
                 color: rgba(221, 221, 221, 0.13) !important;
                 cursor: not-allowed !important;

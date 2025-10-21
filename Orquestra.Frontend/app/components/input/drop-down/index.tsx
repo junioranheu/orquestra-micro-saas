@@ -85,6 +85,7 @@ export default function Dropdown({
         }),
         option: (base: any, { isFocused, isSelected }: any) => ({
             ...base,
+            fontSize: '0.875rem',
             backgroundColor: isFocused ? 'var(--contrast-light)' : isSelected ? 'var(--contrast)' : 'transparent',
             color: isFocused ? 'var(--black)' : isSelected ? 'var(--white)' : 'var(--black)',
             ':active': {
