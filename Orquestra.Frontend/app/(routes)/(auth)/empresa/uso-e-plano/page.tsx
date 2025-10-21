@@ -1,5 +1,6 @@
 'use client';
 import Tabs from '@/app/components/tabs';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
 import styles from './page.module.scss';
 import EmpresaUsoEPlanoTabFaturas from './tabs/faturas';
@@ -8,14 +9,19 @@ import EmpresaUsoEPlanoTabPlano from './tabs/plano';
 export default function EmpresaUsoEPlano() {
 
     useTitle('Plano e faturas');
+    const me = useApiGetMe({});
+
+    if (!me) {
+        return null;
+    }
 
     return (
         <section className={styles.main}>
             <Tabs
                 tabs={['Plano', 'Faturas']}
                 contents={[
-                    <EmpresaUsoEPlanoTabPlano />,
-                    <EmpresaUsoEPlanoTabFaturas />,
+                    <EmpresaUsoEPlanoTabPlano me={me} />,
+                    <EmpresaUsoEPlanoTabFaturas me={me} />
                 ]}
             />
         </section>
