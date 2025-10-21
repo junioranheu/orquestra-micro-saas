@@ -14,7 +14,7 @@ import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
 import { usePathname } from 'next/navigation';
 import 'nprogress/nprogress.css';
-import { Fragment, ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
 
@@ -41,20 +41,18 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                     !hideHeader && <UpNav />
                 }
 
+                <header>
+                    <NavbarNotAuth />
+                </header>
+
                 <main className='no-layout'>
                     {
                         !hideHeader ? (
-                            <Fragment>
-                                <header>
-                                    <NavbarNotAuth />
-                                </header>
+                            <div className='children'>
+                                {children}
 
-                                <div className='children'>
-                                    {children}
-
-                                    <WhatsappButton phone={SYSTEM.PHONE_SUPPORT} />
-                                </div>
-                            </Fragment>
+                                <WhatsappButton phone={SYSTEM.PHONE_SUPPORT} />
+                            </div>
                         ) : (
                             children
                         )

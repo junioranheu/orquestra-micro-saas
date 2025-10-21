@@ -149,15 +149,45 @@ export const HELP_TOPICS = [
     },
     {
         topic: 'Módulos',
-        description: `Conheça os módulos disponíveis no ${SYSTEM.NAME} e como utilizá-los.`,
+        description: `Conheça os módulos disponíveis no ${SYSTEM.NAME} e como eles podem ser personalizados conforme a necessidade da sua empresa.`,
         items: [
             {
+                title: 'Como funcionam os módulos?',
+                description: 'Os módulos do sistema representam áreas específicas da sua empresa — como Agenda, Finanças, Clientes e Relatórios — e podem ser ativados ou desativados conforme o tipo de serviço que você oferece.'
+            },
+            {
+                title: 'Quem pode gerenciar os módulos?',
+                description: 'Apenas administradores têm permissão para atribuir ou remover módulos de outros membros da equipe. Isso pode ser feito acessando "Gerenciar empresa" (/empresa/gerenciar) ou pela tela de "Uso, plano e faturas" (/empresa/uso-e-plano).'
+            },
+            {
                 title: 'Posso ativar ou desativar módulos?',
-                description: 'Sim, em "Gerenciar empresa" (/empresa/gerenciar) você pode ativar apenas os módulos que deseja usar.'
+                description: 'Sim. Em "Gerenciar empresa", você pode escolher exatamente quais módulos estarão ativos na sua conta. Desative o que não usa para deixar o ambiente mais limpo e ágil.'
             },
             {
                 title: 'Novos módulos',
-                description: 'Adicionamos periodicamente novos módulos para expandir as funcionalidades da plataforma.'
+                description: `A equipe do ${SYSTEM.NAME} adiciona novos módulos regularmente, trazendo ferramentas para automatizar ainda mais o seu fluxo de trabalho. Fique de olho nas atualizações!`
+            }
+        ]
+    },
+    {
+        topic: 'Planos',
+        description: `Saiba quais são os planos disponíveis no ${SYSTEM.NAME} e o que cada um oferece.`,
+        items: [
+            {
+                title: 'Período de teste gratuito',
+                description: 'Toda empresa começa com um plano gratuito de 14 dias, com acesso total a todos os recursos da plataforma. Nenhum cartão é necessário para iniciar o teste.'
+            },
+            {
+                title: 'Plano básico',
+                description: 'Ideal para pequenas equipes ou profissionais autônomos. Inclui agendamentos ilimitados, cadastro de clientes e relatórios básicos. Custo acessível e sem taxas escondidas.'
+            },
+            {
+                title: 'Plano premium',
+                description: `Feito para quem quer o máximo do ${SYSTEM.NAME}. Traz dashboards avançados, automações, módulos financeiros completos, suporte prioritário, etc.`
+            },
+            {
+                title: 'Alterar ou cancelar plano',
+                description: 'O plano pode ser alterado ou cancelado a qualquer momento em "Uso, plano e faturas" (/empresa/uso-e-plano). Mudanças de plano são aplicadas imediatamente após a confirmação.'
             }
         ]
     },
