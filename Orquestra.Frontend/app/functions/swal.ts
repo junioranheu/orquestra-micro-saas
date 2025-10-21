@@ -36,7 +36,19 @@ export default function swal(options: iProps): Promise<any> {
                 }
 
                 return null;
-            } : undefined
+            } : undefined,
+            didOpen: () => {
+                const htmlContainer = Swal.getHtmlContainer();
+
+                if (!htmlContainer) {
+                    return;
+                }
+
+                const text = htmlContainer.textContent?.trim() ?? '';
+                const isLong = text?.length > 70;
+
+                htmlContainer.classList.add(isLong ? 'swal2-to-left' : 'swal2-to-center');
+            }
         }).then((result: SweetAlertResult) => {
             if (result.isConfirmed && confirmFunction) {
                 // User clicked confirm button;

@@ -379,6 +379,7 @@ input:-webkit-autofill {
 // swal
 .swal2-popup {
     // background-color: orange !important;
+    background-color: var(--white) !important;
     padding: 2.5rem 2rem !important;
     border-radius: var(--border-radius) !important;
     box-shadow: var(--box-shadow-dark);
@@ -392,19 +393,19 @@ input:-webkit-autofill {
         font-family: inherit !important;
         color: var(--black) !important;
 
+        // Definido diretamente no swal.ts (didOpen);
+        // text-align: center !important;
+        // padding-left: 1rem !important;
+        // padding-right: 1rem !important;
+
         // text-align: left !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        // padding-left: 0rem !important;
+        // padding-right: 0rem !important;
+        // white-space: normal !important;
+        // word-break: keep-all !important;
+        // overflow-wrap: break-word !important;
+        // hyphens: auto !important;
     }
-
-    // .swal2-error {
-    //     border-color: var(--contrast) !important;
-    // }
-
-    // .swal2-x-mark-line-left,
-    // .swal2-x-mark-line-right {
-    //     background-color: var(--contrast) !important;
-    // }
 
     button {
         background-color: var(--main) !important;
@@ -465,16 +466,85 @@ input:-webkit-autofill {
         border-top-color: var(--main) !important;
     }
 
-    .swal2-icon {
-        font-size: 0.65rem !important;
-    }
-
     .swal2-validation-message {
         font-size: 0.9rem;
     }
 
     .swal2-checkbox {
         accent-color: var(--main) !important;
+    }
+
+    // Ícones;
+    .swal2-icon {
+        font-size: 0.65rem !important;
+    }
+
+    .swal2-icon.swal2-success {
+        color: var(--main);
+        border-color: var(--main) !important;
+    }
+
+    .swal2-icon.swal2-success .swal2-success-ring {
+        border: 3px solid var(--main) !important;
+    }
+
+    .swal2-icon.swal2-success [class^='swal2-success-line'] {
+        background-color: var(--main) !important;
+    }
+
+    .swal2-icon.swal2-warning {
+        color: var(--main);
+        border-color: var(--main) !important;
+    }
+
+    .swal2-icon.swal2-warning .swal2-icon-content {
+        color: var(--main) !important;
+    }
+
+    .swal2-icon.swal2-error {
+        color: var(--red);
+        border-color: var(--red) !important;
+    }
+
+    .swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+        background-color: var(--red) !important;
+    }
+
+    .swal2-icon.swal2-info {
+        color: var(--main);
+        border-color: var(--main) !important;
+    }
+
+    .swal2-icon.swal2-info .swal2-icon-content {
+        color: var(--main) !important;
+    }
+
+    .swal2-icon.swal2-question {
+        color: var(--main);
+        border-color: var(--main) !important;
+    }
+
+    .swal2-icon.swal2-question .swal2-icon-content {
+        color: var(--main) !important;
+    }
+
+    .swal2-to-center {
+        // background-color: tomato !important;
+        text-align: center !important;
+        padding-left: 0rem !important;
+        padding-right: 0rem !important;
+    }
+
+    .swal2-to-left {
+        // background-color: orange !important;
+        text-align: left !important;
+        letter-spacing: 0.3px !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
     }
 }
 
