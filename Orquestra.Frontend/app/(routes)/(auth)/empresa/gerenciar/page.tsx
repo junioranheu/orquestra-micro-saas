@@ -66,8 +66,12 @@ export default function EmpresaGerenciar() {
                 }
 
                 await Fetch.put({ url: `${CONSTS_COMPANY_USER.updateCurrentMainCompanyUser}?companyId=${company.companyId}` });
-                toast({ content: `A empresa "${company.name}" agora é a sua principal!` });
-                window.location.reload();
+
+                swal({
+                    content: `A empresa <b>${company.name}</b> agora é a sua principal!`,
+                    confirmFunction: () => window.location.reload(),
+                    icon: 'success'
+                });
             }
         });
     }
@@ -247,19 +251,19 @@ export default function EmpresaGerenciar() {
                                 <div className={styles.actions}>
                                     {
                                         !company.isAdm && (
-                                            <Button label='Sair' handleFunction={() => handleLeave(company)} isStyleSimple={true} />
+                                            <Button label='Desvincular da empresa' handleFunction={() => handleLeave(company)} isStyleSimple={true} />
                                         )
                                     }
 
                                     {
-                                        currentMainCompany?.isAdm && (
+                                        (currentMainCompany?.isAdm && currentMainCompany?.companyId === company.companyId) && (
                                             <Button label='Editar' handleFunction={() => handleOpenModal(company)} isStyleSimple={true} />
                                         )
                                     }
 
                                     {
                                         currentMainCompany?.companyId !== company.companyId && (
-                                            <Button label='Tornar principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
+                                            <Button label='Tornar empresa principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
                                         )
                                     }
                                 </div>

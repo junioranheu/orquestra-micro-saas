@@ -366,7 +366,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
                                         !editing ? (
                                             <Fragment>
                                                 <Button label='Excluir' handleFunction={() => handleDisable(event)} isStyleSimple={true} />
-                                                <Button label='Editar' handleFunction={() => setEditing(true)} />
+                                                <Button label='Habilitar edição' handleFunction={() => setEditing(true)} />
                                             </Fragment>
                                         ) : (
                                             <Fragment>

@@ -246,7 +246,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
                                 {
                                     !editing ? (
                                         <Fragment>
-                                            <Button label='Editar' handleFunction={() => setEditing(true)} />
+                                            <Button label='Habilitar edição' handleFunction={() => setEditing(true)} />
                                         </Fragment>
                                     ) : (
                                         <Fragment>
