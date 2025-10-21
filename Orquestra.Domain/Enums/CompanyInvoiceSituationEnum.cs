@@ -11,5 +11,5 @@ public enum CompanyInvoiceSituationEnum
     Paid = 2,
 
     [Description("Cancelado")]
-    Canceled = 999,
+    Canceled = 999
 }

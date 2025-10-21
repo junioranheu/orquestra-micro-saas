@@ -3,6 +3,9 @@ import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_COMPANY_INVOICE, iCompanyInvoice, iCompanyInvoicePaginated } from '@/app/api/consts/company-invoice';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableExtraItems, iTableManagingOptions } from '@/app/components/table/generic';
+import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
+import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { useState } from 'react';
 import styles from './index.module.scss';
@@ -39,6 +42,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
                     2: 'Básico',
                     3: 'Premium'
                 };
+
                 return map[value] ?? '-';
             }
         },
@@ -71,18 +75,56 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
 
     const managingOptions = [
         {
-            label: 'Pagar',
-            function: (e) => handlePay(e),
-            icon: <Icon icon='dollar-sign' />
+            label: 'Visualizar fatura',
+            function: (e) => handleCheck(e),
+            icon: <Icon icon='search' />
         }
     ] as iTableManagingOptions[];
 
     const tableExtraItems = [
-        { title: 'Situação da empresa', label: me?.currentMainCompany?.companySituationStr ?? '-' }
+        { title: 'Situação atual da empresa', label: me?.currentMainCompany?.companySituationStr ?? '-' }
     ] as iTableExtraItems[];
 
-    function handlePay(e: iCompanyInvoice) {
-        alert(e.companyInvoiceSituation);
+    function handleCheck(e: iCompanyInvoice) {
+        (window as any).handleCopyToClipboard = (value: string | number) => {
+            navigator.clipboard.writeText(String(value));
+            toast({ content: 'Número de fatura copiado com sucesso.' });
+        };
+
+        const formattedAmount = e.amount.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+
+        const situationMap: Record<number, string> = {
+            1: 'Pendente',
+            2: 'Aprovado',
+            999: 'Cancelado'
+        };
+
+        const planTypeMap: Record<number, string> = {
+            1: 'Grátis',
+            2: 'Básico',
+            3: 'Premium'
+        };
+
+        const situationText = situationMap[Number(e.companyInvoiceSituation)] ?? 'Desconhecido';
+        const planTypeText = planTypeMap[Number(e.planType)] ?? 'Desconhecido';
+
+        const message = `<div style="text-align: left; line-height: 1.6;">
+            <b>Número da fatura:</b> <span style="cursor:pointer; color:var(--contrast); text-decoration:underline;" onclick="window.handleCopyToClipboard('${e.invoiceNumber}')">${e.invoiceNumber}</span><br/>
+            <b>Tipo de Plano:</b> ${planTypeText}<br/>
+            <b>Valor:</b> ${formattedAmount}<br/>
+            <b>Situação:</b> ${situationText}<br/>
+            <b>Descrição:</b> ${e.description ?? '-'}<br/>
+            <b>Data de Criação:</b> ${e.createdDate ? handleFormatDate(e.createdDate, DATE_STYLE.DETALHADO) : '-'}
+        </div>`;
+
+        swal({
+            content: message,
+            confirmBtnText: 'Voltar',
+            icon: 'info'
+        });
     }
 
     return (
@@ -95,7 +137,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={invoice?.count}
 
-                title={`Faturas do ${me.currentMainCompany.name}`}
+                title='Histórico de faturas da empresa'
                 managingOptions={managingOptions}
                 extraItems={tableExtraItems}
             />

@@ -70,7 +70,7 @@ export default function TableGeneric({
     maxPageSize = 25,
     totalRowsCount = 0,
     handleTableRowClick = undefined,
-    isMainDivBoxShadowed = true,
+    isMainDivBoxShadowed = false,
     mainDivMarginTopBottom = 1,
     mainDivMarginSides = 3,
     mainDivHasPadding = true,
@@ -287,7 +287,7 @@ export default function TableGeneric({
             <div className={styles.container}>
                 <div className={styles.top}>
                     <div className={styles.left}>
-                        <span className={styles.title}>{title}</span>
+                        <span className={styles.title} dangerouslySetInnerHTML={{ __html: title ?? '' }} />
                     </div>
 
                     <div className={styles.right}>
