@@ -1,80 +1,52 @@
-'use client';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import NProgress from 'nprogress';
 import { useEffect, useRef } from 'react';
 
 export default function useShowNProgressOnPageLoad() {
 
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const router = useRouter();
     const loadingRef = useRef<NodeJS.Timeout | null>(null);
-    const prevPath = useRef<string>('');
 
     useEffect(() => {
-        // Evita rodar no primeiro render;
-        if (!prevPath.current) {
-            prevPath.current = pathname + searchParams.toString();
-            return;
-        }
+        const handleStart = () => {
+            if (loadingRef.current) {
+                clearTimeout(loadingRef.current);
+            }
 
-        // Se mudar de rota (ou query);
-        if (prevPath.current !== pathname + searchParams.toString()) {
             NProgress.start();
+        };
 
-            // Evita piscadas rápidas;
+        const handleComplete = () => {
+            // Pequeno delay pra suavizar e evitar piscada;
             if (loadingRef.current) {
                 clearTimeout(loadingRef.current);
             }
 
             loadingRef.current = setTimeout(() => {
                 NProgress.done();
-            }, 500); // Tempo de "carregamento" mínimo;
+            }, 1000);
+        };
 
-            prevPath.current = pathname + searchParams.toString();
-        }
+        // Monkey patch do router.push para disparar NProgress;
+        const originalPush = router.push;
 
-        return () => {
-            if (loadingRef.current) {
-                clearTimeout(loadingRef.current);
+        router.push = async (...args) => {
+            handleStart();
+
+            try {
+                const res = originalPush(...args);
+                handleComplete();
+                return res;
+            } catch (err: unknown) {
+                handleComplete();
+                throw err;
             }
         };
-    }, [pathname, searchParams]);
+
+        return () => {
+            if (loadingRef.current) clearTimeout(loadingRef.current);
+            router.push = originalPush;
+        };
+    }, [router]);
 
 }
-
-// import { useRouter } from 'next/navigation';
-// import NProgress from 'nprogress';
-// import { useEffect } from 'react';
-
-// export default function useShowNProgressOnPageLoad() {
-
-//     const router = useRouter();
-
-//     useEffect(() => {
-//         const handleStart = () => NProgress.start();
-//         const handleComplete = () => NProgress.done();
-
-//         // monkey patch do router.push para disparar NProgress;
-//         const originalPush = router.push;
-
-//         router.push = async (...args) => {
-//             handleStart();
-
-//             try {
-//                 const res = originalPush(...args);
-//                 handleComplete();
-
-//                 return res;
-//             } catch (err: unknown) {
-//                 handleComplete();
-
-//                 throw err;
-//             }
-//         }
-
-//         return () => {
-//             router.push = originalPush;
-//         }
-//     }, [router]);
-
-// }
