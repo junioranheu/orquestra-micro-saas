@@ -289,7 +289,7 @@ export default function TableGeneric({
 
     return (
         <section
-            className={`${styles.main} ${(hasAltStyle && 'tableAltStyle')}`}
+            className={`${styles.main} ${(hasAltStyle && 'tableAltStyle')} ${(hasAltStyle && styles.tableAltStyle)}`}
             style={{
                 boxShadow: (isMainDivBoxShadowed ? 'var(--box-shadow)' : ''),
                 margin: `${mainDivMarginTopBottom}rem ${mainDivMarginSides}rem`,

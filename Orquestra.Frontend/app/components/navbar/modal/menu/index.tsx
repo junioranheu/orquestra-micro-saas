@@ -58,7 +58,7 @@ export default function ModalMenu({ isOpen, setIsModalOpen, customPosition, me }
 export function MenuItem({ icon, label, desc, badge, handleFunction }: iPropsMenuItem) {
     return (
         <button className={styles.item} type='button' onClick={() => handleFunction && handleFunction()}>
-            <span className={styles.icon}><Icon icon={icon} weight='bold' /></span>
+            <span className={styles.icon}><Icon icon={icon} weight='normal' /></span>
 
             <div className={styles.content}>
                 <div className={styles.labelRow}>

@@ -148,7 +148,88 @@ public sealed class UpdatePlanTypeCompanyTests
         Assert.Equal(PlanTypeEnum.Premium, updated.PlanType);
     }
 
-    #region CreateSut
+    [Fact]
+    public async Task Should_ThrowException_WhenCompanyAlreadyHasSamePlan()
+    {
+        Context context = Fixture.CreateContext();
+        User user = UserMock.Create();
+        UpdatePlanTypeCompany sut = CreateSut(context, user);
+
+        Company company = new()
+        {
+            CompanyId = Guid.NewGuid(),
+            Name = "Company Same Plan",
+            PlanType = PlanTypeEnum.Basic,
+            Status = true
+        };
+
+        context.Companies.Add(company);
+        await context.SaveChangesAsync();
+
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Basic));
+
+        Assert.Contains("já está com o plano", ex.Message.ToLowerInvariant());
+    }
+
+    [Fact]
+    public async Task Should_ThrowException_WhenCompanyHasPendingInvoice()
+    {
+        Context context = Fixture.CreateContext();
+        User user = UserMock.Create();
+        UpdatePlanTypeCompany sut = CreateSut(context, user);
+
+        Company company = new()
+        {
+            CompanyId = Guid.NewGuid(),
+            Name = "Company With Pending Invoice",
+            PlanType = PlanTypeEnum.Basic,
+            Status = true
+        };
+
+        CompanyInvoice invoice = new()
+        {
+            CompanyInvoiceId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            PlanType = PlanTypeEnum.Premium,
+            CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending,
+            Status = true
+        };
+
+        context.Companies.Add(company);
+        context.CompanyInvoices.Add(invoice);
+        await context.SaveChangesAsync();
+
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>     sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium));
+
+        Assert.Contains("fatura em aberto", ex.Message);
+    }
+
+    [Fact]
+    public async Task Should_PassCheckAvailability_WhenPlanIsDifferentAndNoPendingInvoices()
+    {
+        Context context = Fixture.CreateContext();
+        User user = UserMock.Create();
+        UpdatePlanTypeCompany sut = CreateSut(context, user);
+
+        Company company = new()
+        {
+            CompanyId = Guid.NewGuid(),
+            Name = "Company Free to Upgrade",
+            PlanType = PlanTypeEnum.Basic,
+            Status = true
+        };
+
+        context.Companies.Add(company);
+        await context.SaveChangesAsync();
+
+        await sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium);
+
+        Company updated = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
+        Assert.Equal(PlanTypeEnum.Premium, updated.PlanType);
+        Assert.Equal(CompanySituationEnum.PendingPayment, updated.CompanySituation);
+    }
+
+    #region helper
     private static UpdatePlanTypeCompany CreateSut(Context context, User user, Mock<IEmailService>? emailServiceMock = null)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);

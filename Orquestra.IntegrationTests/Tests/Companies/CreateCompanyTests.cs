@@ -185,7 +185,7 @@ public sealed class CreateCompanyTests
         CreateCompany sut = CreateSut(context, user, emailService);
 
         Company company = CompanyMock.Create();
-        company.PlanType = PlanTypeEnum.Basic;
+        company.PlanType = PlanTypeEnum.Free;
 
         var input = company.Adapt<CompanyInput>();
 
@@ -196,7 +196,7 @@ public sealed class CreateCompanyTests
         Company? createdCompany = await context.Companies.FindAsync(result.CompanyId);
         Assert.NotNull(createdCompany);
 
-        Assert.Equal(CompanySituationEnum.PendingPayment, createdCompany!.CompanySituation);
+        Assert.Equal(CompanySituationEnum.Approved, createdCompany!.CompanySituation);
         Assert.NotNull(createdCompany.PlanStartDate);
         Assert.NotNull(createdCompany.PlanEndDate);
     }

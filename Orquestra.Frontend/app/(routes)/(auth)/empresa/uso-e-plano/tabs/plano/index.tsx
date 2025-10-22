@@ -41,17 +41,16 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
             checkboxLabel: 'Li e estou de acordo',
             confirmBtnText: 'Confirmar',
             confirmFunction: async () => {
-                const input = {
-                    companyId: me?.currentMainCompany?.companyId,
-                    planType: plan.planType
-                };
+                const formDataInput = new FormData();
+                formDataInput.append('CompanyId', me?.currentMainCompany?.companyId?.toString()!);
+                formDataInput.append('PlanType', plan.planType.toString());
 
-                const output = await Fetch.put({ url: CONSTS_COMPANY.updatePlanType, body: input });
+                const output = await Fetch.put({ url: CONSTS_COMPANY.updatePlanType, body: formDataInput, isFormData: true });
 
                 if (output) {
                     swal({
-                        content: `Obrigado pela sua aquisição! 🎉
-                            <br/><br/>Agora sua empresa está com o plano <b>${plan.planTypeDescription}</b> ativo.`,
+                        content: `Obrigado pela sua aquisição!<br/>Agora sua empresa está com o plano <b>${plan.planTypeDescription.toLocaleLowerCase()}</b> ativo.`,
+                        confirmFunction: () => window.location.reload(),
                         icon: 'success'
                     });
 
@@ -101,8 +100,8 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
 
                                     <Link
                                         href='#'
-                                        className={`${styles.ctaButton} ${isFree ? styles.disabled : ''}`}
-                                        onClick={isFree ? undefined : () => handleChooseNewPlan(p)}
+                                        className={`${styles.ctaButton} ${(isFree || isCurrentPlan) ? styles.disabled : ''}`}
+                                        onClick={(isFree || isCurrentPlan) ? undefined : () => handleChooseNewPlan(p)}
                                     >
                                         {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
                                     </Link>

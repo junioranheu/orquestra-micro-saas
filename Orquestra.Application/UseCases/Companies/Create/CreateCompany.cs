@@ -53,8 +53,8 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
 
         (decimal _, int _, string _, string[] _, int durationDays) = PlanTypeHelper.GetValues(PlanTypeEnum.Free);
 
-        company.PlanType = input.PlanType;
-        company.CompanySituation = CompanySituationEnum.PendingPayment;
+        company.PlanType = PlanTypeEnum.Free;
+        company.CompanySituation = CompanySituationEnum.Approved;
         company.PlanStartDate = GetDate();
         company.PlanEndDate = GetDate().AddDays(durationDays);
 

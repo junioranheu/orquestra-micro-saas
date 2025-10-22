@@ -96,7 +96,7 @@ public sealed class EndToEndTests
             ZipCode = "02726090",
             Country = "Brasil",
             CompanyType = CompanyTypeEnum.Freelancer,
-            PlanType = PlanTypeEnum.Basic
+            PlanType = PlanTypeEnum.Free
         };
 
         CompanyOutput createdCompanyOutput = await createCompany.Execute(createdUser.UserId, companyInput);
@@ -105,7 +105,7 @@ public sealed class EndToEndTests
         Company? dbCompany = await context.Companies.AsNoTracking().FirstOrDefaultAsync(c => c.Name == companyInput.Name);
         Assert.NotNull(dbCompany);
         Assert.Equal(companyInput.Email, dbCompany.Email);
-        Assert.Equal(PlanTypeEnum.Basic, dbCompany.PlanType);
+        Assert.Equal(PlanTypeEnum.Free, dbCompany.PlanType);
 
         // Verify CompanyUser (first admin) exists and is linked;
         CompanyUser? dbCompanyUser = await context.CompanyUsers.FirstOrDefaultAsync(cu => cu.CompanyId == dbCompany.CompanyId && cu.UserId == createdUser.UserId);

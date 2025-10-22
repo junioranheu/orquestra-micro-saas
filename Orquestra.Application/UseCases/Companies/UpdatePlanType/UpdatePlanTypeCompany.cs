@@ -34,7 +34,7 @@ public sealed class UpdatePlanTypeCompany(
         }
 
         // #1 - Checar a "disponibilidade" da alteração;
-        CheckAvailability(company: result, newPlanType: planType);
+        await CheckAvailability(company: result, newPlanType: planType);
 
         // #2 - Criar cobrança, obrigatoriamente antes de normalizar o input.Modules;
         await _createCompanyInvoice.Execute(userIdAuth, companyId, planType);
@@ -44,7 +44,7 @@ public sealed class UpdatePlanTypeCompany(
     }
 
     #region extras
-    private static void CheckAvailability(Company company, PlanTypeEnum newPlanType)
+    private async Task CheckAvailability(Company company, PlanTypeEnum newPlanType)
     {
         (decimal _, int _, string descriptionCurrentPlan, string[] _, int _) = PlanTypeHelper.GetValues(company.PlanType.GetValueOrDefault());
         // (decimal _, int _, string descriptionNewPlan, string[] _, int _) = PlanTypeHelper.GetValues(newPlanType);
@@ -52,6 +52,13 @@ public sealed class UpdatePlanTypeCompany(
         if (company.PlanType == newPlanType)
         {
             throw new InvalidOperationException($"Não foi possível prosseguir pois essa empresa já está com o plano {descriptionCurrentPlan.ToLowerInvariant()} vigente.");
+        }
+
+        bool hasAnyPendingInvoice = await _context.CompanyInvoices.AsNoTracking().AnyAsync(x => x.CompanyId == company.CompanyId && x.CompanyInvoiceSituation == CompanyInvoiceSituationEnum.Pending && x.PlanType != PlanTypeEnum.Free && x.Status == true);
+
+        if (hasAnyPendingInvoice)
+        {
+            throw new InvalidOperationException($"Esta empresa tem pelo menos uma fatura em aberto, pendente de pagamento, portanto não foi possível prosseguir.");
         }
     }
 
