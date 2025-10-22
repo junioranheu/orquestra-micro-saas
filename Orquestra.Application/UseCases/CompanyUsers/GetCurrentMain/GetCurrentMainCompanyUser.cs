@@ -20,7 +20,7 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
                      Where(x => x.UserId == userId && x.IsCurrentMainCompanyUser == true && x.Status == true).
                      FirstOrDefaultAsync();
 
-        if (output is null)
+        if (output is null || output?.Company is null)
         {
             return (null, false);
         }
