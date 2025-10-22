@@ -266,6 +266,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                                             Ir para dashboard
                                             <Icon icon='arrow-right' className='group-hover:translate-x-1 transition-transform' />
                                         </Link>
+
                                         <Link href={ROUTES.ETC_AJUDA} className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'>
                                             Central de ajuda
                                         </Link>

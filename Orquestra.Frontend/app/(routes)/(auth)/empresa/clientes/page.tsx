@@ -131,7 +131,7 @@ export default function EmpresaClientes() {
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={clients?.count}
 
-                    title={`Clientes cadastrados em ${me?.currentMainCompany?.name ?? ''} (${clients?.count ?? 0})`}
+                    title={`Clientes cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
                     managingOptions={managingOptions}
                     btn_add_label='Cadastrar novo'
                     btn_add_function={() => handleOpenModalView(undefined)}

@@ -267,7 +267,7 @@ export default function Ajuda() {
                 </div>
             </div>
 
-            <AjudaSearchInput keySearch='' />
+            <AjudaSearchInput keySearch='' hasAltStyle={true} />
             <AjudaListCards topics={[...HELP_TOPICS].sort((a, b) => a.topic.localeCompare(b.topic))} />
         </section>
     )

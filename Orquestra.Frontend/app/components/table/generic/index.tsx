@@ -10,6 +10,7 @@ import 'rc-pagination/assets/index.css';
 import Table, { ColumnType as RcTableColumnType } from 'rc-table';
 import 'rc-table/assets/index.css';
 import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useEffect, useState } from 'react';
+import ContentLoaderText from '../../content-loader/text';
 import styles from './index.module.scss';
 
 export interface iTableColumn extends RcTableColumnType<any> {
@@ -298,7 +299,9 @@ export default function TableGeneric({
             <div className={styles.container}>
                 <div className={styles.top}>
                     <div className={styles.left}>
-                        <span className={styles.title} dangerouslySetInnerHTML={{ __html: title ?? '' }} />
+                        <span className={styles.title}>
+                            <ContentLoaderText text={(title ? `${title} ${`(${totalRowsCount})`}` : '')} delay={150} />
+                        </span>
                     </div>
 
                     <div className={styles.right}>

@@ -8,13 +8,14 @@ import styles from './index.module.scss';
 
 interface iProps {
     keySearch: string | undefined;
+    hasAltStyle?: boolean;
 }
 
 interface iFormData {
     key: string | undefined;
 }
 
-export default function AjudaSearchInput({ keySearch }: iProps) {
+export default function AjudaSearchInput({ keySearch, hasAltStyle = false }: iProps) {
 
     const router = useRouter();
 
@@ -39,23 +40,25 @@ export default function AjudaSearchInput({ keySearch }: iProps) {
 
     return (
         <div className={styles.search}>
-            <InputMask
-                title='Busque aqui :)'
-                fieldName='key'
-                type='text'
-                formData={formData}
-                setFormData={setFormData}
-                style={{ padding: 0 }}
-                placeholder='Procure por um tópico como "agendamento" ou "empresa", por exemplo'
-                handleKeyDown={handleKeyDown}
-            />
+            <div className={`${styles.input} ${hasAltStyle && styles.altStyle}`}>
+                <InputMask
+                    title='Busque aqui :)'
+                    fieldName='key'
+                    type='text'
+                    formData={formData}
+                    setFormData={setFormData}
+                    style={{ padding: 0 }}
+                    placeholder='Procure por um tópico como "agendamento" ou "empresa", por exemplo'
+                    handleKeyDown={handleKeyDown}
+                />
 
-            <div
-                className={`${styles.icon} contrastOnHover`}
-                title='Buscar tópico'
-                onClick={() => handleSearch()}
-            >
-                <Lupa />
+                <div
+                    className={`${styles.icon} contrastOnHover`}
+                    title='Buscar tópico'
+                    onClick={() => handleSearch()}
+                >
+                    <Lupa />
+                </div>
             </div>
         </div>
     )
