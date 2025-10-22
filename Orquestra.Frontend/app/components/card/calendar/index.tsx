@@ -59,7 +59,7 @@ export default function CardCalendar({ me }: iProps) {
                                         img={SvgOne}
                                         isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
                                         title='Não perca mais tempo!'
-                                        description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou o módulo de Agendamento.<br/>Confira sua situação abaixo:'
+                                        description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou/não te concedeu acesso ao módulo de Agendamentos.'
                                         buttonLabel='Gerenciar situação da empresa'
                                         buttonFunction={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s} />

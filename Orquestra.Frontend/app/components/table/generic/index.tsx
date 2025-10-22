@@ -42,6 +42,7 @@ interface iProps {
     mainDivMarginTopBottom?: number;
     mainDivMarginSides?: number;
     mainDivHasPadding?: boolean;
+    hasAltStyle?: boolean;
 
     title?: string;
     managingOptions?: iTableManagingOptions[];
@@ -74,6 +75,7 @@ export default function TableGeneric({
     mainDivMarginTopBottom = 1,
     mainDivMarginSides = 3,
     mainDivHasPadding = true,
+    hasAltStyle = true,
 
     title,
     managingOptions = [],
@@ -286,7 +288,7 @@ export default function TableGeneric({
 
     return (
         <section
-            className={styles.main}
+            className={`${styles.main} ${(hasAltStyle && 'tableAltStyle')}`}
             style={{
                 boxShadow: (isMainDivBoxShadowed ? 'var(--box-shadow)' : ''),
                 margin: `${mainDivMarginTopBottom}rem ${mainDivMarginSides}rem`,
@@ -316,7 +318,7 @@ export default function TableGeneric({
                                     handleFunction={btn_filter_function}
                                     isStyleSimple={true}
                                     icone_feather={<Icon icon='search' size='small' />}
-                                    style={{ fontSize: '0.75rem' }}
+                                    style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
                             )
                         }
@@ -328,7 +330,7 @@ export default function TableGeneric({
                                     handleFunction={btn_import_function}
                                     isStyleSimple={true}
                                     icone_feather={<Icon icon='upload' size='small' />}
-                                    style={{ fontSize: '0.75rem' }}
+                                    style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
                             )
                         }
@@ -340,7 +342,7 @@ export default function TableGeneric({
                                     handleFunction={btn_export_function}
                                     isStyleSimple={true}
                                     icone_feather={<Icon icon='download' size='small' />}
-                                    style={{ fontSize: '0.75rem' }}
+                                    style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
                             )
                         }

@@ -376,6 +376,19 @@ input:-webkit-autofill {
     }
 }
 
+.tableAltStyle {
+    // background-color: orange !important;
+    background-color: var(--cream) !important;
+
+    th {
+        background-color: var(--main) !important;
+    }
+
+    .rc-table-cell-row-hover {
+        background-color: rgba(119, 243, 185, 0.1) !important;
+    }
+}
+
 // swal
 .swal2-popup {
     // background-color: orange !important;

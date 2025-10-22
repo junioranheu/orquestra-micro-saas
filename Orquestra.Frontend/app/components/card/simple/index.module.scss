@@ -55,6 +55,7 @@
                 flex: 1;
 
                 .title {
+                    // background-color: tomato;
                     font-size: 1.125rem;
                     font-weight: 700;
                     color: var(--black);
@@ -74,6 +75,30 @@
                     display: flex;
                     justify-content: flex-start;
                 }
+            }
+        }
+    }
+
+    .cardAltStyle {
+        // background-color: orange !important;
+        background-color: var(--cream);
+
+        .inner {
+            // background-color: orange !important;
+            width: 100%;
+
+            .right {
+                // background-color: tomato !important;
+                background-color: #FFFFFF;
+                border-radius: var(--border-radius);
+                border: 1px solid var(--gray-light);
+                padding: 2rem;
+                width: 100%;
+                min-height: 12rem;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
         }
     }

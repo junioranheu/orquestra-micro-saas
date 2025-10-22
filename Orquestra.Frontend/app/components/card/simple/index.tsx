@@ -13,6 +13,7 @@ export type iProps = {
     buttonFunction?: () => void;
     className?: string;
     style?: CSSProperties;
+    hasCardAltStyle?: boolean;
 }
 
 export default function CardSimple({
@@ -24,7 +25,8 @@ export default function CardSimple({
     buttonDisabled = false,
     buttonFunction,
     className,
-    style
+    style,
+    hasCardAltStyle = false
 }: iProps) {
     return (
         <div className={styles.wrapper}>
@@ -40,7 +42,7 @@ export default function CardSimple({
                 )
             }
 
-            <article className={styles.card} style={style}>
+            <article className={`${styles.card} ${(hasCardAltStyle && styles.cardAltStyle)}`} style={style}>
                 <div className={styles.inner}>
                     {
                         isImgInsideOfCard && (

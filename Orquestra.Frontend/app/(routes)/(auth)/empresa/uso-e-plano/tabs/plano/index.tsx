@@ -21,7 +21,7 @@ export default function EmpresaUsoEPlanoTabPlano({ me }: iProps) {
 
     return (
         <section className={styles.main}>
-            <CardSimpleWithChildren>
+            <CardSimpleWithChildren style={{ backgroundColor: 'var(--cream)' }}>
                 <Plans me={me} plans={plans} />
             </CardSimpleWithChildren>
         </section>

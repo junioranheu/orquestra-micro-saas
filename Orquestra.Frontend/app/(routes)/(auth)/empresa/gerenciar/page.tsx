@@ -129,7 +129,8 @@ export default function EmpresaGerenciar() {
                                 img={SvgOne}
                                 title={me?.currentMainCompany ? `${handleGetFirstName(me?.userName)}, <span class="mainColor">${me?.currentMainCompany?.name}</span> é sua empresa principal.` : 'Escolha uma empresa abaixo para ser sua principal.'}
                                 description={`Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length > 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
-                                style={{ minHeight: '100%', backgroundColor: 'var(--cream)' }}
+                                style={{ minHeight: '100%' }}
+                                hasCardAltStyle={true}
                             />
 
                             <CardSimple
@@ -139,6 +140,7 @@ export default function EmpresaGerenciar() {
                                 buttonLabel='Cadastrar nova empresa'
                                 buttonFunction={() => handleOpenModal(undefined)}
                                 style={{ minHeight: '100%' }}
+                                hasCardAltStyle={true}
                             />
                         </div>
                     ) : (
@@ -148,6 +150,7 @@ export default function EmpresaGerenciar() {
                             description='Aparentemente você não faz parte de nenhuma empresa.<br/>Por que não cadastra a sua agora mesmo?'
                             buttonLabel={`Cadastrar sua empresa no ${SYSTEM.NAME}`}
                             buttonFunction={() => handleOpenModal(undefined)}
+                            hasCardAltStyle={true}
                         />
                     )
                 }
