@@ -335,6 +335,7 @@ input:-webkit-autofill {
 
     .rc-table-content,
     .rc-table-cell {
+        // background-color: orange !important;
         border: none;
     }
 
@@ -384,8 +385,14 @@ input:-webkit-autofill {
         background-color: var(--main) !important;
     }
 
+    td {
+        // background-color: orange !important;
+        background-color: inherit !important;
+        border-bottom: 1px solid var(--gray-light) !important;
+    }
+
     .rc-table-cell-row-hover {
-        background-color: rgba(119, 243, 185, 0.1) !important;
+        background-color: #FFFFFF !important;
     }
 }
 

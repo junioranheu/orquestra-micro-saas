@@ -76,7 +76,7 @@ export default function TableGeneric({
     mainDivMarginTopBottom = 1,
     mainDivMarginSides = 3,
     mainDivHasPadding = true,
-    hasAltStyle = true,
+    hasAltStyle = false,
 
     title,
     managingOptions = [],
