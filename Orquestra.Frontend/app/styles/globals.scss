@@ -680,6 +680,7 @@ input:-webkit-autofill {
 
 // react-big-calendar  
 .rbc-calendar {
+    background-color: #FFFFFF;
     // background-color: tomato !important;
 
     // // Headers;
@@ -878,7 +879,10 @@ input:-webkit-autofill {
 
     // toolbar;
     .rbc-toolbar {
-        // background-color: purple;
+        // background-color: purple !important;
+        background-color: var(--cream);
+        margin-bottom: 0;
+        padding-bottom: 10px;
 
         .rbc-toolbar-label {
             // background-color: orange;
@@ -898,7 +902,8 @@ input:-webkit-autofill {
             }
 
             button {
-                // background-color: orange;
+                // background-color: orange !important;
+                background-color: #FFFFFF;
                 border: 1px solid var(--gray-light) !important;
                 transition: 0.3s;
 

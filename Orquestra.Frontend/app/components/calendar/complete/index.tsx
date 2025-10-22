@@ -202,7 +202,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
     return (
         <Fragment>
             <div className={styles.main}>
-                <CardSimpleWithChildren style={{ height: customElementHeight || '85vh' }}>
+                <CardSimpleWithChildren style={{ height: customElementHeight || '85vh', backgroundColor: 'var(--cream)' }}>
                     <Calendar
                         localizer={localizer}
                         events={events}

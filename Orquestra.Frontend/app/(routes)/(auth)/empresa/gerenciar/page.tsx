@@ -129,7 +129,7 @@ export default function EmpresaGerenciar() {
                                 img={SvgOne}
                                 title={me?.currentMainCompany ? `${handleGetFirstName(me?.userName)}, <span class="mainColor">${me?.currentMainCompany?.name}</span> é sua empresa principal.` : 'Escolha uma empresa abaixo para ser sua principal.'}
                                 description={`Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length > 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
-                                style={{ minHeight: '100%' }}
+                                style={{ minHeight: '100%', backgroundColor: 'var(--cream)' }}
                             />
 
                             <CardSimple
