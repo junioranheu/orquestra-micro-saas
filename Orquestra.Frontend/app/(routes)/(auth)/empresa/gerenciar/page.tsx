@@ -16,9 +16,8 @@ import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.f
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
-import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
-import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
@@ -35,11 +34,9 @@ export default function EmpresaGerenciar() {
     useTitle('Gerenciar empresas');
 
     const router = useRouter();
-    const me = useApiGetMeSimple();
+    const me = useApiGetMe({});
 
     const planTypeEnum = useApiGetEnum({ enumName: 'PlanTypeEnum' });
-
-    const currentMainCompany = useApiGetCurrentMainCompany({});
     const [companies, setCompanies] = useState<iCompanyOutput[]>();
 
     useApiRequestToSetterOnUrlChange<iCompanyOutput[]>({ apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}&onlyStatusTrue=false`, setter: setCompanies });
@@ -60,7 +57,7 @@ export default function EmpresaGerenciar() {
             cancelBtnText: 'Cancelar',
             confirmBtnText: 'Sim, continuar',
             confirmFunction: async () => {
-                if (company.companyId === currentMainCompany?.companyId) {
+                if (company.companyId === me?.currentMainCompany?.companyId) {
                     swal({ content: 'Essa já é sua empresa principal.', icon: 'warning' });
                     return;
                 }
@@ -130,8 +127,8 @@ export default function EmpresaGerenciar() {
                         <div className={styles.flex}>
                             <CardSimple
                                 img={SvgOne}
-                                title={`${handleGetFirstName(me?.userName)}, <span class="mainColor">${currentMainCompany?.name}</span> é sua empresa principal.`}
-                                description={`Que legal! Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length > 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
+                                title={me?.currentMainCompany ? `${handleGetFirstName(me?.userName)}, <span class="mainColor">${me?.currentMainCompany?.name}</span> é sua empresa principal.` : 'Escolha uma empresa abaixo para ser sua principal.'}
+                                description={`Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length > 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
                                 style={{ minHeight: '100%' }}
                             />
 
@@ -176,7 +173,7 @@ export default function EmpresaGerenciar() {
                                     </div>
 
                                     {
-                                        currentMainCompany?.companyId === company.companyId && (
+                                        me?.currentMainCompany?.companyId === company.companyId && (
                                             <Tippy content='Essa é sua empresa princial atualmente'>
                                                 <span className={styles.badge}>
                                                     <Icon icon='star' size='small' />
@@ -232,7 +229,7 @@ export default function EmpresaGerenciar() {
                                     </Tippy>
 
                                     {
-                                        currentMainCompany?.companyId == company.companyId && (
+                                        me?.currentMainCompany?.companyId == company.companyId && (
                                             <p>
                                                 <Icon icon='star' size='small' /> Empresa principal
                                             </p>
@@ -264,13 +261,13 @@ export default function EmpresaGerenciar() {
                                     }
 
                                     {
-                                        (company?.isAdm && currentMainCompany?.companyId === company.companyId) && (
+                                        (company?.isAdm && me?.currentMainCompany?.companyId === company.companyId) && (
                                             <Button label='Editar' handleFunction={() => handleOpenModal(company)} isStyleSimple={true} />
                                         )
                                     }
 
                                     {
-                                        currentMainCompany?.companyId !== company.companyId && (
+                                        me?.currentMainCompany?.companyId !== company.companyId && (
                                             <Button label='Tornar empresa principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
                                         )
                                     }

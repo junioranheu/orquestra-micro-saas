@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Caching.Memory;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
 using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
@@ -26,6 +27,7 @@ namespace Orquestra.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController(
+        IMemoryCache memoryCache,
         IEnvService env,
         ICreateToken createToken,
         IJwtTokenGenerator jwtTokenGenerator,
@@ -36,6 +38,7 @@ public class AuthController(
         IRecoverPasswordUser recoverPasswordUser
     ) : BaseController<AuthController>
 {
+    private readonly IMemoryCache _memoryCache = memoryCache;
     private readonly IEnvService _env = env;
     private readonly ICreateToken _createToken = createToken;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
@@ -89,6 +92,12 @@ public class AuthController(
     {
         // Misc;
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        string cacheKey = $"key_me_{userIdAuth}";
+
+        if (_memoryCache.TryGetValue(cacheKey, out MeOutput? cachedOutput))
+        {
+            return Ok(cachedOutput);
+        }
 
         const bool isAuth = true;
         string nameAuth = GetUserNameAuth();
@@ -139,6 +148,9 @@ public class AuthController(
                 output.CurrentMainCompany.UserModulesStr = modulesStr;
             }
         }
+
+        // Cache de apenas 1 segundo para ajudar nas requisições repetidas;
+        _memoryCache.Set(cacheKey, output, TimeSpan.FromSeconds(1));
 
         return Ok(output);
     }
