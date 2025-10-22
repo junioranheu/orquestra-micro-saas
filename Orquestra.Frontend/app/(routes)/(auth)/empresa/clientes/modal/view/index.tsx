@@ -127,7 +127,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
             if (output) {
                 swal({
                     content: 'Cliente registrado com sucesso.',
-                    confirmFunction: () => window.location.reload(),
+                    confirmFunction: () => setTrigger(new Date()),
                     icon: 'success'
                 });
 

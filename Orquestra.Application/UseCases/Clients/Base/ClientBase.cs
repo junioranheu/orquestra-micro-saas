@@ -20,7 +20,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
         if (!checkName)
         {
-            throw new ArgumentException("O nome não é válido. Insira seu nome completo, por favor.");
+            throw new ArgumentException("O nome não é válido. Insira um nome completo, por favor.");
         }
 
         input.Email = input.Email?.Trim().ToLowerInvariant() ?? string.Empty;
