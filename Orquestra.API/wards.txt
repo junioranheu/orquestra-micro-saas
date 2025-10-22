@@ -3,7 +3,6 @@ Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
 Criar algum job ou trava/verifica a vigência do plano da empresa;
-Criar lógica pra não repetir chamadas em " public async Task<ActionResult> Me()" por 1 segundo;
 
 ⦁	Company:
 Criar tela de Planos e Uso;
@@ -12,6 +11,7 @@ Criar endpoint para REENVIAR confirmação de e-mail;
 
 ⦁	User/Configurações:
 Criar método pra trocar de senha;
+Criar front para essa parada;
 
 ⦁	Notificações (?)
 Desenvolver feature de notificação;
