@@ -15,7 +15,7 @@
     --border-radius: 0.5rem;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05), 0 6px 20px rgba(0, 0, 0, 0.05);
     --box-shadow-dark: 0 10px 40px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.04);
-    --filter-contrast: invert(34%) sepia(96%) saturate(942%) hue-rotate(219deg) brightness(84%) contrast(88%);
+    --filter-main: invert(54%) sepia(80%) saturate(700%) hue-rotate(100deg) brightness(70%) contrast(85%);
 }
 
 * {
@@ -149,7 +149,7 @@ svg {
         transition: 0.3s;
 
         svg {
-            filter: var(--filter-contrast);
+            filter: var(--filter-main);
             transition: 0s;
         }
     }

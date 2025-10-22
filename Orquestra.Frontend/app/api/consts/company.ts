@@ -8,6 +8,7 @@ export const CONSTS_COMPANY = {
     post: `${BASE}/${controller}`,
     get: `${BASE}/${controller}`,
     put: `${BASE}/${controller}`,
+    updatePlanType: `${BASE}/${controller}/UpdatePlanType`,
     getAll: `${BASE}/${controller}/GetAll`,
     getAllByUserId: `${BASE}/${controller}/GetAllByUserId`,
     verify: `${BASE}/${controller}/Verify`

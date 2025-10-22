@@ -10,7 +10,7 @@ Chamar o novo end-point "UpdatePlanTypeCompany" no front-end;
 Criar endpoint para REENVIAR confirmação de e-mail;
 
 ⦁	User/Configurações:
-Criar método pra trocar de senha;
+Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
 
 ⦁	Notificações (?)

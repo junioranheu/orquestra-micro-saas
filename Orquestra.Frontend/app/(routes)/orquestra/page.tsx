@@ -1,6 +1,6 @@
 'use client';
 import { iMeSimple } from '@/app/api/consts/auth';
-import { CONSTS_UTILITY, iPlanType } from '@/app/api/consts/utility';
+import { CONSTS_UTILITY, iPlanTypeOutput } from '@/app/api/consts/utility';
 import Img from '@/app/assets/png/server.png';
 import Icon from '@/app/components/icon';
 import { iDropdownOption } from '@/app/components/input/drop-down';
@@ -31,8 +31,8 @@ export default function LandingPage() {
     const [open, setOpen] = useState<boolean>(false);
     const [scrolled, setScrolled] = useState<boolean>(false);
 
-    const [plans, setPlans] = useState<iPlanType | undefined>();
-    useApiRequestToSetterOnUrlChange<iPlanType>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
+    const [plans, setPlans] = useState<iPlanTypeOutput | undefined>();
+    useApiRequestToSetterOnUrlChange<iPlanTypeOutput>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 24);
@@ -62,7 +62,7 @@ export default function LandingPage() {
 
             <Footer />
         </div>
-    );
+    )
 }
 
 function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; open: boolean; setOpen: (v: boolean) => void; scrolled: boolean; }) {
@@ -204,7 +204,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                 )
             }
         </header>
-    );
+    )
 }
 
 function Hero({ me }: { me: iMeSimple | undefined }) {
@@ -312,7 +312,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                 </div>
             </div>
         </section>
-    );
+    )
 }
 
 function Features() {
@@ -364,7 +364,7 @@ function Features() {
                 }
             </div>
         </section>
-    );
+    )
 }
 
 function Process() {
@@ -411,10 +411,10 @@ function Process() {
                 </div>
             </div>
         </section>
-    );
+    )
 }
 
-function Pricing({ me, plans }: { me: iMeSimple | undefined, plans: iPlanType | undefined }) {
+function Pricing({ me, plans }: { me: iMeSimple | undefined, plans: iPlanTypeOutput | undefined }) {
     return (
         <section id='pricing' className='px-4 sm:px-6 py-16 sm:py-24 max-w-6xl mx-auto'>
             {/* Section Header */}
@@ -528,10 +528,10 @@ function Testimonials() {
                 }
             </div>
         </section>
-    );
+    )
 }
 
-function CTA({ me, plans }: { me: iMeSimple | undefined, plans: iPlanType | undefined }) {
+function CTA({ me, plans }: { me: iMeSimple | undefined, plans: iPlanTypeOutput | undefined }) {
     return (
         <section className='px-4 sm:px-6 py-12 sm:py-16 max-w-6xl mx-auto'>
             <div className='relative overflow-hidden px-6 sm:px-12 py-12 sm:py-16 rounded-3xl bg-gradient-to-r from-[var(--main)] via-[var(--main)] to-[var(--main-dark)] shadow-2xl'>
@@ -557,7 +557,7 @@ function CTA({ me, plans }: { me: iMeSimple | undefined, plans: iPlanType | unde
                 </div>
             </div>
         </section>
-    );
+    )
 }
 
 function Footer() {

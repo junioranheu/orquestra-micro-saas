@@ -1,20 +1,178 @@
 .main {
-    // background-color: blue !important;
+    // background-color: tomato;
     display: flex;
+    margin-top: 1rem;
+
+    .pricingSection {
+        padding: 4rem 0;
+        max-width: 80rem;
+        margin: 0 auto;
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+
+            .title {
+                font-size: 2rem;
+                font-weight: 900;
+                margin-bottom: 0.5rem;
+                color: #111827;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                color: #6b7280;
+                max-width: 40rem;
+                margin: 0 auto;
+            }
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.25rem;
+            grid-template-columns: 1fr;
+
+            @media (min-width: 1025px) {
+                // background-color: orange !important;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+
+            .cardWrapper {
+                position: relative;
+                transition: transform 0.3s ease, z-index 0.3s;
+
+                &:hover {
+                    transform: translateY(-6px);
+                }
+
+                .badge {
+                    position: absolute;
+                    top: -1rem;
+                    left: 2rem;
+                    padding: 0.35rem 0.9rem;
+                    background: linear-gradient(90deg, var(--main), var(--main-dark));
+                    color: white;
+                    font-weight: 700;
+                    font-size: 0.85rem;
+                    border-radius: 9999px;
+                    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+                }
+
+                .card {
+                    // background-color: orange !important;
+                    height: 100%;
+                    padding: 2rem;
+                    border-radius: 1rem;
+                    border: 1px solid rgba(0, 0, 0, 0.04);
+                    display: flex;
+                    flex-direction: column;
+                    transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+
+                    &.cardNormal {
+                        border: 1px solid var(--gray-light);
+
+                        &:hover {
+                            background: #FFFFFF;
+                            box-shadow: 0 8px 26px rgba(10, 10, 10, 0.06);
+                        }
+                    }
+
+                    .planHeading {
+                        font-size: 1.375rem;
+                        font-weight: 800;
+                        margin-bottom: 0.35rem;
+                        color: #111827;
+                    }
+
+                    .planSub {
+                        color: #6b7280;
+                        font-size: 0.95rem;
+                        margin-bottom: 1rem;
+                    }
+
+                    .priceWrap {
+                        margin-bottom: 1.25rem;
+                        display: flex;
+                        align-items: baseline;
+                        gap: 0.5rem;
+
+                        .price {
+                            font-size: 2rem;
+                            font-weight: 900;
+                            background: linear-gradient(90deg, var(--main), var(--main-dark));
+                            -webkit-background-clip: text;
+                            background-clip: text;
+                            color: transparent;
+                        }
+
+                        .pricePerMonth {
+                            color: #6b7280;
+                            font-size: 0.95rem;
+                        }
+                    }
+
+                    .perksList {
+                        margin-bottom: 1.5rem;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.6rem;
+                        list-style: none;
+                        padding: 0;
+
+                        .perkItem {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            color: #374151;
+                            font-size: 0.95rem;
+
+                            .perkIcon {
+                                // background-color: orange !important;
+                                width: 1.25rem;
+                                height: 1.25rem;
+                                border-radius: 50%;
+                                color: var(--main);
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-weight: 700;
+                                font-size: 0.75rem;
+                            }
+
+                            .perkText {
+                                font-size: 0.95rem;
+                            }
+                        }
+                    }
+
+                    .ctaButton {
+                        margin-top: auto; // empurra pra baixo
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                        padding: 0.8rem 1rem;
+                        font-weight: 800;
+                        color: white;
+                        border-radius: 0.75rem;
+                        text-decoration: none;
+                        background: linear-gradient(90deg, var(--main), var(--main-dark));
+                        transition: box-shadow 0.2s ease, transform 0.15s ease;
+
+                        &:hover {
+                            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+                            transform: translateY(-2px);
+                        }
+
+                        &.disabled {
+                            opacity: 0.6;
+                            pointer-events: none;
+                            cursor: not-allowed;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-
-/* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
-/* hi-res laptops and desktops */
-@media (max-width:1281px) {}
-
-/* big landscape tablets, laptops, and desktops */
-@media (max-width:1025px) {}
-
-/* tablet, landscape iPad, lo-res laptops ands desktops */
-@media (max-width:801px) {}
-
-/* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
-@media (max-width:600px) {}
-
-/* smartphones, Android phones, landscape iPhone */
-@media (max-width:480px) {}

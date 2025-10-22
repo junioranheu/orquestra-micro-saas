@@ -17,17 +17,19 @@ export interface iBuildVersion {
     configuration: string;
 }
 
-export interface iPlanType {
+export interface iPlanTypeOutput {
     planDurationDays: number;
     planDurationDaysFree: number;
-    plans: {
-        planType: number;
-        planTypeName: string;
-        planTypeDescription: string;
-        price: number;
-        schedulingLimit: number;
-        description: string;
-        perks: string[];
-        durationDays: number;
-    }[];
+    plans: iPlanType[];
+}
+
+export interface iPlanType {
+    planType: number;
+    planTypeName: string;
+    planTypeDescription: string;
+    price: number;
+    schedulingLimit: number;
+    description: string;
+    perks: string[];
+    durationDays: number;
 }

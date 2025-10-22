@@ -2,7 +2,7 @@
 import { CarouselLogin } from '@/app/(routes)/(not-auth)/login/page';
 import styles from '@/app/(routes)/(not-auth)/login/page.module.scss';
 import { iUserInput } from '@/app/api/consts/user';
-import { CONSTS_UTILITY, iPlanType } from '@/app/api/consts/utility';
+import { CONSTS_UTILITY, iPlanTypeOutput } from '@/app/api/consts/utility';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
 import { iDropdownOption } from '@/app/components/input/drop-down';
@@ -37,8 +37,8 @@ export default function CriarConta() {
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
     useIsSupportedBrowser();
 
-    const [plans, setPlans] = useState<iPlanType | undefined>();
-    useApiRequestToSetterOnUrlChange<iPlanType>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
+    const [plans, setPlans] = useState<iPlanTypeOutput | undefined>();
+    useApiRequestToSetterOnUrlChange<iPlanTypeOutput>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
 
     const [token, setToken] = useState('');
 
