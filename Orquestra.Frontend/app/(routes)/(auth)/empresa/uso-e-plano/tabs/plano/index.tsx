@@ -6,6 +6,7 @@ import { Fetch } from '@/app/api/fetch';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import swal from '@/app/functions/swal';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
+import { Guid } from 'guid-typescript';
 import Link from 'next/link';
 import { useState } from 'react';
 import styles from './index.module.scss';
@@ -42,7 +43,7 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
             confirmBtnText: 'Confirmar',
             confirmFunction: async () => {
                 const formDataInput = new FormData();
-                formDataInput.append('CompanyId', me?.currentMainCompany?.companyId?.toString()!);
+                formDataInput.append('CompanyId', me?.currentMainCompany?.companyId?.toString() ?? Guid.EMPTY);
                 formDataInput.append('PlanType', plan.planType.toString());
 
                 const output = await Fetch.put({ url: CONSTS_COMPANY.updatePlanType, body: formDataInput, isFormData: true });
