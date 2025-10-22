@@ -22,11 +22,12 @@ export default function useApiGetMe({ isFetch = true, trigger = undefined }: iPr
             const result = await Fetch.get({ url: CONSTS_AUTH.me }) as iMe;
             // console.log(result);     
 
-            if (result?.currentMainCompany?.companySituation?.toString() === pendingPayment.toString() && pathname !== ROUTES.EMPRESA_USO_E_PLANO) {
+            if (result?.currentMainCompany?.companySituation?.toString() === pendingPayment.toString() && (pathname !== ROUTES.EMPRESA_USO_E_PLANO && pathname !== ROUTES.LOGOUT)) {
                 swal({
-                    content: 'A situação atual da empresa é <b>pendente de pagamento</b>. Por favor, regularize essa pendência antes de continuar.',
+                    content: 'A situação atual da empresa é <b>pendente de pagamento</b>. Isso significa que existe pelo menos uma fatura em aberto. Por favor, regularize essa pendência antes de continuar.',
+                    confirmBtnText: 'Regularizar pendência',
                     confirmFunction: () => router.push(ROUTES.EMPRESA_USO_E_PLANO),
-                    icon: 'warning'
+                    icon: 'error'
                 });
             }
 
