@@ -142,8 +142,8 @@ public sealed class UpdatePlanTypeCompanyTests
 
         // Assert;
         Company updated = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
-        Assert.NotNull(updated.PlanStartDate);
-        Assert.NotNull(updated.PlanEndDate);
+        Assert.Null(updated.PlanStartDate);
+        Assert.Null(updated.PlanEndDate);
         Assert.Equal(CompanySituationEnum.PendingPayment, updated.CompanySituation);
         Assert.Equal(PlanTypeEnum.Premium, updated.PlanType);
     }

@@ -2,21 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.CompanyInvoices.Get;
+using Orquestra.Application.UseCases.CompanyInvoices.Pay;
 using Orquestra.Application.UseCases.Shared;
-using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
-using Orquestra.Infrastructure.Services.Env;
-using Orquestra.Infrastructure.Services.Env.Models;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CompanyInvoiceController(IEnvService env, IGetCompanyInvoice get) : BaseController<CompanyInvoiceController>
+public class CompanyInvoiceController(IGetCompanyInvoice get, IPayCompanyInvoice pay) : BaseController<CompanyInvoiceController>
 {
-    private readonly IEnvService _env = env;
     private readonly IGetCompanyInvoice _get = get;
+    private readonly IPayCompanyInvoice _pay = pay;
 
     [AuthorizeFilter]
     [HttpGet]
@@ -29,15 +27,12 @@ public class CompanyInvoiceController(IEnvService env, IGetCompanyInvoice get) :
     }
 
     [AllowAnonymous]
-    [HttpPost("Pay/{invoiceNumber}")]
-    public async Task<IActionResult> Pay(string invoiceNumber)
+    [HttpPut("Pay/{companyInvoiceId}")]
+    public async Task<IActionResult> Pay(Guid companyInvoiceId)
     {
-        // TO DO;
-        // await _pay.Execute(invoiceNumber);
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _pay.Execute(userIdAuth, companyInvoiceId);
 
-        EnvOutput env = _env.GetUrls();
-        string url = $"{env.UrlFrontend}/{SystemConsts.Screens.Dashboard}";
-
-        return Redirect(url);
+        return Ok(true);
     }
 }

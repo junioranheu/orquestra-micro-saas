@@ -5,7 +5,6 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.UpdatePlanType;
 
@@ -65,8 +64,8 @@ public sealed class UpdatePlanTypeCompany(
     private async Task UpdateCompanyData(Company company, PlanTypeEnum planType)
     {
         company.CompanySituation = CompanySituationEnum.PendingPayment;
-        company.PlanStartDate = GetDate();
-        company.PlanEndDate = GetDate().AddDays(SystemConsts.Time.PlanDurationDays);
+        company.PlanStartDate = null;
+        company.PlanEndDate = null;
         company.PlanType = planType;
 
         _context.Update(company);
