@@ -30,10 +30,12 @@ export default function EmpresaUsoEPlanoTabPlano({ me }: iProps) {
 
 function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | undefined }) {
 
+    const messageInvoice = 'Ao confirmar, uma nova fatura será gerada automaticamente e o plano atual, caso exista, será substituído.';
+
     async function handleChooseNewPlan(plan: iPlanType) {
         swal({
             content: `Você tem certeza de que deseja prosseguir com a aquisição do plano <b>${plan.planTypeDescription.toLocaleLowerCase()}</b>?
-                <br/><br/>Ao confirmar, uma nova fatura será gerada automaticamente e o plano atual, caso exista, será substituído.`,
+                <br/><br/>${messageInvoice}`,
             icon: 'success',
             mustConfirm: true,
             checkboxLabel: 'Li e estou de acordo',
@@ -64,7 +66,7 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
         <section className={styles.pricingSection}>
             <div className={styles.header}>
                 <h2 className={styles.title}>Planos que crescem com você</h2>
-                <p className={styles.subtitle}>Sem contratos. Cancele quando quiser.</p>
+                <p className={styles.subtitle}>Sem contratos. Cancele quando quiser. Lembrando que, {messageInvoice.toLowerCase()}</p>
             </div>
 
             <div className={styles.grid}>
