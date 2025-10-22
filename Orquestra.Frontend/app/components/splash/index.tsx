@@ -1,5 +1,4 @@
 import SYSTEM from '@/app/consts/system';
-import useDisableScroll from '@/app/hooks/useDisableScroll';
 import { useEffect, useMemo, useState } from 'react';
 import Styles from './index.module.scss';
 
@@ -10,8 +9,6 @@ interface iProps {
 }
 
 export default function Splash({ text, destroyAfterSeconds, isGradient = false }: iProps) {
-
-    useDisableScroll();
 
     const letters = useMemo(() => Array.from(text), [text]);
     const [visible, setVisible] = useState<boolean>(true);
@@ -28,9 +25,7 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
     }
 
     return (
-        <section className={Styles.splash}
-            style={{ background: isGradient ? 'var(--gradient)' : 'var(--white)' }}
-        >
+        <section className={Styles.splash} style={{ background: isGradient ? 'var(--gradient)' : 'var(--white)' }}>
             <div className={`${Styles.loading} ${SYSTEM.ANIMATE}`}>
                 {
                     letters.map((letter, i) => (
