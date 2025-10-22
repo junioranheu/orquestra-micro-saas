@@ -49,4 +49,5 @@ export default interface iCompanyOutput {
     userModules?: string[];
     userModulesStr?: string[];
     isAdm?: boolean;
+    isOwner?: boolean;
 }

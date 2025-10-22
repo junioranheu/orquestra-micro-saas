@@ -67,5 +67,7 @@ public sealed class CompanyOutput
     public List<string> UserModulesStr { get; set; } = [];
 
     public bool IsAdm { get; set; } = false;
+
+    public bool IsOwner { get; set; } = false;
     #endregion
 }

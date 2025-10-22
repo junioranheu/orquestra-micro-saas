@@ -131,7 +131,7 @@ export default function EmpresaGerenciar() {
                             <CardSimple
                                 img={SvgOne}
                                 title={`${handleGetFirstName(me?.userName)}, <span class="mainColor">${currentMainCompany?.name}</span> é sua empresa principal.`}
-                                description={`Que legal! Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length >= 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
+                                description={`Que legal! Você atualmente faz parte de <b>${companies?.length} empresa${companies?.length > 1 ? 's' : ''}</b>.${(companies?.length > 1 ? '<br/>Escolha abaixo outra empresa para torná-la sua principal.<br/>Essa escolha pode ser alterada a qualquer momento!' : '')}`}
                                 style={{ minHeight: '100%' }}
                             />
 
@@ -211,7 +211,7 @@ export default function EmpresaGerenciar() {
                                                 <Icon icon='check-circle' size='small' /> Empresa validada
                                             </p>
                                         ) : (
-                                            <Tippy content={currentMainCompany?.isAdm
+                                            <Tippy content={company?.isAdm
                                                 ? 'Verifique o e-mail enviado para concluir a validação da empresa.'
                                                 : 'Pendente de validação. Peça ao administrador para que verifique o e-mail enviado para concluir a validação da empresa.'}>
                                                 <p>
@@ -240,9 +240,17 @@ export default function EmpresaGerenciar() {
                                     }
 
                                     {
-                                        currentMainCompany?.isAdm && (
+                                        company?.isAdm && (
                                             <p>
-                                                <Icon icon='shield' size='small' /> Você é um administrador
+                                                <Icon icon='shield' size='small' /> Você é um dos administradores
+                                            </p>
+                                        )
+                                    }
+
+                                    {
+                                        company?.isOwner && (
+                                            <p>
+                                                <Icon icon='award' size='small' /> Você é o dono
                                             </p>
                                         )
                                     }
@@ -250,13 +258,13 @@ export default function EmpresaGerenciar() {
 
                                 <div className={styles.actions}>
                                     {
-                                        !company.isAdm && (
+                                        !company.isOwner && (
                                             <Button label='Desvincular da empresa' handleFunction={() => handleLeave(company)} isStyleSimple={true} />
                                         )
                                     }
 
                                     {
-                                        (currentMainCompany?.isAdm && currentMainCompany?.companyId === company.companyId) && (
+                                        (company?.isAdm && currentMainCompany?.companyId === company.companyId) && (
                                             <Button label='Editar' handleFunction={() => handleOpenModal(company)} isStyleSimple={true} />
                                         )
                                     }

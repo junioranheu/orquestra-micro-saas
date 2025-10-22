@@ -124,8 +124,6 @@ public class AuthController(
         // Módulos;
         if (currentMainCompany is not null && output.CurrentMainCompany is not null)
         {
-            currentMainCompany.IsAdm = isUserAdm;
-
             if (isUserAdm)
             {
                 var moduleEnum = GetEnumListWithDescriptions<ModuleEnum>();
@@ -151,13 +149,8 @@ public class AuthController(
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
 
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
+        (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
         CompanyOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanyOutput>();
-
-        if (currentMainCompanySimple is not null)
-        {
-            currentMainCompanySimple.IsAdm = isUserAdm;
-        }
 
         return Ok(currentMainCompanySimple);
     }

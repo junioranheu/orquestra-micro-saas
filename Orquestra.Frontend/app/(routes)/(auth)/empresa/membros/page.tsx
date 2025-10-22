@@ -119,7 +119,7 @@ export default function EmpresaMembros() {
     const [userClicked, setUserClicked] = useState<iCompanyUser | undefined>(undefined);
 
     function handleOpenModalEdit(user: iCompanyUser | undefined) {
-        if (!me?.currentMainCompany?.isAdm) {
+        if (!me?.isUserAdmOfCurrentMainCompany) {
             toast({ content: 'Apenas os administradores da empresa podem realizar modificações nos membros.' });
             return;
         }
@@ -180,7 +180,7 @@ export default function EmpresaMembros() {
                     title={`Membros cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
                     managingOptions={managingOptions}
 
-                    {... (me?.currentMainCompany?.isAdm ? {
+                    {... (me?.isUserAdmOfCurrentMainCompany ? {
                         btn_add_label: 'Convidar novo membro',
                         btn_add_function: () => setIsModalInviteOpen(true)
                     } : {})}

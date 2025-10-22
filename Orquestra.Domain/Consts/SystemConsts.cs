@@ -15,6 +15,7 @@ public static class SystemConsts
 
     public static class Time
     {
+        public const int OneSecond = 1;
         public const int OneMinute = 60;
         public const int TenMinutes = 600;
         public const int OneHour = 3600;

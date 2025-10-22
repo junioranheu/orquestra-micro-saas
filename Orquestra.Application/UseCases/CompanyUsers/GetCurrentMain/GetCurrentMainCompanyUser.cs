@@ -34,6 +34,9 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
         }
 
         bool isUserAdm = output.CompanyUserRole == CompanyUserRoleEnum.Administrator;
+
+        outputAdapt.IsAdm = isUserAdm;
+        outputAdapt.IsOwner = output.InviterUserId is null || output.InviterUserId == Guid.Empty;
         outputAdapt.CompanySituationStr = GetEnumDesc(outputAdapt.CompanySituation);
 
         return (outputAdapt, isUserAdm);

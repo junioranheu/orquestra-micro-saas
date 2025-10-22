@@ -36,6 +36,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         GetEnumsDesc([output]);
         NormalizeLogo([result], [output]);
         await NormalizeIsAdm([output], userId: userIdAuth);
+        NormalizeIsOwner([output], userId: userIdAuth);
 
         return output;
     }
@@ -85,6 +86,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
         GetEnumsDesc(output);
         NormalizeLogo(result, output);
         await NormalizeIsAdm(output, userId);
+        NormalizeIsOwner(output, userId);
 
         return output;
     }
@@ -174,6 +176,20 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
             {
                 company.IsAdm = role == CompanyUserRoleEnum.Administrator;
             }
+        }
+    }
+
+    private static void NormalizeIsOwner(List<CompanyOutput>? output, Guid userId)
+    {
+        if (output is null || output.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var company in output)
+        {
+            bool found = company.CompanyUsers != null && company.CompanyUsers.Any(u => u.UserId == userId && (u.InviterUserId == null || u.InviterUserId == Guid.Empty));
+            company.IsOwner = found;
         }
     }
     #endregion
