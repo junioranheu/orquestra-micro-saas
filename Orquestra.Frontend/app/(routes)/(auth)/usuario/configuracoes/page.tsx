@@ -3,6 +3,7 @@ import Tabs from '@/app/components/tabs';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
 import styles from './page.module.scss';
+import UsuarioConfiguracoesTabEtc from './tabs/etc';
 import UsuarioConfiguracoesTabInfos from './tabs/infos';
 
 export default function UsuarioConfiguracoes() {
@@ -17,9 +18,10 @@ export default function UsuarioConfiguracoes() {
     return (
         <section className={styles.main}>
             <Tabs
-                tabs={[`Informações xxx ${me?.userName}`,]}
+                tabs={[`Informações xxx ${me?.userName}`, 'Outros']}
                 contents={[
                     <UsuarioConfiguracoesTabInfos me={me} key={1} />,
+                    <UsuarioConfiguracoesTabEtc me={me} key={2} />,
                 ]}
             />
         </section>

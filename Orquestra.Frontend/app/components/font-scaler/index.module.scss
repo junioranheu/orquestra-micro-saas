@@ -1,0 +1,24 @@
+.fontScaler {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+
+    button {
+        border: none;
+        background: var(--main);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
+
+        &:hover {
+            filter: brightness(0.9);
+        }
+    }
+
+    span {
+        font-weight: bold;
+        margin-left: 6px;
+    }
+}
