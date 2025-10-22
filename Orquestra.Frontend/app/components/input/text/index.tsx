@@ -162,6 +162,7 @@ export default function InputMask<T>({
                     key={type}
                     mask={mask}
                     type={type}
+                    lang='pt-BR'
                     className={classes}
                     style={style}
                     placeholder={placeholder}

@@ -20,8 +20,8 @@ export default function EmpresaUsoEPlano() {
             <Tabs
                 tabs={[`Plano atual da empresa ${me?.currentMainCompany?.name}`, 'Histórico de faturas']}
                 contents={[
-                    <EmpresaUsoEPlanoTabPlano me={me} />,
-                    <EmpresaUsoEPlanoTabFaturas me={me} />
+                    <EmpresaUsoEPlanoTabPlano me={me} key={1} />,
+                    <EmpresaUsoEPlanoTabFaturas me={me} key={2} />
                 ]}
             />
         </section>

@@ -19,7 +19,7 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>):
         apiUrlRequest,
         setter,
         index = 1,
-        limit = 100,
+        limit = 15,
         isSelectAll = false,
         allowRequestNull = true,
         trigger = undefined,

@@ -99,7 +99,6 @@ export default function EmpresaClientes() {
         setIsModalViewOpen(true);
     }
 
-
     async function handleDisable(member: iClient) {
         swal({
             content: 'Você tem certeza que deseja remover este cliente?',
@@ -132,7 +131,7 @@ export default function EmpresaClientes() {
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={clients?.count}
 
-                    title={`Clientes cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
+                    title={`Clientes cadastrados em ${me?.currentMainCompany?.name ?? ''} (${clients?.count ?? 0})`}
                     managingOptions={managingOptions}
                     btn_add_label='Cadastrar novo'
                     btn_add_function={() => handleOpenModalView(undefined)}

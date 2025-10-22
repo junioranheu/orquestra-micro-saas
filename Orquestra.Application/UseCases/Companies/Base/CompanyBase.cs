@@ -37,6 +37,16 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
     {
         string warnAlreadyExist = $"Caso você não concorde que já exista uma empresa com esta informação, entre em contato pelo e-mail {SystemConsts.App.Email}.";
 
+        #region status
+        if (!isCreate)
+        {
+            if (!input.Status)
+            {
+                throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyCompany);
+            }
+        }
+        #endregion
+
         #region basic
         if (!isCreate)
         {
@@ -120,16 +130,6 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         if (input.LogoFormFile is not null)
         {
             ValidateMaxSizeFile(file: input.LogoFormFile, maxMegabytes: 3);
-        }
-        #endregion
-
-        #region status
-        if (!isCreate)
-        {
-            if (!input.Status)
-            {
-                throw new InvalidOperationException(SystemConsts.Warnings.NeedToVerifyCompany);
-            }
         }
         #endregion
     }

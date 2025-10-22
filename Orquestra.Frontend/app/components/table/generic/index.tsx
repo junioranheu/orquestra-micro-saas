@@ -67,7 +67,7 @@ export default function TableGeneric({
     data,
     currentPage,
     setCurrentPage,
-    maxPageSize = 25,
+    maxPageSize = 15,
     totalRowsCount = 0,
     handleTableRowClick = undefined,
     isMainDivBoxShadowed = false,
@@ -97,12 +97,13 @@ export default function TableGeneric({
     const [paginatedData, setPaginatedData] = useState<any[] | undefined>([]);
     const [sortColumn, setSortColumn] = useState<string | null>(null);
     const [sortOrder, setSortOrder] = useState<'ascend' | 'descend' | null>(null);
-    const [showEmptyText, setShowEmptyText] = useState(false);
+    const [showEmptyText, setShowEmptyText] = useState<boolean>(false);
 
     useEffect(() => {
         function handlePagination() {
             if (totalRowsCount > 0) {
-                // console.log(`Foi definido que há um limite de linhas (totalRowsCount: ${totalRowsCount}})`);
+                // console.clear();
+                // console.log(`Foi definido que há um limite de linhas (totalRowsCount: ${totalRowsCount})`);
                 setCountTotalItems(totalRowsCount ?? 1);
 
                 // Workaround;
@@ -113,12 +114,18 @@ export default function TableGeneric({
                     setPaginatedData(data);
                 }, 10);
 
-                if (pageSize < 1) {
-                    const pageSizeHandlePagination = data?.length ?? maxPageSize;
-                    // console.log(`Definir o setPageSize apenas uma vez: ${pageSizeHandlePagination}`);
+                // Workaround (código retirado do if abaixo (conteúdo original));
+                const pageSizeHandlePagination = data?.length ?? maxPageSize;
+                setPageSize(pageSizeHandlePagination);
 
-                    setPageSize(pageSizeHandlePagination);
-                }
+                // Dia 22/10 esse trecho foi comentado porque foi percebido que estava atrapalhando os reloads com triggers;
+                // É importante ficar esperto quanto a isso. Talvez vale a pena descomentar futuramente, dependendo...
+                // if (pageSize < 1) {
+                //     const pageSizeHandlePagination = data?.length ?? maxPageSize;
+                //     console.log(`Definir o setPageSize apenas uma vez: ${pageSizeHandlePagination}`);
+
+                //     setPageSize(pageSizeHandlePagination);
+                // }
 
                 return;
             }
@@ -138,7 +145,9 @@ export default function TableGeneric({
         }
 
         if (data?.length) {
-            handlePagination();
+            setTimeout(() => {
+                handlePagination();
+            }, 10);
         } else {
             setTimeout(() => {
                 setPaginatedData([]);

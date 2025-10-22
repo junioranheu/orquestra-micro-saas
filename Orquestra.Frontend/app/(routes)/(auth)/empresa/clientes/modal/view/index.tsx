@@ -181,7 +181,6 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         }
     }
 
-
     if (!isModalOpen) {
         return;
     }

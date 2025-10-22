@@ -245,6 +245,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                         <div className={styles.metaRow}>
                             <Tags
                                 tags={[
+                                    { label: (company?.status ? 'Empresa verificada' : 'Empresa pendente de validação'), title: (company?.status ? 'Tudo certo! Essa empresa já foi verificada' : 'Parece que essa empresa ainda não foi verificada via e-mail') },
                                     { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                 ]}
                             />
