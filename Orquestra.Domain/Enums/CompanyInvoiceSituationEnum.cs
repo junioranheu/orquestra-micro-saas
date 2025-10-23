@@ -10,6 +10,9 @@ public enum CompanyInvoiceSituationEnum
     [Description("Aprovado")]
     Paid = 2,
 
+    [Description("Vencido")]
+    Expired = 3,
+
     [Description("Cancelado")]
     Canceled = 999
 }

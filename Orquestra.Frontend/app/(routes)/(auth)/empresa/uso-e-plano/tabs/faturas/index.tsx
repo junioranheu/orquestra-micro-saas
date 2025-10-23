@@ -62,6 +62,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
                 const map: Record<number, string> = {
                     1: 'Pendente de pagamento',
                     2: 'Aprovado',
+                    3: 'Vencido',
                     999: 'Cancelado'
                 };
 
@@ -103,6 +104,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
         const situationMap: Record<number, string> = {
             1: 'Pendente',
             2: 'Aprovado',
+            3: 'Vencido',
             999: 'Cancelado'
         };
 
