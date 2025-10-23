@@ -177,7 +177,7 @@ export default function EmpresaMembros() {
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={members?.count}
 
-                    title={`Membros cadastrados em ${me?.currentMainCompany?.name ?? ''}`}
+                    title='Membros cadastrados'
                     managingOptions={managingOptions}
 
                     {... (me?.isUserAdmOfCurrentMainCompany ? {

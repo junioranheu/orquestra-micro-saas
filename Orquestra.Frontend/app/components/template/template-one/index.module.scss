@@ -9,14 +9,20 @@
     padding: 2rem;
 
     .inner {
-        text-align: center;
-        width: fit-content;
+        // background-color: orange !important;
+
+        // background: transparent;
+        // box-shadow: none;
 
         // background: var(--gradient);
         // box-shadow: var(--box-shadow);
-        background: transparent;
-        box-shadow: none;
 
+        background-color: var(--cream) !important;
+        border: 1px solid var(--gray-light);
+        text-align: center;
+        width: fit-content;
+
+        margin-top: -5rem;
         padding: 3rem;
         border-radius: var(--border-radius);
 
@@ -113,16 +119,12 @@
     .container {
         // background: orange !important;
 
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        margin-top: 0rem;
-
         .inner {
+            // background-color: tomato !important;
 
             .errorIcon,
             .successIcon {
-                display: none;
+                height: 4rem;
             }
 
             .code {

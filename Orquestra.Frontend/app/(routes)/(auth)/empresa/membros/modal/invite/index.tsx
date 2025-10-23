@@ -54,7 +54,7 @@ export default function EmpresaMembrosModalInvite({ isModalOpen, setIsModalOpen,
 
         if (output) {
             swal({
-                content: `Um convite foi enviado para o e-mail ${formData.inviteEmail}. Esperamos que aceitem o convite o mais rápido possível para que o convidado se torne um membro da sua empresa no ${SYSTEM.NAME}.`,
+                content: `Um convite foi enviado para o e-mail <b>${formData.inviteEmail}</b>. Esperamos que aceitem o convite o mais rápido possível para que o convidado se torne um membro da sua empresa no ${SYSTEM.NAME}.`,
                 icon: 'success'
             });
 

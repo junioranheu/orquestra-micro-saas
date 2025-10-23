@@ -170,133 +170,169 @@ export default function EmpresaGerenciar() {
 
                 <div className={styles.grid}>
                     {
-                        companies?.sort((a, b) => a.name.localeCompare(b.name)).map((company) => (
-                            <article key={company.companyId.toString()} className={styles.card}>
-                                <header className={styles.header}>
-                                    <div className={styles.avatar}>
+                        companies?.sort((a, b) => a.name.localeCompare(b.name)).map((company) => {
+                            const isCurrentMain = me?.currentMainCompany?.companyId === company.companyId;
+                            const isAdmin = company?.isAdm;
+                            const isOwner = company?.isOwner;
+
+                            return (
+                                <article key={company.companyId.toString()} className={styles.card}>
+                                    <header className={styles.header}>
+                                        <div className={styles.avatar}>
+                                            {
+                                                company.logoBase64 ? (
+                                                    <Image src={decodeURIComponent(company.logoBase64)} alt={company.name} priority={true} width={0} height={0} />
+                                                ) : (
+                                                    <span>{handleGetNameInitials(company.name)}</span>
+                                                )
+                                            }
+                                        </div>
+
+                                        <div className={styles.info}>
+                                            <h3>{company.name}</h3>
+                                            <p className={styles.type}>{company.companyTypeStr}</p>
+                                        </div>
+
                                         {
-                                            company.logoBase64 ? (
-                                                <Image src={decodeURIComponent(company.logoBase64)} alt={company.name} priority={true} width={0} height={0} />
+                                            isCurrentMain && (
+                                                <Tippy content='Essa é sua empresa princial atualmente'>
+                                                    <span className={styles.badge}>
+                                                        <Icon icon='star' size='small' />
+                                                    </span>
+                                                </Tippy>
+                                            )
+                                        }
+                                    </header>
+
+                                    <div className={styles.content}>
+                                        {
+                                            isCurrentMain ? (
+                                                <Tippy content='Gerenciar plano'>
+                                                    <p>
+                                                        <Icon icon='layers' size='small' /> <Link href={ROUTES.EMPRESA_USO_E_PLANO}>Plano {planTypeEnum?.find(x => x.value.toString() === company.planType?.toString())?.label?.toLocaleLowerCase()} ({company.companySituationStr?.toLocaleLowerCase()})</Link>
+                                                    </p>
+                                                </Tippy>
                                             ) : (
-                                                <span>{handleGetNameInitials(company.name)}</span>
+                                                <p>
+                                                    <Icon icon='layers' size='small' /> Plano {planTypeEnum?.find(x => x.value.toString() === company.planType?.toString())?.label?.toLocaleLowerCase()} ({company.companySituationStr?.toLocaleLowerCase()})
+                                                </p>
+                                            )
+                                        }
+
+                                        {
+                                            company.planStartDate && company.planEndDate && (
+                                                <Tippy content='Vigência do plano atual'>
+                                                    <p>
+                                                        <Icon icon='calendar' size='small' />{' '}
+                                                        {new Date(company.planStartDate).toLocaleDateString()} →{' '}
+                                                        {new Date(company.planEndDate).toLocaleDateString()}
+                                                    </p>
+                                                </Tippy>
+                                            )
+                                        }
+
+                                        {
+                                            company.status ? (
+                                                <p>
+                                                    <Icon icon='check-circle' size='small' /> Empresa validada
+                                                </p>
+                                            ) : (
+                                                <Tippy content={isAdmin ? 'Clique aqui para reenviar o e-mail de verificação de empresa.' : 'Pendente de validação. Peça a um dos administradores para que verifiquem o e-mail enviado para concluir a validação da empresa.'}>
+                                                    <p
+                                                        className={company.isAdm ? 'pointer' : ''}
+                                                        onClick={() => {
+                                                            if (!isAdmin) {
+                                                                return;
+                                                            }
+
+                                                            handleResendVerifyEmail(company);
+                                                        }}
+                                                    >
+                                                        <Icon icon='x-circle' size='small' /> <b style={{ color: 'var(--red)' }}>Empresa pendente de validação</b>
+                                                    </p>
+                                                </Tippy>
+                                            )
+                                        }
+
+                                        <p>
+                                            <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
+                                        </p>
+
+                                        {
+                                            isCurrentMain ? (
+                                                <Tippy content='Gerenciar membros'>
+                                                    <p>
+                                                        <Icon icon='users' size='small' /> <Link href={ROUTES.EMPRESA_MEMBROS}>{company?.companyUsers?.length} membro{company?.companyUsers?.length === 1 ? '' : 's'}</Link>
+                                                    </p>
+                                                </Tippy>
+                                            ) : (
+                                                <p>
+                                                    <Icon icon='users' size='small' /> {company?.companyUsers?.length} membro{company?.companyUsers?.length === 1 ? '' : 's'}
+                                                </p>
+                                            )
+                                        }
+
+                                        {
+                                            isCurrentMain ? (
+                                                <Tippy content='Gerenciar clientes'>
+                                                    <p>
+                                                        <Icon icon='user-check' size='small' /> <Link href={ROUTES.EMPRESA_CLIENTES}>{company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}</Link>
+                                                    </p>
+                                                </Tippy>
+                                            ) : (
+                                                <p>
+                                                    <Icon icon='user-check' size='small' /> {company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}
+                                                </p>
+                                            )
+                                        }
+
+                                        {
+                                            me?.currentMainCompany?.companyId == company.companyId && (
+                                                <p>
+                                                    <Icon icon='star' size='small' /> Empresa principal
+                                                </p>
+                                            )
+                                        }
+
+                                        {
+                                            isAdmin && (
+                                                <p>
+                                                    <Icon icon='shield' size='small' /> Você é um dos administradores
+                                                </p>
+                                            )
+                                        }
+
+                                        {
+                                            isOwner && (
+                                                <p>
+                                                    <Icon icon='award' size='small' /> Você é o dono
+                                                </p>
                                             )
                                         }
                                     </div>
 
-                                    <div className={styles.info}>
-                                        <h3>{company.name}</h3>
-                                        <p className={styles.type}>{company.companyTypeStr}</p>
+                                    <div className={styles.actions}>
+                                        {
+                                            !isOwner && (
+                                                <Button label='Desvincular da empresa' handleFunction={() => handleLeave(company)} isStyleSimple={true} />
+                                            )
+                                        }
+
+                                        {
+                                            (isAdmin && isCurrentMain) && (
+                                                <Button label='Editar' handleFunction={() => handleOpenModal(company)} isStyleSimple={true} />
+                                            )
+                                        }
+
+                                        {
+                                            !isCurrentMain && (
+                                                <Button label='Tornar empresa principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
+                                            )
+                                        }
                                     </div>
-
-                                    {
-                                        me?.currentMainCompany?.companyId === company.companyId && (
-                                            <Tippy content='Essa é sua empresa princial atualmente'>
-                                                <span className={styles.badge}>
-                                                    <Icon icon='star' size='small' />
-                                                </span>
-                                            </Tippy>
-                                        )
-                                    }
-                                </header>
-
-                                <div className={styles.content}>
-                                    <Tippy content='Gerenciar plano'>
-                                        <p>
-                                            <Icon icon='layers' size='small' /> <Link href={ROUTES.EMPRESA_USO_E_PLANO}>Plano {planTypeEnum?.find(x => x.value.toString() === company.planType?.toString())?.label?.toLocaleLowerCase()} ({company.companySituationStr?.toLocaleLowerCase()})</Link>
-                                        </p>
-                                    </Tippy>
-
-                                    {
-                                        company.planStartDate && company.planEndDate && (
-                                            <Tippy content='Vigência do plano atual'>
-                                                <p>
-                                                    <Icon icon='calendar' size='small' />{' '}
-                                                    {new Date(company.planStartDate).toLocaleDateString()} →{' '}
-                                                    {new Date(company.planEndDate).toLocaleDateString()}
-                                                </p>
-                                            </Tippy>
-                                        )
-                                    }
-
-                                    {
-                                        company.status ? (
-                                            <p>
-                                                <Icon icon='check-circle' size='small' /> Empresa validada
-                                            </p>
-                                        ) : (
-                                            <Tippy content={company?.isAdm ? 'Clique aqui para reenviar o e-mail de verificação de empresa.' : 'Pendente de validação. Peça ao administrador para que verifique o e-mail enviado para concluir a validação da empresa.'}>
-                                                <p
-                                                    className={company.isAdm ? 'pointer' : ''}
-                                                    onClick={() => {
-                                                        if (!company?.isAdm) {
-                                                            return;
-                                                        }
-
-                                                        handleResendVerifyEmail(company);
-                                                    }}
-                                                >
-                                                    <Icon icon='x-circle' size='small' /> <b style={{ color: 'var(--red)' }}>Empresa pendente de validação</b>
-                                                </p>
-                                            </Tippy>
-                                        )
-                                    }
-
-                                    <p>
-                                        <Icon icon='mail' size='small' /> {company.email.toLocaleLowerCase()}
-                                    </p>
-
-                                    <Tippy content='Gerenciar clientes'>
-                                        <p>
-                                            <Icon icon='users' size='small' /> <Link href={ROUTES.EMPRESA_CLIENTES}>{company.amountOfClients} cliente{company.amountOfClients === 1 ? '' : 's'}</Link>
-                                        </p>
-                                    </Tippy>
-
-                                    {
-                                        me?.currentMainCompany?.companyId == company.companyId && (
-                                            <p>
-                                                <Icon icon='star' size='small' /> Empresa principal
-                                            </p>
-                                        )
-                                    }
-
-                                    {
-                                        company?.isAdm && (
-                                            <p>
-                                                <Icon icon='shield' size='small' /> Você é um dos administradores
-                                            </p>
-                                        )
-                                    }
-
-                                    {
-                                        company?.isOwner && (
-                                            <p>
-                                                <Icon icon='award' size='small' /> Você é o dono
-                                            </p>
-                                        )
-                                    }
-                                </div>
-
-                                <div className={styles.actions}>
-                                    {
-                                        !company.isOwner && (
-                                            <Button label='Desvincular da empresa' handleFunction={() => handleLeave(company)} isStyleSimple={true} />
-                                        )
-                                    }
-
-                                    {
-                                        (company?.isAdm && me?.currentMainCompany?.companyId === company.companyId) && (
-                                            <Button label='Editar' handleFunction={() => handleOpenModal(company)} isStyleSimple={true} />
-                                        )
-                                    }
-
-                                    {
-                                        me?.currentMainCompany?.companyId !== company.companyId && (
-                                            <Button label='Tornar empresa principal' handleFunction={() => handleSetCurrentMainCompany(company)} isStyleSimple={true} />
-                                        )
-                                    }
-                                </div>
-                            </article>
-                        ))
+                                </article>
+                            )
+                        })
                     }
                 </div>
             </section>
