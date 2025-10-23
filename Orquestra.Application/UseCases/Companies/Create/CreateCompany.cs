@@ -5,14 +5,9 @@ using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
-using Orquestra.Application.UseCases.Verifications.Create;
-using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
-using Orquestra.Infrastructure.Services.Env;
-using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.Create;
@@ -20,12 +15,9 @@ namespace Orquestra.Application.UseCases.Companies.Create;
 public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(deps), ICreateCompany
 {
     private readonly Context _context = deps.Context;
-    private readonly IEnvService _env = deps.Env;
-    private readonly ICreateVerification _createVerification = deps.CreateVerification;
     private readonly IInviteCompanyUser _inviteCompanyUser = deps.InviteCompanyUser;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = deps.UpdateCurrentMainCompanyUser;
     private readonly IGetUser _getUser = deps.GetUser;
-    private readonly IEmailService _emailService = deps.EmailService;
 
     public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
     {
@@ -38,8 +30,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         await SaveCompanyFirstAdministrator(userIdAuth, company, user);
 
         // E-mail;
-        Verification verification = await SaveVerification(company);
-        await SendEmail(company, verification, user);
+        await SendEmail(company, user);
 
         var output = company.Adapt<CompanyOutput>();
 
@@ -82,34 +73,10 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
         return company;
     }
 
-    private async Task<Verification> SaveVerification(Company input)
-    {
-        Verification verification = await _createVerification.Execute<Company>(entityId: input.CompanyId, verificationType: VerificationTypeEnum.Company);
-
-        return verification;
-    }
-
     private async Task SaveCompanyFirstAdministrator(Guid userIdAuth, Company input, UserOutput user)
     {
         await _inviteCompanyUser.Execute(userIdAuth, companyId: input.CompanyId, email: user.Email, isFirstAdministrator: true);
         await _updateCurrentMainCompanyUser.Execute(userIdAuth, companyId: input.CompanyId);
-    }
-
-    private async Task SendEmail(Company company, Verification verification, UserOutput user)
-    {
-        EnvOutput env = _env.GetUrls();
-        string verifyUrl = $"{env.UrlBackend}/Company/Verify/{verification.Token}";
-
-        Dictionary<string, string> values = new()
-        {
-            { "[NameApp]", SystemConsts.App.NameApp },
-            { "[CompanyName]", company.Name },
-            { "[UserName]", GetFirstWord(user.FullName) },
-            { "[VerifyUrl]", verifyUrl }
-        };
-
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values);
-        await _emailService.SendEmail(to: company.Email, subject: $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua empresa!", body: bodyHtml, cc: [user.Email]);
     }
     #endregion
 }

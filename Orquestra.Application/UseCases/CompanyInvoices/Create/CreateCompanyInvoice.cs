@@ -41,7 +41,7 @@ public sealed class CreateCompanyInvoice(
             CompanyId = companyId,
             PlanType = planType,
             Amount = price,
-            Description = string.Empty,
+            Description = $"Plano {GetEnumDesc(planType).ToLowerInvariant()}",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending
         };
 

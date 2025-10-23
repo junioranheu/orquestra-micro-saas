@@ -5,12 +5,15 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.Users.Get;
+using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -31,7 +34,10 @@ public record CompanyBaseDependencies(
 public partial class CompanyBase(CompanyBaseDependencies deps)
 {
     private readonly Context _context = deps.Context;
+    private readonly IEnvService _env = deps.Env;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
+    private readonly ICreateVerification _createVerification = deps.CreateVerification;
+    private readonly IEmailService _emailService = deps.EmailService;
 
     public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate, bool mustValidateIfNameAlreadyExist, bool mustValidateIfEmailAlreadyExist)
     {
@@ -132,6 +138,25 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
             ValidateMaxSizeFile(file: input.LogoFormFile, maxMegabytes: 3);
         }
         #endregion
+    }
+
+    public async Task SendEmail(Company company, UserOutput user)
+    {
+        Verification verification = await _createVerification.Execute<Company>(entityId: company.CompanyId, verificationType: VerificationTypeEnum.Company);
+
+        EnvOutput env = _env.GetUrls();
+        string verifyUrl = $"{env.UrlBackend}/Company/Verify/{verification.Token}";
+
+        Dictionary<string, string> values = new()
+        {
+            { "[NameApp]", SystemConsts.App.NameApp },
+            { "[CompanyName]", company.Name },
+            { "[UserName]", GetFirstWord(user.FullName) },
+            { "[VerifyUrl]", verifyUrl }
+        };
+
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values);
+        await _emailService.SendEmail(to: company.Email, subject: $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua empresa!", body: bodyHtml, cc: [user.Email]);
     }
 
     #region extras
