@@ -5,6 +5,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.UpdatePlanType;
 
@@ -46,18 +47,26 @@ public sealed class UpdatePlanTypeCompany(
     private async Task CheckAvailability(Company company, PlanTypeEnum newPlanType)
     {
         (decimal _, int _, string descriptionCurrentPlan, string[] _, int _) = PlanTypeHelper.GetValues(company.PlanType.GetValueOrDefault());
-        // (decimal _, int _, string descriptionNewPlan, string[] _, int _) = PlanTypeHelper.GetValues(newPlanType);
 
-        if (company.PlanType == newPlanType)
+        List<CompanyInvoice> invoices = await _context.CompanyInvoices.AsNoTracking().Where(x => x.CompanyId == company.CompanyId && x.Status == true).ToListAsync();
+
+        if (invoices is null || invoices.Count == 0)
         {
-            throw new InvalidOperationException($"Não foi possível prosseguir pois essa empresa já está com o plano {descriptionCurrentPlan.ToLowerInvariant()} vigente.");
+            return;
         }
 
-        bool hasAnyPendingInvoice = await _context.CompanyInvoices.AsNoTracking().AnyAsync(x => x.CompanyId == company.CompanyId && x.CompanyInvoiceSituation == CompanyInvoiceSituationEnum.Pending && x.PlanType != PlanTypeEnum.Free && x.Status == true);
+        bool hasAnyActiveInvoice = invoices.Any(x => x.CompanyId == company.CompanyId && x.CompanyInvoiceSituation == CompanyInvoiceSituationEnum.Paid && x.PlanType != PlanTypeEnum.Free && x.Status == true);
+
+        if (company.PlanType == newPlanType && hasAnyActiveInvoice)
+        {
+            throw new InvalidOperationException($"Não foi possível prosseguir pois essa empresa já está com o plano <b>{GetEnumDesc(newPlanType).ToLowerInvariant()}</b> vigente.");
+        }
+
+        bool hasAnyPendingInvoice = invoices.Any(x => x.CompanyId == company.CompanyId && x.CompanyInvoiceSituation == CompanyInvoiceSituationEnum.Pending && x.PlanType != PlanTypeEnum.Free && x.Status == true);
 
         if (hasAnyPendingInvoice)
         {
-            throw new InvalidOperationException($"Esta empresa tem pelo menos uma fatura em aberto, pendente de pagamento, portanto não foi possível prosseguir.");
+            throw new InvalidOperationException($"A empresa tem pelo menos uma fatura em aberto, pendente de pagamento, portanto não foi possível prosseguir.");
         }
     }
 

@@ -76,6 +76,8 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
                     plans?.plans?.map((p, i) => {
                         const isCurrentPlan = p.planType.toString() === me?.currentMainCompany?.planType?.toString();
                         const isFree = p.planTypeName === 'Free';
+                        const isPaymentPendent = me?.currentMainCompany?.companySituation?.toString() === '1';
+                        const isDisabled = (isFree || (isCurrentPlan && !isPaymentPendent));
 
                         return (
                             <div key={i} className={`${styles.cardWrapper} ${(isFree && 'notAllowed')}`}>
@@ -103,8 +105,8 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
 
                                     <Link
                                         href='#'
-                                        className={`${styles.ctaButton} ${(isFree || isCurrentPlan) ? styles.disabled : ''}`}
-                                        onClick={(isFree || isCurrentPlan) ? undefined : () => handleChooseNewPlan(p)}
+                                        className={`${styles.ctaButton} ${isDisabled ? styles.disabled : ''}`}
+                                        onClick={isDisabled ? undefined : () => handleChooseNewPlan(p)}
                                     >
                                         {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
                                     </Link>

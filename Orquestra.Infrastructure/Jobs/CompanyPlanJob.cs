@@ -51,38 +51,43 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory) : Backgrou
         DateTime now = GetDate();
         int pendingPaymentValue = (int)CompanySituationEnum.PendingPayment;
 
-        // Atualiza empresas para PendingPayment;
+        // Atualiza empresas para CompanySituationEnum.PendingPayment;
         string companiesSql = @"
         UPDATE ""Companies""
-        SET ""CompanySituation"" = {0}
-        WHERE ""PlanEndDate"" <= {1}
-        AND ""CompanySituation"" != {0};";
+        SET ""CompanySituation"" = {0}      -- {0} = novo status: CompanySituationEnum.PendingPayment
+        WHERE ""PlanEndDate"" <= {1}        -- {1} = now
+          AND ""CompanySituation"" != {0}   -- só empresas que ainda não estão PendingPayment
+          AND ""Status"" = true;            -- só empresas ativas
+        ";
 
         int companiesUpdated = await context.Database.ExecuteSqlRawAsync(
             companiesSql,           
-            pendingPaymentValue,    // {0} = pendingPaymentValue ;
+            pendingPaymentValue,    // {0} = novo status: CompanySituationEnum.PendingPayment;
             now                     // {1} = now;
         );
 
         Console.WriteLine($"Companies updated: {companiesUpdated}");
 
+        // Atualiza os invoices para CompanyInvoiceSituationEnum.Expired;
         if (companiesUpdated > 0)
         {
             int expiredValue = (int)CompanyInvoiceSituationEnum.Expired;
 
             string invoicesSql = @"
             UPDATE ""CompanyInvoices"" ci
-            SET ""CompanyInvoiceSituation"" = {0}
+            SET ""CompanyInvoiceSituation"" = {0}       -- {0} = novo status: CompanyInvoiceSituationEnum.Expired
             FROM ""Companies"" c
             WHERE ci.""CompanyId"" = c.""CompanyId""
-            AND ci.""CompanyInvoiceSituation"" != {0}
-            AND c.""PlanEndDate"" <= {1}
-            AND c.""CompanySituation"" = {2};";
+              AND ci.""Status"" = true                  -- só invoices ativas
+              AND ci.""CompanyInvoiceSituation"" != {0} -- só invoices que ainda não estão Expired
+              AND c.""PlanEndDate"" <= {1}              -- {1} = now
+              AND c.""CompanySituation"" = {2};         -- {2} = pendingPaymentValue
+            ";
 
             int invoicesUpdated = await context.Database.ExecuteSqlRawAsync(
                 invoicesSql,
-                expiredValue,        // {0}
-                now,                 // {1}
+                expiredValue,        // {0} novo status: CompanyInvoiceSituationEnum.Expired;
+                now,                 // {1} now;
                 pendingPaymentValue  // {2}, apenas invoices de empresas que acabaram de virar PendingPayment;
             );
 
