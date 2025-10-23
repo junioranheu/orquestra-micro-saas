@@ -50,9 +50,11 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
 
                 if (output) {
                     swal({
-                        content: `Obrigado pela sua aquisição!<br/>Agora sua empresa está com o plano <b>${plan.planTypeDescription.toLocaleLowerCase()}</b> ativo.`,
+                        content: `Plano adquirido com sucesso!<br/>O novo plano da sua empresa é o <b>${plan.planTypeDescription.toLowerCase()}</b>. Para ativá-lo, acesse a aba <b>histórico de faturas</b> e realize o pagamento.`,
                         confirmFunction: () => window.location.reload(),
-                        icon: 'success'
+                        icon: 'success',
+                        checkboxLabel: 'Entendido',
+                        confirmBtnText: 'Voltar'
                     });
 
                     return;

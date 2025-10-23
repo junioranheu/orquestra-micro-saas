@@ -2,10 +2,9 @@
 Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
-Criar algum job ou trava/verifica a vigência do plano da empresa;
+Criar algum job verifica a vigência do plano da empresa, e se já venceu: atualiza automaticamente os status da Company e CompanyInvoice;
 
 ⦁	Company:
-Após usar o "UpdatePlanTypeCompany", tenho que pensar alguma forma de bloquear o acesso até efetuar o pagamento "[HttpPost("Pay/{invoiceNumber}")]"
 Criar endpoint para REENVIAR confirmação de e-mail;
 
 ⦁	User/Configurações:

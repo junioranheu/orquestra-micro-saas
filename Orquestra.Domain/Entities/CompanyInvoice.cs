@@ -10,7 +10,8 @@ public sealed class CompanyInvoice : Audit
 {
     public CompanyInvoice()
     {
-        InvoiceNumber = GuidToNumericId(CompanyInvoiceId);
+        Guid guid = CompanyInvoiceId != Guid.Empty ? CompanyInvoiceId : Guid.NewGuid();
+        InvoiceNumber = GuidToNumericId(guid);
     }
 
     [Key]

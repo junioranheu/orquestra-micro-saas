@@ -301,9 +301,9 @@ public static class Get
     {
         byte[] hash = SHA1.HashData(guid.ToByteArray());
         long value = BitConverter.ToInt64(hash, 0);
-        long output = Math.Abs(value);
+        long result = value == long.MinValue ? 0 : Math.Abs(value);
 
-        return output;
+        return result;
     }
 
     /// <summary>

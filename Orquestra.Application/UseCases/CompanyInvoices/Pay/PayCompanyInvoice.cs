@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -7,9 +8,10 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.CompanyInvoices.Pay;
 
-public sealed class PayCompanyInvoice(Context context) : IPayCompanyInvoice
+public sealed class PayCompanyInvoice(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IPayCompanyInvoice
 {
     private readonly Context _context = context;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
     public async Task Execute(Guid userIdAuth, Guid companyInvoiceId)
     {
@@ -17,6 +19,8 @@ public sealed class PayCompanyInvoice(Context context) : IPayCompanyInvoice
                       // AsNoTracking(). // Propositalmente sem AsNoTracking;
                       Where(x => x.CompanyInvoiceId == companyInvoiceId).
                       FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompanyInvoice);
+
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: invoice.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         // TO DO: Efetuar pagamento (?);
 

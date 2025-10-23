@@ -250,6 +250,32 @@ export const HELP_TOPICS = [
                 description: 'Os Termos de Uso podem ser atualizados periodicamente. Alterações relevantes serão comunicadas aos usuários por e-mail ou dentro da própria plataforma.'
             }
         ]
+    },
+    {
+        topic: 'Faturas',
+        description: `Entenda como funcionam as faturas no ${SYSTEM.NAME} e o que acontece após a aquisição de um novo plano.`,
+        items: [
+            {
+                title: 'Criação de fatura',
+                description: `Sempre que um novo plano é adquirido, o ${SYSTEM.NAME} gera automaticamente uma nova fatura vinculada à empresa. Essa fatura precisa ser paga para que o plano seja efetivamente ativado.`
+            },
+            {
+                title: 'Ativação do plano',
+                description: `O plano adquirido só entra em vigor após o pagamento da fatura correspondente. Antes disso, a empresa permanece com a situação <b>pendente de pagamento</b> e o plano anterior (se existir) é desconsiderado.`
+            },
+            {
+                title: 'Histórico de faturas',
+                description: `Todas as faturas emitidas ficam registradas na aba "Histórico de faturas" dentro de "Plano e faturas" (/empresa/uso-e-plano). Lá é possível visualizar datas, valores, status e descrições detalhadas.`
+            },
+            {
+                title: 'Situação da fatura',
+                description: `As faturas podem ter três situações principais: <b>Pendente</b> (aguardando pagamento), <b>Aprovada</b> (pagamento confirmado) e <b>Cancelada</b> (fatura invalidada manualmente ou substituída por outra).`
+            },
+            {
+                title: 'Cancelamento automático',
+                description: `Ao adquirir um novo plano antes de pagar o atual, a fatura anterior é automaticamente cancelada, garantindo que apenas a fatura mais recente permaneça ativa.`
+            }
+        ]
     }
 ] as iAjudaTopico[];
 

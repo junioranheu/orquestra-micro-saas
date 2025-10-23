@@ -1,8 +1,9 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_COMPANY_INVOICE, iCompanyInvoice, iCompanyInvoicePaginated } from '@/app/api/consts/company-invoice';
+import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
-import TableGeneric, { iTableColumn, iTableExtraItems, iTableManagingOptions } from '@/app/components/table/generic';
+import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
@@ -17,8 +18,9 @@ interface iProps {
 export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [trigger, setTrigger] = useState<Date>(new Date());
     const [invoice, setInvoices] = useState<iCompanyInvoicePaginated>();
-    useApiRequestToSetterOnUrlChange<iCompanyInvoicePaginated>({ apiUrlRequest: `${CONSTS_COMPANY_INVOICE.get}?companyId=${me?.currentMainCompany?.companyId}`, setter: setInvoices, hasPaginationInput: true, index: currentPage, limit: 15 });
+    useApiRequestToSetterOnUrlChange<iCompanyInvoicePaginated>({ apiUrlRequest: `${CONSTS_COMPANY_INVOICE.get}?companyId=${me?.currentMainCompany?.companyId}`, setter: setInvoices, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
 
     const columns = [
         {
@@ -58,18 +60,19 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
             key: 'companyInvoiceSituation',
             render: (value: number) => {
                 const map: Record<number, string> = {
-                    1: 'Pendente',
+                    1: 'Pendente de pagamento',
                     2: 'Aprovado',
                     999: 'Cancelado'
                 };
 
-                return map[value] ?? '-';
+                const text = map[value] ?? '-';
+
+                if (value === 1) {
+                    return <span style={{ color: 'var(--red)', fontWeight: 600 }}>⚠️ {text}</span>; // vermelho pro pendente
+                }
+
+                return text;
             }
-        },
-        {
-            title: 'Descrição',
-            dataIndex: 'description',
-            key: 'description'
         }
     ] as iTableColumn[];
 
@@ -85,10 +88,6 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
             icon: <Icon icon='dollar-sign' />
         }
     ] as iTableManagingOptions[];
-
-    const tableExtraItems = [
-        { title: 'Situação atual da empresa', label: me?.currentMainCompany?.companySituationStr ?? '-' }
-    ] as iTableExtraItems[];
 
     function handleCheck(e: iCompanyInvoice) {
         (window as any).handleCopyToClipboard = (value: string | number) => {
@@ -121,7 +120,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
             <b>Tipo de Plano:</b> ${planTypeText}<br/>
             <b>Valor:</b> ${formattedAmount}<br/>
             <b>Situação:</b> ${situationText}<br/>
-            <b>Descrição:</b> ${e.description ?? '-'}<br/>
+            <b>Descrição:</b> ${e.description ? e.description : '-'}<br/>
             <b>Data de Criação:</b> ${e.createdDate ? handleFormatDate(e.createdDate, DATE_STYLE.DETALHADO) : '-'}
         </div>`;
 
@@ -133,7 +132,26 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
     }
 
     async function handlePay(e: iCompanyInvoice) {
-        alert(e.amount);
+        const pendingPayment = 1; // De acordo com o back-end (CompanySituationEnum);
+
+        if (e.companyInvoiceSituation.toString() !== pendingPayment.toString()) {
+            swal({
+                content: 'Apenas faturas pendentes podem ser pagas.',
+                icon: 'warning'
+            });
+
+            return;
+        }
+
+        const schedule = await Fetch.put({ url: `${CONSTS_COMPANY_INVOICE.pay}/${e.companyInvoiceId}` });
+
+        if (schedule) {
+            toast({ content: 'Esta fatura foi paga com sucesso.' });
+            setTrigger(new Date());
+            return;
+        }
+
+        toast({ content: 'Não foi possível pagar esta fatura. Tente novamente mais tarde.' });
     }
 
     return (
@@ -148,7 +166,6 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
 
                 title='Histórico de faturas da empresa'
                 managingOptions={managingOptions}
-                extraItems={tableExtraItems}
             />
         </section>
     )

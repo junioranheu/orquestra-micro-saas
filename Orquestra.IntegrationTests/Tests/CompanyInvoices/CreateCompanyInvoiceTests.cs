@@ -56,6 +56,38 @@ public sealed class CreateCompanyInvoiceTests
     }
 
     [Fact]
+    public async Task Execute_ShouldThrow_WhenUserIsNotLinked()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        User adminUser = UserMock.Create();
+        await Fixture.Save(context, adminUser);
+
+        // Cria um outro usuário vinculado à empresa, mas não o user original;
+        User user2 = UserMock.Create();
+        await Fixture.Save(context, user2);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyUserId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            UserId = user2.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Member
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        CreateCompanyInvoice sut = CreateSut(context, adminUser);
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(adminUser.UserId, company.CompanyId, PlanTypeEnum.Basic));
+    }
+
+    [Fact]
     public async Task Execute_ShouldThrow_WhenUserIsNotAdmin()
     {
         // Arrange;
