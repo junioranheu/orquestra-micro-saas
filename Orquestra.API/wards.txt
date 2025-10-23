@@ -2,7 +2,6 @@
 Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
-Adicionar as datas de vigência no modalzinho de fatura (e talvez ajustar os capitalizes dos labels);
 
 ⦁	User/Configurações:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
@@ -10,3 +9,7 @@ Criar front para essa parada;
 
 ⦁	Notificações (?):
 Desenvolver feature de notificação;
+
+⦁	Sha la mea vola:
+Recriar os testes de UpdatePlanTypeCompany
+Adicionar as datas de vigência no modalzinho de fatura (e talvez ajustar os capitalizes dos labels);
