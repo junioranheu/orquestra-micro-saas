@@ -10,6 +10,3 @@ Criar front para essa parada;
 
 ⦁	Notificações (?):
 Desenvolver feature de notificação;
-
-⦁	Sha la mea vola:
-Adicionar as datas de vigência no modalzinho de fatura (e talvez ajustar os capitalizes dos labels);

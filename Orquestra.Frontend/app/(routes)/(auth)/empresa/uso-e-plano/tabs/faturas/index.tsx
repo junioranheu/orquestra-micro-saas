@@ -19,7 +19,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [trigger, setTrigger] = useState<Date>(new Date());
-    const [invoice, setInvoices] = useState<iCompanyInvoicePaginated>();
+    const [invoices, setInvoices] = useState<iCompanyInvoicePaginated>();
     useApiRequestToSetterOnUrlChange<iCompanyInvoicePaginated>({ apiUrlRequest: `${CONSTS_COMPANY_INVOICE.get}?companyId=${me?.currentMainCompany?.companyId}`, setter: setInvoices, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
 
     const columns = [
@@ -119,11 +119,11 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
 
         const message = `<div style="text-align: left; line-height: 1.6;">
             <b>Número da fatura:</b> <span style="cursor:pointer; color:var(--contrast); text-decoration:underline;" onclick="window.handleCopyToClipboard('${e.invoiceNumber}')">${e.invoiceNumber}</span><br/>
-            <b>Tipo de Plano:</b> ${planTypeText}<br/>
+            <b>Tipo de plano:</b> ${planTypeText}<br/>
             <b>Valor:</b> ${formattedAmount}<br/>
             <b>Situação:</b> ${situationText}<br/>
             <b>Descrição:</b> ${e.description ? e.description : '-'}<br/>
-            <b>Data de Criação:</b> ${e.createdDate ? handleFormatDate(e.createdDate, DATE_STYLE.DETALHADO) : '-'}
+            <b>Data de criação:</b> ${e.createdDate ? handleFormatDate(e.createdDate, DATE_STYLE.DETALHADO) : '-'}
         </div>`;
 
         swal({
@@ -161,10 +161,10 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
             <TableGeneric
                 idPropName='companyInvoiceId'
                 columns={columns}
-                data={invoice?.output ?? []}
+                data={invoices?.output ?? []}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
-                totalRowsCount={invoice?.count}
+                totalRowsCount={invoices?.count}
 
                 title='Histórico de faturas da empresa'
                 managingOptions={managingOptions}

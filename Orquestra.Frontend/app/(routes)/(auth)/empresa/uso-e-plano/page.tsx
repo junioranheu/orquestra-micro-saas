@@ -9,6 +9,7 @@ import EmpresaUsoEPlanoTabPlano from './tabs/plano';
 export default function EmpresaUsoEPlano() {
 
     useTitle('Plano e faturas');
+
     const me = useApiGetMe({});
 
     if (!me) {
