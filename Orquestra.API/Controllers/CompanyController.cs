@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
+using Orquestra.Application.UseCases.Companies.ResendVerifyEmail;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.Update;
 using Orquestra.Application.UseCases.Companies.UpdatePlanType;
@@ -22,7 +23,8 @@ public class CompanyController(
         IGetCompany get,
         IUpdateCompany update,
         IVerifyCompany verify,
-        IUpdatePlanTypeCompany updatePlanType
+        IUpdatePlanTypeCompany updatePlanType,
+        IResendVerifyEmailCompany resendVerifyEmailCompany
     ) : BaseController<CompanyController>
 {
     private readonly IEnvService _env = env;
@@ -31,6 +33,7 @@ public class CompanyController(
     private readonly IUpdateCompany _update = update;
     private readonly IVerifyCompany _verify = verify;
     private readonly IUpdatePlanTypeCompany _updatePlanType = updatePlanType;
+    private readonly IResendVerifyEmailCompany _resendVerifyEmailCompany = resendVerifyEmailCompany;
 
     [AuthorizeFilter]
     [HttpPost]
@@ -113,5 +116,15 @@ public class CompanyController(
         string url = $"{env.UrlFrontend}/{SystemConsts.Screens.CompanyVerified}";
 
         return Redirect(url);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("ResendVerifyEmailCompany/{companyId}")]
+    public async Task<IActionResult> ResendVerifyEmailCompany(Guid companyId)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _resendVerifyEmailCompany.Execute(userIdAuth, companyId);
+
+        return Ok(true);
     }
 }

@@ -5,7 +5,7 @@ Atualizar o sistema para o .NET 10;
 Criar algum job verifica a vigência do plano da empresa, e se já venceu: atualiza automaticamente os status da Company e CompanyInvoice;
 
 ⦁	Company:
-Criar endpoint para REENVIAR confirmação de e-mail;
+Implementar chamada do ResendVerifyEmailCompany no front;
 
 ⦁	User/Configurações:
 Criar método pra trocar de senha (ou alterar as infos do usuário);

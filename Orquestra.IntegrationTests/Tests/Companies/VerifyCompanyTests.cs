@@ -22,6 +22,10 @@ public sealed class VerifyCompanyTests
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
+        company.Status = false; // Forçar status false;
+        context.Update(company);
+        await context.SaveChangesAsync();
+
         Verification verification = new()
         {
             VerificationId = Guid.NewGuid(),

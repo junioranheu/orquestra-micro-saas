@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Create;
 using Orquestra.Application.UseCases.Companies.Get;
+using Orquestra.Application.UseCases.Companies.ResendVerifyEmail;
 using Orquestra.Application.UseCases.Companies.Update;
 using Orquestra.Application.UseCases.Companies.UpdatePlanType;
 using Orquestra.Application.UseCases.Companies.Verify;
@@ -26,7 +27,8 @@ public static class DependencyInjection
         services.AddScoped<IUpdateCompany, UpdateCompany>();
         services.AddScoped<IVerifyCompany, VerifyCompany>();
         services.AddScoped<IUpdatePlanTypeCompany, UpdatePlanTypeCompany>();
-
+        services.AddScoped<IResendVerifyEmailCompany, ResendVerifyEmailCompany>();
+     
         services.AddScoped(x => new CompanyBaseDependencies(
            x.GetRequiredService<Context>(),
            x.GetRequiredService<IEnvService>(),
