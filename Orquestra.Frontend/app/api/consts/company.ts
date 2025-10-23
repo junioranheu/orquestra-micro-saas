@@ -11,7 +11,8 @@ export const CONSTS_COMPANY = {
     updatePlanType: `${BASE}/${controller}/UpdatePlanType`,
     getAll: `${BASE}/${controller}/GetAll`,
     getAllByUserId: `${BASE}/${controller}/GetAllByUserId`,
-    verify: `${BASE}/${controller}/Verify`
+    verify: `${BASE}/${controller}/Verify`,
+    resendVerifyEmailCompany: `${BASE}/${controller}/ResendVerifyEmailCompany`
 };
 
 export default interface iCompanyOutput {

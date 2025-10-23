@@ -118,7 +118,7 @@ public class CompanyController(
         return Redirect(url);
     }
 
-    [AllowAnonymous]
+    [AuthorizeFilter]
     [HttpPost("ResendVerifyEmailCompany/{companyId}")]
     public async Task<IActionResult> ResendVerifyEmailCompany(Guid companyId)
     {

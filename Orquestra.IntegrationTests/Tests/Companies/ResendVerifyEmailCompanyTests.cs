@@ -87,6 +87,10 @@ public sealed class ResendVerifyEmailCompanyTests
 
         await Fixture.Save(context, oldVerification);
 
+        oldVerification.CreatedDate = DateTime.UtcNow.AddDays(-2); // Mais de 1 dia;
+        context.Update(oldVerification);
+        await context.SaveChangesAsync();
+
         ResendVerifyEmailCompany sut = CreateSut(context, user);
 
         // Act;
@@ -100,6 +104,71 @@ public sealed class ResendVerifyEmailCompanyTests
         Assert.False(checkOldVerification?.Status);
         Assert.True(allVerifications.Any(v => v.Status == false), "Pelo menos uma verificação precisa ter sido desativada");
         Assert.True(allVerifications.Any(v => v.Status == true), "Pelo menos uma verificação precisa ainda estar ativa");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenVerificationSentLessThanOneDayAgo()
+    {
+        // Arrange;
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync(status: false);
+
+        // Cria uma verificação recente (<24h);
+        Verification recentVerification = new()
+        {
+            VerificationId = Guid.NewGuid(),
+            EntityId = company.CompanyId,
+            EntityType = nameof(Company),
+            VerificationType = VerificationTypeEnum.Company,
+            Token = Guid.NewGuid().ToString(),
+            Status = true
+        };
+
+        await Fixture.Save(context, recentVerification);
+
+        recentVerification.CreatedDate = DateTime.UtcNow.AddHours(-12); // Menos de 1 dia;
+        context.Update(recentVerification);
+        await context.SaveChangesAsync();
+
+        ResendVerifyEmailCompany sut = CreateSut(context, user);
+
+        // Act & Assert;
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId));
+        Assert.Contains("existe uma solicitação", ex.Message);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldAllow_WhenVerificationOlderThanOneDay()
+    {
+        // Arrange;
+        (Context context, User user, Company company) = await ArrangeCompanyWithUserAsync(status: false);
+
+        // Cria uma verificação antiga (>24h);
+        Verification oldVerification = new()
+        {
+            VerificationId = Guid.NewGuid(),
+            EntityId = company.CompanyId,
+            EntityType = nameof(Company),
+            VerificationType = VerificationTypeEnum.Company,
+            Token = Guid.NewGuid().ToString(),
+            Status = true
+        };
+
+        await Fixture.Save(context, oldVerification);
+
+        oldVerification.CreatedDate = DateTime.UtcNow.AddDays(-2); // Mais de 1 dia;
+        context.Update(oldVerification);
+        await context.SaveChangesAsync();
+
+        ResendVerifyEmailCompany sut = CreateSut(context, user);
+
+        // Act;
+        await sut.Execute(user.UserId, company.CompanyId);
+
+        // Assert;
+        List<Verification> verifications = await context.Verifications.Where(x => x.EntityId == company.CompanyId && x.VerificationType == VerificationTypeEnum.Company).ToListAsync();
+
+        Assert.NotEmpty(verifications);
+        Assert.Contains(verifications, x => x.CreatedDate >= DateTime.UtcNow.AddMinutes(-1)); // Nova verificação criada agora;
     }
 
     #region helpers

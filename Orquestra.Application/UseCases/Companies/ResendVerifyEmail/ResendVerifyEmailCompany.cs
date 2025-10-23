@@ -6,6 +6,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Companies.ResendVerifyEmail;
 
@@ -41,6 +42,13 @@ public sealed class ResendVerifyEmailCompany(CompanyBaseDependencies deps) : Com
                             // AsNoTracking(). // Propositalmente sem AsNoTracking;
                             Where(x => x.EntityId == companyId && x.VerificationType == VerificationTypeEnum.Company && x.Status == true).
                             ToListAsync();
+
+        bool hasRecentVerification = verifications.Any(x => x.CreatedDate >= GetDate().AddDays(-1));
+
+        if (hasRecentVerification)
+        {
+            throw new InvalidOperationException("Já existe uma solicitação de verificação feita nas últimas 24 horas. Tente novamente mais tarde.");
+        }
 
         if (verifications is not null && verifications.Count != 0)
         {

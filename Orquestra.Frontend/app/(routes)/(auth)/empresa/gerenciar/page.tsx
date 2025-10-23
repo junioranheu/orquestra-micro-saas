@@ -110,6 +110,19 @@ export default function EmpresaGerenciar() {
         });
     }
 
+    async function handleResendVerifyEmail(company: iCompanyOutput) {
+        const output = await Fetch.post({ url: `${CONSTS_COMPANY.resendVerifyEmailCompany}/${company.companyId}` });
+
+        if (output) {
+            swal({
+                content: 'Um novo e-mail de verificação foi enviado com sucesso.',
+                icon: 'success'
+            });
+
+            return;
+        }
+    }
+
     if (!companies || isLoading) {
         return (
             <section className={styles.main}>
@@ -211,11 +224,18 @@ export default function EmpresaGerenciar() {
                                                 <Icon icon='check-circle' size='small' /> Empresa validada
                                             </p>
                                         ) : (
-                                            <Tippy content={company?.isAdm
-                                                ? 'Verifique o e-mail enviado para concluir a validação da empresa.'
-                                                : 'Pendente de validação. Peça ao administrador para que verifique o e-mail enviado para concluir a validação da empresa.'}>
-                                                <p>
-                                                    <Icon icon='x-circle' size='small' /> <b>Empresa pendente de validação</b>
+                                            <Tippy content={company?.isAdm ? 'Clique aqui para reenviar o e-mail de verificação de empresa.' : 'Pendente de validação. Peça ao administrador para que verifique o e-mail enviado para concluir a validação da empresa.'}>
+                                                <p
+                                                    className={company.isAdm ? 'pointer' : ''}
+                                                    onClick={() => {
+                                                        if (!company?.isAdm) {
+                                                            return;
+                                                        }
+
+                                                        handleResendVerifyEmail(company);
+                                                    }}
+                                                >
+                                                    <Icon icon='x-circle' size='small' /> <b style={{ color: 'var(--red)' }}>Empresa pendente de validação</b>
                                                 </p>
                                             </Tippy>
                                         )

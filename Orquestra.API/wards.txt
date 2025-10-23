@@ -4,12 +4,9 @@ Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
 Criar algum job verifica a vigência do plano da empresa, e se já venceu: atualiza automaticamente os status da Company e CompanyInvoice;
 
-⦁	Company:
-Implementar chamada do ResendVerifyEmailCompany no front;
-
 ⦁	User/Configurações:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
 
-⦁	Notificações (?)
+⦁	Notificações (?):
 Desenvolver feature de notificação;
