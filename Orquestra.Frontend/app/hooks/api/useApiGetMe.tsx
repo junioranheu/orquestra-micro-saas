@@ -22,11 +22,11 @@ export default function useApiGetMe({ isFetch = true, trigger = undefined }: iPr
             const result = await Fetch.get({ url: CONSTS_AUTH.me }) as iMe;
             // console.log(result);     
 
-            if (result?.currentMainCompany?.companySituation?.toString() === pendingPayment.toString() && (pathname !== ROUTES.EMPRESA_USO_E_PLANO && pathname !== ROUTES.LOGOUT)) {
+            if (result?.currentMainCompany?.companySituation?.toString() === pendingPayment.toString() && (pathname !== ROUTES.EMPRESA_USO_E_PLANO && pathname !== ROUTES.EMPRESA_GERENCIAR && pathname !== ROUTES.LOGOUT)) {
                 swal({
-                    content: 'A situação atual da empresa é <b>pendente de pagamento</b>. Isso significa que existe pelo menos uma fatura em aberto. Por favor, regularize essa pendência antes de continuar.',
-                    confirmBtnText: 'Regularizar pendência',
-                    confirmFunction: () => router.push(ROUTES.EMPRESA_USO_E_PLANO),
+                    content: result?.isUserAdmOfCurrentMainCompany ? 'A situação atual da empresa é <b>pendente de pagamento</b>. Isso significa que existe pelo menos uma fatura em aberto. Por favor, regularize essa pendência antes de continuar.' : 'A situação atual da empresa é <b>pendente de pagamento</b>. Isso significa que existe pelo menos uma fatura em aberto. Por favor, peça para um administrador regularizar essa pendência antes de continuar.',
+                    confirmBtnText: result?.isUserAdmOfCurrentMainCompany ? 'Regularizar pendência' : 'Voltar',
+                    confirmFunction: result?.isUserAdmOfCurrentMainCompany ? () => router.push(ROUTES.EMPRESA_USO_E_PLANO) : () => router.push(ROUTES.EMPRESA_GERENCIAR),
                     icon: 'error'
                 });
             }

@@ -460,7 +460,7 @@ function Pricing({ me, plans }: { me: iMeSimple | undefined, plans: iPlanTypeOut
                                     }
                                 </ul>
 
-                                <Link href={me?.isAuth ? `${ROUTES.EMPRESA_USO_E_PLANO}?plan=${p.planTypeName?.toLocaleLowerCase()}` : ROUTES.LOGIN} className='block w-full py-3 px-4 text-center font-bold rounded-lg transition-all duration-300 text-white bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] hover:shadow-lg hover:-translate-y-0.5'>
+                                <Link href={me?.isAuth ? ROUTES.EMPRESA_USO_E_PLANO : ROUTES.LOGIN} className='block w-full py-3 px-4 text-center font-bold rounded-lg transition-all duration-300 text-white bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] hover:shadow-lg hover:-translate-y-0.5'>
                                     {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
                                 </Link>
                             </div>

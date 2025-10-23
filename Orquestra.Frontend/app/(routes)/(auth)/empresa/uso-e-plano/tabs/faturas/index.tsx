@@ -75,9 +75,14 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
 
     const managingOptions = [
         {
-            label: 'Visualizar fatura',
+            label: 'Visualizar detalhes',
             function: (e) => handleCheck(e),
             icon: <Icon icon='search' />
+        },
+        {
+            label: 'Pagar fatura',
+            function: (e) => handlePay(e),
+            icon: <Icon icon='dollar-sign' />
         }
     ] as iTableManagingOptions[];
 
@@ -125,6 +130,10 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
             confirmBtnText: 'Voltar',
             icon: 'info'
         });
+    }
+
+    async function handlePay(e: iCompanyInvoice) {
+        alert(e.amount);
     }
 
     return (

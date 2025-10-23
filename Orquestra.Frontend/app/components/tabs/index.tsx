@@ -21,9 +21,8 @@ export default function Tabs({ tabs, contents, activeIndexDefault = 0 }: TabsPro
                             key={index}
                             className={`${styles.tab} ${index === activeIndex ? styles.active : ''}`}
                             onClick={() => setActiveIndex(index)}
-                        >
-                            {tab}
-                        </button>
+                            dangerouslySetInnerHTML={{ __html: tab }}
+                        />
                     ))
                 }
             </div>

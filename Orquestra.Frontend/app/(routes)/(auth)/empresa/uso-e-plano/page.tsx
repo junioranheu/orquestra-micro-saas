@@ -18,7 +18,7 @@ export default function EmpresaUsoEPlano() {
     return (
         <section className={styles.main}>
             <Tabs
-                tabs={[`Plano atual da empresa ${me?.currentMainCompany?.name}`, 'Histórico de faturas']}
+                tabs={['Planos', 'Histórico de faturas']}
                 contents={[
                     <EmpresaUsoEPlanoTabPlano me={me} key={1} />,
                     <EmpresaUsoEPlanoTabFaturas me={me} key={2} />
