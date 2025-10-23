@@ -8,5 +8,8 @@ public enum LogTypeEnum
     Exception = 1,
 
     [Description("Requisição")]
-    Request = 2
+    Request = 2,
+
+    [Description("Job")]
+    Job = 3
 }

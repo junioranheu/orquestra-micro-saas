@@ -21,6 +21,14 @@ public sealed class GetLog(Context context) : IGetLog
 
         (IEnumerable<Log> output, int count) = await PagedQuery.Execute(query, pagination);
 
+        Parallel.ForEach(output, log =>
+        {
+            if (log.User is not null) { 
+                log.User.Password = string.Empty;
+                log.User.RecoverPasswordAnswer = string.Empty;
+            }
+        });
+
         return (output, count);
     }
 }

@@ -1,15 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure.Jobs;
 
-public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory) : BackgroundService
+public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<CompanyPlanJob> logger) : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
+    private readonly ILogger _logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -46,7 +50,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory) : Backgrou
     //}
     #endregion
 
-    private static async Task CheckAndExpirePlans(Context context)
+    private async Task CheckAndExpirePlans(Context context)
     {
         DateTime now = GetDate();
         int pendingPaymentValue = (int)CompanySituationEnum.PendingPayment;
@@ -61,16 +65,16 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory) : Backgrou
         ";
 
         int companiesUpdated = await context.Database.ExecuteSqlRawAsync(
-            companiesSql,           
+            companiesSql,
             pendingPaymentValue,    // {0} = novo status: CompanySituationEnum.PendingPayment;
             now                     // {1} = now;
         );
 
-        Console.WriteLine($"Companies updated: {companiesUpdated}");
-
         // Atualiza os invoices para CompanyInvoiceSituationEnum.Expired;
         if (companiesUpdated > 0)
         {
+            await CreateLog(context, _logger, description: $"Empresas atualizadas: {companiesUpdated}");
+
             int expiredValue = (int)CompanyInvoiceSituationEnum.Expired;
 
             string invoicesSql = @"
@@ -91,7 +95,29 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory) : Backgrou
                 pendingPaymentValue  // {2}, apenas invoices de empresas que acabaram de virar PendingPayment;
             );
 
-            Console.WriteLine($"Invoices updated: {invoicesUpdated}");
+            if (invoicesUpdated > 0)
+            {
+                await CreateLog(context, logger, description: $"Faturas atualizadas: {invoicesUpdated}");
+            }            
         }
+    }
+
+    public static async Task CreateLog(Context context, ILogger logger, string description)
+    {
+        Log log = new()
+        {
+            LogType = LogTypeEnum.Job,
+            RequestType = "POST",
+            Endpoint =  nameof(CompanyPlanJob),
+            Parameters = string.Empty,
+            Exception = string.Empty,
+            Description = description,
+            Status = StatusCodes.Status204NoContent,
+            UserId = null
+        };
+
+        logger.LogInformation("{description}", description);
+        await context.AddAsync(log);
+        await context.SaveChangesAsync();
     }
 }

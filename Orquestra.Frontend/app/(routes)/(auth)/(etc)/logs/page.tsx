@@ -7,33 +7,18 @@ import handleCopyToClipboard from '@/app/functions/clipboard.copy';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil } from '@/app/functions/get.date.brazil';
 import toast from '@/app/functions/toast';
-import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './page.module.scss';
 
 export default function Logs() {
 
     useTitle('Logs');
 
-    const logTypeEnum = useApiGetEnum({ enumName: 'LogTypeEnum' });
-
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [logs, setLogs] = useState<iLogPaginated>();
-    const [logsNormalized, setLogsNormalized] = useState<iLog[]>([]);
     useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: 15 });
-
-    useEffect(() => {
-        if (logTypeEnum) {
-            const normalized = logs?.output?.map(log => ({
-                ...log,
-                logType: logTypeEnum?.find(x => x.value === log.logType)?.label ?? log.logType
-            })) ?? [];
-
-            setLogsNormalized(normalized);
-        }
-    }, [logTypeEnum, logs]);
 
     const columns = [
         {
@@ -43,9 +28,18 @@ export default function Logs() {
             render: (value: string) => new Date(value).toLocaleString('pt-BR')
         },
         {
-            title: 'Tipo',
+            title: 'Tipo de log',
             dataIndex: 'logType',
-            key: 'logType'
+            key: 'logType',
+            render: (value: number) => {
+                const map: Record<number, string> = {
+                    1: 'Exceção',
+                    2: 'Requisição',
+                    3: 'Job'
+                };
+
+                return map[value] ?? '-';
+            }
         },
         {
             title: 'Status',
@@ -57,11 +51,11 @@ export default function Logs() {
             dataIndex: 'endpoint',
             key: 'endpoint'
         },
-        {
-            title: 'Parâmetros',
-            dataIndex: 'parameters',
-            key: 'parameters'
-        },
+        // {
+        //     title: 'Parâmetros',
+        //     dataIndex: 'parameters',
+        //     key: 'parameters'
+        // },
         {
             title: 'Descrição',
             dataIndex: 'description',
@@ -92,7 +86,7 @@ export default function Logs() {
             <TableGeneric
                 idPropName='logId'
                 columns={columns}
-                data={logsNormalized ?? []}
+                data={logs?.output ?? []}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={logs?.count}

@@ -98,7 +98,7 @@ public sealed class RequestFilter(ICreateLog createLog) : ActionFilterAttribute
                 return parameters;
             }
 
-            string[] keysToHide = ["Senha", "Password"];
+            string[] keysToHide = ["Senha", "Password", "senha", "password"];
 
             foreach (var key in keysToHide)
             {

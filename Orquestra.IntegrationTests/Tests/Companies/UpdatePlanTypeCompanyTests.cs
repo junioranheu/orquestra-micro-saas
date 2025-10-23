@@ -26,9 +26,7 @@ public sealed class UpdatePlanTypeCompanyTests
         // Arrange;
         Context context = Fixture.CreateContext();
         User user = UserMock.Create();
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-
-        var sut = CreateSut(context, user, emailServiceMock);
+        UpdatePlanTypeCompany sut = CreateSut(context, user);
 
         Company company = new()
         {
@@ -36,7 +34,7 @@ public sealed class UpdatePlanTypeCompanyTests
             Name = "Orquestra LTDA",
             PlanType = PlanTypeEnum.Basic,
             Status = true,
-            CompanySituation = CompanySituationEnum.PendingPayment,
+            CompanySituation = CompanySituationEnum.Approved,
             PlanStartDate = GetDate(),
             PlanEndDate = GetDate().AddDays(30)
         };
@@ -48,28 +46,26 @@ public sealed class UpdatePlanTypeCompanyTests
         await sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium);
 
         // Assert;
-        Company updatedCompany = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
-
-        Assert.Equal(CompanySituationEnum.PendingPayment, updatedCompany.CompanySituation);
-        Assert.Equal(PlanTypeEnum.Premium, updatedCompany.PlanType);
+        Company updated = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
+        Assert.Equal(PlanTypeEnum.Premium, updated.PlanType);
+        Assert.Equal(CompanySituationEnum.PendingPayment, updated.CompanySituation);
+        Assert.Null(updated.PlanStartDate);
+        Assert.Null(updated.PlanEndDate);
     }
 
     [Fact]
     public async Task Should_ThrowException_WhenCompanyDoesNotExist()
     {
-        // Arrange;
         Context context = Fixture.CreateContext();
         User user = UserMock.Create();
         UpdatePlanTypeCompany sut = CreateSut(context, user);
 
-        // Act & Assert;
         await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, Guid.NewGuid(), PlanTypeEnum.Premium));
     }
 
     [Fact]
     public async Task Should_ThrowException_WhenCompanyIsInactive()
     {
-        // Arrange;
         Context context = Fixture.CreateContext();
         User user = UserMock.Create();
         UpdatePlanTypeCompany sut = CreateSut(context, user);
@@ -89,67 +85,11 @@ public sealed class UpdatePlanTypeCompanyTests
         context.Update(company);
         await context.SaveChangesAsync();
 
-        // Act & Assert;
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium));
     }
 
     [Fact]
-    public async Task Should_ThrowException_WhenCompanyAlreadyHasPlan()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-        User user = UserMock.Create();
-        UpdatePlanTypeCompany sut = CreateSut(context, user);
-
-        Company company = new()
-        {
-            CompanyId = Guid.NewGuid(),
-            Name = "Test Company",
-            PlanType = PlanTypeEnum.Basic,
-            Status = true
-        };
-
-        context.Companies.Add(company);
-        await context.SaveChangesAsync();
-
-        // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Basic));
-    }
-
-    [Fact]
-    public async Task Should_AdjustDates_WhenPlanStartDateIsNull()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-        User user = UserMock.Create();
-        UpdatePlanTypeCompany sut = CreateSut(context, user);
-
-        Company company = new()
-        {
-            CompanyId = Guid.NewGuid(),
-            Name = "Test Company",
-            PlanType = PlanTypeEnum.Basic,
-            Status = true,
-            PlanStartDate = null,
-            PlanEndDate = null
-        };
-
-        context.Companies.Add(company);
-        await context.SaveChangesAsync();
-
-        // Act;
-        await sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium);
-
-        // Assert;
-        Company updated = await context.Companies.FirstAsync(x => x.CompanyId == company.CompanyId);
-        Assert.Null(updated.PlanStartDate);
-        Assert.Null(updated.PlanEndDate);
-        Assert.Equal(CompanySituationEnum.PendingPayment, updated.CompanySituation);
-        Assert.Equal(PlanTypeEnum.Premium, updated.PlanType);
-    }
-
-    [Fact]
-    public async Task Should_ThrowException_WhenCompanyAlreadyHasSamePlan()
+    public async Task Should_ThrowException_WhenCompanyAlreadyHasSamePlanWithActiveInvoice()
     {
         Context context = Fixture.CreateContext();
         User user = UserMock.Create();
@@ -163,11 +103,20 @@ public sealed class UpdatePlanTypeCompanyTests
             Status = true
         };
 
+        CompanyInvoice invoice = new()
+        {
+            CompanyInvoiceId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            PlanType = PlanTypeEnum.Basic,
+            CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid,
+            Status = true
+        };
+
         context.Companies.Add(company);
+        context.CompanyInvoices.Add(invoice);
         await context.SaveChangesAsync();
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Basic));
-
         Assert.Contains("já está com o plano", ex.Message.ToLowerInvariant());
     }
 
@@ -199,13 +148,12 @@ public sealed class UpdatePlanTypeCompanyTests
         context.CompanyInvoices.Add(invoice);
         await context.SaveChangesAsync();
 
-        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>     sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium));
-
-        Assert.Contains("fatura em aberto", ex.Message);
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium));
+        Assert.Contains("fatura em aberto", ex.Message.ToLowerInvariant());
     }
 
     [Fact]
-    public async Task Should_PassCheckAvailability_WhenPlanIsDifferentAndNoPendingInvoices()
+    public async Task Should_PassCheckAvailability_WhenDifferentPlanAndNoPendingInvoices()
     {
         Context context = Fixture.CreateContext();
         User user = UserMock.Create();
@@ -219,7 +167,17 @@ public sealed class UpdatePlanTypeCompanyTests
             Status = true
         };
 
+        CompanyInvoice invoice = new()
+        {
+            CompanyInvoiceId = Guid.NewGuid(),
+            CompanyId = company.CompanyId,
+            PlanType = PlanTypeEnum.Basic,
+            CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid,
+            Status = true
+        };
+
         context.Companies.Add(company);
+        context.CompanyInvoices.Add(invoice);
         await context.SaveChangesAsync();
 
         await sut.Execute(user.UserId, company.CompanyId, PlanTypeEnum.Premium);
@@ -230,17 +188,16 @@ public sealed class UpdatePlanTypeCompanyTests
     }
 
     #region helper
-    private static UpdatePlanTypeCompany CreateSut(Context context, User user, Mock<IEmailService>? emailServiceMock = null)
+    private static UpdatePlanTypeCompany CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
         IConfiguration config = Fixture.CreateConfiguration();
-        emailServiceMock ??= Fixture.CreateEmailService();
+        Mock<IEmailService> emailService = Fixture.CreateEmailService();
         EnvService envService = new(env, config);
-
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailService.Object);
 
         UpdatePlanTypeCompany updatePlanTypeCompany = new(context, checkIfUserIsLinkedCompanyUser, createCompanyInvoice);
 
