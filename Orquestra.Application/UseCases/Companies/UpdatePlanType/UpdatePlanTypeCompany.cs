@@ -19,7 +19,7 @@ public sealed class UpdatePlanTypeCompany(
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
     private readonly ICreateCompanyInvoice _createCompanyInvoice = createCompanyInvoice;
 
-    public async Task Execute(Guid userIdAuth, Guid companyId, PlanTypeEnum planType)
+    public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, PlanTypeEnum planType)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
@@ -37,10 +37,12 @@ public sealed class UpdatePlanTypeCompany(
         await CheckAvailability(company: result, newPlanType: planType);
 
         // #2 - Criar cobrança, obrigatoriamente antes de normalizar o input.Modules;
-        await _createCompanyInvoice.Execute(userIdAuth, companyId, planType);
+        CompanyInvoice? invoice = await _createCompanyInvoice.Execute(userIdAuth, companyId, planType);
 
         // #3 - Atualizar os dados da empresa, em si;
         await UpdateCompanyData(company: result, planType);
+
+        return invoice;
     }
 
     #region extras

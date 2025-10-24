@@ -1,7 +1,6 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_COMPANY_INVOICE, iCompanyInvoice, iCompanyInvoicePaginated } from '@/app/api/consts/company-invoice';
-import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -13,14 +12,14 @@ import styles from './index.module.scss';
 
 interface iProps {
     me: iMe;
+    handlePay: (e: iCompanyInvoice) => Promise<void>;
 }
 
-export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
+export default function EmpresaUsoEPlanoTabFaturas({ me, handlePay }: iProps) {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [trigger, setTrigger] = useState<Date>(new Date());
     const [invoices, setInvoices] = useState<iCompanyInvoicePaginated>();
-    useApiRequestToSetterOnUrlChange<iCompanyInvoicePaginated>({ apiUrlRequest: `${CONSTS_COMPANY_INVOICE.get}?companyId=${me?.currentMainCompany?.companyId}`, setter: setInvoices, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
+    useApiRequestToSetterOnUrlChange<iCompanyInvoicePaginated>({ apiUrlRequest: `${CONSTS_COMPANY_INVOICE.get}?companyId=${me?.currentMainCompany?.companyId}`, setter: setInvoices, hasPaginationInput: true, index: currentPage, limit: 15 });
 
     const columns = [
         {
@@ -131,29 +130,6 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
             confirmBtnText: 'Voltar',
             icon: 'info'
         });
-    }
-
-    async function handlePay(e: iCompanyInvoice) {
-        const pendingPayment = 1; // De acordo com o back-end (CompanySituationEnum);
-
-        if (e.companyInvoiceSituation.toString() !== pendingPayment.toString()) {
-            swal({
-                content: 'Apenas faturas pendentes podem ser pagas.',
-                icon: 'warning'
-            });
-
-            return;
-        }
-
-        const schedule = await Fetch.put({ url: `${CONSTS_COMPANY_INVOICE.pay}/${e.companyInvoiceId}` });
-
-        if (schedule) {
-            toast({ content: 'Esta fatura foi paga com sucesso.' });
-            setTrigger(new Date());
-            return;
-        }
-
-        toast({ content: 'Não foi possível pagar esta fatura. Tente novamente mais tarde.' });
     }
 
     return (

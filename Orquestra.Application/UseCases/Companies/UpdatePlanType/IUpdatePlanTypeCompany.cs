@@ -1,8 +1,9 @@
-﻿using Orquestra.Domain.Enums;
+﻿using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.Companies.UpdatePlanType;
 
 public interface IUpdatePlanTypeCompany
 {
-    Task Execute(Guid userIdAuth, Guid companyId, PlanTypeEnum planType);
+    Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, PlanTypeEnum planType);
 }

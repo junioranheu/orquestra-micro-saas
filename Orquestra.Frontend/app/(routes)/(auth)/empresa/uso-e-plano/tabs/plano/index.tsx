@@ -1,6 +1,7 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_COMPANY } from '@/app/api/consts/company';
+import { iCompanyInvoice } from '@/app/api/consts/company-invoice';
 import { CONSTS_UTILITY, iPlanType, iPlanTypeOutput } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
@@ -13,9 +14,10 @@ import styles from './index.module.scss';
 
 interface iProps {
     me: iMe;
+    handlePay: (e: iCompanyInvoice) => Promise<void>;
 }
 
-export default function EmpresaUsoEPlanoTabPlano({ me }: iProps) {
+export default function EmpresaUsoEPlanoTabPlano({ me, handlePay }: iProps) {
 
     const [plans, setPlans] = useState<iPlanTypeOutput | undefined>();
     useApiRequestToSetterOnUrlChange<iPlanTypeOutput>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
@@ -23,13 +25,13 @@ export default function EmpresaUsoEPlanoTabPlano({ me }: iProps) {
     return (
         <section className={styles.main}>
             <CardSimpleWithChildren style={{ backgroundColor: 'var(--cream)' }}>
-                <Plans me={me} plans={plans} />
+                <Plans me={me} plans={plans} handlePay={handlePay} />
             </CardSimpleWithChildren>
         </section>
     )
 }
 
-function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | undefined }) {
+function Plans({ me, plans, handlePay }: { me: iMe | undefined, plans: iPlanTypeOutput | undefined, handlePay: (e: iCompanyInvoice) => Promise<void> }) {
 
     const messageInvoice = 'Ao confirmar, uma nova fatura será gerada automaticamente e o plano atual, caso exista, será substituído.';
 
@@ -46,12 +48,14 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
                 formDataInput.append('CompanyId', me?.currentMainCompany?.companyId?.toString() ?? Guid.EMPTY);
                 formDataInput.append('PlanType', plan.planType.toString());
 
-                const output = await Fetch.put({ url: CONSTS_COMPANY.updatePlanType, body: formDataInput, isFormData: true });
+                const output = await Fetch.put({ url: CONSTS_COMPANY.updatePlanType, body: formDataInput, isFormData: true }) as iCompanyInvoice;
 
                 if (output) {
                     swal({
-                        content: `Plano adquirido com sucesso!<br/>O novo plano da sua empresa é o <b>${plan.planTypeDescription.toLowerCase()}</b>. Para ativá-lo, acesse a aba <b>histórico de faturas</b> e realize o pagamento.`,
-                        confirmFunction: () => window.location.reload(),
+                        content: `Plano adquirido com sucesso!<br/>O novo plano da sua empresa é o <b>${plan.planTypeDescription.toLowerCase()}</b>.`,
+                        confirmFunction: () => {
+                            handlePay(output);
+                        },
                         icon: 'success',
                         checkboxLabel: 'Entendi',
                         confirmBtnText: 'Voltar'

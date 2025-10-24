@@ -9,6 +9,7 @@ using Orquestra.Application.UseCases.Companies.Update;
 using Orquestra.Application.UseCases.Companies.UpdatePlanType;
 using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
@@ -70,9 +71,9 @@ public class CompanyController(
     public async Task<ActionResult> UpdatePlanType([FromForm] CompanyInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        await _updatePlanType.Execute(userIdAuth, companyId: input.CompanyId.GetValueOrDefault(), planType: input.PlanType);
+        CompanyInvoice? invoice = await _updatePlanType.Execute(userIdAuth, companyId: input.CompanyId.GetValueOrDefault(), planType: input.PlanType);
 
-        return Ok(true);
+        return Ok(invoice);
     }
 
     [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
