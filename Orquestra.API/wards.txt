@@ -17,7 +17,5 @@ Desenvolver feature de notificação;
 Na tabela de clientes, criar uma opção para visualizar todas os agendamentos do cliente;
 
 ⦁	Gongo:
-Mudar a cor que chega o e-mail de validação para verde escuro;
 Se tiver no plano básico, criar as limitações;
 Fonte das tabelas está muito pequena;
-O pagamento deve ser feito na hora de solicitar o novo plano, sem ir para o histórico de faturas;

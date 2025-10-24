@@ -237,20 +237,26 @@ export default function EmpresaGerenciar() {
                                                     <Icon icon='check-circle' size='small' /> Empresa validada
                                                 </p>
                                             ) : (
-                                                <Tippy content={isAdmin ? 'Clique aqui para reenviar o e-mail de verificação de empresa.' : 'Pendente de validação. Peça a um dos administradores para que verifiquem o e-mail enviado para concluir a validação da empresa.'}>
-                                                    <p
-                                                        className={company.isAdm ? 'pointer' : ''}
-                                                        onClick={() => {
-                                                            if (!isAdmin) {
-                                                                return;
-                                                            }
+                                                isCurrentMain ? (
+                                                    <Tippy content={isAdmin ? 'Clique aqui para reenviar o e-mail de verificação de empresa.' : 'Pendente de validação. Peça a um dos administradores para que verifiquem o e-mail enviado para concluir a validação da empresa.'}>
+                                                        <p
+                                                            className={company.isAdm ? 'pointer' : ''}
+                                                            onClick={() => {
+                                                                if (!isAdmin) {
+                                                                    return;
+                                                                }
 
-                                                            handleResendVerifyEmail(company);
-                                                        }}
-                                                    >
-                                                        <Icon icon='x-circle' size='small' /> <b style={{ color: 'var(--red)' }}>Empresa pendente de validação</b>
+                                                                handleResendVerifyEmail(company);
+                                                            }}
+                                                        >
+                                                            <Icon icon='x-circle' size='small' /> <b style={{ color: 'var(--red)' }}>Empresa pendente de validação</b>
+                                                        </p>
+                                                    </Tippy>
+                                                ) : (
+                                                    <p>
+                                                        <Icon icon='x-circle' size='small' /> Empresa pendente de validação
                                                     </p>
-                                                </Tippy>
+                                                )
                                             )
                                         }
 
