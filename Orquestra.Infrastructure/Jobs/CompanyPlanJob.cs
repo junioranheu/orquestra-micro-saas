@@ -30,6 +30,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         }
     }
 
+    #region extras
     #region obsolete_EF_with_hashset
     //private static async Task CheckAndExpirePlans(Context context)
     //{
@@ -50,7 +51,6 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
     //}
     #endregion
 
-    #region obsolete_raw_sql
     private async Task CheckAndExpirePlans(Context context)
     {
         DateTime now = GetDate();
@@ -85,14 +85,14 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
               AND ci.""Status"" = true                  -- só invoices ativas
               AND ci.""CompanyInvoiceSituation"" != {0} -- só invoices que ainda não estão Expired
               AND c.""PlanEndDate"" <= {1}              -- {1} = now
-              AND c.""CompanySituation"" = {2};         -- {2} = pendingPaymentValue
+              AND c.""CompanySituation"" = {2};         -- {2} = CompanySituationEnum.PendingPayment
             ";
 
             int invoicesUpdated = await context.Database.ExecuteSqlRawAsync(
                 invoicesSql,
                 expiredValue,        // {0} novo status: CompanyInvoiceSituationEnum.Expired;
                 now,                 // {1} now;
-                pendingPaymentValue  // {2}, apenas invoices de empresas que acabaram de virar PendingPayment;
+                pendingPaymentValue  // {2}, apenas invoices de empresas que acabaram de virar CompanySituationEnum.PendingPayment;
             );
 
             if (invoicesUpdated > 0)
@@ -101,9 +101,8 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
             }
         }
     }
-    #endregion
 
-    public static async Task CreateLog(Context context, ILogger logger, string description)
+    private static async Task CreateLog(Context context, ILogger logger, string description)
     {
         Log log = new()
         {
@@ -121,4 +120,5 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         await context.AddAsync(log);
         await context.SaveChangesAsync();
     }
+    #endregion
 }
