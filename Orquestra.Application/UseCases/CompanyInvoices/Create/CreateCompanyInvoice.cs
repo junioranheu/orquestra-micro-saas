@@ -48,6 +48,13 @@ public sealed class CreateCompanyInvoice(
         await _context.AddAsync(invoice);
         await _context.SaveChangesAsync();
 
+        if (isCreateCompany && planType == PlanTypeEnum.Free)
+        {
+            invoice.CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid;
+            _context.Update(invoice);
+            await _context.SaveChangesAsync();
+        }
+
         await SendEmail(company, invoice);
 
         return invoice;

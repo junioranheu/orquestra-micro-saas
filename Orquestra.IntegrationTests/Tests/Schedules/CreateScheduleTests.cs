@@ -366,6 +366,69 @@ public sealed class CreateScheduleTests
         Assert.NotNull(observations);
     }
 
+    [Theory]
+    [InlineData(PlanTypeEnum.Free)]
+    [InlineData(PlanTypeEnum.Basic)]
+    [InlineData(PlanTypeEnum.Premium)]
+    public async Task ValidateLimitsOfCurrentPlan_ShouldBehaveCorrectly_ByPlanType(PlanTypeEnum planType)
+    {
+        // Arrange;
+        (Context context, User user, Company company, Client client) = await ArrangeScheduleDependenciesAsync();
+
+        company.PlanType = planType;
+        await context.SaveChangesAsync();
+
+        (_, int schedulingLimit, _, _, _) = PlanTypeHelper.GetValues(planType);
+
+        // Cria N agendamentos (o suficiente pra ultrapassar o limite, caso tenha);
+        int amount = schedulingLimit + 1;
+
+        for (int i = 0; i < amount; i++)
+        {
+            await context.Schedules.AddAsync(new Schedule
+            {
+                ScheduleId = Guid.NewGuid(),
+                CompanyId = company.CompanyId,
+                ClientId = client.ClientId,
+                CreatedDate = GetDate().AddMinutes(-i),
+                DateStart = GetDate().AddDays(1).AddHours(9),
+                DateEnd = GetDate().AddDays(1).AddHours(10),
+                ScheduleStatus = ScheduleStatusEnum.Scheduled
+            });
+        }
+
+        await context.SaveChangesAsync();
+
+        ScheduleInput input = new()
+        {
+            CompanyId = company.CompanyId,
+            ClientId = client.ClientId,
+            DateStart = GetDate().AddDays(1).AddHours(10),
+            DateEnd = GetDate().AddDays(1).AddHours(11),
+            UsersIds = [user.UserId],
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        CreateSchedule sut = CreateSut(context, user);
+
+        // Act;
+        var exception = await Record.ExceptionAsync(() => sut.Validate(input, user.UserId, true));
+
+        // Assert;
+        if (planType == PlanTypeEnum.Premium)
+        {
+            // Premium nunca tem limite;
+            Assert.Null(exception);
+        }
+        else
+        {
+            // Free e Basic devem estourar o limite;
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+            Assert.Contains("excedeu o limite", exception.Message, StringComparison.InvariantCultureIgnoreCase);
+        }
+    }
+
     #region helpers
     private static async Task<(Context context, User user, Company company, Client client)> ArrangeScheduleDependenciesAsync()
     {

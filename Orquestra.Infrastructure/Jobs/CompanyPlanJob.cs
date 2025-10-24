@@ -30,10 +30,10 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         }
     }
 
-    #region obsolete
+    #region obsolete_EF_with_hashset
     //private static async Task CheckAndExpirePlans(Context context)
     //{
-    //    List<Guid> expiredCompanyIds = await context.Companies.Where(c => c.PlanEndDate <= GetDate() && c.Status == true).Select(c => c.CompanyId).ToListAsync();
+    //    List<Guid> expiredCompanyIds = await context.Companies.Where(c => c.PlanEndDate <= GetDate() && c.CompanySituation != CompanySituationEnum.PendingPayment).Select(c => c.CompanyId).ToListAsync();
 
     //    if (expiredCompanyIds.Count == 0)
     //    {
@@ -50,6 +50,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
     //}
     #endregion
 
+    #region obsolete_raw_sql
     private async Task CheckAndExpirePlans(Context context)
     {
         DateTime now = GetDate();
@@ -60,8 +61,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         UPDATE ""Companies""
         SET ""CompanySituation"" = {0}      -- {0} = novo status: CompanySituationEnum.PendingPayment
         WHERE ""PlanEndDate"" <= {1}        -- {1} = now
-          AND ""CompanySituation"" != {0}   -- só empresas que ainda não estão PendingPayment
-          AND ""Status"" = true;            -- só empresas ativas
+          AND ""CompanySituation"" != {0};   -- só empresas que ainda não estão PendingPayment
         ";
 
         int companiesUpdated = await context.Database.ExecuteSqlRawAsync(
@@ -98,9 +98,10 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
             if (invoicesUpdated > 0)
             {
                 await CreateLog(context, logger, description: $"Faturas atualizadas: {invoicesUpdated}");
-            }            
+            }
         }
     }
+    #endregion
 
     public static async Task CreateLog(Context context, ILogger logger, string description)
     {
@@ -108,7 +109,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         {
             LogType = LogTypeEnum.Job,
             RequestType = "POST",
-            Endpoint =  nameof(CompanyPlanJob),
+            Endpoint = nameof(CompanyPlanJob),
             Parameters = string.Empty,
             Exception = string.Empty,
             Description = description,

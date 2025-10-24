@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.Users.Get;
@@ -18,6 +19,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
     private readonly IInviteCompanyUser _inviteCompanyUser = deps.InviteCompanyUser;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = deps.UpdateCurrentMainCompanyUser;
     private readonly IGetUser _getUser = deps.GetUser;
+    private readonly ICreateCompanyInvoice _createCompanyInvoice = deps.CreateCompanyInvoice;  
 
     public async Task<CompanyOutput> Execute(Guid userIdAuth, CompanyInput input)
     {
@@ -31,6 +33,9 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
 
         // E-mail;
         await SendEmail(company, user);
+
+        // Invoice;
+        await _createCompanyInvoice.Execute(userIdAuth, companyId: company.CompanyId, planType: PlanTypeEnum.Free, isCreateCompany: true);
 
         var output = company.Adapt<CompanyOutput>();
 

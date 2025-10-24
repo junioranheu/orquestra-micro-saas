@@ -1,10 +1,11 @@
 ﻿⦁	Etc:
 Resolver os "TO DO";
-Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
+Integração com WhatsApp;
 Módulo de nota fiscal;
 Criar uma logo;
 Resolver bug da paginação (ex: tela de Logs - quando tem muitas páginas, simplesmente, buga (cria paginação inexistente));
+Ajustar limitações dos planos Grátis e Básico (integração com o WhatsApp);
 
 ⦁	User/Configurações/Personalização:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
@@ -15,7 +16,3 @@ Desenvolver feature de notificação;
 
 ⦁	Clientes:
 Na tabela de clientes, criar uma opção para visualizar todas os agendamentos do cliente;
-
-⦁	Gongo:
-Se tiver no plano básico, criar as limitações;
-Fonte das tabelas está muito pequena;

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Companies.Get;
+using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
@@ -79,9 +80,11 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
         _ = await _getClient.Execute(userIdAuth: userIdAuth, clientId: input.ClientId) ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundClient);
 
-        _ = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
+        CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: input.CompanyId, throwIfStatusFalse: true) ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
 
         await ValidateUsersAndRemoveNotLinkedOnes(input);
+
+        await ValidateLimitsOfCurrentPlan(_context, company);
     }
 
     public async Task<List<string>> CheckForObservations(ScheduleOutput? schedule)
@@ -279,6 +282,24 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         }
 
         return RegexCustomUrl().IsMatch(url);
+    }
+
+    private static async Task ValidateLimitsOfCurrentPlan(Context context, CompanyOutput company)
+    {
+        if (company.PlanType == PlanTypeEnum.Premium)
+        {
+            return;
+        }
+
+        DateTime now = GetDate();
+        int amountOfSchedulesCurrentMonth = await context.Schedules.AsNoTracking().Where(x => x.CompanyId == company.CompanyId && (x.CreatedDate.HasValue && x.CreatedDate.Value.Month == now.Month && x.CreatedDate.Value.Year == now.Year)).CountAsync();
+
+        (decimal _, int schedulingLimit, string _, string[] _, int _) = PlanTypeHelper.GetValues(company.PlanType);
+
+        if (amountOfSchedulesCurrentMonth > schedulingLimit)
+        {
+            throw new InvalidOperationException($"Você excedeu o limite de {schedulingLimit} agendamentos por mês para o plano {GetEnumDesc(company.PlanType).ToLowerInvariant()}.");
+        }
     }
     #endregion
 }
