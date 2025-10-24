@@ -121,7 +121,6 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
     const setCompanyTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setCountryOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.country ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
-    const setColorOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.color ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
         if (!formData.name || !formData.email || !formData.phone || !formData.companyType) {
@@ -266,7 +265,6 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
                         <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar logo da empresa' />
-                        {/* <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} /> */}
 
                         {
                             type === 'edit' && (

@@ -3,9 +3,10 @@ Resolver os "TO DO";
 Integração com WhatsApp;
 Atualizar o sistema para o .NET 10;
 Módulo de nota fiscal;
-Resolver bug da paginação (ex: tela de Logs);
+Criar uma logo;
+Resolver bug da paginação (ex: tela de Logs - quando tem muitas páginas, simplesmente, buga (cria paginação inexistente));
 
-⦁	User/Configurações:
+⦁	User/Configurações/Personalização:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
 
@@ -19,7 +20,4 @@ Na tabela de clientes, criar uma opção para visualizar todas os agendamentos d
 Mudar a cor que chega o e-mail de validação para verde escuro;
 Se tiver no plano básico, criar as limitações;
 Fonte das tabelas está muito pequena;
-Alterar nome Agendamentos para Agenda e mudar na URL;
 O pagamento deve ser feito na hora de solicitar o novo plano, sem ir para o histórico de faturas;
-Colocar card na tela inicial de cadastrar cliente/membro, etc;
-Criar uma logo;

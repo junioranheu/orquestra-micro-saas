@@ -60,7 +60,7 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Agendamentos',
+        topic: 'Agenda',
         description: 'Organize seus horários, serviços e notificações automáticas.',
         items: [
             {

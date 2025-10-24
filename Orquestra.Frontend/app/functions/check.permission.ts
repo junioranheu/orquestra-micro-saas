@@ -9,14 +9,8 @@ interface iProps {
 
 // Verificar se o usuário tem a permissão para visualizar um elemento;
 export function handleCheckShowElement({ me, rolesRequired, mustBeSystemAdmin = false }: iProps): boolean {
-    const systemAdmin = 1000; // Back-end;
-
     if (mustBeSystemAdmin) {
-        if (me && me.roles?.map(x => x.toString()).includes(systemAdmin.toString())) {
-            return true;
-        } else {
-            return false;
-        }
+        return handleCheckIfSysAdm(me);
     }
 
     if (!me || !me?.isAuth || !me?.currentMainCompany) {
@@ -47,4 +41,14 @@ export function handleCheckShowElement({ me, rolesRequired, mustBeSystemAdmin = 
 
     // console.log(rolesRequired, isShowElement);
     return isShowElement;
+}
+
+export function handleCheckIfSysAdm(me: iMe | undefined) {
+    const systemAdmin = 1000; // Back-end;
+
+    if (me && me.roles?.map(x => x.toString()).includes(systemAdmin.toString())) {
+        return true;
+    }
+
+    return false;
 }

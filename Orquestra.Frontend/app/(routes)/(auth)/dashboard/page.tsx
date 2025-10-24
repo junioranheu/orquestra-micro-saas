@@ -6,6 +6,7 @@ import CardSimple from '@/app/components/card/simple';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Footer from '@/app/components/footer';
 import ROUTES from '@/app/consts/routes';
+import { handleCheckIfSysAdm } from '@/app/functions/check.permission';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
@@ -40,41 +41,45 @@ export default function Dashboard() {
                 <CardCalendar me={me} />
             </div>
 
-            <div className={styles.flex}>
-                <CardSimple
-                    img={SvgUserArrow}
-                    title='Membros da equipe'
-                    description='Adicione, gerencie e defina permissões para os profissionais da sua empresa.<br/>Mantenha sua equipe organizada e com os acessos certos.'
-                    buttonLabel='Gerenciar equipe'
-                    buttonFunction={() => router.push(ROUTES.EMPRESA_MEMBROS)}
-                />
+            {
+                handleCheckIfSysAdm(me) ? (
+                    <div className={styles.flex}>
+                        <CardSimple
+                            img={SvgUserArrow}
+                            title='Configurações avançadas'
+                            description='Personalize a plataforma do seu jeito: gerencie preferências, permissões e integrações em um só lugar.'
+                            buttonLabel='Abrir configurações'
+                            buttonFunction={() => router.push(ROUTES.USUARIO_CONFIGURACOES)}
+                        />
 
-                <CardSimple
-                    img={SvgUserEnvelope}
-                    title='Clientes'
-                    description='Acompanhe e gerencie os dados dos seus clientes em um só lugar.<br/>Visualize histórico de atendimentos, contatos e informações importantes com facilidade.'
-                    buttonLabel='Ver clientes'
-                    buttonFunction={() => router.push(ROUTES.EMPRESA_CLIENTES)}
-                />
-            </div>
+                        <CardSimple
+                            img={SvgUserEnvelope}
+                            title='Central de ajuda'
+                            description='Encontre respostas rápidas, tutoriais e suporte para tirar suas dúvidas e aproveitar ao máximo a plataforma.'
+                            buttonLabel='Acessar a central de ajuda'
+                            buttonFunction={() => router.push(ROUTES.ETC_AJUDA)}
+                        />
+                    </div>
+                ) : (
+                    <div className={styles.flex}>
+                        <CardSimple
+                            img={SvgUserArrow}
+                            title='Membros da equipe'
+                            description='Adicione, gerencie e defina permissões para os profissionais da sua empresa.<br/>Mantenha sua equipe organizada e com os acessos certos.'
+                            buttonLabel='Gerenciar equipe'
+                            buttonFunction={() => router.push(ROUTES.EMPRESA_MEMBROS)}
+                        />
 
-            {/* <div className={styles.flex}>
-                <CardSimple
-                    img={SvgUserArrow}
-                    title='Configurações avançadas'
-                    description='Personalize a plataforma do seu jeito: gerencie preferências, permissões e integrações em um só lugar.'
-                    buttonLabel='Abrir configurações'
-                    buttonFunction={() => router.push(ROUTES.USUARIO_CONFIGURACOES)}
-                />
-
-                <CardSimple
-                    img={SvgUserEnvelope}
-                    title='Central de ajuda'
-                    description='Encontre respostas rápidas, tutoriais e suporte para tirar suas dúvidas e aproveitar ao máximo a plataforma.'
-                    buttonLabel='Acessar a central de ajuda'
-                    buttonFunction={() => router.push(ROUTES.ETC_AJUDA)}
-                />
-            </div> */}
+                        <CardSimple
+                            img={SvgUserEnvelope}
+                            title='Clientes'
+                            description='Acompanhe e gerencie os dados dos seus clientes em um só lugar.<br/>Visualize histórico de atendimentos, contatos e informações importantes com facilidade.'
+                            buttonLabel='Ver clientes'
+                            buttonFunction={() => router.push(ROUTES.EMPRESA_CLIENTES)}
+                        />
+                    </div>
+                )
+            }
 
             <Footer />
         </section>

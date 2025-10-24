@@ -21,7 +21,7 @@ const ROUTES = {
     EMPRESA_MEMBROS: '/empresa/membros',
     EMPRESA_CLIENTES: '/empresa/clientes',
     EMPRESA_FINANCEIRO: '/empresa/financeiro',
-    EMPRESA_AGENDAMENTOS: '/empresa/agendamentos',
+    EMPRESA_AGENDAMENTOS: '/empresa/agenda',
     DASHBOARD: '/dashboard'
 };
 

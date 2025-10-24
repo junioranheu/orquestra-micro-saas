@@ -9,7 +9,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 export default function EmpresaAgendamentos() {
 
-    useTitle('Agendamentos');
+    useTitle('Agenda');
     useDisableScroll();
 
     const me = useApiGetMe({});
