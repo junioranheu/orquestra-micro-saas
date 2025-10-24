@@ -1,4 +1,5 @@
 import SYSTEM from '@/app/consts/system';
+import { handleCheckIsSupportedBrowser } from '@/app/functions/check.browser';
 import swal from '@/app/functions/swal';
 import { useEffect, useState } from 'react';
 
@@ -7,12 +8,9 @@ export default function useIsSupportedBrowser() {
     const [isSupported, setIsSupported] = useState<boolean>(true);
 
     useEffect(() => {
-        const userAgent = navigator.userAgent.toLowerCase();
+        const checkIsSupported = handleCheckIsSupportedBrowser();
 
-        const isChrome = /chrome/.test(userAgent) && !/edge|edg|opr|opera/.test(userAgent);
-        const isEdge = /edg|edge/.test(userAgent);
-
-        if (!isChrome && !isEdge) {
+        if (!checkIsSupported) {
             setIsSupported(false);
 
             swal({

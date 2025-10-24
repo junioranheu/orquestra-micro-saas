@@ -4,6 +4,7 @@ import { iModalCustomPosition } from '@/app/components/modal/generic';
 import ModalMenu from '@/app/components/navbar/modal/menu';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
@@ -67,14 +68,10 @@ export default function Navbar() {
                             <span onClick={() => router.push(ROUTES.USUARIO_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
                         </Tippy>
 
-                        <Tippy content='Central de ajuda'>
-                            <span className={styles.hideIfSmall} onClick={() => router.push(ROUTES.ETC_AJUDA)}><Icon icon='help-circle' weight='bold' /></span>
-                        </Tippy>
-
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
                                 <span className={styles.hideIfSmall}>
-                                    <ContentLoaderText text={(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : `Olá, ${me?.userName ?? ''}`} />
+                                    <ContentLoaderText text={(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : `Olá, ${me?.userName ? handleGetFirstName(me?.userName) : ''}`} />
                                 </span>
 
                                 <Icon icon='chevron-down' weight='bold' />

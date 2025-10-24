@@ -9,6 +9,7 @@ import { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleCheckIsSupportedBrowser } from '@/app/functions/check.browser';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
@@ -19,7 +20,6 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSet
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
-import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -35,7 +35,6 @@ export default function CriarConta() {
     const [isRequestLoading, setIsRequestLoading] = useIsRequestLoading();
 
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
-    useIsSupportedBrowser();
 
     const [plans, setPlans] = useState<iPlanTypeOutput | undefined>();
     useApiRequestToSetterOnUrlChange<iPlanTypeOutput>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
@@ -76,6 +75,12 @@ export default function CriarConta() {
     const setRecoverPasswordQuestion = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.recoverPasswordQuestion!)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleCreate() {
+        const isSupported = handleCheckIsSupportedBrowser();
+
+        if (!isSupported) {
+            return;
+        }
+
         setIsRequestLoading(true);
 
         if (!formData.fullName || !formData.email || !formData.password || !formData.recoverPasswordQuestion || !formData.recoverPasswordAnswer) {
@@ -105,10 +110,10 @@ export default function CriarConta() {
                 swal({
                     content: `${handleGetFirstName(formData.fullName)}, seu registro foi concluído com sucesso! </br></br>
                             Antes de acessar sua conta pela primeira vez, <b>valide seu e-mail</b> clicando no link que enviamos para <b>${formData.email}</b>.</br></br>
-                            Ah, e um lembrete importante: guarde bem sua <b>pergunta e resposta de recuperação de senha</b> — elas serão essenciais caso precise redefinir sua senha futuramente.`,
+                            Ah, e um lembrete importante: guarde bem sua <b>pergunta e resposta de recuperação de senha</b> — elas serão essenciais caso precise redefinir sua senha.`,
                     icon: 'success',
                     mustConfirm: true,
-                    checkboxLabel: 'Entendido. Validarei minha conta via e-mail'
+                    checkboxLabel: 'Entendi. Validarei minha conta via e-mail'
                 });
             } else {
                 swal({

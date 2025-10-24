@@ -58,7 +58,7 @@ public partial class UserBase(IGetUser getUser)
 
         if (!checkPassword)
         {
-            throw new ArgumentException("A senha não é válida. Insira uma senha com pelo menos 8 carácteres e um digito ou carácter especial, por favor.");
+            throw new ArgumentException("A senha é inválida. Insira uma senha com pelo menos 8 caracteres e um digito ou carácter especial, por favor.");
         }
         #endregion
     }

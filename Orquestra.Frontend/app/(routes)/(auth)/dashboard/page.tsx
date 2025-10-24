@@ -43,6 +43,24 @@ export default function Dashboard() {
             <div className={styles.flex}>
                 <CardSimple
                     img={SvgUserArrow}
+                    title='Membros da equipe'
+                    description='Adicione, gerencie e defina permissões para os profissionais da sua empresa.<br/>Mantenha sua equipe organizada e com os acessos certos.'
+                    buttonLabel='Gerenciar equipe'
+                    buttonFunction={() => router.push(ROUTES.EMPRESA_MEMBROS)}
+                />
+
+                <CardSimple
+                    img={SvgUserEnvelope}
+                    title='Clientes'
+                    description='Acompanhe e gerencie os dados dos seus clientes em um só lugar.<br/>Visualize histórico de atendimentos, contatos e informações importantes com facilidade.'
+                    buttonLabel='Ver clientes'
+                    buttonFunction={() => router.push(ROUTES.EMPRESA_CLIENTES)}
+                />
+            </div>
+
+            {/* <div className={styles.flex}>
+                <CardSimple
+                    img={SvgUserArrow}
                     title='Configurações avançadas'
                     description='Personalize a plataforma do seu jeito: gerencie preferências, permissões e integrações em um só lugar.'
                     buttonLabel='Abrir configurações'
@@ -56,7 +74,7 @@ export default function Dashboard() {
                     buttonLabel='Acessar a central de ajuda'
                     buttonFunction={() => router.push(ROUTES.ETC_AJUDA)}
                 />
-            </div>
+            </div> */}
 
             <Footer />
         </section>

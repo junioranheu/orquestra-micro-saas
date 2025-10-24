@@ -12,13 +12,13 @@ import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleCheckIsSupportedBrowser } from '@/app/functions/check.browser';
 import { handleSetCookieAndLogin } from '@/app/functions/set.cookies';
 import swal from '@/app/functions/swal';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import { useIsRequestLoading } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
-import useIsSupportedBrowser from '@/app/hooks/useIsSupportedBrowser';
 import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
@@ -39,7 +39,6 @@ export default function Login() {
     const [isModalRecuperarSenhaOpen, setIsModalRecuperarSenhaOpen] = useState<boolean>(false);
 
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
-    useIsSupportedBrowser();
 
     const refButton = useRef<HTMLButtonElement>(null);
 
@@ -54,6 +53,12 @@ export default function Login() {
     });
 
     async function handleLogin() {
+        const isSupported = handleCheckIsSupportedBrowser();
+
+        if (!isSupported) {
+            return;
+        }
+
         setIsRequestLoading(true);
 
         if (!formData.email || !formData.password) {

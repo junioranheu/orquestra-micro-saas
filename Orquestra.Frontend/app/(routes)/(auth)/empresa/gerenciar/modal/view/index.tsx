@@ -9,7 +9,6 @@ import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
-import { COLORS } from '@/app/consts/colors';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleConvertBase64ToFile from '@/app/functions/convert.base64ToFile';
@@ -267,7 +266,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                         <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
                         <InputImage title='Logo' fieldName='logoFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar logo da empresa' />
-                        <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} />
+                        {/* <Dropdown title='Cor de customização' options={COLORS ?? []} selectedOption={COLORS?.find(x => x.value.toString() === formData.color?.toString())} setSelectedOption={setColorOption} isDisabled={!editing} /> */}
 
                         {
                             type === 'edit' && (

@@ -51,7 +51,7 @@ export default function CardCalendar({ me }: iProps) {
                                         img={SvgOne}
                                         isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
                                         title='Tudo certo!'
-                                        description={`A empresa <b>${me?.currentMainCompany?.name}</b> já possui o módulo de agendamentos.<br/>Comece a gerenciar seus compromissos agora mesmo clicando no botão do card ao lado.`}
+                                        description={`A empresa <b>${me?.currentMainCompany?.name}</b> já está prontinha para começar a criar novos agendamentos.<br/>Comece a gerenciar seus compromissos agora mesmo clicando no botão do card ao lado.`}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s}
                                     />
                                 ) : (

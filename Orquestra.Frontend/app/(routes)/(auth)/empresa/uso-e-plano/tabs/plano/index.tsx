@@ -53,7 +53,7 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
                         content: `Plano adquirido com sucesso!<br/>O novo plano da sua empresa é o <b>${plan.planTypeDescription.toLowerCase()}</b>. Para ativá-lo, acesse a aba <b>histórico de faturas</b> e realize o pagamento.`,
                         confirmFunction: () => window.location.reload(),
                         icon: 'success',
-                        checkboxLabel: 'Entendido',
+                        checkboxLabel: 'Entendi',
                         confirmBtnText: 'Voltar'
                     });
 
