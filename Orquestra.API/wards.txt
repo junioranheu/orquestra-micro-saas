@@ -2,10 +2,9 @@
 Resolver os "TO DO";
 Atualizar o sistema para o .NET 10;
 Integração com WhatsApp;
-Módulo de nota fiscal;
-Criar uma logo;
-Resolver bug da paginação (ex: tela de Logs - quando tem muitas páginas, simplesmente, buga (cria paginação inexistente));
 Ajustar limitações dos planos Grátis e Básico (integração com o WhatsApp);
+Módulo de nota fiscal;
+Criar uma logo e .ico;
 
 ⦁	User/Configurações/Personalização:
 Criar método pra trocar de senha (ou alterar as infos do usuário);

@@ -34,7 +34,7 @@ interface iProps {
     idPropName: string;
     columns: iTableColumn[];
     data: any[] | undefined;
-    currentPage: number; // É necessário usar o currentPage como param para posteriormente utilizá-lo para requisições ao back-end (por isso o currentPage não está internamente no componente);
+    currentPage: number;
     setCurrentPage?: Dispatch<SetStateAction<number>>;
     maxPageSize?: number;
     totalRowsCount?: number;
@@ -71,7 +71,7 @@ export default function TableGeneric({
     setCurrentPage,
     maxPageSize = 15,
     totalRowsCount = 0,
-    handleTableRowClick = undefined,
+    handleTableRowClick,
     isMainDivBoxShadowed = false,
     mainDivMarginTopBottom = 1,
     mainDivMarginSides = 3,
@@ -95,7 +95,7 @@ export default function TableGeneric({
     setApiUrlRequest
 }: iProps) {
 
-    const [pageSize, setPageSize] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(maxPageSize);
     const [countTotalItems, setCountTotalItems] = useState<number>(0);
     const [paginatedData, setPaginatedData] = useState<any[] | undefined>([]);
     const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -104,82 +104,48 @@ export default function TableGeneric({
 
     useEffect(() => {
         function handlePagination() {
-            if (totalRowsCount > 0) {
-                // console.clear();
-                // console.log(`Foi definido que há um limite de linhas (totalRowsCount: ${totalRowsCount})`);
-                setCountTotalItems(totalRowsCount ?? 1);
+            const total = Number(totalRowsCount) || 0;
+            setCountTotalItems(total);
 
-                // Workaround;
+            // Evita bug de pageSize dinâmico alterando o total de páginas;
+            const stablePageSize = maxPageSize > 0 ? maxPageSize : 15;
+            setPageSize(stablePageSize);
+
+            if (!data || !data.length) {
                 setPaginatedData([]);
-
-                setTimeout(() => {
-                    // console.log(data?.length, data);
-                    setPaginatedData(data);
-                }, 10);
-
-                // Workaround (código retirado do if abaixo (conteúdo original));
-                const pageSizeHandlePagination = data?.length ?? maxPageSize;
-                setPageSize(pageSizeHandlePagination);
-
-                // Dia 22/10 esse trecho foi comentado porque foi percebido que estava atrapalhando os reloads com triggers;
-                // É importante ficar esperto quanto a isso. Talvez vale a pena descomentar futuramente, dependendo...
-                // if (pageSize < 1) {
-                //     const pageSizeHandlePagination = data?.length ?? maxPageSize;
-                //     console.log(`Definir o setPageSize apenas uma vez: ${pageSizeHandlePagination}`);
-
-                //     setPageSize(pageSizeHandlePagination);
-                // }
-
                 return;
             }
 
-            // console.log('NÃO foi definido que há um limite de linhas (totalRowsCount)');
-            setCountTotalItems(data?.length ?? 1);
-            setPageSize(maxPageSize);
+            // Se a API já traz os dados paginados;
+            if (total > 0) {
+                setPaginatedData(data);
+                return;
+            }
 
-            const paginatedData = data?.slice((currentPage - 1) * maxPageSize, currentPage * maxPageSize);
-
-            // Workaround;
-            setPaginatedData([]);
-
-            setTimeout(() => {
-                setPaginatedData(paginatedData);
-            }, 10);
+            // Fallback: paginação manual no front;
+            const paginated = data.slice((currentPage - 1) * stablePageSize, currentPage * stablePageSize);
+            setPaginatedData(paginated);
         }
 
-        if (data?.length) {
-            setTimeout(() => {
-                handlePagination();
-            }, 10);
-        } else {
-            setTimeout(() => {
-                setPaginatedData([]);
-            }, 10);
-        }
-    }, [data, currentPage, totalRowsCount, maxPageSize, pageSize]);
+        handlePagination();
+    }, [data, currentPage, totalRowsCount, maxPageSize]);
 
     const [animateClass, setAnimateClass] = useState<string>('');
 
     function handlePageChange(page: number) {
-        if (setCurrentPage) {
-            setCurrentPage(page);
-        }
+        if (setCurrentPage) setCurrentPage(page);
 
         setAnimateClass('');
-
-        setTimeout(() => {
-            setAnimateClass(SYSTEM.ANIMATE_SLOW);
-        }, 10);
+        setTimeout(() => setAnimateClass(SYSTEM.ANIMATE_SLOW), 10);
     }
 
     function handleSort(column: string) {
         let newSortOrder: 'ascend' | 'descend' = 'ascend';
-
         if (sortColumn === column) {
             newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
         }
 
-        const sorted = [...paginatedData ?? []].sort((a, b) => {
+        const sorted = [...(paginatedData ?? [])].sort((a, b) => {
             if (a[column] < b[column]) return newSortOrder === 'ascend' ? -1 : 1;
             if (a[column] > b[column]) return newSortOrder === 'ascend' ? 1 : -1;
             return 0;
@@ -191,20 +157,14 @@ export default function TableGeneric({
     }
 
     function handleGetValue(record: any, key: string): any {
-        if (!record || !key) {
-            return undefined;
-        }
+        if (!record || !key) return undefined;
 
         const parts = key.split('.');
         let current = record;
 
         for (const part of parts) {
-            if (current == null) {
-                return undefined;
-            }
-
+            if (current == null) return undefined;
             const match = Object.keys(current).find(k => k.toLowerCase() === part.toLowerCase());
-
             current = match ? current[match] : undefined;
         }
 
@@ -229,49 +189,36 @@ export default function TableGeneric({
             const val = handleGetValue(record, col.dataIndex);
             return col.render ? col.render(val, record, index) : val;
         }
-    }))
+    }));
 
-    // Add managing options column if managingOptions is provided;
     if (managingOptions?.length > 0) {
-        // @ts-expect-error: a definição de tipo de iTableColumn não permite esse render customizado, mas é intencional aqui;
+        // @ts-expect-error tipo propositalmente flexível;
         enhancedColumns.push({
             title: (<span>Ações</span>),
             key: 'actions',
             width: 100,
             render: (record: any) => (
                 <div className={styles.column_actions}>
-                    {
-                        managingOptions?.map((option: iTableManagingOptions, index: number) => {
-                            // Verifica se é um botão ou um ícone normal;
-                            if (option.isButton) {
-                                return (
-                                    <Button
-                                        key={index}
-                                        label={option.label}
-                                        handleFunction={() => option.function(record)}
-                                        svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
-                                        icone_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
-                                        isStyleSimple={false}
-                                    />
-                                )
-                            } else {
-                                return (
-                                    <Tippy key={index} content={option.label}>
-                                        <span onClick={() => option.function(record)}>
-                                            {
-                                                // Verifica se o ícone é um componente React ou uma imagem estática;
-                                                isValidElement(option.icon) ? (
-                                                    option.icon // Se for um componente React, renderiza ele;
-                                                ) : (
-                                                    <Image src={option.icon} alt={option.label} /> // Caso contrário, trata como uma imagem;
-                                                )
-                                            }
-                                        </span>
-                                    </Tippy>
-                                )
-                            }
-                        })
-                    }
+                    {managingOptions.map((option, index) => (
+                        option.isButton ? (
+                            <Button
+                                key={index}
+                                label={option.label}
+                                handleFunction={() => option.function(record)}
+                                svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
+                                icone_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
+                                isStyleSimple={false}
+                            />
+                        ) : (
+                            <Tippy key={index} content={option.label}>
+                                <span onClick={() => option.function(record)}>
+                                    {isValidElement(option.icon)
+                                        ? option.icon
+                                        : <Image src={option.icon} alt={option.label} />}
+                                </span>
+                            </Tippy>
+                        )
+                    ))}
                 </div>
             )
         });
@@ -279,13 +226,13 @@ export default function TableGeneric({
 
     useEffect(() => {
         setShowEmptyText(false);
-
-        const timer = setTimeout(() => {
-            setShowEmptyText(true);
-        }, 1000);
-
+        const timer = setTimeout(() => setShowEmptyText(true), 1000);
         return () => clearTimeout(timer);
     }, [currentPage]);
+
+    // Total precisa ser múltiplo exato do pageSize;
+    const totalPages = pageSize > 0 ? Math.ceil(countTotalItems / pageSize) : 1;
+    const safeTotal = totalPages * pageSize;
 
     return (
         <section
@@ -300,7 +247,7 @@ export default function TableGeneric({
                 <div className={styles.top}>
                     <div className={styles.left}>
                         <span className={styles.title}>
-                            <ContentLoaderText text={(title ? `${title} ${`(${totalRowsCount})`}` : '')} delay={150} />
+                            <ContentLoaderText text={(title ? `${title} (${totalRowsCount})` : '')} delay={150} />
                         </span>
                     </div>
 
@@ -315,11 +262,11 @@ export default function TableGeneric({
                         }
 
                         {
-                            (btn_filter_label && btn_filter_function) && (
+                            btn_filter_label && btn_filter_function && (
                                 <Button
                                     label={btn_filter_label}
                                     handleFunction={btn_filter_function}
-                                    isStyleSimple={true}
+                                    isStyleSimple
                                     icone_feather={<Icon icon='search' size='small' />}
                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
@@ -327,11 +274,11 @@ export default function TableGeneric({
                         }
 
                         {
-                            (btn_import_label && btn_import_function) && (
+                            btn_import_label && btn_import_function && (
                                 <Button
                                     label={btn_import_label}
                                     handleFunction={btn_import_function}
-                                    isStyleSimple={true}
+                                    isStyleSimple
                                     icone_feather={<Icon icon='upload' size='small' />}
                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
@@ -339,11 +286,11 @@ export default function TableGeneric({
                         }
 
                         {
-                            (btn_export_label && btn_export_function) && (
+                            btn_export_label && btn_export_function && (
                                 <Button
                                     label={btn_export_label}
                                     handleFunction={btn_export_function}
-                                    isStyleSimple={true}
+                                    isStyleSimple
                                     icone_feather={<Icon icon='download' size='small' />}
                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
@@ -351,7 +298,7 @@ export default function TableGeneric({
                         }
 
                         {
-                            (btn_add_label && btn_add_function) && (
+                            btn_add_label && btn_add_function && (
                                 <Button
                                     label={btn_add_label}
                                     handleFunction={btn_add_function}
@@ -382,9 +329,9 @@ export default function TableGeneric({
                 data={paginatedData}
                 rowKey={idPropName}
                 onRow={(row) => ({
-                    onClick: handleTableRowClick ? () => handleTableRowClick(row) : () => null,
+                    onClick: handleTableRowClick ? () => handleTableRowClick(row) : undefined,
                 })}
-                emptyText={(showEmptyText ? <span className={animateClass}>Os dados ainda estão carregando ou não existem dados para exibir neste momento</span> : null)}
+                emptyText={showEmptyText ? <span className={animateClass}>Os dados ainda estão carregando ou não existem dados para exibir neste momento</span> : null}
                 className={SYSTEM.ANIMATE}
                 rowClassName={animateClass}
             />
@@ -392,11 +339,419 @@ export default function TableGeneric({
             <Pagination
                 current={currentPage}
                 pageSize={pageSize}
-                total={countTotalItems}
-                showSizeChanger={true}
+                total={safeTotal}
+                showSizeChanger
                 onChange={handlePageChange}
-                onShowSizeChange={(current: number, size: number) => setPageSize(size)}
+                onShowSizeChange={(size: number) => {
+                    setPageSize(size);
+                    if (setCurrentPage) {
+                        setCurrentPage(1);
+                    }
+                }}
             />
         </section>
     )
 }
+
+// 'use client';
+// import Icon from '@/app/components/icon';
+// import Button from '@/app/components/input/button';
+// import FiltersSelected from '@/app/components/table/filters-selected';
+// import SYSTEM from '@/app/consts/system';
+// import Tippy from '@tippyjs/react';
+// import Image, { StaticImageData } from 'next/image';
+// import Pagination from 'rc-pagination';
+// import 'rc-pagination/assets/index.css';
+// import Table, { ColumnType as RcTableColumnType } from 'rc-table';
+// import 'rc-table/assets/index.css';
+// import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useEffect, useState } from 'react';
+// import ContentLoaderText from '../../content-loader/text';
+// import styles from './index.module.scss';
+
+// export interface iTableColumn extends RcTableColumnType<any> {
+//     dataIndex: string;
+//     key: string;
+// }
+
+// export interface iTableExtraItems {
+//     title?: string;
+//     label: string;
+// }
+
+// export interface iTableManagingOptions {
+//     label: string;
+//     function: (record: any) => void;
+//     icon: StaticImageData | ReactElement;
+//     isButton?: boolean;
+// }
+
+// interface iProps {
+//     idPropName: string;
+//     columns: iTableColumn[];
+//     data: any[] | undefined;
+//     currentPage: number; // É necessário usar o currentPage como param para posteriormente utilizá-lo para requisições ao back-end (por isso o currentPage não está internamente no componente);
+//     setCurrentPage?: Dispatch<SetStateAction<number>>;
+//     maxPageSize?: number;
+//     totalRowsCount?: number;
+//     handleTableRowClick?: (e: any) => void;
+//     isMainDivBoxShadowed?: boolean;
+//     mainDivMarginTopBottom?: number;
+//     mainDivMarginSides?: number;
+//     mainDivHasPadding?: boolean;
+//     hasAltStyle?: boolean;
+
+//     title?: string;
+//     managingOptions?: iTableManagingOptions[];
+//     extraItems?: iTableExtraItems[] | null;
+//     btn_add_label?: string;
+//     btn_add_function?: (e: MouseEvent<HTMLDivElement>) => void;
+//     btn_import_label?: string;
+//     btn_import_function?: (e: MouseEvent<HTMLDivElement>) => void;
+//     btn_export_label?: string;
+//     btn_export_function?: (e: MouseEvent<HTMLDivElement>) => void;
+//     btn_filter_label?: string;
+//     btn_filter_function?: (e: MouseEvent<HTMLDivElement>) => void;
+
+//     modalFilterFormData?: any;
+//     setModalFilterFormData?: Dispatch<SetStateAction<any>>;
+//     apiUrlRequest?: string;
+//     setApiUrlRequest?: Dispatch<SetStateAction<string>>;
+// }
+
+// export default function TableGeneric({
+//     idPropName,
+//     columns,
+//     data,
+//     currentPage,
+//     setCurrentPage,
+//     maxPageSize = 15,
+//     totalRowsCount = 0,
+//     handleTableRowClick = undefined,
+//     isMainDivBoxShadowed = false,
+//     mainDivMarginTopBottom = 1,
+//     mainDivMarginSides = 3,
+//     mainDivHasPadding = true,
+//     hasAltStyle = false,
+
+//     title,
+//     managingOptions = [],
+//     extraItems = null,
+//     btn_add_label,
+//     btn_add_function,
+//     btn_import_label,
+//     btn_import_function,
+//     btn_export_label,
+//     btn_export_function,
+//     btn_filter_label,
+//     btn_filter_function,
+//     modalFilterFormData,
+//     setModalFilterFormData,
+//     apiUrlRequest,
+//     setApiUrlRequest
+// }: iProps) {
+
+//     const [pageSize, setPageSize] = useState<number>(0);
+//     const [countTotalItems, setCountTotalItems] = useState<number>(0);
+//     const [paginatedData, setPaginatedData] = useState<any[] | undefined>([]);
+//     const [sortColumn, setSortColumn] = useState<string | null>(null);
+//     const [sortOrder, setSortOrder] = useState<'ascend' | 'descend' | null>(null);
+//     const [showEmptyText, setShowEmptyText] = useState<boolean>(false);
+
+//     useEffect(() => {
+//         function handlePagination() {
+//             if (totalRowsCount > 0) {
+//                 // console.clear();
+//                 // console.log(`Foi definido que há um limite de linhas (totalRowsCount: ${totalRowsCount})`);
+//                 setCountTotalItems(totalRowsCount ?? 1);
+
+//                 // Workaround;
+//                 setPaginatedData([]);
+
+//                 setTimeout(() => {
+//                     // console.log(data?.length, data);
+//                     setPaginatedData(data);
+//                 }, 10);
+
+//                 // Workaround (código retirado do if abaixo (conteúdo original));
+//                 const pageSizeHandlePagination = data?.length ?? maxPageSize;
+//                 setPageSize(pageSizeHandlePagination);
+
+//                 // Dia 22/10 esse trecho foi comentado porque foi percebido que estava atrapalhando os reloads com triggers;
+//                 // É importante ficar esperto quanto a isso. Talvez vale a pena descomentar futuramente, dependendo...
+//                 // if (pageSize < 1) {
+//                 //     const pageSizeHandlePagination = data?.length ?? maxPageSize;
+//                 //     console.log(`Definir o setPageSize apenas uma vez: ${pageSizeHandlePagination}`);
+
+//                 //     setPageSize(pageSizeHandlePagination);
+//                 // }
+
+//                 return;
+//             }
+
+//             // console.log('NÃO foi definido que há um limite de linhas (totalRowsCount)');
+//             setCountTotalItems(data?.length ?? 1);
+//             setPageSize(maxPageSize);
+
+//             const paginatedData = data?.slice((currentPage - 1) * maxPageSize, currentPage * maxPageSize);
+
+//             // Workaround;
+//             setPaginatedData([]);
+
+//             setTimeout(() => {
+//                 setPaginatedData(paginatedData);
+//             }, 10);
+//         }
+
+//         if (data?.length) {
+//             setTimeout(() => {
+//                 handlePagination();
+//             }, 10);
+//         } else {
+//             setTimeout(() => {
+//                 setPaginatedData([]);
+//             }, 10);
+//         }
+//     }, [data, currentPage, totalRowsCount, maxPageSize, pageSize]);
+
+//     const [animateClass, setAnimateClass] = useState<string>('');
+
+//     function handlePageChange(page: number) {
+//         if (setCurrentPage) {
+//             setCurrentPage(page);
+//         }
+
+//         setAnimateClass('');
+
+//         setTimeout(() => {
+//             setAnimateClass(SYSTEM.ANIMATE_SLOW);
+//         }, 10);
+//     }
+
+//     function handleSort(column: string) {
+//         let newSortOrder: 'ascend' | 'descend' = 'ascend';
+
+//         if (sortColumn === column) {
+//             newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
+//         }
+
+//         const sorted = [...paginatedData ?? []].sort((a, b) => {
+//             if (a[column] < b[column]) return newSortOrder === 'ascend' ? -1 : 1;
+//             if (a[column] > b[column]) return newSortOrder === 'ascend' ? 1 : -1;
+//             return 0;
+//         });
+
+//         setPaginatedData(sorted);
+//         setSortColumn(column);
+//         setSortOrder(newSortOrder);
+//     }
+
+//     function handleGetValue(record: any, key: string): any {
+//         if (!record || !key) {
+//             return undefined;
+//         }
+
+//         const parts = key.split('.');
+//         let current = record;
+
+//         for (const part of parts) {
+//             if (current == null) {
+//                 return undefined;
+//             }
+
+//             const match = Object.keys(current).find(k => k.toLowerCase() === part.toLowerCase());
+
+//             current = match ? current[match] : undefined;
+//         }
+
+//         return current;
+//     }
+
+//     const enhancedColumns = columns.map(col => ({
+//         ...col,
+//         title: (
+//             <span onClick={() => handleSort(col.dataIndex)}>
+//                 {col.title} {sortColumn === col.dataIndex && (sortOrder === 'ascend' ? '↑' : '↓')}
+//             </span>
+//         ),
+//         onHeaderCell: () => ({
+//             onClick: () => handleSort(col.dataIndex),
+//             style: {
+//                 cursor: 'pointer',
+//                 textDecoration: sortColumn === col.dataIndex ? 'underline' : 'none'
+//             }
+//         }),
+//         render: (value: any, record: any, index: number) => {
+//             const val = handleGetValue(record, col.dataIndex);
+//             return col.render ? col.render(val, record, index) : val;
+//         }
+//     }))
+
+//     // Add managing options column if managingOptions is provided;
+//     if (managingOptions?.length > 0) {
+//         // @ts-expect-error: a definição de tipo de iTableColumn não permite esse render customizado, mas é intencional aqui;
+//         enhancedColumns.push({
+//             title: (<span>Ações</span>),
+//             key: 'actions',
+//             width: 100,
+//             render: (record: any) => (
+//                 <div className={styles.column_actions}>
+//                     {
+//                         managingOptions?.map((option: iTableManagingOptions, index: number) => {
+//                             // Verifica se é um botão ou um ícone normal;
+//                             if (option.isButton) {
+//                                 return (
+//                                     <Button
+//                                         key={index}
+//                                         label={option.label}
+//                                         handleFunction={() => option.function(record)}
+//                                         svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
+//                                         icone_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
+//                                         isStyleSimple={false}
+//                                     />
+//                                 )
+//                             } else {
+//                                 return (
+//                                     <Tippy key={index} content={option.label}>
+//                                         <span onClick={() => option.function(record)}>
+//                                             {
+//                                                 // Verifica se o ícone é um componente React ou uma imagem estática;
+//                                                 isValidElement(option.icon) ? (
+//                                                     option.icon // Se for um componente React, renderiza ele;
+//                                                 ) : (
+//                                                     <Image src={option.icon} alt={option.label} /> // Caso contrário, trata como uma imagem;
+//                                                 )
+//                                             }
+//                                         </span>
+//                                     </Tippy>
+//                                 )
+//                             }
+//                         })
+//                     }
+//                 </div>
+//             )
+//         });
+//     }
+
+//     useEffect(() => {
+//         setShowEmptyText(false);
+
+//         const timer = setTimeout(() => {
+//             setShowEmptyText(true);
+//         }, 1000);
+
+//         return () => clearTimeout(timer);
+//     }, [currentPage]);
+
+//     return (
+//         <section
+//             className={`${styles.main} ${(hasAltStyle && 'tableAltStyle')} ${(hasAltStyle && styles.tableAltStyle)}`}
+//             style={{
+//                 boxShadow: (isMainDivBoxShadowed ? 'var(--box-shadow)' : ''),
+//                 margin: `${mainDivMarginTopBottom}rem ${mainDivMarginSides}rem`,
+//                 padding: (mainDivHasPadding ? '1rem' : '0rem')
+//             }}
+//         >
+//             <div className={styles.container}>
+//                 <div className={styles.top}>
+//                     <div className={styles.left}>
+//                         <span className={styles.title}>
+//                             <ContentLoaderText text={(title ? `${title} ${`(${totalRowsCount})`}` : '')} delay={150} />
+//                         </span>
+//                     </div>
+
+//                     <div className={styles.right}>
+//                         {
+//                             extraItems?.map((x, i) => (
+//                                 <div key={i} className={styles.extraItem}>
+//                                     {x.title && <span className={styles.title}>{x.title}</span>}
+//                                     <span className={styles.label}>{x.label}</span>
+//                                 </div>
+//                             ))
+//                         }
+
+//                         {
+//                             (btn_filter_label && btn_filter_function) && (
+//                                 <Button
+//                                     label={btn_filter_label}
+//                                     handleFunction={btn_filter_function}
+//                                     isStyleSimple={true}
+//                                     icone_feather={<Icon icon='search' size='small' />}
+//                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+//                                 />
+//                             )
+//                         }
+
+//                         {
+//                             (btn_import_label && btn_import_function) && (
+//                                 <Button
+//                                     label={btn_import_label}
+//                                     handleFunction={btn_import_function}
+//                                     isStyleSimple={true}
+//                                     icone_feather={<Icon icon='upload' size='small' />}
+//                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+//                                 />
+//                             )
+//                         }
+
+//                         {
+//                             (btn_export_label && btn_export_function) && (
+//                                 <Button
+//                                     label={btn_export_label}
+//                                     handleFunction={btn_export_function}
+//                                     isStyleSimple={true}
+//                                     icone_feather={<Icon icon='download' size='small' />}
+//                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+//                                 />
+//                             )
+//                         }
+
+//                         {
+//                             (btn_add_label && btn_add_function) && (
+//                                 <Button
+//                                     label={btn_add_label}
+//                                     handleFunction={btn_add_function}
+//                                     icone_feather={<Icon icon='plus-circle' size='small' />}
+//                                     style={{ fontSize: '0.75rem' }}
+//                                 />
+//                             )
+//                         }
+//                     </div>
+//                 </div>
+
+//                 {
+//                     (apiUrlRequest && setApiUrlRequest) && (
+//                         <div className={styles.bottom}>
+//                             <FiltersSelected
+//                                 modalFilterFormData={modalFilterFormData}
+//                                 setModalFilterFormData={setModalFilterFormData}
+//                                 apiUrlRequest={apiUrlRequest}
+//                                 setApiUrlRequest={setApiUrlRequest}
+//                             />
+//                         </div>
+//                     )
+//                 }
+//             </div>
+
+//             <Table
+//                 columns={enhancedColumns}
+//                 data={paginatedData}
+//                 rowKey={idPropName}
+//                 onRow={(row) => ({
+//                     onClick: handleTableRowClick ? () => handleTableRowClick(row) : () => null,
+//                 })}
+//                 emptyText={(showEmptyText ? <span className={animateClass}>Os dados ainda estão carregando ou não existem dados para exibir neste momento</span> : null)}
+//                 className={SYSTEM.ANIMATE}
+//                 rowClassName={animateClass}
+//             />
+
+//             <Pagination
+//                 current={currentPage}
+//                 pageSize={pageSize}
+//                 total={countTotalItems}
+//                 showSizeChanger={true}
+//                 onChange={handlePageChange}
+//                 onShowSizeChange={(current: number, size: number) => setPageSize(size)}
+//             />
+//         </section>
+//     )
+// }

@@ -21,7 +21,7 @@ export default function EmpresaUsoEPlano() {
 
         if (e.companyInvoiceSituation.toString() !== pendingPayment.toString()) {
             swal({
-                content: 'Apenas faturas pendentes podem ser pagas.',
+                content: 'Apenas faturas <b>pendentes</b> podem ser pagas.',
                 icon: 'warning'
             });
 
