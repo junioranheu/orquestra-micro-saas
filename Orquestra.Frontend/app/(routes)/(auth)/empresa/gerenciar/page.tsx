@@ -50,6 +50,12 @@ export default function EmpresaGerenciar() {
         return () => clearTimeout(timer);
     }, []);
 
+    useEffect(() => {
+        if (me && !me?.currentMainCompany) {
+            handleOpenModal(undefined);
+        }
+    }, [me]);
+
     function handleSetCurrentMainCompany(company: iCompanyOutput) {
         swal({
             content: `Você deseja selecionar <b>${company.name}</b> como sua empresa principal?`,

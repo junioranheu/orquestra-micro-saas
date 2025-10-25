@@ -58,10 +58,10 @@ export default function CardCalendar({ me }: iProps) {
                                     <CardSimple
                                         img={SvgOne}
                                         isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
-                                        title='Não perca mais tempo!'
+                                        title='Crie sua própria empresa!'
                                         description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou/não te concedeu acesso ao módulo de Agendamentos.'
-                                        buttonLabel='Gerenciar situação da empresa'
-                                        buttonFunction={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}
+                                        buttonLabel='Criar uma nova empresa agora mesmo'
+                                        buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s} />
                                 )
                             }
@@ -71,7 +71,7 @@ export default function CardCalendar({ me }: iProps) {
                                 isImgInsideOfCard={windowSize.width < 1281}
                                 title='Simplifique a gestão da sua empresa'
                                 description='Gestão de horários simples, rápida e sem dor de cabeça.<br/>Seu negócio afinado como uma orquestra.'
-                                buttonLabel='Agendar compromissos agora mesmo'
+                                buttonLabel='Acessar a agenda'
                                 buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
                                 buttonDisabled={!hasAccessToSchedule}
                             />

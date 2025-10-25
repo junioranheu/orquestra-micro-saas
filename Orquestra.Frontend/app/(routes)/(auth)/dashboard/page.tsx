@@ -6,7 +6,6 @@ import CardSimple from '@/app/components/card/simple';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Footer from '@/app/components/footer';
 import ROUTES from '@/app/consts/routes';
-import { handleCheckIfSysAdm } from '@/app/functions/check.permission';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
@@ -42,7 +41,7 @@ export default function Dashboard() {
             </div>
 
             {
-                handleCheckIfSysAdm(me) ? (
+                !me?.currentMainCompany ? (
                     <div className={styles.flex}>
                         <CardSimple
                             img={SvgUserArrow}

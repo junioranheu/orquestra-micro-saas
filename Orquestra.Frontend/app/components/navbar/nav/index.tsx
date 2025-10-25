@@ -52,8 +52,20 @@ export default function Navbar() {
                     </div>
 
                     <div className={`${styles.right} ${SYSTEM.ANIMATE}`}>
-                        <Tippy content='Gerencie suas empresas ou cadastre a sua'>
-                            <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}><Icon icon='briefcase' weight='bold' /><span className={styles.hideIfSmall}>Empresas</span></span>
+                        <Tippy content='Gerencie suas empresas ou cadastre uma nova'>
+                            <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}>
+                                {
+                                    me?.currentMainCompany ? (
+                                        <Fragment>
+                                            <Icon icon='briefcase' weight='bold' /><span>Gerenciar empresas</span>
+                                        </Fragment>
+                                    ) : (
+                                        <Fragment>
+                                            <Icon icon='plus-circle' weight='bold' /><span>Cadastrar sua empresa</span>
+                                        </Fragment>
+                                    )
+                                }
+                            </span>
                         </Tippy>
 
                         {
