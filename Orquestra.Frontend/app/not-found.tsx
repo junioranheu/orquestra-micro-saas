@@ -3,7 +3,7 @@ import '@/app/styles/globals.scss';
 import { useEffect, useState } from 'react';
 import UpNav from './components/navbar/up-nav';
 import LayoutTemplateOne from './components/template/template-one';
-import { HANKEN } from './fonts/fonts';
+import { INTER } from './fonts/fonts';
 import useTitle from './hooks/useTitle';
 
 export default function NotFound() {
@@ -16,7 +16,7 @@ export default function NotFound() {
     }, []);
 
     return (
-        <section className={HANKEN.className}>
+        <section className={INTER.className}>
             <UpNav />
 
             <section style={{ background: 'var(--gradient)' }}>

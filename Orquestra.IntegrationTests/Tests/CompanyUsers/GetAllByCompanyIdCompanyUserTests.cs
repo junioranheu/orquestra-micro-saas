@@ -191,7 +191,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
 
         await Fixture.Save(context, adminCU);
 
-        // Adiciona um membro e um admin;
+        // Adiciona um colaborador e um admin;
         User memberUser = UserMock.Create();
 
         await Fixture.Save(context, memberUser);

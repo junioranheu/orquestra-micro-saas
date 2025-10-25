@@ -132,7 +132,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             companyId: 'ID da Empresa',
             company: 'Empresa',
 
-            companyUserRole: 'Tipo de membro',
+            companyUserRole: 'Tipo de colaborador',
             modules: 'Módulos atribuídos'
         };
 

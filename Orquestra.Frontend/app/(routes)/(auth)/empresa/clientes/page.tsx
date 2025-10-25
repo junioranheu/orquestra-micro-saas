@@ -83,7 +83,7 @@ export default function EmpresaClientes() {
             icon: <Icon icon='edit' />
         },
         {
-            label: 'Remover membro',
+            label: 'Remover colaborador',
             function: (e) => handleDisable(e),
             icon: <Icon icon='user-x' />
         }

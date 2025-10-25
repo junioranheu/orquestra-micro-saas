@@ -98,9 +98,9 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
 
         if (!companyUsers || !companyUsers.length) {
             swal({
-                content: 'Nenhum membro foi registrado. Por favor, cadastre pelo menos um membro na sua empresa para prosseguir.',
-                confirmBtnText: 'Cadastrar membro',
-                confirmFunction: () => { router.push(ROUTES.EMPRESA_MEMBROS) },
+                content: 'Nenhum colaborador foi registrado. Por favor, cadastre pelo menos um colaborador na sua empresa para prosseguir.',
+                confirmBtnText: 'Cadastrar colaborador',
+                confirmFunction: () => { router.push(ROUTES.EMPRESA_COLABORADORES) },
                 icon: 'warning'
             });
 
@@ -321,11 +321,11 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
                         <InputMask title='Hora de início' type='time' fieldName='timeStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
                         <InputMask title='Data e hora de encerramento' type='date' fieldName='dateEnd' formData={formData} setFormData={setFormData} isDisabled isObligatory />
                         <InputMask title='Hora de encerramento' type='time' fieldName='timeEnd' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
-                        <Dropdown title='Membros da equipe' options={companyUsersDropDown ?? []} isMultiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
+                        <Dropdown title='Colaboradores da equipe' options={companyUsersDropDown ?? []} isMultiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
 
                         <div className={styles.div}>
-                            <label>Este agendamento é específico a um ou mais membros?</label>
-                            <input type='text' value={formData?.usersIds?.length > 0 ? `Sim, para ${formData?.usersIds?.length} membro${formData?.usersIds?.length > 1 ? 's' : ''}` : 'Não — Liberado para qualquer membro'} readOnly={true} disabled={true} />
+                            <label>Este agendamento é específico a um ou mais colaboradores?</label>
+                            <input type='text' value={formData?.usersIds?.length > 0 ? `Sim, para ${formData?.usersIds?.length} colaborador${formData?.usersIds?.length > 1 ? 'es' : ''}` : 'Não — Liberado para qualquer colaborador'} readOnly={true} disabled={true} />
                         </div>
 
                         <InputMask title='Valor recebido' type='number' fieldName='amountReceived' formData={formData} setFormData={setFormData} isDisabled={!editing} />

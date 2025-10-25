@@ -81,7 +81,7 @@ public sealed class DeleteScheduleTests
     {
         (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
 
-        // Adiciona outro usuário diferente ao schedule (user não está nos membros específicos);
+        // Adiciona outro usuário diferente ao schedule (user não está nos colaboradores específicos);
         User other = UserMock.Create();
         await Fixture.Save(context, other);
 

@@ -16,7 +16,7 @@ const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [
 
 export const MODULES_PERMISSIONS: Record<string, string[]> = {
     [ROUTES.EMPRESA_CLIENTES]: ['*'],
-    [ROUTES.EMPRESA_MEMBROS]: ['*'],
+    [ROUTES.EMPRESA_COLABORADORES]: ['*'],
     [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULES.Scheduling.toString()],
     [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales.toString()]
 };

@@ -92,23 +92,23 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Membros e equipe',
+        topic: 'Colaboradores e equipe',
         description: 'Gerencie os profissionais da equipe e seus níveis de acesso.',
         items: [
             {
-                title: 'Cadastrar novos membros',
-                description: 'No módulo "Membros", clique em "Adicionar" e defina permissões e serviços vinculados.'
+                title: 'Cadastrar novos colaboradores',
+                description: 'No módulo "Colaboradores", clique em "Adicionar" e defina permissões e serviços vinculados.'
             },
             {
                 title: 'Definir agenda de profissionais',
-                description: 'Cada membro pode ter seus horários personalizados no calendário.'
+                description: 'Cada colaborador pode ter seus horários personalizados no calendário.'
             },
             {
                 title: 'Gerenciar permissões de acesso',
                 description: 'Controle quem pode acessar informações financeiras, agendamentos, configurações e outros módulos.'
             },
             {
-                title: 'Apenas um administrador pode gerir os membros?',
+                title: 'Apenas um administrador pode gerir os colaboradores?',
                 description: 'Sim, somente administradores podem realizar alterações na equipe.'
             }
         ]
@@ -157,7 +157,7 @@ export const HELP_TOPICS = [
             },
             {
                 title: 'Quem pode gerenciar os módulos?',
-                description: 'Apenas administradores têm permissão para atribuir ou remover módulos de outros membros da equipe. Isso pode ser feito acessando "Gerenciar empresa" (/empresa/gerenciar) ou pela tela de "Plano e faturas" (/empresa/uso-e-plano).'
+                description: 'Apenas administradores têm permissão para atribuir ou remover módulos de outros colaboradores da equipe. Isso pode ser feito acessando "Gerenciar empresa" (/empresa/gerenciar) ou pela tela de "Plano e faturas" (/empresa/uso-e-plano).'
             },
             {
                 title: 'Posso ativar ou desativar módulos?',

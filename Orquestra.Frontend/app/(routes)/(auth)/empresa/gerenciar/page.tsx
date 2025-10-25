@@ -272,14 +272,14 @@ export default function EmpresaGerenciar() {
 
                                         {
                                             isCurrentMain ? (
-                                                <Tippy content='Gerenciar membros'>
+                                                <Tippy content='Gerenciar colaboradores'>
                                                     <p>
-                                                        <Icon icon='users' size='small' /> <Link href={ROUTES.EMPRESA_MEMBROS}>{company?.companyUsers?.length} membro{company?.companyUsers?.length === 1 ? '' : 's'}</Link>
+                                                        <Icon icon='users' size='small' /> <Link href={ROUTES.EMPRESA_COLABORADORES}>{company?.companyUsers?.length} colaborador{company?.companyUsers?.length === 1 ? '' : 'es'}</Link>
                                                     </p>
                                                 </Tippy>
                                             ) : (
                                                 <p>
-                                                    <Icon icon='users' size='small' /> {company?.companyUsers?.length} membro{company?.companyUsers?.length === 1 ? '' : 's'}
+                                                    <Icon icon='users' size='small' /> {company?.companyUsers?.length} colaborador{company?.companyUsers?.length === 1 ? '' : 'es'}
                                                 </p>
                                             )
                                         }

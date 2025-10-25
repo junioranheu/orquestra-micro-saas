@@ -70,7 +70,7 @@ public sealed class DeleteClientTests
         Client client = ClientMock.Create();
         await Fixture.Save(context, client);
 
-        // Cria o vínculo, mas com papel de Membro (não admin);
+        // Cria o vínculo, mas com papel de Colaborador (não admin);
         CompanyUser companyUser = new()
         {
             CompanyUserId = Guid.NewGuid(),

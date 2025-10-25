@@ -302,7 +302,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                                     !editing ? (
                                         <Fragment>
                                             <Button label='Plano e faturas' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} isStyleSimple={true} />
-                                            <Button label='Membros' handleFunction={() => window.open(ROUTES.EMPRESA_MEMBROS, '_blank')} isStyleSimple={true} />
+                                            <Button label='Colaboradores' handleFunction={() => window.open(ROUTES.EMPRESA_COLABORADORES, '_blank')} isStyleSimple={true} />
                                             <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} />
                                             <Button label='Habilitar edição' handleFunction={() => setEditing(true)} />
                                         </Fragment>

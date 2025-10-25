@@ -1,11 +1,12 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_COMPANY } from '@/app/api/consts/company';
-import { iCompanyInvoice } from '@/app/api/consts/company-invoice';
+import { CONSTS_COMPANY_INVOICE, iCompanyInvoice } from '@/app/api/consts/company-invoice';
 import { CONSTS_UTILITY, iPlanType, iPlanTypeOutput } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
 import Link from 'next/link';
@@ -14,10 +15,9 @@ import styles from './index.module.scss';
 
 interface iProps {
     me: iMe;
-    handlePay: (e: iCompanyInvoice) => Promise<void>;
 }
 
-export default function EmpresaUsoEPlanoTabPlano({ me, handlePay }: iProps) {
+export default function EmpresaUsoEPlanoTabPlano({ me }: iProps) {
 
     const [plans, setPlans] = useState<iPlanTypeOutput | undefined>();
     useApiRequestToSetterOnUrlChange<iPlanTypeOutput>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });
@@ -25,13 +25,13 @@ export default function EmpresaUsoEPlanoTabPlano({ me, handlePay }: iProps) {
     return (
         <section className={styles.main}>
             <CardSimpleWithChildren style={{ backgroundColor: 'var(--cream)' }}>
-                <Plans me={me} plans={plans} handlePay={handlePay} />
+                <Plans me={me} plans={plans} />
             </CardSimpleWithChildren>
         </section>
     )
 }
 
-function Plans({ me, plans, handlePay }: { me: iMe | undefined, plans: iPlanTypeOutput | undefined, handlePay: (e: iCompanyInvoice) => Promise<void> }) {
+function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | undefined }) {
 
     const messageInvoice = 'Ao confirmar, uma nova fatura será gerada automaticamente e o plano atual, caso exista, será substituído.';
 
@@ -66,6 +66,33 @@ function Plans({ me, plans, handlePay }: { me: iMe | undefined, plans: iPlanType
             },
             cancelBtnText: 'Voltar'
         });
+    }
+
+    async function handlePay(e: iCompanyInvoice) {
+        const pendingPayment = 1; // De acordo com o back-end (CompanySituationEnum);
+
+        if (e.companyInvoiceSituation.toString() !== pendingPayment.toString()) {
+            swal({
+                content: 'Apenas faturas <b>pendentes</b> podem ser pagas.',
+                icon: 'warning'
+            });
+
+            return;
+        }
+
+        const schedule = await Fetch.put({ url: `${CONSTS_COMPANY_INVOICE.pay}/${e.companyInvoiceId}` });
+
+        if (schedule) {
+            swal({
+                content: 'Fatura foi paga com sucesso.',
+                confirmFunction: () => window.location.reload(),
+                icon: 'success'
+            });
+
+            return;
+        }
+
+        toast({ content: 'Não foi possível pagar esta fatura. Tente novamente mais tarde.' });
     }
 
     return (

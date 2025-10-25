@@ -63,10 +63,10 @@ export default function Dashboard() {
                     <div className={styles.flex}>
                         <CardSimple
                             img={SvgUserArrow}
-                            title='Membros da equipe'
+                            title='Colaboradores'
                             description='Adicione, gerencie e defina permissões para os profissionais da sua empresa.<br/>Mantenha sua equipe organizada e com os acessos certos.'
                             buttonLabel='Gerenciar equipe'
-                            buttonFunction={() => router.push(ROUTES.EMPRESA_MEMBROS)}
+                            buttonFunction={() => router.push(ROUTES.EMPRESA_COLABORADORES)}
                         />
 
                         <CardSimple

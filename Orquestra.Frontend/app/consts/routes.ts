@@ -19,7 +19,7 @@ const ROUTES = {
     EMPRESA_GERENCIAR: '/empresa/gerenciar',
     EMPRESA_VERIFICADA: '/empresa/verificada',
     EMPRESA_USO_E_PLANO: '/empresa/uso-e-plano',
-    EMPRESA_MEMBROS: '/empresa/membros',
+    EMPRESA_COLABORADORES: '/empresa/colaboradores',
     EMPRESA_CLIENTES: '/empresa/clientes',
     EMPRESA_FINANCEIRO: '/empresa/financeiro',
     EMPRESA_AGENDAMENTOS: '/empresa/agenda',

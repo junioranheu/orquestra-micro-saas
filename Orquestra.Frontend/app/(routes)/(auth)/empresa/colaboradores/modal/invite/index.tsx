@@ -54,7 +54,7 @@ export default function EmpresaMembrosModalInvite({ isModalOpen, setIsModalOpen,
 
         if (output) {
             swal({
-                content: `Um convite foi enviado para o e-mail <b>${formData.inviteEmail}</b>. Esperamos que aceitem o convite o mais rápido possível para que o convidado se torne um membro da sua empresa no ${SYSTEM.NAME}.`,
+                content: `Um convite foi enviado para o e-mail <b>${formData.inviteEmail}</b>. Esperamos que aceitem o convite o mais rápido possível para que o convidado se torne um colaborador da sua empresa no ${SYSTEM.NAME}.`,
                 icon: 'success'
             });
 
@@ -83,7 +83,7 @@ export default function EmpresaMembrosModalInvite({ isModalOpen, setIsModalOpen,
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            Convidar novo membro
+                            Convidar novo colaborador
                         </h1>
                     </div>
 
@@ -100,7 +100,7 @@ export default function EmpresaMembrosModalInvite({ isModalOpen, setIsModalOpen,
 
                 <main className={styles.modalContent}>
                     <div className='modal-layout-flex'>
-                        <InputMask title='E-mail do novo membro da equipe a ser convidado' fieldName='inviteEmail' formData={formData} setFormData={setFormData} isObligatory={true} />
+                        <InputMask title='E-mail do novo colaborador da equipe a ser convidado' fieldName='inviteEmail' formData={formData} setFormData={setFormData} isObligatory={true} />
                     </div>
                 </main>
 

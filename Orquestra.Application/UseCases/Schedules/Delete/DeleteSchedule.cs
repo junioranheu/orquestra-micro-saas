@@ -34,10 +34,10 @@ public sealed class DeleteSchedule(ScheduleBaseDependencies deps) : ScheduleBase
 
         Guid[]? specificMember = schedule.UsersIds;
 
-        bool hasPermission = 
-             // (specificMember is null || specificMember?.Length == 0) || // O agendamento não foi definido para um membro em específico;
+        bool hasPermission =
+             // (specificMember is null || specificMember?.Length == 0) || // O agendamento não foi definido para um colaborador em específico;
              (user.CompanyUserRole == CompanyUserRoleEnum.Administrator) || // O usuário é um administrador da empresa;
-             ((specificMember is not null && specificMember?.Length > 0) && specificMember.Contains(user.UserId)); // O usuário, de fato, tem acesso porque foi adicionado como um membro específico;
+             ((specificMember is not null && specificMember?.Length > 0) && specificMember.Contains(user.UserId)); // O usuário, de fato, tem acesso porque foi adicionado como um colaborador específico;
 
         if (!hasPermission)
         {

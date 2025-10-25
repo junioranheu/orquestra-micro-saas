@@ -6,7 +6,7 @@ import UpNav from '@/app/components/navbar/up-nav';
 import WhatsappButton from '@/app/components/whatsapp/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import { HANKEN } from '@/app/fonts/fonts';
+import { INTER } from '@/app/fonts/fonts';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import '@/app/styles/globals.scss';
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <html lang='pt-BR'>
             <Head />
 
-            <body className={HANKEN.className}>
+            <body className={INTER.className}>
                 <Toaster expand={false} closeButton={false} />
 
                 {

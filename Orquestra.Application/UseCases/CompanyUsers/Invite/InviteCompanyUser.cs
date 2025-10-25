@@ -91,7 +91,7 @@ public sealed class InviteCompanyUser(
 
         if (alreadyIsMember)
         {
-            throw new InvalidOperationException($"Este e-mail já faz parte dos membros desta empresa.");
+            throw new InvalidOperationException($"Este e-mail já faz parte dos colaboradores desta empresa.");
         }
 
         CompanyUserInput input = new()

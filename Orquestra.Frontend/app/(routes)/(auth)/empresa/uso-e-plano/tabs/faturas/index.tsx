@@ -12,10 +12,9 @@ import styles from './index.module.scss';
 
 interface iProps {
     me: iMe;
-    handlePay: (e: iCompanyInvoice) => Promise<void>;
 }
 
-export default function EmpresaUsoEPlanoTabFaturas({ me, handlePay }: iProps) {
+export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [invoices, setInvoices] = useState<iCompanyInvoicePaginated>();
@@ -81,11 +80,6 @@ export default function EmpresaUsoEPlanoTabFaturas({ me, handlePay }: iProps) {
             label: 'Visualizar detalhes',
             function: (e) => handleCheck(e),
             icon: <Icon icon='search' />
-        },
-        {
-            label: 'Pagar fatura',
-            function: (e) => handlePay(e),
-            icon: <Icon icon='dollar-sign' />
         }
     ] as iTableManagingOptions[];
 

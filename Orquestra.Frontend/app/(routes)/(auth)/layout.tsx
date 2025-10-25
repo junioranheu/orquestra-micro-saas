@@ -8,7 +8,7 @@ import Splash from '@/app/components/splash';
 import SYSTEM from '@/app/consts/system';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
-import { HANKEN } from '@/app/fonts/fonts';
+import { INTER } from '@/app/fonts/fonts';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                 <GlobalContextProvider>
                     <Head />
 
-                    <body className={`body ${HANKEN.className}`}>
+                    <body className={`body ${INTER.className}`}>
                         <Toaster expand={false} closeButton={false} />
                         <Loading typeMessage='normal' />
                         <UpNav />

@@ -92,7 +92,7 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
 
         if (output) {
             swal({
-                content: 'Membro da equipe atualizado com sucesso.',
+                content: 'Colaborador atualizado com sucesso.',
                 confirmFunction: () => setTrigger(new Date()),
                 icon: 'success'
             });
@@ -123,7 +123,7 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            <ContentLoaderText text={(`Editar membro: ${user?.user?.fullName}`)} />
+                            <ContentLoaderText text={(`Editar colaborador: ${user?.user?.fullName}`)} />
                         </h1>
                     </div>
 
@@ -140,7 +140,7 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
 
                 <main className={styles.modalContent}>
                     <div className='modal-layout-flex'>
-                        <Dropdown title='Tipo de membro' options={companyUserRoleEnum ?? []} selectedOption={companyUserRoleEnum?.find(x => x.label === formData.companyUserRole) ?? undefined} setSelectedOption={setCompanyUserRoleOption} isDisabled={!editing} />
+                        <Dropdown title='Tipo de colaborador' options={companyUserRoleEnum ?? []} selectedOption={companyUserRoleEnum?.find(x => x.label === formData.companyUserRole) ?? undefined} setSelectedOption={setCompanyUserRoleOption} isDisabled={!editing} />
                         <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={moduleEnum?.filter(x => formData.userModules?.map(String).includes(String(x.value))) ?? []} setSelectedOption={setModuleOption} isDisabled={!editing} isMultiple={true} />
                     </div>
                 </main>

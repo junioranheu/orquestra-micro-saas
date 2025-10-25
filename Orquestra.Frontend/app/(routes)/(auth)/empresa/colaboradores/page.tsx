@@ -20,7 +20,7 @@ import styles from './page.module.scss';
 
 export default function EmpresaMembros() {
 
-    useTitle('Membros da empresa');
+    useTitle('Colaboradores da empresa');
     const router = useRouter();
     const me = useApiGetMe({});
 
@@ -103,12 +103,12 @@ export default function EmpresaMembros() {
 
     const managingOptions = [
         {
-            label: 'Editar membro',
+            label: 'Editar colaborador',
             function: (e) => handleOpenModalEdit(e),
             icon: <Icon icon='edit' />
         },
         {
-            label: 'Remover membro',
+            label: 'Remover colaborador',
             function: (e) => handleDisable(e),
             icon: <Icon icon='user-x' />
         }
@@ -120,7 +120,7 @@ export default function EmpresaMembros() {
 
     function handleOpenModalEdit(user: iCompanyUser | undefined) {
         if (!me?.isUserAdmOfCurrentMainCompany) {
-            toast({ content: 'Apenas os administradores da empresa podem realizar modificações nos membros.' });
+            toast({ content: 'Apenas os administradores da empresa podem realizar modificações nos colaboradores.' });
             return;
         }
 
@@ -132,7 +132,7 @@ export default function EmpresaMembros() {
         const isSameUser = member.userId === me?.userId;
 
         swal({
-            content: isSameUser ? 'Você tem certeza que deseja sair desta empresa?' : 'Você tem certeza que deseja remover este membro?',
+            content: isSameUser ? 'Você tem certeza que deseja sair desta empresa?' : 'Você tem certeza que deseja remover este colaborador?',
             confirmBtnText: isSameUser ? 'Sim, desejo sair' : 'Sim, desejo remover',
             confirmFunction: async () => {
                 const input = { companyId: me?.currentMainCompany?.companyId, userId: member.userId };
@@ -140,7 +140,7 @@ export default function EmpresaMembros() {
 
                 if (schedule) {
                     if (!isSameUser) {
-                        toast({ content: 'Membro removido da equipe com sucesso.' });
+                        toast({ content: 'Colaborador removido da equipe com sucesso.' });
                     }
 
                     if (isSameUser) {
@@ -159,7 +159,7 @@ export default function EmpresaMembros() {
                     return;
                 }
 
-                toast({ content: isSameUser ? 'Não foi possível sair desta empresa. Tente novamente mais tarde.' : 'Não foi possível remover este membro da equipe. Tente novamente mais tarde.' });
+                toast({ content: isSameUser ? 'Não foi possível sair desta empresa. Tente novamente mais tarde.' : 'Não foi possível remover este colaborador da equipe. Tente novamente mais tarde.' });
             },
             cancelBtnText: 'Voltar',
             icon: 'question'
@@ -177,11 +177,11 @@ export default function EmpresaMembros() {
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={members?.count}
 
-                    title='Membros cadastrados'
+                    title='Colaboradores cadastrados'
                     managingOptions={managingOptions}
 
                     {... (me?.isUserAdmOfCurrentMainCompany ? {
-                        btn_add_label: 'Convidar novo membro',
+                        btn_add_label: 'Convidar novo colaborador',
                         btn_add_function: () => setIsModalInviteOpen(true)
                     } : {})}
 
