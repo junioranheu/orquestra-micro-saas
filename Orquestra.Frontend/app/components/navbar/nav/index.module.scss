@@ -56,6 +56,13 @@
                 }
             }
         }
+
+        .effect {
+            // background-color: orange !important;
+            background-color: var(--contrast-light);
+            color: var(--contrast);
+            cursor: pointer;
+        }
     }
 }
 

@@ -53,7 +53,7 @@ export default function Navbar() {
 
                     <div className={`${styles.right} ${SYSTEM.ANIMATE}`}>
                         <Tippy content='Gerencie suas empresas ou cadastre uma nova'>
-                            <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}>
+                            <span className={me?.currentMainCompany ? '' : styles.effect} onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}>
                                 {
                                     me?.currentMainCompany ? (
                                         <Fragment>
