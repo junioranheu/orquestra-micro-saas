@@ -74,7 +74,6 @@ export default function LayoutTemplateOne({
                     title && (
                         <div className={styles.divTitle}>
                             <Mascot
-                                width={52}
                                 isCentralized={false}
                                 tippyContent={
                                     <div>

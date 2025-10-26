@@ -18,7 +18,7 @@ export default function UsuarioConfiguracoes() {
     return (
         <section className={styles.main}>
             <Tabs
-                tabs={[`Sei lá ${me?.userName}`, 'Personalização']}
+                tabs={[`Sei lá, ${me?.userName}`, 'Personalização']}
                 contents={[
                     <UsuarioConfiguracoesTabEtc me={me} key={1} />,
                     <UsuarioConfiguracoesTabPersonalizacao me={me} key={2} />,

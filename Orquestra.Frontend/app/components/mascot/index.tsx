@@ -17,7 +17,7 @@ interface iProps {
 }
 
 export default function Mascot({
-    width = 64,
+    width = 52,
     isCentralized = true,
     tippyContent,
     tippyPlacement = 'top',

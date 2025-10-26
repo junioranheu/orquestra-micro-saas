@@ -48,7 +48,6 @@ export default function Dashboard() {
                 <ContentLoaderText text={`Olá, ${handleGetFirstName(auth?.fullName)}`} />
 
                 <Mascot
-                    width={52}
                     isCentralized={false}
                     tippyContent={
                         <div>

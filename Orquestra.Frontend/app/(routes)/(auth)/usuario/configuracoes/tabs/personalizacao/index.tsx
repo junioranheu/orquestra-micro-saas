@@ -1,6 +1,8 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
 import FontScaler from '@/app/components/font-scaler';
+import Button from '@/app/components/input/button';
+import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
@@ -37,11 +39,28 @@ function MascotToggle() {
 
     return (
         <div className={styles.container}>
-            <p>O mascote {SYSTEM.MASCOT} está <strong>{showMascot ? 'ativo' : 'desligado'}</strong>.</p>
+            <p>O mascote {SYSTEM.MASCOT} está <strong>{showMascot ? 'ativo' : 'desativado'}</strong>.</p>
 
-            <button onClick={handleToggleMascot}>
-                {showMascot ? 'Desligar' : 'Ligar'} mascote
-            </button>
+            <Button
+                label={showMascot ? 'Desativar mascote' : 'Ativar mascote'}
+                handleFunction={() => handleToggleMascot()}
+            />
+
+            {
+                showMascot && (
+                    <Mascot
+                        isCentralized={false}
+                        tippyContent={
+                            <div>
+                                Olá, eu sou o {SYSTEM.MASCOT}! 💚
+                            </div>
+                        }
+                        tippyPlacement='right'
+                        flipPeriodic={true}
+                    />
+                )
+            }
         </div>
+
     )
 }

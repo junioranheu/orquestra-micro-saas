@@ -326,7 +326,6 @@ export default function Ajuda() {
                     {
                         showMascot ? (
                             <Mascot
-                                width={52}
                                 isCentralized={false}
                                 tippyContent={
                                     <div>
