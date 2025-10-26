@@ -4,7 +4,7 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
 import styles from './page.module.scss';
 import EmpresaUsoEPlanoTabFaturas from './tabs/faturas';
-import EmpresaUsoEPlanoTabPlano from './tabs/plano';
+import EmpresaUsoEPlanoTabPlanos from './tabs/planos';
 
 export default function EmpresaUsoEPlano() {
 
@@ -20,7 +20,7 @@ export default function EmpresaUsoEPlano() {
             <Tabs
                 tabs={['Planos', 'Histórico de faturas']}
                 contents={[
-                    <EmpresaUsoEPlanoTabPlano me={me} key={1} />,
+                    <EmpresaUsoEPlanoTabPlanos me={me} key={1} />,
                     <EmpresaUsoEPlanoTabFaturas me={me} key={2} />
                 ]}
                 isBig={true}

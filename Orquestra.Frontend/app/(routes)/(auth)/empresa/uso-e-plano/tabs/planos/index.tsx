@@ -18,7 +18,7 @@ interface iProps {
     me: iMe;
 }
 
-export default function EmpresaUsoEPlanoTabPlano({ me }: iProps) {
+export default function EmpresaUsoEPlanoTabPlanos({ me }: iProps) {
 
     const [plans, setPlans] = useState<iPlanTypeOutput | undefined>();
     useApiRequestToSetterOnUrlChange<iPlanTypeOutput>({ apiUrlRequest: CONSTS_UTILITY.getPlanType, setter: setPlans });

@@ -1,6 +1,8 @@
 .main {
+    // background-color: orange !important;
     display: flex;
-    width: fit-content;
+    // width: fit-content;
+    width: 100%;
     margin: auto;
     margin-top: 1rem;
 
@@ -19,7 +21,7 @@
 
             .title {
                 font-size: 2.5rem;
-                font-weight: 900;
+                font-weight: 800;
                 margin-bottom: 0.5rem;
                 color: #111827;
             }
@@ -34,6 +36,7 @@
         }
 
         .grid {
+            // background-color: tomato;
             display: grid;
             gap: 1.25rem;
             grid-template-columns: 1fr;
