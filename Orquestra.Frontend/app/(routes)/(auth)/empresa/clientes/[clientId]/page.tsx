@@ -6,6 +6,7 @@ import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
+import TemplatePageHeader from '@/app/components/template/page-header';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { handleGuessGender } from '@/app/functions/get.guessGender';
@@ -54,10 +55,12 @@ export default function ClientProfile() {
             const clientId = query?.toString();
 
             const client = await Fetch.get({ url: `${CONSTS_CLIENT.get}?clientId=${clientId}` }) as iClient;
-            setClient(client);
-
             const schedules = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByClientId}?companyId=${client.companyId}&clientId=${clientId}` }) as iSchedule[];
-            setSchedules(schedules);
+
+            setTimeout(() => {
+                setClient(client);
+                setSchedules(schedules);
+            }, 1000);
         }
 
         handleFetch();
@@ -76,7 +79,9 @@ export default function ClientProfile() {
     }
 
     if (!client) {
-        return;
+        return (
+            <TemplatePageHeader title='Carregando informações do cliente...' isLoading={true}></TemplatePageHeader>
+        )
     }
 
     return (

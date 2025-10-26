@@ -3,6 +3,8 @@ import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
+import styles from '@/app/components/modal/generic/index.module.scss';
+import Tags from '@/app/components/tags';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -57,32 +59,55 @@ export default function EmpresaMembrosModalFilters({
             isOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             onRequestClose={() => setIsModalOpen(false)}
-            showCloseButton={true}
-            title='Filtre seus colaboradores'
-            overlayColor={0.5}
+            showCloseButton={false}
             allowCloseOutsideClick={false}
-            style={{ width: '50rem' }}
+            overlayColor={0.5}
+            style={{ width: '50rem', padding: 0, background: 'transparent' }}
         >
-            <div className='modal-layout-flex'>
-                <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
-                <Dropdown title='Tipo de colaborador' options={companyUserRoleEnum ?? []} selectedOption={modalFilterFormData.companyUserRole ?? undefined} setSelectedOption={setCompanyUserRoleOption} />
-                {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
-                <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={modalFilterFormData.modules ?? undefined} setSelectedOption={setModuleOption} />
+            <div className={styles.modalCard}>
+                <header className={styles.modalHeader}>
+                    <div className={styles.modalHeaderLeft}>
+                        <h1 className={styles.inputTitle}>
+                            Filtre seus clientes
+                        </h1>
+                    </div>
 
-                <Button
-                    label='Limpar filtros'
-                    handleFunction={() => handleClearFormData(setModalFilterFormData)}
-                    isStyleSimple={true}
-                    style={{ fontSize: '0.75rem' }}
-                />
+                    <div className={styles.modalHeaderRight}>
+                        <div className={styles.metaRow}>
+                            <Tags
+                                tags={[
+                                    { label: '✖', color: 'transparent', handleFunction: () => setIsModalOpen(false), title: 'Fechar' }
+                                ]}
+                            />
+                        </div>
+                    </div>
+                </header>
 
-                <Button
-                    label='Filtrar'
-                    handleFunction={() => handleSubmit()}
-                    style={{ fontSize: '0.75rem' }}
-                />
+                <main className={styles.modalContent}>
+                    <div className={styles.grid}>
+                        <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+                        <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+                        {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
+                        <Dropdown title='Tipo de colaborador' options={companyUserRoleEnum ?? []} selectedOption={modalFilterFormData.companyUserRole ?? undefined} setSelectedOption={setCompanyUserRoleOption} />
+                        {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
+                        <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={modalFilterFormData.modules ?? undefined} setSelectedOption={setModuleOption} />
+                    </div>
+                </main>
+
+                <footer className={styles.modalFooter}>
+                    <Button
+                        label='Limpar filtros'
+                        handleFunction={() => handleClearFormData(setModalFilterFormData)}
+                        isStyleSimple={true}
+                        style={{ fontSize: '0.75rem' }}
+                    />
+
+                    <Button
+                        label='Filtrar'
+                        handleFunction={() => handleSubmit()}
+                        style={{ fontSize: '0.75rem' }}
+                    />
+                </footer>
             </div>
         </ModalGeneric>
     )

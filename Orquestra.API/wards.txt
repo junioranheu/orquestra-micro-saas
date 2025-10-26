@@ -11,8 +11,3 @@ Criar front para essa parada;
 
 ⦁	Notificações (?):
 Desenvolver feature de notificação;
-
-⦁	AEA:
-Criar uma logo e .ico;
-No dashboard principal, adicionar as próximas consultas, pra facilitar a visualização do usuário;
-Deixar o TAB do mesmo tamanho (fonte e TUDO) que o novo placeholder;
