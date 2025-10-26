@@ -25,6 +25,122 @@
     }
 }
 
+.dailyAgenda {
+    background: #ffffff;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-light);
+    padding: 1.5rem;
+    font-family: inherit;
+
+    .title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0 0 20px 0;
+    }
+
+    .section {
+        margin-bottom: 24px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .sectionTitle {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7280;
+            margin: 0 0 12px 0;
+        }
+    }
+
+    .scheduleItem {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border-radius: var(--border-radius);
+        margin-bottom: 8px;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: #f9fafb;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &.active {
+            background-color: #d7fec8;
+
+            &:hover {
+                background-color: #ceecc2;
+            }
+
+            .avatar {
+                background-color: var(--main);
+                color: #ffffff;
+            }
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .info {
+            flex: 1;
+            min-width: 0;
+
+            .name {
+                font-size: 15px;
+                font-weight: 500;
+                color: #1a1a1a;
+                margin-bottom: 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .service {
+                font-size: 13px;
+                color: #6b7280;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .time {
+            font-size: 13px;
+            color: #6b7280;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+    }
+
+    .empty {
+        padding: 32px 16px;
+        text-align: center;
+
+        p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin: 0;
+        }
+    }
+}
+
 @media (max-width: 1281px) {
     .main {
         // background-color: orange;

@@ -4,6 +4,7 @@ export const DATE_STYLE = {
     DIA_MES_ANO: 'DIA_MES_ANO',
     DETALHADO: 'DETALHADO',
     DETALHADO_SEM_SEGUNDOS: 'DETALHADO_SEM_SEGUNDOS',
+    DETALHADO_APENAS_REFERENCIA_DIA: 'DETALHADO_APENAS_REFERENCIA_DIA',
     MES_EXTENSO_E_ANO: 'MES_EXTENSO_E_ANO',
     DIA_DA_SEMANA_E_DIA_DO_MES: 'DIA_DA_SEMANA_E_DIA_DO_MES',
     DIA_DA_SEMANA: 'DIA_DA_SEMANA',
@@ -61,6 +62,22 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
                 } else {
                     dateFormatted = dataObj.toLocaleTimeString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: !isBr });
                 }
+                break;
+
+            case DATE_STYLE.DETALHADO_APENAS_REFERENCIA_DIA:
+                const diffDays3 = handleCheckDiffInDays(new Date(), dataObj);
+                // console.log(diffDays3);
+
+                if (diffDays3 === 0) {
+                    dateFormatted = `${today}`;
+                } else if (diffDays3 === 1) {
+                    dateFormatted = `${yesterday}`;
+                } else if (diffDays3 === -1) {
+                    dateFormatted = `${tomorrow}`;
+                } else {
+                    dateFormatted = dataObj.toLocaleTimeString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: !isBr });
+                }
+
                 break;
 
             case DATE_STYLE.MES_EXTENSO_E_ANO:

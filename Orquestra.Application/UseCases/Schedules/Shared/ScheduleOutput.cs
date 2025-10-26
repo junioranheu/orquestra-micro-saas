@@ -11,11 +11,11 @@ public sealed class ScheduleOutput
 
     public DateTime DateStart { get; set; }
 
-    public string TimeStart => DateStart.ToString("HH:mm");
+    public string TimeStart => DateStart.AddHours(-3).ToString("HH:mm");
 
     public DateTime DateEnd { get; set; }
 
-    public string TimeEnd => DateEnd.ToString("HH:mm");
+    public string TimeEnd => DateEnd.AddHours(-3).ToString("HH:mm");
 
     public PaymentTypeEnum PaymentType { get; set; }
 

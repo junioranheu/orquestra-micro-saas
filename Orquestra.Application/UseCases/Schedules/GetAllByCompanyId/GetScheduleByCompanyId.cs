@@ -28,13 +28,10 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
         {
             // Ontem, hoje e amanhã, apenas;
             DateTime today = GetDate();
-            DateTime yesterday = today.AddDays(-1);
-            DateTime tomorrow = today.AddDays(1);
+            DateTime yesterday = today.Date.AddDays(-1);
+            DateTime tomorrow = today.Date.AddDays(2).AddTicks(-1);
 
-            DateTime start = yesterday;
-            DateTime end = tomorrow.AddDays(1).AddTicks(-1);
-
-            query = query.Where(x => x.DateStart >= start && x.DateStart <= end);
+            query = query.Where(x => x.DateStart >= yesterday && x.DateStart <= tomorrow);
         }
         else if ((year.HasValue && year.Value > 0) && (month.HasValue && month.Value > 0)) // Se foi passado year e month, deve pegar o intervalo de: mês anterior, mês alvo e mês posterior;
         {
@@ -58,7 +55,7 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
             query = query.Where(x => x.DateStart.Year == year);
         }
 
-        List<Schedule> result = await query.ToListAsync();
+        List<Schedule> result = await query.OrderBy(x => x.DateStart).ToListAsync();
 
         if (result is null || result.Count == 0)
         {

@@ -204,10 +204,10 @@ public sealed class GetAllByCompanyIdTests
         await Fixture.Save(context, client);
 
         DateTime today = GetDate();
-        DateTime yesterday = today.AddDays(-1);
-        DateTime tomorrow = today.AddDays(1);
-        DateTime twoDaysAgo = today.AddDays(-2);
-        DateTime twoDaysLater = today.AddDays(2);
+        DateTime yesterday = today.Date.AddDays(-1);
+        DateTime tomorrow = today.Date.AddDays(1);
+        DateTime twoDaysAgo = today.Date.AddDays(-2);
+        DateTime twoDaysLater = today.Date.AddDays(2);
 
         // Dentro do range;
         Schedule schedYesterday = ScheduleMock.Create(client.ClientId, company.CompanyId);
