@@ -164,7 +164,7 @@ export function CookieDefault({ extenseButtonDescription = true }: iProps) {
             text={`A plataforma ${SYSTEM.NAME} utiliza cookies para oferecer uma melhor experiência. Ao continuar navegando, você concorda com o uso de cookies.`}
             cookieSecurity={true}
             hideOnScrollDown={false}
-            rejectButtonText={extenseButtonDescription ? 'Aceitar cookies obrigatórios' : 'Rejeitar cookies'}
+            rejectButtonText={extenseButtonDescription ? 'Fechar' : 'Rejeitar cookies'}
             acceptButtonText={extenseButtonDescription ? 'Aceitar todos os cookies' : 'Aceitar cookies'}
             onAccept={() => null}
             onReject={() => null}
