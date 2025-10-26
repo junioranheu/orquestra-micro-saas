@@ -8,6 +8,7 @@ import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { useState } from 'react';
+import styles from './index.module.scss';
 
 interface iProps {
     me: iMe;
@@ -126,7 +127,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
     }
 
     return (
-        <section>
+        <section className={styles.main}>
             <TableGeneric
                 idPropName='companyInvoiceId'
                 columns={columns}

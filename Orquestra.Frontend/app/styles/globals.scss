@@ -29,7 +29,8 @@
     // display: none !important;
     // background-color: orange !important;
     height: 100vh;
-    overflow-x: hidden;
+    // overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: hidden;
 
     background-color: var(--white);
@@ -63,6 +64,7 @@
                 // background: orange !important;
                 padding: 0rem 2rem 2rem 2rem;
                 overflow-y: auto;
+                overflow-x: auto;
 
                 // Gambiarra monstra para exibir tudo;
                 height: 92%;
