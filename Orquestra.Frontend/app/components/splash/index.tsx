@@ -38,7 +38,7 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
                 }
 
                 <div className={`${styles.gif}`}>
-                    <LoadingGif width={96} />
+                    <LoadingGif width={96} flip={true} />
                 </div>
             </div>
         </section>

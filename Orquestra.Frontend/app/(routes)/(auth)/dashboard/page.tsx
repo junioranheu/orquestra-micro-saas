@@ -15,6 +15,7 @@ import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
@@ -56,6 +57,8 @@ export default function Dashboard() {
                         </div>
                     }
                     tippyPlacement='right'
+                    flipPeriodic={true}
+                    flipInterval={handleGetRandomNumber(5000, 15000)}
                 />
             </span>
 
