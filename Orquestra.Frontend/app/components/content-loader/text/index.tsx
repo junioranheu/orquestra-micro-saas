@@ -27,8 +27,6 @@ export default function ContentLoaderText({ text, delay = 0 }: iProps) {
     }
 
     return (
-        <span className={styles.fadeIn}>
-            {text}
-        </span>
+        <span className={styles.fadeIn} dangerouslySetInnerHTML={{ __html: text }} />
     )
 }

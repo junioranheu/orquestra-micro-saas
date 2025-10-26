@@ -246,9 +246,11 @@ export default function TableGeneric({
             <div className={styles.container}>
                 <div className={styles.top}>
                     <div className={styles.left}>
-                        <span className={styles.title}>
-                            <ContentLoaderText text={(title ? `${title} (${totalRowsCount})` : '')} delay={150} />
-                        </span>
+                        <Tippy content={`${totalRowsCount} registro${totalRowsCount > 1 ? 's' : ''}`}>
+                            <span className={styles.title}>
+                                <ContentLoaderText text={title ? title : ''} delay={150} />
+                            </span>
+                        </Tippy>
                     </div>
 
                     <div className={styles.right}>
