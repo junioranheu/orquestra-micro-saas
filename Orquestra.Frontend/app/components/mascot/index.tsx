@@ -14,6 +14,7 @@ interface iProps {
     flipPeriodic?: boolean;   // Espelha periodicamente;
     flipInterval?: number;    // Intervalo da inversão periódica;
     absolutePosition?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+    hasAnimateDelay?: boolean;
 }
 
 export default function Mascot({
@@ -24,7 +25,8 @@ export default function Mascot({
     flip = false,
     flipPeriodic = false,
     flipInterval = 3000,
-    absolutePosition
+    absolutePosition,
+    hasAnimateDelay = true
 }: iProps) {
 
     const [flipped, setFlipped] = useState<boolean>(flip);
@@ -66,7 +68,7 @@ export default function Mascot({
     return (
         <Tippy content={tippyContent} placement={tippyPlacement} interactive={true}>
             <div
-                className={`${styles.mascot} ${SYSTEM.ANIMATE_DELAY_1s}`}
+                className={`${styles.mascot} ${hasAnimateDelay && SYSTEM.ANIMATE_DELAY_1s}`}
                 style={{
                     margin: isCentralized ? 'auto' : 'none',
                     transform: flipped ? 'scaleX(-1)' : 'scaleX(1)',

@@ -37,8 +37,8 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
                     ))
                 }
 
-                <div className={`${styles.gif}`}>
-                    <Mascot width={96} flip={true} />
+                <div className={styles.gif}>
+                    <Mascot width={96} flip={true} hasAnimateDelay={false} />
                 </div>
             </div>
         </section>

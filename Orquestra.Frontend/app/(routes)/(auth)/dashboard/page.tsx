@@ -105,7 +105,7 @@ export default function Dashboard() {
                             img={SvgUserEnvelope}
                             title='Clientes'
                             description='Acompanhe e gerencie os dados dos seus clientes em um só lugar.<br/>Visualize histórico de atendimentos, contatos e informações importantes com facilidade.'
-                            buttonLabel='Ver clientes'
+                            buttonLabel='Gerenciar clientes'
                             buttonFunction={() => router.push(ROUTES.EMPRESA_CLIENTES)}
                         />
                     </div>

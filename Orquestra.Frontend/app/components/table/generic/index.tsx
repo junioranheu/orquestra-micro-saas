@@ -194,13 +194,13 @@ export default function TableGeneric({
     if (managingOptions?.length > 0) {
         // @ts-expect-error tipo propositalmente flexível;
         enhancedColumns.push({
-            title: (<span>Ações</span>),
+            title: (<span style={{ display: 'block', textAlign: 'center', width: '100%' }}>Ações</span>),
             key: 'actions',
             width: 100,
             render: (record: any) => (
                 <div className={styles.column_actions}>
-                    {managingOptions.map((option, index) => (
-                        option.isButton ? (
+                    {
+                        managingOptions.map((option, index) => (option.isButton ? (
                             <Button
                                 key={index}
                                 label={option.label}
@@ -212,13 +212,11 @@ export default function TableGeneric({
                         ) : (
                             <Tippy key={index} content={option.label}>
                                 <span onClick={() => option.function(record)}>
-                                    {isValidElement(option.icon)
-                                        ? option.icon
-                                        : <Image src={option.icon} alt={option.label} />}
+                                    {isValidElement(option.icon) ? option.icon : <Image src={option.icon} alt={option.label} />}
                                 </span>
                             </Tippy>
-                        )
-                    ))}
+                        )))
+                    }
                 </div>
             )
         });
