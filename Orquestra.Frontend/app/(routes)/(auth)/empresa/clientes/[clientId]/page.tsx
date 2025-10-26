@@ -29,10 +29,6 @@ interface iContactInfoProps {
     address: string;
 }
 
-interface iInternalNotesProps {
-    notes: string;
-}
-
 interface iAppointmentHistoryProps {
     schedules: iSchedule[];
 }
@@ -93,13 +89,16 @@ export default function ClientProfile() {
                     <div className={styles.clientProfile__grid}>
                         <div className={styles.clientProfile__sidebar}>
                             <ContactInfo
-                                email={client?.email}
-                                phone={client?.phone ?? ''}
-                                birthDate={handleFormatDate(client?.dateOfBirth ? new Date(new Date(client.dateOfBirth).getTime() + 3 * 60 * 60 * 1000) : '-', DATE_STYLE.DIA_MES_ANO)}
-                                address={client?.address ?? ''}
+                                email={client?.email ? client?.email : '-'}
+                                phone={client?.phone ? client?.phone : '-'}
+                                birthDate={client?.dateOfBirth ? handleFormatDate(client?.dateOfBirth ? new Date(new Date(client.dateOfBirth).getTime() + 3 * 60 * 60 * 1000) : '-', DATE_STYLE.DIA_MES_ANO) : '-'}
+                                address={client?.address ? client?.address : '-'}
                             />
 
-                            <InternalNotes notes={client?.notes ?? ''} />
+                            <div className={`${styles.card} ${styles.internalNotes}`}>
+                                <h2 className={styles.card__title}>Notas internas</h2>
+                                <p className={styles.internalNotes__text}>{client?.notes ? client?.notes : 'Nenhuma anotação no momento.'}</p>
+                            </div>
                         </div>
 
                         <div className={styles.clientProfile__main}>
@@ -201,16 +200,6 @@ function ContactInfo({ email, phone, birthDate, address }: iContactInfoProps) {
     )
 }
 
-// Componente de Notas Internas
-function InternalNotes({ notes }: iInternalNotesProps) {
-    return (
-        <div className={`${styles.card} ${styles.internalNotes}`}>
-            <h2 className={styles.card__title}>Notas internas</h2>
-            <p className={styles.internalNotes__text}>{notes ? notes : 'Nenhuma anotação no momento.'}</p>
-        </div>
-    )
-}
-
 // Componente de Histórico de Agendamentos
 function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 
@@ -222,25 +211,35 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 
             <div className={styles.appointmentHistory__list}>
                 {
-                    schedules?.map((schedule, index) => (
+                    schedules?.length ? schedules.map((schedule, index) => (
                         <div key={index} className={`${styles.appointmentItem} ${styles[`appointmentItem--${schedule.scheduleStatus}`]}`}>
                             <div className={styles.appointmentItem__content}>
                                 <div className={styles.appointmentItem__info}>
-                                    <h3 className={styles.appointmentItem__title}>{schedule.customTitle ? schedule.customTitle : `Agendamento para ${handleFormatDate(schedule.dateStart, DATE_STYLE.DIA_MES_ANO)}`}</h3>
+                                    <h3 className={styles.appointmentItem__title}>
+                                        {schedule.customTitle ? schedule.customTitle : `Agendamento para ${handleFormatDate(schedule.dateStart, DATE_STYLE.DIA_MES_ANO)}`}
+                                    </h3>
+
                                     <p className={styles.appointmentItem__datetime}>
                                         {handleFormatDate(schedule.dateStart, DATE_STYLE.DETALHADO)}
                                     </p>
                                 </div>
 
                                 <div className={styles.appointmentItem__meta}>
-                                    <span className={styles.appointmentItem__price}>R$ {schedule.amountReceived ?? 0}</span>
+                                    <span className={styles.appointmentItem__price}>
+                                        R$ {schedule.amountReceived ?? 0}
+                                    </span>
+
                                     <span className={`${styles.appointmentItem__status} ${styles[`appointmentItem__status--${schedule.scheduleStatus}`]}`}>
                                         {scheduleStatusEnum?.find(x => x.value === schedule.scheduleStatus)?.label?.toString() ?? ''}
                                     </span>
                                 </div>
                             </div>
                         </div>
-                    ))
+                    )) : (
+                        <p className={styles.appointmentHistory__empty}>
+                            Nenhum agendamento encontrado.
+                        </p>
+                    )
                 }
             </div>
         </div>

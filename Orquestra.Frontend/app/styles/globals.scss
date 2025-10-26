@@ -42,10 +42,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
 
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+    // user-select: none;
+    // -webkit-user-select: none;
+    // -moz-user-select: none;
+    // -ms-user-select: none;
 
     .auth {
         // background-color: purple !important;
@@ -124,7 +124,7 @@ svg {
 }
 
 ::selection {
-    background: var(--main-dark);
+    background: var(--contrast);
     color: var(--white);
 }
 
