@@ -2,8 +2,8 @@ import Icon from '@/app/components/icon';
 import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { PACIFICO } from '@/app/fonts/fonts';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
-import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import feather from 'feather-icons';
 import { usePathname, useRouter } from 'next/navigation';
@@ -22,7 +22,6 @@ export default function Sidebar() {
     const router = useRouter();
     const pathname = usePathname();
     const me = useApiGetMe({});
-    const versionBuild = useApiGetBuildVersion();
     const [active, setActive] = useState<string>('');
 
     const menuItems = [
@@ -39,11 +38,11 @@ export default function Sidebar() {
     }, [pathname]);
 
     return (
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} notSelectable`}>
             <div className={styles.brand}>
                 <Icon icon='calendar' weight='bold' />
-                <span>{SYSTEM.NAME}</span>
-                <small>{versionBuild?.buildVersion}</small>
+                <span className={PACIFICO.className}>{SYSTEM.NAME}</span>
+                {/* <small>{versionBuild?.buildVersion}</small> */}
             </div>
 
             <nav>

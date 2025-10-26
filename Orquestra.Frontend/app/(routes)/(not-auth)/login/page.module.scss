@@ -32,13 +32,24 @@ $radius: 1.25rem;
                 gap: 1rem;
 
                 .welcome {
-                    // background-color: orange;
+                    // background-color: tomato;
                     color: var(--black);
                     font-size: 2.5rem;
                     line-height: 2.75rem;
                     font-weight: 700;
                     text-align: center;
-                    margin-bottom: 1rem;
+
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+
+                    img {
+                        // background-color: orange;
+                        margin: auto;
+                        width: 65%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
                 }
             }
 

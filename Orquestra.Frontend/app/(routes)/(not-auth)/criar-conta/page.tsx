@@ -3,6 +3,7 @@ import { CarouselLogin } from '@/app/(routes)/(not-auth)/login/page';
 import styles from '@/app/(routes)/(not-auth)/login/page.module.scss';
 import { iUserInput } from '@/app/api/consts/user';
 import { CONSTS_UTILITY, iPlanTypeOutput } from '@/app/api/consts/utility';
+import ImgLogo from '@/app/assets/png/logo.png';
 import Divider from '@/app/components/divider';
 import Button from '@/app/components/input/button';
 import { iDropdownOption } from '@/app/components/input/drop-down';
@@ -22,6 +23,7 @@ import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Dispatch, KeyboardEvent, SetStateAction, useEffect, useRef, useState } from 'react';
 const Dropdown = dynamic(() => import('@/app/components/input/drop-down').then(x => x.default), { ssr: false });
@@ -134,7 +136,8 @@ export default function CriarConta() {
                 <div className={styles.left}>
                     <div className={styles.form}>
                         <div className={styles.welcome}>
-                            <span>Cadastre-se agora no {SYSTEM.NAME}</span>
+                            <Image src={ImgLogo} alt='' priority={true} />
+                            {/* <span>Cadastre-se agora no {SYSTEM.NAME}</span> */}
                         </div>
 
                         <div className={styles.flex}>

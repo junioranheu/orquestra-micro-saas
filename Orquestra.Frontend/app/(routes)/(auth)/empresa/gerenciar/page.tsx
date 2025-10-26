@@ -343,7 +343,7 @@ export default function EmpresaGerenciar() {
                                                 label='Ver detalhes'
                                                 handleFunction={() => handleOpenModal(company)}
                                                 isStyleSimple={true}
-                                                icon_feather={<Icon icon='eye' size='small' />}
+                                                icon_feather={<Icon icon='search' size='small' />}
                                             />
 
                                             {

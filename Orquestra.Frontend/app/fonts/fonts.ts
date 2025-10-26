@@ -1,4 +1,4 @@
-import { Hanken_Grotesk, Inter, Tilt_Neon } from 'next/font/google';
+import { Hanken_Grotesk, Inter, Pacifico } from 'next/font/google';
 
 export const INTER = Inter({
     weight: ['300', '400', '500', '600', '700'],
@@ -12,7 +12,7 @@ export const HANKEN = Hanken_Grotesk({
     subsets: ['latin']
 });
 
-export const NEON = Tilt_Neon({
+export const PACIFICO = Pacifico({
     weight: ['400'],
     subsets: ['latin']
 });

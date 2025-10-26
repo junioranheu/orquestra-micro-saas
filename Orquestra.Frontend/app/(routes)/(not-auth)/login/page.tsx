@@ -4,6 +4,7 @@ import Img1 from '@/app/assets/abstract/1.webp';
 import Img2 from '@/app/assets/abstract/2.webp';
 import Img3 from '@/app/assets/abstract/3.webp';
 import Img4 from '@/app/assets/abstract/4.webp';
+import ImgLogo from '@/app/assets/png/logo.png';
 import Carousel from '@/app/components/carousel';
 import { CookieDefault } from '@/app/components/cookie';
 import Divider from '@/app/components/divider';
@@ -21,6 +22,7 @@ import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useIsIncognito from '@/app/hooks/useIsIncognito';
 import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Fragment, KeyboardEvent, useRef, useState } from 'react';
@@ -88,7 +90,8 @@ export default function Login() {
                     <div className={styles.left}>
                         <div className={styles.form}>
                             <div className={styles.welcome}>
-                                <span>Bem-vindo ao {SYSTEM.NAME}</span>
+                                <Image src={ImgLogo} alt='' priority={true} />
+                                {/* <span>Bem-vindo ao {SYSTEM.NAME}</span> */}
                             </div>
 
                             <div className={styles.flex}>
