@@ -99,7 +99,8 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
         <section className={styles.pricingSection}>
             <div className={styles.header}>
                 <h2 className={styles.title}>Planos que crescem com você</h2>
-                <p className={styles.subtitle}>Sem contratos. Cancele quando quiser. Lembrando que, {messageInvoice.toLowerCase()}</p>
+                <p className={styles.subtitle}>Sem contratos. Cancele quando quiser.</p>
+                <p className={styles.subtitle}>Lembre-se que, {messageInvoice.toLowerCase()}</p>
             </div>
 
             <div className={styles.grid}>
