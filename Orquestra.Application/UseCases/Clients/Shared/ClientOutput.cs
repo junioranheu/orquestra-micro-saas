@@ -36,4 +36,6 @@ public sealed class ClientOutput
     public Guid CompanyId { get; set; }
     [JsonIgnore]
     public Company? Company { get; set; }
+
+    public DateTime? CreatedDate { get; set; }
 }

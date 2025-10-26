@@ -11,7 +11,8 @@ export const CONSTS_SCHEDULE = {
     put: `${BASE}/${controller}`,
     disable: `${BASE}/${controller}/Disable`,
     get: `${BASE}/${controller}`,
-    getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`
+    getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`,
+    getAllByClientId: `${BASE}/${controller}/GetAllByClientId`
 };
 
 export default interface iSchedule {

@@ -5,6 +5,7 @@ Integração com WhatsApp;
 Ajustar limitações dos planos Grátis e Básico (integração com o WhatsApp);
 Módulo de nota fiscal;
 Criar uma logo e .ico;
+Dar uma repaginada geral (especialmente a tela de gerenciar empresas) e refazer o UI, pq tá uma m****;
 
 ⦁	User/Configurações/Personalização:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
@@ -12,6 +13,3 @@ Criar front para essa parada;
 
 ⦁	Notificações (?):
 Desenvolver feature de notificação;
-
-⦁	Clientes:
-Na tabela de clientes, criar uma opção para visualizar todas os agendamentos do cliente;

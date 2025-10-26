@@ -3,6 +3,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Delete;
 using Orquestra.Application.UseCases.Schedules.Get;
+using Orquestra.Application.UseCases.Schedules.GetAllByClientId;
 using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Schedules.Update;
@@ -14,6 +15,7 @@ namespace Orquestra.API.Controllers;
 public class ScheduleController(
         IGetSchedule get,
         IGetScheduleByCompanyId getScheduleByCompanyId,
+        IGetScheduleByClientId getScheduleByClientId,
         ICreateSchedule create,
         IUpdateSchedule update,
         IDeleteSchedule delete
@@ -21,6 +23,7 @@ public class ScheduleController(
 {
     private readonly IGetSchedule _get = get;
     private readonly IGetScheduleByCompanyId _getScheduleByCompanyId = getScheduleByCompanyId;
+    private readonly IGetScheduleByClientId _getScheduleByClientId = getScheduleByClientId;
     private readonly ICreateSchedule _create = create;
     private readonly IUpdateSchedule _update = update;
     private readonly IDeleteSchedule _delete = delete;
@@ -76,6 +79,16 @@ public class ScheduleController(
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(userIdAuth, companyId, year, month);
+
+        return Ok(output);
+    }
+
+    [AuthorizeFilter]
+    [HttpGet("GetAllByClientId")]
+    public async Task<ActionResult> GetScheduleByClientId(Guid companyId, Guid clientId)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        List<ScheduleOutput>? output = await _getScheduleByClientId.Execute(userIdAuth, companyId, clientId);
 
         return Ok(output);
     }

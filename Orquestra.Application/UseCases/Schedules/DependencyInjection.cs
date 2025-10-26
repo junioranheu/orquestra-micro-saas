@@ -6,6 +6,7 @@ using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Create;
 using Orquestra.Application.UseCases.Schedules.Delete;
 using Orquestra.Application.UseCases.Schedules.Get;
+using Orquestra.Application.UseCases.Schedules.GetAllByClientId;
 using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Update;
 using Orquestra.Infrastructure.Data;
@@ -19,6 +20,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IGetSchedule, GetSchedule>();
         services.AddScoped<IGetScheduleByCompanyId, GetScheduleByCompanyId>();
+        services.AddScoped<IGetScheduleByClientId, GetScheduleByClientId>();
         services.AddScoped<ICreateSchedule, CreateSchedule>();
         services.AddScoped<IUpdateSchedule, UpdateSchedule>();
         services.AddScoped<IDeleteSchedule, DeleteSchedule>();

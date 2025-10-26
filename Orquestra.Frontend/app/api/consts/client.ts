@@ -29,6 +29,7 @@ export default interface iClient {
     notes?: string;
     companyId: Guid;
     company: iCompanyOutput;
+    createdDate: Date;
 }
 
 export interface iClientPaginated {

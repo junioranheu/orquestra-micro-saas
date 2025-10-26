@@ -1,0 +1,361 @@
+// Variables
+$primary-color: var(--main);
+$primary-hover: var(--main-dark);
+$secondary-bg: #f3f4f6;
+$secondary-hover: #e5e7eb;
+$text-primary: #111827;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+$border-color: var(--gray-light);
+$white: #ffffff;
+
+$success-bg: #d1fae5;
+$success-text: #065f46;
+$success-border: #a7f3d0;
+
+$error-bg: #fee2e2;
+$error-text: #991b1b;
+$error-border: #fecaca;
+
+$warning-bg: #fef3c7;
+$warning-text: #92400e;
+$warning-border: #fde68a;
+
+$border-radius: 0.5rem;
+$spacing-unit: 0.5rem;
+
+// Mixins
+@mixin card {
+    background: $white;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    padding: 1.5rem;
+}
+
+@mixin button-base {
+    padding: 0.625rem 1.5rem;
+    border-radius: $border-radius;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+}
+
+// Main Container
+.clientProfile {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 2rem;
+
+    &__container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        @media (min-width: 1024px) {
+            grid-template-columns: 1fr 2fr;
+        }
+    }
+
+    &__sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+// Breadcrumb
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+
+    &__link {
+        color: $primary-color;
+        text-decoration: none;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $primary-hover;
+        }
+    }
+
+    &__separator {
+        color: $text-muted;
+    }
+
+    &__current {
+        color: $text-primary;
+    }
+}
+
+// Client Header
+.clientHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    &__info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__avatar {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--contrast), var(--contrast));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    &__avatarEmoji {
+        font-size: 2rem;
+    }
+
+    &__details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    &__name {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: $text-primary;
+        margin: 0;
+    }
+
+    &__since {
+        color: $text-secondary;
+        margin: 0;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+}
+
+// Buttons
+.btn {
+    @include button-base;
+}
+
+.btnPrimary {
+    background: $primary-color;
+    color: $white;
+
+    &:hover {
+        background: $primary-hover;
+    }
+}
+
+.btnSecondary {
+    background: $secondary-bg;
+    color: $text-primary;
+
+    &:hover {
+        background: $secondary-hover;
+    }
+}
+
+// Card
+.card {
+    @include card;
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $text-primary;
+        margin: 0 0 1.5rem 0;
+    }
+}
+
+// Contact Info
+.contactInfo {
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    &__item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    &__icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: $text-muted;
+        margin-top: 0.125rem;
+        flex-shrink: 0;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    &__label {
+        font-size: 0.875rem;
+        color: $text-secondary;
+        margin: 0;
+    }
+
+    &__value {
+        color: $text-primary;
+        margin: 0;
+    }
+}
+
+// Internal Notes
+.internalNotes {
+    &__text {
+        color: $text-secondary;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+}
+
+// Appointment History
+.appointmentHistory {
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+
+// Appointment Item
+.appointmentItem {
+    border-radius: $border-radius;
+    border: 1px solid $border-color;
+    background: $white;
+    padding: 1.25rem;
+
+    &--agendado {
+        background: $warning-bg;
+        border-color: $warning-border;
+    }
+
+    &__content {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    &__info {
+        flex: 1;
+    }
+
+    &__title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0 0 0.25rem 0;
+    }
+
+    &__datetime {
+        font-size: 0.875rem;
+        color: $text-secondary;
+        margin: 0;
+    }
+
+    &__meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-shrink: 0;
+    }
+
+    &__price {
+        font-weight: 600;
+        color: $text-primary;
+    }
+
+    &__status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+
+        // Marcado;
+        &--1 {
+            background: var(--contrast);
+            color: $white;
+        }
+
+        // Remarcado;
+        &--2 {
+            background: $warning-bg;
+            color: $warning-text;
+        }
+
+        // Concluído;
+        &--3 {
+            background: $success-bg;
+            color: $success-text;
+        }
+
+        // Cancelado;
+        &--4 {
+            background: $error-bg;
+            color: $error-text;
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .clientProfile {
+        padding: 1rem;
+    }
+
+    .clientHeader {
+        flex-direction: column;
+        align-items: flex-start;
+
+        &__actions {
+            width: 100%;
+
+            .btn {
+                flex: 1;
+            }
+        }
+    }
+
+    .appointmentItem {
+        &__content {
+            flex-direction: column;
+        }
+
+        &__meta {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+}

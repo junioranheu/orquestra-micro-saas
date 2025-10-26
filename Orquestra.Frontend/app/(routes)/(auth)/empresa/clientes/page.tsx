@@ -3,11 +3,13 @@ import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/clien
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
+import ROUTES from '@/app/consts/routes';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
+import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
 import EmpresaClientesModalView from './modal/view';
@@ -16,7 +18,9 @@ import styles from './page.module.scss';
 export default function EmpresaClientes() {
 
     useTitle('Clientes');
+
     const me = useApiGetMe({});
+    const router = useRouter();
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [clients, setClients] = useState<iClientPaginated>();
@@ -78,12 +82,17 @@ export default function EmpresaClientes() {
 
     const managingOptions = [
         {
+            label: 'Visualizar detalhes',
+            function: (e) => router.push(`${ROUTES.EMPRESA_CLIENTES}/${e.clientId}`),
+            icon: <Icon icon='search' />
+        },
+        {
             label: 'Editar cliente',
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />
         },
         {
-            label: 'Remover colaborador',
+            label: 'Remover cliente',
             function: (e) => handleDisable(e),
             icon: <Icon icon='user-x' />
         }
