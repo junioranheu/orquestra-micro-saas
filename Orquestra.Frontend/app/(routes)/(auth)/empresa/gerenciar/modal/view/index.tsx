@@ -228,7 +228,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
             onRequestClose={handleClose}
             showCloseButton={false}
             allowCloseOutsideClick={false}
-            width={windowSize.width <= 1281 ? '85%' : '55%'}
+            width={windowSize.width <= 1366 ? '85%' : '55%'}
             style={{ padding: 0, background: 'transparent' }}
         >
             <div className={styles.modalCard}>

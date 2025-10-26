@@ -1,5 +1,5 @@
   .card {
-      //   background-color: tomato !important;
+      // background-color: tomato !important;
       background: #ffffff;
       border-radius: var(--border-radius);
       padding: 1rem;
@@ -7,21 +7,3 @@
 
       width: 100%;
   }
-
-  // Media queries
-  @media (max-width:1536px) {}
-
-  // hi-res laptops and desktops 
-  @media (max-width:1281px) {}
-
-  // big landscape tablets, laptops, and desktops 
-  @media (max-width:1025px) {}
-
-  // tablet, landscape iPad, lo-res laptops ands desktops 
-  @media (max-width:801px) {}
-
-  // portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
-  @media (max-width:600px) {}
-
-  // smartphones, Android phones, landscape iPhone
-  @media (max-width:480px) {}

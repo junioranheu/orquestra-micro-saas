@@ -176,7 +176,7 @@ export default function CriarConta() {
 
                             <div className={styles.flexRow}>
                                 <Dropdown
-                                    title='Pergunta de recuperação de conta'
+                                    title='Pergunta de segurança'
                                     options={recoverPasswordQuestionEnum ?? []} selectedOption={recoverPasswordQuestionEnum?.find(x => x.value.toString() === formData.recoverPasswordQuestion?.toString())}
                                     setSelectedOption={setRecoverPasswordQuestion}
                                     isDisabled={isIncognito}
@@ -184,7 +184,7 @@ export default function CriarConta() {
                                 />
 
                                 <InputMask
-                                    title='Resposta de recuperação de conta'
+                                    title='Resposta de segurança'
                                     fieldName='recoverPasswordAnswer'
                                     formData={formData}
                                     setFormData={setFormData}

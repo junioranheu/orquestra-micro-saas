@@ -33,8 +33,8 @@ export default function CardCalendar({ me }: iProps) {
             <CalendarSimple
                 isReadOnly={!hasAccessToSchedule}
                 disablePastDays={true}
-                resetBorderRadiusRight={!windowSize.width ? true : windowSize.width > 1281}
-                removeBorderRight={!windowSize.width ? true : windowSize.width > 1281}
+                resetBorderRadiusRight={!windowSize.width ? true : windowSize.width > 1366}
+                removeBorderRight={!windowSize.width ? true : windowSize.width > 1366}
             />
 
             <div className={styles.flex}>
@@ -49,7 +49,7 @@ export default function CardCalendar({ me }: iProps) {
                                 hasAccessToSchedule ? (
                                     <CardSimple
                                         img={SvgOne}
-                                        isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
+                                        isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                         title='Tudo certo!'
                                         description={`A empresa <b>${me?.currentMainCompany?.name}</b> já está prontinha para começar a criar novos agendamentos.<br/>Comece a gerenciar seus compromissos agora mesmo clicando no botão do card ao lado.`}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s}
@@ -57,7 +57,7 @@ export default function CardCalendar({ me }: iProps) {
                                 ) : (
                                     <CardSimple
                                         img={SvgOne}
-                                        isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1281}
+                                        isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                         title='Crie sua própria empresa!'
                                         description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou/não te concedeu acesso ao módulo de Agendamentos.'
                                         buttonLabel='Criar uma nova empresa agora mesmo'
@@ -68,7 +68,7 @@ export default function CardCalendar({ me }: iProps) {
 
                             <CardSimple
                                 img={SvgTwo}
-                                isImgInsideOfCard={windowSize.width < 1281}
+                                isImgInsideOfCard={windowSize.width < 1366}
                                 title='Simplifique a gestão da sua empresa'
                                 description='Gestão de horários simples, rápida e sem dor de cabeça.<br/>Seu negócio afinado como uma orquestra.'
                                 buttonLabel='Acessar a agenda'

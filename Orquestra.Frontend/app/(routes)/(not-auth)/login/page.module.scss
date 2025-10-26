@@ -148,16 +148,30 @@ $radius: 1.25rem;
 }
 
 // hi-res laptops and desktops 
-@media (max-width:1281px) {
+@media (max-width:1366px) {
     .main {
         // background: purple !important;
 
         .wrapper {
             width: 80vw;
 
+            // Workaround
+            zoom: 0.9;
+            margin-top: -2rem;
+
             .left {
                 .form {
                     padding: 3rem 3rem;
+
+                    .welcome {
+                        // background-color: tomato;
+
+                        img {
+                            // background-color: orange;
+                            width: 25%;
+                            height: 100%;
+                        }
+                    }
                 }
             }
         }
@@ -173,6 +187,10 @@ $radius: 1.25rem;
             width: 100vw;
             height: 100vh;
             border-radius: 0rem;
+
+            // Desfazer workaround
+            zoom: 1;
+            margin-top: 0;
 
             .left {
                 // background-color: purple !important;

@@ -2,7 +2,10 @@
     // O height é definido pelo tsx (não alterar!);
     border-radius: var(--border-radius);
     font-family: inherit !important;
+
+    margin: auto;
     margin-top: 1rem;
+    padding: 0rem 2rem 2rem 2rem;
 
     button {
         // background-color: purple !important;
@@ -13,12 +16,7 @@
 
 // Media queries
 // hi-res laptops and desktops 
-@media (max-width:1281px) {
-    .main {
-        // background-color: tomato !important;
-        max-width: 89vw;
-    }
-}
+@media (max-width:1366px) {}
 
 // big landscape tablets, laptops, and desktops 
 @media (max-width:1025px) {}
