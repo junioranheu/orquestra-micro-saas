@@ -8,7 +8,7 @@ import CardCalendar from '@/app/components/card/calendar';
 import CardSimple from '@/app/components/card/simple';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Footer from '@/app/components/footer';
-import LoadingGif from '@/app/components/loading/gif';
+import Mascot from '@/app/components/mascot';
 import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
@@ -47,7 +47,7 @@ export default function Dashboard() {
             <span className={styles.hello}>
                 <ContentLoaderText text={`Olá, ${handleGetFirstName(auth?.fullName)}`} />
 
-                <LoadingGif
+                <Mascot
                     width={52}
                     isCentralized={false}
                     tippyContent={

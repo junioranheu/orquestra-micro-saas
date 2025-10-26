@@ -81,6 +81,15 @@
     letter-spacing: 0.05em;
 }
 
+.divTitle {
+    // background-color: orange;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 .title {
     font-size: 1.875rem;
     font-weight: 700;

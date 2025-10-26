@@ -1,4 +1,4 @@
-import LoadingGif from '@/app/components/loading/gif';
+import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
 import { PACIFICO } from '@/app/fonts/fonts';
 import { useEffect, useMemo, useState } from 'react';
@@ -38,7 +38,7 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
                 }
 
                 <div className={`${styles.gif}`}>
-                    <LoadingGif width={96} flip={true} />
+                    <Mascot width={96} flip={true} />
                 </div>
             </div>
         </section>

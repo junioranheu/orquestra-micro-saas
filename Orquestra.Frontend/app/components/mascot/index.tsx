@@ -2,7 +2,7 @@ import ImgLoading from '@/app/assets/gif/loading-cat.gif';
 import SYSTEM from '@/app/consts/system';
 import Tippy from '@tippyjs/react';
 import Image from 'next/image';
-import { ReactNode, useEffect, useState } from 'react';
+import { CSSProperties, ReactNode, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -13,16 +13,18 @@ interface iProps {
     flip?: boolean;           // Espelha sempre;
     flipPeriodic?: boolean;   // Espelha periodicamente;
     flipInterval?: number;    // Intervalo da inversão periódica;
+    absolutePosition?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 }
 
-export default function LoadingGif({
+export default function Mascot({
     width = 64,
     isCentralized = true,
     tippyContent,
     tippyPlacement = 'top',
     flip = false,
     flipPeriodic = false,
-    flipInterval = 3000
+    flipInterval = 3000,
+    absolutePosition
 }: iProps) {
 
     const [flipped, setFlipped] = useState<boolean>(flip);
@@ -50,6 +52,13 @@ export default function LoadingGif({
         return () => clearInterval(interval);
     }, [flipPeriodic, flipInterval]);
 
+    const absoluteStyle: CSSProperties = absolutePosition ? {
+        position: 'absolute',
+        ...(absolutePosition.includes('top') ? { top: '1rem' } : { bottom: '1rem' }),
+        ...(absolutePosition.includes('left') ? { left: '1rem' } : { right: '1rem' }),
+        zIndex: 9999
+    } : {};
+
     if (!showMascot) {
         return null;
     }
@@ -57,11 +66,12 @@ export default function LoadingGif({
     return (
         <Tippy content={tippyContent} placement={tippyPlacement} interactive={true}>
             <div
-                className={`${styles.loader} ${SYSTEM.ANIMATE_DELAY_1s}`}
+                className={`${styles.mascot} ${SYSTEM.ANIMATE_DELAY_1s}`}
                 style={{
                     margin: isCentralized ? 'auto' : 'none',
                     transform: flipped ? 'scaleX(-1)' : 'scaleX(1)',
-                    transition: 'transform 0.5s ease'
+                    transition: 'transform 0.5s ease',
+                    ...absoluteStyle
                 }}
             >
                 <Image src={ImgLoading} width={width} height={width} alt='' />

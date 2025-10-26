@@ -1,7 +1,9 @@
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
+import Mascot from '@/app/components/mascot';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
@@ -69,12 +71,27 @@ export default function LayoutTemplateOne({
                 </div>
 
                 {
-                    code && <span className={styles.code}>{code}</span>
-                }
-
-                {
                     title && (
-                        <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
+                        <div className={styles.divTitle}>
+                            <Mascot
+                                width={52}
+                                isCentralized={false}
+                                tippyContent={
+                                    <div>
+                                        {title}
+                                        {
+                                            code && ` • código ${code}`
+                                        }
+                                    </div>
+                                }
+                                tippyPlacement='right'
+                                flip={true}
+                                flipPeriodic={true}
+                                flipInterval={handleGetRandomNumber(4000, 7500)}
+                            />
+
+                            <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
+                        </div>
                     )
                 }
 

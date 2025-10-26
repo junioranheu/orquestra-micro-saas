@@ -1,6 +1,6 @@
 'use client';
 import ImgMeditation from '@/app/assets/webp/meditation.webp';
-import LoadingGif from '@/app/components/loading/gif';
+import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
@@ -325,7 +325,7 @@ export default function Ajuda() {
                 <div className={SYSTEM.ANIMATE_DELAY_0_5s}>
                     {
                         showMascot ? (
-                            <LoadingGif
+                            <Mascot
                                 width={52}
                                 isCentralized={false}
                                 tippyContent={
