@@ -8,7 +8,10 @@ import CardCalendar from '@/app/components/card/calendar';
 import CardSimple from '@/app/components/card/simple';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Footer from '@/app/components/footer';
+import LoadingGif from '@/app/components/loading/gif';
+import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
+import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
@@ -16,6 +19,7 @@ import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
@@ -39,7 +43,21 @@ export default function Dashboard() {
 
     return (
         <section className={styles.main}>
-            <span className={styles.hello}>Olá, <ContentLoaderText text={handleGetFirstName(auth?.fullName)} /></span>
+            <span className={styles.hello}>
+                <ContentLoaderText text={`Olá, ${handleGetFirstName(auth?.fullName)}`} />
+
+                <LoadingGif
+                    width={52}
+                    isCentralized={false}
+                    tippyContent={
+                        <div>
+                            Olá! Eu sou o {SYSTEM.MASCOT}.<br /><br />
+                            Qualquer dúvida visite a <Link href={ROUTES.ETC_AJUDA}>central de ajudas</Link> ou nos contate pelo <WhatsappHyperlink showIcon={false} />.
+                        </div>
+                    }
+                    tippyPlacement='right'
+                />
+            </span>
 
             <div className={styles.flex}>
                 <CardCalendar me={me} />

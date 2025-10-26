@@ -1,6 +1,6 @@
 'use client';
 import Head from '@/app/(routes)/head';
-import Loading from '@/app/components/loading';
+import Loading from '@/app/components/loading/full';
 import Navbar from '@/app/components/navbar/nav';
 import UpNav from '@/app/components/navbar/up-nav';
 import Sidebar from '@/app/components/sidebar';

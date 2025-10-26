@@ -1,6 +1,8 @@
+import LoadingGif from '@/app/components/loading/gif';
 import SYSTEM from '@/app/consts/system';
+import { PACIFICO } from '@/app/fonts/fonts';
 import { useEffect, useMemo, useState } from 'react';
-import Styles from './index.module.scss';
+import styles from './index.module.scss';
 
 interface iProps {
     text: string;
@@ -25,8 +27,8 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
     }
 
     return (
-        <section className={Styles.splash} style={{ background: isGradient ? 'var(--gradient)' : 'var(--white)' }}>
-            <div className={`${Styles.loading} ${SYSTEM.ANIMATE}`}>
+        <section className={`${styles.splash} ${PACIFICO.className} notSelectable`} style={{ background: isGradient ? 'var(--gradient)' : 'var(--white)' }}>
+            <div className={`${styles.loading} ${SYSTEM.ANIMATE}`}>
                 {
                     letters.map((letter, i) => (
                         <span key={i} style={{ animationDelay: `${i * 0.1}s` }}>
@@ -34,6 +36,10 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
                         </span>
                     ))
                 }
+
+                <div className={`${styles.gif}`}>
+                    <LoadingGif width={96} />
+                </div>
             </div>
         </section>
     )

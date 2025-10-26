@@ -1,4 +1,5 @@
 import Icon from '@/app/components/icon';
+import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import Tippy from '@tippyjs/react';
@@ -30,15 +31,9 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
                         </Tippy>
 
                         <Tippy content='Contatar suporte via WhatsApp'>
-                            <Link
-                                href='#'
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    window.open(`https://wa.me/${SYSTEM.PHONE_SUPPORT}`, '_blank');
-                                }}
-                            >
-                                <Icon icon='message-circle' color='var(--gray-dark)' className='contrastOnHover' />
-                            </Link>
+                            <span>
+                                <WhatsappHyperlink showIcon={true} />
+                            </span>
                         </Tippy>
 
                         <Tippy content='Contatar suporte via e-mail'>

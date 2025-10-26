@@ -6,6 +6,7 @@ import Icon from '@/app/components/icon';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import Splash from '@/app/components/splash';
 import WhatsappButton from '@/app/components/whatsapp/button';
+import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
@@ -603,16 +604,9 @@ function Footer() {
 
                         <div className='flex gap-3'>
                             <Tippy content='Contatar suporte via WhatsApp'>
-                                <Link
-                                    href='#'
-                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        window.open(`https://wa.me/${SYSTEM.PHONE_SUPPORT}`, '_blank');
-                                    }}
-                                >
-                                    <Icon icon='message-circle' color='var(--gray-dark)' className='contrastOnHover' />
-                                </Link>
+                                <span>
+                                    <WhatsappHyperlink showIcon={true} className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all' />
+                                </span>
                             </Tippy>
 
                             <Tippy content='Contatar suporte via e-mail'>

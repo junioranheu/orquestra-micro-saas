@@ -11,3 +11,4 @@ Criar front para essa parada;
 
 ⦁	Notificações (?):
 Desenvolver feature de notificação;
+Colocar um componentezinho no dashboard principal (provavelmente dividindo flex com "Resumo da agenda");

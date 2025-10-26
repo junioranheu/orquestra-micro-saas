@@ -5,6 +5,7 @@ const SYSTEM = {
     DESCRIPTION: 'Harmonia na gestão do seu negócio',
     AUTHOR: '@junioranheu',
     COLOR: '#f0fcdc',
+    MASCOT: 'Maestro',
 
     EMAIL_SUPPORT: 'orquestra.saas@gmail.com',
     PHONE_SUPPORT: '12982716339',

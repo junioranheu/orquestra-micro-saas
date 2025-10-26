@@ -1,8 +1,7 @@
 'use client';
-import ImgMeditation from '@/app/assets/webp/meditation.webp';
+import LoadingGif from '@/app/components/loading/gif';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
-import Image from 'next/image';
 import AjudaListCards from './components/list-cards';
 import AjudaSearchInput from './components/seach-input';
 import styles from './page.module.scss';
@@ -288,9 +287,20 @@ export default function Ajuda() {
             <div className={styles.hero}>
                 <span>Central de ajuda</span>
 
-                <div className={SYSTEM.ANIMATE_PULSE_INFINITE}>
+                {/* <div className={SYSTEM.ANIMATE_PULSE_INFINITE}>
                     <Image src={ImgMeditation} alt='' priority={true} />
-                </div>
+                </div> */}
+
+                <LoadingGif
+                    width={52}
+                    isCentralized={false}
+                    tippyContent={
+                        <div>
+                            Qualquer dúvida sobre o {SYSTEM.NAME}, pode ser sanada aqui!
+                        </div>
+                    }
+                    tippyPlacement='right'
+                />
             </div>
 
             <AjudaSearchInput keySearch='' hasAltStyle={true} />
