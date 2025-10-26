@@ -1,6 +1,8 @@
 .main {
-    // background-color: blue !important;
+    background-color: tomato !important;
     display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */

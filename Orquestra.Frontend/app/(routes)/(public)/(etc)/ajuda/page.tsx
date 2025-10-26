@@ -1,7 +1,10 @@
 'use client';
+import ImgMeditation from '@/app/assets/webp/meditation.webp';
 import LoadingGif from '@/app/components/loading/gif';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import AjudaListCards from './components/list-cards';
 import AjudaSearchInput from './components/seach-input';
 import styles from './page.module.scss';
@@ -275,32 +278,70 @@ export const HELP_TOPICS = [
                 description: `Ao adquirir um novo plano antes de pagar o atual, a fatura anterior é automaticamente cancelada, garantindo que apenas a fatura mais recente permaneça ativa.`
             }
         ]
+    },
+    {
+        topic: 'Mascote e dicas do sistema',
+        description: `Conheça o mascote ${SYSTEM.MASCOT}, que aparece para dar dicas e orientações dentro do ${SYSTEM.NAME}.`,
+        items: [
+            {
+                title: 'Para que serve o mascote?',
+                description: `O ${SYSTEM.MASCOT} aparece em pontos estratégicos do sistema para dar dicas, ajudar na navegação e mostrar informações importantes.`
+            },
+            {
+                title: 'Como interagir com ele?',
+                description: `Você pode passar o mouse sobre o mascote ou clicar nele para visualizar mensagens e links úteis.`
+            },
+            {
+                title: 'Posso desativar o mascote?',
+                description: `Sim! Se você preferir que o ${SYSTEM.MASCOT} não apareça, é possível desligá-lo diretamente nas configurações/aba personalização.`
+            },
+            {
+                title: 'O que acontece ao desativar?',
+                description: `Ao desativar, o ${SYSTEM.MASCOT} deixa de aparecer em toda a interface, mas você ainda terá acesso às mesmas informações através da central de ajuda e outros recursos do sistema.`
+            },
+            {
+                title: 'Se eu o desativei, como ativá-lo novamente?',
+                description: `Se mudar de ideia, basta voltar nas configurações/aba personalização e ligar o mascote novamente.`
+            }
+        ]
     }
 ] as iAjudaTopico[];
 
 export default function Ajuda() {
 
     useTitle('Central de ajuda');
+    const [showMascot, setShowMascot] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const value = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);
+        setShowMascot(value === null ? true : value === 'true');
+    }, []);
 
     return (
         <section className={styles.main}>
             <div className={styles.hero}>
                 <span>Central de ajuda</span>
 
-                {/* <div className={SYSTEM.ANIMATE_PULSE_INFINITE}>
-                    <Image src={ImgMeditation} alt='' priority={true} />
-                </div> */}
-
-                <LoadingGif
-                    width={52}
-                    isCentralized={false}
-                    tippyContent={
-                        <div>
-                            Qualquer dúvida sobre o {SYSTEM.NAME}, pode ser sanada aqui!
-                        </div>
+                <div className={SYSTEM.ANIMATE_DELAY_0_5s}>
+                    {
+                        showMascot ? (
+                            <LoadingGif
+                                width={52}
+                                isCentralized={false}
+                                tippyContent={
+                                    <div>
+                                        Qualquer dúvida sobre o {SYSTEM.NAME}, pode ser sanada aqui!
+                                    </div>
+                                }
+                                tippyPlacement='right'
+                            />
+                        ) : (
+                            <div className={SYSTEM.ANIMATE_PULSE_INFINITE}>
+                                <Image src={ImgMeditation} alt='' priority={true} />
+                            </div>
+                        )
                     }
-                    tippyPlacement='right'
-                />
+                </div>
             </div>
 
             <AjudaSearchInput keySearch='' hasAltStyle={true} />

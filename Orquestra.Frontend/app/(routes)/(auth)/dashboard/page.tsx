@@ -52,11 +52,12 @@ export default function Dashboard() {
                     isCentralized={false}
                     tippyContent={
                         <div>
-                            Olá! Eu sou o {SYSTEM.MASCOT}.<br /><br />
-                            Qualquer dúvida visite a <Link href={ROUTES.ETC_AJUDA}>central de ajudas</Link> ou nos contate pelo <WhatsappHyperlink showIcon={false} />.
+                            Oi! Eu sou o {SYSTEM.MASCOT}. 🐱✨<br /><br />
+                            Se pintar alguma dúvida, dá uma passadinha na <Link href={ROUTES.ETC_AJUDA}>central de ajuda</Link> ou fala com a gente pelo <WhatsappHyperlink showIcon={false} />.<br /><br />
+                            Caso queira me dispensar por um tempo, é só ajustar isso na aba de personalização, nas <Link href={ROUTES.USUARIO_CONFIGURACOES}>configurações</Link> do {SYSTEM.NAME}. 😅
                         </div>
                     }
-                    tippyPlacement='right'
+                    tippyPlacement='bottom'
                     flipPeriodic={true}
                     flipInterval={handleGetRandomNumber(5000, 15000)}
                 />
