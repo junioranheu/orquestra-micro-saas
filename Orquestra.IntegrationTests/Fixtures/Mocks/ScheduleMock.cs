@@ -8,7 +8,7 @@ public static class ScheduleMock
 {
     public static Schedule Create(Guid clientId, Guid companyId)
     {
-        DateTime dateStart = GetDate().AddDays(GetRandomNumber(1, 7));
+        DateTime dateStart = GetDate().AddDays(GetRandomNumber(1, 7)).Date.AddHours(12);
 
         var input = new Schedule
         {

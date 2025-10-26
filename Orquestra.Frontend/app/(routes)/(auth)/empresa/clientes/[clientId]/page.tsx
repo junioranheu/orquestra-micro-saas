@@ -1,5 +1,6 @@
 'use client';
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
+import { handleDisableClient } from '@/app/(routes)/(auth)/empresa/clientes/page';
 import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
@@ -12,7 +13,7 @@ import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
 import { useParams, useRouter } from 'next/navigation';
-import { Fragment, useEffect, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 // Interfaces
@@ -20,6 +21,8 @@ interface iClientHeaderProps {
     name: string;
     memberSince: string;
     onEdit: () => void;
+    client: iClient;
+    setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
 interface iContactInfoProps {
@@ -84,6 +87,8 @@ export default function ClientProfile() {
                         name={client?.fullName}
                         memberSince={handleFormatDate(client?.createdDate, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO)}
                         onEdit={() => handleOpenModalView(client)}
+                        client={client}
+                        setTrigger={setTrigger}
                     />
 
                     <div className={styles.clientProfile__grid}>
@@ -121,7 +126,7 @@ export default function ClientProfile() {
 }
 
 // Componente de Header do Cliente
-function ClientHeader({ name, memberSince, onEdit }: iClientHeaderProps) {
+function ClientHeader({ name, memberSince, onEdit, client, setTrigger }: iClientHeaderProps) {
 
     const [emoji, setEmoji] = useState<string>('👤');
 
@@ -151,6 +156,7 @@ function ClientHeader({ name, memberSince, onEdit }: iClientHeaderProps) {
             </div>
 
             <div className={styles.clientHeader__actions}>
+                <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} />
                 <Button label='Editar cliente' handleFunction={() => onEdit()} />
             </div>
         </div>

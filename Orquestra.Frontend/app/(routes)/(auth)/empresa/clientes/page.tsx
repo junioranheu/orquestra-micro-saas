@@ -10,7 +10,7 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
 import EmpresaClientesModalView from './modal/view';
 import styles from './page.module.scss';
@@ -93,7 +93,7 @@ export default function EmpresaClientes() {
         },
         {
             label: 'Remover cliente',
-            function: (e) => handleDisable(e),
+            function: (e) => handleDisableClient(e, setTrigger),
             icon: <Icon icon='user-x' />
         }
     ] as iTableManagingOptions[];
@@ -106,27 +106,6 @@ export default function EmpresaClientes() {
         setTypeModal(client ? 'edit' : 'create');
         setClientClicked(client);
         setIsModalViewOpen(true);
-    }
-
-    async function handleDisable(member: iClient) {
-        swal({
-            content: 'Você tem certeza que deseja remover este cliente?',
-            confirmBtnText: 'Sim, desejo remover',
-            confirmFunction: async () => {
-                const input = { clientId: member.clientId };
-                const schedule = await Fetch.put({ url: CONSTS_CLIENT.disable, body: input });
-
-                if (schedule) {
-                    toast({ content: 'Cliente removido com sucesso.' });
-                    setTrigger(new Date());
-                    return;
-                }
-
-                toast({ content: 'Não foi possível remover este cliente. Tente novamente mais tarde.' });
-            },
-            cancelBtnText: 'Voltar',
-            icon: 'question'
-        });
     }
 
     return (
@@ -174,4 +153,25 @@ export default function EmpresaClientes() {
             />
         </Fragment>
     )
+}
+
+export async function handleDisableClient(member: iClient, setTrigger: Dispatch<SetStateAction<Date>>) {
+    swal({
+        content: 'Você tem certeza que deseja remover este cliente?',
+        confirmBtnText: 'Sim, desejo remover',
+        confirmFunction: async () => {
+            const input = { clientId: member.clientId };
+            const schedule = await Fetch.put({ url: CONSTS_CLIENT.disable, body: input });
+
+            if (schedule) {
+                toast({ content: 'Cliente removido com sucesso.' });
+                setTrigger(new Date());
+                return;
+            }
+
+            toast({ content: 'Não foi possível remover este cliente. Tente novamente mais tarde.' });
+        },
+        cancelBtnText: 'Voltar',
+        icon: 'question'
+    });
 }

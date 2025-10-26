@@ -54,7 +54,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
         if (isCreate)
         {
-            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId);
+            bool anyCPF = await _context.Clients.AsNoTracking().AnyAsync(x => x.CPF == input.CPF && x.CompanyId == input.CompanyId && x.Status == true);
 
             if (anyCPF)
             {
@@ -63,7 +63,7 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
 
             if (!string.IsNullOrEmpty(input.Email))
             {
-                bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email!.ToLower() == input.Email && x.CompanyId == input.CompanyId);
+                bool anyEmail = await _context.Clients.AsNoTracking().AnyAsync(x => x.Email!.ToLower() == input.Email && x.CompanyId == input.CompanyId && x.Status == true);
 
                 if (anyEmail)
                 {

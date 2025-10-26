@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Orquestra.Domain.Entities;
 
 [Index(nameof(CompanyId), nameof(Email), IsUnique = false)]
-[Index(nameof(CompanyId), nameof(CPF), IsUnique = true)]
+[Index(nameof(CompanyId), nameof(CPF), IsUnique = false)]
 public sealed class Client : Audit
 {
     [Key]
