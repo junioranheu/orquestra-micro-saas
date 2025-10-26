@@ -19,7 +19,7 @@ export default function NotFound() {
         <section className={INTER.className}>
             <UpNav />
 
-            <section style={{ background: 'var(--gradient)' }}>
+            <section>
                 <LayoutTemplateOne
                     svg='error'
                     code='#404'
