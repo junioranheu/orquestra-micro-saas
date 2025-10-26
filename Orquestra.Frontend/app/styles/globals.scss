@@ -911,7 +911,7 @@ input:-webkit-autofill {
     // toolbar;
     .rbc-toolbar {
         // background-color: purple !important;
-        background-color: var(--cream);
+        // background-color: var(--cream);
         margin-bottom: 0;
         padding-bottom: 10px;
 
@@ -920,6 +920,7 @@ input:-webkit-autofill {
             text-transform: none;
             font-size: 1.875rem;
             font-weight: 700;
+            padding-bottom: 0.25rem;
         }
 
         .rbc-btn-group {

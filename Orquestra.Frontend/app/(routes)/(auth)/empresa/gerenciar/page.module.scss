@@ -25,7 +25,6 @@
 
     &:hover {
         transform: translateY(-4px);
-        // box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
         border-color: #d1d5db;
     }
 
@@ -76,7 +75,7 @@
     justify-content: center;
     flex-shrink: 0;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
     transition: transform 0.3s ease;
 
     &:hover {
@@ -153,13 +152,13 @@
     &.badgeAdmin {
         background: linear-gradient(135deg, var(--main) 0%, var(--main) 100%);
         color: #ffffff;
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
     }
 
     &.badgeOwner {
-        background: linear-gradient(135deg, var(--contrast) 0%, var(--contrast) 100%);
+        background: linear-gradient(135deg, var(--main) 0%, var(--main) 100%);
         color: #ffffff;
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
     }
 
     span {
