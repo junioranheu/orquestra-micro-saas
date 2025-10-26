@@ -8,6 +8,7 @@ import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
+import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -99,8 +100,10 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
         <section className={styles.pricingSection}>
             <div className={styles.header}>
                 <h2 className={styles.title}>Planos que crescem com você</h2>
-                <p className={styles.subtitle}>Sem contratos. Cancele quando quiser.</p>
-                <p className={styles.subtitle}>Lembre-se que, {messageInvoice.toLowerCase()}</p>
+
+                <Tippy content={`Lembre-se que, ${messageInvoice.toLowerCase()}`} placement='bottom'>
+                    <p className={styles.subtitle}>Sem contratos. Cancele quando quiser. <span style={{ color: 'var(--contrast)', fontWeight: 'bold' }}>*</span></p>
+                </Tippy>
             </div>
 
             <div className={styles.grid}>

@@ -75,10 +75,10 @@ public class ScheduleController(
 
     [AuthorizeFilter]
     [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult> GetAllByCompanyId(Guid companyId, int? year = null, int? month = null)
+    public async Task<ActionResult> GetAllByCompanyId(Guid companyId, int? year = null, int? month = null, bool? getOnlyNearbyDates = false)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(userIdAuth, companyId, year, month);
+        List<ScheduleOutput>? output = await _getScheduleByCompanyId.Execute(userIdAuth, companyId, year, month, getOnlyNearbyDates);
 
         return Ok(output);
     }

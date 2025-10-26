@@ -13,6 +13,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
 
@@ -191,6 +192,93 @@ public sealed class GetAllByCompanyIdTests
         // Assert;
         Assert.NotNull(result);
         Assert.All(result, r => Assert.Equal(2025, r.DateStart.Year));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReturnSchedules_WhenGetNearbyDatesIsTrue()
+    {
+        // Arrange;
+        (Context context, User user, Company company, _) = await ArrangeSchedulesWithUserAsync(count: 0);
+
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        DateTime today = GetDate();
+        DateTime yesterday = today.AddDays(-1);
+        DateTime tomorrow = today.AddDays(1);
+        DateTime twoDaysAgo = today.AddDays(-2);
+        DateTime twoDaysLater = today.AddDays(2);
+
+        // Dentro do range;
+        Schedule schedYesterday = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        schedYesterday.DateStart = yesterday.AddHours(10);
+        schedYesterday.Status = true;
+        await Fixture.Save(context, schedYesterday);
+
+        Schedule schedToday = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        schedToday.DateStart = today.AddHours(15);
+        schedToday.Status = true;
+        await Fixture.Save(context, schedToday);
+
+        Schedule schedTomorrow = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        schedTomorrow.DateStart = tomorrow.AddHours(9);
+        schedTomorrow.Status = true;
+        await Fixture.Save(context, schedTomorrow);
+
+        // Fora do range;
+        Schedule schedTwoDaysAgo = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        schedTwoDaysAgo.DateStart = twoDaysAgo.AddHours(8);
+        schedTwoDaysAgo.Status = true;
+        await Fixture.Save(context, schedTwoDaysAgo);
+
+        Schedule schedTwoDaysLater = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        schedTwoDaysLater.DateStart = twoDaysLater.AddHours(11);
+        schedTwoDaysLater.Status = true;
+        await Fixture.Save(context, schedTwoDaysLater);
+
+        GetScheduleByCompanyId sut = CreateSut(context, user);
+
+        // Act;
+        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null, true);
+
+        // Assert;
+        Assert.NotNull(result);
+        Assert.Contains(result, r => r.ScheduleId == schedYesterday.ScheduleId);
+        Assert.Contains(result, r => r.ScheduleId == schedToday.ScheduleId);
+        Assert.Contains(result, r => r.ScheduleId == schedTomorrow.ScheduleId);
+        Assert.DoesNotContain(result, r => r.ScheduleId == schedTwoDaysAgo.ScheduleId);
+        Assert.DoesNotContain(result, r => r.ScheduleId == schedTwoDaysLater.ScheduleId);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReturnEmptyList_WhenGetNearbyDatesIsTrueAndNoSchedulesInRange()
+    {
+        // Arrange;
+        (Context context, User user, Company company, _) = await ArrangeSchedulesWithUserAsync(count: 0);
+
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        // Todos fora do range (há 5 dias e daqui 5 dias);
+        DateTime today = DateTime.Today;
+        Schedule oldSched = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        oldSched.DateStart = today.AddDays(-5);
+        oldSched.Status = true;
+        await Fixture.Save(context, oldSched);
+
+        Schedule futureSched = ScheduleMock.Create(client.ClientId, company.CompanyId);
+        futureSched.DateStart = today.AddDays(5);
+        futureSched.Status = true;
+        await Fixture.Save(context, futureSched);
+
+        GetScheduleByCompanyId sut = CreateSut(context, user);
+
+        // Act;
+        List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null, true);
+
+        // Assert;
+        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 
     #region helpers

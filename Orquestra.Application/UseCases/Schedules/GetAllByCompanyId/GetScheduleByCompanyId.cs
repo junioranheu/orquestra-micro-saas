@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Schedules.Base;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 
@@ -13,7 +14,7 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
     private readonly Context _context = deps.Context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
 
-    public async Task<List<ScheduleOutput>?> Execute(Guid userIdAuth, Guid companyId, int? year, int? month)
+    public async Task<List<ScheduleOutput>?> Execute(Guid userIdAuth, Guid companyId, int? year, int? month, bool? getOnlyNearbyDates = false)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
@@ -23,7 +24,19 @@ public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : Sche
                     AsNoTracking().
                     Where(x => x.CompanyId == companyId && x.Status == true && x.Client!.Status == true);
 
-        if ((year.HasValue && year.Value > 0) && (month.HasValue && month.Value > 0)) // Se foi passado year e month, deve pegar o intervalo de: mês anterior, mês alvo e mês posterior;
+        if (getOnlyNearbyDates.GetValueOrDefault())
+        {
+            // Ontem, hoje e amanhã, apenas;
+            DateTime today = GetDate();
+            DateTime yesterday = today.AddDays(-1);
+            DateTime tomorrow = today.AddDays(1);
+
+            DateTime start = yesterday;
+            DateTime end = tomorrow.AddDays(1).AddTicks(-1);
+
+            query = query.Where(x => x.DateStart >= start && x.DateStart <= end);
+        }
+        else if ((year.HasValue && year.Value > 0) && (month.HasValue && month.Value > 0)) // Se foi passado year e month, deve pegar o intervalo de: mês anterior, mês alvo e mês posterior;
         {
             // Ano alvo;
             DateTime targetDate = new(year.Value, month.Value, 1);

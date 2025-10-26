@@ -1,4 +1,6 @@
 'use client';
+import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { Fetch } from '@/app/api/fetch';
 import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import SvgUserEnvelope from '@/app/assets/svg/user-envelope.svg';
 import CardCalendar from '@/app/components/card/calendar';
@@ -12,7 +14,7 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function Dashboard() {
@@ -31,6 +33,20 @@ export default function Dashboard() {
             }
         }
     }, [auth, me]);
+
+    const [schedules, setSchedules] = useState<iSchedule[]>([]);
+
+    useEffect(() => {
+        async function handleFetchSchedules() {
+            const items = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}&getOnlyNearbyDates=true` }) as iSchedule[];
+            console.log(items);
+            setSchedules(items);
+        }
+
+        if (me?.currentMainCompany?.companyId) {
+            handleFetchSchedules();
+        }
+    }, [me]);
 
     return (
         <section className={styles.main}>
