@@ -7,49 +7,78 @@ import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
 
 interface iProps {
-    svg?: 'error' | 'success';
+    variant?: 'error' | 'success' | 'warning' | 'info';
     code?: string;
     title?: string;
     description: string;
-    showSupportContact: boolean;
-    isCentralized: boolean;
+    showSupportContact?: boolean;
 }
 
-export default function LayoutTemplateOne({ svg, code, title, description, showSupportContact, isCentralized }: iProps) {
+export default function LayoutTemplateOne({
+    variant = 'error',
+    code,
+    title,
+    description,
+    showSupportContact = false
+}: iProps) {
 
     const router = useRouter();
     useDisableScroll();
 
-    return (
-        <main
-            className={styles.container}
-            style={isCentralized ? { alignItems: 'center' } : { alignItems: 'flex-start' }}
-        >
-            <div className={styles.inner}>
-                <div className={styles.iconWrapper}>
-                    {
-                        svg === 'error' && (
-                            <svg className={styles.errorIcon} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={1.5} strokeLinecap='round' strokeLinejoin='round'>
-                                <circle cx='12' cy='12' r='10' />
-                                <line x1='4.93' y1='4.93' x2='19.07' y2='19.07' />
-                            </svg>
-                        )
-                    }
+    function handleGetIcon() {
+        switch (variant) {
+            case 'error':
+                return (
+                    <svg className={styles.icon} data-variant="error" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+                        <circle cx='12' cy='12' r='10' />
+                        <line x1='15' y1='9' x2='9' y2='15' />
+                        <line x1='9' y1='9' x2='15' y2='15' />
+                    </svg>
+                );
+            case 'success':
+                return (
+                    <svg className={styles.icon} data-variant="success" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+                        <circle cx='12' cy='12' r='10' />
+                        <path d='M9 12l2 2 4-4' />
+                    </svg>
+                );
+            case 'warning':
+                return (
+                    <svg className={styles.icon} data-variant="warning" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+                        <path d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z' />
+                        <line x1='12' y1='9' x2='12' y2='13' />
+                        <line x1='12' y1='17' x2='12.01' y2='17' />
+                    </svg>
+                );
+            case 'info':
+                return (
+                    <svg className={styles.icon} data-variant="info" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+                        <circle cx='12' cy='12' r='10' />
+                        <line x1='12' y1='16' x2='12' y2='12' />
+                        <line x1='12' y1='8' x2='12.01' y2='8' />
+                    </svg>
+                );
+        }
+    }
 
-                    {
-                        svg === 'success' && (
-                            <svg className={styles.successIcon} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={1.5} strokeLinecap='round' strokeLinejoin='round'>
-                                <circle cx='12' cy='12' r='10' />
-                                <path d='M9 12l2 2 4-4' />
-                            </svg>
-                        )
-                    }
+    return (
+        <main className={styles.container}>
+            <div className={styles.card}>
+                <div className={styles.iconWrapper}>
+                    {handleGetIcon()}
                 </div>
 
-                {code && <h1 className={styles.code}>{code}</h1>}
-                {title && <h2 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />}
+                {
+                    code && <span className={styles.code}>{code}</span>
+                }
 
-                <p className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
+                {
+                    title && (
+                        <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
+                    )
+                }
+
+                <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
 
                 <div className={styles.actions}>
                     <Button
@@ -62,7 +91,7 @@ export default function LayoutTemplateOne({ svg, code, title, description, showS
                     {
                         showSupportContact && (
                             <Button
-                                label='Contatar suporte via e-mail'
+                                label='Contatar suporte'
                                 icon_feather={<Icon icon='mail' />}
                                 handleFunction={() => window.location.href = `mailto:${SYSTEM.EMAIL_SUPPORT}`}
                                 isStyleSimple={true}

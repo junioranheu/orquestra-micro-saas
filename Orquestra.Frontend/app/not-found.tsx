@@ -21,12 +21,11 @@ export default function NotFound() {
 
             <section>
                 <LayoutTemplateOne
-                    svg='error'
+                    variant='error'
                     code='#404'
                     title='Página não encontrada'
                     description={path ? `A página ${(path.includes("/404") ? "" : `"${path}"`)} que você tentou acessar não existe.` : 'A página que você tentou acessar não existe.'}
                     showSupportContact={true}
-                    isCentralized={true}
                 />
             </section>
         </section>

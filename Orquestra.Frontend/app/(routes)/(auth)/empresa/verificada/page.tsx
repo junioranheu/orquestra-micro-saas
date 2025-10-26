@@ -10,14 +10,13 @@ export default function EmpresaVerificada() {
     return (
         <section>
             <LayoutTemplateOne
-                svg='success'
+                variant='success'
                 title='Uhu!'
                 description={
                     `Estamos muito felizes por sua empresa estar aqui no <b>${SYSTEM.NAME}</b>!<br/>
                 Agora você já pode voltar ao dashboard para dar continuidade nos seus afazres dentro da plataforma.`
                 }
                 showSupportContact={false}
-                isCentralized={true}
             />
         </section>
     )

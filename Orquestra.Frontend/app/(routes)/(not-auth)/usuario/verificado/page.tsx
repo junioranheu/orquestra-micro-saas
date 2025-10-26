@@ -11,14 +11,13 @@ export default function UsuarioVerificado() {
     return (
         <section className={styles.main}>
             <LayoutTemplateOne
-                svg='success'
+                variant='success'
                 title='Uhu!'
                 description={
                     `Estamos muito felizes por você estar aqui no <b>${SYSTEM.NAME}</b>!<br/>
                 Agora você já pode voltar ao início para realizar o login na plataforma.`
                 }
                 showSupportContact={false}
-                isCentralized={true}
             />
         </section>
     )
