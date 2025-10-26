@@ -244,77 +244,81 @@ export default function TableGeneric({
             }}
         >
             <div className={styles.container}>
-                <div className={styles.top}>
-                    {
-                        title && (
-                            <div className={styles.left}>
-                                <Tippy content={`${totalRowsCount} registro${totalRowsCount > 1 ? 's' : ''}`}>
-                                    <span className={styles.title}>
-                                        {title && <ContentLoaderText text={title ? title : ''} delay={150} />}
-                                    </span>
-                                </Tippy>
+                {
+                    (title || extraItems?.length || btn_filter_label || btn_import_label || btn_export_label || btn_add_label) && (
+                        <div className={styles.top}>
+                            {
+                                title && (
+                                    <div className={styles.left}>
+                                        <Tippy content={`${totalRowsCount} registro${totalRowsCount > 1 ? 's' : ''}`}>
+                                            <span className={styles.title}>
+                                                {title && <ContentLoaderText text={title ? title : ''} delay={150} />}
+                                            </span>
+                                        </Tippy>
+                                    </div>
+                                )
+                            }
+
+                            <div className={styles.right}>
+                                {
+                                    extraItems?.map((x, i) => (
+                                        <div key={i} className={styles.extraItem}>
+                                            {x.title && <span className={styles.title}>{x.title}</span>}
+                                            <span className={styles.label}>{x.label}</span>
+                                        </div>
+                                    ))
+                                }
+
+                                {
+                                    btn_filter_label && btn_filter_function && (
+                                        <Button
+                                            label={btn_filter_label}
+                                            handleFunction={btn_filter_function}
+                                            isStyleSimple
+                                            icon_feather={<Icon icon='search' size='small' />}
+                                            style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+                                        />
+                                    )
+                                }
+
+                                {
+                                    btn_import_label && btn_import_function && (
+                                        <Button
+                                            label={btn_import_label}
+                                            handleFunction={btn_import_function}
+                                            isStyleSimple
+                                            icon_feather={<Icon icon='upload' size='small' />}
+                                            style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+                                        />
+                                    )
+                                }
+
+                                {
+                                    btn_export_label && btn_export_function && (
+                                        <Button
+                                            label={btn_export_label}
+                                            handleFunction={btn_export_function}
+                                            isStyleSimple
+                                            icon_feather={<Icon icon='download' size='small' />}
+                                            style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+                                        />
+                                    )
+                                }
+
+                                {
+                                    btn_add_label && btn_add_function && (
+                                        <Button
+                                            label={btn_add_label}
+                                            handleFunction={btn_add_function}
+                                            icon_feather={<Icon icon='plus-circle' size='small' />}
+                                            style={{ fontSize: '0.75rem' }}
+                                        />
+                                    )
+                                }
                             </div>
-                        )
-                    }
-
-                    <div className={styles.right}>
-                        {
-                            extraItems?.map((x, i) => (
-                                <div key={i} className={styles.extraItem}>
-                                    {x.title && <span className={styles.title}>{x.title}</span>}
-                                    <span className={styles.label}>{x.label}</span>
-                                </div>
-                            ))
-                        }
-
-                        {
-                            btn_filter_label && btn_filter_function && (
-                                <Button
-                                    label={btn_filter_label}
-                                    handleFunction={btn_filter_function}
-                                    isStyleSimple
-                                    icon_feather={<Icon icon='search' size='small' />}
-                                    style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
-                                />
-                            )
-                        }
-
-                        {
-                            btn_import_label && btn_import_function && (
-                                <Button
-                                    label={btn_import_label}
-                                    handleFunction={btn_import_function}
-                                    isStyleSimple
-                                    icon_feather={<Icon icon='upload' size='small' />}
-                                    style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
-                                />
-                            )
-                        }
-
-                        {
-                            btn_export_label && btn_export_function && (
-                                <Button
-                                    label={btn_export_label}
-                                    handleFunction={btn_export_function}
-                                    isStyleSimple
-                                    icon_feather={<Icon icon='download' size='small' />}
-                                    style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
-                                />
-                            )
-                        }
-
-                        {
-                            btn_add_label && btn_add_function && (
-                                <Button
-                                    label={btn_add_label}
-                                    handleFunction={btn_add_function}
-                                    icon_feather={<Icon icon='plus-circle' size='small' />}
-                                    style={{ fontSize: '0.75rem' }}
-                                />
-                            )
-                        }
-                    </div>
-                </div>
+                        </div>
+                    )
+                }
 
                 {
                     (apiUrlRequest && setApiUrlRequest) && (

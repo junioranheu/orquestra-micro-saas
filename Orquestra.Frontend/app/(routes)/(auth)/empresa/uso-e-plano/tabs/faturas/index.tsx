@@ -8,7 +8,6 @@ import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { useState } from 'react';
-import styles from './index.module.scss';
 
 interface iProps {
     me: iMe;
@@ -127,7 +126,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
     }
 
     return (
-        <section className={styles.main}>
+        <section>
             <TableGeneric
                 idPropName='companyInvoiceId'
                 columns={columns}
@@ -135,8 +134,6 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={invoices?.count}
-
-                title='Histórico de faturas da empresa'
                 managingOptions={managingOptions}
             />
         </section>

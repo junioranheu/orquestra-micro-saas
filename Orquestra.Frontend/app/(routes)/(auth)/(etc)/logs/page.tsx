@@ -2,6 +2,7 @@
 import { CONSTS_LOG, iLog, iLogPaginated } from '@/app/api/consts/log';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableExtraItems, iTableManagingOptions } from '@/app/components/table/generic';
+import TemplatePageHeader from '@/app/components/template/page-header';
 import SYSTEM from '@/app/consts/system';
 import handleCopyToClipboard from '@/app/functions/clipboard.copy';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -10,7 +11,6 @@ import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { useState } from 'react';
-import styles from './page.module.scss';
 
 export default function Logs() {
 
@@ -82,7 +82,7 @@ export default function Logs() {
     }
 
     return (
-        <section className={styles.main}>
+        <TemplatePageHeader title={`Logs do ${SYSTEM.NAME}`}>
             <TableGeneric
                 idPropName='logId'
                 columns={columns}
@@ -90,11 +90,9 @@ export default function Logs() {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={logs?.count}
-
-                title={`Logs do ${SYSTEM.NAME}`}
                 managingOptions={managingOptions}
                 extraItems={tableExtraItems}
             />
-        </section>
+        </TemplatePageHeader>
     )
 }

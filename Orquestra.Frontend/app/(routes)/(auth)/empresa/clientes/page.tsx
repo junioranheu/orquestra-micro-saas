@@ -2,7 +2,9 @@
 import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
+import Button from '@/app/components/input/button';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
+import TemplatePageHeader from '@/app/components/template/page-header';
 import ROUTES from '@/app/consts/routes';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
@@ -13,7 +15,6 @@ import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
 import EmpresaClientesModalView from './modal/view';
-import styles from './page.module.scss';
 
 export default function EmpresaClientes() {
 
@@ -110,7 +111,26 @@ export default function EmpresaClientes() {
 
     return (
         <Fragment>
-            <section className={styles.main}>
+            <TemplatePageHeader
+                title='Clientes cadastrados'
+                actions={[
+                    <Button
+                        key='search'
+                        label='Filtrar'
+                        isStyleSimple={true}
+                        handleFunction={() => setIsModalFilterOpen(true)}
+                        icon_feather={<Icon icon='search' size='small' />}
+                    />,
+                    me?.isUserAdmOfCurrentMainCompany && (
+                        <Button
+                            key='add'
+                            label='Cadastrar novo cliente'
+                            handleFunction={() => handleOpenModalView(undefined)}
+                            icon_feather={<Icon icon='plus-circle' size='small' />}
+                        />
+                    )
+                ]}
+            >
                 <TableGeneric
                     idPropName='clientId'
                     columns={columns}
@@ -118,20 +138,13 @@ export default function EmpresaClientes() {
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={clients?.count}
-
-                    title='Clientes cadastrados'
                     managingOptions={managingOptions}
-                    btn_add_label='Cadastrar novo'
-                    btn_add_function={() => handleOpenModalView(undefined)}
-                    btn_filter_label='Filtrar'
-                    btn_filter_function={() => setIsModalFilterOpen(true)}
-
                     modalFilterFormData={modalFilterFormData}
                     setModalFilterFormData={setModalFilterFormData}
                     apiUrlRequest={apiUrlRequest}
                     setApiUrlRequest={setApiUrlRequest}
                 />
-            </section>
+            </TemplatePageHeader>
 
             <EmpresaClientesModalFilters
                 isModalOpen={isModalFilterOpen}

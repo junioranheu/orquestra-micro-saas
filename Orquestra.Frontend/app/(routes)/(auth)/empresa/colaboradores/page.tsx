@@ -18,7 +18,6 @@ import { Fragment, useEffect, useState } from 'react';
 import EmpresaMembrosModalEdit from './modal/edit';
 import EmpresaMembrosModalFilters, { iCompanyUserFormDataModalFilter } from './modal/filter';
 import EmpresaMembrosModalInvite from './modal/invite';
-import styles from './page.module.scss';
 
 export default function EmpresaMembros() {
 
@@ -190,24 +189,19 @@ export default function EmpresaMembros() {
                     )
                 ]}
             >
-                <section className={styles.main}>
-                    <TableGeneric
-                        idPropName='companyUserId'
-                        columns={columns}
-                        data={membersNormalized ?? []}
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        totalRowsCount={members?.count}
-
-                        // showTitleAmount={true}
-                        managingOptions={managingOptions}
-
-                        modalFilterFormData={modalFilterFormData}
-                        setModalFilterFormData={setModalFilterFormData}
-                        apiUrlRequest={apiUrlRequest}
-                        setApiUrlRequest={setApiUrlRequest}
-                    />
-                </section>
+                <TableGeneric
+                    idPropName='companyUserId'
+                    columns={columns}
+                    data={membersNormalized ?? []}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalRowsCount={members?.count}
+                    managingOptions={managingOptions}
+                    modalFilterFormData={modalFilterFormData}
+                    setModalFilterFormData={setModalFilterFormData}
+                    apiUrlRequest={apiUrlRequest}
+                    setApiUrlRequest={setApiUrlRequest}
+                />
             </TemplatePageHeader>
 
             <EmpresaMembrosModalFilters
