@@ -5,12 +5,12 @@ import styles from './index.module.scss';
 
 interface iProps {
     title: string;
-    isLoading: boolean;
+    isLoading?: boolean;
     actions?: ReactNode[];
     children?: ReactNode;
 }
 
-export default function TemplatePageHeader({ title, isLoading, actions = [], children }: iProps) {
+export default function TemplatePageHeader({ title, isLoading = false, actions = [], children }: iProps) {
     return (
         <section className={styles.main}>
             <div className={styles.pageHeader}>

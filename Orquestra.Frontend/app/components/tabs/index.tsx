@@ -6,15 +6,16 @@ interface TabsProps {
     tabs: string[];
     contents: ReactNode[];
     activeIndexDefault?: number;
+    isBig?: boolean;
 }
 
-export default function Tabs({ tabs, contents, activeIndexDefault = 0 }: TabsProps) {
+export default function Tabs({ tabs, contents, activeIndexDefault = 0, isBig = false }: TabsProps) {
 
     const [activeIndex, setActiveIndex] = useState<number>(activeIndexDefault);
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
+            <div className={`${styles.header} ${isBig && styles.big}`}>
                 {
                     tabs.map((tab, index) => (
                         <button

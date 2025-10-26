@@ -23,6 +23,7 @@ export default function EmpresaUsoEPlano() {
                     <EmpresaUsoEPlanoTabPlano me={me} key={1} />,
                     <EmpresaUsoEPlanoTabFaturas me={me} key={2} />
                 ]}
+                isBig={true}
             />
         </section>
     )

@@ -137,7 +137,7 @@ export default function EmpresaGerenciar() {
     if (isLoading) {
         return (
             <TemplatePageHeader title='Minhas empresas' isLoading={isLoading}>
-            </TemplatePageHeader >
+            </TemplatePageHeader>
         )
     }
 

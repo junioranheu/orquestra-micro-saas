@@ -70,7 +70,7 @@
     width: 56px;
     height: 56px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--contrast) 0%, var(--contrast) 100%);
+    background: linear-gradient(135deg, var(--main) 0%, var(--main) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,19 +145,19 @@
     }
 
     &.badgeMain {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, var(--main) 0%, var(--main) 100%);
         color: #ffffff;
         box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
     }
 
     &.badgeAdmin {
-        background: linear-gradient(135deg, var(--contrast) 0%, var(--contrast) 100%);
+        background: linear-gradient(135deg, var(--main) 0%, var(--main) 100%);
         color: #ffffff;
         box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
     }
 
     &.badgeOwner {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        background: linear-gradient(135deg, var(--contrast) 0%, var(--contrast) 100%);
         color: #ffffff;
         box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
     }
@@ -253,7 +253,7 @@
     gap: 0.875rem;
     padding: 1rem;
     // background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    background: var(--contrast);
+    background: var(--main);
     font-family: inherit !important;
     border-radius: var(--border-radius);
     margin-top: 1rem;

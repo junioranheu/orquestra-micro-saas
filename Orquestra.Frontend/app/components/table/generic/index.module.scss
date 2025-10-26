@@ -6,6 +6,7 @@
     width: 100%;
     margin-left: 0 !important;
     margin-right: 0 !important;
+    margin-top: 0 !important;
 
     .container {
         display: flex;
@@ -26,7 +27,9 @@
                 overflow-x: auto;
 
                 .title {
-                    font-size: 1.875rem;
+                    // font-size: 1.875rem;
+                    // font-weight: 700;
+                    font-size: 1rem;
                     font-weight: 700;
                 }
             }

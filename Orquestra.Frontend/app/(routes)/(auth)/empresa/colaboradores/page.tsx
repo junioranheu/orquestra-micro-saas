@@ -3,7 +3,9 @@ import { CONSTS_COMPANY_USER, iCompanyUser, iCompanyUserPaginated } from '@/app/
 import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
+import Button from '@/app/components/input/button';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
+import TemplatePageHeader from '@/app/components/template/page-header';
 import ROUTES from '@/app/consts/routes';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
@@ -168,32 +170,45 @@ export default function EmpresaMembros() {
 
     return (
         <Fragment>
-            <section className={styles.main}>
-                <TableGeneric
-                    idPropName='companyUserId'
-                    columns={columns}
-                    data={membersNormalized ?? []}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    totalRowsCount={members?.count}
+            <TemplatePageHeader
+                title='Colaboradores cadastrados'
+                actions={[
+                    <Button
+                        key='search'
+                        label='Filtrar'
+                        isStyleSimple={true}
+                        handleFunction={() => setIsModalFilterOpen(true)}
+                        icon_feather={<Icon icon='search' size='small' />}
+                    />,
+                    me?.isUserAdmOfCurrentMainCompany && (
+                        <Button
+                            key='add'
+                            label='Convidar novo colaborador'
+                            handleFunction={() => setIsModalInviteOpen(true)}
+                            icon_feather={<Icon icon='plus-circle' size='small' />}
+                        />
+                    )
+                ]}
+            >
+                <section className={styles.main}>
+                    <TableGeneric
+                        idPropName='companyUserId'
+                        columns={columns}
+                        data={membersNormalized ?? []}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        totalRowsCount={members?.count}
 
-                    title='Colaboradores cadastrados'
-                    managingOptions={managingOptions}
+                        // showTitleAmount={true}
+                        managingOptions={managingOptions}
 
-                    {... (me?.isUserAdmOfCurrentMainCompany ? {
-                        btn_add_label: 'Convidar novo colaborador',
-                        btn_add_function: () => setIsModalInviteOpen(true)
-                    } : {})}
-
-                    btn_filter_label='Filtrar'
-                    btn_filter_function={() => setIsModalFilterOpen(true)}
-
-                    modalFilterFormData={modalFilterFormData}
-                    setModalFilterFormData={setModalFilterFormData}
-                    apiUrlRequest={apiUrlRequest}
-                    setApiUrlRequest={setApiUrlRequest}
-                />
-            </section>
+                        modalFilterFormData={modalFilterFormData}
+                        setModalFilterFormData={setModalFilterFormData}
+                        apiUrlRequest={apiUrlRequest}
+                        setApiUrlRequest={setApiUrlRequest}
+                    />
+                </section>
+            </TemplatePageHeader>
 
             <EmpresaMembrosModalFilters
                 isModalOpen={isModalFilterOpen}
