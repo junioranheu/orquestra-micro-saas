@@ -54,7 +54,7 @@ export default function LayoutTemplateOne({ svg, code, title, description, showS
                 <div className={styles.actions}>
                     <Button
                         label='Voltar ao início'
-                        icone_feather={<Icon icon='home' />}
+                        icon_feather={<Icon icon='home' />}
                         handleFunction={() => router.push(ROUTES.LOGIN)}
                         isBig={true}
                     />
@@ -63,7 +63,7 @@ export default function LayoutTemplateOne({ svg, code, title, description, showS
                         showSupportContact && (
                             <Button
                                 label='Contatar suporte via e-mail'
-                                icone_feather={<Icon icon='mail' />}
+                                icon_feather={<Icon icon='mail' />}
                                 handleFunction={() => window.location.href = `mailto:${SYSTEM.EMAIL_SUPPORT}`}
                                 isStyleSimple={true}
                                 isBig={true}

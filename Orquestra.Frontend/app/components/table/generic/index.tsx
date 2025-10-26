@@ -206,7 +206,7 @@ export default function TableGeneric({
                                 label={option.label}
                                 handleFunction={() => option.function(record)}
                                 svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
-                                icone_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
+                                icon_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
                                 isStyleSimple={false}
                             />
                         ) : (
@@ -269,7 +269,7 @@ export default function TableGeneric({
                                     label={btn_filter_label}
                                     handleFunction={btn_filter_function}
                                     isStyleSimple
-                                    icone_feather={<Icon icon='search' size='small' />}
+                                    icon_feather={<Icon icon='search' size='small' />}
                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
                             )
@@ -281,7 +281,7 @@ export default function TableGeneric({
                                     label={btn_import_label}
                                     handleFunction={btn_import_function}
                                     isStyleSimple
-                                    icone_feather={<Icon icon='upload' size='small' />}
+                                    icon_feather={<Icon icon='upload' size='small' />}
                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
                             )
@@ -293,7 +293,7 @@ export default function TableGeneric({
                                     label={btn_export_label}
                                     handleFunction={btn_export_function}
                                     isStyleSimple
-                                    icone_feather={<Icon icon='download' size='small' />}
+                                    icon_feather={<Icon icon='download' size='small' />}
                                     style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
                                 />
                             )
@@ -304,7 +304,7 @@ export default function TableGeneric({
                                 <Button
                                     label={btn_add_label}
                                     handleFunction={btn_add_function}
-                                    icone_feather={<Icon icon='plus-circle' size='small' />}
+                                    icon_feather={<Icon icon='plus-circle' size='small' />}
                                     style={{ fontSize: '0.75rem' }}
                                 />
                             )

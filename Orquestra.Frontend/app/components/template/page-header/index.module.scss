@@ -1,0 +1,44 @@
+.main {
+    // background: red;
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: 100vh;
+
+    @media (max-width: 768px) {
+        padding: 1.5rem 1rem;
+    }
+
+    .pageHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 1.25rem;
+            align-items: flex-start;
+        }
+
+        .pageTitle {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--black);
+            margin: 0;
+            letter-spacing: -0.025em;
+
+            @media (max-width: 768px) {
+                font-size: 1.75rem;
+            }
+        }
+    }
+}

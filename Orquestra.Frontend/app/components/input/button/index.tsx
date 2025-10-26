@@ -12,7 +12,7 @@ interface iProps {
     handleFunction?: ((param?: any) => void) | null;
     svg_component?: ReactNode;
     svg_staticImageData?: StaticImageData | null;
-    icone_feather?: JSX.Element | null;
+    icon_feather?: JSX.Element | null;
     refBtn?: RefObject<HTMLButtonElement | null>;
     isDisabled?: boolean;
     isStyleSimple?: boolean;
@@ -28,7 +28,7 @@ export default function Button({
     handleFunction,
     svg_component = null,
     svg_staticImageData = null,
-    icone_feather,
+    icon_feather,
     refBtn,
     isDisabled = false,
     isStyleSimple = false,
@@ -81,7 +81,7 @@ export default function Button({
             ref={refBtn}
             disabled={isDisabledInternal || isDisabled}
         >
-            {icone_feather && cloneElement(icone_feather)}
+            {icon_feather && cloneElement(icon_feather)}
             {/* @ts-expect-error: svg_component pode não ter props compatíveis; */}
             {svg_component && cloneElement(svg_component, svgDefaultProps)}
             {svg_staticImageData && <Image src={svg_staticImageData} width={20} alt='' />}
