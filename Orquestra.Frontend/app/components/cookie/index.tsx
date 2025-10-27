@@ -110,11 +110,13 @@ const CookieWidget = (props: iCookieWidgetProps) => {
                 <p className='cookie_widget_title'>{title ?? 'This website'}</p>
                 <p className='cookie_widget_subtitle'>{subtitle ?? 'use Cookies'}</p>
             </div>
+
             <div className='cookie_widget_content'>
                 <p className='cookie_widget_text'>
                     {text ??
                         'We use cookies and similar methods to recognize visitors and remember their preferences. We also use them to measure ad campaign effectiveness, target ads and analyze site traffic. To learn more about these methods, including how to disable them, view our Cookie Policy.'}
                 </p>
+
                 {policyLink && (
                     <a
                         className='cookie_widget_privacy_policy'
@@ -127,7 +129,16 @@ const CookieWidget = (props: iCookieWidgetProps) => {
                     </a>
                 )}
             </div>
+
             <div className='cookie_widget_footer'>
+                <button
+                    className='cookie_widget_button_reject'
+                    aria-label={rejectButtonText ?? 'Reject All'}
+                    onClick={_onDecline}
+                >
+                    {rejectButtonText ?? 'Reject All'}
+                </button>
+
                 <button
                     className='cookie_widget_button_accept'
                     aria-label={acceptButtonText ?? 'Accept All'}
@@ -135,13 +146,6 @@ const CookieWidget = (props: iCookieWidgetProps) => {
                     onClick={_onAccept}
                 >
                     {acceptButtonText ?? 'Accept All'}
-                </button>
-                <button
-                    className='cookie_widget_button_reject'
-                    aria-label={rejectButtonText ?? 'Reject All'}
-                    onClick={_onDecline}
-                >
-                    {rejectButtonText ?? 'Reject All'}
                 </button>
             </div>
         </div>

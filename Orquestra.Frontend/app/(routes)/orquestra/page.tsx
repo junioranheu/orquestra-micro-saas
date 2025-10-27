@@ -1,6 +1,7 @@
 'use client';
 import { iMeSimple } from '@/app/api/consts/auth';
 import { CONSTS_UTILITY, iPlanTypeOutput } from '@/app/api/consts/utility';
+import ImgLogo from '@/app/assets/png/logo-simple.png';
 import Img from '@/app/assets/png/server.png';
 import Icon from '@/app/components/icon';
 import { iDropdownOption } from '@/app/components/input/drop-down';
@@ -87,17 +88,19 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                 {/* Logo */}
                 <Tippy content='Voltar ao início'>
                     <Link href={ROUTES.DASHBOARD} className='flex items-center gap-2.5 group'>
-                        <div className='w-10 h-10 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
+                        {/* <div className='w-10 h-10 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
                             <Icon icon='calendar' />
-                        </div>
+                        </div> */}
 
-                        <div className='hidden sm:flex flex-col'>
+                        {/* <div className='hidden sm:flex flex-col'>
                             <span className='font-bold text-gray-900 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] bg-clip-text text-transparent'>
                                 {SYSTEM.NAME}
                             </span>
 
                             <span className='text-xs text-gray-500'>{SYSTEM.DESCRIPTION}</span>
-                        </div>
+                        </div> */}
+
+                        <Image src={ImgLogo} alt='' width={120} height={120} priority={true} />
                     </Link>
                 </Tippy>
 
