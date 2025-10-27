@@ -76,7 +76,7 @@ export default function Mascot({
                     ...absoluteStyle
                 }}
             >
-                <Image src={ImgLoading} width={width} height={width} alt='' />
+                <Image src={ImgLoading} width={width} height={width} alt='' unoptimized={true} />
             </div>
         </Tippy>
     )

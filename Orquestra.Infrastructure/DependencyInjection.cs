@@ -15,7 +15,8 @@ using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Interceptors;
-using Orquestra.Infrastructure.Jobs;
+using Orquestra.Infrastructure.Jobs.Companies;
+using Orquestra.Infrastructure.Jobs.Schedules;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
@@ -178,5 +179,6 @@ public static class DependencyInjection
     private static void AddJobs(IServiceCollection services)
     {
         services.AddHostedService<CompanyPlanJob>();
+        services.AddHostedService<ScheduleStatusJob>();
     }
 }

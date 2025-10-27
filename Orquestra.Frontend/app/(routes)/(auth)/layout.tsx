@@ -14,13 +14,12 @@ import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
-import useWindowSize from '@/app/hooks/useWindowSize';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
 import { usePathname } from 'next/navigation';
 import 'nprogress/nprogress.css';
-import { ReactNode, useEffect, useMemo } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
 import 'tippy.js/dist/tippy.css';
 
@@ -30,12 +29,8 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     useCheckAzureServer();
     useShowNProgressOnPageLoad();
 
-    const windowSize = useWindowSize();
     const pathname = usePathname();
-
-    const hideHeader = useMemo(() => {
-        return (pathname?.includes(ROUTES.EMPRESA_AGENDAMENTOS) && windowSize.width <= 1366);
-    }, [pathname, windowSize.width]);
+    const hideHeader = pathname?.includes(ROUTES.EMPRESA_AGENDAMENTOS);
 
     useEffect(() => {
         feather.replace();

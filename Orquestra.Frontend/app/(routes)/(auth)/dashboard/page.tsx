@@ -58,7 +58,7 @@ export default function Dashboard() {
                     }
                     tippyPlacement='bottom'
                     flipPeriodic={true}
-                    flipInterval={handleGetRandomNumber(5000, 15000)}
+                    flipInterval={handleGetRandomNumber(5000, 10000)}
                 />
             </span>
 

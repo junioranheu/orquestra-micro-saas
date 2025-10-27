@@ -7,6 +7,7 @@ import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import TemplatePageHeader from '@/app/components/template/page-header';
+import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { handleGuessGender } from '@/app/functions/get.guessGender';
@@ -150,8 +151,8 @@ function ClientHeader({ name, memberSince, onEdit, client, setTrigger }: iClient
     return (
         <div className={styles.clientHeader}>
             <div className={styles.clientHeader__info}>
-                <div className={styles.clientHeader__avatar}>
-                    <span className={styles.clientHeader__avatarEmoji}>{emoji}</span>
+                <div className={`${styles.clientHeader__avatar} notSelectable`}>
+                    <span className={`${styles.clientHeader__avatarEmoji} ${SYSTEM.ANIMATE_DELAY_0_5s}`}>{emoji}</span>
                 </div>
 
                 <div className={styles.clientHeader__details}>

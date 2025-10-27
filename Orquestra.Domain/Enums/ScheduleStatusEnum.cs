@@ -7,12 +7,9 @@ public enum ScheduleStatusEnum
     [Description("Marcado")]
     Scheduled = 1,
 
-    [Description("Remarcado")]
-    Rescheduled = 2,
-
     [Description("Concluído")]
-    Completed = 3,
+    Completed = 2,
 
     [Description("Cancelado")]
-    Canceled = 4
+    Canceled = 3
 }

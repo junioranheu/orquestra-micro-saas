@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Jobs.Base;
 using static Orquestra.Utils.Fixtures.Get;
 
-namespace Orquestra.Infrastructure.Jobs;
+namespace Orquestra.Infrastructure.Jobs.Companies;
 
 public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<CompanyPlanJob> logger) : BackgroundService
 {
@@ -30,7 +29,6 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         }
     }
 
-    #region extras
     #region obsolete_EF_with_hashset
     //private static async Task CheckAndExpirePlans(Context context)
     //{
@@ -73,7 +71,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         // Atualiza os invoices para CompanyInvoiceSituationEnum.Expired;
         if (companiesUpdated > 0)
         {
-            await CreateLog(context, _logger, description: $"Empresas atualizadas: {companiesUpdated}");
+            await JobsBase.CreateLog(context, _logger, description: $"Empresas atualizadas: {companiesUpdated}");
 
             int expiredValue = (int)CompanyInvoiceSituationEnum.Expired;
 
@@ -97,28 +95,8 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
 
             if (invoicesUpdated > 0)
             {
-                await CreateLog(context, logger, description: $"Faturas atualizadas: {invoicesUpdated}");
+                await JobsBase.CreateLog(context, _logger, description: $"Faturas atualizadas: {invoicesUpdated}");
             }
         }
     }
-
-    private static async Task CreateLog(Context context, ILogger logger, string description)
-    {
-        Log log = new()
-        {
-            LogType = LogTypeEnum.Job,
-            RequestType = "POST",
-            Endpoint = nameof(CompanyPlanJob),
-            Parameters = string.Empty,
-            Exception = string.Empty,
-            Description = description,
-            Status = StatusCodes.Status204NoContent,
-            UserId = null
-        };
-
-        logger.LogInformation("{description}", description);
-        await context.AddAsync(log);
-        await context.SaveChangesAsync();
-    }
-    #endregion
 }

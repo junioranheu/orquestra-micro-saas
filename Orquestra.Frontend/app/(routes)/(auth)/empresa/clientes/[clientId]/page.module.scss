@@ -330,20 +330,14 @@ $spacing-unit: 0.5rem;
             color: $white;
         }
 
-        // Remarcado;
-        &--2 {
-            background: $warning-bg;
-            color: $warning-text;
-        }
-
         // Concluído;
-        &--3 {
+        &--2 {
             background: $success-bg;
             color: $success-text;
         }
 
         // Cancelado;
-        &--4 {
+        &--3 {
             background: $error-bg;
             color: $error-text;
         }

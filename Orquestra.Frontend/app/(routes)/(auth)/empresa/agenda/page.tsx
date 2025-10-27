@@ -30,9 +30,9 @@ export default function EmpresaAgendamentos() {
             }
         }
 
-        updateSize(25);
-        window.addEventListener('resize', () => updateSize(10));
-        return () => window.removeEventListener('resize', () => updateSize(10));
+        updateSize(30);
+        window.addEventListener('resize', () => updateSize(15));
+        return () => window.removeEventListener('resize', () => updateSize(15));
     }, []);
 
     return (
@@ -54,7 +54,7 @@ export default function EmpresaAgendamentos() {
                 isCentralized={false}
                 tippyContent={
                     <div>
-                        Oi! Tudo em dia na sua agenda?<br /><br />
+                        Oi! Tudo em dia com seus agendamentos?<br /><br />
                         Aliás, caso queira me dispensar por um tempo, é só ajustar isso na aba de personalização, nas <Link href={ROUTES.USUARIO_CONFIGURACOES}>configurações</Link> do {SYSTEM.NAME}. 😅
                     </div>
                 }
