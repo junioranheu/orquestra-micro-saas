@@ -92,11 +92,13 @@ export default function EmpresaClientes() {
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />
         },
-        {
-            label: 'Remover cliente',
-            function: (e) => handleDisableClient(e, setTrigger),
-            icon: <Icon icon='user-x' />
-        }
+        ...(me?.isUserAdmOfCurrentMainCompany ? [
+            {
+                label: 'Remover cliente',
+                function: (e: iClient) => handleDisableClient(e, setTrigger),
+                icon: <Icon icon='user-x' />
+            }
+        ] : [])
     ] as iTableManagingOptions[];
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);

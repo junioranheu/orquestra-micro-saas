@@ -4,9 +4,9 @@ namespace Orquestra.Domain.Enums;
 
 public enum ModuleEnum
 {
-    [Description("Módulo de controle de agendamentos")]
+    [Description("Agenda")]
     Scheduling = 1,
 
-    [Description("Módulo de controle financeiro")]
+    [Description("Módulo financeiro")]
     Sales = 2
 }

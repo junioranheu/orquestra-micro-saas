@@ -41,6 +41,7 @@ export default function EmpresaAgendamentos() {
                 {
                     availableHeight && me && me?.currentMainCompany ? (
                         <CalendarComplete
+                            me={me}
                             events={events}
                             customElementHeight={(availableHeight)}
                             companyId={me?.currentMainCompany?.companyId}

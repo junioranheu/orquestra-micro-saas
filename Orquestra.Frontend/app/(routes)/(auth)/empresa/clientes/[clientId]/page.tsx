@@ -1,6 +1,7 @@
 'use client';
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
 import { handleDisableClient } from '@/app/(routes)/(auth)/empresa/clientes/page';
+import { iMe } from '@/app/api/consts/auth';
 import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
@@ -20,6 +21,7 @@ import styles from './page.module.scss';
 
 // Interfaces
 interface iClientHeaderProps {
+    me: iMe | undefined;
     name: string;
     memberSince: string;
     onEdit: () => void;
@@ -90,6 +92,7 @@ export default function ClientProfile() {
             <div className={styles.clientProfile}>
                 <div className={styles.clientProfile__container}>
                     <ClientHeader
+                        me={me}
                         name={client?.fullName}
                         memberSince={handleFormatDate(client?.createdDate, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO)}
                         onEdit={() => handleOpenModalView(client)}
@@ -132,7 +135,7 @@ export default function ClientProfile() {
 }
 
 // Componente de Header do Cliente
-function ClientHeader({ name, memberSince, onEdit, client, setTrigger }: iClientHeaderProps) {
+function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iClientHeaderProps) {
 
     const [emoji, setEmoji] = useState<string>('👤');
 
@@ -162,7 +165,7 @@ function ClientHeader({ name, memberSince, onEdit, client, setTrigger }: iClient
             </div>
 
             <div className={styles.clientHeader__actions}>
-                <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} />
+                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} />}
                 <Button label='Editar cliente' handleFunction={() => onEdit()} />
             </div>
         </div>

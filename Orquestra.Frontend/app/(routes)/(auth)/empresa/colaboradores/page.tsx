@@ -108,11 +108,13 @@ export default function EmpresaMembros() {
             function: (e) => handleOpenModalEdit(e),
             icon: <Icon icon='edit' />
         },
-        {
-            label: 'Remover colaborador',
-            function: (e) => handleDisable(e),
-            icon: <Icon icon='user-x' />
-        }
+        ...(me?.isUserAdmOfCurrentMainCompany ? [
+            {
+                label: 'Remover colaborador',
+                function: (e: iUser) => handleDisable(e),
+                icon: <Icon icon='user-x' />
+            }
+        ] : [])
     ] as iTableManagingOptions[];
 
     const [isModalInviteOpen, setIsModalInviteOpen] = useState<boolean>(false);

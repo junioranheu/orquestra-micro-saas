@@ -1,3 +1,4 @@
+import { iMe } from '@/app/api/consts/auth';
 import iClient from '@/app/api/consts/client';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
@@ -30,6 +31,7 @@ interface iProps {
     isOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
+    me: iMe | undefined;
     event: iEvent | undefined;
     companyId: Guid;
     companyUsers: iUser[] | undefined;
@@ -37,7 +39,7 @@ interface iProps {
     handleGetSchedules: () => Promise<void>;
 }
 
-export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event, companyId, companyUsers, clients, handleGetSchedules }: iProps) {
+export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, event, companyId, companyUsers, clients, handleGetSchedules }: iProps) {
 
     const router = useRouter();
     const windowSize = useWindowSize();
@@ -365,7 +367,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, event,
                                     canEdit && (
                                         !editing ? (
                                             <Fragment>
-                                                <Button label='Excluir' handleFunction={() => handleDisable(event)} isStyleSimple={true} />
+                                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir' handleFunction={() => handleDisable(event)} isStyleSimple={true} />}
                                                 <Button label='Habilitar edição' handleFunction={() => setEditing(true)} isDisabled={formData.scheduleStatus === 2} />
                                             </Fragment>
                                         ) : (

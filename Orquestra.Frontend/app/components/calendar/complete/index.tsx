@@ -1,4 +1,5 @@
 'use client';
+import { iMe } from '@/app/api/consts/auth';
 import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
@@ -29,13 +30,14 @@ export interface iEvent extends RBCEvent {
 }
 
 interface iProps {
+    me: iMe | undefined;
     events: iEvent[];
     customElementHeight?: number;
     companyId: Guid;
     setEvents: Dispatch<SetStateAction<iEvent[]>>;
 }
 
-export default function CalendarComplete({ events, customElementHeight, companyId, setEvents }: iProps) {
+export default function CalendarComplete({ me, events, customElementHeight, companyId, setEvents }: iProps) {
 
     const [, setIsRequestLoading] = useIsRequestLoading();
 
@@ -259,6 +261,7 @@ export default function CalendarComplete({ events, customElementHeight, companyI
                 isOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 type={typeModal}
+                me={me}
                 event={eventClicked}
                 companyId={companyId}
                 companyUsers={companyUsers?.output ?? []}
