@@ -9,7 +9,7 @@
     border: 1px solid var(--white);
     box-shadow: rgba(149, 157, 165, 0.15) 0px 8px 24px;
     border-radius: 8px;
-    font-family: Helvetica;
+    font-family: inherit;
 }
 
 .cookie_widget_container.is-right {
@@ -121,8 +121,7 @@
 }
 
 .cookie_widget_button_accept {
-    color: #bb2030;
-    /* font-weight: bold; */
+    font-weight: bold;
     border-bottom-right-radius: 8px;
 }
 

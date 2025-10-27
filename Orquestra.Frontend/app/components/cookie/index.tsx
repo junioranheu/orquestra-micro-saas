@@ -129,19 +129,19 @@ const CookieWidget = (props: iCookieWidgetProps) => {
             </div>
             <div className='cookie_widget_footer'>
                 <button
-                    className='cookie_widget_button_reject'
-                    aria-label={rejectButtonText ?? 'Reject All'}
-                    onClick={_onDecline}
-                >
-                    {rejectButtonText ?? 'Reject All'}
-                </button>
-                <button
                     className='cookie_widget_button_accept'
                     aria-label={acceptButtonText ?? 'Accept All'}
                     style={{ color }}
                     onClick={_onAccept}
                 >
                     {acceptButtonText ?? 'Accept All'}
+                </button>
+                <button
+                    className='cookie_widget_button_reject'
+                    aria-label={rejectButtonText ?? 'Reject All'}
+                    onClick={_onDecline}
+                >
+                    {rejectButtonText ?? 'Reject All'}
                 </button>
             </div>
         </div>
@@ -164,8 +164,8 @@ export function CookieDefault({ extenseButtonDescription = true }: iProps) {
             text={`A plataforma ${SYSTEM.NAME} utiliza cookies para oferecer uma melhor experiência. Ao continuar navegando, você concorda com o uso de cookies.`}
             cookieSecurity={true}
             hideOnScrollDown={false}
-            rejectButtonText={extenseButtonDescription ? 'Fechar' : 'Rejeitar cookies'}
-            acceptButtonText={extenseButtonDescription ? 'Aceitar todos os cookies' : 'Aceitar cookies'}
+            rejectButtonText={extenseButtonDescription ? 'Fechar' : 'Fechar'}
+            acceptButtonText={extenseButtonDescription ? 'Aceitar cookies' : 'Aceitar cookies'}
             onAccept={() => null}
             onReject={() => null}
         />
