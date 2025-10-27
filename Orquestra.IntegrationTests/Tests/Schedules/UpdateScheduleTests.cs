@@ -275,6 +275,32 @@ public sealed class UpdateScheduleTests
         Assert.NotNull(observations);
     }
 
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenScheduleIsCompleted()
+    {
+        (Context context, User user, Schedule schedule) = await ArrangeScheduleWithUserAsync();
+
+        schedule.ScheduleStatus = ScheduleStatusEnum.Completed;
+        context.Update(schedule);
+        await context.SaveChangesAsync();
+
+        ScheduleInput input = new()
+        {
+            ScheduleId = schedule.ScheduleId,
+            CompanyId = schedule.CompanyId,
+            ClientId = schedule.ClientId,
+            DateStart = schedule.DateStart,
+            DateEnd = schedule.DateEnd,
+            UsersIds = schedule.UsersIds,
+            PaymentType = schedule.PaymentType,
+            ScheduleStatus = ScheduleStatusEnum.Scheduled
+        };
+
+        UpdateSchedule sut = CreateSut(context, user);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(user.UserId, input));
+    }
+
     #region helpers
     private static async Task<(Context context, User user, Schedule schedule)> ArrangeScheduleWithUserAsync()
     {

@@ -47,7 +47,17 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         {
             if (input.ScheduleStatus != ScheduleStatusEnum.Scheduled)
             {
-                throw new ArgumentException($"O status de uma consulta recém criada deve ser {GetStatusDesc(ScheduleStatusEnum.Scheduled)}.");
+                throw new ArgumentException($"O status de uma consulta recém criada deve ser <b>{GetStatusDesc(ScheduleStatusEnum.Scheduled).ToLowerInvariant()}</b>.");
+            }
+        }
+
+        if (!isCreate)
+        {
+            Schedule? schedule = await _context.Schedules.AsNoTracking().Where(x => x.ScheduleId == input.ScheduleId).FirstOrDefaultAsync();
+
+            if (schedule?.ScheduleStatus == ScheduleStatusEnum.Completed || schedule?.ScheduleStatus == ScheduleStatusEnum.Canceled)
+            {
+                throw new InvalidOperationException($"Agendamentos com o status <b>{GetStatusDesc(ScheduleStatusEnum.Completed).ToLowerInvariant()}</b> não podem ser modificados.");
             }
         }
 
