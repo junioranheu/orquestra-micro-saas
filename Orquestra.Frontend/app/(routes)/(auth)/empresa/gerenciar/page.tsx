@@ -211,7 +211,7 @@ export default function EmpresaGerenciar() {
                                                         <Tippy content='Empresa Principal'>
                                                             <span className={`${styles.statusBadge} ${styles.badgeMain}`}>
                                                                 <Icon icon='star' size='small' />
-                                                                <span>Empresa Principal</span>
+                                                                <span>Empresa principal</span>
                                                             </span>
                                                         </Tippy>
                                                     )
