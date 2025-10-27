@@ -1,6 +1,5 @@
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
-import { PACIFICO } from '@/app/fonts/fonts';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './index.module.scss';
 
@@ -8,9 +7,10 @@ interface iProps {
     text: string;
     destroyAfterSeconds?: number;
     isGradient?: boolean;
+    showGif?: boolean;
 }
 
-export default function Splash({ text, destroyAfterSeconds, isGradient = false }: iProps) {
+export default function Splash({ text, destroyAfterSeconds, isGradient = false, showGif = false }: iProps) {
 
     const letters = useMemo(() => Array.from(text), [text]);
     const [visible, setVisible] = useState<boolean>(true);
@@ -27,7 +27,7 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
     }
 
     return (
-        <section className={`${styles.splash} ${PACIFICO.className} notSelectable`} style={{ background: isGradient ? 'var(--gradient)' : 'var(--white)' }}>
+        <section className={`${styles.splash} notSelectable`} style={{ background: isGradient ? 'var(--gradient)' : 'var(--white)' }}>
             <div className={`${styles.loading} ${SYSTEM.ANIMATE}`}>
                 {
                     letters.map((letter, i) => (
@@ -37,9 +37,13 @@ export default function Splash({ text, destroyAfterSeconds, isGradient = false }
                     ))
                 }
 
-                <div className={styles.gif}>
-                    <Mascot width={96} flip={true} hasAnimateDelay={false} />
-                </div>
+                {
+                    showGif && (
+                        <div className={styles.gif}>
+                            <Mascot width={96} flip={true} hasAnimateDelay={false} />
+                        </div>
+                    )
+                }
             </div>
         </section>
     )
