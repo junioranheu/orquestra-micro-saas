@@ -71,6 +71,7 @@ public static class SystemConsts
         public const string NotFoundUser = "O usuário não foi encontrado na base de dados.";
         public const string NotFoundSchedule = "O agendamento não foi encontrado na base de dados.";
         public const string NotFoundVerification = "O código de verificação não foi encontrado na base de dados.";
-        public const string AlreadyAuth = "Você já está autenticado no sistema, portanto não pode prosseguir com esta requisição.";      
+        public const string AlreadyAuth = "Você já está autenticado no sistema, portanto não pode prosseguir com esta requisição.";
+        public const string NotLinkedOrDontHaveCompany = "No momento, você não está vinculado a nenhuma empresa ou não há nenhuma definida como principal.";
     }
 }

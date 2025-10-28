@@ -6,6 +6,7 @@ using Orquestra.Application.UseCases.Clients;
 using Orquestra.Application.UseCases.Companies;
 using Orquestra.Application.UseCases.CompanyInvoices;
 using Orquestra.Application.UseCases.CompanyUsers;
+using Orquestra.Application.UseCases.Integrations;
 using Orquestra.Application.UseCases.Locations;
 using Orquestra.Application.UseCases.Logs;
 using Orquestra.Application.UseCases.Schedules;
@@ -44,6 +45,7 @@ public static class DependencyInjection
         services.AddClientsApplication();
         services.AddVerificationsApplication();
         services.AddCompanyInvoicesApplication();
+        services.AddIntegrationsApplication();
     }
 
     private static void AddServices(IServiceCollection _)

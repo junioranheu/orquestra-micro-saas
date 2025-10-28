@@ -1,10 +1,13 @@
 ﻿⦁	Etc:
 Resolver os "TO DO";
 Atualizar o sistema para o .NET 10;
-Integração com WhatsApp;
-Ajustar limitações dos planos Grátis e Básico (integração com o WhatsApp);
 Módulo de nota fiscal;
 
 ⦁	User/Configurações/Personalização:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
+
+⦁	User/Configurações/Personalização:
+Módulo de integração com WhatsApp;
+Finalizar SendMessageWhatsapp;
+Criar teste de integração para SendMessageWhatsapp e IntegrationWhatsappBaseDependencies;

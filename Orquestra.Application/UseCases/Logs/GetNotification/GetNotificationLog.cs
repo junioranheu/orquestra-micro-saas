@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Logs.Shared;
 using Orquestra.Application.UseCases.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -24,7 +25,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
 
         if (currentMainCompany is null)
         {
-            throw new InvalidOperationException("No momento, você não faz parte de nenhuma empresa ou não definiu nenhuma como sua principal, portanto não é possível gerar nenhuma notificação.");
+            throw new InvalidOperationException(SystemConsts.Warnings.NotLinkedOrDontHaveCompany);
         }
 
         Guid companyId = currentMainCompany.CompanyId;
