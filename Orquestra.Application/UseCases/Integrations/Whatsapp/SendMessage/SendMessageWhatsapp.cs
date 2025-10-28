@@ -9,6 +9,6 @@ public sealed class SendMessageWhatsapp(IntegrationWhatsappBaseDependencies deps
     {
         await Validate(userIdAuth, input);
 
-        string aea = "aea";
+        // TO DO;
     }
 }
