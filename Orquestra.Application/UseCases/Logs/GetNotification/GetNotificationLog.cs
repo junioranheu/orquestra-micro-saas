@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Logs.Shared;
@@ -38,6 +37,7 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
         }
 
         List<User> users = await _context.Users.AsNoTracking().ToListAsync();
+        List<Client> clients = await (from c in _context.Clients.AsNoTracking() join cu in _context.CompanyUsers.AsNoTracking() on c.CompanyId equals cu.CompanyId where cu.UserId == userIdAuth select c).ToListAsync();
 
         List<LogNotificationOutput> output = [.. linq.Select(log =>
         {
@@ -92,13 +92,15 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             }
 
             string story = $"{requestTypeNormalized} de {endpointName.ToLowerInvariant()}";
+            bool found = false;
 
-            if (!string.IsNullOrEmpty(log.Parameters) && users.Count != 0)
+            if (!string.IsNullOrEmpty(log.Parameters))
             {
                 Guid? userId = GetPropertyValueFromStringJson<Guid>(log.Parameters, "UserId");
-                
-                if (userId is not null && userId != Guid.Empty)
+
+                if (!found && userId is not null && userId != Guid.Empty)
                 {
+                    found = true;
                     User? user = users.FirstOrDefault(x => x.UserId == userId);
 
                     if (user is not null)
@@ -106,7 +108,28 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
                         story += $" ({user.FullName})";
                     }
                 }
-            }             
+
+                Guid? clientId = GetPropertyValueFromStringJson<Guid>(log.Parameters, "ClientId");
+
+                if (!found && clientId is not null && clientId != Guid.Empty)
+                {
+                    found = true;
+                    Client? client = clients.FirstOrDefault(x => x.ClientId == clientId);
+
+                    if (client is not null)
+                    {
+                        story += $" ({client.FullName})";
+                    }
+                }
+
+                string? email = GetPropertyValueFromStringJson<string>(log.Parameters, "Email");
+
+                if (!found && !string.IsNullOrEmpty(email))
+                {
+                    found = true;
+                    story += $" ({email})";
+                }
+            }
 
             string? description = log.Description;
             string marker = "Mais informações:";
@@ -115,7 +138,7 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             if (index != -1)
             {
                 description = log.Description?[(index + marker.Length)..].Trim();
-            }  
+            }
 
             return new LogNotificationOutput
             {
