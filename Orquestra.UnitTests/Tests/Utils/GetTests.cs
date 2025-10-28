@@ -813,6 +813,40 @@ public sealed class GetTests
         Assert.Equal(expected, result);
     }
 
+    [Theory]
+    [InlineData("{\"UserId\":\"b3461127-72cd-0585-eb71-adb3a38e8387\"}", "UserId", "b3461127-72cd-0585-eb71-adb3a38e8387")]
+    [InlineData("{\"Age\":25}", "Age", "25")]
+    [InlineData("{\"Name\":\"Junior\"}", "Name", "Junior")]
+    [InlineData("{\"Active\":true}", "Active", "True")]
+    [InlineData(null, "UserId", null)]
+    [InlineData("", "UserId", null)]
+    [InlineData("{}", "UserId", null)]
+    [InlineData("{invalid json}", "UserId", null)]
+    public void GetPropertyValue_ShouldReturnCorrectValue(string? json, string propertyName, string? expected)
+    {
+        // Act;
+        if (typeof(Guid) == typeof(Guid) && expected != null && Guid.TryParse(expected, out Guid guidExpected))
+        {
+            Guid result = GetPropertyValueFromStringJson<Guid>(json, propertyName);
+            Assert.Equal(guidExpected, result);
+        }
+        else if (typeof(bool) == typeof(bool) && bool.TryParse(expected, out bool boolExpected))
+        {
+            bool result = GetPropertyValueFromStringJson<bool>(json, propertyName);
+            Assert.Equal(boolExpected, result);
+        }
+        else if (typeof(int) == typeof(int) && int.TryParse(expected, out int intExpected))
+        {
+            int result = GetPropertyValueFromStringJson<int>(json, propertyName);
+            Assert.Equal(intExpected, result);
+        }
+        else
+        {
+            string? result = GetPropertyValueFromStringJson<string>(json, propertyName);
+            Assert.Equal(expected, result);
+        }
+    }
+
     #region helpers
     private enum TestEnum
     {

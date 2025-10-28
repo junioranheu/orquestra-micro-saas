@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -649,10 +650,11 @@ public static partial class Get
     /// e calcula os dois dígitos verificadores conforme a regra oficial do CPF.
     /// Retorna <c>true</c> se o CPF for válido ou <c>false</c> caso contrário.
     /// </summary>
-   
+
     public static bool IsValidCPF(string? cpf)
     {
-        if (string.IsNullOrWhiteSpace(cpf)) { 
+        if (string.IsNullOrWhiteSpace(cpf))
+        {
             return false;
         }
 
@@ -660,12 +662,14 @@ public static partial class Get
         string digitsOnly = new([.. cpf.Where(char.IsDigit)]);
 
         // Must have 11 digits; 
-        if (digitsOnly.Length != 11) { 
+        if (digitsOnly.Length != 11)
+        {
             return false;
         }
 
         // Invalid if all digits are equal (e.g., 11111111111);
-        if (digitsOnly.Distinct().Count() == 1) { 
+        if (digitsOnly.Distinct().Count() == 1)
+        {
             return false;
         }
 
@@ -706,11 +710,47 @@ public static partial class Get
     /// </remarks>
     public static string RemoveHtmlTags(string? input)
     {
-        if (string.IsNullOrEmpty(input)) { 
+        if (string.IsNullOrEmpty(input))
+        {
             return string.Empty;
         }
 
         string output = RegexRemoveHtml().Replace(input, string.Empty);
         return output.Trim();
+    }
+
+    /// <summary>
+    /// Tenta extrair uma propriedade de um JSON e converter para o tipo desejado.
+    /// </summary>
+    /// <typeparam name="T">Tipo de retorno desejado (ex: Guid, int, string, bool).</typeparam>
+    /// <param name="json">O conteúdo JSON em string.</param>
+    /// <param name="propertyName">Nome da propriedade a ser extraída.</param>
+    /// <returns>O valor convertido, ou default(T) caso a propriedade não exista ou não seja válida.</returns>
+    public static T GetPropertyValueFromStringJson<T>(string? json, string propertyName)
+    {
+        if (string.IsNullOrEmpty(json))
+        {
+            return default!;
+        }
+
+        try
+        {
+            using JsonDocument doc = JsonDocument.Parse(json);
+
+            if (doc.RootElement.TryGetProperty(propertyName, out JsonElement element))
+            {
+                return element.Deserialize<T>()!;
+            }
+        }
+        catch (JsonException)
+        {
+            // JSON inválido, retorna default;
+        }
+        catch (InvalidOperationException)
+        {
+            // Falha na conversão, retorna default;
+        }
+
+        return default!;
     }
 }

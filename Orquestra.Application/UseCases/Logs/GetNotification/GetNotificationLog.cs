@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Logs.Shared;
@@ -30,6 +31,13 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
                     OrderByDescending(x => x.CreatedDate);
 
         (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
+
+        if (count < 1)
+        {
+            return ([], 0);
+        }
+
+        List<User> users = await _context.Users.AsNoTracking().ToListAsync();
 
         List<LogNotificationOutput> output = [.. linq.Select(log =>
         {
@@ -85,6 +93,21 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
 
             string story = $"{requestTypeNormalized} de {endpointName.ToLowerInvariant()}";
 
+            if (!string.IsNullOrEmpty(log.Parameters) && users.Count != 0)
+            {
+                Guid? userId = GetPropertyValueFromStringJson<Guid>(log.Parameters, "UserId");
+                
+                if (userId is not null && userId != Guid.Empty)
+                {
+                    User? user = users.FirstOrDefault(x => x.UserId == userId);
+
+                    if (user is not null)
+                    {
+                        story += $" ({user.FullName})";
+                    }
+                }
+            }             
+
             string? description = log.Description;
             string marker = "Mais informações:";
             int index = log.Description?.IndexOf(marker) ?? -1;
@@ -92,7 +115,7 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             if (index != -1)
             {
                 description = log.Description?[(index + marker.Length)..].Trim();
-            }
+            }  
 
             return new LogNotificationOutput
             {
