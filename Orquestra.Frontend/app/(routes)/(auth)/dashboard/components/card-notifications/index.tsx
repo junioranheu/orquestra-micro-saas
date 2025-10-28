@@ -1,11 +1,17 @@
 'use client';
 import styles from '@/app/(routes)/(auth)/dashboard/components/card-daily-agenda/index.module.scss';
+import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
+import Tippy from '@tippyjs/react';
 import { useEffect, useState } from 'react';
 
-export default function CardNotifications() {
+interface iProps {
+    me: iMe;
+}
+
+export default function CardNotifications({ me }: iProps) {
 
     const [notifications, setNotifications] = useState<iLogNotificationOutput[]>([]);
 
@@ -40,12 +46,14 @@ export default function CardNotifications() {
 
     return (
         <div className={styles.dailyAgenda}>
-            <h2 className={styles.title}>Notificações do sistema</h2>
+            <Tippy content='Os dados são atualizados automaticamente a cada 10 minutos.'>
+                <h2 className={styles.title} style={{ cursor: 'help' }}>Notificações do sistema</h2>
+            </Tippy>
 
             {
                 notifications.length > 0 && (
                     <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Atualizado a cada 10 minutos</h3>
+                        <h3 className={styles.sectionTitle}>Resumo das suas notificações da empresa {me?.currentMainCompany.name}</h3>
                         {notifications.map((notification) => handleRenderNotification(notification))}
                     </div>
                 )

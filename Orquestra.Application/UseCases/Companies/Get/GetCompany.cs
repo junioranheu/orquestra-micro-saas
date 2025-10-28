@@ -103,7 +103,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         var clientsCount = await _context.Clients.
                            AsNoTracking().
-                           Where(c => companyIds.Contains(c.CompanyId)).
+                           Where(c => companyIds.Contains(c.CompanyId) && c.Status == true).
                            GroupBy(c => c.CompanyId).
                            Select(g => new { CompanyId = g.Key, Count = g.Count() }).
                            ToListAsync();

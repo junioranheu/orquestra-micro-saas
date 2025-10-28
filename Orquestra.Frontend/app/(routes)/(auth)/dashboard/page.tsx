@@ -71,7 +71,7 @@ export default function Dashboard() {
 
             {
                 me?.currentMainCompany && (
-                    <CardNotifications />
+                    <CardNotifications me={me} />
                 )
             }
 
