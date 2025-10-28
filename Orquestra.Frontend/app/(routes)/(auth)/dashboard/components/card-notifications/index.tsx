@@ -3,6 +3,7 @@ import styles from '@/app/(routes)/(auth)/dashboard/components/card-daily-agenda
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
+import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import Tippy from '@tippyjs/react';
 import { useEffect, useState } from 'react';
@@ -45,7 +46,7 @@ export default function CardNotifications({ me }: iProps) {
     }
 
     return (
-        <div className={styles.dailyAgenda}>
+        <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
             <Tippy content='Os dados são atualizados automaticamente a cada 10 minutos.'>
                 <h2 className={styles.title} style={{ cursor: 'help' }}>Notificações do sistema</h2>
             </Tippy>
@@ -53,7 +54,7 @@ export default function CardNotifications({ me }: iProps) {
             {
                 notifications.length > 0 && (
                     <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Resumo das suas notificações da empresa {me?.currentMainCompany.name}</h3>
+                        <h3 className={styles.sectionTitle}>Resumo das últimas notificações da empresa {me?.currentMainCompany.name}</h3>
                         {notifications.map((notification) => handleRenderNotification(notification))}
                     </div>
                 )
@@ -62,10 +63,10 @@ export default function CardNotifications({ me }: iProps) {
             {
                 notifications?.length === 0 && (
                     <div className={styles.empty}>
-                        <p>Nenhum agendamento para hoje</p>
+                        <p>Nenhuma notificação disponível</p>
                     </div>
                 )
             }
         </div>
-    );
+    )
 }

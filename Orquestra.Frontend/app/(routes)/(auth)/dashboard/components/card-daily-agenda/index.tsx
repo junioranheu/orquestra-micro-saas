@@ -2,6 +2,7 @@
 import { iMe } from '@/app/api/consts/auth';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
+import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import { handleGetNameInitials } from '@/app/functions/get.formatUserName';
@@ -80,7 +81,7 @@ export default function CardDailyAgenda({ me }: iProps) {
     const { current, upcoming, past } = handleCategorizeSchedules();
 
     return (
-        <div className={styles.dailyAgenda}>
+        <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
             <h2 className={styles.title}>Resumo da agenda</h2>
 
             {
@@ -118,5 +119,5 @@ export default function CardDailyAgenda({ me }: iProps) {
                 )
             }
         </div>
-    );
+    )
 }
