@@ -37,12 +37,12 @@ export default function UsuarioNotificacoes() {
             )
         },
         {
-            title: 'Detalhes',
+            title: 'Notificação',
             dataIndex: 'story',
             key: 'story'
         },
         {
-            title: '',
+            title: 'Detalhes',
             dataIndex: 'description',
             key: 'description'
         },

@@ -87,6 +87,17 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             }
             #endregion
 
+            #region normalize_description
+            string? description = log.Description;
+            string marker = "Mais informações:";
+            int index = log.Description?.IndexOf(marker) ?? -1;
+
+            if (index != -1)
+            {
+                description = log.Description?[(index + marker.Length)..].Trim();
+            }
+            #endregion
+
             #region normalize_story
             string story = $"{requestTypeNormalized} de {endpointName.ToLowerInvariant()}";
             bool found = false;
@@ -102,7 +113,8 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
 
                     if (user is not null)
                     {
-                        story += $" ({user.FullName})";
+                        // story += $" ({user.FullName})";
+                        description = user.FullName;
                     }
                 }
 
@@ -115,7 +127,8 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
 
                     if (client is not null)
                     {
-                        story += $" ({client.FullName})";
+                        // story += $" ({client.FullName})";
+                        description = client.FullName;
                     }
                 }
 
@@ -124,19 +137,9 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
                 if (!found && !string.IsNullOrEmpty(email))
                 {
                     found = true;
-                    story += $" ({email})";
+                    // story += $" ({email})";
+                    description = email;
                 }
-            }
-            #endregion
-
-            #region normalize_description
-            string? description = log.Description;
-            string marker = "Mais informações:";
-            int index = log.Description?.IndexOf(marker) ?? -1;
-
-            if (index != -1)
-            {
-                description = log.Description?[(index + marker.Length)..].Trim();
             }
             #endregion
 
