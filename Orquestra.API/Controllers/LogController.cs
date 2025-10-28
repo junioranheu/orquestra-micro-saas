@@ -27,10 +27,10 @@ public class LogController(IGetLog get, IGetNotificationLog getNotificationLog) 
 
     [AuthorizeFilter]
     [HttpGet("GetNotification")]
-    public async Task<ActionResult> GetNotification([FromQuery] PaginationInput paginationInput)
+    public async Task<ActionResult> GetNotification([FromQuery] PaginationInput paginationInput, bool? isDashboard = false)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        (List<LogNotificationOutput> output, int count) = await _getNotificationLog.Execute(paginationInput, userIdAuth);
+        (List<LogNotificationOutput> output, int count) = await _getNotificationLog.Execute(paginationInput, userIdAuth, isDashboard.GetValueOrDefault());
 
         return Ok(new { output, count });
     }

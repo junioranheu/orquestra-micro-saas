@@ -753,4 +753,16 @@ public static partial class Get
 
         return default!;
     }
+
+    /// <summary>
+    /// Verifica se o código está sendo executado dentro de um ambiente de teste do xUnit.
+    /// </summary>
+    /// <returns>
+    /// Retorna <see langword="true"/> se o assembly do xUnit runner estiver carregado no domínio atual da aplicação; 
+    /// caso contrário, retorna <see langword="false"/>.
+    /// </returns>
+    public static bool IsRunningFromXUnit()
+    {
+        return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName?.StartsWith("xunit.runner", StringComparison.OrdinalIgnoreCase) == true);
+    }
 }

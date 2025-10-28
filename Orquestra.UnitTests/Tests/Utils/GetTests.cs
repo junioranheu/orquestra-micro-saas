@@ -847,6 +847,16 @@ public sealed class GetTests
         }
     }
 
+    [Fact]
+    public void Should_ReturnTrue_When_RunningFromXUnit()
+    {
+        // Act;
+        bool result = IsRunningFromXUnit();
+
+        // Assert;
+        Assert.True(result);
+    }
+
     #region helpers
     private enum TestEnum
     {

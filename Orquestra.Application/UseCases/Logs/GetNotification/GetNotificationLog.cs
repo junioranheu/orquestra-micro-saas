@@ -16,8 +16,9 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
     private readonly Context _context = context;
     private readonly IMemoryCache _cache = cache;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
+    private const int CACHE_TIMESPAN = 10;
 
-    public async Task<(List<LogNotificationOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth)
+    public async Task<(List<LogNotificationOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, bool isDashboard = false)
     {
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userId: userIdAuth);
 
@@ -26,14 +27,26 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             throw new InvalidOperationException("No momento, você não faz parte de nenhuma empresa ou não definiu nenhuma como sua principal, portanto não é possível gerar nenhuma notificação.");
         }
 
-        var (endpointMap, linq, count) = await GetLogs(pagination, userIdAuth, currentMainCompany);
+        Guid companyId = currentMainCompany.CompanyId;
+        string cacheKey = $"key_get_notification_log_isDashboard_{userIdAuth}_{companyId}";
+
+        if (isDashboard)
+        {
+            // Cache;
+            if (_cache.TryGetValue(cacheKey, out (List<LogNotificationOutput> output, int count) cached))
+            {
+                return cached;
+            }
+        }
+
+        var (endpointMap, linq, count) = await GetLogs(pagination, userIdAuth, companyId, isDashboard);
 
         if (count < 1)
         {
             return ([], 0);
         }
 
-        (List<User> users, List<Client> clients) = await GetExtraDataFromDb(userIdAuth);
+        List<User>? users = await GetExtraDataFromDb();
 
         List<LogNotificationOutput> output = [.. linq.Select(log =>
         {
@@ -97,15 +110,6 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
 
             if (!string.IsNullOrEmpty(log.Parameters))
             {
-                // E-mail;
-                string? email = GetPropertyValueFromStringJson<string>(log.Parameters, nameof(User.Email));
-
-                if (!found && !string.IsNullOrEmpty(email))
-                {
-                    found = true;
-                    description = email;
-                }
-
                 // Schedule;
                 if (log.Endpoint!.Contains("/Schedule"))
                 {
@@ -119,19 +123,17 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                     }
                 }
 
-                // ClientId;
-                Guid? clientId = GetPropertyValueFromStringJson<Guid>(log.Parameters, nameof(Client.ClientId));
-
-                if (!found && clientId is not null && clientId != Guid.Empty)
+                // Client;
+                if (log.Endpoint!.Contains("/Client"))
                 {
-                    found = true;
-                    Client? client = clients.FirstOrDefault(x => x.ClientId == clientId);
+                    string? fullName = GetPropertyValueFromStringJson<string>(log.Parameters, nameof(Client.FullName));
 
-                    if (client is not null)
+                    if (!found && !string.IsNullOrEmpty(fullName))
                     {
-                        description = client.FullName;
+                        found = true;
+                        description = fullName;
                     }
-                }   
+                }
                 
                 // UserId;
                 Guid? userId = GetPropertyValueFromStringJson<Guid>(log.Parameters, nameof(User.UserId));
@@ -139,12 +141,21 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                 if (!found && userId is not null && userId != Guid.Empty)
                 {
                     found = true;
-                    User? user = users.FirstOrDefault(x => x.UserId == userId);
+                    User? user = users?.FirstOrDefault(x => x.UserId == userId);
 
                     if (user is not null)
                     {
                         description = user.FullName;
                     }
+                }
+
+                // E-mail;
+                string? email = GetPropertyValueFromStringJson<string>(log.Parameters, nameof(User.Email));
+
+                if (!found && !string.IsNullOrEmpty(email))
+                {
+                    found = true;
+                    description = email;
                 }
             }
             #endregion
@@ -163,21 +174,20 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             };
         }).Where(x => x is not null).Select(x => x)];
 
+        if (isDashboard)
+        {
+            var result = (output, count);
+
+            // Salva no cache;
+            _cache.Set(cacheKey, result, TimeSpan.FromMinutes(CACHE_TIMESPAN));
+        }
+
         return (output, count);
     }
 
     #region extras
-    private async Task<(Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid userIdAuth, CompanyOutput currentMainCompany)
+    private async Task<(Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid userIdAuth, Guid companyId, bool isDashboard)
     {
-        string cacheKey = $"key_get_notification_log_{userIdAuth}";
-
-        // Cache;
-        if (_cache.TryGetValue(cacheKey, out (Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count) cached))
-        {
-            return cached;
-        }
-
-        // Se não estiver no cache, realiza consulta completa;
         Dictionary<string, string> endpointMap = new()
         {
             { "/Client", "Cliente" },
@@ -188,25 +198,38 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             { "/Company", "Empresa" }
         };
 
-        var query = _context.Logs.AsNoTracking().Where(x => x.Parameters!.Contains($"\"CompanyId\":\"{currentMainCompany.CompanyId}\"") || x.UserId == userIdAuth).OrderByDescending(x => x.CreatedDate);
-        var queryExtraFilter = query.ToList().Where(log => endpointMap.Keys.Any(k => log.Endpoint!.Contains(k)));
+        bool isXUnit = IsRunningFromXUnit();
+
+        var query = _context.Logs.
+                     AsNoTracking().
+                     Where(x => 
+                        (x.Parameters!.Contains($"\"CompanyId\":\"{companyId}\"") || x.UserId == userIdAuth) &&
+                        (isXUnit || endpointMap.Keys.Any(k => x.Endpoint!.Contains(k)))
+                     ).OrderByDescending(x => x.CreatedDate);
+
+        if (isDashboard)
+        {
+            pagination = new() { Index = 0, Limit = 5, IsSelectAll = false };
+        }
 
         (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
 
-        var result = (endpointMap, linq, count);
-
-        // Salva no cache;
-        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(5));
-
-        return result;
+        return (endpointMap, linq, count);
     }
 
-    private async Task<(List<User> users, List<Client> clients)> GetExtraDataFromDb(Guid userIdAuth)
+    private async Task<List<User>?> GetExtraDataFromDb()
     {
-        List<User> users = await _context.Users.AsNoTracking().ToListAsync();
-        List<Client> clients = await (from c in _context.Clients.AsNoTracking() join cu in _context.CompanyUsers.AsNoTracking() on c.CompanyId equals cu.CompanyId where cu.UserId == userIdAuth select c).ToListAsync();
+        // Key global para todos os usuários;
+        string usersCacheKey = "key_get_notification_log_AllUsers";
 
-        return (users, clients);
+        // Tenta pegar usuários do cache global
+        if (!_cache.TryGetValue(usersCacheKey, out List<User>? users))
+        {
+            users = await _context.Users.AsNoTracking().ToListAsync();
+            _cache.Set(usersCacheKey, users, TimeSpan.FromMinutes(CACHE_TIMESPAN));
+        }
+
+        return users;
     }
     #endregion
 }

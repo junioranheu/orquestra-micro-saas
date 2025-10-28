@@ -3,7 +3,6 @@ import styles from '@/app/(routes)/(auth)/dashboard/components/card-daily-agenda
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
-import { handleGetDateBrazil } from '@/app/functions/get.date.brazil';
 import { useEffect, useState } from 'react';
 
 export default function CardNotifications() {
@@ -12,7 +11,7 @@ export default function CardNotifications() {
 
     useEffect(() => {
         async function handleFetchNotifications() {
-            const items = await Fetch.get({ url: `${CONSTS_LOG.getNotification}?index=0&limit=5` }) as iLogNotificationOutputPaginated;
+            const items = await Fetch.get({ url: `${CONSTS_LOG.getNotification}?isDashboard=true` }) as iLogNotificationOutputPaginated;
 
             console.log(items);
             setNotifications(items.output ?? []);
@@ -46,7 +45,7 @@ export default function CardNotifications() {
             {
                 notifications.length > 0 && (
                     <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Atualizado às {handleFormatDate(handleGetDateBrazil(), DATE_STYLE.HORA_MINUTO)}</h3>
+                        <h3 className={styles.sectionTitle}>Atualizado a cada 10 minutos</h3>
                         {notifications.map((notification) => handleRenderNotification(notification))}
                     </div>
                 )

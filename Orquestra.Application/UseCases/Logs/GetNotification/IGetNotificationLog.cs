@@ -5,5 +5,5 @@ namespace Orquestra.Application.UseCases.Logs.GetNotification;
 
 public interface IGetNotificationLog
 {
-    Task<(List<LogNotificationOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth);
+    Task<(List<LogNotificationOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, bool isDashboard = false);
 }

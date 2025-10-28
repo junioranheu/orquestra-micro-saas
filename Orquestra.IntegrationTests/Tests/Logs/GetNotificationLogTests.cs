@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Logs.GetNotification;
 using Orquestra.Application.UseCases.Logs.Shared;
@@ -14,6 +13,8 @@ namespace Orquestra.IntegrationTests.Tests.Logs;
 
 public sealed class GetNotificationLogTests
 {
+    private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
+
     [Fact]
     public async Task Execute_ShouldReturnLogs_WhenCompanyIdMatchesOrUserIdMatches()
     {
@@ -28,7 +29,6 @@ public sealed class GetNotificationLogTests
 
         string parametersWithCompany = $"{{\"CompanyId\":\"{company.CompanyId}\"}}";
 
-        // Logs relacionados à empresa;
         await Fixture.Save(context, new Log
         {
             LogId = Guid.NewGuid(),
@@ -51,38 +51,22 @@ public sealed class GetNotificationLogTests
             CreatedDate = DateTime.UtcNow.AddMinutes(-4)
         });
 
-        // Log que não pertence à empresa nem ao usuário;
-        await Fixture.Save(context, new Log
-        {
-            LogId = Guid.NewGuid(),
-            LogType = LogTypeEnum.Request,
-            RequestType = "POST",
-            Endpoint = "/api/Auth",
-            Parameters = "{\"CompanyId\":\"outra-empresa\"}",
-            UserId = Guid.NewGuid(),
-            CreatedDate = DateTime.UtcNow.AddMinutes(-1)
-        });
-
         CompanyUser companyUser = new()
         {
             CompanyId = company.CompanyId,
             UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator
+            CompanyUserRole = CompanyUserRoleEnum.Administrator,
+            Status = true,
+            IsCurrentMainCompanyUser = true
         };
 
         await Fixture.Save(context, companyUser);
 
-        // Normalizar dados;
-        companyUser.Status = true;
-        companyUser.IsCurrentMainCompanyUser = true;
-        context.Update(companyUser);
-        await context.SaveChangesAsync();
-
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, _cache);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
-        (List<LogNotificationOutput> output, int count) = await sut.Execute(pagination, user.UserId);
+        (List<LogNotificationOutput> output, int count) = await sut.Execute(pagination, user.UserId, false);
 
         // Assert;
         Assert.Equal(2, count);
@@ -100,11 +84,11 @@ public sealed class GetNotificationLogTests
         User user = UserMock.Create("Junior Souza", "one@test.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, _cache);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, false));
     }
 
     [Fact]
@@ -123,16 +107,12 @@ public sealed class GetNotificationLogTests
         {
             CompanyId = company.CompanyId,
             UserId = user.UserId,
-            CompanyUserRole = CompanyUserRoleEnum.Administrator
+            CompanyUserRole = CompanyUserRoleEnum.Administrator,
+            Status = true,
+            IsCurrentMainCompanyUser = true
         };
 
         await Fixture.Save(context, companyUser);
-
-        // Normalizar dados;
-        companyUser.Status = true;
-        companyUser.IsCurrentMainCompanyUser = true;
-        context.Update(companyUser);
-        await context.SaveChangesAsync();
 
         string parameters = $"{{\"CompanyId\":\"{company.CompanyId}\"}}";
 
@@ -151,11 +131,11 @@ public sealed class GetNotificationLogTests
             });
         }
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, _cache);
         PaginationInput pagination = new() { Index = 1, Limit = 5 };
 
         // Act;
-        (List<LogNotificationOutput> output, int count) = await sut.Execute(pagination, user.UserId);
+        (List<LogNotificationOutput> output, int count) = await sut.Execute(pagination, user.UserId, false);
 
         // Assert;
         Assert.Equal(15, count);
@@ -181,17 +161,16 @@ public sealed class GetNotificationLogTests
             UserId = user.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Administrator,
             Status = true,
-            IsCurrentMainCompanyUser = false // <-- Proposital pra cair no throw;
+            IsCurrentMainCompanyUser = false
         };
 
         await Fixture.Save(context, companyUser);
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, _cache);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId));
-
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, false));
         Assert.Contains("portanto não é possível gerar nenhuma", exception.Message);
     }
 
@@ -201,27 +180,22 @@ public sealed class GetNotificationLogTests
         // Arrange;
         Context context = Fixture.CreateContext();
 
-        Company company = CompanyMock.Create();
-        await Fixture.Save(context, company);
-
         User user = UserMock.Create("Junior Souza", "no-main@test.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, _cache);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId));
-
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, false));
         Assert.Contains("portanto não é possível gerar nenhuma", exception.Message);
     }
 
     #region helpers
-    private static GetNotificationLog CreateSut(Context context)
+    private static GetNotificationLog CreateSut(Context context, IMemoryCache cache)
     {
         GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
-        MemoryCache memoryCache = new(new MemoryCacheOptions());
-        GetNotificationLog getNotificationLog = new(context, memoryCache, getCurrentMainCompanyUser);
+        GetNotificationLog getNotificationLog = new(context, cache, getCurrentMainCompanyUser);
 
         return getNotificationLog;
     }

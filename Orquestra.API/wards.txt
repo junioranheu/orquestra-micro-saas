@@ -8,6 +8,3 @@ Módulo de nota fiscal;
 ⦁	User/Configurações/Personalização:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
-
-⦁	Notificações:
-Colocar um componentezinho no dashboard principal (provavelmente dividindo flex com "Resumo da agenda");
