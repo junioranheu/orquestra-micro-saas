@@ -171,7 +171,7 @@ public sealed class GetNotificationLogTests
 
         // Act & Assert;
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, false));
-        Assert.Contains("portanto não é possível gerar nenhuma", exception.Message);
+        Assert.Contains("você não está vinculado", exception.Message);
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public sealed class GetNotificationLogTests
 
         // Act & Assert;
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, false));
-        Assert.Contains("portanto não é possível gerar nenhuma", exception.Message);
+        Assert.Contains("você não está vinculado", exception.Message);
     }
 
     #region helpers
