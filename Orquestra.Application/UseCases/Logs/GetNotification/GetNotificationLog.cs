@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Logs.Shared;
@@ -10,9 +11,10 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Logs.GetNotification;
 
-public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUser getCurrentMainCompanyUser) : IGetNotificationLog
+public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGetCurrentMainCompanyUser getCurrentMainCompanyUser) : IGetNotificationLog
 {
     private readonly Context _context = context;
+    private readonly IMemoryCache _cache = cache;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
 
     public async Task<(List<LogNotificationOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth)
@@ -24,7 +26,7 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             throw new InvalidOperationException("No momento, você não faz parte de nenhuma empresa ou não definiu nenhuma como sua principal, portanto não é possível gerar nenhuma notificação.");
         }
 
-        (IEnumerable<Log> linq, int count) = await GetLogs(pagination, userIdAuth, currentMainCompany);
+        var (endpointMap, linq, count) = await GetLogs(pagination, userIdAuth, currentMainCompany);
 
         if (count < 1)
         {
@@ -70,16 +72,7 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
                 return null;
             }
 
-            string? endpointName = log.Endpoint switch
-            {
-                string x when x.Contains("/Client") => "Cliente",
-                string x when x.Contains("/CompanyInvoice") => "Fatura",
-                string x when x.Contains("/CompanyUser") => "Colaborador",
-                string x when x.Contains("/Schedule") => "Agendamento",
-                string x when x.Contains("/User") => "Usuário",
-                string x when x.Contains("/Company") => "Empresa",
-                _ => string.Empty
-            };
+            string endpointName = endpointMap.Where(kvp => log.Endpoint!.Contains(kvp.Key)).Select(kvp => kvp.Value).FirstOrDefault() ?? string.Empty;
 
             if (string.IsNullOrEmpty(endpointName))
             {
@@ -174,16 +167,38 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
     }
 
     #region extras
-    private async Task<(IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid userIdAuth, CompanyOutput currentMainCompany)
+    private async Task<(Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid userIdAuth, CompanyOutput currentMainCompany)
     {
-        var query = _context.Logs.
-                    AsNoTracking().
-                    Where(x => x.Parameters!.Contains($"\"CompanyId\":\"{currentMainCompany.CompanyId}\"") || x.UserId == userIdAuth).
-                    OrderByDescending(x => x.CreatedDate);
+        string cacheKey = $"key_get_notification_log_{userIdAuth}";
+
+        // Cache;
+        if (_cache.TryGetValue(cacheKey, out (Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count) cached))
+        {
+            return cached;
+        }
+
+        // Se não estiver no cache, realiza consulta completa;
+        Dictionary<string, string> endpointMap = new()
+        {
+            { "/Client", "Cliente" },
+            { "/CompanyInvoice", "Fatura" },
+            { "/CompanyUser", "Colaborador" },
+            { "/Schedule", "Agendamento" },
+            { "/User", "Usuário" },
+            { "/Company", "Empresa" }
+        };
+
+        var query = _context.Logs.AsNoTracking().Where(x => x.Parameters!.Contains($"\"CompanyId\":\"{currentMainCompany.CompanyId}\"") || x.UserId == userIdAuth).OrderByDescending(x => x.CreatedDate);
+        var queryExtraFilter = query.ToList().Where(log => endpointMap.Keys.Any(k => log.Endpoint!.Contains(k)));
 
         (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
 
-        return (linq, count);
+        var result = (endpointMap, linq, count);
+
+        // Salva no cache;
+        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(5));
+
+        return result;
     }
 
     private async Task<(List<User> users, List<Client> clients)> GetExtraDataFromDb(Guid userIdAuth)
