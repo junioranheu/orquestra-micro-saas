@@ -6,7 +6,7 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSet
 import useTitle from '@/app/hooks/useTitle';
 import { useState } from 'react';
 
-export default function Logs() {
+export default function UsuarioNotificacoes() {
 
     useTitle('Notificações do sistema');
 

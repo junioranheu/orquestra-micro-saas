@@ -9,8 +9,5 @@ Módulo de nota fiscal;
 Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
 
-⦁	Notificações (?):
-Desenvolver feature de notificação;
-Criar teste para GetNotificationLog;
-Implementar no front-end;
+⦁	Notificações:
 Colocar um componentezinho no dashboard principal (provavelmente dividindo flex com "Resumo da agenda");

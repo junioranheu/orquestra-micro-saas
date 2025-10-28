@@ -24,23 +24,18 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             throw new InvalidOperationException("No momento, você não faz parte de nenhuma empresa ou não definiu nenhuma como sua principal, portanto não é possível gerar nenhuma notificação.");
         }
 
-        var query = _context.Logs.
-                    AsNoTracking().
-                    Where(x => x.Parameters!.Contains($"\"CompanyId\":\"{currentMainCompany.CompanyId}\"") || x.UserId == userIdAuth).
-                    OrderByDescending(x => x.CreatedDate);
-
-        (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
+        (IEnumerable<Log> linq, int count) = await GetLogs(pagination, userIdAuth, currentMainCompany);
 
         if (count < 1)
         {
             return ([], 0);
         }
 
-        List<User> users = await _context.Users.AsNoTracking().ToListAsync();
-        List<Client> clients = await (from c in _context.Clients.AsNoTracking() join cu in _context.CompanyUsers.AsNoTracking() on c.CompanyId equals cu.CompanyId where cu.UserId == userIdAuth select c).ToListAsync();
+        (List<User> users, List<Client> clients) = await GetExtraDataFromDb(userIdAuth);
 
         List<LogNotificationOutput> output = [.. linq.Select(log =>
         {
+            #region normalize_general_data
             string emoji = log.LogType switch
             {
                 LogTypeEnum.Exception => "🔴",
@@ -90,7 +85,9 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             {
                 return null;
             }
+            #endregion
 
+            #region normalize_story
             string story = $"{requestTypeNormalized} de {endpointName.ToLowerInvariant()}";
             bool found = false;
 
@@ -130,7 +127,9 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
                     story += $" ({email})";
                 }
             }
+            #endregion
 
+            #region normalize_description
             string? description = log.Description;
             string marker = "Mais informações:";
             int index = log.Description?.IndexOf(marker) ?? -1;
@@ -139,6 +138,7 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
             {
                 description = log.Description?[(index + marker.Length)..].Trim();
             }
+            #endregion
 
             return new LogNotificationOutput
             {
@@ -156,4 +156,26 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
 
         return (output, count);
     }
+
+    #region extras
+    private async Task<(IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid userIdAuth, CompanyOutput currentMainCompany)
+    {
+        var query = _context.Logs.
+                    AsNoTracking().
+                    Where(x => x.Parameters!.Contains($"\"CompanyId\":\"{currentMainCompany.CompanyId}\"") || x.UserId == userIdAuth).
+                    OrderByDescending(x => x.CreatedDate);
+
+        (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
+
+        return (linq, count);
+    }
+
+    private async Task<(List<User> users, List<Client> clients)> GetExtraDataFromDb(Guid userIdAuth)
+    {
+        List<User> users = await _context.Users.AsNoTracking().ToListAsync();
+        List<Client> clients = await (from c in _context.Clients.AsNoTracking() join cu in _context.CompanyUsers.AsNoTracking() on c.CompanyId equals cu.CompanyId where cu.UserId == userIdAuth select c).ToListAsync();
+
+        return (users, clients);
+    }
+    #endregion
 }

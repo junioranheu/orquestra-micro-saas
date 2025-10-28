@@ -1,4 +1,5 @@
-﻿using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
+﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Logs.GetNotification;
 using Orquestra.Application.UseCases.Logs.Shared;
 using Orquestra.Application.UseCases.Shared;
@@ -76,7 +77,7 @@ public sealed class GetNotificationLogTests
         context.Update(companyUser);
         await context.SaveChangesAsync();
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, user);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
@@ -98,7 +99,7 @@ public sealed class GetNotificationLogTests
         User user = UserMock.Create("Junior Souza", "one@test.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, user);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
@@ -149,7 +150,7 @@ public sealed class GetNotificationLogTests
             });
         }
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, user);
         PaginationInput pagination = new() { Index = 1, Limit = 5 };
 
         // Act;
@@ -173,7 +174,6 @@ public sealed class GetNotificationLogTests
         User user = UserMock.Create("Junior Souza", "no-main@test.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
-        // O usuário até pertence a uma empresa, mas não tem empresa principal configurada;
         CompanyUser companyUser = new()
         {
             CompanyId = company.CompanyId,
@@ -185,7 +185,7 @@ public sealed class GetNotificationLogTests
 
         await Fixture.Save(context, companyUser);
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, user);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
@@ -206,7 +206,7 @@ public sealed class GetNotificationLogTests
         User user = UserMock.Create("Junior Souza", "no-main@test.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
-        GetNotificationLog sut = CreateSut(context);
+        GetNotificationLog sut = CreateSut(context, user);
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
@@ -216,7 +216,7 @@ public sealed class GetNotificationLogTests
     }
 
     #region helpers
-    private static GetNotificationLog CreateSut(Context context)
+    private static GetNotificationLog CreateSut(Context context, User user)
     {
         GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
         GetNotificationLog getNotificationLog = new(context, getCurrentMainCompanyUser);
