@@ -104,21 +104,30 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
 
             if (!string.IsNullOrEmpty(log.Parameters))
             {
-                Guid? userId = GetPropertyValueFromStringJson<Guid>(log.Parameters, "UserId");
+                // E-mail;
+                string? email = GetPropertyValueFromStringJson<string>(log.Parameters, nameof(User.Email));
 
-                if (!found && userId is not null && userId != Guid.Empty)
+                if (!found && !string.IsNullOrEmpty(email))
                 {
                     found = true;
-                    User? user = users.FirstOrDefault(x => x.UserId == userId);
+                    description = email;
+                }
 
-                    if (user is not null)
+                // Schedule;
+                if (log.Endpoint!.Contains("/Schedule"))
+                {
+                    DateTime? dateStart = GetPropertyValueFromStringJson<DateTime>(log.Parameters, nameof(Schedule.DateStart));
+
+                    if (!found && dateStart is not null && dateStart != DateTime.MinValue)
                     {
-                        // story += $" ({user.FullName})";
-                        description = user.FullName;
+                        found = true;
+                        string? customTitle = GetPropertyValueFromStringJson<string>(log.Parameters, nameof(Schedule.CustomTitle));
+                        description = !string.IsNullOrEmpty(customTitle) ? customTitle : GetDateDetails(dateStart);
                     }
                 }
 
-                Guid? clientId = GetPropertyValueFromStringJson<Guid>(log.Parameters, "ClientId");
+                // ClientId;
+                Guid? clientId = GetPropertyValueFromStringJson<Guid>(log.Parameters, nameof(Client.ClientId));
 
                 if (!found && clientId is not null && clientId != Guid.Empty)
                 {
@@ -127,18 +136,22 @@ public sealed class GetNotificationLog(Context context, IGetCurrentMainCompanyUs
 
                     if (client is not null)
                     {
-                        // story += $" ({client.FullName})";
                         description = client.FullName;
                     }
-                }
+                }   
+                
+                // UserId;
+                Guid? userId = GetPropertyValueFromStringJson<Guid>(log.Parameters, nameof(User.UserId));
 
-                string? email = GetPropertyValueFromStringJson<string>(log.Parameters, "Email");
-
-                if (!found && !string.IsNullOrEmpty(email))
+                if (!found && userId is not null && userId != Guid.Empty)
                 {
                     found = true;
-                    // story += $" ({email})";
-                    description = email;
+                    User? user = users.FirstOrDefault(x => x.UserId == userId);
+
+                    if (user is not null)
+                    {
+                        description = user.FullName;
+                    }
                 }
             }
             #endregion
