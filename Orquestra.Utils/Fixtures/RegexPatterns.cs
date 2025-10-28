@@ -36,6 +36,9 @@ public static partial class RegexPatterns
     [GeneratedRegex(@"^(?=.*[\d@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")]
     public static partial Regex RegexPassword();
 
+    [GeneratedRegex("<.*?>")]
+    public static partial Regex RegexRemoveHtml();
+
     // Se descomentar a linha debaixo, desbuga qualquer problema nos Regex acima (wtf);
     // public static bool IsValidPhone(string phone) => RegexPhone().IsMatch(phone);
 }

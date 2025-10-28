@@ -6,10 +6,11 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using static Orquestra.Utils.Fixtures.RegexPatterns;
 
 namespace Orquestra.Utils.Fixtures;
 
-public static class Get
+public static partial class Get
 {
     /// <summary>
     /// Obtém o horário atual, forçando ao horário de Brasilia;
@@ -644,10 +645,11 @@ public static class Get
     /// <summary>
     /// Valida se um CPF (Cadastro de Pessoa Física) é válido.
     /// O método remove todos os caracteres não numéricos, verifica se o CPF possui 11 dígitos,
-    /// descarta sequências com todos os números iguais (como 11111111111)
+    /// descarta sequências com todos os números iguais (como 11111111111).
     /// e calcula os dois dígitos verificadores conforme a regra oficial do CPF.
     /// Retorna <c>true</c> se o CPF for válido ou <c>false</c> caso contrário.
     /// </summary>
+   
     public static bool IsValidCPF(string? cpf)
     {
         if (string.IsNullOrWhiteSpace(cpf)) { 
@@ -685,5 +687,30 @@ public static class Get
         bool isValid = digitsOnly.EndsWith(checkDigits);
 
         return isValid;
+    }
+
+    /// <summary>
+    /// Remove todas as tags HTML de uma string, retornando apenas o texto limpo.
+    /// </summary>
+    /// <param name="input">O texto que pode conter tags HTML.</param>
+    /// <returns>O texto sem nenhuma tag HTML. Caso a entrada seja nula, retorna string vazia.</returns>
+    /// <remarks>
+    /// Esse método utiliza expressão regular para remover qualquer conteúdo entre
+    /// &lt; e &gt;. Também faz trim no resultado final.
+    /// 
+    /// Exemplo:
+    /// <code>
+    /// string result = TextSanitizer.RemoveHtmlTags("&lt;b&gt;Olá&lt;/b&gt; mundo!");
+    /// // Resultado: "Olá mundo!"
+    /// </code>
+    /// </remarks>
+    public static string RemoveHtmlTags(string? input)
+    {
+        if (string.IsNullOrEmpty(input)) { 
+            return string.Empty;
+        }
+
+        string output = RegexRemoveHtml().Replace(input, string.Empty);
+        return output.Trim();
     }
 }

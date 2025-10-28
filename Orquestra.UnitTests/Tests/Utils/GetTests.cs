@@ -796,6 +796,23 @@ public sealed class GetTests
         Assert.True(result2);
     }
 
+    [Theory]
+    [InlineData("<b>Olá mundo</b>", "Olá mundo")]
+    [InlineData("<div>Teste</div>", "Teste")]
+    [InlineData("<p>Com <span>tags</span> dentro</p>", "Com tags dentro")]
+    [InlineData("Sem tags", "Sem tags")]
+    [InlineData("", "")]
+    [InlineData(null, "")]
+    [InlineData("  <i>Espaços antes e depois</i>  ", "Espaços antes e depois")]
+    public void RemoveHtmlTags_ShouldReturnCleanText(string? input, string expected)
+    {
+        // Act;
+        string result = RemoveHtmlTags(input);
+
+        // Assert;
+        Assert.Equal(expected, result);
+    }
+
     #region helpers
     private enum TestEnum
     {

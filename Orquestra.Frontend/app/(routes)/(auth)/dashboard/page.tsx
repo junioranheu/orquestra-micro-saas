@@ -132,7 +132,7 @@ function DailyAgenda({ me }: iDailyAgendaProps) {
                 url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}&getOnlyNearbyDates=true`
             }) as iSchedule[];
 
-            console.log(items);
+            // console.log(items);
             setSchedules(items);
         }
 

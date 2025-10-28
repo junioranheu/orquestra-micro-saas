@@ -6,6 +6,7 @@ const controller = 'api/Log';
 
 export const CONSTS_LOG = {
     get: `${BASE}/${controller}`,
+    getNotification: `${BASE}/${controller}/GetNotification`
 };
 
 export interface iLog {
@@ -24,5 +25,22 @@ export interface iLog {
 
 export interface iLogPaginated {
     output: iLog[];
+    count: number;
+}
+
+export interface iLogNotificationOutput {
+    logId: Guid;
+    emoji: string;
+    logType?: string;
+    requestType?: string;
+    endpointName?: string;
+    rawEndpoint?: string;
+    description?: string;
+    story?: string;
+    date: Date;
+}
+
+export interface iLogNotificationOutputPaginated {
+    output: iLogNotificationOutput[];
     count: number;
 }

@@ -140,4 +140,20 @@ public sealed class RegexPatternsTests
     {
         Assert.DoesNotMatch(RegexPatterns.RegexPassword(), pwd);
     }
+
+    [Theory]
+    [InlineData("<b>Olá mundo</b>", "Olá mundo")]
+    [InlineData("<div>Teste</div>", "Teste")]
+    [InlineData("<p>Com <span>tags</span> dentro</p>", "Com tags dentro")]
+    [InlineData("Sem tags", "Sem tags")]
+    [InlineData("", "")]
+    [InlineData(null, "")]
+    public void RegexRemoveHtml_ShouldRemoveHtmlTags(string? input, string expected)
+    {
+        // Act;
+        string result = input is null ? string.Empty : RegexPatterns.RegexRemoveHtml().Replace(input, string.Empty).Trim();
+
+        // Assert;
+        Assert.Equal(expected, result);
+    }
 }
