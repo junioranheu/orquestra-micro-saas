@@ -20,7 +20,7 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<Verification> Verifications { get; set; }
     public DbSet<CompanyInvoice> CompanyInvoices { get; set; }
-    public DbSet<IntegrationWhatsapp> IntegrationsWhatsapp { get; set; }
+    public DbSet<IntegrationWhatsApp> IntegrationsWhatsApp { get; set; }
 
     #region extras
     protected override void OnModelCreating(ModelBuilder modelBuilder)

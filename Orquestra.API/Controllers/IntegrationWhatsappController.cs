@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
-using Orquestra.Application.UseCases.Integrations.Whatsapp.Create;
+using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Domain.Entities;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class IntegrationWhatsappController(ICreateIntegrationWhatsapp createIntegrationWhatsapp) : BaseController<IntegrationWhatsappController>
+public class IntegrationWhatsAppController(ICreateIntegrationWhatsApp createIntegrationWhatsApp) : BaseController<IntegrationWhatsAppController>
 {
-    private readonly ICreateIntegrationWhatsapp _createIntegrationWhatsapp = createIntegrationWhatsapp;
+    private readonly ICreateIntegrationWhatsApp _createIntegrationWhatsApp = createIntegrationWhatsApp;
 
     [AuthorizeFilter]
     [HttpPost]
-    public async Task<ActionResult> Create(IntegrationWhatsapp input)
+    public async Task<ActionResult> Create(IntegrationWhatsApp input)
     {
         if (input.CompanyId == Guid.Empty)
         {
@@ -21,7 +21,7 @@ public class IntegrationWhatsappController(ICreateIntegrationWhatsapp createInte
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        await _createIntegrationWhatsapp.Execute(userIdAuth, companyId: input.CompanyId, input);
+        await _createIntegrationWhatsApp.Execute(userIdAuth, companyId: input.CompanyId, input);
 
         return Ok(true);
     }

@@ -1,8 +1,8 @@
-﻿using Orquestra.Application.UseCases.Integrations.Whatsapp.Base;
+﻿using Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
 
-namespace Orquestra.Application.UseCases.Integrations.Whatsapp.SendMessage;
+namespace Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessage;
 
-public sealed class SendMessageWhatsapp(IntegrationWhatsappBaseDependencies deps) : IntegrationWhatsappBase(deps), ISendMessageWhatsapp
+public sealed class SendMessageWhatsApp(IntegrationWhatsAppBaseDependencies deps) : IntegrationWhatsAppBase(deps), ISendMessageWhatsApp
 {
     public async Task Execute(Guid userIdAuth)
     {

@@ -13,8 +13,8 @@ using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
-using Orquestra.Application.UseCases.Integrations.Whatsapp.Base;
-using Orquestra.Application.UseCases.Integrations.Whatsapp.Create;
+using Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
+using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Application.UseCases.Users.Create;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
@@ -242,7 +242,7 @@ public sealed class EndToEndTests
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
         GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
-        CreateIntegrationWhatsapp createIntegrationWhatsapp = new(new IntegrationWhatsappBaseDependencies(
+        CreateIntegrationWhatsApp createIntegrationWhatsApp = new(new IntegrationWhatsAppBaseDependencies(
             context,
             checkIfUserIsLinkedCompanyUser,
             getCurrentMainCompanyUser
@@ -258,7 +258,7 @@ public sealed class EndToEndTests
            emailServiceMock.Object,
            checkIfUserIsLinkedCompanyUser,
            createCompanyInvoice,
-           createIntegrationWhatsapp
+           createIntegrationWhatsApp
        ));
 
         return createCompany;

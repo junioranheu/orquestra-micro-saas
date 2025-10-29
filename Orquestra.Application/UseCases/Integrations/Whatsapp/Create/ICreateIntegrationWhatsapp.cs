@@ -1,8 +1,8 @@
 ﻿using Orquestra.Domain.Entities;
 
-namespace Orquestra.Application.UseCases.Integrations.Whatsapp.Create;
+namespace Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 
-public interface ICreateIntegrationWhatsapp
+public interface ICreateIntegrationWhatsApp
 {
-    Task Execute(Guid userIdAuth, Guid companyId, IntegrationWhatsapp? input = null);
+    Task Execute(Guid userIdAuth, Guid companyId, IntegrationWhatsApp? input = null);
 }

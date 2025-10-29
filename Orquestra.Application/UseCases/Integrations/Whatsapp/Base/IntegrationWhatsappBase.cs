@@ -2,20 +2,18 @@
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Domain.Consts;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
-namespace Orquestra.Application.UseCases.Integrations.Whatsapp.Base;
+namespace Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
 
-public record IntegrationWhatsappBaseDependencies(
+public record IntegrationWhatsAppBaseDependencies(
     Context Context,
     ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
     IGetCurrentMainCompanyUser GetCurrentMainCompanyUser
 );
 
-public partial class IntegrationWhatsappBase(IntegrationWhatsappBaseDependencies deps)
+public partial class IntegrationWhatsAppBase(IntegrationWhatsAppBaseDependencies deps)
 {
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = deps.GetCurrentMainCompanyUser;
@@ -35,12 +33,12 @@ public partial class IntegrationWhatsappBase(IntegrationWhatsappBaseDependencies
 
         //if (currentMainCompany.PlanType == PlanTypeEnum.Free)
         //{
-        //    throw new InvalidOperationException($"O plano <b>{GetEnumDesc(PlanTypeEnum.Free).ToLowerInvariant}</b> não tem acesso às integrações do WhatsApp.");
+        //    throw new InvalidOperationException($"O plano <b>{GetEnumDesc(PlanTypeEnum.Free).ToLowerInvariant()}</b> não tem acesso às integrações do WhatsApp.");
         //}
 
         //if (currentMainCompany.CompanySituation == CompanySituationEnum.PendingPayment)
         //{
-        //    throw new InvalidOperationException($"Sua empresa está na situação de <b>{GetEnumDesc(CompanySituationEnum.PendingPayment).ToLowerInvariant}</b>, portanto não pode prosseguir com esta ação.");
+        //    throw new InvalidOperationException($"Sua empresa está na situação de <b>{GetEnumDesc(CompanySituationEnum.PendingPayment).ToLowerInvariant()}</b>, portanto não pode prosseguir com esta ação.");
         //}
 
         //if (!IsPhoneValid(input.Phone))

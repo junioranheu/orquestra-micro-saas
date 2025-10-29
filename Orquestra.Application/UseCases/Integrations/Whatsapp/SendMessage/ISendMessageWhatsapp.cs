@@ -1,6 +1,6 @@
-﻿namespace Orquestra.Application.UseCases.Integrations.Whatsapp.SendMessage;
+﻿namespace Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessage;
 
-public interface ISendMessageWhatsapp
+public interface ISendMessageWhatsApp
 {
     Task Execute(Guid userIdAuth);
 }

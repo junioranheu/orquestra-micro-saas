@@ -8,7 +8,7 @@ Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
 
 ⦁	User/Configurações/Personalização:
-Módulo de integração com WhatsApp;
-Finalizar SendMessageWhatsapp;
-Criar teste de integração para CreateIntegrationWhatsapp;
-Criar teste de integração para SendMessageWhatsapp e IntegrationWhatsappBaseDependencies;
+Implementar chamada do CreateIntegrationWhatsApp no front-end;
+Finalizar SendMessageWhatsApp (criar lógica pra ficar procurando os Schedules e aí montar as mensagens);
+Criar job para o SendMessageWhatsApp;
+Criar teste de integração para SendMessageWhatsApp e IntegrationWhatsAppBaseDependencies;

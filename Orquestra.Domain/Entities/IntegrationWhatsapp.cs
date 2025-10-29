@@ -4,10 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace Orquestra.Domain.Entities;
 
-public sealed class IntegrationWhatsapp : Audit
+public sealed class IntegrationWhatsApp : Audit
 {
     [Key]
-    public Guid IntegrationWhatsappId { get; set; }
+    public Guid IntegrationWhatsAppId { get; set; }
 
     [MaxLength(512)]
     [Display(Description = "Mensagem enviada como lembrete antes do agendamento")]

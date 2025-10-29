@@ -4,7 +4,7 @@ using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
-using Orquestra.Application.UseCases.Integrations.Whatsapp.Create;
+using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Application.UseCases.Verifications.Create;
@@ -30,7 +30,7 @@ public record CompanyBaseDependencies(
     IEmailService EmailService,
     ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
     ICreateCompanyInvoice CreateCompanyInvoice,
-    ICreateIntegrationWhatsapp CreateIntegrationWhatsapp
+    ICreateIntegrationWhatsApp CreateIntegrationWhatsApp
 );
 
 public partial class CompanyBase(CompanyBaseDependencies deps)
