@@ -27,6 +27,12 @@ public sealed class CreateIntegrationWhatsapp(IntegrationWhatsappBaseDependencie
     private async Task DeletePrevious(Guid companyId)
     {
         List<IntegrationWhatsapp> rows = await _context.IntegrationsWhatsapp.AsNoTracking().Where(x => x.CompanyId == companyId).ToListAsync();
+      
+        if (rows.Count == 0)
+        {
+            return;
+        }
+
         _context.RemoveRange(rows);
     }
 

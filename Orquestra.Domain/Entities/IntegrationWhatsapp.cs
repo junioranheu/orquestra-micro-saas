@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace Orquestra.Domain.Entities;
 
@@ -25,6 +26,7 @@ public sealed class IntegrationWhatsapp : Audit
     public string MessageBeforeScheduleAlert { get; set; } = "Olá, {Cliente}. Seu agendamento em {Data} às {Hora} está chegando! Preparado?";
 
     public Guid CompanyId { get; set; }
+    [JsonIgnore]
     public Company? Company { get; set; }
 
     public static string FormatMessage(string template, string cliente, DateTime data)
