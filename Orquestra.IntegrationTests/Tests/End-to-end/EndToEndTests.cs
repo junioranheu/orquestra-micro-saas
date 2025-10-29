@@ -9,9 +9,12 @@ using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
+using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
+using Orquestra.Application.UseCases.Integrations.Whatsapp.Base;
+using Orquestra.Application.UseCases.Integrations.Whatsapp.Create;
 using Orquestra.Application.UseCases.Users.Create;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
@@ -238,6 +241,13 @@ public sealed class EndToEndTests
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
+        GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
+        CreateIntegrationWhatsapp createIntegrationWhatsapp = new(new IntegrationWhatsappBaseDependencies(
+            context,
+            checkIfUserIsLinkedCompanyUser,
+            getCurrentMainCompanyUser
+        ));
+
         CreateCompany createCompany = new(new CompanyBaseDependencies(
            context,
            envService,
@@ -247,7 +257,8 @@ public sealed class EndToEndTests
            getUser,
            emailServiceMock.Object,
            checkIfUserIsLinkedCompanyUser,
-           createCompanyInvoice
+           createCompanyInvoice,
+           createIntegrationWhatsapp
        ));
 
         return createCompany;

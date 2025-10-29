@@ -9,8 +9,11 @@ using Orquestra.Application.UseCases.Companies.ResendVerifyEmail;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
+using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
+using Orquestra.Application.UseCases.Integrations.Whatsapp.Base;
+using Orquestra.Application.UseCases.Integrations.Whatsapp.Create;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Entities;
@@ -215,16 +218,24 @@ public sealed class ResendVerifyEmailCompanyTests
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
+        GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
+        CreateIntegrationWhatsapp createIntegrationWhatsapp = new(new IntegrationWhatsappBaseDependencies(
+            context,
+            checkIfUserIsLinkedCompanyUser,
+            getCurrentMainCompanyUser
+        ));
+
         ResendVerifyEmailCompany resendVerifyEmailCompany = new(new CompanyBaseDependencies(
-          context,
-          envService,
-          createVerification,
-          inviteCompanyUser,
-          updateCurrentMainCompanyUser,
-          getUser,
-          emailServiceMock.Object,
-          checkIfUserIsLinkedCompanyUser,
-          createCompanyInvoice
+            context,
+            envService,
+            createVerification,
+            inviteCompanyUser,
+            updateCurrentMainCompanyUser,
+            getUser,
+            emailServiceMock.Object,
+            checkIfUserIsLinkedCompanyUser,
+            createCompanyInvoice,
+            createIntegrationWhatsapp
         ));
 
         return resendVerifyEmailCompany;

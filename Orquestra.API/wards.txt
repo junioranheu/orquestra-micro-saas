@@ -10,4 +10,5 @@ Criar front para essa parada;
 ⦁	User/Configurações/Personalização:
 Módulo de integração com WhatsApp;
 Finalizar SendMessageWhatsapp;
+Criar teste de integração para CreateIntegrationWhatsapp;
 Criar teste de integração para SendMessageWhatsapp e IntegrationWhatsappBaseDependencies;

@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Integrations.Whatsapp.Base;
+using Orquestra.Application.UseCases.Integrations.Whatsapp.Create;
 using Orquestra.Application.UseCases.Integrations.Whatsapp.SendMessage;
 using Orquestra.Infrastructure.Data;
 
@@ -11,6 +12,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddIntegrationsApplication(this IServiceCollection services)
     {
+        services.AddScoped<ICreateIntegrationWhatsapp, CreateIntegrationWhatsapp>();
         services.AddScoped<ISendMessageWhatsapp, SendMessageWhatsapp>();
 
         services.AddScoped(x => new IntegrationWhatsappBaseDependencies(
