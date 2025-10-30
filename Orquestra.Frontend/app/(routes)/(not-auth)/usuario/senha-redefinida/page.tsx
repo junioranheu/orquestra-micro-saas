@@ -28,7 +28,7 @@ export default function UsuarioSenhaRedefinida() {
                     `Senha redefinida com sucesso!<br/>
                 Agora você já pode voltar ao início para realizar o login na plataforma.`
                 }
-                showSupportContact={false}
+                showHelpPage={false}
             />
         </section>
     )

@@ -16,7 +16,7 @@ export default function EmpresaVerificada() {
                     `Estamos muito felizes por sua empresa estar aqui no <b>${SYSTEM.NAME}</b>!<br/>
                 Agora você já pode voltar ao dashboard para dar continuidade nos seus afazres dentro da plataforma.`
                 }
-                showSupportContact={false}
+                showHelpPage={false}
             />
         </section>
     )

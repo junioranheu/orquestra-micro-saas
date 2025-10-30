@@ -2,7 +2,6 @@ import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import Mascot from '@/app/components/mascot';
 import ROUTES from '@/app/consts/routes';
-import SYSTEM from '@/app/consts/system';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import { useRouter } from 'next/navigation';
@@ -13,7 +12,7 @@ interface iProps {
     code?: string;
     title?: string;
     description: string;
-    showSupportContact?: boolean;
+    showHelpPage?: boolean;
 }
 
 export default function LayoutTemplateOne({
@@ -21,7 +20,7 @@ export default function LayoutTemplateOne({
     code,
     title,
     description,
-    showSupportContact = false
+    showHelpPage: showSupportContact = false
 }: iProps) {
 
     const router = useRouter();
@@ -76,7 +75,7 @@ export default function LayoutTemplateOne({
                             <Mascot
                                 isCentralized={false}
                                 tippyContent={
-                                    <div>
+                                    <div style={{ fontSize: '0.8rem', padding: '0.5rem' }}>
                                         {title}
                                         {
                                             code && ` • código ${code}`
@@ -107,9 +106,9 @@ export default function LayoutTemplateOne({
                     {
                         showSupportContact && (
                             <Button
-                                label='Contatar suporte'
-                                icon_feather={<Icon icon='mail' />}
-                                handleFunction={() => window.location.href = `mailto:${SYSTEM.EMAIL_SUPPORT}`}
+                                label='Central de ajuda'
+                                icon_feather={<Icon icon='help-circle' />}
+                                handleFunction={() => router.push(ROUTES.ETC_AJUDA)}
                                 isStyleSimple={true}
                                 isBig={true}
                             />

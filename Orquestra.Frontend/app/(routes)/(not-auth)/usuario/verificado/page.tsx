@@ -17,7 +17,7 @@ export default function UsuarioVerificado() {
                     `Estamos muito felizes por você estar aqui no <b>${SYSTEM.NAME}</b>!<br/>
                 Agora você já pode voltar ao início para realizar o login na plataforma.`
                 }
-                showSupportContact={false}
+                showHelpPage={false}
             />
         </section>
     )
