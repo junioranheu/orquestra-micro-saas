@@ -84,6 +84,7 @@ export default function ContentLoaderGrid({
             foregroundColor='#ddd'
             speed={1.75}
             title=''
+            style={{ borderRadius: 'var(--border-radius)' }}
             {...props}
         >
             {

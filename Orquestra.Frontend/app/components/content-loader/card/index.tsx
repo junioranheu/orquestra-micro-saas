@@ -19,7 +19,7 @@ export function ContentLoaderCard({ showHeader = false, id = "default" }: iProps
             foregroundColor='#ddd'
             speed={1.75}
             title=''
-            style={{ width: '100%', height: '100%', maxHeight: '14rem' }}
+            style={{ width: '100%', height: '100%', maxHeight: '14rem', borderRadius: 'var(--border-radius)' }}
         >
             {
                 showHeader && (

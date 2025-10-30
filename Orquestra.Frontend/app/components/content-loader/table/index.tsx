@@ -10,6 +10,7 @@ export default function ContentLoaderTable() {
             foregroundColor='#ddd'
             speed={1.75}
             title=''
+            style={{ borderRadius: 'var(--border-radius)' }}
         >
             <rect x='51' y='45' rx='3' ry='3' width='906' height='17' />
             <circle cx='879' cy='123' r='11' />
