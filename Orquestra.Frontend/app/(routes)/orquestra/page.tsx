@@ -621,7 +621,7 @@ function Footer() {
                                 </a>
                             </Tippy>
 
-                            <Tippy content='GitHub'>
+                            <Tippy content={`GitHub ${SYSTEM.AUTHOR}`}>
                                 <a
                                     href={SYSTEM.URL_GITHUB}
                                     target='_blank'
@@ -632,7 +632,7 @@ function Footer() {
                                 </a>
                             </Tippy>
 
-                            <Tippy content='LinkedIn'>
+                            <Tippy content={`LinkedIn ${SYSTEM.AUTHOR}`}>
                                 <a
                                     href={SYSTEM.URL_LINKEDIN}
                                     target='_blank'

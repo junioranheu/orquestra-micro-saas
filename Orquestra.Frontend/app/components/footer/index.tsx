@@ -48,13 +48,13 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
                             </Link>
                         </Tippy>
 
-                        <Tippy content='GitHub'>
+                        <Tippy content={`GitHub ${SYSTEM.AUTHOR}`}>
                             <Link href={SYSTEM.URL_GITHUB} target='_blank' rel='noopener noreferrer'>
                                 <Icon icon='github' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>
 
-                        <Tippy content='LinkedIn'>
+                        <Tippy content={`LinkedIn ${SYSTEM.AUTHOR}`}>
                             <Link href={SYSTEM.URL_LINKEDIN} target='_blank' rel='noopener noreferrer'>
                                 <Icon icon='linkedin' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>

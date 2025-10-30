@@ -38,6 +38,10 @@ export default function CardNotifications({ me }: iProps) {
         )
     }
 
+    if (!notifications?.length) {
+        return null;
+    }
+
     function handleRenderNotification(notification: iLogNotificationOutput) {
         return (
             <div key={notification.logId.toString()} className={styles.scheduleItem}>
