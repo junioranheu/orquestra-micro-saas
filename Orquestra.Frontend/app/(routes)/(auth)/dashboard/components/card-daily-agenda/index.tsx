@@ -2,10 +2,14 @@
 import { iMe } from '@/app/api/consts/auth';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
+import ImgClean from '@/app/assets/svg/clean.svg';
+import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import { handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import handleGetRandomNumber from '@/app/functions/get.randomNumber';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
@@ -17,13 +21,16 @@ export default function CardDailyAgenda({ me }: iProps) {
 
     const now = handleGetDateBrazil();
     const [schedules, setSchedules] = useState<iSchedule[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         async function handleFetchSchedules() {
             const items = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}&getOnlyNearbyDates=true` }) as iSchedule[];
-
-            // console.log(items);
             setSchedules(items);
+
+            setTimeout(() => {
+                setIsLoading(false);
+            }, handleGetRandomNumber(750, 1250));
         }
 
         if (me?.currentMainCompany?.companyId) {
@@ -80,6 +87,12 @@ export default function CardDailyAgenda({ me }: iProps) {
 
     const { current, upcoming, past } = handleCategorizeSchedules();
 
+    if (isLoading) {
+        return (
+            <ContentLoaderCard />
+        )
+    }
+
     return (
         <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
             <h2 className={styles.title}>Resumo da agenda</h2>
@@ -115,6 +128,10 @@ export default function CardDailyAgenda({ me }: iProps) {
                 schedules?.length === 0 && (
                     <div className={styles.empty}>
                         <p>Nenhum agendamento para hoje</p>
+
+                        <div className={styles.center}>
+                            <Image src={ImgClean} alt='' priority={true} width={256} />
+                        </div>
                     </div>
                 )
             }

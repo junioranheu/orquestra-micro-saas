@@ -17,7 +17,7 @@ import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect } from 'react';
+import { useEffect } from 'react';
 import CardDailyAgenda from './components/card-daily-agenda';
 import CardNotifications from './components/card-notifications';
 import styles from './page.module.scss';
@@ -65,10 +65,10 @@ export default function Dashboard() {
 
             {
                 me?.currentMainCompany && (
-                    <Fragment>
+                    <div className={styles.flex}>
                         <CardDailyAgenda me={me} />
                         <CardNotifications me={me} />
-                    </Fragment>
+                    </div>
                 )
             }
 

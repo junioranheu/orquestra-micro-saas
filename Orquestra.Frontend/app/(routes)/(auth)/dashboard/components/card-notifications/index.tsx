@@ -3,8 +3,10 @@ import styles from '@/app/(routes)/(auth)/dashboard/components/card-daily-agenda
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
+import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
+import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import Tippy from '@tippyjs/react';
 import { useEffect, useState } from 'react';
 
@@ -15,17 +17,26 @@ interface iProps {
 export default function CardNotifications({ me }: iProps) {
 
     const [notifications, setNotifications] = useState<iLogNotificationOutput[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         async function handleFetchNotifications() {
             const items = await Fetch.get({ url: `${CONSTS_LOG.getNotification}?isDashboard=true` }) as iLogNotificationOutputPaginated;
-
-            console.log(items);
             setNotifications(items.output ?? []);
+
+            setTimeout(() => {
+                setIsLoading(false);
+            }, handleGetRandomNumber(750, 1250));
         }
 
         handleFetchNotifications();
     }, []);
+
+    if (isLoading) {
+        return (
+            <ContentLoaderCard />
+        )
+    }
 
     function handleRenderNotification(notification: iLogNotificationOutput) {
         return (
