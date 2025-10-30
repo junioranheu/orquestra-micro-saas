@@ -345,14 +345,21 @@ input:-webkit-autofill {
         }
     }
 
-    .rc-table-content,
+    .rc-table-content {
+        // background-color: orange !important;
+        border: none !important;
+    }
+
     .rc-table-cell {
         // background-color: orange !important;
         border: none;
+        // border-right: transparent;
+        border-bottom: 1px solid var(--gray-light);
     }
 
     .rc-table-cell-row-hover {
-        background-color: rgba(37, 150, 190, 0.1) !important;
+        // background-color: rgba(37, 150, 190, 0.1) !important;
+        background-color: var(--gray-light) !important;
     }
 }
 

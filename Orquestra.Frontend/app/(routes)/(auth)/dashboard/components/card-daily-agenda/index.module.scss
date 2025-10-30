@@ -7,10 +7,10 @@
 
     .title {
         // background-color: orange;
-        font-size: 20px;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin: 0 0 20px 0;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--black);
+        margin: 0 0 0.5rem 0;
         width: fit-content;
     }
 
@@ -22,10 +22,12 @@
         }
 
         .sectionTitle {
-            font-size: 13px;
+            // background-color: orange;
+            font-size: 0.875rem;
             font-weight: 500;
-            color: #6b7280;
+            color: #9ca3af;
             margin: 0 0 12px 0;
+            width: fit-content;
         }
     }
 
@@ -39,7 +41,7 @@
         transition: background-color 0.2s ease;
 
         &:hover {
-            background-color: #f9fafb;
+            background-color: var(--gray-light);
         }
 
         &:last-child {
@@ -78,6 +80,7 @@
             min-width: 0;
 
             .name {
+                // background-color: tomato;
                 font-size: 15px;
                 font-weight: 500;
                 color: #1a1a1a;
@@ -85,6 +88,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                width: fit-content;
             }
 
             .service {
@@ -111,7 +115,7 @@
 
         p {
             color: #9ca3af;
-            font-size: 14px;
+            font-size: 0.875rem;
             margin: 0;
         }
 
