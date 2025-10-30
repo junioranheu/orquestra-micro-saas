@@ -2,12 +2,14 @@
 import { iMe } from '@/app/api/consts/auth';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
+import ImgThought from '@/app/assets/webp/thought.webp';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import { handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
@@ -126,6 +128,10 @@ export default function CardDailyAgenda({ me }: iProps) {
                 schedules?.length === 0 && (
                     <div className={styles.empty}>
                         <p>Nenhum agendamento para hoje</p>
+
+                        <div className={styles.center}>
+                            <Image src={ImgThought} alt='' priority={true} />
+                        </div>
                     </div>
                 )
             }

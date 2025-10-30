@@ -107,11 +107,24 @@
     .empty {
         // background-color: tomato;
         text-align: left;
+        height: 100%;
 
         p {
             color: #9ca3af;
             font-size: 14px;
             margin: 0;
+        }
+
+        .center {
+            // background-color: orange;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+            img {
+                margin-bottom: 2rem;
+            }
         }
     }
 }
