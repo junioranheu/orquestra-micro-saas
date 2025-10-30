@@ -1,5 +1,3 @@
-$radius: 1.25rem;
-
 .main {
     background: var(--gradient);
     height: 100vh;
@@ -14,7 +12,7 @@ $radius: 1.25rem;
         display: flex;
         width: 50vw;
         height: fit-content;
-        border-radius: $radius;
+        border-radius: 1.25rem;
         box-shadow: var(--box-shadow-dark);
         overflow: hidden;
 
