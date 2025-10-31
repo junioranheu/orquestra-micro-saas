@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
-using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Get;
@@ -15,12 +14,11 @@ public static class DependencyInjection
     {
         services.AddScoped<ICreateIntegrationWhatsApp, CreateIntegrationWhatsApp>();
         services.AddScoped<IGetIntegrationWhatsApp, GetIntegrationWhatsApp>();
-        services.AddScoped<ISendMessageWhatsApp, SendMessageWhatsApp>();
+        services.AddScoped<ISendMessageBatchWhatsApp, SendMessageBatchWhatsApp>();
 
         services.AddScoped(x => new IntegrationWhatsAppBaseDependencies(
            x.GetRequiredService<Context>(),
-           x.GetRequiredService<ICheckIfUserIsLinkedCompanyUser>(),
-           x.GetRequiredService<IGetCurrentMainCompanyUser>()   
+           x.GetRequiredService<ICheckIfUserIsLinkedCompanyUser>()
         ));
 
         return services;

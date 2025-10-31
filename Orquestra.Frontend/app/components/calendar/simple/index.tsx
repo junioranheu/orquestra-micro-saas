@@ -107,7 +107,7 @@ export default function CalendarSimple({ isReadOnly, disablePastDays, resetBorde
 
     return (
         <div
-            className={styles.calendar}
+            className={`${styles.calendar} notSelectable`}
             style={{
                 ...(resetBorderRadiusRight && {
                     borderTopRightRadius: 0,

@@ -127,7 +127,9 @@ public sealed class CreateIntegrationWhatsAppTests
 
         IntegrationWhatsAppBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, getCurrentMainCompanyUser);
 
-        return new CreateIntegrationWhatsApp(deps);
+        CreateIntegrationWhatsApp createIntegrationWhatsApp = new(deps);
+
+        return createIntegrationWhatsApp;
     }
     #endregion
 }
