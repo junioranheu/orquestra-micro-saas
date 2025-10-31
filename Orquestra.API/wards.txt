@@ -8,7 +8,6 @@ Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
 
 ⦁	User/Configurações/Personalização:
-Implementar chamada do CreateIntegrationWhatsApp no front-end;
 Criar teste de integração do IGetIntegrationWhatsApp;
 Finalizar/refatorar SendMessageWhatsApp (criar lógica pra ficar procurando os Schedules e aí montar as mensagens);
 Criar job para o SendMessageWhatsApp;
