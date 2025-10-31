@@ -89,38 +89,40 @@ export default function ClientProfile() {
 
     return (
         <Fragment>
-            <div className={styles.clientProfile}>
-                <div className={styles.clientProfile__container}>
-                    <ClientHeader
-                        me={me}
-                        name={client?.fullName}
-                        memberSince={handleFormatDate(client?.createdDate, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO)}
-                        onEdit={() => handleOpenModalView(client)}
-                        client={client}
-                        setTrigger={setTrigger}
-                    />
+            <TemplatePageHeader title={`Detalhes do cliente ${handleGetFirstName(client.fullName)}`}>
+                <div className={styles.clientProfile}>
+                    <div className={styles.clientProfile__container}>
+                        <ClientHeader
+                            me={me}
+                            name={client?.fullName}
+                            memberSince={handleFormatDate(client?.createdDate, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO)}
+                            onEdit={() => handleOpenModalView(client)}
+                            client={client}
+                            setTrigger={setTrigger}
+                        />
 
-                    <div className={styles.clientProfile__grid}>
-                        <div className={styles.clientProfile__sidebar}>
-                            <ContactInfo
-                                email={client?.email ? client?.email : '-'}
-                                phone={client?.phone ? client?.phone : '-'}
-                                birthDate={client?.dateOfBirth ? handleFormatDate(client?.dateOfBirth ? new Date(new Date(client.dateOfBirth).getTime() + 3 * 60 * 60 * 1000) : '-', DATE_STYLE.DIA_MES_ANO) : '-'}
-                                address={client?.address ? client?.address : '-'}
-                            />
+                        <div className={styles.clientProfile__grid}>
+                            <div className={styles.clientProfile__sidebar}>
+                                <ContactInfo
+                                    email={client?.email ? client?.email : '-'}
+                                    phone={client?.phone ? client?.phone : '-'}
+                                    birthDate={client?.dateOfBirth ? handleFormatDate(client?.dateOfBirth ? new Date(new Date(client.dateOfBirth).getTime() + 3 * 60 * 60 * 1000) : '-', DATE_STYLE.DIA_MES_ANO) : '-'}
+                                    address={client?.address ? client?.address : '-'}
+                                />
 
-                            <div className={`${styles.card} ${styles.internalNotes}`}>
-                                <h2 className={styles.card__title}>Notas internas</h2>
-                                <p className={styles.internalNotes__text}>{client?.notes ? client?.notes : 'Nenhuma anotação no momento.'}</p>
+                                <div className={`${styles.card} ${styles.internalNotes}`}>
+                                    <h2 className={styles.card__title}>Notas internas</h2>
+                                    <p className={styles.internalNotes__text}>{client?.notes ? client?.notes : 'Nenhuma anotação no momento.'}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className={styles.clientProfile__main}>
-                            <AppointmentHistory schedules={schedules} />
+                            <div className={styles.clientProfile__main}>
+                                <AppointmentHistory schedules={schedules} />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </TemplatePageHeader>
 
             <EmpresaClientesModalView
                 isModalOpen={isModalViewOpen}
@@ -165,7 +167,7 @@ function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iCl
             </div>
 
             <div className={styles.clientHeader__actions}>
-                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} />}
+                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} style={{ background: '#FFFFFF' }} />}
                 <Button label='Editar cliente' handleFunction={() => onEdit()} />
             </div>
         </div>
