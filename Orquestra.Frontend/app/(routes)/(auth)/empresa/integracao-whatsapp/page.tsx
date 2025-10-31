@@ -40,8 +40,8 @@ export default function EmpresaIntegracaoWhatsapp() {
             ]}
         >
             <CardCreamWithChildren
-                title={<span className={SYSTEM.ANIMATE_DELAY_0_5s}>{handleGetFirstName(me?.userName)}, seja criativo...</span>}
-                subtitle={<span>E <b>configure as mensagens padrão</b> que serão enviadas aos seus clientes.</span>}
+                title={<span className={SYSTEM.ANIMATE_DELAY_0_5s}>{handleGetFirstName(me?.userName)}, deixe sua marca nas mensagens</span>}
+                subtitle={<span>Então, <b>configure as mensagens padrão</b> que serão enviadas aos seus clientes.</span>}
             >
                 <div className={styles.container}>
                     <div className={styles.header}>
@@ -73,9 +73,9 @@ export default function EmpresaIntegracaoWhatsapp() {
                             <Icon icon='info' />
                             <div>
                                 <strong>Dica:</strong>
-                                &nbsp;você pode usar as variáveis dinâmicas
+                                &nbsp;você pode usar as variáveis dinâmicas:
                                 <code>&#123;cliente&#125;</code>,
-                                <code>&#123;data&#125;</code> e
+                                <code>&#123;data&#125;</code> e&nbsp;
                                 <code>&#123;hora&#125;</code>.
                                 Elas serão substituídas automaticamente pelas informações do agendamento.
                             </div>
