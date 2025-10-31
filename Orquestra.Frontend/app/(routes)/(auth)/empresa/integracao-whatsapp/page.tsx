@@ -1,4 +1,5 @@
 'use client';
+import { CONSTS_INTEGRATION_WHATSAPP, iIntegrationWhatsapp } from '@/app/api/consts/integration-whatsapp';
 import CardCreamWithChildren from '@/app/components/card/cream-with-children';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
@@ -6,7 +7,9 @@ import TemplatePageHeader from '@/app/components/template/page-header';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
+import { Guid } from 'guid-typescript';
 import { useState } from 'react';
 import styles from './page.module.scss';
 
@@ -15,19 +18,11 @@ export default function EmpresaIntegracaoWhatsapp() {
     useTitle('Integração com o Whatsapp');
     const me = useApiGetMe({});
 
-    const [templates, setTemplates] = useState({
-        lembreteSemana: 'Olá {cliente}! Este é um lembrete do seu agendamento no dia {{data}} às {{hora}}. Aguardamos você!',
-        lembreteDia: 'Olá {cliente}, passando para lembrar do seu agendamento hoje às {{hora}}. Até breve!',
-        cancelamento: 'Olá {cliente}. Confirmamos o cancelamento do seu agendamento que estava marcado para {{data}} às {{hora}}.'
-    });
-
-    function handleChange(key: string, value: string) {
-        setTemplates(prev => ({ ...prev, [key]: value }));
-    }
+    const [integration, setIntegration] = useState<iIntegrationWhatsapp>();
+    useApiRequestToSetterOnUrlChange<iIntegrationWhatsapp>({ apiUrlRequest: `${CONSTS_INTEGRATION_WHATSAPP.get}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`, setter: setIntegration });
 
     function handleSave() {
-        console.log('Mensagens salvas:', templates);
-        alert('Mensagens salvas com sucesso!');
+        alert('AEA');
     }
 
     return (
@@ -38,7 +33,7 @@ export default function EmpresaIntegracaoWhatsapp() {
                     <Button
                         key='add'
                         label='Salvar configurações de integração com WhatsApp'
-                        handleFunction={() => null}
+                        handleFunction={() => handleSave()}
                         icon_feather={<Icon icon='check' size='small' />}
                     />
                 )
@@ -55,27 +50,23 @@ export default function EmpresaIntegracaoWhatsapp() {
 
                     <div className={styles.grid}>
                         <div className={styles.card}>
-                            <h3>Mensagem de lembrete (1 semana antes):</h3>
-                            <textarea
-                                value={templates.lembreteSemana}
-                                onChange={e => handleChange('lembreteSemana', e.target.value)}
-                            />
+                            <h3>Mensagem enviada um dia antes:</h3>
+                            <textarea value={integration?.messageReminderBeforeSchedule} />
                         </div>
 
                         <div className={styles.card}>
-                            <h3>Mensagem de confirmação de cancelamento:</h3>
-                            <textarea
-                                value={templates.cancelamento}
-                                onChange={e => handleChange('cancelamento', e.target.value)}
-                            />
+                            <h3>Mensagem enviada pouco antes do horário do agendamento:</h3>
+                            <textarea value={integration?.messageBeforeScheduleAlert} />
                         </div>
 
-                        <div className={`${styles.card} ${styles.full}`}>
-                            <h3>Mensagem de lembrete (no dia):</h3>
-                            <textarea
-                                value={templates.lembreteDia}
-                                onChange={e => handleChange('lembreteDia', e.target.value)}
-                            />
+                        <div className={styles.card}>
+                            <h3>Mensagem enviada quando o agendamento é confirmado:</h3>
+                            <textarea value={integration?.messageOnScheduleConfirmed} />
+                        </div>
+
+                        <div className={styles.card}>
+                            <h3>Mensagem enviada quando o agendamento é cancelado:</h3>
+                            <textarea value={integration?.messageOnScheduleCanceled} />
                         </div>
 
                         <div className={styles.tipSection}>

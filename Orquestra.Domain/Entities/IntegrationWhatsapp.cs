@@ -10,8 +10,12 @@ public sealed class IntegrationWhatsApp : Audit
     public Guid IntegrationWhatsAppId { get; set; }
 
     [MaxLength(512)]
-    [Display(Description = "Mensagem enviada como lembrete antes do agendamento")]
-    public string MessageReminderBeforeSchedule { get; set; } = "Olá, {cliente}. Você tem um agendamento em {data} às {hora}. Estamos te esperando!";
+    [Display(Description = "Mensagem enviada um dia antes")]
+    public string MessageReminderBeforeSchedule { get; set; } = "Olá, {cliente}. Você tem um agendamento amanhã às {hora}. Estamos te esperando!";
+
+    [MaxLength(512)]
+    [Display(Description = "Mensagem enviada pouco antes do horário do agendamento")]
+    public string MessageBeforeScheduleAlert { get; set; } = "Olá, {cliente}. Seu agendamento em {data} às {hora} está chegando! Preparado?";
 
     [MaxLength(512)]
     [Display(Description = "Mensagem enviada quando o agendamento é confirmado")]
@@ -20,10 +24,6 @@ public sealed class IntegrationWhatsApp : Audit
     [MaxLength(512)]
     [Display(Description = "Mensagem enviada quando o agendamento é cancelado")]
     public string MessageOnScheduleCanceled { get; set; } = "Olá, {cliente}. Seu agendamento em {data} foi cancelado. Entre em contato para reagendar.";
-
-    [MaxLength(512)]
-    [Display(Description = "Mensagem enviada pouco antes do horário do agendamento")]
-    public string MessageBeforeScheduleAlert { get; set; } = "Olá, {cliente}. Seu agendamento em {data} às {hora} está chegando! Preparado?";
 
     public Guid CompanyId { get; set; }
     [JsonIgnore]
