@@ -21,7 +21,7 @@ import EmpresaMembrosModalInvite from './modal/invite';
 
 export default function EmpresaMembros() {
 
-    useTitle('Colaboradores da empresa');
+    useTitle('Colaboradores');
     const router = useRouter();
     const me = useApiGetMe({});
 

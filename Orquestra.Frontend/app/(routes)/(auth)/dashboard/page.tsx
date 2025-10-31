@@ -24,11 +24,10 @@ import styles from './page.module.scss';
 
 export default function Dashboard() {
 
-    useTitle('Dashboard');
-
     const router = useRouter();
     const [auth,] = useUserContext();
     const me = useApiGetMe({});
+    useTitle(me ? `Olá, ${handleGetFirstName(me?.userName)}` : 'Dashboard');
 
     // Verificar se o usuário autenticado pelo back e front são o mesmo;
     useEffect(() => {

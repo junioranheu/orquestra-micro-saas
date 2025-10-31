@@ -9,6 +9,6 @@ Criar front para essa parada;
 
 ⦁	User/Configurações/Personalização:
 Implementar chamada do CreateIntegrationWhatsApp no front-end;
-Finalizar SendMessageWhatsApp (criar lógica pra ficar procurando os Schedules e aí montar as mensagens);
+Finalizar/refatorar SendMessageWhatsApp (criar lógica pra ficar procurando os Schedules e aí montar as mensagens);
 Criar job para o SendMessageWhatsApp;
 Criar teste de integração para SendMessageWhatsApp e IntegrationWhatsAppBaseDependencies;
