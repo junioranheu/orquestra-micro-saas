@@ -50,7 +50,18 @@
                 transition: outline 0.1s ease;
 
                 &:focus {
-                    outline: 2px solid var(--main);
+                    outline: 1px solid var(--main);
+                }
+
+                &:disabled,
+                &:read-only {
+                    background: rgba(221, 221, 221, 0.25) !important;
+                    color: var(--gray-dark) !important;
+                    cursor: not-allowed !important;
+
+                    &:focus {
+                        outline: none;
+                    }
                 }
             }
 
