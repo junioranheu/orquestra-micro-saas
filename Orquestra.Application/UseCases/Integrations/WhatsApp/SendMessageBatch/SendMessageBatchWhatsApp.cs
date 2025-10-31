@@ -55,37 +55,42 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
 
     private async Task<List<WhatsAppMessageBatchOutput>> GetIntegrations(List<Company> companies)
     {
-        List<Guid> companyIds = [.. companies.Select(x => x.CompanyId)];
+        List<Guid> companyIds = companies?.Select(c => c.CompanyId).ToList() ?? [];
 
-        List<WhatsAppMessageBatchOutput> outputs = await _context.IntegrationsWhatsApp.
-            Include(x => x.Company).ThenInclude(x => x!.Clients)!.ThenInclude(x => x.Schedules).
-            AsNoTracking().
-            Where(x =>
-                companyIds.Contains(x.CompanyId) &&
-                x.Status == true &&
-                x.Company!.Clients!.Any(c =>
-                    c.Phone != "" &&
-                    c.Schedules!.Any(s => s.ScheduleStatus != ScheduleStatusEnum.Completed && s.Status == true)     
-                )
-            ).
-            SelectMany(integration => integration.Company!.Clients!.
-                SelectMany(client => client.Schedules!.
-                    Select(schedule => new WhatsAppMessageBatchOutput
-                    {
-                        CompanyName = integration.Company!.Name,
-                        ClientName = client.FullName,
-                        ClientPhone = client.Phone ?? string.Empty,
-                        ScheduleDate = schedule.DateStart,
-                        ScheduleStatus = schedule.ScheduleStatus,
-                        MessageReminderBeforeSchedule = integration.MessageReminderBeforeSchedule,
-                        MessageBeforeScheduleAlert = integration.MessageBeforeScheduleAlert,
-                        MessageOnScheduleConfirmed = integration.MessageOnScheduleConfirmed,
-                        MessageOnScheduleCanceled = integration.MessageOnScheduleCanceled
-                    })
-             )
-            ).ToListAsync();
+        if (companyIds.Count == 0)
+        {
+            return [];
+        }
 
-        return outputs;
+        var query =
+            from s in _context.Schedules.AsNoTracking()
+            join c in _context.Clients.AsNoTracking() on s.ClientId equals c.ClientId
+            join co in _context.Companies.AsNoTracking() on s.CompanyId equals co.CompanyId
+            join i in _context.IntegrationsWhatsApp.AsNoTracking() on co.CompanyId equals i.CompanyId
+            where
+                companyIds.Contains(co.CompanyId) &&    // Apenas as companies da lista validadas pelo ValidateCompany();
+                c.Status == true &&                     // Empresa ativa;
+                i.Status == true &&                     // Integração ativa;
+                c.Status == true &&                     // Cliente ativo;
+                !string.IsNullOrEmpty(c.Phone) &&       // Cliente com telefone;
+                s.Status == true &&                     // Schedule ativo;
+                s.ScheduleStatus != ScheduleStatusEnum.Completed // Schedule diferente de concluído;
+            select new WhatsAppMessageBatchOutput
+            {
+                CompanyName = co.Name ?? string.Empty,
+                ClientName = c.FullName,
+                ClientPhone = c.Phone ?? string.Empty,
+                ScheduleDate = s.DateStart,
+                ScheduleStatus = s.ScheduleStatus,
+                MessageReminderBeforeSchedule = i.MessageReminderBeforeSchedule ?? string.Empty,
+                MessageBeforeScheduleAlert = i.MessageBeforeScheduleAlert ?? string.Empty,
+                MessageOnScheduleConfirmed = i.MessageOnScheduleConfirmed ?? string.Empty,
+                MessageOnScheduleCanceled = i.MessageOnScheduleCanceled ?? string.Empty
+            };
+
+        List<WhatsAppMessageBatchOutput> output = await query.ToListAsync();
+
+        return output;
     }
 
     private async Task<int> SendMessages(List<WhatsAppMessageBatchOutput> integrations)
