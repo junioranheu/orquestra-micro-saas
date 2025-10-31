@@ -62,8 +62,8 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
 
             string logTypeNormalized = log.LogType switch
             {
-                LogTypeEnum.Exception => "Falha",
-                LogTypeEnum.Request => "Consulta",
+                LogTypeEnum.Exception => "Erro",
+                LogTypeEnum.Request => "Sucesso",
                 _ => string.Empty
             };
 
