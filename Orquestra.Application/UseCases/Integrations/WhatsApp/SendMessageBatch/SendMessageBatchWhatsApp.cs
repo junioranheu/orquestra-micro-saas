@@ -49,7 +49,7 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
         List<Guid> companyIds = [.. companies.Select(x => x.CompanyId)];
 
         List<IntegrationWhatsApp> integrations = await _context.IntegrationsWhatsApp.
-                                                 Include(x => x.Company).ThenInclude(x => x!.Clients).
+                                                 Include(x => x.Company)!.ThenInclude(x => x!.Clients)!.ThenInclude(x => x.Schedules).
                                                  AsNoTracking().
                                                  Where(x => companyIds.Contains(x.CompanyId) && x.Status == true).
                                                  ToListAsync();
