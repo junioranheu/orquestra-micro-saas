@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import styles from './index.module.scss';
 
 export type iProps = {
-    title: string;
+    title: ReactNode;
     subtitle?: ReactNode;
     children: ReactNode;
 }

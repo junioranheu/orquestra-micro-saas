@@ -1,4 +1,5 @@
 .container {
+    // background-color: orange !important;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -17,6 +18,7 @@
     }
 
     .header {
+        // background-color: tomato !important;
         display: flex;
         gap: 0.5rem;
         border-bottom: 2px solid rgba(0, 0, 0, 0.06);
@@ -25,6 +27,7 @@
             background: transparent;
             border: none;
             padding: 0.75rem 1.25rem;
+            padding-top: 0.5rem;
             font-weight: 500;
             font-size: 0.95rem;
             font-family: inherit !important;

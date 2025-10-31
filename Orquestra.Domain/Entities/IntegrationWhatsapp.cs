@@ -11,19 +11,19 @@ public sealed class IntegrationWhatsApp : Audit
 
     [MaxLength(512)]
     [Display(Description = "Mensagem enviada como lembrete antes do agendamento")]
-    public string MessageReminderBeforeSchedule { get; set; } = "Olá, {Cliente}. Você tem um agendamento em {Data} às {Hora}. Estamos te esperando!";
+    public string MessageReminderBeforeSchedule { get; set; } = "Olá, {cliente}. Você tem um agendamento em {data} às {hora}. Estamos te esperando!";
 
     [MaxLength(512)]
     [Display(Description = "Mensagem enviada quando o agendamento é confirmado")]
-    public string MessageOnScheduleConfirmed { get; set; } = "Olá, {Cliente}. Seu agendamento em {Data} às {Hora} foi confirmado!";
+    public string MessageOnScheduleConfirmed { get; set; } = "Olá, {cliente}. Seu agendamento em {data} às {hora} foi confirmado!";
 
     [MaxLength(512)]
     [Display(Description = "Mensagem enviada quando o agendamento é cancelado")]
-    public string MessageOnScheduleCanceled { get; set; } = "Olá, {Cliente}. Seu agendamento em {Data} foi cancelado. Entre em contato para reagendar.";
+    public string MessageOnScheduleCanceled { get; set; } = "Olá, {cliente}. Seu agendamento em {data} foi cancelado. Entre em contato para reagendar.";
 
     [MaxLength(512)]
     [Display(Description = "Mensagem enviada pouco antes do horário do agendamento")]
-    public string MessageBeforeScheduleAlert { get; set; } = "Olá, {Cliente}. Seu agendamento em {Data} às {Hora} está chegando! Preparado?";
+    public string MessageBeforeScheduleAlert { get; set; } = "Olá, {cliente}. Seu agendamento em {data} às {hora} está chegando! Preparado?";
 
     public Guid CompanyId { get; set; }
     [JsonIgnore]
@@ -31,6 +31,29 @@ public sealed class IntegrationWhatsApp : Audit
 
     public static string FormatMessage(string template, string cliente, DateTime data)
     {
-        return template.Replace("{Cliente}", cliente).Replace("{Data}", data.ToString("dd/MM/yyyy", new CultureInfo("pt-BR"))).Replace("{Hora}", data.ToString("HH:mm", new CultureInfo("pt-BR")));
+        if (string.IsNullOrEmpty(template))
+        {
+            return string.Empty;
+        }
+
+        string normalized = template.ToLowerInvariant();
+        string result = template;
+
+        if (normalized.Contains("{cliente}"))
+        {
+            result = result.Replace("{cliente}", cliente, StringComparison.OrdinalIgnoreCase);
+        }
+
+        if (normalized.Contains("{data}"))
+        {
+            result = result.Replace("{data}", data.ToString("dd/MM/yyyy", new CultureInfo("pt-BR")), StringComparison.OrdinalIgnoreCase);
+        }
+
+        if (normalized.Contains("{hora}"))
+        {
+            result = result.Replace("{hora}", data.ToString("HH:mm", new CultureInfo("pt-BR")), StringComparison.OrdinalIgnoreCase);
+        }
+
+        return result;
     }
 }
