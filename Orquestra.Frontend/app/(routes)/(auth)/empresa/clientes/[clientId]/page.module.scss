@@ -48,11 +48,11 @@ $spacing-unit: 0.5rem;
 
 // Main Container
 .clientProfile {
-    // background: red !important;
+    // background: tomato !important;
     // min-height: 100vh;
     // padding: 1rem;
     background-color: var(--cream);
-    width: fit-content;
+    width: 100%;
     padding: 2rem;
     border-radius: var(--border-radius);
     border: 1px solid var(--gray-light);
@@ -60,7 +60,6 @@ $spacing-unit: 0.5rem;
     margin-top: 0rem;
 
     &__container {
-        max-width: 1280px;
         margin: 0 auto;
     }
 
