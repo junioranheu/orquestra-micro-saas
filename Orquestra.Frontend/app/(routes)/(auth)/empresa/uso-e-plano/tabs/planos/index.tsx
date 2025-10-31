@@ -4,6 +4,7 @@ import { CONSTS_COMPANY } from '@/app/api/consts/company';
 import { CONSTS_COMPANY_INVOICE, iCompanyInvoice } from '@/app/api/consts/company-invoice';
 import { CONSTS_UTILITY, iPlanType, iPlanTypeOutput } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
+import CardCreamWithChildren from '@/app/components/card/cream-with-children';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
@@ -98,59 +99,60 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
 
     return (
         <section className={styles.pricingSection}>
-            <div className={styles.header}>
-                <h2 className={styles.title}>Planos que crescem com você</h2>
-
-                <Tippy content={`Lembre-se que, ${messageInvoice.toLowerCase()}`} placement='bottom'>
-                    <p className={styles.subtitle}>Sem contratos. Cancele quando quiser. <span style={{ color: 'var(--contrast)', fontWeight: 'bold' }}>*</span></p>
-                </Tippy>
-            </div>
-
-            <div className={styles.grid}>
-                {
-                    plans?.plans?.map((p, i) => {
-                        const isCurrentPlan = p.planType.toString() === me?.currentMainCompany?.planType?.toString();
-                        const isFree = p.planTypeName === 'Free';
-                        const isPaymentPendent = me?.currentMainCompany?.companySituation?.toString() === '1';
-                        const isDisabled = (isFree || (isCurrentPlan && !isPaymentPendent));
-
-                        return (
-                            <div key={i} className={`${styles.cardWrapper} ${(isFree && 'notAllowed')}`}>
-                                {isCurrentPlan && <div className={styles.badge}>Plano atual</div>}
-
-                                <div className={`${styles.card} ${styles.cardNormal}`}>
-                                    <h3 className={styles.planHeading}>{p.planTypeDescription}</h3>
-                                    <p className={styles.planSub}>{p.description}</p>
-
-                                    <div className={styles.priceWrap}>
-                                        <span className={styles.price}>R$ {p.price}</span>
-                                        {!isFree && <span className={styles.pricePerMonth}>/mês</span>}
-                                    </div>
-
-                                    <ul className={styles.perksList}>
-                                        {
-                                            p.perks.map((perk) => (
-                                                <li key={perk} className={styles.perkItem}>
-                                                    <span className={styles.perkIcon}>✓</span>
-                                                    <span className={styles.perkText}>{perk}</span>
-                                                </li>
-                                            ))
-                                        }
-                                    </ul>
-
-                                    <Link
-                                        href='#'
-                                        className={`${styles.ctaButton} ${isDisabled ? styles.disabled : ''}`}
-                                        onClick={isDisabled ? undefined : () => handleChooseNewPlan(p)}
-                                    >
-                                        {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
-                                    </Link>
-                                </div>
-                            </div>
-                        );
-                    })
+            <CardCreamWithChildren
+                title='Planos que crescem com você'
+                subtitle={
+                    <Tippy content={`Lembre-se que, ${messageInvoice.toLowerCase()}`} placement='right'>
+                        <p className={styles.subtitle} style={{ cursor: 'help' }}>Sem contratos. Cancele quando quiser. <span style={{ color: 'var(--contrast)', fontWeight: 'bold' }}>*</span></p>
+                    </Tippy>
                 }
-            </div>
+            >
+                <div className={styles.grid}>
+                    {
+                        plans?.plans?.map((p, i) => {
+                            const isCurrentPlan = p.planType.toString() === me?.currentMainCompany?.planType?.toString();
+                            const isFree = p.planTypeName === 'Free';
+                            const isPaymentPendent = me?.currentMainCompany?.companySituation?.toString() === '1';
+                            const isDisabled = (isFree || (isCurrentPlan && !isPaymentPendent));
+
+                            return (
+                                <div key={i} className={`${styles.cardWrapper} ${(isFree && 'notAllowed')}`}>
+                                    {isCurrentPlan && <div className={styles.badge}>Plano atual</div>}
+
+                                    <div className={`${styles.card} ${styles.cardNormal}`}>
+                                        <h3 className={styles.planHeading}>{p.planTypeDescription}</h3>
+                                        <p className={styles.planSub}>{p.description}</p>
+
+                                        <div className={styles.priceWrap}>
+                                            <span className={styles.price}>R$ {p.price}</span>
+                                            {!isFree && <span className={styles.pricePerMonth}>/mês</span>}
+                                        </div>
+
+                                        <ul className={styles.perksList}>
+                                            {
+                                                p.perks.map((perk) => (
+                                                    <li key={perk} className={styles.perkItem}>
+                                                        <span className={styles.perkIcon}>✓</span>
+                                                        <span className={styles.perkText}>{perk}</span>
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>
+
+                                        <Link
+                                            href='#'
+                                            className={`${styles.ctaButton} ${isDisabled ? styles.disabled : ''}`}
+                                            onClick={isDisabled ? undefined : () => handleChooseNewPlan(p)}
+                                        >
+                                            {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
+                                        </Link>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    }
+                </div>
+            </CardCreamWithChildren>
         </section>
     )
 }

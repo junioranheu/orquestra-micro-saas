@@ -1,38 +1,23 @@
 .main {
     // background-color: orange !important;
     display: flex;
-    // width: fit-content;
     width: 100%;
     margin: auto;
     margin-top: 1rem;
 
     .pricingSection {
-        padding: 4rem 1rem;
-        max-width: 80rem;
-        margin: 0 auto;
+        // background: tomato !important;
+        margin: auto;
+        width: 100%;
 
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
+        @media (min-width: 1366px) {
+            // background-color: orange !important;
+            width: 90%;
+        }
 
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-
-            .title {
-                font-size: 2.5rem;
-                font-weight: 800;
-                margin-bottom: 0.5rem;
-                color: #111827;
-            }
-
-            .subtitle {
-                font-size: 1rem;
-                color: #6b7280;
-                max-width: 40rem;
-                margin: 0 auto;
-                cursor: help;
-            }
+        @media (min-width: 1512px) {
+            // background-color: blue !important;
+            width: 80%;
         }
 
         .grid {
@@ -73,7 +58,7 @@
                     background-color: #FFFFFF;
                     height: 100%;
                     padding: 2rem;
-                    border-radius: 1rem;
+                    border-radius: var(--border-radius);
                     border: 1px solid rgba(0, 0, 0, 0.04);
                     display: flex;
                     flex-direction: column;
@@ -165,7 +150,7 @@
                         padding: 0.8rem 1rem;
                         font-weight: 800;
                         color: white;
-                        border-radius: 0.75rem;
+                        border-radius: var(--border-radius-sm);
                         text-decoration: none;
                         background: linear-gradient(90deg, var(--main), var(--main-dark));
                         transition: box-shadow 0.2s ease, transform 0.15s ease;
