@@ -6,8 +6,8 @@ public class SendMessageBatchWhatsAppHandler(ISendMessageBatchWhatsApp sendMessa
 {
     private readonly ISendMessageBatchWhatsApp _sendMessageBatchWhatsApp = sendMessageBatchWhatsApp;
 
-    public async Task ExecuteAsync(CancellationToken token)
+    public async Task<int> ExecuteAsync(CancellationToken token)
     {
-        await _sendMessageBatchWhatsApp.Execute(token);
+        return await _sendMessageBatchWhatsApp.Execute(token);
     }
 }

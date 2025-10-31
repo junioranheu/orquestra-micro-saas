@@ -15,7 +15,7 @@ public record IntegrationWhatsAppBaseDependencies(
 
 public partial class IntegrationWhatsAppBase()
 {
-    public static bool Validate(Company company, bool mustThrow)
+    public static bool ValidateCompany(Company company, bool mustThrow)
     {
         if (company is null)
         {

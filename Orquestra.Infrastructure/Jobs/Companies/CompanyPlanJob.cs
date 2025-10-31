@@ -13,6 +13,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
 {
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
     private readonly ILogger _logger = logger;
+    private const int LOOP_IN_HOUR = 1;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -25,7 +26,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
             await CheckAndExpirePlans(context);
 
             // Loop;
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromHours(LOOP_IN_HOUR), stoppingToken);
         }
     }
 

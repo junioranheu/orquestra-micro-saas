@@ -58,12 +58,13 @@
     }
 
     &.disabled {
+        // background-color: orange !important;
         cursor: not-allowed !important;
 
         div {
             background-color: rgba(221, 221, 221, 0.13) !important;
             border-bottom: 0 !important;
-            border-radius: var(--border-radius) !important;
+            border-radius: var(--border-radius-xs) !important;
         }
     }
 }
