@@ -70,6 +70,25 @@ export default function EmpresaIntegracaoWhatsapp() {
         }));
     }, [integration, me]);
 
+    function handleReset() {
+        swal({
+            content: 'Você tem certeza que deseja redefinir todas as mensagens automáticas?',
+            confirmBtnText: 'Sim',
+            confirmFunction: () => {
+                setFormData(prev => ({
+                    ...prev,
+                    messageReminderBeforeSchedule: 'Olá, {cliente}. Você tem um agendamento amanhã às {hora}. Estamos te esperando!',
+                    messageBeforeScheduleAlert: 'Olá, {cliente}. Seu agendamento em {data} às {hora} está chegando! Preparado?',
+                    messageOnScheduleConfirmed: 'Olá, {cliente}. Seu agendamento em {data} às {hora} foi confirmado!',
+                    messageOnScheduleCanceled: 'Olá, {cliente}. Seu agendamento em {data} foi cancelado. Entre em contato para reagendar.',
+                    companyId: me?.currentMainCompany?.companyId
+                }));
+            },
+            cancelBtnText: 'Não, quero voltar',
+            icon: 'question'
+        });
+    }
+
     async function handleSave() {
         const output = await Fetch.post({ url: CONSTS_INTEGRATION_WHATSAPP.post, body: formData });
 
@@ -89,6 +108,16 @@ export default function EmpresaIntegracaoWhatsapp() {
         <TemplatePageHeader
             title='Integração com WhatsApp'
             actions={[
+                me?.isUserAdmOfCurrentMainCompany && (
+                    <Button
+                        key='add'
+                        label='Redefinir tudo'
+                        handleFunction={() => handleReset()}
+                        icon_feather={<Icon icon='rotate-ccw' size='small' />}
+                        isStyleSimple={true}
+                        isDisabled={!hasPermitionToSave}
+                    />
+                ),
                 me?.isUserAdmOfCurrentMainCompany && (
                     <Button
                         key='add'
