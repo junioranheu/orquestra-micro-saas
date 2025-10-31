@@ -3,7 +3,7 @@ using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Get;
-using Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessage;
+using Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessageBatch;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Integrations;

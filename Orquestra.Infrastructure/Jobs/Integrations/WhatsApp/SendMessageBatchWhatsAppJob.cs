@@ -1,20 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Jobs.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Orquestra.Infrastructure.Jobs.Base.Handlers;
 
 namespace Orquestra.Infrastructure.Jobs.Integrations.WhatsApp;
 
-public sealed class SendMessageBatchWhatsAppJob(IServiceScopeFactory scopeFactory) : BackgroundService
+public sealed class SendMessageBatchWhatsAppJob(IServiceScopeFactory scopeFactory, ISendMessageBatchWhatsAppHandler handler) : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
+    private readonly ISendMessageBatchWhatsAppHandler _handler = handler;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -23,10 +17,8 @@ public sealed class SendMessageBatchWhatsAppJob(IServiceScopeFactory scopeFactor
             using IServiceScope scope = _scopeFactory.CreateScope();
             Context context = scope.ServiceProvider.GetRequiredService<Context>();
 
-            ISendMessageBatchWhatsApp useCase = scope.ServiceProvider.GetRequiredService<ISendMessageBatchWhatsApp>();
-
             // Início;
-            await CheckAndExpirePlans(context);
+            await _handler.ExecuteAsync(stoppingToken);
 
             // Loop;
             await Task.Delay(TimeSpan.FromHours(1), stoppingToken);

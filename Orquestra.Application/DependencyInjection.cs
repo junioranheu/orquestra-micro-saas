@@ -7,11 +7,13 @@ using Orquestra.Application.UseCases.Companies;
 using Orquestra.Application.UseCases.CompanyInvoices;
 using Orquestra.Application.UseCases.CompanyUsers;
 using Orquestra.Application.UseCases.Integrations;
+using Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessageBatch;
 using Orquestra.Application.UseCases.Locations;
 using Orquestra.Application.UseCases.Logs;
 using Orquestra.Application.UseCases.Schedules;
 using Orquestra.Application.UseCases.Users;
 using Orquestra.Application.UseCases.Verifications;
+using Orquestra.Infrastructure.Jobs.Base.Handlers;
 
 namespace Orquestra.Application;
 
@@ -22,6 +24,7 @@ public static class DependencyInjection
         AddLogger(builder);
         AddUseCases(services);
         AddServices(services);
+        AddHandlers(services);
 
         return services;
     }
@@ -51,5 +54,10 @@ public static class DependencyInjection
     private static void AddServices(IServiceCollection _)
     {
 
+    }
+
+    private static void AddHandlers(IServiceCollection services)
+    {
+        services.AddScoped<ISendMessageBatchWhatsAppHandler, SendMessageBatchWhatsAppHandler>();
     }
 }

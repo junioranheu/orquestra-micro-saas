@@ -2,5 +2,5 @@
 
 public interface ISendMessageBatchWhatsApp
 {
-    Task Execute();
+    Task Execute(CancellationToken token);
 }

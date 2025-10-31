@@ -16,6 +16,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Factory;
 using Orquestra.Infrastructure.Interceptors;
 using Orquestra.Infrastructure.Jobs.Companies;
+using Orquestra.Infrastructure.Jobs.Integrations.WhatsApp;
 using Orquestra.Infrastructure.Jobs.Schedules;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
@@ -180,5 +181,6 @@ public static class DependencyInjection
     {
         services.AddHostedService<CompanyPlanJob>();
         services.AddHostedService<ScheduleStatusJob>();
+        services.AddHostedService<SendMessageBatchWhatsAppJob>();       
     }
 }

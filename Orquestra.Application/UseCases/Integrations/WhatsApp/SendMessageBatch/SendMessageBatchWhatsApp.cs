@@ -9,7 +9,7 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
 {
     private readonly Context _context = deps.Context;
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken token)
     {
         List<Company> companies = await GetCompanies();
         List<Company> validCompanies = [];

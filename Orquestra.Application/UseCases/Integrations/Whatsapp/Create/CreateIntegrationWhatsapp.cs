@@ -8,7 +8,7 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 
-public sealed class CreateIntegrationWhatsApp(IntegrationWhatsAppBaseDependencies deps) : IntegrationWhatsAppBase(deps), ICreateIntegrationWhatsApp
+public sealed class CreateIntegrationWhatsApp(IntegrationWhatsAppBaseDependencies deps) : ICreateIntegrationWhatsApp
 {
     private readonly Context _context = deps.Context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
