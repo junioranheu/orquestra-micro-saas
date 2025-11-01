@@ -38,14 +38,14 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
 
         List<WhatsAppMessageBatchOutput> integrations = await GetIntegrations(companies: validCompanies);
 
+        await _smsService.SendSms(to: "12982716339", from: SystemConsts.App.NameApp, text: "Teste");
+
         if (integrations is null || integrations.Count == 0)
         {
             return 0;
         }
 
         int amount = await SendMessages(integrations);
-
-        await _smsService.SendSms(to: "982716339", from: SystemConsts.App.NameApp, text: "Teste");
 
         return amount;
     }
