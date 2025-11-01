@@ -23,7 +23,8 @@ export default function EmpresaIntegracaoWhatsapp() {
     const me = useApiGetMe({});
     const router = useRouter();
 
-    const [hasPermitionToSave, setHasPermitionToSave] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [hasPermitionToSave, setHasPermitionToSave] = useState<boolean>(true);
 
     useEffect(() => {
         if (!me || !me?.currentMainCompany) {
@@ -56,18 +57,22 @@ export default function EmpresaIntegracaoWhatsapp() {
     });
 
     useEffect(() => {
-        if (!integration || !me || !me?.currentMainCompany) {
-            return;
-        }
+        setTimeout(() => {
+            setIsLoading(false);
 
-        setFormData(prev => ({
-            ...prev,
-            messageReminderBeforeSchedule: integration?.messageReminderBeforeSchedule,
-            messageBeforeScheduleAlert: integration?.messageBeforeScheduleAlert,
-            messageOnScheduleConfirmed: integration?.messageOnScheduleConfirmed,
-            messageOnScheduleCanceled: integration?.messageOnScheduleCanceled,
-            companyId: me?.currentMainCompany?.companyId
-        }));
+            if (!integration || !me || !me?.currentMainCompany) {
+                return;
+            }
+
+            setFormData(prev => ({
+                ...prev,
+                messageReminderBeforeSchedule: integration?.messageReminderBeforeSchedule,
+                messageBeforeScheduleAlert: integration?.messageBeforeScheduleAlert,
+                messageOnScheduleConfirmed: integration?.messageOnScheduleConfirmed,
+                messageOnScheduleCanceled: integration?.messageOnScheduleCanceled,
+                companyId: me?.currentMainCompany?.companyId
+            }));
+        }, 1000);
     }, [integration, me]);
 
     function handleReset() {
@@ -102,6 +107,12 @@ export default function EmpresaIntegracaoWhatsapp() {
         }
 
         return;
+    }
+
+    if (isLoading) {
+        return (
+            <TemplatePageHeader title='Carregando informações...' isLoading={true}></TemplatePageHeader>
+        )
     }
 
     return (
