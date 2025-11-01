@@ -55,7 +55,10 @@ public sealed class CreateCompanyInvoice(
             await _context.SaveChangesAsync();
         }
 
-        await SendEmail(company, invoice);
+        if (planType != PlanTypeEnum.Free)
+        {
+            await SendEmail(company, invoice);
+        }
 
         return invoice;
     }
