@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Orquestra.Domain.Consts;
-using System.Net.Http.Json;
+using Orquestra.Infrastructure.Services.Email.Models;
+using System.Text;
+using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure.Services.Sms;
 
-public class SmsService(IWebHostEnvironment env, HttpClient httpClient) : ISmsService
+public class SmsService(IOptions<EmailSettings> options, IWebHostEnvironment env, HttpClient httpClient) : ISmsService
 {
+    private readonly string _apiKey = options.Value.ApiKey ?? throw new ArgumentException("Brevo API key não está configurada.");
     private readonly bool _isDevelopment = env.IsDevelopment();
     private readonly HttpClient _httpClient = httpClient;
 
@@ -33,11 +37,11 @@ public class SmsService(IWebHostEnvironment env, HttpClient httpClient) : ISmsSe
         var payload = new
         {
             sender = from,
-            recipient = phoneNormalized,       
-            content = text,        
-            tag,                   
+            recipient = phoneNormalized,
+            content = text,
+            tag,
             type, // marketing || transactional;
-            callback = callbackUrl 
+            callback = callbackUrl
         };
 
         if (_isDevelopment && SystemConsts.Brevo.DoNotSendEmailIfDev)
@@ -45,19 +49,46 @@ public class SmsService(IWebHostEnvironment env, HttpClient httpClient) : ISmsSe
             return string.Empty;
         }
 
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("transactionalSMS/send", payload);
-        string responseBody = await response.Content.ReadAsStringAsync();
+        string jsonPayload = JsonSerializer.Serialize(payload);
 
-        if (!response.IsSuccessStatusCode)
+        HttpRequestMessage request = new()
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri("https://api.brevo.com/v3/transactionalSMS/send"),
+            Headers =
+            {
+                { "accept", "application/json" },
+                { "api-key", _apiKey }
+            },
+            Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+        };
+
+        try
+        {
+            using HttpResponseMessage response = await _httpClient.SendAsync(request);
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (mustThrow)
+                {
+                    string msg = $"Erro ao enviar SMS ({(int)response.StatusCode} {response.StatusCode}): {responseBody}";
+                    throw new HttpRequestException(msg);
+                }
+
+                return string.Empty;
+            }
+
+            return responseBody;
+        }
+        catch
         {
             if (mustThrow)
             {
-                throw new HttpRequestException($"Erro ao enviar SMS ({response.StatusCode}): {responseBody}");
+                throw;
             }
 
             return string.Empty;
         }
-
-        return responseBody;
     }
 }

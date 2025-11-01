@@ -12,5 +12,6 @@ public sealed class EmailSettings
     // public bool EnableSsl { get; set; }
     #endregion
     
-    public required string Password { get; set; }
+    public required string SmtpKey { get; set; }
+    public required string ApiKey { get; set; }
 }

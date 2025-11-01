@@ -17,7 +17,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
     {
         using SmtpClient client = new(SystemConsts.Brevo.SmtpHost, SystemConsts.Brevo.SmtpPort)
         {
-            Credentials = new NetworkCredential(SystemConsts.Brevo.Username, _settings.Password),
+            Credentials = new NetworkCredential(SystemConsts.Brevo.Username, _settings.SmtpKey),
             EnableSsl = SystemConsts.Brevo.EnableSsl
         };
 
