@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Orquestra.Domain.Consts;
 using System.Net.Http.Json;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure.Services.Sms;
 
@@ -10,21 +11,33 @@ public class SmsService(IWebHostEnvironment env, HttpClient httpClient) : ISmsSe
     private readonly bool _isDevelopment = env.IsDevelopment();
     private readonly HttpClient _httpClient = httpClient;
 
-    public async Task<string> SendSms(string to, string from, string text, string tag = "", string type = "transactional", string? callbackUrl = null)
+    public async Task<string> SendSms(string to, string from, string text, bool mustThrow = false, string tag = "", string type = "transactional", string? callbackUrl = null)
     {
         if (_isDevelopment)
         {
             text = $"[DEBUG] {text}";
         }
 
+        string? phoneNormalized = NormalizeBrazilianPhone(to);
+
+        if (string.IsNullOrEmpty(phoneNormalized))
+        {
+            if (mustThrow)
+            {
+                throw new ArgumentException("Número de telefone inválido");
+            }
+
+            return string.Empty;
+        }
+
         var payload = new
         {
             sender = from,
-            recipient = to,        // addTo
-            content = text,        // setText
-            tag,                   // setTag
-            type,                  // marketing | transactional
-            callback = callbackUrl // setCallback
+            recipient = to,        // addTo;
+            content = text,        // setText;
+            tag,                   // setTag;
+            type,                  // marketing | transactional;
+            callback = callbackUrl // setCallback;
         };
 
         if (_isDevelopment && SystemConsts.Brevo.DoNotSendEmailIfDev)
@@ -37,7 +50,12 @@ public class SmsService(IWebHostEnvironment env, HttpClient httpClient) : ISmsSe
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new HttpRequestException($"Erro ao enviar SMS ({response.StatusCode}): {responseBody}");
+            if (mustThrow)
+            {
+                throw new HttpRequestException($"Erro ao enviar SMS ({response.StatusCode}): {responseBody}");
+            }
+
+            return string.Empty;
         }
 
         return responseBody;

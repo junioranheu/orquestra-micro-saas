@@ -11,7 +11,6 @@ using Orquestra.Application.UseCases.Companies.Update;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
-using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
@@ -270,8 +269,8 @@ public sealed class UpdateCompanyTests
 
         // Empresa 2 — já existe no banco, vamos usar seus dados pra conflito;
         Company company2 = CompanyMock.Create();
-        company2.Name = "Tmr Weon"; 
-        company2.Email = "huevonazo@gmail.com"; 
+        company2.Name = "Tmr Weon";
+        company2.Email = "huevonazo@gmail.com";
         await Fixture.Save(context, company2);
 
         Mock<IEmailService> emailService = Fixture.CreateEmailService();
@@ -309,7 +308,7 @@ public sealed class UpdateCompanyTests
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
         Mock<ISmsService> smsServiceMock = new();
-        smsServiceMock.Setup(x => x.SendSms(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>())).ReturnsAsync("OK");
+        smsServiceMock.Setup(x => x.SendSms(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>())).ReturnsAsync("OK");
 
         CreateIntegrationWhatsApp createIntegrationWhatsApp = new(new IntegrationWhatsAppBaseDependencies(
             context,

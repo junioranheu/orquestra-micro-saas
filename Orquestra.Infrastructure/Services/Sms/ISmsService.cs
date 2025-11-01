@@ -2,5 +2,5 @@
 
 public interface ISmsService
 {
-    Task<string> SendSms(string to, string from, string text, string tag = "", string type = "transactional", string? callbackUrl = null);
+    Task<string> SendSms(string to, string from, string text, bool mustThrow = false, string tag = "", string type = "transactional", string? callbackUrl = null);
 }
