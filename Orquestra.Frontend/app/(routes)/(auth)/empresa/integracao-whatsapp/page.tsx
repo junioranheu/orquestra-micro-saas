@@ -42,7 +42,7 @@ export default function EmpresaIntegracaoWhatsapp() {
                 icon: 'warning'
             });
         }
-    }, [me]);
+    }, [me, router]);
 
     const [integration, setIntegration] = useState<iIntegrationWhatsapp>();
     useApiRequestToSetterOnUrlChange<iIntegrationWhatsapp>({ apiUrlRequest: `${CONSTS_INTEGRATION_WHATSAPP.get}?companyId=${me?.currentMainCompany?.companyId ?? Guid.EMPTY}`, setter: setIntegration });

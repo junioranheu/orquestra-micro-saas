@@ -91,7 +91,8 @@
 
 // Media queries
 // hi-res laptops and desktops 
-@media (max-width:1281px) {
+@media (max-width:1281px),
+(max-height: 600px) {
     .sidebar {
         // background-color: orange !important;
         min-width: 3.5rem;

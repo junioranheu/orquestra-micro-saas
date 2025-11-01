@@ -26,6 +26,9 @@ const ROUTES = {
     EMPRESA_NOTA_FISCAL: '/empresa/nota-fiscal',
     EMPRESA_INTEGRACAO_WHATSAPP: '/empresa/integracao-whatsapp',
     EMPRESA_AGENDAMENTOS: '/empresa/agenda',
+    EMPRESA_ORCAMENTO: '/empresa/orcamento',
+    EMPRESA_ORDEM_DE_SERVICO: '/empresa/ordem-de-servico',
+    EMPRESA_ESTOQUE: '/empresa/estoque',
     DASHBOARD: '/dashboard'
 };
 

@@ -18,4 +18,13 @@ public enum ModuleEnum
 
     [Description("Financeiro")]
     Sales = 5,
+
+    [Description("Orçamento")]
+    Quote = 6,
+
+    [Description("Ordem de serviço")]
+    ServiceOrder = 7,
+
+    [Description("Estoque")]
+    Inventory = 8
 }

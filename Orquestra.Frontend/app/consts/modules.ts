@@ -3,7 +3,10 @@ export const MODULES = {
     IntegrationWhatsApp: 2,
     CostumerFollowUp: 3,
     Invoice: 4,
-    Sales: 5
+    Sales: 5,
+    Quote: 6,
+    ServiceOrder: 7,
+    Inventory: 8
 } as const;
 
 export type Module = typeof MODULES[keyof typeof MODULES];
