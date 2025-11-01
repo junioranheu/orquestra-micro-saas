@@ -51,11 +51,11 @@ export default function CardNotifications({ me }: iProps) {
                     </Tippy>
 
                     <div className={styles.service}>
-                        <b>{notification.logType}</b>{notification.description ? `: ${notification.description}` : ''}
+                        <span><b>{notification.logType}</b>{notification.description ? `: ${notification.description}` : ''}</span>
                     </div>
                 </div>
 
-                <div className={styles.time}>
+                <div className={styles.right}>
                     {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
                 </div>
             </div>

@@ -75,16 +75,13 @@ export default function CardDailyAgenda({ me }: iProps) {
                     <div className={styles.name}>{schedule.client?.fullName}</div>
 
                     <div className={styles.service}>
-                        {schedule.customTitle || 'Agendamento'}{schedule.isRestrictForSpecificUsers ? ` • Agendamento específico para ${schedule?.usersIds?.length} colaborador${schedule?.usersIds?.length > 1 ? 'es' : ''}` : ''}
-                    </div>
-
-                    <div>
-                        <WhatsappWebShortcut phone={schedule.client?.phone} />
+                        <span>{schedule.customTitle || 'Agendamento'}{schedule.isRestrictForSpecificUsers ? ` • Agendamento específico para ${schedule?.usersIds?.length} colaborador${schedule?.usersIds?.length > 1 ? 'es' : ''}` : ''}</span>
+                        <span>{handleFormatDate(schedule.dateStart, DATE_STYLE.DETALHADO_APENAS_REFERENCIA_DIA)}, {handleFormatTimeRange(schedule.timeStart, schedule.timeEnd)}</span>
                     </div>
                 </div>
 
-                <div className={styles.time}>
-                    {handleFormatDate(schedule.dateStart, DATE_STYLE.DETALHADO_APENAS_REFERENCIA_DIA)}, {handleFormatTimeRange(schedule.timeStart, schedule.timeEnd)}
+                <div className={styles.right}>
+                    <WhatsappWebShortcut phone={schedule.client?.phone} />
                 </div>
             </div>
         )
