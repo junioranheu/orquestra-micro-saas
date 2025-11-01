@@ -85,6 +85,63 @@ public enum CompanyTypeEnum
     [Description("Freelancer")]
     Freelancer = 27,
 
+    [Description("Técnico em informática")]
+    TecnicoInformatica = 28,
+
+    [Description("Técnico de refrigeração")]
+    TecnicoRefrigeracao = 29,
+
+    [Description("Eletricista")]
+    Eletricista = 30,
+
+    [Description("Encanador")]
+    Encanador = 31,
+
+    [Description("Marceneiro")]
+    Marceneiro = 32,
+
+    [Description("Pedreiro")]
+    Pedreiro = 33,
+
+    [Description("Jardineiro")]
+    Jardineiro = 34,
+
+    [Description("Motorista particular")]
+    MotoristaParticular = 35,
+
+    [Description("Fotógrafo de eventos")]
+    FotografoEventos = 36,
+
+    [Description("Tatuador")]
+    Tatuador = 37,
+
+    [Description("Músico")]
+    Musico = 38,
+
+    [Description("Cuidador de idosos")]
+    CuidadorIdosos = 39,
+
+    [Description("Dog walker/pet sitter")]
+    DogWalkerPetSitter = 40,
+
+    [Description("Engenharia civil/construção")]
+    EngenhariaCivil = 41,
+
+    [Description("Engenharia elétrica/eletrônica")]
+    EngenhariaEletrica = 42,
+
+    [Description("Engenharia mecânica/industrial")]
+    EngenhariaMecanica = 43,
+
+    [Description("Engenharia de software")]
+    EngenhariaTI = 44,
+
+    [Description("Consultoria e escritório de engenharia")]
+    ConsultoriaEngenharia = 45,
+
+    [Description("músico")]
+    DJ = 46,
+
     [Description("Outro")]
     Outro = 99
 }

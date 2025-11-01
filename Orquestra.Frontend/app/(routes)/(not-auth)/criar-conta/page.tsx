@@ -180,6 +180,7 @@ export default function CriarConta() {
                                     setSelectedOption={setRecoverPasswordQuestion}
                                     isDisabled={isIncognito}
                                     isObligatory={true}
+                                    isSearchable={false}
                                 />
 
                                 <InputMask
