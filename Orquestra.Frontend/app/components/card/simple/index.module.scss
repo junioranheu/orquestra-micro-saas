@@ -32,6 +32,7 @@
         justify-content: flex-start;
         align-items: center;
         width: 100%;
+        height: 100%;
         min-height: 13rem;
 
         .inner {
@@ -104,35 +105,11 @@
 }
 
 // Media queries
-@media (max-width:1536px) {
-    .wrapper {
-        // background-color: orange !important;
-
-        .imgOutside {
-            // background-color: purple;
-            margin-right: 0;
-            position: relative;
-
-            img {
-                min-width: 3rem;
-                max-width: 3rem;
-                object-fit: contain;
-                position: absolute;
-                left: 0;
-                top: 0;
-                z-index: 999;
-            }
-        }
-
-        .card {
-            min-height: 15rem;
-        }
-    }
-}
-
 // hi-res laptops and desktops 
 @media (max-width:1366px) {
     .wrapper {
+        // background-color: tomato !important;
+
         .card {
             min-height: 13rem;
         }

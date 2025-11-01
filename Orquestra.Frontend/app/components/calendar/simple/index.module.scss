@@ -82,18 +82,18 @@
                     color: var(--gray-dark);
                     position: relative;
 
-                    // &::after {
-                    //     content: '';
-                    //     position: absolute;
-                    //     top: 50%;
-                    //     left: 0;
-                    //     width: 100%;
-                    //     height: 1px;
-                    //     // background-color: rgba(0, 0, 0, 0.7);
-                    //     background-color: var(--contrast);
-                    //     transform: rotate(-45deg);
-                    //     transform-origin: center;
-                    // }
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        top: 50%;
+                        left: 0;
+                        width: 100%;
+                        height: 1px;
+                        // background-color: rgba(0, 0, 0, 0.7);
+                        background-color: var(--muted);
+                        transform: rotate(-45deg);
+                        transform-origin: center;
+                    }
                 }
             }
 
@@ -143,6 +143,13 @@
 }
 
 // Media queries
+@media (max-width: 1850px) {
+    .calendar {
+        // background-color: orange !important;
+        width: 40%;
+    }
+}
+
 // hi-res laptops and desktops 
 @media (max-width:1366px) {
     .calendar {
