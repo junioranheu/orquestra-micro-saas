@@ -4,6 +4,7 @@ import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import ImgThought from '@/app/assets/webp/thought.webp';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
+import WhatsappWebShortcut from '@/app/components/whatsapp/whatsapp-web-shortcut';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
@@ -75,6 +76,10 @@ export default function CardDailyAgenda({ me }: iProps) {
 
                     <div className={styles.service}>
                         {schedule.customTitle || 'Agendamento'}{schedule.isRestrictForSpecificUsers ? ` • Agendamento específico para ${schedule?.usersIds?.length} colaborador${schedule?.usersIds?.length > 1 ? 'es' : ''}` : ''}
+                    </div>
+
+                    <div>
+                        <WhatsappWebShortcut phone={schedule.client?.phone} />
                     </div>
                 </div>
 

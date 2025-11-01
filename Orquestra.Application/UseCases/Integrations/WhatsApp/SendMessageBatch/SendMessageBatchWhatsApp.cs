@@ -1,18 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Shared;
-using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Sms;
 
 namespace Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessageBatch;
 
 public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies deps) : IntegrationWhatsAppBase(), ISendMessageBatchWhatsApp
 {
     private readonly Context _context = deps.Context;
-    private readonly ISmsService _smsService = deps.SmsService;
 
     public async Task<int> Execute(CancellationToken token)
     {
@@ -38,16 +35,13 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
 
         List<WhatsAppMessageBatchOutput> integrations = await GetIntegrations(companies: validCompanies);
 
-        await _smsService.SendSms(to: "12982716339", from: SystemConsts.App.NameApp, text: "Teste");
-
         if (integrations is null || integrations.Count == 0)
         {
             return 0;
         }
 
-        int amount = await SendMessages(integrations);
-
-        return amount;
+        // int amount = await SendMessages(integrations);
+        throw new NotImplementedException();
     }
 
     #region extras
@@ -98,13 +92,13 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
         return output;
     }
 
-    private async Task<int> SendMessages(List<WhatsAppMessageBatchOutput> integrations)
-    {
-        int amount = integrations.Count;
+    //private async Task<int> SendMessages(List<WhatsAppMessageBatchOutput> integrations)
+    //{
+    //    int amount = integrations.Count;
 
-        // TO DO: Criar lógica para separar as mensagens;
+    //    // TO DO: Criar lógica para separar as mensagens;
 
-        return amount;
-    }
+    //    return amount;
+    //}
     #endregion
 }

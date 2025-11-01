@@ -8,7 +8,6 @@ Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
 
 ⦁	User/Configurações/Personalização:
-Finalizar/refatorar SendMessageWhatsApp (criar lógica pra ficar procurando os Schedules e aí montar as mensagens);
-Criar job para o SendMessageWhatsApp;
-Criar teste de integração para SendMessageWhatsApp e IntegrationWhatsAppBaseDependencies;
-Criar teste de integração pro service SmsService (igual fiz pro EmailService);
+Criar lógica para abrir o WhatsApp direto do front com as mensagens automáticas;
+Colocar essa paradinha no dashboard principal;
+Colocar essa paradinha no detalhamento de cada schedule;
