@@ -16,7 +16,7 @@ public sealed class EmailServiceTests
         // Configura DI real;
         ServiceCollection services = new();
 
-        EmailSettings emailSettingsMock = new() { SmtpKey = "xxx" };
+        EmailSettings emailSettingsMock = new() { SmtpKey = "xxx", ApiKey = "xxx" };
         services.AddSingleton(emailSettingsMock);
         services.AddTransient<IEmailService, EmailService>();
 
