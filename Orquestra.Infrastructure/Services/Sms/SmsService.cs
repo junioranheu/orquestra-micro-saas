@@ -33,11 +33,11 @@ public class SmsService(IWebHostEnvironment env, HttpClient httpClient) : ISmsSe
         var payload = new
         {
             sender = from,
-            recipient = to,        // addTo;
-            content = text,        // setText;
-            tag,                   // setTag;
-            type,                  // marketing | transactional;
-            callback = callbackUrl // setCallback;
+            recipient = phoneNormalized,       
+            content = text,        
+            tag,                   
+            type, // marketing || transactional;
+            callback = callbackUrl 
         };
 
         if (_isDevelopment && SystemConsts.Brevo.DoNotSendEmailIfDev)
@@ -45,7 +45,7 @@ public class SmsService(IWebHostEnvironment env, HttpClient httpClient) : ISmsSe
             return string.Empty;
         }
 
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("send", payload);
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("transactionalSMS/send", payload);
         string responseBody = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)

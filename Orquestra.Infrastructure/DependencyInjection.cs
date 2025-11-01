@@ -22,6 +22,7 @@ using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Sms;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
@@ -52,8 +53,13 @@ public static class DependencyInjection
         services.AddSingleton<IEmailService>(x =>
         {
             EmailSettings settings = x.GetRequiredService<IOptions<EmailSettings>>().Value;
-            IWebHostEnvironment env = builder.Environment;
 
+            if (string.IsNullOrWhiteSpace(settings.Password))
+            {
+                throw new ArgumentException("Brevo API key não está configurada.");
+            }
+
+            IWebHostEnvironment env = builder.Environment;
             return new EmailService(settings, env);
         });
 
@@ -61,8 +67,17 @@ public static class DependencyInjection
         services.AddHttpClient<ISmsService, SmsService>((x, httpClient) =>
         {
             EmailSettings settings = x.GetRequiredService<IOptions<EmailSettings>>().Value;
+
+            if (string.IsNullOrWhiteSpace(settings.Password))
+            {
+                throw new ArgumentException("Brevo API key não está configurada.");
+            }
+
             httpClient.BaseAddress = new Uri("https://api.brevo.com/v3/");
+            httpClient.DefaultRequestHeaders.Clear();
             httpClient.DefaultRequestHeaders.Add("api-key", settings.Password);
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
         // Env;
@@ -190,6 +205,6 @@ public static class DependencyInjection
     {
         services.AddHostedService<CompanyPlanJob>();
         services.AddHostedService<ScheduleStatusJob>();
-        services.AddHostedService<SendMessageBatchWhatsAppJob>();       
+        services.AddHostedService<SendMessageBatchWhatsAppJob>();
     }
 }
