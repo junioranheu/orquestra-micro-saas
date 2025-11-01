@@ -16,6 +16,7 @@ export default function Navbar() {
 
     const router = useRouter();
     const me = useApiGetMe({});
+
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [modalPosition, setModalPosition] = useState<iModalCustomPosition>({});
 

@@ -1,13 +1,8 @@
 ﻿⦁	Etc:
 Resolver os "TO DO";
-Atualizar o sistema para o .NET 10;
-Módulo de nota fiscal;
+Atualizar o sistema para o .NET 10 (dia 11/11); 
+Desenvolver os outros módulos;
 
 ⦁	User/Configurações/Personalização:
 Criar método pra trocar de senha (ou alterar as infos do usuário);
 Criar front para essa parada;
-
-⦁	User/Configurações/Personalização:
-Criar lógica para abrir o WhatsApp direto do front com as mensagens automáticas;
-Colocar essa paradinha no dashboard principal;
-Colocar essa paradinha no detalhamento de cada schedule;
