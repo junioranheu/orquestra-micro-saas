@@ -174,6 +174,11 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         return [.. output];
     }
 
+    public async Task<string> GetIntegrationWhatsapp(Guid companyId)
+    {
+        return "xd";
+    }
+
     public async Task SendEmail(Schedule schedule, bool isCreate)
     {
         if (schedule is null)

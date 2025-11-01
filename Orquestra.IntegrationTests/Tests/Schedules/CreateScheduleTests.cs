@@ -388,6 +388,8 @@ public sealed class CreateScheduleTests
             amount = 10; // Workaround para o teste;
         }
 
+        DateTime date = GetDate().Date;
+
         for (int i = 0; i < amount; i++)
         {
             await context.Schedules.AddAsync(new Schedule
@@ -395,9 +397,9 @@ public sealed class CreateScheduleTests
                 ScheduleId = Guid.NewGuid(),
                 CompanyId = company.CompanyId,
                 ClientId = client.ClientId,
-                CreatedDate = GetDate(),
-                DateStart = GetDate().AddDays(1).AddHours(9),
-                DateEnd = GetDate().AddDays(1).AddHours(10),
+                CreatedDate = date,
+                DateStart = date.AddDays(1).AddHours(9),
+                DateEnd = date.AddDays(1).AddHours(10),
                 ScheduleStatus = ScheduleStatusEnum.Scheduled
             });
         }
@@ -408,8 +410,8 @@ public sealed class CreateScheduleTests
         {
             CompanyId = company.CompanyId,
             ClientId = client.ClientId,
-            DateStart = GetDate().AddDays(1).AddHours(10),
-            DateEnd = GetDate().AddDays(1).AddHours(11),
+            DateStart = date.AddDays(1).AddHours(10),
+            DateEnd = date.AddDays(1).AddHours(11),
             UsersIds = [user.UserId],
             ScheduleStatus = ScheduleStatusEnum.Scheduled
         };

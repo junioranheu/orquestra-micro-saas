@@ -583,11 +583,10 @@ input:-webkit-autofill {
     }
 
     .swal2-to-left {
-        // background-color: orange !important;
+        // background-color: tomato !important;
         text-align: left !important;
         letter-spacing: 0.3px !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding: 1rem 0.75rem !important;
         white-space: normal !important;
         word-break: keep-all !important;
         overflow-wrap: break-word !important;

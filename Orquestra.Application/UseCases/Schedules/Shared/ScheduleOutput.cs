@@ -43,4 +43,6 @@ public sealed class ScheduleOutput
     public List<string>? Observations { get; set; }
 
     public UserOutput[]? UsersOutput { get; set; } = [];
+
+    public string? MessageIntegrationWhatsapp { get; set; }
 }

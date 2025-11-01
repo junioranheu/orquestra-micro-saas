@@ -37,4 +37,5 @@ export default interface iSchedule {
     // Extras;
     observations: string[]; // Avisos do sistema;
     usersOutput?: iUserPaginated[];
+    messageIntegrationWhatsapp?: string;
 }

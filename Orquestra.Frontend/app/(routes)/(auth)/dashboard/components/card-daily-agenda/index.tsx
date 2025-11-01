@@ -81,7 +81,7 @@ export default function CardDailyAgenda({ me }: iProps) {
                 </div>
 
                 <div className={styles.right}>
-                    <WhatsappWebShortcut phone={schedule.client?.phone} />
+                    <WhatsappWebShortcut phone={schedule.client?.phone} message={schedule.messageIntegrationWhatsapp} />
                 </div>
             </div>
         )
