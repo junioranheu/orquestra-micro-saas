@@ -11,7 +11,6 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
-using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 

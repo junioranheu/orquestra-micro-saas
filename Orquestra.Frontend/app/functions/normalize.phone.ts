@@ -12,6 +12,17 @@ export function handleNormalizePhoneToE164(phone?: string) {
     return digits;
 }
 
+export function handleIsValidE164(phone?: string): boolean {
+    if (!phone) {
+        return false;
+    }
+
+    const e164Regex = /^[1-9]\d{7,14}$/;
+    const isValid = e164Regex.test(phone.trim());
+
+    return isValid;
+}
+
 export function handleBuildWhatsappWebUrl(phone: string, text: string) {
     return `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text || '')}`;
 }

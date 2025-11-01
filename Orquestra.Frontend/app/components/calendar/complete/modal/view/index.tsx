@@ -10,6 +10,7 @@ import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
+import WhatsappWebShortcut from '@/app/components/whatsapp/whatsapp-web-shortcut';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate, handleFormatDateToInputValue, handleFormatTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
@@ -63,6 +64,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         paymentType: '',
         scheduleStatus: '',
         clientId: SYSTEM.EMPTY_GUID,
+        client: undefined,
         companyId: SYSTEM.EMPTY_GUID,
         usersIds: [],
         isRestrictForSpecificUsers: false,
@@ -71,7 +73,8 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         observation: '',
         amountReceived: 0,
         observations: [],
-        usersOutput: []
+        usersOutput: [],
+        messageIntegrationWhatsapp: ''
     });
 
     const handleClose = useCallback(() => {
@@ -149,6 +152,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
             paymentType: event.schedule.paymentType,
             scheduleStatus: event.schedule.scheduleStatus,
             clientId: event.schedule.clientId,
+            client: event.schedule.client,
             companyId: event.schedule.companyId,
             usersIds: event.schedule.usersIds,
             isRestrictForSpecificUsers: event.schedule.isRestrictForSpecificUsers,
@@ -156,7 +160,8 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
             customUrl: event.schedule.customUrl,
             observation: event.schedule.observation,
             amountReceived: event.schedule.amountReceived,
-            observations: event.schedule.observations
+            observations: event.schedule.observations,
+            messageIntegrationWhatsapp: event.schedule.messageIntegrationWhatsapp
         });
     }, [isOpen, type, event, companyUsers, clients, scheduleStatusEnum, router, setIsModalOpen, handleClose]);
 
@@ -363,6 +368,8 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                             </div>
                         ) : (
                             <div className={styles.buttonsRow}>
+                                <WhatsappWebShortcut phone={formData.client?.phone} message={formData.messageIntegrationWhatsapp} clientId={formData.clientId} />
+
                                 {
                                     canEdit && (
                                         !editing ? (

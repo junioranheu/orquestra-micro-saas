@@ -54,6 +54,11 @@ export default function EmpresaClientes() {
             key: 'cpf'
         },
         {
+            title: 'Telefone',
+            dataIndex: 'phone',
+            key: 'phone'
+        },
+        {
             title: 'E-mail',
             dataIndex: 'email',
             key: 'email'
