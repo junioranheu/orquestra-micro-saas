@@ -156,4 +156,23 @@ public sealed class RegexPatternsTests
         // Assert;
         Assert.Equal(expected, result);
     }
+
+    [Theory]
+    [InlineData("1234567890")] // Só dígitos — não deve casar;
+    [InlineData("5512982716339")] // Só dígitos — não deve casar;
+    public void NonDigitRegex_ShouldNotMatch_WhenOnlyDigits(string input)
+    {
+        Assert.DoesNotMatch(RegexPatterns.RegexRemoveAllButDigits(), input);
+    }
+
+    [Theory]
+    [InlineData("+55 (12) 98271-6339")]
+    [InlineData("55 12 98271-6339")]
+    [InlineData("(12)98271-6339")]
+    [InlineData("12.98271.6339")]
+    [InlineData("telefone: 12982716339")]
+    public void NonDigitRegex_ShouldMatch_WhenContainsNonDigits(string input)
+    {
+        Assert.Matches(RegexPatterns.RegexRemoveAllButDigits(), input);
+    }
 }

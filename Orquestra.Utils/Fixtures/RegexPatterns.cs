@@ -39,6 +39,9 @@ public static partial class RegexPatterns
     [GeneratedRegex("<.*?>")]
     public static partial Regex RegexRemoveHtml();
 
+    [GeneratedRegex(@"\D")]
+    public static partial Regex RegexRemoveAllButDigits();
+
     // Se descomentar a linha debaixo, desbuga qualquer problema nos Regex acima (wtf);
     // public static bool IsValidPhone(string phone) => RegexPhone().IsMatch(phone);
 }

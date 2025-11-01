@@ -21,6 +21,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 
@@ -218,11 +219,13 @@ public sealed class ResendVerifyEmailCompanyTests
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
-        GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
+        Mock<ISmsService> smsServiceMock = new();
+        smsServiceMock.Setup(x => x.SendSms(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>())).ReturnsAsync("OK");
+
         CreateIntegrationWhatsApp createIntegrationWhatsApp = new(new IntegrationWhatsAppBaseDependencies(
             context,
             checkIfUserIsLinkedCompanyUser,
-            getCurrentMainCompanyUser
+            smsServiceMock.Object
         ));
 
         ResendVerifyEmailCompany resendVerifyEmailCompany = new(new CompanyBaseDependencies(

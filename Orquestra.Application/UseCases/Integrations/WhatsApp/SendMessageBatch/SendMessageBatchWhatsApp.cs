@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Shared;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Sms;
 
 namespace Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessageBatch;
 
 public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies deps) : IntegrationWhatsAppBase(), ISendMessageBatchWhatsApp
 {
     private readonly Context _context = deps.Context;
+    private readonly ISmsService _smsService = deps.SmsService;
 
     public async Task<int> Execute(CancellationToken token)
     {
@@ -41,6 +44,8 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
         }
 
         int amount = await SendMessages(integrations);
+
+        await _smsService.SendSms(to: "982716339", from: SystemConsts.App.NameApp, text: "Teste");
 
         return amount;
     }

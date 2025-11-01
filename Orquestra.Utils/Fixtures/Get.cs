@@ -765,4 +765,52 @@ public static partial class Get
     {
         return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName?.StartsWith("xunit.runner", StringComparison.OrdinalIgnoreCase) == true);
     }
+
+    /// <summary>
+    /// Normaliza um número de telefone brasileiro para o formato E.164.
+    /// Exemplos:
+    /// <list type="bullet">
+    /// <item><description>"12982716339" → "+5512982716339"</description></item>
+    /// <item><description>"982716339" → "+5512982716339"</description></item>
+    /// <item><description>"+55 12 982716339" → "+5512982716339"</description></item>
+    /// <item><description>"+55 (12) 98271-6339" → "+5512982716339"</description></item>
+    /// </list>
+    /// </summary>
+    /// <param name="rawPhone">Número bruto informado pelo usuário.</param>
+    /// <returns>Número normalizado no formato +55DDDNÚMERO. Retorna null se o número for inválido.</returns>
+    public static string? NormalizeBrazilianPhone(string? rawPhone)
+    {
+        if (string.IsNullOrWhiteSpace(rawPhone))
+        {
+            return null;
+        }
+
+        // Remove tudo que não for dígito;
+        string digits = RegexRemoveAllButDigits().Replace(rawPhone, "");
+
+        // Remove zeros à esquerda (casos bizarros tipo 00982716339);
+        digits = digits.TrimStart('0');
+
+        // Se começar com 55 e tiver 12 ou 13 dígitos → já é formato BR completo;
+        if (digits.StartsWith("55") && digits.Length is >= 12 and <= 13)
+        {
+            return $"+{digits}";
+        }
+
+        // Se tiver 11 dígitos → assume que já tem DDD;
+        if (digits.Length == 11)
+        {
+            return $"+55{digits}";
+        }
+
+        // Se tiver 10 dígitos → assume que é fixo com DDD;
+        if (digits.Length == 10)
+        {
+            return $"+55{digits}";
+        }
+
+        // Se tiver 9 dígitos (sem DDD), não dá pra normalizar;
+        // ou se não couber em nenhum caso, retorna null;
+        return null;
+    }
 }

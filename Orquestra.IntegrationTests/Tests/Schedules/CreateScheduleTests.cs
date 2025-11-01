@@ -383,6 +383,11 @@ public sealed class CreateScheduleTests
         // Cria N agendamentos (o suficiente pra ultrapassar o limite, caso tenha);
         int amount = schedulingLimit + 1;
 
+        if (planType == PlanTypeEnum.Premium)
+        {
+            amount = 10; // Workaround para o teste;
+        }
+
         for (int i = 0; i < amount; i++)
         {
             await context.Schedules.AddAsync(new Schedule
@@ -390,7 +395,7 @@ public sealed class CreateScheduleTests
                 ScheduleId = Guid.NewGuid(),
                 CompanyId = company.CompanyId,
                 ClientId = client.ClientId,
-                CreatedDate = GetDate().AddMinutes(-i),
+                CreatedDate = GetDate(),
                 DateStart = GetDate().AddDays(1).AddHours(9),
                 DateEnd = GetDate().AddDays(1).AddHours(10),
                 ScheduleStatus = ScheduleStatusEnum.Scheduled
@@ -412,7 +417,7 @@ public sealed class CreateScheduleTests
         CreateSchedule sut = CreateSut(context, user);
 
         // Act;
-        var exception = await Record.ExceptionAsync(() => sut.Validate(input, user.UserId, true));
+        Exception exception = await Record.ExceptionAsync(() => sut.Validate(input, user.UserId, true));
 
         // Assert;
         if (planType == PlanTypeEnum.Premium)

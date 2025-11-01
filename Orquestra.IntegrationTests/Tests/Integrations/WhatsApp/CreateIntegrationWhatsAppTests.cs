@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Moq;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
@@ -7,6 +8,7 @@ using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 
@@ -123,9 +125,11 @@ public sealed class CreateIntegrationWhatsAppTests
     {
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, Fixture.CreateIHttpContextAccessor(user));
-        GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
 
-        IntegrationWhatsAppBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, getCurrentMainCompanyUser);
+        Mock<ISmsService> smsServiceMock = new();
+        smsServiceMock.Setup(x => x.SendSms(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>())).ReturnsAsync("OK");
+
+        IntegrationWhatsAppBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, smsServiceMock.Object);
 
         CreateIntegrationWhatsApp createIntegrationWhatsApp = new(deps);
 

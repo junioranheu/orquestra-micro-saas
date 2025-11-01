@@ -3,6 +3,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Services.Sms;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -10,7 +11,8 @@ namespace Orquestra.Application.UseCases.Integrations.WhatsApp.Base;
 
 public record IntegrationWhatsAppBaseDependencies(
     Context Context,
-    ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser
+    ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
+    ISmsService SmsService
 );
 
 public partial class IntegrationWhatsAppBase()

@@ -9,7 +9,6 @@ using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
-using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Invite;
 using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
@@ -27,6 +26,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 
@@ -241,11 +241,13 @@ public sealed class EndToEndTests
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
 
-        GetCurrentMainCompanyUser getCurrentMainCompanyUser = new(context);
+        Mock<ISmsService> smsServiceMock = new();
+        smsServiceMock.Setup(x => x.SendSms(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>())).ReturnsAsync("OK");
+
         CreateIntegrationWhatsApp createIntegrationWhatsApp = new(new IntegrationWhatsAppBaseDependencies(
             context,
             checkIfUserIsLinkedCompanyUser,
-            getCurrentMainCompanyUser
+            smsServiceMock.Object
         ));
 
         CreateCompany createCompany = new(new CompanyBaseDependencies(

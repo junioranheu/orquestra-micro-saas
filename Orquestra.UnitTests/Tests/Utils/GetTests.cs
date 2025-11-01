@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Orquestra.Domain.Consts;
+using Orquestra.Infrastructure.Services.Sms;
 using System.ComponentModel;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -855,6 +856,44 @@ public sealed class GetTests
 
         // Assert;
         Assert.True(result);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void NormalizeBrazilianPhone_ShouldReturnNull_WhenInputIsEmptyOrNull(string? input)
+    {
+        string? result = NormalizeBrazilianPhone(input);
+        Assert.Null(result);
+    }
+
+    [Theory]
+    [InlineData("+55 (12) 98271-6339", "+5512982716339")]
+    [InlineData("55 12 98271-6339", "+5512982716339")]
+    [InlineData("(12) 98271-6339", "+5512982716339")]
+    [InlineData("12 98271-6339", "+5512982716339")]
+    [InlineData("12982716339", "+5512982716339")] // 11 dígitos;
+    [InlineData("5512982716339", "+5512982716339")] // Já está com DDI + DDD;
+    [InlineData("+5512982716339", "+5512982716339")] // Já está certo;
+    [InlineData("5511987654321", "+5511987654321")] // Outro DDD, válido;
+    public void NormalizeBrazilianPhone_ShouldNormalizeCorrectly(string input, string expected)
+    {
+        string? result = NormalizeBrazilianPhone(input);
+        Assert.Equal(expected, result);
+    }
+
+    [Theory]
+    [InlineData("982716339")]
+    [InlineData("123456")]
+    [InlineData("987654321012345")]
+    [InlineData("abc")]
+    [InlineData("+999999999999999")]
+    [InlineData("00982716339")] 
+    public void NormalizeBrazilianPhone_ShouldReturnNull_WhenInvalid(string input)
+    {
+        string? result = NormalizeBrazilianPhone(input);
+        Assert.Null(result);
     }
 
     #region helpers
