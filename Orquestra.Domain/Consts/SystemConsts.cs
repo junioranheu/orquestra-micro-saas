@@ -10,7 +10,6 @@ public static class SystemConsts
         public const string Author = "@junioranheu";
         public const string Slogan = "Harmonia na gestão do seu negócio";
         public const string MainColor = "#f9fff6";
-        public const bool DoNotSendEmailIfDev = false;
     }
 
     public static class Time
@@ -74,6 +73,16 @@ public static class SystemConsts
         public const string NotFoundVerification = "O código de verificação não foi encontrado na base de dados.";
         public const string AlreadyAuth = "Você já está autenticado no sistema, portanto não pode prosseguir com esta requisição.";
         public const string NotLinkedOrDontHaveCompany = "No momento, você não está vinculado a nenhuma empresa ou não há nenhuma definida como principal.";
+    }
 
+    public static class Brevo
+    {
+        public const string SmtpHost = "smtp-relay.brevo.com";
+        public const int SmtpPort = 587;
+        public const string SenderName = "Orquestra";
+        public const string SenderEmail = App.Email;
+        public const string Username = "953807001@smtp-brevo.com";
+        public  const bool EnableSsl = true;
+        public const bool DoNotSendEmailIfDev = false;
     }
 }

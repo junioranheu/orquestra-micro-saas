@@ -13,21 +13,12 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
     private readonly EmailSettings _settings = settings;
     private readonly bool _isDevelopment = env.IsDevelopment();
 
-    #region settings
-    const string _smtpHost = "smtp-relay.brevo.com";
-    const int _smtpPort = 587;
-    const string _senderName = "Orquestra";
-    const string _senderEmail = SystemConsts.App.Email;
-    const string _username = "953807001@smtp-brevo.com";
-    const bool _enableSsl = true;
-    #endregion
-
     public async Task SendEmail(string to, string subject, string body, bool isHtml = true, List<string>? cc = null)
     {
-        using SmtpClient client = new(_smtpHost, _smtpPort)
+        using SmtpClient client = new(SystemConsts.Brevo.SmtpHost, SystemConsts.Brevo.SmtpPort)
         {
-            Credentials = new NetworkCredential(_username, _settings.Password),
-            EnableSsl = _enableSsl
+            Credentials = new NetworkCredential(SystemConsts.Brevo.Username, _settings.Password),
+            EnableSsl = SystemConsts.Brevo.EnableSsl
         };
 
         if (_isDevelopment)
@@ -37,7 +28,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 
         MailMessage mailMessage = new()
         {
-            From = new MailAddress(address: _senderEmail, displayName: _senderName),
+            From = new MailAddress(address: SystemConsts.Brevo.SenderEmail, displayName: SystemConsts.Brevo.SenderName),
             Subject = subject,
             Body = body,
             IsBodyHtml = isHtml,
@@ -57,7 +48,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 
         mailMessage.HeadersEncoding = Encoding.UTF8;
 
-        if (_isDevelopment && SystemConsts.App.DoNotSendEmailIfDev)
+        if (_isDevelopment && SystemConsts.Brevo.DoNotSendEmailIfDev)
         {
             return;
         }

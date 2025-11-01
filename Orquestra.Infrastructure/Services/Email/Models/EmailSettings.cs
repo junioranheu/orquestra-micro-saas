@@ -11,5 +11,6 @@ public sealed class EmailSettings
     // public required string Password { get; set; }
     // public bool EnableSsl { get; set; }
     #endregion
+    
     public required string Password { get; set; }
 }

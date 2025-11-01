@@ -18,7 +18,7 @@ public sealed class EmailServiceTests
 
         EmailSettings emailSettingsMock = new() { Password = "xxx" };
         services.AddSingleton(emailSettingsMock);
-        services.AddTransient<IEmailService, EmailService>();
+        services.AddTransient<IEmailService, SmsService>();
 
         Mock<IWebHostEnvironment> envMock = new();
         envMock.SetupGet(x => x.ContentRootPath).Returns(AppContext.BaseDirectory); 

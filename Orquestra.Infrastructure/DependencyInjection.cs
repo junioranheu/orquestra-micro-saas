@@ -21,6 +21,7 @@ using Orquestra.Infrastructure.Jobs.Schedules;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.Sms;
 using System.Text;
 using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
@@ -54,6 +55,14 @@ public static class DependencyInjection
             IWebHostEnvironment env = builder.Environment;
 
             return new EmailService(settings, env);
+        });
+
+        // SMS;
+        services.AddHttpClient<ISmsService, SmsService>((x, httpClient) =>
+        {
+            EmailSettings settings = x.GetRequiredService<IOptions<EmailSettings>>().Value;
+            httpClient.BaseAddress = new Uri("https://api.brevo.com/v3/");
+            httpClient.DefaultRequestHeaders.Add("api-key", settings.Password);
         });
 
         // Env;
