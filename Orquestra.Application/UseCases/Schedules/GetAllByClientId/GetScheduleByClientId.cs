@@ -33,7 +33,7 @@ public sealed class GetScheduleByClientId(ScheduleBaseDependencies deps) : Sched
         {
             item.Observations = await CheckForObservations(schedule: item);
             item.UsersOutput = await GetUsers(users: item.UsersIds);
-            item.MessageIntegrationWhatsapp = await GetIntegrationWhatsapp(companyId: item.CompanyId);
+            item.MessageIntegrationWhatsapp = await GetIntegrationWhatsapp(schedule: item);
         }
 
         return output;

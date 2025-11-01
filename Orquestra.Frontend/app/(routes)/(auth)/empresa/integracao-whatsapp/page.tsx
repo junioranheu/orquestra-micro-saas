@@ -77,10 +77,10 @@ export default function EmpresaIntegracaoWhatsapp() {
             confirmFunction: () => {
                 setFormData(prev => ({
                     ...prev,
-                    messageReminderBeforeSchedule: 'Olá, {cliente}. Você tem um agendamento amanhã às {hora}. Estamos te esperando!',
-                    messageBeforeScheduleAlert: 'Olá, {cliente}. Seu agendamento em {data} às {hora} está chegando! Preparado?',
-                    messageOnScheduleConfirmed: 'Olá, {cliente}. Seu agendamento em {data} às {hora} foi confirmado!',
-                    messageOnScheduleCanceled: 'Olá, {cliente}. Seu agendamento em {data} foi cancelado. Entre em contato para reagendar.',
+                    messageReminderBeforeSchedule: 'Olá, {cliente}. Você tem um agendamento amanhã às {hora}. Nós, {empresa}, estamos te esperando!',
+                    messageBeforeScheduleAlert: 'Olá, {cliente}. Seu agendamento em {data} às {hora} está chegando! Nós, {empresa}, estamos te esperando!',
+                    messageOnScheduleConfirmed: 'Olá, {cliente}. Seu agendamento em {data} às {hora} foi confirmado! Nós, {empresa}, estamos te esperando!',
+                    messageOnScheduleCanceled: 'Olá, {cliente}. Seu agendamento em {data} foi cancelado. Entre em contato para reagendar. Nós, {empresa}, estamos te esperando!',
                     companyId: me?.currentMainCompany?.companyId
                 }));
             },
@@ -165,8 +165,9 @@ export default function EmpresaIntegracaoWhatsapp() {
                                 <strong>Dica:</strong>
                                 &nbsp;você pode usar as variáveis dinâmicas:
                                 <code>&#123;cliente&#125;</code>,
-                                <code>&#123;data&#125;</code> e&nbsp;
-                                <code>&#123;hora&#125;</code>.
+                                <code>&#123;data&#125;</code>,
+                                <code>&#123;hora&#125;</code>,
+                                <code>&#123;empresa&#125;</code>.
                                 Elas serão substituídas automaticamente pelas informações do agendamento.
                             </div>
                         </div>

@@ -11,6 +11,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using System.Text.RegularExpressions;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -174,9 +175,67 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         return [.. output];
     }
 
-    public async Task<string> GetIntegrationWhatsapp(Guid companyId)
+    public async Task<string> GetIntegrationWhatsapp(ScheduleOutput? schedule)
     {
-        return "xd";
+        if (schedule is null)
+        {
+            return string.Empty;
+        }
+
+        IntegrationWhatsApp? integration = await _context.IntegrationsWhatsApp.AsNoTracking().Where(x => x.CompanyId == schedule.CompanyId).FirstOrDefaultAsync();
+
+        if (integration is null)
+        {
+            return string.Empty;
+        }
+
+        // Pega dados base;
+        string clientName = schedule.Client?.FullName ?? "cliente";
+        string date = schedule.DateStart.ToString("dd/MM/yyyy");
+        string time = schedule.DateStart.ToString("HH:mm");
+        string companyName = schedule.Company?.Name ?? "";
+        TimeSpan diff = schedule.DateStart - GetDate();
+
+        // Pega o template certo dependendo do contexto;
+        string? template = null;
+
+        // Se o agendamento foi cancelado;
+        if (schedule.ScheduleStatus == ScheduleStatusEnum.Canceled)
+        {
+            template = integration.MessageOnScheduleCanceled;
+        }
+        // Se o agendamento foi confirmado;
+        else if (schedule.ScheduleStatus == ScheduleStatusEnum.Scheduled)
+        {
+            template = integration.MessageOnScheduleConfirmed;
+        }
+        // Se ainda vai acontecer;
+        else if (diff.TotalDays <= 1 && diff.TotalHours > 1)
+        {
+            // Um dia antes;
+            template = integration.MessageReminderBeforeSchedule;
+        }
+        else if (diff.TotalHours <= 1 && diff.TotalMinutes > 0)
+        {
+            // 1 hora antes;
+            template = integration.MessageBeforeScheduleAlert;
+        }
+
+        if (string.IsNullOrWhiteSpace(template))
+        {
+            return string.Empty;
+        }
+
+        // Substitui placeholders;
+        string message = template.Replace("{cliente}", clientName).Replace("{data}", date).Replace("{hora}", time).Replace("{empresa}", companyName);
+
+        // Limpeza: remove vírgulas ou espaços duplicados;
+        message = message.Replace(",,", ",");
+        message = message.Replace(" ,", ",");
+        message = message.Replace(" .", ".");
+        message = message.Replace("  ", " ");
+
+        return message;
     }
 
     public async Task SendEmail(Schedule schedule, bool isCreate)

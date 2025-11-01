@@ -28,7 +28,7 @@ public sealed class GetSchedule(ScheduleBaseDependencies deps) : ScheduleBase(de
         var output = result.Adapt<ScheduleOutput>();
         output.Observations = await CheckForObservations(schedule: output);
         output.UsersOutput = await GetUsers(users: output.UsersIds);
-        output.MessageIntegrationWhatsapp = await GetIntegrationWhatsapp(companyId: output.CompanyId);
+        output.MessageIntegrationWhatsapp = await GetIntegrationWhatsapp(schedule: output);
 
         return output;
     }
