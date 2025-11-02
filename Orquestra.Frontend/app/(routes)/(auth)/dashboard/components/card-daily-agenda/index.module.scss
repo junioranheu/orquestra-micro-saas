@@ -1,6 +1,6 @@
 .dailyAgenda {
     // background: tomato !important;
-    background: #ffffff;
+    background: var(--white-og);
     border-radius: var(--border-radius);
     border: 1px solid var(--gray-light);
     padding: 1.5rem;
@@ -15,7 +15,7 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: #FFFFFF;
+        background: var(--white-og);
     }
 
     .title {
@@ -78,7 +78,7 @@
 
             .avatar {
                 background-color: var(--main);
-                color: #ffffff;
+                color: var(--white-og);
             }
         }
 

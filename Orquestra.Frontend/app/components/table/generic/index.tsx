@@ -274,7 +274,7 @@ export default function TableGeneric({
                                             handleFunction={btn_filter_function}
                                             isStyleSimple
                                             icon_feather={<Icon icon='search' size='small' />}
-                                            style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+                                            style={{ fontSize: '0.75rem', backgroundColor: 'var(--white-og)' }}
                                         />
                                     )
                                 }
@@ -286,7 +286,7 @@ export default function TableGeneric({
                                             handleFunction={btn_import_function}
                                             isStyleSimple
                                             icon_feather={<Icon icon='upload' size='small' />}
-                                            style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+                                            style={{ fontSize: '0.75rem', backgroundColor: 'var(--white-og)' }}
                                         />
                                     )
                                 }
@@ -298,7 +298,7 @@ export default function TableGeneric({
                                             handleFunction={btn_export_function}
                                             isStyleSimple
                                             icon_feather={<Icon icon='download' size='small' />}
-                                            style={{ fontSize: '0.75rem', backgroundColor: '#FFFFFF' }}
+                                            style={{ fontSize: '0.75rem', backgroundColor: 'var(--white-og)' }}
                                         />
                                     )
                                 }

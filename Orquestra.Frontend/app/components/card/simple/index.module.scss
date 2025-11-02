@@ -23,7 +23,7 @@
 
     .card {
         // background-color: orange !important;
-        background: #ffffff;
+        background: var(--white-og);
         border-radius: var(--border-radius);
         padding: 2rem 1.5rem;
         border: 1px solid var(--gray-light);
@@ -89,7 +89,7 @@
 
             .right {
                 // background-color: tomato !important;
-                background-color: #FFFFFF;
+                background-color: var(--white-og);
                 border-radius: var(--border-radius);
                 border: 1px solid var(--gray-light);
                 padding: 2rem;

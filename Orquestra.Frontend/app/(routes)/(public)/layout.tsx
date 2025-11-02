@@ -9,6 +9,7 @@ import SYSTEM from '@/app/consts/system';
 import { INTER } from '@/app/fonts/fonts';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
+import useTheme from '@/app/hooks/useTheme';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
     useStandardIntructions();
     useShowNProgressOnPageLoad();
+    useTheme();
 
     const pathname = usePathname();
     const hideHeader = pathname?.includes(ROUTES.LANDING_PAGE);

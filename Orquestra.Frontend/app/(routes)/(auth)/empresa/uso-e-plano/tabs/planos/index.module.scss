@@ -47,7 +47,7 @@
                     left: 2rem;
                     padding: 0.35rem 0.9rem;
                     background: linear-gradient(90deg, var(--main), var(--main-dark));
-                    color: white;
+                    color: var(--white-og);
                     font-weight: 700;
                     font-size: 0.85rem;
                     border-radius: 9999px;
@@ -56,7 +56,7 @@
 
                 .card {
                     // background-color: orange !important;
-                    background-color: #FFFFFF;
+                    background-color: var(--white-og);
                     height: 100%;
                     padding: 2rem;
                     border-radius: var(--border-radius);
@@ -69,7 +69,7 @@
                         border: 1px solid var(--gray-light);
 
                         &:hover {
-                            background: #FFFFFF;
+                            background: var(--white-og);
                             box-shadow: 0 8px 26px rgba(10, 10, 10, 0.06);
                         }
                     }
@@ -151,7 +151,7 @@
                         width: 100%;
                         padding: 0.8rem 1rem;
                         font-weight: 800;
-                        color: white;
+                        color: var(--white-og);
                         border-radius: var(--border-radius-sm);
                         text-decoration: none;
                         background: linear-gradient(90deg, var(--main), var(--main-dark));

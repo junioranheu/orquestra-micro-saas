@@ -1,6 +1,7 @@
 'use client';
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
+import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
@@ -20,10 +21,16 @@ function ThemeSelector() {
 
     const [selectedTheme, setSelectedTheme] = useState<string>('padrao');
 
-    const themes = [
-        { id: 'padrao', label: 'Padrão', className: styles.themeDefault },
-        { id: 'escuro', label: 'Escuro', className: styles.themeDark }
-    ];
+    useEffect(() => {
+        const saved = localStorage.getItem(SYSTEM.LOCAL_STORAGE_THEME) || 'padrao';
+        setSelectedTheme(saved);
+    }, []);
+
+    function handleSelectTheme(themeId: string) {
+        setSelectedTheme(themeId);
+        localStorage.setItem(SYSTEM.LOCAL_STORAGE_THEME, themeId);
+        handleApplyTheme(themeId);
+    }
 
     return (
         <div className={styles.card}>
@@ -31,20 +38,23 @@ function ThemeSelector() {
 
             <div className={styles.themeContainer}>
                 {
-                    themes.map((theme) => (
+                    THEMES.map((theme) => (
                         <button
                             key={theme.id}
-                            onClick={() => setSelectedTheme(theme.id)}
+                            onClick={() => handleSelectTheme(theme.id)}
                             className={styles.themeButton}
                         >
-                            <div className={`${styles.themeCircle} ${theme.className} ${selectedTheme === theme.id ? styles.themeSelected : ''}`} />
+                            <div
+                                className={`${styles.themeCircle} ${theme.className} ${selectedTheme === theme.id ? styles.themeSelected : ''
+                                    }`}
+                            />
                             <span className={styles.themeLabel}>{theme.label}</span>
                         </button>
                     ))
                 }
             </div>
         </div>
-    );
+    )
 }
 
 function FontSizeSelector() {

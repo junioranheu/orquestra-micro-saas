@@ -15,6 +15,7 @@ const SYSTEM = {
     COOKIE_AUTH_FRONT: 'COOKIE_AUTH_FRONT',
     LOCAL_STORAGE_FONT_SIZE: 'LOCAL_STORAGE_FONT_SIZE',
     LOCAL_STORAGE_SHOW_MASCOT: 'LOCAL_STORAGE_SHOW_MASCOT',
+    LOCAL_STORAGE_THEME: 'LOCAL_STORAGE_THEME',
 
     ANIMATE: 'animate__animated animate__fadeIn',
     ANIMATE_SLOW: 'animate__animated animate__fadeIn animate__slow',

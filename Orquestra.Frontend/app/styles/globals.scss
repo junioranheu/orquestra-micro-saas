@@ -6,6 +6,7 @@
     --contrast-light: #efeefc;
     --black: #15171A;
     --white: #f7f9fc;
+    --white-og: #FFFFFF;
     --muted: #9ca3af;
     --gray: lightgray;
     --gray-light: #ece8e8;
@@ -412,7 +413,7 @@ input:-webkit-autofill {
     }
 
     .rc-table-cell-row-hover {
-        background-color: #FFFFFF !important;
+        background-color: var(--white-og) !important;
     }
 }
 
@@ -721,7 +722,7 @@ input:-webkit-autofill {
 
 // react-big-calendar  
 .rbc-calendar {
-    background-color: #FFFFFF;
+    background-color: var(--white-og);
     // background-color: tomato !important;
 
     // // Headers;
@@ -733,7 +734,7 @@ input:-webkit-autofill {
     .rbc-row-bg {
         // background-color: tomato !important;
         // background-color: var(--white);
-        background-color: #FFFFFF;
+        background-color: var(--white-og);
         cursor: copy;
         width: 100% !important;
     }
@@ -946,7 +947,7 @@ input:-webkit-autofill {
 
             button {
                 // background-color: orange !important;
-                background-color: #FFFFFF;
+                background-color: var(--white-og);
                 border: 1px solid var(--gray-light) !important;
                 transition: 0.3s;
 

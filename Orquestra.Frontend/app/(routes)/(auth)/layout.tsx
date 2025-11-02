@@ -14,6 +14,7 @@ import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
+import useTheme from '@/app/hooks/useTheme';
 import '@/app/styles/globals.scss';
 import 'animate.css/animate.min.css';
 import feather from 'feather-icons';
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     useStandardIntructions();
     useCheckAzureServer();
     useShowNProgressOnPageLoad();
+    useTheme();
 
     const pathname = usePathname();
     const hideHeader = pathname?.includes(ROUTES.EMPRESA_AGENDAMENTOS);

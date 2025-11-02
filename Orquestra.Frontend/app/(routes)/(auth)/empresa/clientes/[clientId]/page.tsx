@@ -167,7 +167,7 @@ function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iCl
             </div>
 
             <div className={styles.clientHeader__actions}>
-                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} style={{ background: '#FFFFFF' }} />}
+                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} />}
                 <Button label='Editar cliente' handleFunction={() => onEdit()} />
             </div>
         </div>
