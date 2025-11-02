@@ -91,7 +91,7 @@ export default function ModalGeneric({
 
                         {
                             showCloseButton && (
-                                <Tippy content='Fechar'>
+                                <Tippy content='Fechar.'>
                                     <button className='close' onClick={() => handleClose(true)}>
                                         ✖
                                     </button>

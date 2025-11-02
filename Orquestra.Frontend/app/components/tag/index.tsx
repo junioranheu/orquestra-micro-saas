@@ -58,7 +58,7 @@ export default function Tag({ text, handleRemoveFunction, fixCapitalizeStr = tru
 
             {
                 handleRemoveFunction && (
-                    <Tippy content={tippyContent ?? 'Remover'}>
+                    <Tippy content={tippyContent ?? 'Remover.'}>
                         <span
                             className={styles.x}
                             onClick={() => handleRemoveFunction && handleRemoveFunction()}

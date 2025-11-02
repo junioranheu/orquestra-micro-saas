@@ -86,7 +86,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
         <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-[var(--main-light)]/50' : 'bg-white/70 backdrop-blur-md'}`}>
             <div className='max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4'>
                 {/* Logo */}
-                <Tippy content='Voltar ao início'>
+                <Tippy content='Voltar ao início.'>
                     <Link href={ROUTES.DASHBOARD} className='flex items-center gap-2.5 group'>
                         {/* <div className='w-10 h-10 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
                             <Icon icon='calendar' />
@@ -606,13 +606,13 @@ function Footer() {
                         <p className='font-semibold text-white mb-3 text-sm uppercase tracking-wide'>Links úteis</p>
 
                         <div className='flex gap-3'>
-                            <Tippy content='Contatar suporte via WhatsApp'>
+                            <Tippy content='Contatar suporte via WhatsApp.'>
                                 <span>
                                     <WhatsappHyperlink showIcon={true} className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all' />
                                 </span>
                             </Tippy>
 
-                            <Tippy content='Contatar suporte via e-mail'>
+                            <Tippy content='Contatar suporte via e-mail.'>
                                 <a
                                     href={`mailto:${SYSTEM.EMAIL_SUPPORT}`}
                                     className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
@@ -621,7 +621,7 @@ function Footer() {
                                 </a>
                             </Tippy>
 
-                            <Tippy content={`GitHub ${SYSTEM.AUTHOR}`}>
+                            <Tippy content={`GitHub ${SYSTEM.AUTHOR}.`}>
                                 <a
                                     href={SYSTEM.URL_GITHUB}
                                     target='_blank'
@@ -632,7 +632,7 @@ function Footer() {
                                 </a>
                             </Tippy>
 
-                            <Tippy content={`LinkedIn ${SYSTEM.AUTHOR}`}>
+                            <Tippy content={`LinkedIn ${SYSTEM.AUTHOR}.`}>
                                 <a
                                     href={SYSTEM.URL_LINKEDIN}
                                     target='_blank'

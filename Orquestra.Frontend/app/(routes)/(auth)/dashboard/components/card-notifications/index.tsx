@@ -48,7 +48,7 @@ export default function CardNotifications({ me }: iProps) {
         return (
             <div key={notification.logId.toString()} className={styles.scheduleItem}>
                 <div className={styles.info}>
-                    <Tippy content={`${notification.emoji} ${notification.logType}`}>
+                    <Tippy content={`${notification.emoji} ${notification.logType}.`}>
                         <div className={styles.name} style={{ cursor: 'help' }}>{notification.story}</div>
                     </Tippy>
 

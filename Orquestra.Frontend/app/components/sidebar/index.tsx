@@ -34,11 +34,11 @@ export default function Sidebar() {
     const [popoverPos, setPopoverPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
     const popoverRef = useRef<HTMLDivElement>(null);
 
-    const handleClickOutside = (e: MouseEvent) => {
+    function handleClickOutside(e: MouseEvent) {
         if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
             setOpenPopover(null);
         }
-    };
+    }
 
     useEffect(() => {
         setActive(pathname);
@@ -46,7 +46,7 @@ export default function Sidebar() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [pathname]);
 
-    const menuGroups = [
+    const MENU_GROUPS = [
         {
             label: 'Geral',
             items: [
@@ -56,6 +56,7 @@ export default function Sidebar() {
                     { label: 'Plano e faturas', description: 'Visualize o plano atual e gerencie suas faturas.', icon: 'tag', route: ROUTES.EMPRESA_USO_E_PLANO, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
                     { label: 'Notificações', description: 'Gerencie alertas e notificações do sistema.', icon: 'bell', route: ROUTES.USUARIO_NOTIFICACOES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) }
                 ] : []),
+                { label: 'Central de ajuda', description: `Encontre respostas para dúvidas e suporte para utilizar o ${SYSTEM.NAME}.`, icon: 'help-circle', route: ROUTES.ETC_AJUDA, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
                 { label: 'Configurações', description: 'Personalize o sistema, altere informações da conta e troque sua senha.', icon: 'settings', route: ROUTES.USUARIO_CONFIGURACOES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
             ]
         },
@@ -67,7 +68,7 @@ export default function Sidebar() {
                 { label: 'Colaboradores', description: 'Controle os usuários e profissionais da empresa.', icon: 'users', route: ROUTES.EMPRESA_COLABORADORES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
                 { label: 'Clientes', description: 'Gerencie informações e histórico dos clientes.', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
                 { label: 'Orçamento', description: 'Crie e acompanhe propostas de serviço.', icon: 'file', route: ROUTES.EMPRESA_ORCAMENTO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Quote] }) },
-                { label: 'OS', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.ServiceOrder] }) },
+                { label: 'Ordem de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.ServiceOrder] }) },
                 { label: 'Estoque', description: 'Controle produtos e materiais disponíveis.', icon: 'package', route: ROUTES.EMPRESA_ESTOQUE, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Inventory] }) },
             ]
         },
@@ -107,7 +108,7 @@ export default function Sidebar() {
 
             <nav>
                 {
-                    menuGroups.map((group, gIndex) => {
+                    MENU_GROUPS.map((group, gIndex) => {
                         const visibleItems = group.items.filter(x => x.hasAccess);
 
                         if (visibleItems.length === 0) {
@@ -160,7 +161,7 @@ export default function Sidebar() {
                         style={{ top: popoverPos.top, left: popoverPos.left }}
                     >
                         {
-                            menuGroups.find(g => g.label === openPopover)?.items.filter(x => x.hasAccess).map((item, index) => (
+                            MENU_GROUPS.find(g => g.label === openPopover)?.items.filter(x => x.hasAccess).map((item, index) => (
                                 <Tippy key={index} content={item.description} placement='right'>
                                     <div
                                         className={`${styles.popoverItem} ${active === item.route ? styles.active : ''}`}

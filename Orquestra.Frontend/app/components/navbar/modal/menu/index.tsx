@@ -2,6 +2,7 @@ import { iMe } from '@/app/api/consts/auth';
 import Icon from '@/app/components/icon';
 import ModalGeneric, { iModalCustomPosition } from '@/app/components/modal/generic';
 import ROUTES from '@/app/consts/routes';
+import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import feather from 'feather-icons';
@@ -121,7 +122,7 @@ export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Elem
                             <MenuItem icon='file' label='Termos de uso' handleFunction={() => handleRedirect(ROUTES.ETC_TERMOS_DE_USO)} />
                             <MenuItem icon='lock' label='Privacidade' handleFunction={() => handleRedirect(ROUTES.ETC_PRIVACIDADE)} />
                             <MenuItem icon='shield' label='Segurança' handleFunction={() => handleRedirect(ROUTES.ETC_SEGURANCA)} />
-                            <MenuItem icon='smile' label='Página de apresentação' handleFunction={() => handleRedirect(ROUTES.LANDING_PAGE)} />
+                            <MenuItem icon='smile' label={`Sobre o ${SYSTEM.NAME}`} handleFunction={() => handleRedirect(ROUTES.LANDING_PAGE)} />
                         </Fragment>
                     )
                 }

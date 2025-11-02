@@ -62,7 +62,7 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Agenda',
+        topic: 'Módulo: agenda',
         description: 'Organize seus horários, serviços e notificações automáticas.',
         items: [
             {
@@ -80,7 +80,7 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Financeiro',
+        topic: 'Módulo: financeiro',
         description: 'Acompanhe pagamentos, relatórios e o fluxo de caixa da sua empresa.',
         items: [
             {
@@ -116,7 +116,7 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'LGPD e privacidade',
+        topic: 'Privacidade e LGPD',
         description: `Saiba como o ${SYSTEM.NAME} protege os dados de clientes, profissionais e usuários, garantindo segurança, transparência e conformidade com a LGPD.`,
         items: [
             {
@@ -172,7 +172,7 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Planos',
+        topic: 'Planos (empresa)',
         description: `Saiba quais são os planos disponíveis no ${SYSTEM.NAME} e o que cada um oferece.`,
         items: [
             {
@@ -254,7 +254,7 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Faturas',
+        topic: 'Módulo: faturas',
         description: `Entenda como funcionam as faturas no ${SYSTEM.NAME} e o que acontece após a aquisição de um novo plano.`,
         items: [
             {
@@ -302,6 +302,118 @@ export const HELP_TOPICS = [
             {
                 title: 'Se eu o desativei, como ativá-lo novamente?',
                 description: `Se mudar de ideia, basta voltar nas configurações/aba personalização e ligar o mascote novamente.`
+            },
+        ]
+    },
+    {
+        topic: 'Módulo: follow-up',
+        description: 'Acompanhe e gerencie o histórico de contatos e retornos com seus clientes.',
+        items: [
+            {
+                title: 'Registrar follow-up',
+                description: 'Crie registros de follow-up para cada cliente, anotando datas, observações e próximos passos.'
+            },
+            {
+                title: 'Filtrar por status',
+                description: 'Veja apenas os follow-ups pendentes, concluídos ou atrasados para organizar sua rotina.'
+            },
+            {
+                title: 'Notificações automáticas',
+                description: 'Receba alertas de follow-ups programados para não perder nenhuma oportunidade de contato.'
+            }
+        ]
+    },
+    {
+        topic: 'Módulo: orçamento',
+        description: 'Crie, envie e gerencie propostas de serviço para seus clientes.',
+        items: [
+            {
+                title: 'Criar orçamento',
+                description: 'Monte propostas detalhadas com produtos, serviços e preços personalizados para cada cliente.'
+            },
+            {
+                title: 'Enviar para o cliente',
+                description: 'Envie o orçamento diretamente por e-mail ou WhatsApp para aprovação rápida.'
+            },
+            {
+                title: 'Acompanhar status',
+                description: 'Verifique quais orçamentos foram aceitos, rejeitados ou estão pendentes.'
+            }
+        ]
+    },
+    {
+        topic: 'Módulo: ordem de Serviço',
+        description: 'Gerencie a execução dos serviços da sua empresa com controle completo de status e prazos.',
+        items: [
+            {
+                title: 'Criar ordem de serviço',
+                description: 'Registre todos os detalhes do serviço, cliente, colaborador responsável e datas.'
+            },
+            {
+                title: 'Atualizar status',
+                description: 'Marque a ordem como em andamento, concluída ou cancelada, mantendo o histórico completo.'
+            },
+            {
+                title: 'Relatórios de OS',
+                description: 'Gere relatórios para acompanhar produtividade, entregas e pendências da equipe.'
+            }
+        ]
+    },
+    {
+        topic: 'Módulo: estoque',
+        description: 'Controle produtos, materiais e insumos disponíveis em sua empresa.',
+        items: [
+            {
+                title: 'Cadastrar produtos',
+                description: 'Adicione novos itens ao estoque com informações como quantidade, preço e fornecedor.'
+            },
+            {
+                title: 'Atualizar quantidade',
+                description: 'Registre entradas e saídas de produtos para manter o estoque sempre atualizado.'
+            },
+            {
+                title: 'Alertas de baixa',
+                description: 'Receba notificações automáticas quando algum item atingir quantidade mínima definida.'
+            }
+        ]
+    },
+    {
+        topic: 'Módulo: integração com WhatsApp',
+        description: 'Gerencie comunicações com clientes via WhatsApp, criando mensagens automáticas para agendamentos e avisos.',
+        items: [
+            {
+                title: 'Cadastrar e atualizar mensagens',
+                description: 'Você pode criar mensagens personalizadas para enviar aos clientes uma hora ou um dia antes do agendamento, ou em caso de cancelamento.'
+            },
+            {
+                title: 'Uso do WhatsApp Web',
+                description: 'É necessário conectar o sistema ao WhatsApp Web para enviar as mensagens aos clientes.'
+            },
+            {
+                title: 'Envio semi-automático',
+                description: 'O envio ainda não é totalmente automático: a interação do usuário é necessária para que as mensagens sejam enviadas.'
+            },
+            {
+                title: 'Histórico de envios',
+                description: 'Acompanhe todas as mensagens cadastradas, enviadas e entregues aos clientes.'
+            }
+        ]
+    },
+    {
+        topic: 'Módulo: nota Fiscal',
+        description: 'Emita e gerencie notas fiscais eletrônicas para suas vendas e serviços.',
+        items: [
+            {
+                title: 'Emitir nota fiscal',
+                description: 'Crie notas fiscais detalhadas para cada venda ou serviço prestado.'
+            },
+            {
+                title: 'Consultar notas emitidas',
+                description: 'Acesse o histórico de notas fiscais emitidas com filtros por cliente, data e status.'
+            },
+            {
+                title: 'Cancelar ou corrigir nota',
+                description: 'Caso haja erro ou necessidade, cancele ou faça ajustes nas notas fiscais já emitidas.'
             }
         ]
     }

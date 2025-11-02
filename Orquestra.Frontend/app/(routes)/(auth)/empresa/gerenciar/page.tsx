@@ -208,7 +208,7 @@ export default function EmpresaGerenciar() {
                                             <div className={styles.badgeContainer}>
                                                 {
                                                     isCurrentMain && (
-                                                        <Tippy content='Empresa Principal'>
+                                                        <Tippy content='Sua empresa principal.'>
                                                             <span className={`${styles.statusBadge} ${styles.badgeMain}`}>
                                                                 <Icon icon='star' size='small' />
                                                                 <span>Empresa principal</span>
@@ -219,7 +219,7 @@ export default function EmpresaGerenciar() {
 
                                                 {
                                                     isAdmin && (
-                                                        <Tippy content='Você é administrador desta empresa'>
+                                                        <Tippy content='Você é administrador desta empresa.'>
                                                             <span className={`${styles.statusBadge} ${styles.badgeAdmin}`}>
                                                                 <Icon icon='shield' size='small' />
                                                                 <span>Admin</span>
@@ -230,7 +230,7 @@ export default function EmpresaGerenciar() {
 
                                                 {
                                                     isOwner && (
-                                                        <Tippy content='Você é o proprietário'>
+                                                        <Tippy content='Você é o proprietário.'>
                                                             <span className={`${styles.statusBadge} ${styles.badgeOwner}`}>
                                                                 <Icon icon='award' size='small' />
                                                                 <span>Dono</span>

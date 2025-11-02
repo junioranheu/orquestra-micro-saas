@@ -19,24 +19,24 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
             <div className={styles.wrapper}>
                 <span className={styles.content}>
                     <span>{SYSTEM.NAME}: {SYSTEM.DESCRIPTION}.</span>
-                    <span>Todos os direitos reservados © {new Date().getFullYear()} — Desenvolvido e publicado por <Tippy content='LinkedIn'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>.</span>
+                    <span>Todos os direitos reservados © {new Date().getFullYear()} — Desenvolvido e publicado por <Tippy content='LinkedIn.'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>@junioranheu</Link></Tippy>.</span>
                 </span>
 
                 <div className={styles.right}>
                     <div className={styles.icons}>
-                        <Tippy content={`Página de apresentação do ${SYSTEM.NAME}`}>
+                        <Tippy content={`Sobre o ${SYSTEM.NAME}.`}>
                             <Link href={ROUTES.LANDING_PAGE}>
                                 <Icon icon='smile' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>
 
-                        <Tippy content='Contatar suporte via WhatsApp'>
+                        <Tippy content='Contatar suporte via WhatsApp.'>
                             <span>
                                 <WhatsappHyperlink showIcon={true} />
                             </span>
                         </Tippy>
 
-                        <Tippy content='Contatar suporte via e-mail'>
+                        <Tippy content='Contatar suporte via e-mail.'>
                             <Link
                                 href='#'
                                 onClick={(e) => {
@@ -48,13 +48,13 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
                             </Link>
                         </Tippy>
 
-                        <Tippy content={`GitHub ${SYSTEM.AUTHOR}`}>
+                        <Tippy content={`GitHub ${SYSTEM.AUTHOR}.`}>
                             <Link href={SYSTEM.URL_GITHUB} target='_blank' rel='noopener noreferrer'>
                                 <Icon icon='github' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
                         </Tippy>
 
-                        <Tippy content={`LinkedIn ${SYSTEM.AUTHOR}`}>
+                        <Tippy content={`LinkedIn ${SYSTEM.AUTHOR}.`}>
                             <Link href={SYSTEM.URL_LINKEDIN} target='_blank' rel='noopener noreferrer'>
                                 <Icon icon='linkedin' color='var(--gray-dark)' className='contrastOnHover' />
                             </Link>
