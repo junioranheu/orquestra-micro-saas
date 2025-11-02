@@ -12,6 +12,7 @@ import { UserProvider } from '@/app/contexts/user.context';
 import { INTER } from '@/app/fonts/fonts';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
+import useFontSize from '@/app/hooks/useFontSize';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import useTheme from '@/app/hooks/useTheme';
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     useCheckAzureServer();
     useShowNProgressOnPageLoad();
     useTheme();
+    useFontSize();
 
     const pathname = usePathname();
     const hideHeader = pathname?.includes(ROUTES.EMPRESA_AGENDAMENTOS);

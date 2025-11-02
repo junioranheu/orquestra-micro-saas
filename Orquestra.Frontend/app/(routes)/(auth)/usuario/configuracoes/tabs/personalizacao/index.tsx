@@ -1,4 +1,5 @@
 'use client';
+import Button from '@/app/components/input/button';
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
@@ -67,7 +68,33 @@ function MascotToggle() {
 
 function FontSizeSelector() {
 
-    const [fontSize, setFontSize] = useState<number>(50);
+    const MIN_FONT_SIZE = 75;
+    const MAX_FONT_SIZE = 125;
+    const DEFAULT_FONT_SIZE = 100;
+
+    const [fontSize, setFontSize] = useState<number>(DEFAULT_FONT_SIZE);
+
+    useEffect(() => {
+        const stored = localStorage.getItem(SYSTEM.LOCAL_STORAGE_USER_FONT_SIZE);
+        const size = stored ? Number(stored) : DEFAULT_FONT_SIZE;
+        setFontSize(size);
+        document.documentElement.style.setProperty('--user-font-size', `${size}%`);
+        document.documentElement.style.fontSize = `${size}%`;
+    }, []);
+
+    function handleChangeFontSize(value: number) {
+        setFontSize(value);
+        localStorage.setItem(SYSTEM.LOCAL_STORAGE_USER_FONT_SIZE, value.toString());
+        document.documentElement.style.setProperty('--user-font-size', `${value}%`);
+        document.documentElement.style.fontSize = `${value}%`;
+    }
+
+    function handleResetFontSize() {
+        setFontSize(DEFAULT_FONT_SIZE);
+        localStorage.removeItem(SYSTEM.LOCAL_STORAGE_USER_FONT_SIZE);
+        document.documentElement.style.setProperty('--user-font-size', `${DEFAULT_FONT_SIZE}%`);
+        document.documentElement.style.fontSize = `${DEFAULT_FONT_SIZE}%`;
+    }
 
     return (
         <div className={styles.card}>
@@ -77,22 +104,36 @@ function FontSizeSelector() {
                 Ajuste o tamanho do texto para melhor leitura.
             </p>
 
-            <div className={styles.sliderContainer}>
-                <span className={styles.sliderLabel}>Pequeno</span>
+            <div className={styles.sliderLabels}>
+                <span className={styles.sliderLabel}>{MIN_FONT_SIZE}%</span>
+                <span className={styles.sliderCurrent}>Tamanho atual: {fontSize}%</span>
+                <span className={styles.sliderLabel}>{MAX_FONT_SIZE}%</span>
+            </div>
 
+            <div className={styles.sliderContainer}>
                 <input
                     type='range'
-                    min='0'
-                    max='100'
+                    min={MIN_FONT_SIZE}
+                    max={MAX_FONT_SIZE}
+                    step='5'
                     value={fontSize}
-                    onChange={(e) => setFontSize(Number(e.target.value))}
+                    onChange={(e) => handleChangeFontSize(Number(e.target.value))}
                     className={styles.slider}
                 />
-
-                <span className={`${styles.sliderLabel} ${styles.sliderLabelRight}`}>
-                    Grande
-                </span>
             </div>
+
+            {
+                fontSize !== DEFAULT_FONT_SIZE && (
+                    <Button
+                        label='Resetar ao padrão'
+                        isStyleSimple={true}
+                        handleFunction={() => handleResetFontSize()}
+                        isDisabled={fontSize === DEFAULT_FONT_SIZE}
+                        style={{ marginTop: '1rem' }}
+                        classes={SYSTEM.ANIMATE}
+                    />
+                )
+            }
         </div>
     )
 }

@@ -7,6 +7,7 @@ import WhatsappButton from '@/app/components/whatsapp/button';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { INTER } from '@/app/fonts/fonts';
+import useFontSize from '@/app/hooks/useFontSize';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import useTheme from '@/app/hooks/useTheme';
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     useStandardIntructions();
     useShowNProgressOnPageLoad();
     useTheme();
+    useFontSize();
 
     const pathname = usePathname();
     const hideHeader = pathname?.includes(ROUTES.LANDING_PAGE);

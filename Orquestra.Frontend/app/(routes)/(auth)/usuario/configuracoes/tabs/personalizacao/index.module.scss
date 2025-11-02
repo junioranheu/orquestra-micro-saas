@@ -152,6 +152,15 @@
     }
 }
 
+.sliderLabels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+}
+
 .toggleContainer {
     // background-color: orange;
     display: flex;
