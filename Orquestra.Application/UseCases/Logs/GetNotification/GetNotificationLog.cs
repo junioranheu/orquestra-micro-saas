@@ -36,7 +36,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             // Cache;
             if (_cache.TryGetValue(cacheKey, out (List<LogNotificationOutput> output, int count) cached))
             {
-                return cached;
+               return cached;
             }
         }
 
@@ -202,11 +202,12 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
         bool isXUnit = IsRunningFromXUnit();
 
         var query = _context.Logs.
-                     AsNoTracking().
-                     Where(x => 
-                        (x.Parameters!.Contains($"\"CompanyId\":\"{companyId}\"") || x.UserId == userIdAuth) &&
+                    AsNoTracking().
+                    Where(x =>
+                        // (x.Parameters!.Contains($"\"CompanyId\":\"{companyId}\"") || x.UserId == userIdAuth) &&
+                        (x.Parameters!.Contains($"\"CompanyId\":\"{companyId}\"")) &&
                         (isXUnit || endpointMap.Keys.Any(k => x.Endpoint!.Contains(k)))
-                     ).OrderByDescending(x => x.CreatedDate);
+                    ).OrderByDescending(x => x.CreatedDate);
 
         if (isDashboard)
         {

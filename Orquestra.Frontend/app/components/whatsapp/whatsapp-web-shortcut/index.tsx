@@ -53,10 +53,19 @@ export default function WhatsappWebShortcut({ phone, message = '', label = 'Abri
         <div className={styles.container}>
             {
                 isValidPhone ? (
-                    <Button label={label} handleFunction={handleClick} icon_feather={<Icon icon='message-square' />} />
+                    <Button
+                        label={label}
+                        handleFunction={handleClick}
+                        icon_feather={<Icon icon='message-square' />}
+                    />
                 ) : (
                     clientId && (
-                        <Button label='Atualizar telefone' handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${clientId}`)} isStyleSimple={true} icon_feather={<Icon icon='edit' />} />
+                        <Button
+                            label='Atualizar telefone'
+                            handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${clientId}`)}
+                            isStyleSimple={true}
+                            icon_feather={<Icon icon='edit' />}
+                        />
                     )
                 )
             }

@@ -7,6 +7,17 @@
     font-family: inherit;
     width: 100%;
 
+    max-height: 27.5rem;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 0.5rem;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #FFFFFF;
+    }
+
     .title {
         // background-color: orange;
         font-size: 1.125rem;
@@ -22,6 +33,7 @@
     }
 
     .section {
+        // background-color: orange;
         margin-bottom: 24px;
 
         &:last-child {
