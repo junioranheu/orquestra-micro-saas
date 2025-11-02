@@ -10,34 +10,49 @@ using static Orquestra.Utils.Fixtures.Encrypt;
 
 namespace Orquestra.Application.UseCases.Users.Update;
 
-public sealed class UpdateUser(Context context,IGetUser getUser) : UserBase(getUser), IUpdateUser
+public sealed class UpdateUser(Context context, IGetUser getUser) : UserBase(getUser), IUpdateUser
 {
     private readonly Context _context = context;
 
-    public async Task<UserOutput> Execute(Guid userIdAuth, UserInput input)
+    public async Task Execute(Guid userIdAuth, UserInput input)
     {
-        await Validate(input, userIdAuth, isCreate: false);
-        User user = await Update(userIdAuth, input);
-
-        var output = user.Adapt<UserOutput>();
-
-        return output;
+        (User user, UserInput inputNormalized, bool hasChangedPassword) = await Get(userIdAuth, input);
+        await Validate(input: inputNormalized, userIdAuth, isCreate: false, hasChangedPassword);
+        await Update(user, hasChangedPassword);
     }
 
     #region extras
-    private async Task<User> Update(Guid userIdAuth, UserInput input)
+    private async Task<(User user, UserInput inputNormalized, bool hasChangedPassword)> Get(Guid userIdAuth, UserInput input)
     {
-        User? user = await _context.Users.AsNoTracking().Where(x => x.UserId == userIdAuth && x.Status == true).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
+        User? user = await _context.Users.
+                     // AsNoTracking(). // Propositalmente sem AsNoTracking;
+                     Where(x => x.UserId == userIdAuth && x.Status == true).
+                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
-        user.FullName = input.FullName ?? user.FullName;
-        user.Email = input.Email ?? user.Email;
-        user.Password = !string.IsNullOrEmpty(input.Password) ? EncryptPassword(input.Password) : user.Password;
+        user.FullName = !string.IsNullOrEmpty(input.FullName) ? input.FullName : user.FullName;
+        user.Email = !string.IsNullOrEmpty(input.Email) ? input.Email : user.Email;
 
-        _context.ChangeTracker.Clear();
+        bool hasChangedPassword = !string.IsNullOrEmpty(input.Password);
+
+        if (hasChangedPassword)
+        {
+            user.Password = input.Password!;
+        }
+
+        var inputNormalized = user.Adapt<UserInput>();
+
+        return (user, inputNormalized, hasChangedPassword);
+    }
+
+    private async Task Update(User user, bool hasChangedPassword)
+    {
+        if (hasChangedPassword)
+        {
+            user.Password = EncryptPassword(user.Password);
+        }
+
         _context.Update(user);
         await _context.SaveChangesAsync();
-
-        return user;
     }
     #endregion
 }

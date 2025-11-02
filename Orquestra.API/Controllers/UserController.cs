@@ -58,12 +58,12 @@ public class UserController(
 
     [AuthorizeFilter]
     [HttpPut]
-    public async Task<ActionResult> Update([FromForm] UserInput input)
+    public async Task<ActionResult> Update(UserInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        UserOutput output = await _update.Execute(userIdAuth, input);
+        await _update.Execute(userIdAuth, input);
 
-        return Ok(output);
+        return Ok(true);
     }
 
     [AllowAnonymous]

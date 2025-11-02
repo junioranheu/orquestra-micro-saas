@@ -1,10 +1,14 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
+import { CONSTS_USER, iUserInput } from '@/app/api/consts/user';
+import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import swal from '@/app/functions/swal';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from './index.module.scss';
 
@@ -25,13 +29,16 @@ export default function UsuarioConfiguracoesTabConta({ me }: iProps) {
 
 function PersonalInfoForm({ me }: iProps) {
 
-    const [formData, setFormData] = useState({
-        userName: me?.userName,
+    const router = useRouter();
+    const [saving, setSaving] = useState<boolean>(false);
+
+    const [formData, setFormData] = useState<iUserInput>({
+        fullName: me?.userName,
         email: me?.email
     });
 
     async function handleSave() {
-        if (!formData.userName || !formData.email) {
+        if (!formData.fullName) {
             swal({
                 content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS,
                 icon: 'error'
@@ -40,7 +47,36 @@ function PersonalInfoForm({ me }: iProps) {
             return;
         }
 
-        alert('Informações pessoais salvas com sucesso!');
+        swal({
+            content: 'Ao salvar as alterações, sua sessão ficará inválida e você precisará fazer login novamente.',
+            confirmBtnText: 'Continuar',
+            confirmFunction: async () => {
+                setSaving(true);
+
+                const input = {
+                    fullName: formData.fullName
+                };
+
+                const output = await Fetch.put({ url: CONSTS_USER.put, body: input });
+
+                if (output) {
+                    swal({
+                        content: 'Informações pessoais salvas com sucesso.',
+                        confirmFunction: () => router.push(ROUTES.LOGOUT),
+                        allowOutsideClick: false,
+                        icon: 'success'
+                    });
+
+                    setSaving(false);
+                    return;
+                }
+
+                setSaving(false);
+                return;
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'info'
+        });
     }
 
     return (
@@ -55,7 +91,7 @@ function PersonalInfoForm({ me }: iProps) {
             <div className={styles.form}>
                 <div className={styles.formRow}>
                     <div>
-                        <InputMask title='Nome completo' fieldName='userName' formData={formData} setFormData={setFormData} isObligatory={true} />
+                        <InputMask title='Nome completo' fieldName='fullName' formData={formData} setFormData={setFormData} isObligatory={true} />
                     </div>
 
                     <div>
@@ -64,7 +100,7 @@ function PersonalInfoForm({ me }: iProps) {
                 </div>
 
                 <div className={styles.buttonGroup}>
-                    <Button label='Salvar alterações' handleFunction={handleSave} />
+                    <Button label='Salvar alterações' handleFunction={handleSave} isDisabled={saving} />
                 </div>
             </div>
         </div>
@@ -73,13 +109,15 @@ function PersonalInfoForm({ me }: iProps) {
 
 function PasswordForm() {
 
-    const [formData, setFormData] = useState({
-        newPassword: '',
+    const [saving, setSaving] = useState<boolean>(false);
+
+    const [formData, setFormData] = useState<iUserInput>({
+        password: '',
         newPasswordConfirmation: ''
     });
 
     async function handleSave() {
-        if (!formData.newPassword || !formData.newPasswordConfirmation) {
+        if (!formData.password || !formData.newPasswordConfirmation) {
             swal({
                 content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS,
                 icon: 'error'
@@ -88,7 +126,7 @@ function PasswordForm() {
             return;
         }
 
-        if (formData.newPassword !== formData.newPasswordConfirmation) {
+        if (formData.password !== formData.newPasswordConfirmation) {
             swal({
                 content: 'As senhas não coincidem.',
                 icon: 'error'
@@ -97,8 +135,35 @@ function PasswordForm() {
             return;
         }
 
-        alert('Senha alterada com sucesso!');
-        setFormData({ newPassword: '', newPasswordConfirmation: '' });
+        swal({
+            content: 'Deseja prosseguir com a alteração de sua senha?',
+            confirmBtnText: 'Continuar',
+            confirmFunction: async () => {
+                setSaving(true);
+
+                const input = {
+                    password: formData.password
+                };
+
+                const output = await Fetch.put({ url: CONSTS_USER.put, body: input });
+                setFormData({ password: '', newPasswordConfirmation: '' });
+
+                if (output) {
+                    swal({
+                        content: 'Senha atualizada com sucesso.',
+                        icon: 'success'
+                    });
+
+                    setSaving(false);
+                    return;
+                }
+
+                setSaving(false);
+                return;
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'info'
+        });
     }
 
     return (
@@ -113,7 +178,7 @@ function PasswordForm() {
             <div className={styles.form}>
                 <div className={styles.formRow}>
                     <div>
-                        <InputMask title='Nova senha' type='password' fieldName='newPassword' formData={formData} setFormData={setFormData} isObligatory={true} />
+                        <InputMask title='Nova senha' type='password' fieldName='password' formData={formData} setFormData={setFormData} isObligatory={true} />
                     </div>
 
                     <div>
@@ -126,6 +191,7 @@ function PasswordForm() {
                         label='Salvar nova senha'
                         handleFunction={handleSave}
                         icon_feather={<Icon icon='lock' size='small' />}
+                        isDisabled={saving}
                     />
                 </div>
             </div>

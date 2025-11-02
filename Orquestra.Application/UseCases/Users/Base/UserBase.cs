@@ -9,7 +9,7 @@ public partial class UserBase(IGetUser getUser)
 {
     private readonly IGetUser _getUser = getUser;
 
-    public async Task Validate(UserInput input, Guid userIdAuth, bool isCreate)
+    public async Task Validate(UserInput input, Guid userIdAuth, bool isCreate, bool hasChangedPassword)
     {                               
         #region email
         input.Email = input.Email?.Trim().ToLowerInvariant();
@@ -54,11 +54,14 @@ public partial class UserBase(IGetUser getUser)
         #endregion
 
         #region password
-        bool checkPassword = IsPasswordValid(input.Password ?? string.Empty);
-
-        if (!checkPassword)
+        if (hasChangedPassword)
         {
-            throw new ArgumentException("A senha é inválida. Insira uma senha com pelo menos 8 caracteres e um digito ou carácter especial, por favor.");
+            bool checkPassword = IsPasswordValid(input.Password ?? string.Empty);
+
+            if (!checkPassword)
+            {
+                throw new ArgumentException("A senha é inválida. Insira uma senha com pelo menos 8 caracteres e um digito ou carácter especial, por favor.");
+            }
         }
         #endregion
     }

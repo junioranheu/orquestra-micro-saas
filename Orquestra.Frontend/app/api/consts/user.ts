@@ -16,7 +16,10 @@ export interface iUserInput {
     password?: string;
     recoverPasswordQuestion?: string;
     recoverPasswordAnswer?: string;
+
+    // Extras;
     inviteToken?: string;
+    newPasswordConfirmation?: string;
 }
 
 export interface iUser {

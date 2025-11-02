@@ -18,7 +18,6 @@ public sealed class UpdateUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-
         User user = UserMock.Create("Old Name", "old@example.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
@@ -27,16 +26,42 @@ public sealed class UpdateUserTests
         UserInput input = new()
         {
             FullName = "New Name",
-            Email = "new@example.com",
-            Password = "Toquinho22@"
+            Email = "new@example.com"
         };
 
         // Act;
-        var output = await sut.Execute(user.UserId, input);
+        await sut.Execute(user.UserId, input);
 
         // Assert;
-        Assert.Equal("New Name", output.FullName);
-        Assert.Equal("new@example.com", output.Email);
+        User updated = await context.Users.AsNoTracking().FirstAsync(x => x.UserId == user.UserId);
+        Assert.Equal("New Name", updated.FullName);
+        Assert.Equal("new@example.com", updated.Email);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldEncryptAndChangePassword_WhenPasswordProvided()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+        User user = UserMock.Create("Junior Souza", "pass@example.com", UserRoleEnum.Administrator);
+        string oldPassword = user.Password;
+        await Fixture.Save(context, user);
+
+        UpdateUser sut = CreateSut(context);
+
+        string newPassword = "NewPass123!";
+
+        UserInput input = new()
+        {
+            Password = newPassword
+        };
+
+        // Act;
+        await sut.Execute(user.UserId, input);
+
+        // Assert;
+        User updated = await context.Users.AsNoTracking().FirstAsync(x => x.UserId == user.UserId);
+        Assert.NotEqual(oldPassword, updated.Password);
     }
 
     [Fact]
@@ -44,8 +69,8 @@ public sealed class UpdateUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-
         User user = UserMock.Create("Name", "test@example.com", UserRoleEnum.Administrator);
+        string oldPassword = user.Password;
         await Fixture.Save(context, user);
 
         UpdateUser sut = CreateSut(context);
@@ -56,39 +81,13 @@ public sealed class UpdateUserTests
             Password = null
         };
 
-        // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
-    }
-
-    [Fact]
-    public async Task Execute_ShouldEncryptAndChangePassword_WhenProvided()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        User user = UserMock.Create("Pebassauro Réx", "pass@example.com", UserRoleEnum.Administrator);
-        string oldPassword = user.Password;
-        await Fixture.Save(context, user);
-
-        UpdateUser sut = CreateSut(context);
-
-        string newPassword = "newPassword123!";
-
-        UserInput input = new()
-        {
-            FullName = user.FullName,
-            Email = user.Email,
-            Password = newPassword
-        };
-
         // Act;
-        UserOutput output = await sut.Execute(user.UserId, input);
+        await sut.Execute(user.UserId, input);
 
         // Assert;
         User updated = await context.Users.AsNoTracking().FirstAsync(x => x.UserId == user.UserId);
-
-        Assert.NotEqual(oldPassword, updated.Password);
-        Assert.NotEqual(EncryptPassword(newPassword), updated.Password); 
+        Assert.Equal(oldPassword, updated.Password);
+        Assert.Equal("Other Name", updated.FullName);
     }
 
     [Fact]
@@ -101,7 +100,7 @@ public sealed class UpdateUserTests
         UserInput input = new() { FullName = "Test" };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(Guid.NewGuid(), input));
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(Guid.NewGuid(), input));
     }
 
     [Fact]
@@ -109,7 +108,6 @@ public sealed class UpdateUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-
         User user = UserMock.Create("Inactive", "inactive@example.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
@@ -119,10 +117,10 @@ public sealed class UpdateUserTests
 
         UpdateUser sut = CreateSut(context);
 
-        UserInput input = new () { FullName = "Inactive Update" };
+        UserInput input = new() { FullName = "Inactive Update" };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, input));
     }
 
     [Fact]
@@ -130,15 +128,14 @@ public sealed class UpdateUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-
         User user = UserMock.Create("Name", "test2@example.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
         UpdateUser sut = CreateSut(context);
 
-        UserInput input = new(); // Invalid, missing fields;
+        UserInput input = new(); // Campos obrigatórios faltando;
 
-        // Act & Assert
+        // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
     }
 
@@ -146,6 +143,7 @@ public sealed class UpdateUserTests
     private static UpdateUser CreateSut(Context context)
     {
         GetUser getUser = new(context);
+
         UpdateUser updateUser = new(context, getUser);
 
         return updateUser;

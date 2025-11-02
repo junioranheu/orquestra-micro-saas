@@ -21,7 +21,7 @@ public sealed class UserBaseTests
         UserInput input = new() { FullName = "Junior Test", Email = "email-invalido", Password = "Senha123@" };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true));
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true, hasChangedPassword: true));
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public sealed class UserBaseTests
         };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true, hasChangedPassword: true));
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public sealed class UserBaseTests
         };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: false));
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: false, hasChangedPassword: true));
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public sealed class UserBaseTests
         UserInput input = new() { FullName = "A", Email = "junior@teste.com", Password = "Senha123@" };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true));
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true, hasChangedPassword: true));
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public sealed class UserBaseTests
         UserInput input = new() { FullName = "Junior Test", Email = "junior@teste.com", Password = "123" };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true));
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true, hasChangedPassword: true));
     }
 
     [Fact]
@@ -131,7 +131,7 @@ public sealed class UserBaseTests
         };
 
         // Act;
-        await sut.Validate(input, Guid.NewGuid(), isCreate: true);
+        await sut.Validate(input, Guid.NewGuid(), isCreate: true, hasChangedPassword: true);
 
         // Assert;
         Assert.Equal("junior@teste.com", input.Email);
@@ -168,7 +168,7 @@ public sealed class UserBaseTests
         };
 
         // Act;
-        await sut.Validate(input, existing.UserId, isCreate: false);
+        await sut.Validate(input, existing.UserId, isCreate: false, hasChangedPassword: true);
 
         // Assert;
         Assert.Equal("atual@teste.com", input.Email);

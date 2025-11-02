@@ -31,7 +31,7 @@ public sealed class CreateUser(
 
     public async Task<UserOutput> Execute(UserInput input)
     {
-        await Validate(input, userIdAuth: Guid.Empty, isCreate: true);
+        await Validate(input, userIdAuth: Guid.Empty, isCreate: true, hasChangedPassword: true);
 
         bool isInvite = !string.IsNullOrEmpty(input.InviteToken);
         User user = await Save(input, isInvite);
