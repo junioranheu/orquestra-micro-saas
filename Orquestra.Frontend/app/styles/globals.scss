@@ -287,7 +287,7 @@ input[type='password'] {
 
     &:disabled {
         color: #999999 !important;
-        background-color: rgba(221, 221, 221, 0.25);
+        background-color: rgba(221, 221, 221, 0.10);
         border: 1px solid rgba(221, 221, 221, 0.25);
         border-radius: var(--border-radius-xs) !important;
         cursor: not-allowed;

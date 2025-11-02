@@ -18,10 +18,10 @@ export default function UsuarioConfiguracoes() {
     return (
         <section className={styles.main}>
             <Tabs
-                tabs={['Configurações da conta', 'Personalização']}
+                tabs={['Personalização', 'Configurações da conta']}
                 contents={[
-                    <UsuarioConfiguracoesTabConta me={me} key={1} />,
-                    <UsuarioConfiguracoesTabPersonalizacao key={2} />,
+                    <UsuarioConfiguracoesTabPersonalizacao key={1} />,
+                    <UsuarioConfiguracoesTabConta me={me} key={2} />
                 ]}
                 isBig={true}
             />
