@@ -12,7 +12,8 @@
         display: flex;
         width: 50vw;
         height: fit-content;
-        border-radius: 1.25rem;
+        // border-radius: 1.25rem;
+        border-radius: var(--border-radius);
         box-shadow: var(--box-shadow-dark);
         overflow: hidden;
 

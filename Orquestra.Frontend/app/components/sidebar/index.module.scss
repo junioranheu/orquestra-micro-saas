@@ -1,5 +1,4 @@
 .sidebar {
-    // background-color: orange !important;
     min-width: 14.5rem;
     max-width: 14.5rem;
     background-color: var(--main-light);
@@ -11,7 +10,6 @@
     border-right: 2px solid #d8efe8;
 
     .brand {
-        // background-color: orange; 
         font-weight: bold;
         font-size: 1.2rem;
         padding: 1rem;
@@ -21,67 +19,71 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-
-        small {
-            // background-color: orange;
-            font-weight: bold;
-            font-size: 0.5rem;
-            color: var(--main);
-
-            margin-left: -0.5rem;
-            margin-top: 0.4rem;
-        }
     }
 
     nav {
-        // background-color: blue;
         flex: 1;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: flex-start;
+        justify-content: flex-start;
+        padding: 0 0.5rem;
 
-        ul {
-            // background-color: tomato;
-            width: 90%;
+        .group {
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0 0.5rem;
 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            .groupLabel {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #666;
+                text-transform: uppercase;
+                margin-bottom: 0.5rem;
+                display: block;
+                margin-left: 0.5rem;
+            }
 
-            list-style: none;
-            padding: 0;
-            margin: 0;
-
-            li {
-                // background-color: orange !important;
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-
+            ul {
                 width: 100%;
-                margin-bottom: 0.25rem;
-                padding: 0.75rem 1rem;
+                list-style: none;
+                padding: 0;
+                margin: 0;
 
-                cursor: pointer;
-                color: var(--black);
-                border-radius: 1rem;
-                transition: background 0.2s, border 0.2s;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
 
-                svg {
-                    stroke: #444;
-                }
+                li {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    width: 100%;
+                    margin-bottom: 0.25rem;
+                    padding: 0.75rem 1rem;
 
-                &:hover {
-                    background-color: #eafce8;
-                }
-
-                &.active {
-                    background-color: #d7fec8;
-                    font-weight: 500;
+                    cursor: pointer;
+                    color: var(--black);
+                    border-radius: 1rem;
+                    transition: background 0.2s, border 0.2s;
+                    outline: none;
 
                     svg {
-                        stroke: var(--main);
+                        stroke: #444;
+                    }
+
+                    &:hover {
+                        background-color: #eafce8;
+                    }
+
+                    &.active {
+                        background-color: #d7fec8;
+                        font-weight: 500;
+
+                        svg {
+                            stroke: var(--main);
+                        }
                     }
                 }
             }
@@ -92,9 +94,8 @@
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1281px),
-(max-height: 650px) {
+(max-height: 760px) {
     .sidebar {
-        // background-color: orange !important;
         min-width: 3.5rem;
         max-width: 3.5rem;
 
@@ -103,20 +104,34 @@
         }
 
         nav {
-            // background-color: orange;
+            padding: 0;
 
-            ul {
-                list-style: none;
+            .group {
                 padding: 0;
-                margin: 0;
+                margin-bottom: 0;
 
-                li {
-                    font-size: 0;
+                .groupLabel {
+                    display: none;
                 }
 
-                svg {
-                    width: 1rem;
-                    height: auto;
+                ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+
+                    li {
+                        font-size: 0;
+                        padding-left: 1.25rem;
+
+                        svg {
+                            width: 1rem;
+                            height: auto;
+                        }
+
+                        &.active {
+                            border-radius: 0;
+                        }
+                    }
                 }
             }
         }
@@ -126,10 +141,10 @@
 // big landscape tablets, laptops, and desktops 
 @media (max-width:1025px) {}
 
-// tablet, landscape iPad, lo-res laptops ands desktops 
+// tablet, landscape iPad, lo-res laptops and desktops 
 @media (max-width:801px) {}
 
-// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android)
 @media (max-width:600px) {}
 
 // smartphones, Android phones, landscape iPhone
