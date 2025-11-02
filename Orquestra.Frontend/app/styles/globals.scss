@@ -187,7 +187,6 @@ a {
 // Scroll
 ::-webkit-scrollbar {
     width: 0.75rem;
-    height: 0.75rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -197,11 +196,11 @@ a {
 
 ::-webkit-scrollbar-thumb {
     background: var(--gray);
-    border-radius: var(--border-radius);
-}
+    // border-radius: var(--border-radius);
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--contrast);
+    &:hover {
+        background: var(--contrast);
+    }
 }
 
 // Modal
