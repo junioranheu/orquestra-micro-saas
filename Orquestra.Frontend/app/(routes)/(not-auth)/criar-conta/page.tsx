@@ -86,7 +86,7 @@ export default function CriarConta() {
         setIsRequestLoading(true);
 
         if (!formData.fullName || !formData.email || !formData.password || !formData.recoverPasswordQuestion || !formData.recoverPasswordAnswer) {
-            swal({ content: 'Preencha todos os campos antes de prosseguir.', icon: 'error' });
+            swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'error' });
             setIsRequestLoading(false);
             return;
         }

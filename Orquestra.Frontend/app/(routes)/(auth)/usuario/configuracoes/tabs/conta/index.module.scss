@@ -1,20 +1,79 @@
-.main {
-    // background-color: blue !important;
-    display: flex;
+.container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+    padding: 1rem 0rem;
 }
 
-/* =-=-=-=-=-=-=-=-=-=-=-=- Media queries =-=-=-=-=-=-=-=-=-=-=-=- */
-/* hi-res laptops and desktops */
-@media (max-width:1366px) {}
+.wrapper {
+    // max-width: 48rem;
+    margin: 0 auto;
+}
 
-/* big landscape tablets, laptops, and desktops */
-@media (max-width:1025px) {}
+.card {
+    background-color: var(--white-og);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    border: 1px solid var(--gray-light);
+    margin-bottom: 1rem;
 
-/* tablet, landscape iPad, lo-res laptops ands desktops */
-@media (max-width:801px) {}
+    .cardHeader {
+        margin-bottom: 1.5rem;
 
-/* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
-@media (max-width:600px) {}
+        .cardTitle {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
 
-/* smartphones, Android phones, landscape iPhone */
-@media (max-width:480px) {}
+        .cardSubtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+    }
+}
+
+.form {
+    .formRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .radioGroup {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        .radioLabel {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #374151;
+
+            .radio {
+                width: 1.125rem;
+                height: 1.125rem;
+                accent-color: var(--main);
+                cursor: pointer;
+            }
+
+            &:hover {
+                color: #111827;
+            }
+        }
+    }
+
+    .buttonGroup {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+}
