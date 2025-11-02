@@ -10,7 +10,7 @@ public enum PlanTypeEnum
     [PlanTypeHelper.Price(0.00)]
     [PlanTypeHelper.SchedulingLimit(30)]
     [PlanTypeHelper.Description("Freelancers e autônomos")]
-    [PlanTypeHelper.Perks(["30 agendamentos/mês", "Notificações por e-mail", "Teste por {PlanDurationDaysFree} dias"])]
+    [PlanTypeHelper.Perks(["30 agendamentos/mês", "Notificações por e-mail e integração com o WhatsApp", "Teste por {PlanDurationDaysFree} dias"])]
     [PlanTypeHelper.DurationDays(SystemConsts.Time.PlanDurationDaysFree)]
     Free = 1,
 
@@ -18,7 +18,7 @@ public enum PlanTypeEnum
     [PlanTypeHelper.Price(19.99)]
     [PlanTypeHelper.SchedulingLimit(500)]
     [PlanTypeHelper.Description("Pequenas equipes")]
-    [PlanTypeHelper.Perks(["Limite de agendamentos alto (500 agendamentos por mês)", "Integração com o WhatsApp", "Suporte básico"])]
+    [PlanTypeHelper.Perks(["Limite de agendamentos alto (500 agendamentos/mês)", "Integração completa com o WhatsApp", "Suporte básico"])]
     [PlanTypeHelper.DurationDays(SystemConsts.Time.PlanDurationDays)]
     Basic = 2,
 

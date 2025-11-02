@@ -235,7 +235,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            {type === 'create' ? (formData.name ?? 'Nova empresa') : <ContentLoaderText text={formData?.name} />}
+                            {type === 'create' ? (formData.name ?? 'Nova empresa') : <ContentLoaderText content={formData?.name} />}
                         </h1>
                     </div>
 

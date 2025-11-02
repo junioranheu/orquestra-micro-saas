@@ -1,30 +1,85 @@
 'use client';
-import { iMe } from '@/app/api/consts/auth';
-import FontScaler from '@/app/components/font-scaler';
-import Button from '@/app/components/input/button';
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
-interface iProps {
-    me: iMe;
+export default function UsuarioConfiguracoesTabPersonalizacao() {
+    return (
+        <div className={styles.container}>
+            <div className={styles.wrapper}>
+                <ThemeSelector />
+                <FontSizeSelector />
+                <MascotToggle />
+            </div>
+        </div>
+    )
 }
 
-export default function UsuarioConfiguracoesTabPersonalizacao({ me }: iProps) {
+function ThemeSelector() {
+
+    const [selectedTheme, setSelectedTheme] = useState<string>('padrao');
+
+    const themes = [
+        { id: 'padrao', label: 'Padrão', className: styles.themeDefault },
+        { id: 'escuro', label: 'Escuro', className: styles.themeDark }
+    ];
 
     return (
-        <section className={styles.main}>
-            <h1>Personalização {me?.currentMainCompany?.name}</h1>
+        <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Escolha seu tema preferido</h2>
 
-            <FontScaler />
-            <MascotToggle />
-        </section>
+            <div className={styles.themeContainer}>
+                {
+                    themes.map((theme) => (
+                        <button
+                            key={theme.id}
+                            onClick={() => setSelectedTheme(theme.id)}
+                            className={styles.themeButton}
+                        >
+                            <div className={`${styles.themeCircle} ${theme.className} ${selectedTheme === theme.id ? styles.themeSelected : ''}`} />
+                            <span className={styles.themeLabel}>{theme.label}</span>
+                        </button>
+                    ))
+                }
+            </div>
+        </div>
+    );
+}
+
+function FontSizeSelector() {
+
+    const [fontSize, setFontSize] = useState<number>(50);
+
+    return (
+        <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Tamanho da fonte</h2>
+
+            <p className={styles.cardDescription}>
+                Ajuste o tamanho do texto para melhor leitura.
+            </p>
+
+            <div className={styles.sliderContainer}>
+                <span className={styles.sliderLabel}>Pequeno</span>
+
+                <input
+                    type='range'
+                    min='0'
+                    max='100'
+                    value={fontSize}
+                    onChange={(e) => setFontSize(Number(e.target.value))}
+                    className={styles.slider}
+                />
+
+                <span className={`${styles.sliderLabel} ${styles.sliderLabelRight}`}>
+                    Grande
+                </span>
+            </div>
+        </div>
     )
 }
 
 function MascotToggle() {
-
     const [showMascot, setShowMascot] = useState<boolean>(true);
 
     useEffect(() => {
@@ -34,33 +89,39 @@ function MascotToggle() {
 
     function handleToggleMascot() {
         localStorage.setItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT, (!showMascot).toString());
-        setShowMascot(prev => !prev);
+        setShowMascot((prev) => !prev);
     }
 
     return (
-        <div className={styles.container}>
-            <p>O mascote {SYSTEM.MASCOT} está <strong>{showMascot ? 'ativo' : 'desativado'}</strong>.</p>
+        <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Interface</h2>
 
-            <Button
-                label={showMascot ? 'Desativar mascote' : 'Ativar mascote'}
-                handleFunction={() => handleToggleMascot()}
-            />
+            <div className={styles.toggleContainer}>
+                <div className={styles.toggleInfo}>
+                    <div className={styles.toggleText}>
+                        <h3 className={styles.toggleTitle}>Exibir mascote de ajuda</h3>
+                        <p className={styles.toggleDescription}>
+                            Receba dicas e ajuda do {SYSTEM.MASCOT}.
+                        </p>
+                    </div>
 
-            {
-                showMascot && (
-                    <Mascot
-                        isCentralized={false}
-                        tippyContent={
-                            <div>
-                                Olá, eu sou o {SYSTEM.MASCOT}! 💚
-                            </div>
-                        }
-                        tippyPlacement='right'
-                        flipPeriodic={true}
-                    />
-                )
-            }
+                    {
+                        showMascot && (
+                            <Mascot
+                                width={36}
+                                isCentralized={false}
+                                tippyContent={<div>Olá, eu sou o {SYSTEM.MASCOT}! 💚</div>}
+                                tippyPlacement='right'
+                                flipPeriodic={true}
+                            />
+                        )
+                    }
+                </div>
+
+                <button onClick={handleToggleMascot} className={`${styles.toggle} ${showMascot ? styles.toggleActive : ''}`}>
+                    <span className={styles.toggleThumb} />
+                </button>
+            </div>
         </div>
-
     )
 }

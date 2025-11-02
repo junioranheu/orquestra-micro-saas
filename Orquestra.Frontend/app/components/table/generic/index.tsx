@@ -250,7 +250,7 @@ export default function TableGeneric({
                                     <div className={styles.left}>
                                         <Tippy content={`${totalRowsCount} registro${totalRowsCount > 1 ? 's' : ''}.`}>
                                             <span className={styles.title}>
-                                                {title && <ContentLoaderText text={title ? title : ''} delay={150} />}
+                                                {title && <ContentLoaderText content={title ? title : ''} delay={150} />}
                                             </span>
                                         </Tippy>
                                     </div>

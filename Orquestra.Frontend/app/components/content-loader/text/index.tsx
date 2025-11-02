@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
-    text: string | undefined;
+    content: string | undefined;
     delay?: number;
 }
 
-export default function ContentLoaderText({ text, delay = 0 }: iProps) {
+export default function ContentLoaderText({ content: text, delay = 0 }: iProps) {
 
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 

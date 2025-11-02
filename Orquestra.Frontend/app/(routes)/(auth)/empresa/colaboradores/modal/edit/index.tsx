@@ -123,7 +123,7 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            <ContentLoaderText text={(`Editar colaborador: ${user?.user?.fullName}`)} />
+                            <ContentLoaderText content={(`Editar colaborador: ${user?.user?.fullName}`)} />
                         </h1>
                     </div>
 

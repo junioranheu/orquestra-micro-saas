@@ -198,7 +198,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            {type === 'create' ? (formData.fullName ? `Novo cliente: ${formData.fullName}` : 'Cadastrar novo cliente') : <ContentLoaderText text={(`Editar cliente: ${formData?.fullName ?? client?.fullName}`)} />}
+                            {type === 'create' ? (formData.fullName ? `Novo cliente: ${formData.fullName}` : 'Cadastrar novo cliente') : <ContentLoaderText content={(`Editar cliente: ${formData?.fullName ?? client?.fullName}`)} />}
                         </h1>
                     </div>
 

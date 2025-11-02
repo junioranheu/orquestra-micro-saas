@@ -21,7 +21,7 @@ export default function UpNav() {
 
     return (
         <nav className={styles.nav}>
-            <ContentLoaderText text={greeting} />
+            <ContentLoaderText content={greeting} />
         </nav>
     )
 }

@@ -41,7 +41,7 @@ export default function Dashboard() {
     return (
         <section className={styles.main}>
             <span className={styles.hello}>
-                <ContentLoaderText text={`Olá, ${handleGetFirstName(auth?.fullName)}`} />
+                <ContentLoaderText content={`Olá, ${handleGetFirstName(auth?.fullName)}`} />
 
                 <Mascot
                     isCentralized={false}
