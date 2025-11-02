@@ -53,7 +53,7 @@ export default function Navbar() {
                     </div>
 
                     <div className={`${styles.right} ${SYSTEM.ANIMATE}`}>
-                        <Tippy content='Gerencie suas empresas ou cadastre uma nova'>
+                        <Tippy content='Gerencie os dados e informações de suas empresas cadastradas.'>
                             <span className={me?.currentMainCompany ? '' : styles.effect} onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}>
                                 {
                                     me?.currentMainCompany ? (
@@ -71,7 +71,7 @@ export default function Navbar() {
 
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (
-                                <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos; também, consulte suas faturas'>
+                                <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos; também, consulte suas faturas.'>
                                     <span className={styles.hideIfSmall} onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /><span className={styles.hideIfSmall}>Plano e faturas</span></span>
                                 </Tippy>
                             )

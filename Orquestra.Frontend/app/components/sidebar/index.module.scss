@@ -6,68 +6,71 @@
     display: flex;
     flex-direction: column;
     padding: 0.5rem 0;
-    transition: transform 0.3s ease;
     border-right: 2px solid #d8efe8;
+    position: relative;
 
     .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         font-weight: bold;
         font-size: 1.2rem;
         padding: 1rem;
         color: var(--main);
         margin-left: 0.78rem;
-
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
     }
 
     nav {
         flex: 1;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
+        gap: 0.5rem;
         padding: 0 0.5rem;
 
         .group {
             width: 100%;
-            margin-bottom: 1rem;
-            padding: 0 0.5rem;
 
-            .groupLabel {
-                font-size: 0.75rem;
+            .groupHeader {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.5rem;
+                color: #555;
                 font-weight: 600;
-                color: #666;
                 text-transform: uppercase;
-                margin-bottom: 0.5rem;
-                display: block;
-                margin-left: 0.5rem;
+                font-size: 0.75rem;
+
+                &:hover {
+                    background-color: #f2fdf0;
+                }
+
+                svg {
+                    width: 1rem;
+                    height: 1rem;
+                    stroke-width: 2;
+                }
             }
 
             ul {
-                width: 100%;
                 list-style: none;
                 padding: 0;
-                margin: 0;
-
+                margin: 0.25rem 0 0 0;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
-                align-items: flex-start;
+                gap: 0.25rem;
 
                 li {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
-                    width: 100%;
-                    margin-bottom: 0.25rem;
-                    padding: 0.75rem 1rem;
-
-                    cursor: pointer;
-                    color: var(--black);
+                    padding: 0.6rem 1rem;
                     border-radius: 1rem;
-                    transition: background 0.2s, border 0.2s;
-                    outline: none;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                    color: var(--black);
+                    font-size: 1rem;
 
                     svg {
                         stroke: #444;
@@ -89,50 +92,86 @@
             }
         }
     }
+
+    .popover {
+        // background-color: orange !important;
+        position: fixed;
+        background-color: var(--main-light);
+        border: 2px solid #d8efe8;
+        border-radius: var(--border-radius);
+        min-width: fit-content;
+        padding: 0.5rem 0;
+        z-index: 999;
+
+        .popoverItem {
+            // background-color: purple !important;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 1rem;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+            color: var(--black);
+            font-size: 1rem;
+
+            svg {
+                stroke: #444;
+            }
+
+            &:hover {
+                background-color: #eafce8;
+            }
+
+            &.active {
+                background-color: #d7fec8;
+                font-weight: 500;
+
+                svg {
+                    stroke: var(--main);
+                }
+            }
+        }
+    }
 }
 
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1281px),
-(max-height: 760px) {
+(max-height: 600px) {
     .sidebar {
-        min-width: 3.5rem;
-        max-width: 3.5rem;
+        // background-color: orange !important;
+        min-width: fit-content;
+        max-width: fit-content;
 
         .brand {
             display: none;
         }
 
         nav {
-            padding: 0;
-
             .group {
-                padding: 0;
-                margin-bottom: 0;
-
-                .groupLabel {
-                    display: none;
-                }
-
                 ul {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
+                    gap: 0.5rem;
 
                     li {
-                        font-size: 0;
-                        padding-left: 1.25rem;
+                        // background-color: purple !important;
+                        font-size: 0.8rem;
+                        gap: 0.5rem;
+                    }
 
-                        svg {
-                            width: 1rem;
-                            height: auto;
-                        }
-
-                        &.active {
-                            border-radius: 0;
-                        }
+                    svg {
+                        // display: none !important;
+                        width: 0.9rem;
                     }
                 }
+            }
+        }
+
+        .popover {
+            // background-color: orange !important;
+
+            .popoverItem {
+                font-size: 0.8rem;
             }
         }
     }
@@ -141,10 +180,10 @@
 // big landscape tablets, laptops, and desktops 
 @media (max-width:1025px) {}
 
-// tablet, landscape iPad, lo-res laptops and desktops 
+// tablet, landscape iPad, lo-res laptops ands desktops 
 @media (max-width:801px) {}
 
-// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android)
+// portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) 
 @media (max-width:600px) {}
 
 // smartphones, Android phones, landscape iPhone

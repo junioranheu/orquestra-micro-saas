@@ -670,6 +670,7 @@ input:-webkit-autofill {
     font-weight: 500 !important;
     border-radius: var(--border-radius) !important;
     padding: 0.35rem 0.5rem !important;
+    z-index: 999999999999999 !important;
 
     &[data-placement^='top']>.tippy-arrow::before {
         border-top-color: var(--black) !important;
