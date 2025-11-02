@@ -2,10 +2,11 @@
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/page-header';
+import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function UsuarioNotificacoes() {
 
@@ -50,6 +51,23 @@ export default function UsuarioNotificacoes() {
             key: 'description'
         },
     ] as iTableColumn[];
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, handleGetRandomNumber(1000, 1250));
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (isLoading) {
+        return (
+            <TemplatePageHeader title='Notificações' isLoading={isLoading}>
+            </TemplatePageHeader>
+        )
+    }
 
     return (
         <TemplatePageHeader title={`Notificações da empresa ${currentMainCompany?.name ?? ''}`} >
