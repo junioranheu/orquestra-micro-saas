@@ -139,8 +139,11 @@ public enum CompanyTypeEnum
     [Description("Consultoria e escritório de engenharia")]
     ConsultoriaEngenharia = 45,
 
-    [Description("músico")]
+    [Description("DJ")]
     DJ = 46,
+
+    [Description("Desenvolvedor de software")]
+    DesenvolvedorSoftware = 47,
 
     [Description("Outro")]
     Outro = 99

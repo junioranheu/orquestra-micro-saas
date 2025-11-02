@@ -30,6 +30,7 @@ public sealed class CompanyBaseTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -54,6 +55,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenEmailIsInvalid()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -77,6 +79,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenPhoneIsInvalid()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -100,6 +103,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenTypeIsInvalid()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -123,6 +127,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenZipCodeIsInvalid()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -146,6 +151,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenCountryIsInvalid()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -169,6 +175,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenPlanTypeIsZero()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -192,6 +199,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenStatusFalseOnUpdate()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -217,6 +225,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenNameAlreadyExists()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -255,6 +264,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenEmailAlreadyExists()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -293,6 +303,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldPass_WhenInputIsValid()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -320,6 +331,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldPass_ForDifferentPlanTypes()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -353,6 +365,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldThrow_WhenLogoFormFileTooLarge()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -381,6 +394,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldPass_WhenStatusTrueOnUpdate()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
@@ -408,6 +422,7 @@ public sealed class CompanyBaseTests
     public async Task Validate_ShouldPass_WhenZipCodeOrCountryEmpty()
     {
         Context context = Fixture.CreateContext();
+
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
