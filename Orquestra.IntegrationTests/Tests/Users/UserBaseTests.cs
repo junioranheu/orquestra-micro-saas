@@ -16,8 +16,7 @@ public sealed class UserBaseTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        GetUser getUser = new(context);
-        UserBase sut = CreateSut(getUser);
+        UserBase sut = CreateSut(context);
 
         UserInput input = new() { FullName = "Junior Test", Email = "email-invalido", Password = "Senha123@" };
 
@@ -45,8 +44,7 @@ public sealed class UserBaseTests
         await context.Users.AddAsync(existing);
         await context.SaveChangesAsync();
 
-        GetUser getUser = new(context);
-        UserBase sut = CreateSut(getUser);
+        UserBase sut = CreateSut(context);
 
         UserInput input = new()
         {
@@ -79,8 +77,7 @@ public sealed class UserBaseTests
         await context.Users.AddAsync(existing);
         await context.SaveChangesAsync();
 
-        GetUser getUser = new(context);
-        UserBase sut = CreateSut(getUser);
+        UserBase sut = CreateSut(context);
 
         UserInput input = new()
         {
@@ -98,8 +95,7 @@ public sealed class UserBaseTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        GetUser getUser = new(context);
-        UserBase sut = CreateSut(getUser);
+        UserBase sut = CreateSut(context);
 
         UserInput input = new() { FullName = "A", Email = "junior@teste.com", Password = "Senha123@" };
 
@@ -112,8 +108,7 @@ public sealed class UserBaseTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        GetUser getUser = new(context);
-        UserBase sut = CreateSut(getUser);
+        UserBase sut = CreateSut(context);
 
         UserInput input = new() { FullName = "Junior Test", Email = "junior@teste.com", Password = "123" };
 
@@ -126,8 +121,7 @@ public sealed class UserBaseTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        GetUser getUser = new(context);
-        UserBase sut = CreateSut(getUser);
+        UserBase sut = CreateSut(context);
 
         UserInput input = new()
         {
@@ -164,8 +158,7 @@ public sealed class UserBaseTests
         await context.Users.AddAsync(existing);
         await context.SaveChangesAsync();
 
-        GetUser getUser = new(context);
-        UserBase sut = CreateSut(getUser);
+        UserBase sut = CreateSut(context);
 
         UserInput input = new()
         {
@@ -183,8 +176,10 @@ public sealed class UserBaseTests
     }
 
     #region helpers
-    private static UserBase CreateSut(IGetUser getUser)
+    private static UserBase CreateSut(Context context)
     {
+        GetUser getUser = new(context);
+
         UserBase userBase = new(getUser);
 
         return userBase;
