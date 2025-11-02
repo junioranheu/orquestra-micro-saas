@@ -11,7 +11,7 @@ import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import { handleGetNameInitials } from '@/app/functions/get.formatUserName';
-import handleGetRandomNumber from '@/app/functions/get.randomNumber';
+import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
@@ -24,16 +24,12 @@ export default function CardDailyAgenda({ me }: iProps) {
 
     const now = handleGetDateBrazil();
     const [schedules, setSchedules] = useState<iSchedule[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const isLoading = useFakeLoading();
 
     useEffect(() => {
         async function handleFetchSchedules() {
             const items = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}&getOnlyNearbyDates=true` }) as iSchedule[];
             setSchedules(items);
-
-            setTimeout(() => {
-                setIsLoading(false);
-            }, handleGetRandomNumber(750, 1250));
         }
 
         if (me?.currentMainCompany?.companyId) {

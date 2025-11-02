@@ -10,12 +10,12 @@ import TemplatePageHeader from '@/app/components/template/page-header';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
-import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
+import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';
 import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
@@ -32,6 +32,7 @@ export default function EmpresaGerenciar() {
 
     const router = useRouter();
     const me = useApiGetMe({});
+    const isLoading = useFakeLoading();
 
     const planTypeEnum = useApiGetEnum({ enumName: 'PlanTypeEnum' });
     const [companies, setCompanies] = useState<iCompanyOutput[]>();
@@ -40,16 +41,6 @@ export default function EmpresaGerenciar() {
         apiUrlRequest: `${CONSTS_COMPANY.getAllByUserId}?userId=${me?.userId ?? Guid.EMPTY}&onlyStatusTrue=false`,
         setter: setCompanies
     });
-
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, handleGetRandomNumber(500, 1500));
-
-        return () => clearTimeout(timer);
-    }, []);
 
     useEffect(() => {
         if (me && !me?.currentMainCompany) {

@@ -1,10 +1,9 @@
 'use client';
 import Tabs from '@/app/components/tabs';
 import TemplatePageHeader from '@/app/components/template/page-header';
-import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';
-import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 import EmpresaUsoEPlanoTabFaturas from './tabs/faturas';
 import EmpresaUsoEPlanoTabPlanos from './tabs/planos';
@@ -13,15 +12,7 @@ export default function EmpresaUsoEPlano() {
 
     useTitle('Plano e faturas');
     const me = useApiGetMe({});
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, handleGetRandomNumber(1000, 1250));
-
-        return () => clearTimeout(timer);
-    }, []);
+    const isLoading = useFakeLoading();
 
     if (!me || isLoading) {
         return (

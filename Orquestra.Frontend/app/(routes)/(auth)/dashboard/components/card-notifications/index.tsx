@@ -8,7 +8,7 @@ import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
-import handleGetRandomNumber from '@/app/functions/get.randomNumber';
+import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import Tippy from '@tippyjs/react';
 import { useEffect, useState } from 'react';
 
@@ -19,16 +19,12 @@ interface iProps {
 export default function CardNotifications({ me }: iProps) {
 
     const [notifications, setNotifications] = useState<iLogNotificationOutput[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const isLoading = useFakeLoading();
 
     useEffect(() => {
         async function handleFetchNotifications() {
             const items = await Fetch.get({ url: `${CONSTS_LOG.getNotification}?isDashboard=true` }) as iLogNotificationOutputPaginated;
             setNotifications(items.output ?? []);
-
-            setTimeout(() => {
-                setIsLoading(false);
-            }, handleGetRandomNumber(750, 1250));
         }
 
         handleFetchNotifications();
