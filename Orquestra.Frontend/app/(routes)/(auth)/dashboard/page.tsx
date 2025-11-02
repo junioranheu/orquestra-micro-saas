@@ -86,7 +86,7 @@ export default function Dashboard() {
                             img={SvgUserEnvelope}
                             title='Central de ajuda'
                             description='Encontre respostas rápidas, tutoriais e suporte para tirar suas dúvidas e aproveitar ao máximo a plataforma.'
-                            buttonLabel='Acessar a central de ajuda'
+                            buttonLabel='Acessar central de ajuda'
                             buttonFunction={() => router.push(ROUTES.ETC_AJUDA)}
                         />
                     </div>

@@ -3,7 +3,9 @@ import styles from '@/app/(routes)/(auth)/dashboard/components/card-daily-agenda
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import { Fetch } from '@/app/api/fetch';
+import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
@@ -65,7 +67,7 @@ export default function CardNotifications({ me }: iProps) {
     return (
         <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
             <Tippy content='Os dados são atualizados automaticamente a cada 10 minutos.'>
-                <h2 className={styles.title} style={{ cursor: 'help' }}>Notificações do sistema</h2>
+                <h2 className={styles.title} style={{ cursor: 'help' }}>Notificações do sistema <ArrowUpRight href={ROUTES.USUARIO_NOTIFICACOES} tippyContent='Visualizar todas as notificações' tippyPlacement='bottom' /></h2>
             </Tippy>
 
             {

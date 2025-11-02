@@ -3,8 +3,10 @@ import { iMe } from '@/app/api/consts/auth';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import ImgThought from '@/app/assets/webp/thought.webp';
+import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import WhatsappWebShortcut from '@/app/components/whatsapp/whatsapp-web-shortcut';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetDateBrazil, handleToBrazilDate } from '@/app/functions/get.date.brazil';
@@ -97,7 +99,7 @@ export default function CardDailyAgenda({ me }: iProps) {
 
     return (
         <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
-            <h2 className={styles.title}>Resumo da agenda</h2>
+            <h2 className={styles.title}>Resumo da agenda <ArrowUpRight href={ROUTES.EMPRESA_AGENDAMENTOS} tippyContent='Acessar agenda' /></h2>
 
             {
                 current.length > 0 && (

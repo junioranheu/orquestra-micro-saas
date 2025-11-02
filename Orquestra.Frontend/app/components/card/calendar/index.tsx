@@ -72,7 +72,7 @@ export default function CardCalendar({ me }: iProps) {
                                 isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                 title='Simplifique a gestão da sua empresa'
                                 description='Gestão de horários simples, rápida e sem dor de cabeça.<br/>Seu negócio afinado como uma orquestra.'
-                                buttonLabel='Acessar a agenda'
+                                buttonLabel='Acessar agenda'
                                 buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
                                 buttonDisabled={!hasAccessToSchedule}
                                 className={SYSTEM.ANIMATE_DELAY_0_5s}
