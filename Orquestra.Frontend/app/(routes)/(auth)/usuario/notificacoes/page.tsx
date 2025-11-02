@@ -2,13 +2,16 @@
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/page-header';
+import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { useState } from 'react';
 
 export default function UsuarioNotificacoes() {
 
-    useTitle('Notificações do sistema');
+    useTitle('Notificações');
+
+    const currentMainCompany = useApiGetCurrentMainCompany({});
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [notifications, setNotifications] = useState<iLogNotificationOutputPaginated>();
@@ -49,7 +52,7 @@ export default function UsuarioNotificacoes() {
     ] as iTableColumn[];
 
     return (
-        <TemplatePageHeader title='Notificações do sistema'>
+        <TemplatePageHeader title={`Notificações da empresa ${currentMainCompany?.name ?? ''}`} >
             <TableGeneric
                 idPropName='logId'
                 columns={columns}
