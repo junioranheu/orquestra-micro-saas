@@ -35,7 +35,7 @@ public partial class UserBase(IGetUser getUser)
         {
             (UserOutput? checkUserById, string _) = await _getUser.Execute(new UserInput() { UserId = userIdAuth });
 
-            if (checkUserById is not null && userIdAuth != checkUserById?.UserId)
+            if (checkUserById is null || (checkUserById is not null && userIdAuth != checkUserById?.UserId))
             {
                 throw new UnauthorizedAccessException("Apenas o proprietário da conta pode alterar suas informações.");
             }
