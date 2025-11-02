@@ -3,7 +3,7 @@ import Tabs from '@/app/components/tabs';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
 import styles from './page.module.scss';
-import UsuarioConfiguracoesTabEtc from './tabs/etc';
+import UsuarioConfiguracoesTabConta from './tabs/conta';
 import UsuarioConfiguracoesTabPersonalizacao from './tabs/personalizacao';
 
 export default function UsuarioConfiguracoes() {
@@ -20,7 +20,7 @@ export default function UsuarioConfiguracoes() {
             <Tabs
                 tabs={['Configurações da conta', 'Personalização']}
                 contents={[
-                    <UsuarioConfiguracoesTabEtc me={me} key={1} />,
+                    <UsuarioConfiguracoesTabConta me={me} key={1} />,
                     <UsuarioConfiguracoesTabPersonalizacao key={2} />,
                 ]}
                 isBig={true}
