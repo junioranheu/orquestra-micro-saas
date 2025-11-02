@@ -2,6 +2,7 @@
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
+import Tippy from '@tippyjs/react';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
@@ -9,81 +10,9 @@ export default function UsuarioConfiguracoesTabPersonalizacao() {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <ThemeSelector />
-                <FontSizeSelector />
                 <MascotToggle />
-            </div>
-        </div>
-    )
-}
-
-function ThemeSelector() {
-
-    const [selectedTheme, setSelectedTheme] = useState<string>('padrao');
-
-    useEffect(() => {
-        const saved = localStorage.getItem(SYSTEM.LOCAL_STORAGE_THEME) || 'padrao';
-        setSelectedTheme(saved);
-    }, []);
-
-    function handleSelectTheme(themeId: string) {
-        setSelectedTheme(themeId);
-        localStorage.setItem(SYSTEM.LOCAL_STORAGE_THEME, themeId);
-        handleApplyTheme(themeId);
-    }
-
-    return (
-        <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Escolha seu tema preferido</h2>
-
-            <div className={styles.themeContainer}>
-                {
-                    THEMES.map((theme) => (
-                        <button
-                            key={theme.id}
-                            onClick={() => handleSelectTheme(theme.id)}
-                            className={styles.themeButton}
-                        >
-                            <div
-                                className={`${styles.themeCircle} ${theme.className} ${selectedTheme === theme.id ? styles.themeSelected : ''
-                                    }`}
-                            />
-                            <span className={styles.themeLabel}>{theme.label}</span>
-                        </button>
-                    ))
-                }
-            </div>
-        </div>
-    )
-}
-
-function FontSizeSelector() {
-
-    const [fontSize, setFontSize] = useState<number>(50);
-
-    return (
-        <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Tamanho da fonte</h2>
-
-            <p className={styles.cardDescription}>
-                Ajuste o tamanho do texto para melhor leitura.
-            </p>
-
-            <div className={styles.sliderContainer}>
-                <span className={styles.sliderLabel}>Pequeno</span>
-
-                <input
-                    type='range'
-                    min='0'
-                    max='100'
-                    value={fontSize}
-                    onChange={(e) => setFontSize(Number(e.target.value))}
-                    className={styles.slider}
-                />
-
-                <span className={`${styles.sliderLabel} ${styles.sliderLabelRight}`}>
-                    Grande
-                </span>
+                <FontSizeSelector />
+                <ThemeSelector />
             </div>
         </div>
     )
@@ -131,6 +60,76 @@ function MascotToggle() {
                 <button onClick={handleToggleMascot} className={`${styles.toggle} ${showMascot ? styles.toggleActive : ''}`}>
                     <span className={styles.toggleThumb} />
                 </button>
+            </div>
+        </div>
+    )
+}
+
+function FontSizeSelector() {
+
+    const [fontSize, setFontSize] = useState<number>(50);
+
+    return (
+        <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Tamanho da fonte</h2>
+
+            <p className={styles.cardDescription}>
+                Ajuste o tamanho do texto para melhor leitura.
+            </p>
+
+            <div className={styles.sliderContainer}>
+                <span className={styles.sliderLabel}>Pequeno</span>
+
+                <input
+                    type='range'
+                    min='0'
+                    max='100'
+                    value={fontSize}
+                    onChange={(e) => setFontSize(Number(e.target.value))}
+                    className={styles.slider}
+                />
+
+                <span className={`${styles.sliderLabel} ${styles.sliderLabelRight}`}>
+                    Grande
+                </span>
+            </div>
+        </div>
+    )
+}
+
+function ThemeSelector() {
+
+    const [selectedTheme, setSelectedTheme] = useState<string>('padrao');
+
+    useEffect(() => {
+        const saved = localStorage.getItem(SYSTEM.LOCAL_STORAGE_THEME) || 'padrao';
+        setSelectedTheme(saved);
+    }, []);
+
+    function handleSelectTheme(themeId: string) {
+        setSelectedTheme(themeId);
+        localStorage.setItem(SYSTEM.LOCAL_STORAGE_THEME, themeId);
+        handleApplyTheme(themeId);
+    }
+
+    return (
+        <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Escolha seu tema preferido</h2>
+
+            <div className={styles.themeContainer}>
+                {
+                    THEMES.map((theme) => (
+                        <Tippy key={theme.id} content={theme.isUsable ? `Tema ${theme.label.toLocaleLowerCase()}.` : `O tema ${theme.label.toLocaleLowerCase()} está indisponível.`} placement='bottom'>
+                            <button
+                                onClick={() => theme.isUsable && handleSelectTheme(theme.id)}
+                                className={`${styles.themeButton} ${theme.isUsable ? '' : styles.themeButtonDisabled}`}
+                            >
+                                <div className={`${styles.themeCircle} ${theme.className} ${selectedTheme === theme.id ? styles.themeSelected : ''}`} />
+                                <span className={styles.themeLabel}>{theme.label}</span>
+                            </button>
+                        </Tippy>
+                    ))
+                }
             </div>
         </div>
     )

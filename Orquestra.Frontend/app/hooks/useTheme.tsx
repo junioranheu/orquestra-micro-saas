@@ -7,13 +7,15 @@ export const THEMES = [
         id: 'padrao',
         label: 'Padrão',
         className: styles.themeDefault,
+        isUsable: true
     },
     {
         id: 'escuro',
         label: 'Escuro',
         className: styles.themeDark,
+        isUsable: false,
         vars: {
-            '--main-light': '#10241c',
+            '--main-light': '#15171A',
             '--contrast': '#6c63ff',
             '--contrast-light': '#2a2a45',
             '--black': '#f7f9fc',
