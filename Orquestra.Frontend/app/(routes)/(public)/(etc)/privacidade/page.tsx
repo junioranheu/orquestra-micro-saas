@@ -10,7 +10,7 @@ export default function Privacidade() {
     const router = useRouter();
 
     useEffect(() => {
-        router.push(`${ROUTES.ETC_AJUDA}/topico?t=lgpd-e-privacidade`);
+        router.push(`${ROUTES.ETC_AJUDA}/topico?t=privacidade-e-lgpd`);
     }, [router]);
 
     return (

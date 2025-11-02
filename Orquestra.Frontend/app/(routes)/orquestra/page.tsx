@@ -10,6 +10,7 @@ import WhatsappButton from '@/app/components/whatsapp/button';
 import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { PACIFICO } from '@/app/fonts/fonts';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMeSimple from '@/app/hooks/api/useApiGetMeSimple';
@@ -88,18 +89,6 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                 {/* Logo */}
                 <Tippy content='Voltar ao início.'>
                     <Link href={ROUTES.DASHBOARD} className='flex items-center gap-2.5 group'>
-                        {/* <div className='w-10 h-10 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105'>
-                            <Icon icon='calendar' />
-                        </div> */}
-
-                        {/* <div className='hidden sm:flex flex-col'>
-                            <span className='font-bold text-gray-900 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] bg-clip-text text-transparent'>
-                                {SYSTEM.NAME}
-                            </span>
-
-                            <span className='text-xs text-gray-500'>{SYSTEM.DESCRIPTION}</span>
-                        </div> */}
-
                         <Image src={ImgLogo} alt='' width={120} height={120} priority={true} />
                     </Link>
                 </Tippy>
@@ -567,20 +556,20 @@ function CTA({ me, plans }: { me: iMeSimple | undefined, plans: iPlanTypeOutput 
 
 function Footer() {
     return (
-        <footer className='bg-gradient-to-b from-gray-900 to-black text-gray-400 py-12 sm:py-16'>
+        <footer className='bg-gradient-to-b from-[#1f1f1f] to-[#111] text-[#ccc] py-12 sm:py-16'>
             <div className='max-w-6xl mx-auto px-4 sm:px-6'>
-                <div className='grid md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-gray-800'>
+                <div className='grid md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-[#333]'>
                     {/* Brand */}
                     <div>
                         <div className='flex items-center gap-2 mb-3'>
-                            <div className='w-8 h-8 bg-gradient-to-br from-[var(--main)] to-[var(--main-dark)] rounded-lg flex items-center justify-center text-white'>
+                            <div className='w-8 h-8 bg-[#2c2c2c] rounded-lg flex items-center justify-center text-white'>
                                 <Icon icon='calendar' />
                             </div>
 
-                            <span className='font-bold text-white'>{SYSTEM.NAME}</span>
+                            <span className='font-bold text-white'><span className={PACIFICO.className}>{SYSTEM.NAME}</span></span>
                         </div>
 
-                        <p className='text-sm text-gray-500'>{SYSTEM.DESCRIPTION}</p>
+                        <p className='text-sm text-[#ccc]'>{SYSTEM.DESCRIPTION}</p>
                     </div>
 
                     {/* Product */}
@@ -589,11 +578,11 @@ function Footer() {
 
                         <ul className='space-y-2'>
                             <li>
-                                <Link href={ROUTES.DASHBOARD} className='hover:text-[var(--main-light)] transition-colors text-sm'>Início</Link>
+                                <Link href={ROUTES.DASHBOARD} className='hover:text-white transition-colors text-sm'>Início</Link>
                             </li>
 
                             <li>
-                                <Link href={ROUTES.ETC_AJUDA} className='hover:text-[var(--main-light)] transition-colors text-sm'>Central de ajuda</Link>
+                                <Link href={ROUTES.ETC_AJUDA} className='hover:text-white transition-colors text-sm'>Central de ajuda</Link>
                             </li>
                         </ul>
                     </div>
@@ -608,14 +597,14 @@ function Footer() {
                         <div className='flex gap-3'>
                             <Tippy content='Contatar suporte via WhatsApp.'>
                                 <span>
-                                    <WhatsappHyperlink showIcon={true} className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all' />
+                                    <WhatsappHyperlink showIcon={true} className='w-10 h-10 rounded-lg bg-[#2c2c2c] hover:bg-[#444] flex items-center justify-center text-[#ccc] hover:text-white transition-all' />
                                 </span>
                             </Tippy>
 
                             <Tippy content='Contatar suporte via e-mail.'>
                                 <a
                                     href={`mailto:${SYSTEM.EMAIL_SUPPORT}`}
-                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
+                                    className='w-10 h-10 rounded-lg bg-[#2c2c2c] hover:bg-[#444] flex items-center justify-center text-[#ccc] hover:text-white transition-all'
                                 >
                                     <Icon icon='mail' />
                                 </a>
@@ -626,7 +615,7 @@ function Footer() {
                                     href={SYSTEM.URL_GITHUB}
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
+                                    className='w-10 h-10 rounded-lg bg-[#2c2c2c] hover:bg-[#444] flex items-center justify-center text-[#ccc] hover:text-white transition-all'
                                 >
                                     <Icon icon='github' />
                                 </a>
@@ -637,7 +626,7 @@ function Footer() {
                                     href={SYSTEM.URL_LINKEDIN}
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='w-10 h-10 rounded-lg bg-gray-800 hover:bg-[var(--main)] flex items-center justify-center text-gray-400 hover:text-white transition-all'
+                                    className='w-10 h-10 rounded-lg bg-[#2c2c2c] hover:bg-[#444] flex items-center justify-center text-[#ccc] hover:text-white transition-all'
                                 >
                                     <Icon icon='linkedin' />
                                 </a>
@@ -647,13 +636,13 @@ function Footer() {
                 </div>
 
                 {/* Bottom */}
-                <div className='flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500'>
+                <div className='flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-[#ccc]'>
                     <p>© {new Date().getFullYear()} {SYSTEM.NAME}. Todos os direitos reservados.</p>
 
                     <div className='flex gap-6'>
-                        <Link href={ROUTES.ETC_SEGURANCA} className='hover:text-[var(--main-light)] transition-colors'>Segurança</Link>
-                        <Link href={ROUTES.ETC_PRIVACIDADE} className='hover:text-[var(--main-light)] transition-colors'>Privacidade</Link>
-                        <Link href={ROUTES.ETC_TERMOS_DE_USO} className='hover:text-[var(--main-light)] transition-colors'>Termos</Link>
+                        <Link href={ROUTES.ETC_SEGURANCA} className='hover:text-white transition-colors'>Segurança</Link>
+                        <Link href={ROUTES.ETC_PRIVACIDADE} className='hover:text-white transition-colors'>Privacidade</Link>
+                        <Link href={ROUTES.ETC_TERMOS_DE_USO} className='hover:text-white transition-colors'>Termos</Link>
                     </div>
                 </div>
             </div>
