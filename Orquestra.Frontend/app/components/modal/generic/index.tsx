@@ -36,7 +36,7 @@ export default function ModalGeneric({
     showCloseButton = true,
     className,
     style = {},
-    overlayColor = 0.2,
+    overlayColor = 0.5,
     allowCloseOutsideClick = true,
     title,
     customPosition = {},

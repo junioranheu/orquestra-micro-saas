@@ -60,7 +60,6 @@ export default function EmpresaClientesModalFilters({
             onRequestClose={() => setIsModalOpen(false)}
             showCloseButton={false}
             allowCloseOutsideClick={false}
-            overlayColor={0.5}
             style={{ width: '50rem', padding: 0, background: 'transparent' }}
         >
             <div className={styles.modalCard}>
