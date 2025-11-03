@@ -99,6 +99,13 @@
     }
 }
 
+.checkbox {
+    accent-color: var(--main);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
 // Media queries
 // hi-res laptops and desktops 
 @media (max-width:1366px) {}

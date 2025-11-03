@@ -92,6 +92,12 @@ export default function Logs() {
                 totalRowsCount={logs?.count}
                 managingOptions={managingOptions}
                 extraItems={tableExtraItems}
+                enableRowSelection={true}
+                selectionAction={{
+                    label: 'Listar IDs (teste)',
+                    function: (ids) => toast({ content: `IDs selecionados: ${ids.join(', ')}` }),
+                    icon: <Icon icon='activity' size='small' />
+                }}
             />
         </TemplatePageHeader>
     )

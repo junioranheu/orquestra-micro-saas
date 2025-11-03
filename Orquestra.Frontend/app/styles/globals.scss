@@ -293,6 +293,11 @@ input[type='password'] {
     }
 }
 
+input[type='checkbox'] {
+    accent-color: var(--contrast);
+    cursor: pointer;
+}
+
 // Autofill;
 input:-webkit-autofill {
     background-color: transparent !important;

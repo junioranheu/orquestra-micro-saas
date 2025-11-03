@@ -9,7 +9,7 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import Table, { ColumnType as RcTableColumnType } from 'rc-table';
 import 'rc-table/assets/index.css';
-import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useEffect, useMemo, useState } from 'react';
 import ContentLoaderText from '../../content-loader/text';
 import styles from './index.module.scss';
 
@@ -27,6 +27,13 @@ export interface iTableManagingOptions {
     label: string;
     function: (record: any) => void;
     icon: StaticImageData | ReactElement;
+    isButton?: boolean;
+}
+
+export interface iSelectionAction {
+    label: string;
+    function: (ids: string[]) => void;
+    icon?: StaticImageData | ReactElement;
     isButton?: boolean;
 }
 
@@ -61,6 +68,9 @@ interface iProps {
     setModalFilterFormData?: Dispatch<SetStateAction<any>>;
     apiUrlRequest?: string;
     setApiUrlRequest?: Dispatch<SetStateAction<string>>;
+
+    enableRowSelection?: boolean;
+    selectionAction?: iSelectionAction | null;
 }
 
 export default function TableGeneric({
@@ -92,7 +102,10 @@ export default function TableGeneric({
     modalFilterFormData,
     setModalFilterFormData,
     apiUrlRequest,
-    setApiUrlRequest
+    setApiUrlRequest,
+
+    enableRowSelection = false,
+    selectionAction = null
 }: iProps) {
 
     const [pageSize, setPageSize] = useState<number>(maxPageSize);
@@ -101,6 +114,9 @@ export default function TableGeneric({
     const [sortColumn, setSortColumn] = useState<string | null>(null);
     const [sortOrder, setSortOrder] = useState<'ascend' | 'descend' | null>(null);
     const [showEmptyText, setShowEmptyText] = useState<boolean>(false);
+
+    // Seleção de linhas;
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         function handlePagination() {
@@ -130,10 +146,17 @@ export default function TableGeneric({
         handlePagination();
     }, [data, currentPage, totalRowsCount, maxPageSize]);
 
+    // Limpa seleção quando muda dados/página (evita seleção inválida);
+    useEffect(() => {
+        setSelectedIds(new Set());
+    }, [data, currentPage, pageSize]);
+
     const [animateClass, setAnimateClass] = useState<string>('');
 
     function handlePageChange(page: number) {
-        if (setCurrentPage) setCurrentPage(page);
+        if (setCurrentPage) {
+            setCurrentPage(page);
+        }
 
         setAnimateClass('');
         setTimeout(() => setAnimateClass(SYSTEM.ANIMATE_SLOW), 10);
@@ -141,6 +164,7 @@ export default function TableGeneric({
 
     function handleSort(column: string) {
         let newSortOrder: 'ascend' | 'descend' = 'ascend';
+
         if (sortColumn === column) {
             newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
         }
@@ -157,13 +181,18 @@ export default function TableGeneric({
     }
 
     function handleGetValue(record: any, key: string): any {
-        if (!record || !key) return undefined;
+        if (!record || !key) {
+            return undefined;
+        }
 
         const parts = key.split('.');
         let current = record;
 
         for (const part of parts) {
-            if (current == null) return undefined;
+            if (current == null) {
+                return undefined;
+            }
+
             const match = Object.keys(current).find(k => k.toLowerCase() === part.toLowerCase());
             current = match ? current[match] : undefined;
         }
@@ -171,7 +200,13 @@ export default function TableGeneric({
         return current;
     }
 
-    const enhancedColumns = columns.map(col => ({
+    // Pega id do registro (string);
+    function handleGetIdFromRecord(record: any) {
+        const val = handleGetValue(record, idPropName);
+        return val == null ? '' : String(val);
+    }
+
+    const enhancedColumns = useMemo(() => columns.map(col => ({
         ...col,
         title: (
             <span onClick={() => handleSort(col.dataIndex)}>
@@ -189,38 +224,97 @@ export default function TableGeneric({
             const val = handleGetValue(record, col.dataIndex);
             return col.render ? col.render(val, record, index) : val;
         }
-    }));
+    })), [columns, sortColumn, sortOrder, paginatedData]);
 
-    if (managingOptions?.length > 0) {
-        // @ts-expect-error tipo propositalmente flexível;
-        enhancedColumns.push({
-            title: (<span style={{ display: 'block', textAlign: 'center', width: '100%' }}>Ações</span>),
-            key: 'actions',
-            width: 100,
-            render: (record: any) => (
-                <div className={styles.column_actions}>
-                    {
-                        managingOptions.map((option, index) => (option.isButton ? (
-                            <Button
-                                key={index}
-                                label={option.label}
-                                handleFunction={() => option.function(record)}
-                                svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
-                                icon_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
-                                isStyleSimple={false}
-                            />
-                        ) : (
-                            <Tippy key={index} content={option.label}>
-                                <span onClick={() => option.function(record)}>
-                                    {isValidElement(option.icon) ? option.icon : <Image src={option.icon} alt={option.label} />}
-                                </span>
-                            </Tippy>
-                        )))
-                    }
+    // Coluna de seleção (checkbox) — será adicionada como primeira coluna se enableRowSelection;
+    function handleMakeSelectionColumn() {
+        return {
+            title: (
+                <div style={{ textAlign: 'center', width: '100%' }}>
+                    <input
+                        type='checkbox'
+                        aria-label='Selecionar todos'
+                        checked={paginatedData ? paginatedData.every(r => selectedIds.has(handleGetIdFromRecord(r))) && paginatedData.length > 0 : false}
+                        onChange={(e) => {
+                            const checked = e.target.checked;
+                            const newSet = new Set(selectedIds);
+
+                            if (checked) {
+                                (paginatedData ?? []).forEach(r => newSet.add(handleGetIdFromRecord(r)));
+                            } else {
+                                (paginatedData ?? []).forEach(r => newSet.delete(handleGetIdFromRecord(r)));
+                            }
+
+                            setSelectedIds(newSet);
+                        }}
+                    />
                 </div>
-            )
-        });
+            ),
+            key: '__select__',
+            width: 40,
+            align: 'center' as const,
+            render: (_: any, record: any) => {
+                const id = handleGetIdFromRecord(record);
+                const checked = selectedIds.has(id);
+                return (
+                    <div style={{ textAlign: 'center' }}>
+                        <input
+                            type='checkbox'
+                            aria-label={`Selecionar linha ${id}`}
+                            checked={checked}
+                            onChange={(e) => {
+                                const newSet = new Set(selectedIds);
+                                if (e.target.checked) newSet.add(id);
+                                else newSet.delete(id);
+                                setSelectedIds(newSet);
+                            }}
+                            onClick={(ev) => ev.stopPropagation()} // Evita trigger no row click;
+                        />
+                    </div>
+                )
+            }
+        }
     }
+
+    // Monta colunas finais (com seleção na frente se ativo);
+    const finalColumns = useMemo(() => {
+        const cols = [...enhancedColumns];
+        if (enableRowSelection) {
+            cols.unshift(handleMakeSelectionColumn() as any);
+        }
+
+        if (managingOptions?.length > 0) {
+            cols.push({
+                title: (<span style={{ display: 'block', textAlign: 'center', width: '100%' }}>Ações</span>),
+                key: 'actions',
+                width: 100,
+                render: (record: any) => (
+                    <div className={styles.column_actions}>
+                        {
+                            managingOptions.map((option, index) => (option.isButton ? (
+                                <Button
+                                    key={index}
+                                    label={option.label}
+                                    handleFunction={() => option.function(record)}
+                                    svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
+                                    icon_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
+                                    isStyleSimple={false}
+                                />
+                            ) : (
+                                <Tippy key={index} content={option.label}>
+                                    <span onClick={() => option.function(record)}>
+                                        {isValidElement(option.icon) ? option.icon : <Image src={option.icon} alt={option.label} />}
+                                    </span>
+                                </Tippy>
+                            )))
+                        }
+                    </div>
+                )
+            } as any);
+        }
+
+        return cols;
+    }, [enhancedColumns, enableRowSelection, selectedIds, managingOptions, paginatedData]);
 
     useEffect(() => {
         setShowEmptyText(false);
@@ -231,6 +325,16 @@ export default function TableGeneric({
     // Total precisa ser múltiplo exato do pageSize;
     const totalPages = pageSize > 0 ? Math.ceil(countTotalItems / pageSize) : 1;
     const safeTotal = totalPages * pageSize;
+
+    // Chama função de ação com os ids selecionados;
+    function handleSelectionAction() {
+        if (!selectionAction || !selectionAction.function) {
+            return;
+        }
+
+        const ids = Array.from(selectedIds);
+        selectionAction.function(ids);
+    }
 
     return (
         <section
@@ -243,7 +347,7 @@ export default function TableGeneric({
         >
             <div className={styles.container}>
                 {
-                    (title || extraItems?.length || btn_filter_label || btn_import_label || btn_export_label || btn_add_label) && (
+                    (title || extraItems?.length || btn_filter_label || btn_import_label || btn_export_label || btn_add_label || (enableRowSelection && selectionAction)) && (
                         <div className={styles.top}>
                             {
                                 title && (
@@ -313,6 +417,21 @@ export default function TableGeneric({
                                         />
                                     )
                                 }
+
+                                {/* Botão de ação com selected ids */}
+                                {
+                                    enableRowSelection && selectionAction && (
+                                        <Button
+                                            label={`${selectionAction.label}${selectedIds.size > 0 ? ` (${selectedIds.size})` : ''}`}
+                                            handleFunction={handleSelectionAction}
+                                            isStyleSimple={false}
+                                            svg_staticImageData={!isValidElement(selectionAction.icon) ? (selectionAction.icon as StaticImageData) : null}
+                                            icon_feather={isValidElement(selectionAction.icon) ? (selectionAction.icon as JSX.Element) : <Icon icon='check' size='small' />}
+                                            style={{ fontSize: '0.75rem', marginLeft: '.5rem' }}
+                                            isDisabled={selectedIds.size === 0}
+                                        />
+                                    )
+                                }
                             </div>
                         </div>
                     )
@@ -333,12 +452,12 @@ export default function TableGeneric({
             </div>
 
             <Table
-                columns={enhancedColumns}
+                columns={finalColumns}
                 data={paginatedData}
                 rowKey={idPropName}
-                onRow={(row) => ({
+                onRow={(row) => (({
                     onClick: handleTableRowClick ? () => handleTableRowClick(row) : undefined,
-                })}
+                }))}
                 emptyText={showEmptyText ? <span className={animateClass}>Os dados ainda estão carregando ou não existem dados para exibir neste momento</span> : null}
                 className={SYSTEM.ANIMATE}
                 rowClassName={animateClass}
