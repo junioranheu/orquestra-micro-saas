@@ -1,4 +1,5 @@
 'use client';
+import ContentLoaderText from '@/app/components/content-loader/text';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import FiltersSelected from '@/app/components/table/filters-selected';
@@ -9,8 +10,7 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import Table, { ColumnType as RcTableColumnType } from 'rc-table';
 import 'rc-table/assets/index.css';
-import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useEffect, useMemo, useState } from 'react';
-import ContentLoaderText from '../../content-loader/text';
+import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './index.module.scss';
 
 export interface iTableColumn extends RcTableColumnType<any> {
@@ -114,73 +114,11 @@ export default function TableGeneric({
     const [sortColumn, setSortColumn] = useState<string | null>(null);
     const [sortOrder, setSortOrder] = useState<'ascend' | 'descend' | null>(null);
     const [showEmptyText, setShowEmptyText] = useState<boolean>(false);
-
-    // Seleção de linhas;
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-
-    useEffect(() => {
-        function handlePagination() {
-            const total = Number(totalRowsCount) || 0;
-            setCountTotalItems(total);
-
-            // Evita bug de pageSize dinâmico alterando o total de páginas;
-            const stablePageSize = maxPageSize > 0 ? maxPageSize : 15;
-            setPageSize(stablePageSize);
-
-            if (!data || !data.length) {
-                setPaginatedData([]);
-                return;
-            }
-
-            // Se a API já traz os dados paginados;
-            if (total > 0) {
-                setPaginatedData(data);
-                return;
-            }
-
-            // Fallback: paginação manual no front;
-            const paginated = data.slice((currentPage - 1) * stablePageSize, currentPage * stablePageSize);
-            setPaginatedData(paginated);
-        }
-
-        handlePagination();
-    }, [data, currentPage, totalRowsCount, maxPageSize]);
-
-    // Limpa seleção quando muda dados/página (evita seleção inválida);
-    useEffect(() => {
-        setSelectedIds(new Set());
-    }, [data, currentPage, pageSize]);
-
     const [animateClass, setAnimateClass] = useState<string>('');
 
-    function handlePageChange(page: number) {
-        if (setCurrentPage) {
-            setCurrentPage(page);
-        }
-
-        setAnimateClass('');
-        setTimeout(() => setAnimateClass(SYSTEM.ANIMATE_SLOW), 10);
-    }
-
-    function handleSort(column: string) {
-        let newSortOrder: 'ascend' | 'descend' = 'ascend';
-
-        if (sortColumn === column) {
-            newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
-        }
-
-        const sorted = [...(paginatedData ?? [])].sort((a, b) => {
-            if (a[column] < b[column]) return newSortOrder === 'ascend' ? -1 : 1;
-            if (a[column] > b[column]) return newSortOrder === 'ascend' ? 1 : -1;
-            return 0;
-        });
-
-        setPaginatedData(sorted);
-        setSortColumn(column);
-        setSortOrder(newSortOrder);
-    }
-
-    function handleGetValue(record: any, key: string): any {
+    // Helpers;
+    const handleGetValue = useCallback((record: any, key: string): any => {
         if (!record || !key) {
             return undefined;
         }
@@ -198,14 +136,120 @@ export default function TableGeneric({
         }
 
         return current;
-    }
+    }, []);
 
-    // Pega id do registro (string);
-    function handleGetIdFromRecord(record: any) {
+    const handleGetIdFromRecord = useCallback((record: any) => {
         const val = handleGetValue(record, idPropName);
         return val == null ? '' : String(val);
-    }
+    }, [handleGetValue, idPropName]);
 
+    const handleSort = useCallback((column: string) => {
+        let newSortOrder: 'ascend' | 'descend' = 'ascend';
+
+        if (sortColumn === column) {
+            newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
+        }
+
+        const sorted = [...(paginatedData ?? [])].sort((a, b) => {
+            if (a[column] < b[column]) {
+                return newSortOrder === 'ascend' ? -1 : 1;
+            }
+
+            if (a[column] > b[column]) {
+                return newSortOrder === 'ascend' ? 1 : -1;
+            }
+
+            return 0;
+        });
+
+        setPaginatedData(sorted);
+        setSortColumn(column);
+        setSortOrder(newSortOrder);
+    }, [paginatedData, sortColumn, sortOrder]);
+
+    const handleMakeSelectionColumn = useCallback(() => ({
+        title: (
+            <div style={{ textAlign: 'center', width: '100%' }}>
+                <input
+                    type='checkbox'
+                    aria-label='Selecionar todos'
+                    checked={paginatedData ? paginatedData.every(r => selectedIds.has(handleGetIdFromRecord(r))) && paginatedData.length > 0 : false}
+                    onChange={(e) => {
+                        const checked = e.target.checked;
+                        const newSet = new Set(selectedIds);
+
+                        (paginatedData ?? []).forEach(r => {
+                            const id = handleGetIdFromRecord(r);
+
+                            if (checked) {
+                                newSet.add(id)
+                            } else {
+                                newSet.delete(id);
+                            }
+                        });
+
+                        setSelectedIds(newSet);
+                    }}
+                />
+            </div>
+        ),
+        key: '__select__',
+        width: 40,
+        align: 'center' as const,
+        render: (_: any, record: any) => {
+            const id = handleGetIdFromRecord(record);
+            const checked = selectedIds.has(id);
+            return (
+                <div style={{ textAlign: 'center' }}>
+                    <input
+                        type='checkbox'
+                        aria-label={`Selecionar linha ${id}`}
+                        checked={checked}
+                        onChange={(e) => {
+                            const newSet = new Set(selectedIds);
+
+                            if (e.target.checked) {
+                                newSet.add(id)
+                            } else {
+                                newSet.delete(id);
+                            }
+
+                            setSelectedIds(newSet);
+                        }}
+                        onClick={(ev) => ev.stopPropagation()}
+                    />
+                </div>
+            );
+        }
+    }), [paginatedData, selectedIds, handleGetIdFromRecord]);
+
+    // Effects;
+    useEffect(() => {
+        const total = Number(totalRowsCount) || 0;
+        setCountTotalItems(total);
+        const stablePageSize = maxPageSize > 0 ? maxPageSize : 15;
+        setPageSize(stablePageSize);
+
+        if (!data || !data.length) {
+            return setPaginatedData([]);
+        }
+
+        if (total > 0) {
+            return setPaginatedData(data);
+        }
+
+        setPaginatedData(data.slice((currentPage - 1) * stablePageSize, currentPage * stablePageSize));
+    }, [data, currentPage, totalRowsCount, maxPageSize]);
+
+    useEffect(() => setSelectedIds(new Set()), [data, currentPage, pageSize]);
+
+    useEffect(() => {
+        setShowEmptyText(false);
+        const timer = setTimeout(() => setShowEmptyText(true), 1000);
+        return () => clearTimeout(timer);
+    }, [currentPage]);
+
+    // Memoized columns;
     const enhancedColumns = useMemo(() => columns.map(col => ({
         ...col,
         title: (
@@ -215,70 +259,17 @@ export default function TableGeneric({
         ),
         onHeaderCell: () => ({
             onClick: () => handleSort(col.dataIndex),
-            style: {
-                cursor: 'pointer',
-                textDecoration: sortColumn === col.dataIndex ? 'underline' : 'none'
-            }
+            style: { cursor: 'pointer', textDecoration: sortColumn === col.dataIndex ? 'underline' : 'none' }
         }),
         render: (value: any, record: any, index: number) => {
             const val = handleGetValue(record, col.dataIndex);
             return col.render ? col.render(val, record, index) : val;
         }
-    })), [columns, sortColumn, sortOrder, paginatedData]);
+    })), [columns, sortColumn, sortOrder, handleSort, handleGetValue]);
 
-    // Coluna de seleção (checkbox) — será adicionada como primeira coluna se enableRowSelection;
-    function handleMakeSelectionColumn() {
-        return {
-            title: (
-                <div style={{ textAlign: 'center', width: '100%' }}>
-                    <input
-                        type='checkbox'
-                        aria-label='Selecionar todos'
-                        checked={paginatedData ? paginatedData.every(r => selectedIds.has(handleGetIdFromRecord(r))) && paginatedData.length > 0 : false}
-                        onChange={(e) => {
-                            const checked = e.target.checked;
-                            const newSet = new Set(selectedIds);
-
-                            if (checked) {
-                                (paginatedData ?? []).forEach(r => newSet.add(handleGetIdFromRecord(r)));
-                            } else {
-                                (paginatedData ?? []).forEach(r => newSet.delete(handleGetIdFromRecord(r)));
-                            }
-
-                            setSelectedIds(newSet);
-                        }}
-                    />
-                </div>
-            ),
-            key: '__select__',
-            width: 40,
-            align: 'center' as const,
-            render: (_: any, record: any) => {
-                const id = handleGetIdFromRecord(record);
-                const checked = selectedIds.has(id);
-                return (
-                    <div style={{ textAlign: 'center' }}>
-                        <input
-                            type='checkbox'
-                            aria-label={`Selecionar linha ${id}`}
-                            checked={checked}
-                            onChange={(e) => {
-                                const newSet = new Set(selectedIds);
-                                if (e.target.checked) newSet.add(id);
-                                else newSet.delete(id);
-                                setSelectedIds(newSet);
-                            }}
-                            onClick={(ev) => ev.stopPropagation()} // Evita trigger no row click;
-                        />
-                    </div>
-                )
-            }
-        }
-    }
-
-    // Monta colunas finais (com seleção na frente se ativo);
     const finalColumns = useMemo(() => {
         const cols = [...enhancedColumns];
+
         if (enableRowSelection) {
             cols.unshift(handleMakeSelectionColumn() as any);
         }
@@ -312,37 +303,34 @@ export default function TableGeneric({
                 )
             } as any);
         }
-
         return cols;
-    }, [enhancedColumns, enableRowSelection, selectedIds, managingOptions, paginatedData]);
+    }, [enhancedColumns, enableRowSelection, managingOptions, handleMakeSelectionColumn]);
 
-    useEffect(() => {
-        setShowEmptyText(false);
-        const timer = setTimeout(() => setShowEmptyText(true), 1000);
-        return () => clearTimeout(timer);
-    }, [currentPage]);
+    // Pagination;
+    const handlePageChange = useCallback((page: number) => {
+        setCurrentPage?.(page);
+        setAnimateClass('');
+        setTimeout(() => setAnimateClass(SYSTEM.ANIMATE_SLOW), 10);
+    }, [setCurrentPage]);
 
-    // Total precisa ser múltiplo exato do pageSize;
-    const totalPages = pageSize > 0 ? Math.ceil(countTotalItems / pageSize) : 1;
-    const safeTotal = totalPages * pageSize;
-
-    // Chama função de ação com os ids selecionados;
-    function handleSelectionAction() {
-        if (!selectionAction || !selectionAction.function) {
+    const handleSelectionAction = useCallback(() => {
+        if (!selectionAction?.function) {
             return;
         }
 
-        const ids = Array.from(selectedIds);
-        selectionAction.function(ids);
-    }
+        selectionAction.function(Array.from(selectedIds));
+    }, [selectionAction, selectedIds]);
+
+    const totalPages = pageSize > 0 ? Math.ceil(countTotalItems / pageSize) : 1;
+    const safeTotal = totalPages * pageSize;
 
     return (
         <section
             className={`${styles.main} ${(hasAltStyle && 'tableAltStyle')} ${(hasAltStyle && styles.tableAltStyle)}`}
             style={{
-                boxShadow: (isMainDivBoxShadowed ? 'var(--box-shadow)' : ''),
+                boxShadow: isMainDivBoxShadowed ? 'var(--box-shadow)' : '',
                 margin: `${mainDivMarginTopBottom}rem ${mainDivMarginSides}rem`,
-                padding: (mainDivHasPadding ? '1rem' : '0rem')
+                padding: mainDivHasPadding ? '1rem' : '0rem'
             }}
         >
             <div className={styles.container}>
@@ -354,7 +342,7 @@ export default function TableGeneric({
                                     <div className={styles.left}>
                                         <Tippy content={`${totalRowsCount} registro${totalRowsCount > 1 ? 's' : ''}.`}>
                                             <span className={styles.title}>
-                                                {title && <ContentLoaderText content={title ? title : ''} delay={150} />}
+                                                <ContentLoaderText content={title} delay={150} />
                                             </span>
                                         </Tippy>
                                     </div>
@@ -418,7 +406,6 @@ export default function TableGeneric({
                                     )
                                 }
 
-                                {/* Botão de ação com selected ids */}
                                 {
                                     enableRowSelection && selectionAction && (
                                         <Button
@@ -455,9 +442,7 @@ export default function TableGeneric({
                 columns={finalColumns}
                 data={paginatedData}
                 rowKey={idPropName}
-                onRow={(row) => (({
-                    onClick: handleTableRowClick ? () => handleTableRowClick(row) : undefined,
-                }))}
+                onRow={(row) => ({ onClick: handleTableRowClick ? () => handleTableRowClick(row) : undefined })}
                 emptyText={showEmptyText ? <span className={animateClass}>Os dados ainda estão carregando ou não existem dados para exibir neste momento</span> : null}
                 className={SYSTEM.ANIMATE}
                 rowClassName={animateClass}
@@ -471,9 +456,7 @@ export default function TableGeneric({
                 onChange={handlePageChange}
                 onShowSizeChange={(size: number) => {
                     setPageSize(size);
-                    if (setCurrentPage) {
-                        setCurrentPage(1);
-                    }
+                    setCurrentPage?.(1);
                 }}
             />
         </section>

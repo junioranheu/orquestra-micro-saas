@@ -86,7 +86,14 @@ export default function EmpresaMembros() {
         {
             title: 'Módulos atribuídos',
             dataIndex: 'modules',
-            key: 'modules'
+            key: 'modules',
+            render: (modules: string | undefined, record) => {
+                if (record.companyUserRole === 'Administrador') {
+                    return 'Todos';
+                }
+
+                return modules;
+            }
         },
         {
             title: 'Data de registro',

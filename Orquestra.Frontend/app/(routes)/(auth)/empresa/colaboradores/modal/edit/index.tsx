@@ -106,6 +106,18 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
         return;
     }
 
+    const [isAdmSelected, setIsAdmSelected] = useState<boolean>(false);
+
+    useEffect(() => {
+        // @ts-expect-error: dinâmico e pode não ter props compatíveis; 
+        if (formData.companyUserRole?.label === 'Administrador') {
+            setIsAdmSelected(true);
+            setFormData(prev => ({ ...prev, userModules: [] }));
+        } else {
+            setIsAdmSelected(false);
+        }
+    }, [formData.companyUserRole]);
+
     if (!isModalOpen) {
         return;
     }
@@ -140,8 +152,22 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
 
                 <main className={styles.modalContent}>
                     <div className='modal-layout-flex'>
-                        <Dropdown title='Tipo de colaborador' options={companyUserRoleEnum ?? []} selectedOption={companyUserRoleEnum?.find(x => x.label === formData.companyUserRole) ?? undefined} setSelectedOption={setCompanyUserRoleOption} isDisabled={!editing} />
-                        <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={moduleEnum?.filter(x => formData.userModules?.map(String).includes(String(x.value))) ?? []} setSelectedOption={setModuleOption} isDisabled={!editing} isMultiple={true} />
+                        <Dropdown
+                            title='Tipo de colaborador'
+                            options={companyUserRoleEnum ?? []}
+                            selectedOption={companyUserRoleEnum?.find(x => x.label === formData.companyUserRole) ?? undefined}
+                            setSelectedOption={setCompanyUserRoleOption}
+                            isDisabled={!editing}
+                        />
+
+                        <Dropdown
+                            title='Módulos atribuídos'
+                            options={moduleEnum ?? []}
+                            selectedOption={moduleEnum?.filter(x => formData.userModules?.map(String).includes(String(x.value))) ?? []}
+                            setSelectedOption={setModuleOption}
+                            isDisabled={!editing || isAdmSelected}
+                            isMultiple={true}
+                        />
                     </div>
                 </main>
 
