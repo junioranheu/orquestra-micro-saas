@@ -13,7 +13,7 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
     private readonly EmailSettings _settings = settings;
     private readonly bool _isDevelopment = env.IsDevelopment();
 
-    public async Task SendEmail(string to, string subject, string body, bool isHtml = true, List<string>? cc = null)
+    public async Task SendEmail(EmailInput input)
     {
         using SmtpClient client = new(SystemConsts.Brevo.SmtpHost, SystemConsts.Brevo.SmtpPort)
         {
@@ -23,24 +23,24 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 
         if (_isDevelopment)
         {
-            subject = $"[DEBUG] {subject}";
+            input.Subject = $"[DEBUG] {input.Subject}";
         }
 
         MailMessage mailMessage = new()
         {
             From = new MailAddress(address: SystemConsts.Brevo.SenderEmail, displayName: SystemConsts.Brevo.SenderName),
-            Subject = subject,
-            Body = body,
-            IsBodyHtml = isHtml,
+            Subject = input.Subject,
+            Body = input.Body,
+            IsBodyHtml = input.IsHtml,
             BodyEncoding = Encoding.UTF8,
             SubjectEncoding = Encoding.UTF8
         };
 
-        mailMessage.To.Add(to);
+        mailMessage.To.Add(input.To);
 
-        if (cc is not null && cc.Count != 0)
+        if (input.Cc is not null && input.Cc.Count != 0)
         {
-            foreach (var c in cc)
+            foreach (var c in input.Cc)
             {
                 mailMessage.CC.Add(c);
             }

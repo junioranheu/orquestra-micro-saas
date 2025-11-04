@@ -2,7 +2,7 @@
 
 namespace Orquestra.Infrastructure.Factory;
 
-public interface IConnectionFactory
+public interface IDataBaseConnection
 {
     string GetConnectionString();
     NpgsqlConnection GetConnection();

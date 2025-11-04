@@ -9,6 +9,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Encrypt;
@@ -103,7 +104,15 @@ public sealed class CreateUser(
         };
 
         string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyUser, values);
-        await _emailService.SendEmail(to: user.Email, subject: $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua conta!", body: bodyHtml);
+
+        EmailInput input = new()
+        {
+            To = user.Email,
+            Subject = $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua conta!",
+            Body = bodyHtml,
+        };
+
+        await _emailService.SendEmail(input);
     }
 
     private async Task LinkUser(User user, string inviteToken)

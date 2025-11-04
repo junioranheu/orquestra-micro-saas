@@ -7,7 +7,7 @@ using OpenTelemetry.Trace;
 using Orquestra.API.Extensions;
 using Orquestra.API.Filters;
 using Orquestra.Domain.Consts;
-using Orquestra.Infrastructure.Factory;
+using Orquestra.Infrastructure.Factory.DataBase;
 using Orquestra.Infrastructure.Serialization;
 using System.IO.Compression;
 using System.Text.Json.Serialization;
@@ -144,7 +144,7 @@ public static class DependencyInjection
 
     private static void AddHealthCheck(IServiceCollection services, WebApplicationBuilder builder)
     {
-        ConnectionFactory connection = new(builder.Configuration);
+        DataBaseConnection connection = new(builder.Configuration);
         string con = connection.GetConnectionString();
         string type = connection.GetConnectionTypeName();
 

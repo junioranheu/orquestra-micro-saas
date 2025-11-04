@@ -25,6 +25,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
@@ -206,7 +207,7 @@ public sealed class EndToEndTests
         //Assert.True(invoice.Amount > 0, "Invoice amount should be greater than 0");
 
         // 7.2) Verifica que foi chamado pelo menos X vezes;
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>?>()), Times.AtLeast(3));
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.AtLeast(3));
 
         //// 7.3) Verifica chamada específica para invoice;
         //emailServiceMock.Verify(x => x.SendEmail(It.Is<string>(to => to == dbCompany.Email), It.Is<string>(subject => subject.Contains("Nova fatura")), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>?>()), Times.Once);

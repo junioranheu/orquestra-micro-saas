@@ -14,6 +14,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 using static Orquestra.Utils.Fixtures.Get;
@@ -680,7 +681,7 @@ public sealed class ScheduleBaseTests
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
 
         Mock<IEmailService> emailServiceMock = new();
-        emailServiceMock.Setup(e => e.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>?>())).Returns(Task.CompletedTask);
+        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<EmailInput>())).Returns(Task.CompletedTask);
 
         ScheduleBaseDependencies deps = new(context, checkIfUserIsLinkedCompanyUser, getClient, getCompany, emailServiceMock.Object);
         ScheduleBase scheduleBase = new(deps);

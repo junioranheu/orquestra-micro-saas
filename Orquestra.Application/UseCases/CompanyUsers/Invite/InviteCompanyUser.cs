@@ -13,6 +13,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Get;
@@ -152,7 +153,15 @@ public sealed class InviteCompanyUser(
         };
 
         string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompanyUser, values);
-        await _emailService.SendEmail(to: user.Email, subject: $"Você foi convidado: {company.Name} — {SystemConsts.App.NameApp}", body: bodyHtml);
+
+        EmailInput input = new()
+        {
+            To = user.Email,
+            Subject = $"Você foi convidado: {company.Name} — {SystemConsts.App.NameApp}",
+            Body = bodyHtml,
+        };
+
+        await _emailService.SendEmail(input);
     }
     #endregion
 }

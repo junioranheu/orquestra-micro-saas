@@ -10,6 +10,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
@@ -204,16 +205,7 @@ public sealed class CreateCompanyInvoiceTests
         Assert.Equal(company.Name, capturedValues!["[CompanyName]"]);
         Assert.Equal(invoice.Amount.ToString(), capturedValues!["[Price]"]);
 
-        emailServiceMock.Verify(
-            x => x.SendEmail(
-                It.IsAny<string>(),        // to;
-                It.IsAny<string>(),        // subject;
-                It.IsAny<string>(),        // body;
-                It.IsAny<bool>(),          // cc;
-                It.IsAny<List<string>>()   // ccList;
-            ),
-            Times.Once
-        );
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     #region helpers

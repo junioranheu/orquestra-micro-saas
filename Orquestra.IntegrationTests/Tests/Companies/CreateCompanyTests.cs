@@ -22,6 +22,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
@@ -143,7 +144,7 @@ public sealed class CreateCompanyTests
         Assert.NotNull(capturedValues);
         Assert.Equal(input.Name, capturedValues!["[CompanyName]"]);
 
-        emailServiceMock.Verify(x => x.SendEmail(input.Email, It.IsAny<string>(), It.IsAny<string>(), true, It.IsAny<List<string>>()), Times.AtLeastOnce);
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.AtLeastOnce);
     }
 
     [Theory]

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace Orquestra.Infrastructure.Factory;
+namespace Orquestra.Infrastructure.Factory.DataBase;
 
-public class ConnectionFactory(IConfiguration configuration) : IConnectionFactory
+public class DataBaseConnection(IConfiguration configuration) : IDataBaseConnection
 {
     private readonly IConfiguration _configuration = configuration;
 

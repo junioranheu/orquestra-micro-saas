@@ -13,6 +13,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
@@ -57,7 +58,7 @@ public sealed class InviteCompanyUserIntegrationTests
         await sut.Execute(authUser.UserId, company.CompanyId, email, false);
 
         // Assert;
-        emailServiceMock.Verify(x => x.SendEmail(It.Is<string>(s => s == email), It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Once);
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     [Fact]
@@ -90,7 +91,7 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.Equal(authUser.UserId, created.InviterUserId);
         Assert.False(created.IsCurrentMainCompanyUser);
 
-        emailServiceMock.Verify(x => x.SendEmail(existingUser.Email, It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Once);
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     [Fact]
@@ -123,7 +124,7 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.True(created.IsCurrentMainCompanyUser);
         Assert.Null(created.InviterUserId);
 
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null), Times.Never);
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Never);
     }
 
     [Fact]

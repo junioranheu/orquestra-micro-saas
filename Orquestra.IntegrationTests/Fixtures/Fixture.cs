@@ -11,6 +11,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Auth.Models;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using System.Security.Claims;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -111,7 +112,7 @@ public static class Fixture
         Mock<IEmailService> emailServiceMock = new();
 
         emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>())).Returns("<html>fake</html>");
-        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null)).Returns(Task.CompletedTask);
+        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<EmailInput>())).Returns(Task.CompletedTask);
 
         return emailServiceMock;
     }
@@ -126,7 +127,7 @@ public static class Fixture
                 capture?.Invoke(vals);
             }).Returns("<html>fake</html>");
 
-        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true, null)).Returns(Task.CompletedTask);
+        emailServiceMock .Setup(x => x.SendEmail(It.IsAny<EmailInput>())).Returns(Task.CompletedTask);
 
         return emailServiceMock;
     }

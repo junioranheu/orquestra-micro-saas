@@ -13,6 +13,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Get;
@@ -158,7 +159,16 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
         };
 
         string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values);
-        await _emailService.SendEmail(to: company.Email, subject: $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua empresa!", body: bodyHtml, cc: [user.Email]);
+
+        EmailInput input = new()
+        {
+            To = company.Email,
+            Subject = $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua empresa!",
+            Body = bodyHtml,
+            Cc= [user.Email]
+        };
+
+        await _emailService.SendEmail(input);
     }
 
     #region extras

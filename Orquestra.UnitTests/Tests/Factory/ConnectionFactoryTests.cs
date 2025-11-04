@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Npgsql;
-using Orquestra.Infrastructure.Factory;
+using Orquestra.Infrastructure.Factory.DataBase;
 
 namespace Orquestra.UnitTests.Tests.Factory;
 
@@ -30,7 +30,7 @@ public sealed class ConnectionFactoryTests
         };
 
         IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings!).Build();
-        ConnectionFactory factory = new(config);
+        DataBaseConnection factory = new(config);
 
         // Act;
         string connStr = factory.GetConnectionString();
@@ -50,7 +50,7 @@ public sealed class ConnectionFactoryTests
         };
 
         IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings!).Build();
-        ConnectionFactory factory = new(config);
+        DataBaseConnection factory = new(config);
 
         // Act;
         string connStr = factory.GetConnectionString();
@@ -69,7 +69,7 @@ public sealed class ConnectionFactoryTests
         };
 
         IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings!).Build();
-        ConnectionFactory factory = new(config);
+        DataBaseConnection factory = new(config);
 
         // Act & Assert;
         Assert.Throws<InvalidOperationException>(() => factory.GetConnectionString());
@@ -79,7 +79,7 @@ public sealed class ConnectionFactoryTests
     public void GetConnection_ShouldReturnNpgsqlConnection()
     {
         // Arrange;
-        ConnectionFactory factory = new(_config);
+        DataBaseConnection factory = new(_config);
 
         // Act;
         NpgsqlConnection connection = factory.GetConnection();
@@ -94,7 +94,7 @@ public sealed class ConnectionFactoryTests
     public void GetConnectionTypeName_ShouldReturnNpgsqlConnectionName()
     {
         // Arrange;
-        ConnectionFactory factory = new(_config);
+        DataBaseConnection factory = new(_config);
 
         // Act;
         string typeName = factory.GetConnectionTypeName();

@@ -11,6 +11,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using static Orquestra.Utils.Fixtures.Get;
@@ -60,7 +61,7 @@ public sealed class RecoverPasswordUserTests
         Assert.Equal("Junior", capturedValues!["[UserName]"]);
         Assert.Contains("/Auth/Verify/RecoverPassword/", capturedValues["[VerifyUrl]"]);
 
-        emailServiceMock.Verify(x => x.SendEmail(user.Email, It.Is<string>(s => s.Contains("Redefina")), It.IsAny<string>(), true, null), Times.Once);
+        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     [Fact]

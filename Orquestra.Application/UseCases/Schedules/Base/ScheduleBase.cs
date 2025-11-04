@@ -11,6 +11,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Services.Email.Models;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -303,7 +304,16 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         }
 
         string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailSchedule, values);
-        await _emailService.SendEmail(to: schedule.Company!.Email, subject: title, body: bodyHtml, cc: membersEmails);
+
+        EmailInput input = new()
+        {
+            To = schedule.Company!.Email,
+            Subject = title,
+            Body = bodyHtml,
+            Cc = membersEmails
+        };
+
+        await _emailService.SendEmail(input);
     }
 
     #region extras
