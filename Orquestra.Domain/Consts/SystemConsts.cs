@@ -85,4 +85,9 @@ public static class SystemConsts
         public  const bool EnableSsl = true;
         public const bool DoNotSendEmailIfDev = false;
     }
+
+    public static class RabbitMQ
+    {
+        public const string EmailQueue = "email-queue";
+    }
 }

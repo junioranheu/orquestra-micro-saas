@@ -12,6 +12,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
@@ -31,7 +32,8 @@ public record CompanyBaseDependencies(
     IEmailService EmailService,
     ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
     ICreateCompanyInvoice CreateCompanyInvoice,
-    ICreateIntegrationWhatsApp CreateIntegrationWhatsApp
+    ICreateIntegrationWhatsApp CreateIntegrationWhatsApp,
+    IGenericPublisher Publisher
 );
 
 public partial class CompanyBase(CompanyBaseDependencies deps)
@@ -41,6 +43,7 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
     private readonly ICreateVerification _createVerification = deps.CreateVerification;
     private readonly IEmailService _emailService = deps.EmailService;
+    private readonly IGenericPublisher _publisher = deps.Publisher;
 
     public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate, bool mustValidateIfNameAlreadyExist, bool mustValidateIfEmailAlreadyExist)
     {
@@ -158,17 +161,17 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values);
+        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values); // TO DO: REMOVER ESSA DEPENDENCIA
 
         EmailInput input = new()
         {
             To = company.Email,
             Subject = $"Bem-vindo ao {SystemConsts.App.NameApp} — Verifique sua empresa!",
             Body = bodyHtml,
-            Cc= [user.Email]
+            Cc = [user.Email]
         };
 
-        await _emailService.SendEmail(input);
+        await _publisher.PublishAsync(SystemConsts.RabbitMQ.EmailQueue, input);
     }
 
     #region extras

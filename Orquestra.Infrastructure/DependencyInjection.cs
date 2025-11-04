@@ -21,6 +21,7 @@ using Orquestra.Infrastructure.Jobs.Companies;
 using Orquestra.Infrastructure.Jobs.Schedules;
 using Orquestra.Infrastructure.Messaging.Consumers;
 using Orquestra.Infrastructure.Messaging.HostedService;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
@@ -38,7 +39,7 @@ public static class DependencyInjection
         AddServices(services, builder);
         AddAuth(services, builder);
         AddFactory(services, builder);
-        AddRabbitMQConsumers(services);
+        AddRabbitMQ(services);
         AddContext(services, builder);
         AddJobs(services);
 
@@ -180,15 +181,19 @@ public static class DependencyInjection
         services.AddSingleton<IRabbitMQConnection>(x => new RabbitMQConnection(rabbitMqUrl: rabbitMqUrl));
     }
 
-    private static void AddRabbitMQConsumers(IServiceCollection services)
+    private static void AddRabbitMQ(IServiceCollection services)
     {
+        // Publishers;
+        services.AddSingleton<IGenericPublisher, GenericPublisher>();
+
         // Consumers;
         services.AddSingleton(x =>
             new EmailConsumer(
                 connection: x.GetRequiredService<IRabbitMQConnection>(),
                 emailService: x.GetRequiredService<IEmailService>(),
-                queueName: "queue-email"
-            ));
+                queueName: SystemConsts.RabbitMQ.EmailQueue
+            )
+        );
 
         // Hosted services;
         services.AddHostedService<EmailConsumerHostedService>();

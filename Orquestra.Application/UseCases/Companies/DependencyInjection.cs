@@ -14,6 +14,7 @@ using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
 
@@ -40,7 +41,8 @@ public static class DependencyInjection
            x.GetRequiredService<IEmailService>(),
            x.GetRequiredService<ICheckIfUserIsLinkedCompanyUser>(),
            x.GetRequiredService<ICreateCompanyInvoice>(),
-           x.GetRequiredService<ICreateIntegrationWhatsApp>()
+           x.GetRequiredService<ICreateIntegrationWhatsApp>(),
+           x.GetRequiredService<IGenericPublisher>()
         ));
 
         return services;
