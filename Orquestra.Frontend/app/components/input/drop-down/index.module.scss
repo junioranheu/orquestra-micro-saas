@@ -35,7 +35,8 @@
         color: var(--black) !important;
         font-size: 0.8rem !important;
         // height: 2.5rem !important;
-        height: 40px !important;
+        // height: 40px !important;
+        min-height: 40px !important;
         transition: 0.3s !important;
 
         >div:first-of-type {
