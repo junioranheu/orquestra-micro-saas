@@ -6,6 +6,7 @@ import { CONSTS_UTILITY, iPlanType, iPlanTypeOutput } from '@/app/api/consts/uti
 import { Fetch } from '@/app/api/fetch';
 import CardCreamWithChildren from '@/app/components/card/cream-with-children';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
+import { handleLaunchConfetti } from '@/app/functions/effect.confetti';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
@@ -53,14 +54,15 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
                 const output = await Fetch.put({ url: CONSTS_COMPANY.updatePlanType, body: formDataInput, isFormData: true }) as iCompanyInvoice;
 
                 if (output) {
+                    handleLaunchConfetti(5000);
+
                     swal({
                         content: `Plano adquirido com sucesso!<br/>O novo plano da sua empresa é o <b>${plan.planTypeDescription.toLowerCase()}</b>.`,
                         confirmFunction: () => {
                             handlePay(output);
                         },
                         icon: 'success',
-                        checkboxLabel: 'Entendi',
-                        confirmBtnText: 'Voltar'
+                        confirmBtnText: 'Ok'
                     });
 
                     return;
