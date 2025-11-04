@@ -51,12 +51,10 @@ export default function Sidebar() {
             label: 'Geral',
             items: [
                 { label: 'Início', description: `Visão geral e estatísticas rápidas do ${SYSTEM.NAME}.`, icon: 'home', route: ROUTES.DASHBOARD, hasAccess: true },
-                { label: 'Empresas', description: 'Gerencie os dados e informações de suas empresas cadastradas.', icon: 'briefcase', route: ROUTES.EMPRESA_GERENCIAR, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
-                ...((me && me?.isUserAdmOfCurrentMainCompany) ? [
-                    { label: 'Plano e faturas', description: 'Visualize o plano atual e gerencie suas faturas.', icon: 'tag', route: ROUTES.EMPRESA_USO_E_PLANO, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
-                    { label: 'Notificações', description: 'Gerencie alertas e notificações do sistema.', icon: 'bell', route: ROUTES.USUARIO_NOTIFICACOES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) }
-                ] : []),
-                { label: 'Central de ajuda', description: `Encontre respostas para dúvidas e suporte para utilizar o ${SYSTEM.NAME}.`, icon: 'help-circle', route: ROUTES.ETC_AJUDA, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
+                // { label: 'Empresas', description: 'Gerencie os dados e informações de suas empresas cadastradas.', icon: 'briefcase', route: ROUTES.EMPRESA_GERENCIAR, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
+                // ...((me && me?.isUserAdmOfCurrentMainCompany) ? [
+                //     { label: 'Plano e faturas', description: 'Visualize o plano atual e gerencie suas faturas.', icon: 'tag', route: ROUTES.EMPRESA_USO_E_PLANO, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
+                // ] : []),
                 { label: 'Configurações', description: 'Personalize o sistema, altere informações da conta e troque sua senha.', icon: 'settings', route: ROUTES.USUARIO_CONFIGURACOES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
             ]
         },
@@ -115,7 +113,7 @@ export default function Sidebar() {
                             return null;
                         }
 
-                        const isGeral = group.label === 'Geral';
+                        const isGeral = group.label === 'Geral' || group.label === 'Sistema';
 
                         return (
                             <div key={gIndex} className={styles.group}>

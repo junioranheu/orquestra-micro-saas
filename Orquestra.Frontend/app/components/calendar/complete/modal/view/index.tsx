@@ -116,7 +116,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
         setCompanyUsersDropDown(optionsCompanyUsers);
 
-        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', 'fullName');
+        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'userId', ['fullName', 'phone', 'email']);
         setClientsDropDown(optionsClients);
 
         if (type === 'create') {

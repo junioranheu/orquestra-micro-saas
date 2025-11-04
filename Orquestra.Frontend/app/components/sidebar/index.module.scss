@@ -120,10 +120,12 @@
             }
 
             &:hover {
+                border-radius: 0;
                 background-color: #eafce8;
             }
 
             &.active {
+                border-radius: 0;
                 background-color: #d7fec8;
                 font-weight: 500;
 

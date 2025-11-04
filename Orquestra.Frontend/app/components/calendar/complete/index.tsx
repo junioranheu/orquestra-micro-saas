@@ -54,7 +54,8 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
     const localizer = dateFnsLocalizer({
         format,
         parse,
-        startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }), // Segunda-feira;
+        // startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }), // Segunda-feira;
+        startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 0 }), // Domingo;
         getDay,
         locales
     });
