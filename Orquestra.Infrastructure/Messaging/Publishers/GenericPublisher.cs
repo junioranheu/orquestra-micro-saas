@@ -41,7 +41,7 @@ public class GenericPublisher(IRabbitMQConnection connection, ILogger<GenericPub
                 cancellationToken: cancellationToken
             );
 
-            _logger.LogDebug("Mensagem do tipo {MessageType} publicada com sucesso na fila {Queue}", typeof(T).Name, queueName);
+            // _logger.LogDebug("Mensagem do tipo {MessageType} publicada com sucesso na fila {Queue}", typeof(T).Name, queueName);
         }
         catch (Exception ex)
         {

@@ -187,17 +187,17 @@ public static class DependencyInjection
         services.AddSingleton<IGenericPublisher, GenericPublisher>();
 
         // Consumers;
-        services.AddSingleton(sp =>
+        services.AddSingleton(x =>
             new GenericConsumer<EmailInput>(
-                connection: sp.GetRequiredService<IRabbitMQConnection>(),
+                connection: x.GetRequiredService<IRabbitMQConnection>(),
                 queueName: SystemConsts.RabbitMQ.EmailQueue,
-                handleMessage: async (email, ct) =>
+                handleMessage: async (input, cancellationToken) =>
                 {
-                    using IServiceScope scope = sp.CreateScope();
+                    using IServiceScope scope = x.CreateScope();
                     IEmailService emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
-                    await emailService.SendEmail(email);
+                    await emailService.SendEmail(input);
                 },
-                logger: sp.GetRequiredService<ILogger<GenericConsumer<EmailInput>>>(),
+                logger: x.GetRequiredService<ILogger<GenericConsumer<EmailInput>>>(),
                 prefetchCount: 5
             )
         );

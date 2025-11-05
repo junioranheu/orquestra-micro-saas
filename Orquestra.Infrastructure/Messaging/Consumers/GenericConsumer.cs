@@ -42,7 +42,7 @@ public class GenericConsumer<TMessage>(
         {
             if (_channel is not null)
             {
-                _logger.LogWarning("Consumer já iniciado para a fila {Queue}", _queueName);
+                _logger.LogWarning("Consumer já iniciado para a fila {Queue}.", _queueName);
                 return;
             }
 
@@ -74,11 +74,11 @@ public class GenericConsumer<TMessage>(
                 cancellationToken: cancellationToken
             );
 
-            _logger.LogInformation("Consumer iniciado com sucesso para a fila {Queue} com prefetch {Prefetch}", _queueName, _prefetchCount);
+            // _logger.LogInformation("Consumer iniciado com sucesso para a fila {Queue} com prefetch {Prefetch}.", _queueName, _prefetchCount);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao iniciar consumer para a fila {Queue}", _queueName);
+            _logger.LogError(ex, "Erro ao iniciar consumer para a fila {Queue}.", _queueName);
             throw;
         }
         finally
@@ -94,13 +94,13 @@ public class GenericConsumer<TMessage>(
         try
         {
             string body = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-            _logger.LogDebug("Mensagem recebida da fila {Queue} - DeliveryTag: {DeliveryTag}", _queueName, deliveryTag);
+            // _logger.LogDebug("Mensagem recebida da fila {Queue} - DeliveryTag: {DeliveryTag}", _queueName, deliveryTag);
 
             TMessage? message = JsonSerializer.Deserialize<TMessage>(body, _jsonOptions);
 
             if (message is null)
             {
-                _logger.LogWarning("Mensagem inválida recebida na fila {Queue} - DeliveryTag: {DeliveryTag}. Body: {Body}", _queueName, deliveryTag, body);
+                _logger.LogWarning("Mensagem inválida recebida na fila {Queue} - DeliveryTag: {DeliveryTag}. Body: {Body}.", _queueName, deliveryTag, body);
                 await _channel!.BasicAckAsync(deliveryTag, multiple: false);
                 return;
             }
@@ -113,7 +113,7 @@ public class GenericConsumer<TMessage>(
         }
         catch (JsonException jsonEx)
         {
-            _logger.LogError(jsonEx, "Erro ao deserializar mensagem da fila {Queue} - DeliveryTag: {DeliveryTag}", _queueName, deliveryTag);
+            _logger.LogError(jsonEx, "Erro ao deserializar mensagem da fila {Queue} - DeliveryTag: {DeliveryTag}.", _queueName, deliveryTag);
 
             // Mensagem malformada, ACK para não reprocessar;
             await _channel!.BasicAckAsync(deliveryTag, multiple: false);
@@ -121,7 +121,7 @@ public class GenericConsumer<TMessage>(
         catch (Exception ex)
         {
             bool requeue = _shouldRequeue(ex);
-            _logger.LogError(ex, "Erro ao processar mensagem da fila {Queue} - DeliveryTag: {DeliveryTag}. Requeue: {Requeue}", _queueName, deliveryTag, requeue);
+            _logger.LogError(ex, "Erro ao processar mensagem da fila {Queue} - DeliveryTag: {DeliveryTag}. Requeue: {Requeue}.", _queueName, deliveryTag, requeue);
 
             await _channel!.BasicNackAsync(
                 deliveryTag: deliveryTag,
@@ -131,7 +131,7 @@ public class GenericConsumer<TMessage>(
 
             if (!requeue)
             {
-                _logger.LogWarning("Mensagem descartada (não será reprocessada) da fila {Queue} - DeliveryTag: {DeliveryTag}. " + "Considere implementar Dead Letter Queue para mensagens com falha permanente.", _queueName, deliveryTag);
+                _logger.LogWarning("Mensagem descartada (não será reprocessada) da fila {Queue} - DeliveryTag: {DeliveryTag}." + " Considere implementar Dead Letter Queue para mensagens com falha permanente.", _queueName, deliveryTag);
             }
         }
     }
@@ -142,12 +142,12 @@ public class GenericConsumer<TMessage>(
         {
             try
             {
-                _logger.LogInformation("Cancelando consumer da fila {Queue} - ConsumerTag: {ConsumerTag}", _queueName, _consumerTag);
+                // _logger.LogInformation("Cancelando consumer da fila {Queue} - ConsumerTag: {ConsumerTag}.", _queueName, _consumerTag);
                 await _channel.BasicCancelAsync(_consumerTag);
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Erro ao cancelar consumer da fila {Queue}", _queueName);
+                _logger.LogWarning(ex, "Erro ao cancelar consumer da fila {Queue}.", _queueName);
             }
         }
 

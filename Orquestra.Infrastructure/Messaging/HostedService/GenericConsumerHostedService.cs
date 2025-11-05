@@ -11,7 +11,7 @@ public class GenericConsumerHostedService<TMessage>(GenericConsumer<TMessage> co
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Iniciando GenericConsumerHostedService para mensagens do tipo {MessageType}", typeof(TMessage).Name);
+        // _logger.LogInformation("Iniciando GenericConsumerHostedService para mensagens do tipo {MessageType}.", typeof(TMessage).Name);
 
         try
         {
@@ -20,18 +20,18 @@ public class GenericConsumerHostedService<TMessage>(GenericConsumer<TMessage> co
         }
         catch (OperationCanceledException)
         {
-            _logger.LogInformation("GenericConsumerHostedService para {MessageType} sendo encerrado graciosamente", typeof(TMessage).Name);
+            _logger.LogInformation("GenericConsumerHostedService para {MessageType} sendo encerrado graciosamente.", typeof(TMessage).Name);
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex, "Erro fatal no GenericConsumerHostedService para {MessageType}", typeof(TMessage).Name);
+            _logger.LogCritical(ex, "Erro fatal no GenericConsumerHostedService para {MessageType}.", typeof(TMessage).Name);
             throw;
         }
     }
 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Parando GenericConsumerHostedService para {MessageType}", typeof(TMessage).Name);
+        // _logger.LogInformation("Parando GenericConsumerHostedService para {MessageType}.", typeof(TMessage).Name);
 
         await _consumer.DisposeAsync();
         await base.StopAsync(cancellationToken);
