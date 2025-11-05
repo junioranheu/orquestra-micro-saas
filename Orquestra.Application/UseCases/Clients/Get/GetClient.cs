@@ -14,6 +14,11 @@ public sealed class GetClient(Context context, ICheckIfUserIsLinkedCompanyUser c
 
     public async Task<ClientOutput?> Execute(Guid userIdAuth, Guid clientId)
     {
+        if (clientId == Guid.Empty)
+        {
+            throw new ArgumentException($"O parâmetro {nameof(clientId)} está vazio.");
+        }
+
         var result = await _context.Clients.
                      Include(x => x.Company).
                      AsNoTracking().

@@ -116,7 +116,8 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
         setCompanyUsersDropDown(optionsCompanyUsers);
 
-        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'userId', ['fullName', 'phone', 'email']);
+        // const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'userId', ['fullName', 'phone', 'email']);
+        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'userId', 'fullName');
         setClientsDropDown(optionsClients);
 
         if (type === 'create') {
@@ -175,7 +176,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
             return;
         }
 
-        if (!formData.clientId || !formData.dateStart || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus) {
+        if ((!formData.clientId || formData?.clientId === SYSTEM.EMPTY_GUID) || !formData.dateStart || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
         }
@@ -204,6 +205,12 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
         const data = handleLoopFormData(formData);
         const input = data.json as iSchedule;
+
+        console.log('input.usersIds', input.usersIds);
+        console.log('input.clientId', input.clientId);
+        setEditing(true);
+        setSaving(false);
+        return;
 
         //#region Normalizar props
         input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
@@ -374,7 +381,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                     canEdit && (
                                         !editing ? (
                                             <Fragment>
-                                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir' handleFunction={() => handleDisable(event)} isStyleSimple={true} />}
+                                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir evento' handleFunction={() => handleDisable(event)} isStyleSimple={true} />}
                                                 <Button label='Habilitar edição' handleFunction={() => setEditing(true)} isDisabled={formData.scheduleStatus === 2} />
                                             </Fragment>
                                         ) : (
