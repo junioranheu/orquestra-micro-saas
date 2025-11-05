@@ -94,7 +94,10 @@ export default function CardDailyAgenda({ me }: iProps) {
     }
 
     return (
-        <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
+        <div
+            className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}
+            style={{ overflow: !schedules?.length ? 'hidden' : 'auto' }}
+        >
             <h2 className={styles.title}>Resumo da agenda <ArrowUpRight href={ROUTES.EMPRESA_AGENDAMENTOS} tippyContent='Acessar agenda' /></h2>
 
             {

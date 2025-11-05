@@ -13,7 +13,6 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Messaging.Publishers;
-using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
@@ -29,7 +28,6 @@ public record CompanyBaseDependencies(
     IInviteCompanyUser InviteCompanyUser,
     IUpdateCurrentMainCompanyUser UpdateCurrentMainCompanyUser,
     IGetUser GetUser,
-    IEmailService EmailService,
     ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
     ICreateCompanyInvoice CreateCompanyInvoice,
     ICreateIntegrationWhatsApp CreateIntegrationWhatsApp,
@@ -42,7 +40,6 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
     private readonly IEnvService _env = deps.Env;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
     private readonly ICreateVerification _createVerification = deps.CreateVerification;
-    private readonly IEmailService _emailService = deps.EmailService;
     private readonly IGenericPublisher _publisher = deps.Publisher;
 
     public async Task Validate(CompanyInput input, Guid userIdAuth, bool isCreate, bool mustValidateIfNameAlreadyExist, bool mustValidateIfEmailAlreadyExist)
@@ -161,7 +158,7 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values); // TO DO: REMOVER ESSA DEPENDENCIA
+        string bodyHtml = RenderTemplate(SystemConsts.Templates.EmailVerifyCompany, values);
 
         EmailInput input = new()
         {
@@ -171,7 +168,7 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
             Cc = [user.Email]
         };
 
-        await _publisher.PublishAsync(SystemConsts.RabbitMQ.EmailQueue, input);
+        await _publisher.Publish(SystemConsts.RabbitMQ.EmailQueue, input);
     }
 
     #region extras

@@ -12,7 +12,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
@@ -27,7 +27,7 @@ public sealed class InviteCompanyUser(
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IGetUser getUser,
         IGetCompany getCompany,
-        IEmailService emailService
+        IGenericPublisher publisher
     ) : CompanyUserBase(context, checkIfUserIsLinkedCompanyUser), IInviteCompanyUser
 {
     private readonly Context _context = context;
@@ -36,7 +36,7 @@ public sealed class InviteCompanyUser(
     private readonly IEnvService _env = env;
     private readonly IGetUser _getUser = getUser;
     private readonly IGetCompany _getCompany = getCompany;
-    private readonly IEmailService _emailService = emailService;
+    private readonly IGenericPublisher _publisher = publisher;
 
     public async Task Execute(Guid userIdAuth, Guid companyId, string email, bool isFirstAdministrator)
     {
@@ -152,7 +152,7 @@ public sealed class InviteCompanyUser(
             { "[VerifyUrl]", verifyUrl },
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyCompanyUser, values);
+        string bodyHtml = RenderTemplate(SystemConsts.Templates.EmailVerifyCompanyUser, values);
 
         EmailInput input = new()
         {
@@ -161,7 +161,7 @@ public sealed class InviteCompanyUser(
             Body = bodyHtml,
         };
 
-        await _emailService.SendEmail(input);
+        await _publisher.Publish(SystemConsts.RabbitMQ.EmailQueue, input);
     }
     #endregion
 }

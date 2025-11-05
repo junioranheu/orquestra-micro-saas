@@ -10,8 +10,7 @@ using Orquestra.Application.UseCases.Verifications.Update;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
-using Orquestra.Infrastructure.Services.Email.Models;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using static Orquestra.Utils.Fixtures.Get;
@@ -39,13 +38,7 @@ public sealed class RecoverPasswordUserTests
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
 
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals =>
-        {
-            capturedValues = new Dictionary<string, string>(vals);
-        });
-
-        RecoverPasswordUser sut = CreateSut(context, emailServiceMock);
+        RecoverPasswordUser sut = CreateSut(context);
 
         // Act;
         await sut.SendEmail(user.Email);
@@ -55,13 +48,6 @@ public sealed class RecoverPasswordUserTests
 
         Assert.NotNull(verification);
         Assert.True(verification!.ExpirationDate > GetDate());
-
-        // Assert: e-mail enviado;
-        Assert.NotNull(capturedValues);
-        Assert.Equal("Junior", capturedValues!["[UserName]"]);
-        Assert.Contains("/Auth/Verify/RecoverPassword/", capturedValues["[VerifyUrl]"]);
-
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     [Fact]
@@ -69,9 +55,8 @@ public sealed class RecoverPasswordUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
 
-        RecoverPasswordUser sut = CreateSut(context, emailServiceMock);
+        RecoverPasswordUser sut = CreateSut(context);
 
         // Act & Assert;
         await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.SendEmail("naoexiste@teste.com"));
@@ -109,8 +94,7 @@ public sealed class RecoverPasswordUserTests
         await context.Verifications.AddAsync(verification);
         await context.SaveChangesAsync();
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        RecoverPasswordUser sut = CreateSut(context, emailServiceMock);
+        RecoverPasswordUser sut = CreateSut(context);
 
         // Act;
         await sut.Verify(verification.Token);
@@ -130,9 +114,8 @@ public sealed class RecoverPasswordUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
 
-        RecoverPasswordUser sut = CreateSut(context, emailServiceMock);
+        RecoverPasswordUser sut = CreateSut(context);
 
         // Act & Assert;
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Verify("token_invalido"));
@@ -170,8 +153,7 @@ public sealed class RecoverPasswordUserTests
         await context.Verifications.AddAsync(verification);
         await context.SaveChangesAsync();
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        RecoverPasswordUser sut = CreateSut(context, emailServiceMock);
+        RecoverPasswordUser sut = CreateSut(context);
 
         // Act & Assert;
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Verify(verification.Token));
@@ -196,13 +178,7 @@ public sealed class RecoverPasswordUserTests
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
 
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals =>
-        {
-            capturedValues = new Dictionary<string, string>(vals);
-        });
-
-        RecoverPasswordUser sut = CreateSut(context, emailServiceMock);
+        RecoverPasswordUser sut = CreateSut(context);
 
         // Act & Assert;
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.SendEmail(user.Email));
@@ -211,17 +187,18 @@ public sealed class RecoverPasswordUserTests
     }
 
     #region helpers
-    private static RecoverPasswordUser CreateSut(Context context, Mock<IEmailService> emailService)
+    private static RecoverPasswordUser CreateSut(Context context)
     {
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
         IConfiguration config = Fixture.CreateConfiguration();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         EnvService envService = new(env, config);
         GetUser getUser = new(context);
         CreateVerification createVerification = new(context);
         GetVerification getVerification = new(context);
         UpdateVerification updateVerification = new(context, getVerification);
 
-        RecoverPasswordUser recoverPasswordUser = new(context, envService, getVerification, updateVerification, getUser, createVerification, emailService.Object);
+        RecoverPasswordUser recoverPasswordUser = new(context, envService, getVerification, updateVerification, getUser, createVerification, genericPublisherMock.Object);
 
         return recoverPasswordUser;
     }

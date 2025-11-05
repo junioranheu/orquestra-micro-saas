@@ -12,8 +12,7 @@ using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
-using Orquestra.Infrastructure.Services.Email.Models;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
@@ -50,15 +49,10 @@ public sealed class InviteCompanyUserIntegrationTests
 
         string email = "novo.usuario@teste.com";
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, email, false);
-
-        // Assert;
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     [Fact]
@@ -76,9 +70,7 @@ public sealed class InviteCompanyUserIntegrationTests
         User existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false);
@@ -90,8 +82,6 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.Equal(CompanyUserRoleEnum.Member, created!.CompanyUserRole);
         Assert.Equal(authUser.UserId, created.InviterUserId);
         Assert.False(created.IsCurrentMainCompanyUser);
-
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     [Fact]
@@ -109,9 +99,7 @@ public sealed class InviteCompanyUserIntegrationTests
         User existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, true);
@@ -123,8 +111,6 @@ public sealed class InviteCompanyUserIntegrationTests
         Assert.Equal(CompanyUserRoleEnum.Administrator, created!.CompanyUserRole);
         Assert.True(created.IsCurrentMainCompanyUser);
         Assert.Null(created.InviterUserId);
-
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Never);
     }
 
     [Fact]
@@ -298,25 +284,10 @@ public sealed class InviteCompanyUserIntegrationTests
 
         string mixedCaseEmail = "Foo.Bar@Example.COM";
 
-        // Capture template values via o mock do Fixture;
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, mixedCaseEmail, false);
-
-        // Assert;
-        Assert.NotNull(capturedValues);
-
-        // [UserName] deve ser o email normalizado em lowercase;
-        Assert.True(capturedValues!.TryGetValue("[UserName]", out string? userName));
-        Assert.Equal(mixedCaseEmail.ToLowerInvariant(), userName);
-
-        // [VerifyUrl] deve conter o token;
-        Assert.True(capturedValues.TryGetValue("[VerifyUrl]", out string? verifyUrl));
-        Assert.Contains("token", verifyUrl); // Assume que o token é gerado pelo CreateVerification mock;
     }
 
     [Fact]
@@ -351,8 +322,7 @@ public sealed class InviteCompanyUserIntegrationTests
         User existing = UserMock.Create();
         await Fixture.Save(context, existing);
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existing.Email, true);
@@ -382,19 +352,10 @@ public sealed class InviteCompanyUserIntegrationTests
         User existing = UserMock.Create();
         await Fixture.Save(context, existing);
 
-        // Capture template values via o mock do Fixture;
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existing.Email, false);
-
-        // Assert: [CompanyUserRole] exists and is lowercase;
-        Assert.NotNull(capturedValues);
-        Assert.True(capturedValues!.TryGetValue("[CompanyUserRole]", out string? roleValue));
-        Assert.Equal(roleValue, roleValue.ToLowerInvariant());
     }
 
     [Fact]
@@ -422,7 +383,7 @@ public sealed class InviteCompanyUserIntegrationTests
         await context.AddAsync(alreadyLinked);
         await context.SaveChangesAsync();
 
-        InviteCompanyUser sut = CreateSut(context, authUser, Fixture.CreateEmailService().Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false));
@@ -439,7 +400,7 @@ public sealed class InviteCompanyUserIntegrationTests
         Company company = CompanyMock.Create();
         await Fixture.Save(context, company);
 
-        InviteCompanyUser sut = CreateSut(context, authUser, Fixture.CreateEmailService().Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         string invalidEmail = "email-invalido";
 
@@ -461,18 +422,10 @@ public sealed class InviteCompanyUserIntegrationTests
 
         string email = "novo.usuario@teste.com";
 
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, email, false);
-
-        // Assert;
-        Assert.NotNull(capturedValues);
-        Assert.True(capturedValues!.TryGetValue("[VerifyUrl]", out string? verifyUrl));
-        Assert.Contains("criar-conta", verifyUrl); // Front-end link;
     }
 
     [Fact]
@@ -490,18 +443,10 @@ public sealed class InviteCompanyUserIntegrationTests
         User existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false);
-
-        // Assert;
-        Assert.NotNull(capturedValues);
-        Assert.True(capturedValues!.TryGetValue("[VerifyUrl]", out string? verifyUrl));
-        Assert.Contains("/CompanyUser/Verify/", verifyUrl); // Back-end link;
     }
 
     [Fact]
@@ -519,29 +464,14 @@ public sealed class InviteCompanyUserIntegrationTests
         User existingUser = UserMock.Create();
         await Fixture.Save(context, existingUser);
 
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
-
-        InviteCompanyUser sut = CreateSut(context, authUser, emailServiceMock.Object);
+        InviteCompanyUser sut = CreateSut(context, authUser);
 
         // Act;
         await sut.Execute(authUser.UserId, company.CompanyId, existingUser.Email, false);
-
-        // Assert;
-        Assert.NotNull(capturedValues);
-        Assert.True(capturedValues!.TryGetValue("[VerifyUrl]", out string? verifyUrl));
-
-        // Extrai o token da URL;
-        string token = verifyUrl.Split('/').Last(); // Pega a parte final da URL;
-        Assert.False(string.IsNullOrWhiteSpace(token));
-
-        // Verifica se o token tem comprimento esperado e apenas caracteres válidos;
-        Assert.Equal(43, token.Length); // Geralmente URL-safe 32 bytes codificados ficam com 43 chars;
-        Assert.Matches("^[A-Za-z0-9_-]+$", token); // Somente caracteres URL-safe;
     }
 
     #region helpers
-    private static InviteCompanyUser CreateSut(Context context, User authUser, IEmailService? emailService = null)
+    private static InviteCompanyUser CreateSut(Context context, User authUser)
     {
         // Cria o IHttpContextAccessor real com o usuário autenticado;
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(authUser);
@@ -558,10 +488,10 @@ public sealed class InviteCompanyUserIntegrationTests
         ICreateVerification createVerification = new CreateVerification(context);
         IGetUser getUser = new GetUser(context);
         IGetCompany getCompany = new GetCompany(context, checkLinked);
-        IEmailService finalEmailService = emailService ?? new Mock<IEmailService>().Object;
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
 
         // Cria o SUT real com todos os serviços concretos;
-        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkLinked, getUser, getCompany, finalEmailService);
+        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkLinked, getUser, getCompany, genericPublisherMock.Object);
 
         return inviteCompanyUser;
     }

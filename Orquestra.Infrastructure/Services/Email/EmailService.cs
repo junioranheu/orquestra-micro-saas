@@ -55,38 +55,4 @@ public class EmailService(EmailSettings settings, IWebHostEnvironment env) : IEm
 
         await client.SendMailAsync(mailMessage);
     }
-
-    /// <summary>
-    /// Carrega um arquivo de template HTML e substitui os placeholders pelos valores fornecidos.
-    /// Dictionary<string, string> values = new()
-    /// {
-    ///    { "[UserName]", "Junior" },
-    ///    { "[CompanyName]", "Orquestra" },
-    ///    { "[ConfirmLink]", "orquestra.com/confirm?token=123" }
-    /// };
-    /// </summary>
-    /// <param name="templatePath">Caminho completo do arquivo HTML do template.</param>
-    /// <param name="values">Dicionário contendo os placeholders e seus respectivos valores. 
-    /// Cada chave deve corresponder a um placeholder no template, por exemplo [Name].</param>
-    /// <returns>Retorna uma string com o conteúdo do template já com os placeholders substituídos pelos valores.</returns>
-    public string RenderTemplate(string templateName, Dictionary<string, string> values)
-    {
-        string basePath = Path.Combine(AppContext.BaseDirectory, "Services", "Email", "Templates");
-        string templatePath = Path.Combine(basePath, templateName);
-
-        if (!File.Exists(templatePath))
-        {
-            throw new FileNotFoundException($"Template não encontrado: {templatePath}");
-        }
-
-        string template = File.ReadAllText(templatePath);
-
-        // Substitui os placeholders;
-        foreach (var kv in values)
-        {
-            template = template.Replace(kv.Key, kv.Value);
-        }
-
-        return template;
-    }
 }

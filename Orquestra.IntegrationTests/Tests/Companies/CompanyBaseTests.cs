@@ -14,6 +14,7 @@ using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
@@ -469,14 +470,14 @@ public sealed class CompanyBaseTests
                 Used = false
             });
 
-        Mock<IEmailService> emailServiceMock = new();
-        emailServiceMock.Setup(x => x.SendEmail(It.IsAny<EmailInput>())).Returns(Task.CompletedTask);
+        Mock<IGenericPublisher> genericPublisherMock = new();
+        genericPublisherMock.Setup(x => x.Publish(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         GetUser getUser = new(context);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, Fixture.CreateIHttpContextAccessor(user));
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
-        InviteCompanyUser inviteCompanyUser = new(context, envMock.Object, createVerificationMock.Object, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
+        InviteCompanyUser inviteCompanyUser = new(context, envMock.Object, createVerificationMock.Object, checkIfUserIsLinkedCompanyUser, getUser, getCompany, genericPublisherMock.Object);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
 
         ICreateCompanyInvoice createCompanyInvoice = new Mock<ICreateCompanyInvoice>().Object;
@@ -489,10 +490,10 @@ public sealed class CompanyBaseTests
             inviteCompanyUser,
             updateCurrentMainCompanyUser,
             getUser,
-            emailServiceMock.Object,
             checkIfUserIsLinkedCompanyUser,
             createCompanyInvoice,
-            createIntegrationWhatsApp
+            createIntegrationWhatsApp,
+            genericPublisherMock.Object
         ));
 
         return companyBase;

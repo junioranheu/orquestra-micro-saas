@@ -18,7 +18,7 @@ using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
@@ -202,10 +202,10 @@ public sealed class ResendVerifyEmailCompanyTests
         return (context, user, company);
     }
 
-    private static ResendVerifyEmailCompany CreateSut(Context context, User user, Mock<IEmailService>? emailServiceMock = null)
+    private static ResendVerifyEmailCompany CreateSut(Context context, User user)
     {
         IConfiguration config = Fixture.CreateConfiguration();
-        emailServiceMock ??= Fixture.CreateEmailService();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         EnvService envService = new(env, config);
@@ -214,9 +214,9 @@ public sealed class ResendVerifyEmailCompanyTests
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
-        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
+        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, genericPublisherMock.Object);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, genericPublisherMock.Object);
 
         Mock<ISmsService> smsServiceMock = new();
         smsServiceMock.Setup(x => x.SendSms(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>())).ReturnsAsync("OK");
@@ -234,10 +234,10 @@ public sealed class ResendVerifyEmailCompanyTests
             inviteCompanyUser,
             updateCurrentMainCompanyUser,
             getUser,
-            emailServiceMock.Object,
             checkIfUserIsLinkedCompanyUser,
             createCompanyInvoice,
-            createIntegrationWhatsApp
+            createIntegrationWhatsApp,
+            genericPublisherMock.Object
         ));
 
         return resendVerifyEmailCompany;

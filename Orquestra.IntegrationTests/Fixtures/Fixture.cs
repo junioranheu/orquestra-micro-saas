@@ -10,6 +10,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Auth.Models;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using System.Security.Claims;
@@ -111,25 +112,17 @@ public static class Fixture
     {
         Mock<IEmailService> emailServiceMock = new();
 
-        emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>())).Returns("<html>fake</html>");
         emailServiceMock.Setup(x => x.SendEmail(It.IsAny<EmailInput>())).Returns(Task.CompletedTask);
 
         return emailServiceMock;
     }
 
-    public static Mock<IEmailService> CreateEmailService(Action<Dictionary<string, string>>? capture = null)
+    public static Mock<IGenericPublisher> CreateGenericPublisher()
     {
-        Mock<IEmailService> emailServiceMock = new();
+        Mock<IGenericPublisher> genericPublisherMock = new();
+        genericPublisherMock.Setup(x => x.Publish(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        emailServiceMock.Setup(x => x.RenderTemplate(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>())).
-            Callback<string, Dictionary<string, string>>((tpl, vals) =>
-            {
-                capture?.Invoke(vals);
-            }).Returns("<html>fake</html>");
-
-        emailServiceMock .Setup(x => x.SendEmail(It.IsAny<EmailInput>())).Returns(Task.CompletedTask);
-
-        return emailServiceMock;
+        return genericPublisherMock;
     }
 
     public static IOptions<JwtSettings> CreateJwtOptions()

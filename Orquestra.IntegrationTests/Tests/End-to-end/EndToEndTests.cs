@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Orquestra.Application.UseCases.Companies.Base;
 using Orquestra.Application.UseCases.Companies.Create;
+using Orquestra.Application.UseCases.Companies.Get;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Companies.Verify;
 using Orquestra.Application.UseCases.CompanyInvoices.Create;
@@ -24,8 +25,7 @@ using Orquestra.Application.UseCases.Verifications.Update;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
-using Orquestra.Infrastructure.Services.Email.Models;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
@@ -40,13 +40,13 @@ public sealed class EndToEndTests
     {
         // Arrange - Context + common fixtures;
         Context context = Fixture.CreateContext();
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         EnvService envService = new(Fixture.CreateDevelopmentEnvironment(), Fixture.CreateConfiguration());
         CreateVerification createVerification = new(context);
         GetUser getUser = new(context);
 
         // ---------- 1) CREATE USER 
-        CreateUser createUser = CreateUserSut(context, envService, createVerification, emailServiceMock.Object, getUser);
+        CreateUser createUser = CreateUserSut(context, envService, createVerification, genericPublisherMock.Object, getUser);
 
         UserInput newUserInput = new()
         {
@@ -87,13 +87,13 @@ public sealed class EndToEndTests
         }
 
         // ---------- 2) CREATE COMPANY (associa o usuário como primeiro administrador);
-        CreateCompany createCompany = CreateCompanySut(context, envService, createVerification, emailServiceMock, createdUserAdapt);
+        CreateCompany createCompany = CreateCompanySut(context, envService, createVerification, genericPublisherMock, createdUserAdapt);
 
         CompanyInput companyInput = new()
         {
             Name = "Orquestra Test Co",
             Email = $"contato.{Guid.NewGuid().ToString()[..6]}@empresa.test",
-            Phone = "11999999999",
+            Phone = "12982716339",
             Address = "Rua Bartholomeu do Chango",
             City = "São Paulo",
             State = "SP",
@@ -141,7 +141,7 @@ public sealed class EndToEndTests
         User invitedUser = UserMock.Create();
         await Fixture.Save(context, invitedUser);
 
-        InviteCompanyUser inviteCompanyUser = InviteCompanyUserSut(context, envService, createVerification, emailServiceMock.Object, createdUserAdapt);
+        InviteCompanyUser inviteCompanyUser = InviteCompanyUserSut(context, envService, createVerification, genericPublisherMock.Object, createdUserAdapt);
 
         // Execute invite (this will create CompanyUser and possibly verification+email);
         await inviteCompanyUser.Execute(createdUser.UserId, dbCompany.CompanyId, invitedUser.Email, isFirstAdministrator: false);
@@ -190,33 +190,12 @@ public sealed class EndToEndTests
         Assert.Equal(schedule.DateStart, dbSchedule.DateStart);
         Assert.Equal(schedule.DateEnd, dbSchedule.DateEnd);
         Assert.Equal(dbCustomer.ClientId, dbSchedule.ClientId);
-
-        //// ---------- 6) CRIA UM INVOICE via CreateCompanyInvoice;
-        //CreateCompanyInvoice createCompanyInvoice = CreateCompanyInvoiceSut(context, createdUserAdapt);
-
-        //ModuleEnum[] newModules = [ModuleEnum.Scheduling];
-        //CompanyInvoice? invoice = await createCompanyInvoice.Execute(createdUser.UserId, dbCompany.CompanyId, dbCompany.PlanType.GetValueOrDefault(), isCreateCompany: true);
-
-        //// Invoice deve existir (não nulo) e persistido;
-        //Assert.NotNull(invoice);
-        //CompanyInvoice? dbInvoice = await context.CompanyInvoices.FirstOrDefaultAsync(i => i.CompanyInvoiceId == invoice.CompanyInvoiceId);
-        //Assert.NotNull(dbInvoice);
-
-        // ---------- 7) VERIFICAÇÕES EXTRAS;
-        //// 7.1) Invoice amount > 0;
-        //Assert.True(invoice.Amount > 0, "Invoice amount should be greater than 0");
-
-        // 7.2) Verifica que foi chamado pelo menos X vezes;
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.AtLeast(3));
-
-        //// 7.3) Verifica chamada específica para invoice;
-        //emailServiceMock.Verify(x => x.SendEmail(It.Is<string>(to => to == dbCompany.Email), It.Is<string>(subject => subject.Contains("Nova fatura")), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>?>()), Times.Once);
     }
 
     #region helpers
-    private static CreateUser CreateUserSut(Context context, IEnvService envService, CreateVerification createVerification, IEmailService emailService, GetUser getUser)
+    private static CreateUser CreateUserSut(Context context, IEnvService envService, CreateVerification createVerification, IGenericPublisher genericPublisher, GetUser getUser)
     {
-        CreateUser createUser = new(context, envService, createVerification, emailService, getUser);
+        CreateUser createUser = new(context, envService, createVerification, getUser, genericPublisher);
 
         return createUser;
     }
@@ -230,17 +209,17 @@ public sealed class EndToEndTests
         return verifyUser;
     }
 
-    private static CreateCompany CreateCompanySut(Context context, IEnvService envService, CreateVerification createVerification, Mock<IEmailService> emailServiceMock, User createdUser)
+    private static CreateCompany CreateCompanySut(Context context, IEnvService envService, CreateVerification createVerification, Mock<IGenericPublisher> genericPublisherMock, User createdUser)
     {
         // Monta as dependências usadas pelo CreateCompany (repete padrão que você tem nos outros testes)
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(createdUser);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetUser getUser = new(context);
-        var getCompany = new Application.UseCases.Companies.Get.GetCompany(context, checkIfUserIsLinkedCompanyUser);
-        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, emailServiceMock.Object);
+        GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
+        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, genericPublisherMock.Object);
         UpdateCurrentMainCompanyUser updateCurrentMainCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, genericPublisherMock.Object);
 
         Mock<ISmsService> smsServiceMock = new();
         smsServiceMock.Setup(x => x.SendSms(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>())).ReturnsAsync("OK");
@@ -258,10 +237,10 @@ public sealed class EndToEndTests
            inviteCompanyUser,
            updateCurrentMainCompanyUser,
            getUser,
-           emailServiceMock.Object,
            checkIfUserIsLinkedCompanyUser,
            createCompanyInvoice,
-           createIntegrationWhatsApp
+           createIntegrationWhatsApp,
+           genericPublisherMock.Object
        ));
 
         return createCompany;
@@ -276,15 +255,15 @@ public sealed class EndToEndTests
         return verifyCompany;
     }
 
-    private static InviteCompanyUser InviteCompanyUserSut(Context context, IEnvService envService, CreateVerification createVerification, IEmailService emailService, User currentUser)
+    private static InviteCompanyUser InviteCompanyUserSut(Context context, IEnvService envService, CreateVerification createVerification, IGenericPublisher publish, User currentUser)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(currentUser);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetUser getUser = new(context);
-        var getCompany = new Application.UseCases.Companies.Get.GetCompany(context, checkIfUserIsLinked);
+        GetCompany getCompany = new(context, checkIfUserIsLinked);
 
-        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinked, getUser, getCompany, emailService);
+        InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinked, getUser, getCompany, publish);
 
         return inviteCompanyUser;
     }
@@ -296,19 +275,6 @@ public sealed class EndToEndTests
         VerifyCompanyUser verifyCompanyUser = new(context, getVerification, updateVerification);
 
         return verifyCompanyUser;
-    }
-
-    private static CreateCompanyInvoice CreateCompanyInvoiceSut(Context context, User currentUser)
-    {
-        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(currentUser);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
-        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
-        EnvService envService = new(Fixture.CreateDevelopmentEnvironment(), Fixture.CreateConfiguration());
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinked, envService, emailServiceMock.Object);
-
-        return createCompanyInvoice;
     }
     #endregion
 }

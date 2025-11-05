@@ -4,7 +4,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
@@ -16,13 +16,13 @@ public sealed class CreateCompanyInvoice(
         Context context,
         ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser,
         IEnvService env,
-        IEmailService emailService
+        IGenericPublisher publisher
     ) : ICreateCompanyInvoice
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
     private readonly IEnvService _env = env;
-    private readonly IEmailService _emailService = emailService;
+    private readonly IGenericPublisher _publisher = publisher;
 
     public async Task<CompanyInvoice?> Execute(Guid userIdAuth, Guid companyId, PlanTypeEnum planType, bool isCreateCompany = false)
     {
@@ -88,7 +88,7 @@ public sealed class CreateCompanyInvoice(
             { "[PaymentUrl]", paymentUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailCreateInvoice, values);
+        string bodyHtml = RenderTemplate(SystemConsts.Templates.EmailCreateInvoice, values);
 
         EmailInput input = new()
         {
@@ -97,7 +97,7 @@ public sealed class CreateCompanyInvoice(
             Body = bodyHtml
         };
 
-        await _emailService.SendEmail(input);
+        await _publisher.Publish(SystemConsts.RabbitMQ.EmailQueue, input);
     }
     #endregion
 }

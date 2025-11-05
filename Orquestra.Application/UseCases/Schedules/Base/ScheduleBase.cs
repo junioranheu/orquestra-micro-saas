@@ -10,7 +10,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email.Models;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
@@ -22,7 +22,7 @@ public record ScheduleBaseDependencies(
     ICheckIfUserIsLinkedCompanyUser CheckIfUserIsLinkedCompanyUser,
     IGetClient GetClient,
     IGetCompany GetCompany,
-    IEmailService EmailService
+    IGenericPublisher Publisher
 );
 
 public partial class ScheduleBase(ScheduleBaseDependencies deps)
@@ -31,7 +31,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;
     private readonly IGetClient _getClient = deps.GetClient;
     private readonly IGetCompany _getCompany = deps.GetCompany;
-    private readonly IEmailService _emailService = deps.EmailService;
+    private readonly IGenericPublisher _publisher = deps.Publisher;
 
     public async Task Validate(ScheduleInput input, Guid userIdAuth, bool isCreate, bool mustValidateDate = true)
     {
@@ -303,7 +303,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             title = isCreate ? $"{schedule.CustomTitle} — {scheduleDateTime} — {client}" : $"Atualização — {schedule.CustomTitle} — {scheduleDateTime} — {client}";
         }
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailSchedule, values);
+        string bodyHtml = RenderTemplate(SystemConsts.Templates.EmailSchedule, values);
 
         EmailInput input = new()
         {
@@ -313,7 +313,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
             Cc = membersEmails
         };
 
-        await _emailService.SendEmail(input);
+        await _publisher.Publish(SystemConsts.RabbitMQ.EmailQueue, input);
     }
 
     #region extras

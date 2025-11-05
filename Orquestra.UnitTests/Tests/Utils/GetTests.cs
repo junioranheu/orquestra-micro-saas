@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Orquestra.Domain.Consts;
-using Orquestra.Infrastructure.Services.Sms;
 using System.ComponentModel;
 using static Orquestra.Utils.Fixtures.Get;
 

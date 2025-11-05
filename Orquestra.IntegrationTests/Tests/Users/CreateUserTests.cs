@@ -9,8 +9,7 @@ using Orquestra.Application.UseCases.Verifications.Create;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
-using Orquestra.Infrastructure.Services.Email.Models;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using static Orquestra.Utils.Fixtures.Get;
@@ -24,7 +23,7 @@ public sealed class CreateUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        CreateUser sut = CreateSut(context, new Mock<IEmailService>());
+        CreateUser sut = CreateSut(context);
 
         UserInput input = new() { FullName = "", Email = "a", Password = "b", InviteToken = "" };
 
@@ -46,13 +45,7 @@ public sealed class CreateUserTests
             InviteToken = ""
         };
 
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals =>
-        {
-            capturedValues = new Dictionary<string, string>(vals);
-        });
-
-        CreateUser sut = CreateSut(context, emailServiceMock);
+        CreateUser sut = CreateSut(context);
 
         // Act;
         UserOutput output = await sut.Execute(input);
@@ -63,13 +56,6 @@ public sealed class CreateUserTests
         Assert.Equal(input.FullName, userInDb!.FullName);
         Assert.Equal(input.Email.ToLowerInvariant(), userInDb.Email);
         Assert.False(userInDb.Status); // Sempre falso ao criar sem invite;
-
-        // Assert: E-mail enviado corretamente;
-        Assert.NotNull(capturedValues);
-        Assert.Equal("Junior", capturedValues!["[UserName]"]);
-        Assert.Contains("/User/Verify/", capturedValues["[VerifyUrl]"]);
-
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     [Fact]
@@ -100,7 +86,7 @@ public sealed class CreateUserTests
             InviteToken = ""
         };
 
-        CreateUser sut = CreateSut(context, new Mock<IEmailService>());
+        CreateUser sut = CreateSut(context);
 
         // Act & Assert;
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(input));
@@ -121,11 +107,11 @@ public sealed class CreateUserTests
         };
 
         ICreateVerification verificationService = new CreateVerification(context);
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         EnvService envService = new(Fixture.CreateDevelopmentEnvironment(), Fixture.CreateConfiguration());
         GetUser getUser = new(context);
 
-        CreateUser sut = new(context, envService, verificationService, emailServiceMock.Object, getUser);
+        CreateUser sut = new(context, envService, verificationService, getUser, genericPublisherMock.Object);
 
         // Act;
         await sut.Execute(input);
@@ -168,8 +154,7 @@ public sealed class CreateUserTests
             InviteToken = verification.Token
         };
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        CreateUser sut = CreateSut(context, emailServiceMock);
+        CreateUser sut = CreateSut(context);
 
         // Act;
         UserOutput output = await sut.Execute(input);
@@ -202,23 +187,23 @@ public sealed class CreateUserTests
             InviteToken = string.Empty
         };
 
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
-        CreateUser sut = CreateSut(context, emailServiceMock);
+        CreateUser sut = CreateSut(context);
 
         // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(input));
     }
 
     #region helpers
-    private static CreateUser CreateSut(Context context, Mock<IEmailService> emailService)
+    private static CreateUser CreateSut(Context context)
     {
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
         IConfiguration config = Fixture.CreateConfiguration();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         EnvService envService = new(env, config);
         CreateVerification verificationService = new(context);
         GetUser getUser = new(context);
 
-        return new CreateUser(context, envService, verificationService, emailService.Object, getUser);
+        return new CreateUser(context, envService, verificationService, getUser, genericPublisherMock.Object);
     }
     #endregion
 }

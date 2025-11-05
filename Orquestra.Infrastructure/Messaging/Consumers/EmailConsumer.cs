@@ -3,6 +3,7 @@ using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
@@ -19,25 +20,25 @@ public class EmailConsumer(IRabbitMQConnection connection, IEmailService emailSe
         IChannel channel = _connection.Channel;
 
         await channel.QueueDeclareAsync(_queueName, durable: true, exclusive: false, autoDelete: false, cancellationToken: cancellationToken);
-        await channel.BasicQosAsync(0, 1, false, cancellationToken);
-
+        await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false, cancellationToken); // Define quantas mensagens são enviadas por "vôo";
         AsyncEventingBasicConsumer consumer = new(channel);
 
-        consumer.ReceivedAsync += async (sender, ea) =>
+        consumer.ReceivedAsync += async (sender, x) =>
         {
             try
             {
-                string message = Encoding.UTF8.GetString(ea.Body.ToArray());
+                string message = Encoding.UTF8.GetString(x.Body.ToArray());
                 await ProcessEmailAsync(message);
-                await channel.BasicAckAsync(ea.DeliveryTag, false);
+                await channel.BasicAckAsync(deliveryTag: x.DeliveryTag, multiple: false); // Terminou de processar a mensagem com sucesso;
             }
-            catch
+            catch (Exception ex)
             {
-                await channel.BasicNackAsync(ea.DeliveryTag, false, true);
+                bool shouldRequeue = ex is TimeoutException || ex is HttpRequestException || ex is IOException || ex is TaskCanceledException || ex is OperationCanceledException || ex is SocketException;
+                await channel.BasicNackAsync(deliveryTag: x.DeliveryTag, multiple: false, requeue: shouldRequeue); // Não foi possível processar a mensagem. É definido para reentrar na fila;
             }
         };
 
-        await channel.BasicConsumeAsync(_queueName, autoAck: false, consumer, cancellationToken);
+        await channel.BasicConsumeAsync(queue: _queueName, autoAck: false, consumer, cancellationToken);
     }
 
     private async Task ProcessEmailAsync(string message)

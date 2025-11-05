@@ -10,7 +10,7 @@ using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 using static Orquestra.Utils.Fixtures.Get;
@@ -475,14 +475,14 @@ public sealed class CreateScheduleTests
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
 
         CreateSchedule getSchedule = new(new ScheduleBaseDependencies(
             context,
             checkIfUserIsLinkedCompanyUser,
             getClient,
             getCompany,
-            emailServiceMock.Object
+            genericPublisherMock.Object
         ));
 
         return getSchedule;

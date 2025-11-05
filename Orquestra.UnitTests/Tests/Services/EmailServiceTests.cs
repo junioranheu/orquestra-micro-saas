@@ -4,13 +4,12 @@ using Moq;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Tests.Services;
 
 public sealed class EmailServiceTests
 {
-    private readonly IEmailService _emailService;
-
     public EmailServiceTests()
     {
         // Configura DI real;
@@ -23,9 +22,6 @@ public sealed class EmailServiceTests
         Mock<IWebHostEnvironment> envMock = new();
         envMock.SetupGet(x => x.ContentRootPath).Returns(AppContext.BaseDirectory);
         services.AddSingleton(envMock.Object);
-
-        ServiceProvider provider = services.BuildServiceProvider();
-        _emailService = provider.GetRequiredService<IEmailService>();
     }
 
     [Fact]
@@ -44,7 +40,7 @@ public sealed class EmailServiceTests
         };
 
         // Act;
-        string result = _emailService.RenderTemplate(templateName, values);
+        string result = RenderTemplate(templateName, values);
 
         // Assert;
         Assert.Contains(userName, result);
@@ -58,7 +54,7 @@ public sealed class EmailServiceTests
         Dictionary<string, string> values = [];
 
         // Act & Assert;
-        Assert.Throws<FileNotFoundException>(() => _emailService.RenderTemplate(templateName, values));
+        Assert.Throws<FileNotFoundException>(() => RenderTemplate(templateName, values));
     }
 
     [Theory]

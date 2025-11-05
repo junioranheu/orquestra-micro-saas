@@ -10,6 +10,7 @@ using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
@@ -193,11 +194,11 @@ public sealed class UpdatePlanTypeCompanyTests
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
         IConfiguration config = Fixture.CreateConfiguration();
-        Mock<IEmailService> emailService = Fixture.CreateEmailService();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         EnvService envService = new(env, config);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailService.Object);
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, genericPublisherMock.Object);
 
         UpdatePlanTypeCompany updatePlanTypeCompany = new(context, checkIfUserIsLinkedCompanyUser, createCompanyInvoice);
 

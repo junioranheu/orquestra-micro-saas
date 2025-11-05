@@ -8,7 +8,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
@@ -24,7 +24,7 @@ public sealed class RecoverPasswordUser(
         IUpdateVerification updateVerification,
         IGetUser getUser,
         ICreateVerification createVerification,
-        IEmailService emailService
+        IGenericPublisher publisher
     ) : IRecoverPasswordUser
 {
     private readonly Context _context = context;
@@ -33,7 +33,7 @@ public sealed class RecoverPasswordUser(
     private readonly IUpdateVerification _updateVerification = updateVerification;
     private readonly IGetUser _getUser = getUser;
     private readonly ICreateVerification _createVerification = createVerification;
-    private readonly IEmailService _emailService = emailService;
+    private readonly IGenericPublisher _publisher = publisher;
 
     public async Task SendEmail(string email)
     {
@@ -94,7 +94,7 @@ public sealed class RecoverPasswordUser(
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailResetPassword, values);
+        string bodyHtml = RenderTemplate(SystemConsts.Templates.EmailResetPassword, values);
 
         EmailInput input = new()
         {
@@ -103,7 +103,7 @@ public sealed class RecoverPasswordUser(
             Body = bodyHtml
         };
 
-        await _emailService.SendEmail(input);
+        await _publisher.Publish(SystemConsts.RabbitMQ.EmailQueue, input);
     }
     #endregion
 }

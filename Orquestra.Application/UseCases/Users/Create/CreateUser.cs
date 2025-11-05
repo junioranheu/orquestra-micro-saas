@@ -8,7 +8,7 @@ using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
@@ -21,14 +21,14 @@ public sealed class CreateUser(
         Context context,
         IEnvService env,
         ICreateVerification createVerification,
-        IEmailService emailService,
-        IGetUser getUser
+        IGetUser getUser,
+        IGenericPublisher publisher
     ) : UserBase(getUser), ICreateUser
 {
     private readonly Context _context = context;
     private readonly IEnvService _env = env;
     private readonly ICreateVerification _createVerification = createVerification;
-    private readonly IEmailService _emailService = emailService;
+    private readonly IGenericPublisher _publisher = publisher;
 
     public async Task<UserOutput> Execute(UserInput input)
     {
@@ -103,7 +103,7 @@ public sealed class CreateUser(
             { "[VerifyUrl]", verifyUrl }
         };
 
-        string bodyHtml = _emailService.RenderTemplate(SystemConsts.Templates.EmailVerifyUser, values);
+        string bodyHtml = RenderTemplate(SystemConsts.Templates.EmailVerifyUser, values);
 
         EmailInput input = new()
         {
@@ -112,7 +112,7 @@ public sealed class CreateUser(
             Body = bodyHtml,
         };
 
-        await _emailService.SendEmail(input);
+        await _publisher.Publish(SystemConsts.RabbitMQ.EmailQueue, input);
     }
 
     private async Task LinkUser(User user, string inviteToken)

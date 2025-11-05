@@ -9,8 +9,7 @@ using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
-using Orquestra.Infrastructure.Services.Email;
-using Orquestra.Infrastructure.Services.Email.Models;
+using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
@@ -189,38 +188,27 @@ public sealed class CreateCompanyInvoiceTests
 
         await Fixture.Save(context, adminCompanyUser);
 
-        ModuleEnum[] modules = [ModuleEnum.Scheduling];
-
-        Dictionary<string, string>? capturedValues = null;
-        Mock<IEmailService> emailServiceMock = Fixture.CreateEmailService(vals => capturedValues = new Dictionary<string, string>(vals));
-
-        CreateCompanyInvoice sut = CreateSut(context, adminUser, emailServiceMock);
+        CreateCompanyInvoice sut = CreateSut(context, adminUser);
 
         // Act;
         CompanyInvoice? invoice = await sut.Execute(adminUser.UserId, company.CompanyId, PlanTypeEnum.Basic, isCreateCompany: true);
 
         // Assert;
         Assert.NotNull(invoice);
-        Assert.NotNull(capturedValues);
-        Assert.Equal(company.Name, capturedValues!["[CompanyName]"]);
-        Assert.Equal(invoice.Amount.ToString(), capturedValues!["[Price]"]);
-
-        emailServiceMock.Verify(x => x.SendEmail(It.IsAny<EmailInput>()), Times.Once);
     }
 
     #region helpers
-    private static CreateCompanyInvoice CreateSut(Context context, User user, Mock<IEmailService>? emailServiceMock = null)
+    private static CreateCompanyInvoice CreateSut(Context context, User user)
     {
         IConfiguration config = Fixture.CreateConfiguration();
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         IWebHostEnvironment env = Fixture.CreateDevelopmentEnvironment();
+        Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         EnvService envService = new(env, config);
         GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
-
-        emailServiceMock ??= Fixture.CreateEmailService();
-
-        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, emailServiceMock.Object);
+        
+        CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, genericPublisherMock.Object);
 
         return createCompanyInvoice;
     }

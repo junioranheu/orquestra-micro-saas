@@ -2,6 +2,3 @@
 Resolver os "TO DO";
 Atualizar o sistema para o .NET 10 (dia 11/11); 
 Desenvolver os outros módulos;
-
-Remover dependência do _emailService.RenderTemplate de dentro do service
-Trocar todos os _emailService pelo RabbitMQ
