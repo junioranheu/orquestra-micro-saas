@@ -187,17 +187,23 @@ public static class DependencyInjection
         services.AddSingleton<IGenericPublisher, GenericPublisher>();
 
         // Consumers;
-        services.AddSingleton(x =>
+        services.AddSingleton(sp =>
             new GenericConsumer<EmailInput>(
-                connection: x.GetRequiredService<IRabbitMQConnection>(),
+                connection: sp.GetRequiredService<IRabbitMQConnection>(),
                 queueName: SystemConsts.RabbitMQ.EmailQueue,
-                handleMessage: async (email, ct) => await x.GetRequiredService<IEmailService>().SendEmail(email),
+                handleMessage: async (email, ct) =>
+                {
+                    using IServiceScope scope = sp.CreateScope();
+                    IEmailService emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+                    await emailService.SendEmail(email);
+                },
+                logger: sp.GetRequiredService<ILogger<GenericConsumer<EmailInput>>>(),
                 prefetchCount: 5
             )
         );
 
         // Hosted services;
-        services.AddHostedService(x => new GenericConsumerHostedService<EmailInput>(x.GetRequiredService<GenericConsumer<EmailInput>>()));
+        services.AddHostedService<GenericConsumerHostedService<EmailInput>>();
     }
 
     private static void AddContext(IServiceCollection services, WebApplicationBuilder builder)
