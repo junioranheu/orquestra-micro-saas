@@ -37,6 +37,15 @@ export interface iSelectionAction {
     isButton?: boolean;
 }
 
+export interface iTableActionButton {
+    label: string;
+    onClick: (ev: MouseEvent<HTMLDivElement | HTMLButtonElement>) => void;
+    icon?: StaticImageData | ReactElement;
+    isSimple?: boolean;
+    disabled?: boolean;
+    style?: React.CSSProperties;
+}
+
 interface iProps {
     idPropName: string;
     columns: iTableColumn[];
@@ -63,6 +72,7 @@ interface iProps {
     btn_export_function?: (e: MouseEvent<HTMLDivElement>) => void;
     btn_filter_label?: string;
     btn_filter_function?: (e: MouseEvent<HTMLDivElement>) => void;
+    actionButtons?: iTableActionButton[];
 
     modalFilterFormData?: any;
     setModalFilterFormData?: Dispatch<SetStateAction<any>>;
@@ -71,6 +81,7 @@ interface iProps {
 
     enableRowSelection?: boolean;
     selectionAction?: iSelectionAction | null;
+    onSelectionChange?: (ids: string[]) => void;
 }
 
 export default function TableGeneric({
@@ -99,13 +110,16 @@ export default function TableGeneric({
     btn_export_function,
     btn_filter_label,
     btn_filter_function,
+    actionButtons = [],
+
     modalFilterFormData,
     setModalFilterFormData,
     apiUrlRequest,
     setApiUrlRequest,
 
     enableRowSelection = false,
-    selectionAction = null
+    selectionAction = null,
+    onSelectionChange
 }: iProps) {
 
     const [pageSize, setPageSize] = useState<number>(maxPageSize);
@@ -306,6 +320,10 @@ export default function TableGeneric({
         return cols;
     }, [enhancedColumns, enableRowSelection, managingOptions, handleMakeSelectionColumn]);
 
+    useEffect(() => {
+        onSelectionChange?.(Array.from(selectedIds));
+    }, [selectedIds, onSelectionChange]);
+
     // Pagination;
     const handlePageChange = useCallback((page: number) => {
         setCurrentPage?.(page);
@@ -335,7 +353,7 @@ export default function TableGeneric({
         >
             <div className={styles.container}>
                 {
-                    (title || extraItems?.length || btn_filter_label || btn_import_label || btn_export_label || btn_add_label || (enableRowSelection && selectionAction)) && (
+                    (title || extraItems?.length || btn_filter_label || btn_import_label || btn_export_label || btn_add_label || actionButtons?.length > 0 || (enableRowSelection && selectionAction)) && (
                         <div className={styles.top}>
                             {
                                 title && (
@@ -404,6 +422,21 @@ export default function TableGeneric({
                                             style={{ fontSize: '0.75rem' }}
                                         />
                                     )
+                                }
+
+                                {
+                                    actionButtons.map((btn, i) => (
+                                        <Button
+                                            key={`action-btn-${i}`}
+                                            label={btn.label}
+                                            handleFunction={btn.onClick}
+                                            isStyleSimple={btn.isSimple}
+                                            isDisabled={btn.disabled}
+                                            svg_staticImageData={!isValidElement(btn.icon) && btn.icon ? (btn.icon as StaticImageData) : null}
+                                            icon_feather={isValidElement(btn.icon) ? (btn.icon as JSX.Element) : null}
+                                            style={{ fontSize: '0.75rem', marginLeft: '.35rem', ...(btn.style || {}) }}
+                                        />
+                                    ))
                                 }
 
                                 {

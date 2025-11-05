@@ -1,6 +1,6 @@
 'use client';
 import Tabs from '@/app/components/tabs';
-import TemplatePageHeader from '@/app/components/template/page-header';
+import TemplatePageHeader from '@/app/components/template/template-page-header';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';

@@ -15,7 +15,7 @@ interface iProps {
     showHelpPage?: boolean;
 }
 
-export default function LayoutTemplateOne({
+export default function LayoutTemplateMessage({
     variant = 'error',
     code,
     title,

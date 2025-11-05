@@ -6,7 +6,7 @@ import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
 import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
-import TemplatePageHeader from '@/app/components/template/page-header';
+import TemplatePageHeader from '@/app/components/template/template-page-header';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';

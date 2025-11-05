@@ -2,7 +2,7 @@
 import { CONSTS_LOG, iLog, iLogPaginated } from '@/app/api/consts/log';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableExtraItems, iTableManagingOptions } from '@/app/components/table/generic';
-import TemplatePageHeader from '@/app/components/template/page-header';
+import TemplatePageHeader from '@/app/components/template/template-page-header';
 import SYSTEM from '@/app/consts/system';
 import handleCopyToClipboard from '@/app/functions/clipboard.copy';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -19,6 +19,8 @@ export default function Logs() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [logs, setLogs] = useState<iLogPaginated>();
     useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: 15 });
+
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
     const columns = [
         {
@@ -51,11 +53,6 @@ export default function Logs() {
             dataIndex: 'endpoint',
             key: 'endpoint'
         },
-        // {
-        //     title: 'Parâmetros',
-        //     dataIndex: 'parameters',
-        //     key: 'parameters'
-        // },
         {
             title: 'Descrição',
             dataIndex: 'description',
@@ -81,6 +78,10 @@ export default function Logs() {
         toast({ content: 'Dados copiados com sucesso.' });
     }
 
+    function handleTeste() {
+        alert(`handleTeste: ${selectedIds.length ? selectedIds.join(', ') : 'Nenhum selecionado.'}`);
+    }
+
     return (
         <TemplatePageHeader title={`Logs do ${SYSTEM.NAME}`}>
             <TableGeneric
@@ -93,11 +94,15 @@ export default function Logs() {
                 managingOptions={managingOptions}
                 extraItems={tableExtraItems}
                 enableRowSelection={true}
+                onSelectionChange={setSelectedIds}
                 selectionAction={{
-                    label: 'Listar IDs (teste)',
+                    label: 'Listar IDs (teste #2)',
                     function: (ids) => toast({ content: `IDs selecionados: ${ids.join(', ')}` }),
                     icon: <Icon icon='activity' size='small' />
                 }}
+                actionButtons={[
+                    { label: 'Listar IDs (teste #1)', onClick: handleTeste, icon: <Icon icon='activity' size='small' />, isSimple: true },
+                ]}
             />
         </TemplatePageHeader>
     )

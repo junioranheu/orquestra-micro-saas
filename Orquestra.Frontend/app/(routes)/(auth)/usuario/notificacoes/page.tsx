@@ -1,7 +1,7 @@
 'use client';
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
-import TemplatePageHeader from '@/app/components/template/page-header';
+import TemplatePageHeader from '@/app/components/template/template-page-header';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { useFakeLoading } from '@/app/hooks/useFakeLoader';

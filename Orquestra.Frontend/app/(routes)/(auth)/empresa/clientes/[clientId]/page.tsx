@@ -7,7 +7,7 @@ import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
-import TemplatePageHeader from '@/app/components/template/page-header';
+import TemplatePageHeader from '@/app/components/template/template-page-header';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';

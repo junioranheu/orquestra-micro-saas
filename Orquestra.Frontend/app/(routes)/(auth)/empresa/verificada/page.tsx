@@ -1,5 +1,5 @@
 'use client';
-import LayoutTemplateOne from '@/app/components/template/template-one';
+import LayoutTemplateMessage from '@/app/components/template/template-message';
 import SYSTEM from '@/app/consts/system';
 import { handleLaunchConfetti } from '@/app/functions/effect.confetti';
 import useTitle from '@/app/hooks/useTitle';
@@ -15,7 +15,7 @@ export default function EmpresaVerificada() {
 
     return (
         <section>
-            <LayoutTemplateOne
+            <LayoutTemplateMessage
                 variant='success'
                 title='Uhu!'
                 description={

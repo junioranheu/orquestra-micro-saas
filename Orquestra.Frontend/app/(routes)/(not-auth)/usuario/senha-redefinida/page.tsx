@@ -1,5 +1,5 @@
 'use client';
-import LayoutTemplateOne from '@/app/components/template/template-one';
+import LayoutTemplateMessage from '@/app/components/template/template-message';
 import swal from '@/app/functions/swal';
 import useTitle from '@/app/hooks/useTitle';
 import { useEffect } from 'react';
@@ -21,7 +21,7 @@ export default function UsuarioSenhaRedefinida() {
 
     return (
         <section className={styles.main}>
-            <LayoutTemplateOne
+            <LayoutTemplateMessage
                 variant='success'
                 title='Uhu!'
                 description={

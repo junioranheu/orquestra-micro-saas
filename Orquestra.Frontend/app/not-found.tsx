@@ -2,7 +2,7 @@
 import '@/app/styles/globals.scss';
 import { useEffect, useState } from 'react';
 import UpNav from './components/navbar/up-nav';
-import LayoutTemplateOne from './components/template/template-one';
+import LayoutTemplateMessage from './components/template/template-message';
 import { INTER } from './fonts/fonts';
 import useTitle from './hooks/useTitle';
 
@@ -20,7 +20,7 @@ export default function NotFound() {
             <UpNav />
 
             <section>
-                <LayoutTemplateOne
+                <LayoutTemplateMessage
                     variant='error'
                     code='#404'
                     title='Página não encontrada'

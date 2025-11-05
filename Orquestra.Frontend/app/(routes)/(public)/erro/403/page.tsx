@@ -1,5 +1,5 @@
 'use client';
-import LayoutTemplateOne from '@/app/components/template/template-one';
+import LayoutTemplateMessage from '@/app/components/template/template-message';
 import useTitle from '@/app/hooks/useTitle';
 import styles from './page.module.scss';
 
@@ -9,7 +9,7 @@ export default function Erro403() {
 
     return (
         <section className={styles.main}>
-            <LayoutTemplateOne
+            <LayoutTemplateMessage
                 variant='error'
                 code='#403'
                 title='Acesso negado'
