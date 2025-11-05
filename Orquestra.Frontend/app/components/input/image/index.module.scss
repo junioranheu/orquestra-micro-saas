@@ -28,10 +28,10 @@
             display: inline-block;
             padding: 10px 16px;
             background-color: var(--main);
-            color: #fff;
+            color: var(--white-og);
             font-size: 0.8rem;
             font-weight: 500;
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--border-radius-xs);
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
