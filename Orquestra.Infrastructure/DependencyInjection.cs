@@ -192,7 +192,7 @@ public static class DependencyInjection
                 connection: x.GetRequiredService<IRabbitMQConnection>(),
                 queueName: SystemConsts.RabbitMQ.EmailQueue,
                 handleMessage: async (email, ct) => await x.GetRequiredService<IEmailService>().SendEmail(email),
-                prefetchCount: 1
+                prefetchCount: 5
             )
         );
 
