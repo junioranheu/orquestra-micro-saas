@@ -116,8 +116,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         const optionsCompanyUsers = handleTransformArrayToDropdownOptionsGuid(companyUsers ?? [], 'userId', 'user.fullName');
         setCompanyUsersDropDown(optionsCompanyUsers);
 
-        // const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'userId', ['fullName', 'phone', 'email']);
-        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'userId', 'fullName');
+        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', ['fullName', 'phone', 'email']);
         setClientsDropDown(optionsClients);
 
         if (type === 'create') {
@@ -205,12 +204,6 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
         const data = handleLoopFormData(formData);
         const input = data.json as iSchedule;
-
-        console.log('input.usersIds', input.usersIds);
-        console.log('input.clientId', input.clientId);
-        setEditing(true);
-        setSaving(false);
-        return;
 
         //#region Normalizar props
         input.usersIds = handleNormalizeGuidArrayField(input.usersIds);
