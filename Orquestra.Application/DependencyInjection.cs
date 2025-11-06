@@ -8,6 +8,7 @@ using Orquestra.Application.UseCases.CompanyInvoices;
 using Orquestra.Application.UseCases.CompanyUsers;
 using Orquestra.Application.UseCases.Integrations;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.SendMessageBatch;
+using Orquestra.Application.UseCases.Inventories;
 using Orquestra.Application.UseCases.Locations;
 using Orquestra.Application.UseCases.Logs;
 using Orquestra.Application.UseCases.Schedules;
@@ -49,6 +50,7 @@ public static class DependencyInjection
         services.AddVerificationsApplication();
         services.AddCompanyInvoicesApplication();
         services.AddIntegrationsApplication();
+        services.AddInventoriesApplication();
     }
 
     private static void AddServices(IServiceCollection _)

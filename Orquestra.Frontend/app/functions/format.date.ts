@@ -34,7 +34,7 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
                 dateFormatted = dataObj.toLocaleDateString(locale, { day: 'numeric', month: 'numeric', year: 'numeric' });
                 break;
 
-            case DATE_STYLE.DETALHADO:
+            case DATE_STYLE.DETALHADO: {
                 const diffDays = handleCheckDiffInDays(new Date(), dataObj);
                 // console.log(diffDays);
 
@@ -48,8 +48,9 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
                     dateFormatted = dataObj.toLocaleTimeString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: !isBr });
                 }
                 break;
+            }
 
-            case DATE_STYLE.DETALHADO_SEM_SEGUNDOS:
+            case DATE_STYLE.DETALHADO_SEM_SEGUNDOS: {
                 const diffDays2 = handleCheckDiffInDays(new Date(), dataObj);
                 // console.log(diffDays2);
 
@@ -63,8 +64,9 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
                     dateFormatted = dataObj.toLocaleTimeString(locale, { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: !isBr });
                 }
                 break;
+            }
 
-            case DATE_STYLE.DETALHADO_APENAS_REFERENCIA_DIA:
+            case DATE_STYLE.DETALHADO_APENAS_REFERENCIA_DIA: {
                 const diffDays3 = handleCheckDiffInDays(new Date(), dataObj);
                 // console.log(diffDays3);
 
@@ -79,6 +81,7 @@ export function handleFormatDate(date: Date | string | undefined, style: keyof t
                 }
 
                 break;
+            }
 
             case DATE_STYLE.MES_EXTENSO_E_ANO:
                 dateFormatted = dataObj.toLocaleDateString(locale, { month: 'long', year: 'numeric' });

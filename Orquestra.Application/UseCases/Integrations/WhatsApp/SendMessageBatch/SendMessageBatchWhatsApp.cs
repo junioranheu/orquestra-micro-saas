@@ -95,9 +95,6 @@ public sealed class SendMessageBatchWhatsApp(IntegrationWhatsAppBaseDependencies
     //private async Task<int> SendMessages(List<WhatsAppMessageBatchOutput> integrations)
     //{
     //    int amount = integrations.Count;
-
-    //    // TO DO: Criar lógica para separar as mensagens;
-
     //    return amount;
     //}
     #endregion

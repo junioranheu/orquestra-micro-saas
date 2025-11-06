@@ -25,14 +25,12 @@ public class GenericConsumerHostedService<TMessage>(GenericConsumer<TMessage> co
         catch (Exception ex)
         {
             _logger.LogCritical(ex, "Erro fatal no GenericConsumerHostedService para {MessageType}.", typeof(TMessage).Name);
-            throw;
         }
     }
 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
         // _logger.LogInformation("Parando GenericConsumerHostedService para {MessageType}.", typeof(TMessage).Name);
-
         await _consumer.DisposeAsync();
         await base.StopAsync(cancellationToken);
     }
