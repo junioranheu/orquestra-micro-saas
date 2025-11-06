@@ -122,7 +122,7 @@ public sealed class CreateIntegrationWhatsAppTests
     #region helper
     private static CreateIntegrationWhatsApp CreateSut(Context context, User user)
     {
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, Fixture.CreateIHttpContextAccessor(user));
 
         Mock<ISmsService> smsServiceMock = new();

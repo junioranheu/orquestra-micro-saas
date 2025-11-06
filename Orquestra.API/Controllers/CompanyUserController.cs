@@ -20,7 +20,7 @@ namespace Orquestra.API.Controllers;
 public class CompanyUserController(
         IEnvService env,
         IInviteCompanyUser invite,
-        IGetCompanyUserByCompanyId getCompanyUserByCompanyId,
+        IGetAllCompanyUserByCompanyId getCompanyUserByCompanyId,
         IVerifyCompanyUser verify,
         IUpdateCurrentMainCompanyUser updateCurrentMainCompanyUser,
         IUpdateCompanyUser updateModuleCompanyUser,
@@ -29,7 +29,7 @@ public class CompanyUserController(
 {
     private readonly IEnvService _env = env;
     private readonly IInviteCompanyUser _invite = invite;
-    private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
+    private readonly IGetAllCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
     private readonly IVerifyCompanyUser _verify = verify;
     private readonly IUpdateCurrentMainCompanyUser _updateCurrentMainCompanyUser = updateCurrentMainCompanyUser;
     private readonly IUpdateCompanyUser _updateModuleCompanyUser = updateModuleCompanyUser;

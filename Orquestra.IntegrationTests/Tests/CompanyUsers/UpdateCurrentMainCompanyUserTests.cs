@@ -147,7 +147,7 @@ public sealed class UpdateCurrentMainCompanyUserTests
     #region helpers
     private static UpdateCurrentMainCompanyUser CreateSut(Context context, User user)
     {
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
 

@@ -98,7 +98,7 @@ public sealed class GetClientTests
     private static GetClient CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
 
         GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);

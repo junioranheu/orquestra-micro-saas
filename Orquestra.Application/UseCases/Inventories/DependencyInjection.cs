@@ -10,7 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInventoriesApplication(this IServiceCollection services)
     {
-        services.AddScoped<IGetInventoryByCompanyId, GetInventoryByCompanyId>();
+        services.AddScoped<IGetAllInventoryByCompanyId, GetAllInventoryByCompanyId>();
         services.AddScoped<ICreateInventory, CreateInventory>();
         services.AddScoped<IUpdateInventory, UpdateInventory>();
         services.AddScoped<IDeleteInventory, DeleteInventory>();

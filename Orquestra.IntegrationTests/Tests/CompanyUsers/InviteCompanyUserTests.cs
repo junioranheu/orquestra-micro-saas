@@ -479,7 +479,7 @@ public sealed class InviteCompanyUserIntegrationTests
         IWebHostEnvironment envMock = Fixture.CreateDevelopmentEnvironment();
 
         // Cria a implementação real do CheckIfUserIsLinkedCompanyUser;
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
         IConfiguration configuration = Fixture.CreateConfiguration();
 

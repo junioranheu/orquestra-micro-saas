@@ -12,7 +12,7 @@ using Orquestra.IntegrationTests.Fixtures.Mocks;
 
 namespace Orquestra.IntegrationTests.Tests.Clients;
 
-public sealed class GetAllByCompanyIdTests
+public sealed class GetAllClientByCompanyIdTests
 {
     [Fact]
     public async Task Execute_ShouldReturnClients_WhenInputIsValid()
@@ -50,7 +50,7 @@ public sealed class GetAllByCompanyIdTests
 
         await Fixture.Save(context, companyUser);
 
-        GetClientByCompanyId sut = CreateSut(context, user);
+        GetAllClientByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ClientOutput>? result = await sut.Execute(user.UserId, company.CompanyId);
@@ -260,7 +260,7 @@ public sealed class GetAllByCompanyIdTests
 
         await Fixture.Save(context, companyUser);
 
-        GetClientByCompanyId sut = CreateSut(context, user);
+        GetAllClientByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ClientOutput>? result = await sut.Execute(user.UserId, company.CompanyId);
@@ -296,20 +296,20 @@ public sealed class GetAllByCompanyIdTests
 
         await Fixture.Save(context, companyUser);
 
-        GetClientByCompanyId sut = CreateSut(context, user);
+        GetAllClientByCompanyId sut = CreateSut(context, user);
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, company.CompanyId));
     }
 
     #region helper
-    private static GetClientByCompanyId CreateSut(Context context, User user)
+    private static GetAllClientByCompanyId CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
 
-        GetClientByCompanyId getClientByCompanyId = new(context, checkIfUserIsLinkedCompanyUser);
+        GetAllClientByCompanyId getClientByCompanyId = new(context, checkIfUserIsLinkedCompanyUser);
 
         return getClientByCompanyId;
     }

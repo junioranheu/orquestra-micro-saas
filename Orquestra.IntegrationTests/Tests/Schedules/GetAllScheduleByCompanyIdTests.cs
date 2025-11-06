@@ -17,7 +17,7 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
 
-public sealed class GetAllByCompanyIdTests
+public sealed class GetAllScheduleByCompanyIdTests
 {
     [Fact]
     public async Task Execute_ShouldReturnSchedules_WhenSchedulesExistAndUserLinked()
@@ -25,7 +25,7 @@ public sealed class GetAllByCompanyIdTests
         // Arrange;
         (Context context, User user, Company company, List<Schedule> schedules) = await ArrangeSchedulesWithUserAsync(count: 3);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null);
@@ -72,7 +72,7 @@ public sealed class GetAllByCompanyIdTests
         may.Status = true;
         await Fixture.Save(context, may);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, 2025, 3);
@@ -98,7 +98,7 @@ public sealed class GetAllByCompanyIdTests
         company.Status = true;
         await Fixture.Save(context, company);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null);
@@ -133,7 +133,7 @@ public sealed class GetAllByCompanyIdTests
 
         await Fixture.Save(context, companyUser);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, company.CompanyId, null, null));
@@ -155,7 +155,7 @@ public sealed class GetAllByCompanyIdTests
         s.Status = true;
         await Fixture.Save(context, s);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, 1997, null);
@@ -184,7 +184,7 @@ public sealed class GetAllByCompanyIdTests
         s2024.Status = true;
         await Fixture.Save(context, s2024);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, 2025, null);
@@ -236,7 +236,7 @@ public sealed class GetAllByCompanyIdTests
         schedTwoDaysLater.Status = true;
         await Fixture.Save(context, schedTwoDaysLater);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null, true);
@@ -271,7 +271,7 @@ public sealed class GetAllByCompanyIdTests
         futureSched.Status = true;
         await Fixture.Save(context, futureSched);
 
-        GetScheduleByCompanyId sut = CreateSut(context, user);
+        GetAllScheduleByCompanyId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, null, null, true);
@@ -324,16 +324,16 @@ public sealed class GetAllByCompanyIdTests
         return (context, user, company, schedules);
     }
 
-    private static GetScheduleByCompanyId CreateSut(Context context, User user)
+    private static GetAllScheduleByCompanyId CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
         Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
 
-        GetScheduleByCompanyId createSchedule = new(new ScheduleBaseDependencies(
+        GetAllScheduleByCompanyId createSchedule = new(new ScheduleBaseDependencies(
             context,
             checkIfUserIsLinkedCompanyUser,
             getClient,

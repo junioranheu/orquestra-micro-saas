@@ -238,7 +238,7 @@ public sealed class CreateCompanyTests
         EnvService envService = new(env, config);
         CreateVerification createVerification = new(context);
         GetUser getUser = new(context);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
         InviteCompanyUser inviteCompanyUser = new(context, envService, createVerification, checkIfUserIsLinkedCompanyUser, getUser, getCompany, genericPublisherMock.Object);

@@ -12,7 +12,7 @@ public static class DependencyInjection
     public static IServiceCollection AddClientsApplication(this IServiceCollection services)
     {
         services.AddScoped<IGetClient, GetClient>();
-        services.AddScoped<IGetClientByCompanyId, GetClientByCompanyId>();
+        services.AddScoped<IGetAllClientByCompanyId, GetAllClientByCompanyId>();
         services.AddScoped<ICreateClient, CreateClient>();
         services.AddScoped<IUpdateClient, UpdateClient>();
         services.AddScoped<IDeleteClient, DeleteClient>();

@@ -99,7 +99,7 @@ public sealed class GetModuleCompanyUserTests
     #region helpers
     private static GetModuleCompanyUser CreateSut(Context context, User user)
     {
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new (context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new (context);
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new (getCompanyUserByCompanyId, httpContextAccessor);
 

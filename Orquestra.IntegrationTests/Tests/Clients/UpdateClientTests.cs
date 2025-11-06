@@ -144,7 +144,7 @@ public sealed class UpdateClientTests
     private static UpdateClient CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
 
         UpdateClient updateClient = new(context, checkIfUserIsLinkedCompanyUser);

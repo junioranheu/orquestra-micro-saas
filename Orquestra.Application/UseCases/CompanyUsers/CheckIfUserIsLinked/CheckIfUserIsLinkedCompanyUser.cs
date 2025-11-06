@@ -10,9 +10,9 @@ namespace Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 /// Caso de uso responsável por verificar se um usuário está vinculado a uma empresa,
 /// considerando permissões de nível de sistema (Admin/Maintainer) e permissões de nível de empresa (Admin).
 /// </summary>
-public sealed class CheckIfUserIsLinkedCompanyUser(IGetCompanyUserByCompanyId getCompanyUserByCompanyId, IHttpContextAccessor httpContextAccessor) : ICheckIfUserIsLinkedCompanyUser
+public sealed class CheckIfUserIsLinkedCompanyUser(IGetAllCompanyUserByCompanyId getCompanyUserByCompanyId, IHttpContextAccessor httpContextAccessor) : ICheckIfUserIsLinkedCompanyUser
 {
-    private readonly IGetCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
+    private readonly IGetAllCompanyUserByCompanyId _getCompanyUserByCompanyId = getCompanyUserByCompanyId;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     /// <summary>

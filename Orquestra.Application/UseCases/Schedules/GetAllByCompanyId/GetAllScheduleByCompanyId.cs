@@ -9,7 +9,7 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 
-public sealed class GetScheduleByCompanyId(ScheduleBaseDependencies deps) : ScheduleBase(deps), IGetScheduleByCompanyId
+public sealed class GetAllScheduleByCompanyId(ScheduleBaseDependencies deps) : ScheduleBase(deps), IGetAllScheduleByCompanyId
 {
     private readonly Context _context = deps.Context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;

@@ -342,7 +342,7 @@ public sealed class UpdateScheduleTests
     private static UpdateSchedule CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);

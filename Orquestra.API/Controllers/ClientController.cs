@@ -15,14 +15,14 @@ namespace Orquestra.API.Controllers;
 [Route("api/[controller]")]
 public class ClientController(
         IGetClient get,
-        IGetClientByCompanyId getClientByCompanyId,
+        IGetAllClientByCompanyId getClientByCompanyId,
         ICreateClient create,
         IUpdateClient update,
         IDeleteClient delete
     ) : BaseController<ClientController>
 {
     private readonly IGetClient _get = get;
-    private readonly IGetClientByCompanyId _getClientByCompanyId = getClientByCompanyId;
+    private readonly IGetAllClientByCompanyId _getClientByCompanyId = getClientByCompanyId;
     private readonly ICreateClient _create = create;
     private readonly IUpdateClient _update = update;
     private readonly IDeleteClient _delete = delete;

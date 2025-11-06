@@ -8,7 +8,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 
-public sealed class GetClientByCompanyId(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IGetClientByCompanyId
+public sealed class GetAllClientByCompanyId(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IGetAllClientByCompanyId
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;

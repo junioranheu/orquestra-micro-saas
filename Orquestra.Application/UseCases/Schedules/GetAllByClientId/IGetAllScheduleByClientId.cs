@@ -2,7 +2,7 @@
 
 namespace Orquestra.Application.UseCases.Schedules.GetAllByClientId;
 
-public interface IGetScheduleByClientId
+public interface IGetAllScheduleByClientId
 {
     Task<List<ScheduleOutput>?> Execute(Guid userIdAuth, Guid companyId, Guid clientId);
 }

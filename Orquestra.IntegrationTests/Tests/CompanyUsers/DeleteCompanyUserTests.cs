@@ -173,7 +173,7 @@ public sealed class DeleteCompanyUserTests
     private static DeleteCompanyUser CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
 
         DeleteCompanyUser deleteCompanyUser = new(context, checkIfUserIsLinkedCompanyUser);

@@ -2,7 +2,7 @@
 
 namespace Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 
-public interface IGetScheduleByCompanyId
+public interface IGetAllScheduleByCompanyId
 {
     Task<List<ScheduleOutput>?> Execute(Guid userIdAuth, Guid companyId, int? year, int? month, bool? getOnlyNearbyDates = false);
 }

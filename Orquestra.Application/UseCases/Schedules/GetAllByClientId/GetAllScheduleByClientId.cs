@@ -7,7 +7,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Schedules.GetAllByClientId;
 
-public sealed class GetScheduleByClientId(ScheduleBaseDependencies deps) : ScheduleBase(deps), IGetScheduleByClientId
+public sealed class GetAllScheduleByClientId(ScheduleBaseDependencies deps) : ScheduleBase(deps), IGetAllScheduleByClientId
 {
     private readonly Context _context = deps.Context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = deps.CheckIfUserIsLinkedCompanyUser;

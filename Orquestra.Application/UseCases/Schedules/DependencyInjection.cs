@@ -19,8 +19,8 @@ public static class DependencyInjection
     public static IServiceCollection AddSchedulesApplication(this IServiceCollection services)
     {
         services.AddScoped<IGetSchedule, GetSchedule>();
-        services.AddScoped<IGetScheduleByCompanyId, GetScheduleByCompanyId>();
-        services.AddScoped<IGetScheduleByClientId, GetScheduleByClientId>();
+        services.AddScoped<IGetAllScheduleByCompanyId, GetAllScheduleByCompanyId>();
+        services.AddScoped<IGetAllScheduleByClientId, GetAllScheduleByClientId>();
         services.AddScoped<ICreateSchedule, CreateSchedule>();
         services.AddScoped<IUpdateSchedule, UpdateSchedule>();
         services.AddScoped<IDeleteSchedule, DeleteSchedule>();

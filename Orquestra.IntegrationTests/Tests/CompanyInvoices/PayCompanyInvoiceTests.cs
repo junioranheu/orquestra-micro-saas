@@ -152,7 +152,7 @@ public sealed class PayCompanyInvoiceTests
     private static PayCompanyInvoice CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         PayCompanyInvoice payCompanyInvoice = new (context, checkIfUserIsLinkedCompanyUser);
 

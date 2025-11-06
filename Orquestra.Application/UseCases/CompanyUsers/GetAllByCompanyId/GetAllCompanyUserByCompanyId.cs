@@ -9,7 +9,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 
-public sealed class GetCompanyUserByCompanyId(Context context) : IGetCompanyUserByCompanyId
+public sealed class GetAllCompanyUserByCompanyId(Context context) : IGetAllCompanyUserByCompanyId
 {
     private readonly Context _context = context;
 

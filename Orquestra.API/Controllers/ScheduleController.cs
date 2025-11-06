@@ -14,16 +14,16 @@ namespace Orquestra.API.Controllers;
 [Route("api/[controller]")]
 public class ScheduleController(
         IGetSchedule get,
-        IGetScheduleByCompanyId getScheduleByCompanyId,
-        IGetScheduleByClientId getScheduleByClientId,
+        IGetAllScheduleByCompanyId getScheduleByCompanyId,
+        IGetAllScheduleByClientId getScheduleByClientId,
         ICreateSchedule create,
         IUpdateSchedule update,
         IDeleteSchedule delete
     ) : BaseController<ScheduleController>
 {
     private readonly IGetSchedule _get = get;
-    private readonly IGetScheduleByCompanyId _getScheduleByCompanyId = getScheduleByCompanyId;
-    private readonly IGetScheduleByClientId _getScheduleByClientId = getScheduleByClientId;
+    private readonly IGetAllScheduleByCompanyId _getScheduleByCompanyId = getScheduleByCompanyId;
+    private readonly IGetAllScheduleByClientId _getScheduleByClientId = getScheduleByClientId;
     private readonly ICreateSchedule _create = create;
     private readonly IUpdateSchedule _update = update;
     private readonly IDeleteSchedule _delete = delete;

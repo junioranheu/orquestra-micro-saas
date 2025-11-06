@@ -213,7 +213,7 @@ public sealed class EndToEndTests
     {
         // Monta as dependências usadas pelo CreateCompany (repete padrão que você tem nos outros testes)
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(createdUser);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetUser getUser = new(context);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
@@ -258,7 +258,7 @@ public sealed class EndToEndTests
     private static InviteCompanyUser InviteCompanyUserSut(Context context, IEnvService envService, CreateVerification createVerification, IGenericPublisher publish, User currentUser)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(currentUser);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinked = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetUser getUser = new(context);
         GetCompany getCompany = new(context, checkIfUserIsLinked);

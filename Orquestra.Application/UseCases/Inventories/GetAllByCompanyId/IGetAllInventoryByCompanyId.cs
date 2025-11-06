@@ -3,7 +3,7 @@ using Orquestra.Domain.Entities;
 
 namespace Orquestra.Application.UseCases.Inventories.GetAllByCompanyId;
 
-public interface IGetInventoryByCompanyId
+public interface IGetAllInventoryByCompanyId
 {
     Task<(IEnumerable<Inventory> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId);
 }

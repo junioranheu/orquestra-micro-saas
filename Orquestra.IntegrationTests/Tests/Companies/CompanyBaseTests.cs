@@ -474,7 +474,7 @@ public sealed class CompanyBaseTests
         genericPublisherMock.Setup(x => x.Publish(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         GetUser getUser = new(context);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, Fixture.CreateIHttpContextAccessor(user));
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
         InviteCompanyUser inviteCompanyUser = new(context, envMock.Object, createVerificationMock.Object, checkIfUserIsLinkedCompanyUser, getUser, getCompany, genericPublisherMock.Object);

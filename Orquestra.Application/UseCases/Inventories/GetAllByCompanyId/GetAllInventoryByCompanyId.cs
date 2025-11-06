@@ -6,7 +6,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Inventories.GetAllByCompanyId;
 
-public sealed class GetInventoryByCompanyId(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IGetInventoryByCompanyId
+public sealed class GetAllInventoryByCompanyId(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IGetAllInventoryByCompanyId
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;

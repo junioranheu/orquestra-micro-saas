@@ -15,7 +15,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCompanyUsersApplication(this IServiceCollection services)
     {
-        services.AddScoped<IGetCompanyUserByCompanyId, GetCompanyUserByCompanyId>();
+        services.AddScoped<IGetAllCompanyUserByCompanyId, GetAllCompanyUserByCompanyId>();
         services.AddScoped<ICheckIfUserIsLinkedCompanyUser, CheckIfUserIsLinkedCompanyUser>();
         services.AddScoped<IVerifyCompanyUser, VerifyCompanyUser>();
         services.AddScoped<IUpdateCurrentMainCompanyUser, UpdateCurrentMainCompanyUser>();

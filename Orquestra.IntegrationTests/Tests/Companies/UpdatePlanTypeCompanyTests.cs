@@ -196,7 +196,7 @@ public sealed class UpdatePlanTypeCompanyTests
         IConfiguration config = Fixture.CreateConfiguration();
         Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
         EnvService envService = new(env, config);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         CreateCompanyInvoice createCompanyInvoice = new(context, checkIfUserIsLinkedCompanyUser, envService, genericPublisherMock.Object);
 

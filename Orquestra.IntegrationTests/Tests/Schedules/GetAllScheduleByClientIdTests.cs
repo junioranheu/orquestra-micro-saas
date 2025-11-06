@@ -16,7 +16,7 @@ using Orquestra.IntegrationTests.Fixtures.Mocks;
 
 namespace Orquestra.IntegrationTests.Tests.Schedules;
 
-public sealed class GetAllByClientIdTests
+public sealed class GetAllScheduleByClientIdTests
 {
     [Fact]
     public async Task Execute_ShouldReturnSchedules_WhenClientHasSchedulesAndUserLinked()
@@ -24,7 +24,7 @@ public sealed class GetAllByClientIdTests
         // Arrange;
         (Context context, User user, Company company, Client client, List<Schedule> schedules) = await ArrangeSchedulesWithClientAsync(count: 3);
 
-        GetScheduleByClientId sut = CreateSut(context, user);
+        GetAllScheduleByClientId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, client.ClientId);
@@ -45,7 +45,7 @@ public sealed class GetAllByClientIdTests
         // Arrange;
         (Context context, User user, Company company, Client client, _) = await ArrangeSchedulesWithClientAsync(count: 0);
 
-        GetScheduleByClientId sut = CreateSut(context, user);
+        GetAllScheduleByClientId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, client.ClientId);
@@ -79,7 +79,7 @@ public sealed class GetAllByClientIdTests
 
         await Fixture.Save(context, companyUser);
 
-        GetScheduleByClientId sut = CreateSut(context, user);
+        GetAllScheduleByClientId sut = CreateSut(context, user);
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>    sut.Execute(user.UserId, company.CompanyId, client.ClientId));
@@ -110,7 +110,7 @@ public sealed class GetAllByClientIdTests
         scheduleOtherCompany.Status = true;
         await Fixture.Save(context, scheduleOtherCompany);
 
-        GetScheduleByClientId sut = CreateSut(context, user);
+        GetAllScheduleByClientId sut = CreateSut(context, user);
 
         // Act;
         List<ScheduleOutput>? result = await sut.Execute(user.UserId, company.CompanyId, client.ClientId);
@@ -163,16 +163,16 @@ public sealed class GetAllByClientIdTests
         return (context, user, company, client, schedules);
     }
 
-    private static GetScheduleByClientId CreateSut(Context context, User user)
+    private static GetAllScheduleByClientId CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
         GetClient getClient = new(context, checkIfUserIsLinkedCompanyUser);
         GetCompany getCompany = new(context, checkIfUserIsLinkedCompanyUser);
         Mock<IGenericPublisher> genericPublisherMock = Fixture.CreateGenericPublisher();
 
-        GetScheduleByClientId getScheduleByClientId = new(new ScheduleBaseDependencies(
+        GetAllScheduleByClientId getScheduleByClientId = new(new ScheduleBaseDependencies(
             context,
             checkIfUserIsLinkedCompanyUser,
             getClient,

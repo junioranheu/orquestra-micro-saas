@@ -157,7 +157,7 @@ public sealed class CheckIfUserIsLinkedCompanyUserIntegrationTests
     private static CheckIfUserIsLinkedCompanyUser CreateSut(Context context, User user)
     {
         IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
 
         return checkIfUserIsLinkedCompanyUser;

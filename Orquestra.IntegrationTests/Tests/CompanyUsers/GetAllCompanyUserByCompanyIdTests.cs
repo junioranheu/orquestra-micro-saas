@@ -9,7 +9,7 @@ using Orquestra.IntegrationTests.Fixtures.Mocks;
 
 namespace Orquestra.IntegrationTests.Tests.CompanyUsers;
 
-public sealed class GetAllByCompanyIdCompanyUserTests
+public sealed class GetAllCompanyUserByCompanyIdTests
 {
     [Fact]
     public async Task Execute_Simple_ShouldReturnUsers_WhenCompanyIdIsValid()
@@ -34,7 +34,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
 
         await Fixture.Save(context, companyUser);
 
-        GetCompanyUserByCompanyId sut = CreateSut(context);
+        GetAllCompanyUserByCompanyId sut = CreateSut(context);
 
         // Act;
         List<CompanyUserOutput>? result = await sut.Execute(company.CompanyId);
@@ -51,7 +51,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        GetCompanyUserByCompanyId sut = CreateSut(context);
+        GetAllCompanyUserByCompanyId sut = CreateSut(context);
 
         // Act;
         List<CompanyUserOutput>? result = await sut.Execute(Guid.NewGuid());
@@ -84,7 +84,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
 
         await Fixture.Save(context, companyUser);
 
-        GetCompanyUserByCompanyId sut = CreateSut(context);
+        GetAllCompanyUserByCompanyId sut = CreateSut(context);
 
         // Act;
         var result = await sut.Execute(Guid.Empty, null);
@@ -138,7 +138,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
         CompanyUserFilterInput input = new();
 
-        GetCompanyUserByCompanyId sut = CreateSut(context);
+        GetAllCompanyUserByCompanyId sut = CreateSut(context);
 
         // Act;
         (IEnumerable<CompanyUserOutput> output, int count) = await sut.Execute(pagination, input, admin.UserId, company.CompanyId);
@@ -163,7 +163,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
         CompanyUserFilterInput input = new();
 
-        GetCompanyUserByCompanyId sut = CreateSut(context);
+        GetAllCompanyUserByCompanyId sut = CreateSut(context);
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(pagination, input, user.UserId, company.CompanyId));
@@ -220,7 +220,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
         CompanyUserFilterInput input = new() { CompanyUserRole = "Administrator" };
 
-        GetCompanyUserByCompanyId sut = CreateSut(context);
+        GetAllCompanyUserByCompanyId sut = CreateSut(context);
 
         // Act;
         (IEnumerable<CompanyUserOutput> output, int count) =
@@ -273,7 +273,7 @@ public sealed class GetAllByCompanyIdCompanyUserTests
             Email = "teste"
         };
 
-        GetCompanyUserByCompanyId sut = CreateSut(context);
+        GetAllCompanyUserByCompanyId sut = CreateSut(context);
 
         // Act;
         (IEnumerable<CompanyUserOutput> output, int count) = await sut.Execute(pagination, input, admin.UserId, company.CompanyId);
@@ -284,9 +284,9 @@ public sealed class GetAllByCompanyIdCompanyUserTests
     }
 
     #region helper
-    private static GetCompanyUserByCompanyId CreateSut(Context context)
+    private static GetAllCompanyUserByCompanyId CreateSut(Context context)
     {
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
 
         return getCompanyUserByCompanyId;
     }

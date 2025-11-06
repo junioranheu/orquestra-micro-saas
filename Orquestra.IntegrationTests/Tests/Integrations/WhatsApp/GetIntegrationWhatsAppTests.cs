@@ -96,7 +96,7 @@ public sealed class GetIntegrationWhatsAppTests
     #region helper
     private static GetIntegrationWhatsApp CreateSut(Context context, User user)
     {
-        GetCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
         CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, Fixture.CreateIHttpContextAccessor(user));
 
         GetIntegrationWhatsApp getIntegrationWhatsApp = new(context, checkIfUserIsLinkedCompanyUser);
