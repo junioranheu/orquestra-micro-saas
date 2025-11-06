@@ -9,7 +9,7 @@ public static class ClientMock
     {
         Company company = CompanyMock.Create();
 
-        var input = new Client 
+        Client input = new() 
         {
             ClientId = Guid.NewGuid(),
             FullName = $"{GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)} {GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)}",

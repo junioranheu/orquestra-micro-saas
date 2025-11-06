@@ -12,8 +12,12 @@ public sealed class Inventory : Audit
     [ForeignKey(nameof(CompanyId))]
     public Company? Company { get; set; }
 
+    [MaxLength(120)]
     public string Name { get; set; } = string.Empty;
+
+    [MaxLength(255)]
     public string? Description { get; set; }
+
     public int Quantity { get; set; }
     public decimal? UnitPrice { get; set; }
 

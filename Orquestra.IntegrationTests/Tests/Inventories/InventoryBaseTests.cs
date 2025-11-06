@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.Inventories.Shared;
+using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
-namespace Orquestra.IntegrationTests.Tests.Inventories
-{
-    internal class InventoryBaseTests
-    {
-    }
-}
+namespace Orquestra.IntegrationTests.Tests.Inventories;

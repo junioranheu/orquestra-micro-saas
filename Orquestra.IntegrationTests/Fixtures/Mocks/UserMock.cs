@@ -9,7 +9,7 @@ public static class UserMock
 {
     public static User Create()
     {
-        var input = new User
+        User input = new()
         {
             UserId = Guid.NewGuid(),
             FullName = $"{GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)} {GetRandomString(charLength: GetRandomNumber(5, 15), onlyLetters: true)}",

@@ -50,10 +50,13 @@ public sealed class Schedule : Audit
     }
     #endregion
 
+    [MaxLength(255)]
     public string? CustomTitle { get; set; }
 
+    [MaxLength(255)]
     public string? CustomUrl { get; set; }
 
+    [MaxLength(255)]
     public string? Observation { get; set; }
 
     public decimal? AmountReceived { get; set; } = 0;

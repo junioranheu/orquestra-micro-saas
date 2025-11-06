@@ -10,7 +10,7 @@ public static class ScheduleMock
     {
         DateTime dateStart = GetDate().AddDays(GetRandomNumber(1, 7)).Date.AddHours(12);
 
-        var input = new Schedule
+        Schedule input = new()
         {
             ScheduleId = Guid.NewGuid(),
             DateStart = dateStart,
