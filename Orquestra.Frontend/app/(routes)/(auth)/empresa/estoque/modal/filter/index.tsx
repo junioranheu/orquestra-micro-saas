@@ -71,7 +71,7 @@ export default function EmpresaEstoqueModalFilters({
                     <div className={styles.grid}>
                         <InputMask title='Nome do item' fieldName='name' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask title='Descrição' fieldName='description' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                        <InputMask title='Quantidade' fieldName='quantity' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+                        <InputMask type='number' title='Quantidade' fieldName='quantity' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                     </div>
                 </main>
 

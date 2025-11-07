@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Inventories.GetAllByCompanyId;
+using Orquestra.Application.UseCases.Inventories.Shared;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -35,7 +36,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         await Fixture.Save(context, companyUser);
 
         // Inventários ativos;
-        Inventory inv1 = InventoryMock.Create(); 
+        Inventory inv1 = InventoryMock.Create();
         await Fixture.Save(context, inv1);
         inv1.CompanyId = company.CompanyId;
         inv1.Status = true;
@@ -62,7 +63,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
-        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId);
+        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, new());
 
         // Assert;
         Assert.Equal(2, count);
@@ -97,7 +98,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
-        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId);
+        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, new());
 
         // Assert;
         Assert.Empty(output);
@@ -131,7 +132,164 @@ public sealed class GetAllInventoryByCompanyIdTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(pagination, user.UserId, company.CompanyId));
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(pagination, user.UserId, company.CompanyId, new()));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFilterByName()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = user.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        Inventory inv1 = InventoryMock.Create();
+        await Fixture.Save(context, inv1);
+        inv1.CompanyId = company.CompanyId;
+        inv1.Status = true;
+        inv1.Name = "Cadeira Gamer";
+        context.Update(inv1);
+        await context.SaveChangesAsync();
+
+        Inventory inv2 = InventoryMock.Create();
+        await Fixture.Save(context, inv2);
+        inv2.CompanyId = company.CompanyId;
+        inv2.Status = true;
+        inv2.Name = "Mesa de Escritório";
+        context.Update(inv2);
+        await context.SaveChangesAsync();
+
+        GetAllInventoryByCompanyId sut = CreateSut(context, user);
+        PaginationInput pagination = new() { Index = 0, Limit = 10 };
+        InventoryInput input = new() { Name = "cadeira" };
+
+        // Act;
+        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
+
+        // Assert;
+        Assert.Single(output);
+        Assert.Contains(output, x => x.InventoryId == inv1.InventoryId);
+        Assert.DoesNotContain(output, x => x.InventoryId == inv2.InventoryId);
+        Assert.Equal(1, count);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFilterByDescription()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = user.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        Inventory inv1 = InventoryMock.Create();
+        await Fixture.Save(context, inv1);
+        inv1.CompanyId = company.CompanyId;
+        inv1.Status = true;
+        inv1.Name = "Monitor";
+        inv1.Description = "4K Ultra HD";
+        context.Update(inv1);
+        await context.SaveChangesAsync();
+
+        Inventory inv2 = InventoryMock.Create();
+        await Fixture.Save(context, inv2);
+        inv2.CompanyId = company.CompanyId;
+        inv2.Status = true;
+        inv2.Name = "Teclado";
+        inv2.Description = "Mecânico RGB";
+        context.Update(inv2);
+        await context.SaveChangesAsync();
+
+        GetAllInventoryByCompanyId sut = CreateSut(context, user);
+        PaginationInput pagination = new() { Index = 0, Limit = 10 };
+        InventoryInput input = new() { Description = "4k" };
+
+        // Act;
+        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
+
+        // Assert;
+        Assert.Single(output);
+        Assert.Contains(output, x => x.InventoryId == inv1.InventoryId);
+        Assert.DoesNotContain(output, x => x.InventoryId == inv2.InventoryId);
+        Assert.Equal(1, count);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFilterByQuantity()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        CompanyUser companyUser = new()
+        {
+            CompanyId = company.CompanyId,
+            UserId = user.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        Inventory inv1 = InventoryMock.Create();
+        await Fixture.Save(context, inv1);
+        inv1.CompanyId = company.CompanyId;
+        inv1.Status = true;
+        inv1.Name = "Mouse";
+        inv1.Quantity = 5;
+        context.Update(inv1);
+        await context.SaveChangesAsync();
+
+        Inventory inv2 = InventoryMock.Create();
+        await Fixture.Save(context, inv2);
+        inv2.CompanyId = company.CompanyId;
+        inv2.Status = true;
+        inv2.Name = "Headset";
+        inv2.Quantity = 10;
+        context.Update(inv2);
+        await context.SaveChangesAsync();
+
+        GetAllInventoryByCompanyId sut = CreateSut(context, user);
+        PaginationInput pagination = new() { Index = 0, Limit = 10 };
+        InventoryInput input = new() { Quantity = 10 };
+
+        // Act;
+        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
+
+        // Assert;
+        Assert.Single(output);
+        Assert.Contains(output, x => x.InventoryId == inv2.InventoryId);
+        Assert.DoesNotContain(output, x => x.InventoryId == inv1.InventoryId);
+        Assert.Equal(1, count);
     }
 
     #region helpers

@@ -133,7 +133,11 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             company: 'Empresa',
 
             companyUserRole: 'Tipo de colaborador',
-            modules: 'Módulos atribuídos'
+            modules: 'Módulos atribuídos',
+
+            name: 'Nome',
+            description: 'Descrição',
+            quantity: 'Quantidade'
         };
 
         if (dictionary[content]) {
