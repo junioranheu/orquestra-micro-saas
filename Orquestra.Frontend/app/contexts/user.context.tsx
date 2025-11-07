@@ -12,6 +12,7 @@ type UserContextType = {
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
+
     const [auth, setAuth] = useState<iUser | null>(null);
 
     useEffect(() => {
@@ -34,5 +35,5 @@ export function UserProvider({ children }: { children: ReactNode }) {
         <UserContext.Provider value={{ auth, setAuth }}>
             {children}
         </UserContext.Provider>
-    );
+    )
 }

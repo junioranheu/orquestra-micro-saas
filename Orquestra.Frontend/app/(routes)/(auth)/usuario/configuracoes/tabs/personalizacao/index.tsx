@@ -2,6 +2,7 @@
 import Button from '@/app/components/input/button';
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
+import { useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
 import Tippy from '@tippyjs/react';
 import { useEffect, useState } from 'react';
@@ -22,7 +23,7 @@ export default function UsuarioConfiguracoesTabPersonalizacao() {
 function InterfaceCustomizer() {
 
     const [showMascot, setShowMascot] = useState<boolean>(true);
-    const [showExpandedSidebar, setShowExpandedSidebar] = useState<boolean>(true);
+    const [showExpandedSidebar, setShowExpandedSidebar] = useShowExpandedSidebar();
 
     useEffect(() => {
         const valueMascot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);

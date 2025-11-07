@@ -2,6 +2,7 @@ import { UserContext } from '@/app/contexts/user.context';
 import { useContext } from 'react';
 
 export default function useUserContext() {
+
     const context = useContext(UserContext);
 
     if (!context) {
@@ -9,4 +10,5 @@ export default function useUserContext() {
     }
 
     return [context.auth, context.setAuth] as const;
+
 }

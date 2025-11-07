@@ -5,6 +5,7 @@ import SYSTEM from '@/app/consts/system';
 import { PACIFICO } from '@/app/fonts/fonts';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import { useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import Tippy from '@tippyjs/react';
 import feather from 'feather-icons';
 import { usePathname, useRouter } from 'next/navigation';
@@ -31,16 +32,11 @@ export default function Sidebar() {
     const me = useApiGetMe({});
 
     const [active, setActive] = useState<string>('');
-    const [showExpandedSidebar, setShowExpandedSidebar] = useState(false);
+    const [showExpandedSidebar, _] = useShowExpandedSidebar();
 
     const [openPopover, setOpenPopover] = useState<string | null>(null);
     const [popoverPos, setPopoverPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
     const popoverRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const valueExpandedSidebar = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR);
-        setShowExpandedSidebar(valueExpandedSidebar === null ? true : valueExpandedSidebar === 'true');
-    }, []);
 
     function handleClickOutside(e: MouseEvent) {
         if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
@@ -116,7 +112,7 @@ export default function Sidebar() {
 
             <nav className={SYSTEM.ANIMATE_DELAY_0_5s}>
                 {
-                    MENU_GROUPS.map((group, gIndex) => {
+                    MENU_GROUPS?.map((group, gIndex) => {
                         const visibleItems = group.items.filter(x => x.hasAccess);
 
                         if (visibleItems.length === 0) {
