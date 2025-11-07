@@ -29,10 +29,18 @@ export default function Sidebar() {
     const router = useRouter();
     const pathname = usePathname();
     const me = useApiGetMe({});
+
     const [active, setActive] = useState<string>('');
+    const [showExpandedSidebar, setShowExpandedSidebar] = useState(false);
+
     const [openPopover, setOpenPopover] = useState<string | null>(null);
     const [popoverPos, setPopoverPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
     const popoverRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const valueExpandedSidebar = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR);
+        setShowExpandedSidebar(valueExpandedSidebar === null ? true : valueExpandedSidebar === 'true');
+    }, []);
 
     function handleClickOutside(e: MouseEvent) {
         if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
@@ -99,12 +107,14 @@ export default function Sidebar() {
 
     return (
         <aside className={`${styles.sidebar} notSelectable`}>
+            <h1>{showExpandedSidebar}</h1>
+
             <div className={styles.brand}>
                 <Icon icon='calendar' weight='bold' />
                 <span className={PACIFICO.className}>{SYSTEM.NAME}</span>
             </div>
 
-            <nav>
+            <nav className={SYSTEM.ANIMATE_DELAY_0_5s}>
                 {
                     MENU_GROUPS.map((group, gIndex) => {
                         const visibleItems = group.items.filter(x => x.hasAccess);
@@ -113,20 +123,20 @@ export default function Sidebar() {
                             return null;
                         }
 
-                        const isGeral = group.label === 'Geral' || group.label === 'Sistema';
+                        const isExpanded = group.label === 'Geral' || group.label === 'Sistema' || showExpandedSidebar;
 
                         return (
                             <div key={gIndex} className={styles.group}>
                                 <div
                                     className={styles.groupHeader}
-                                    onClick={isGeral ? undefined : (e) => handleGroupClick(e, group.label)}
+                                    onClick={isExpanded ? undefined : (e) => handleGroupClick(e, group.label)}
                                 >
                                     <span className={styles.groupLabel}>{group.label}</span>
-                                    {!isGeral && <Icon icon='chevron-right' />}
+                                    {!isExpanded && <Icon icon='chevron-right' />}
                                 </div>
 
                                 {
-                                    isGeral && (
+                                    isExpanded && (
                                         <ul>
                                             {
                                                 visibleItems.map((item, index) => (
@@ -175,5 +185,5 @@ export default function Sidebar() {
                 )
             }
         </aside>
-    );
+    )
 }

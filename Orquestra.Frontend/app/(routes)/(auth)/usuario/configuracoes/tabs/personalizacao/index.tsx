@@ -11,7 +11,7 @@ export default function UsuarioConfiguracoesTabPersonalizacao() {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <MascotToggle />
+                <InterfaceCustomizer />
                 <FontSizeSelector />
                 <ThemeSelector />
             </div>
@@ -19,17 +19,27 @@ export default function UsuarioConfiguracoesTabPersonalizacao() {
     )
 }
 
-function MascotToggle() {
+function InterfaceCustomizer() {
+
     const [showMascot, setShowMascot] = useState<boolean>(true);
+    const [showExpandedSidebar, setShowExpandedSidebar] = useState<boolean>(true);
 
     useEffect(() => {
-        const value = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);
-        setShowMascot(value === null ? true : value === 'true');
+        const valueMascot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);
+        setShowMascot(valueMascot === null ? true : valueMascot === 'true');
+
+        const valueExpandedSidebar = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR);
+        setShowExpandedSidebar(valueExpandedSidebar === null ? true : valueExpandedSidebar === 'true');
     }, []);
 
     function handleToggleMascot() {
         localStorage.setItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT, (!showMascot).toString());
         setShowMascot((prev) => !prev);
+    }
+
+    function handleToggleExpandedSidebar() {
+        localStorage.setItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR, (!showExpandedSidebar).toString());
+        setShowExpandedSidebar((prev) => !prev);
     }
 
     return (
@@ -59,6 +69,21 @@ function MascotToggle() {
                 </div>
 
                 <button onClick={handleToggleMascot} className={`${styles.toggle} ${showMascot ? styles.toggleActive : ''}`}>
+                    <span className={styles.toggleThumb} />
+                </button>
+            </div>
+
+            <div className={styles.toggleContainer}>
+                <div className={styles.toggleInfo}>
+                    <div className={styles.toggleText}>
+                        <h3 className={styles.toggleTitle}>Exibir menu lateral expandido</h3>
+                        <p className={styles.toggleDescription}>
+                            {showExpandedSidebar ? 'O menu lateral está expandido. Aqui você vê todas as opções disponíveis de uma vez.' : 'O menu lateral está recolhido. Clique para expandir e ver mais opções de uma vez.'}
+                        </p>
+                    </div>
+                </div>
+
+                <button onClick={handleToggleExpandedSidebar} className={`${styles.toggle} ${showExpandedSidebar ? styles.toggleActive : ''}`}>
                     <span className={styles.toggleThumb} />
                 </button>
             </div>

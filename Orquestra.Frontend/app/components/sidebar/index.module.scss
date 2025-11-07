@@ -9,6 +9,13 @@
     border-right: 2px solid #d8efe8;
     position: relative;
 
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0.25rem;
+    }
+
     .brand {
         // background-color: orange;
         display: flex;

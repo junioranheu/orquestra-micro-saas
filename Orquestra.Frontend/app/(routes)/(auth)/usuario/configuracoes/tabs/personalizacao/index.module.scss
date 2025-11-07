@@ -26,6 +26,7 @@
 }
 
 .card {
+    // background: tomato !important;
     background-color: var(--white-og);
     border-radius: var(--border-radius);
     padding: 2rem;
@@ -166,6 +167,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    &:not(:last-child) {
+        // background-color: purple;
+        margin-bottom: 1rem;
+    }
 
     .toggleInfo {
         // background-color: tomato;
