@@ -11,6 +11,8 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
+import EmpresaEstoqueModalFilters from './modal/filter';
+import EmpresaEstoqueModalView from './modal/view';
 
 export default function EmpresaEstoque() {
 
@@ -66,14 +68,6 @@ export default function EmpresaEstoque() {
                 value !== undefined && value !== null
                     ? value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                     : '-',
-        },
-        {
-            title: 'Imagem',
-            dataIndex: 'image',
-            key: 'image',
-            render: (image?: Uint8Array, record?: iInventory) =>
-                image
-                    ? `<img src="data:${record?.imageContentType};base64,${Buffer.from(image).toString('base64')}" alt="${record?.name}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" />` : '-',
         }
     ];
 
@@ -87,7 +81,7 @@ export default function EmpresaEstoque() {
             {
                 label: 'Remover item',
                 function: (e: iInventory) => handleDisableClient(e, setTrigger),
-                icon: <Icon icon='user-x' />
+                icon: <Icon icon='x' />
             }
         ] : [])
     ] as iTableManagingOptions[];
@@ -139,7 +133,7 @@ export default function EmpresaEstoque() {
                 />
             </TemplatePageHeader>
 
-            {/* <EmpresaClientesModalFilters
+            <EmpresaEstoqueModalFilters
                 isModalOpen={isModalFilterOpen}
                 setIsModalOpen={setIsModalFilterOpen}
                 modalFilterFormData={modalFilterFormData}
@@ -149,14 +143,14 @@ export default function EmpresaEstoque() {
                 setCurrentPage={setCurrentPage}
             />
 
-            <EmpresaClientesModalView
+            <EmpresaEstoqueModalView
                 isModalOpen={isModalViewOpen}
                 setIsModalOpen={setIsModalViewOpen}
                 type={typeModal}
-                client={clientClicked}
+                item={itemClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
-            /> */}
+            />
         </Fragment>
     )
 }
