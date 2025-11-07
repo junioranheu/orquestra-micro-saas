@@ -61,15 +61,15 @@ public class InventoryController(
 
     [AuthorizeFilter]
     [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, Guid companyId)
+    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, Guid? companyId)
     {
-        if (companyId == Guid.Empty)
+        if (companyId is null || companyId == Guid.Empty)
         {
             return NoContent();
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        (IEnumerable<Inventory> output, int count) = await _getInventoryByCompanyId.Execute(paginationInput, userIdAuth, companyId);
+        (IEnumerable<Inventory> output, int count) = await _getInventoryByCompanyId.Execute(paginationInput, userIdAuth, companyId.GetValueOrDefault());
 
         return Ok(new { output, count });
     }

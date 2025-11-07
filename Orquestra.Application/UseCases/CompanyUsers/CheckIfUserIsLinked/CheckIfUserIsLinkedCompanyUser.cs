@@ -90,10 +90,10 @@ public sealed class CheckIfUserIsLinkedCompanyUser(IGetAllCompanyUserByCompanyId
             isSystemAdmin = false;
         }
 
-        // #2 - Verificar se tem algum parâmetro super importante vazio;
+        // #2 - Verificar se tem algum parâmetro imprescindível vazio;
         if ((companyId is null || companyId == Guid.Empty) || (userId is null || userId == Guid.Empty))
         {
-            throw new ArgumentException($"Os parâmetros {nameof(companyId)} e {nameof(userId)} devem ser preenchidos corretamente.");
+            throw new ArgumentException($"Falha interna ({nameof(CheckIfUserIsLinkedCompanyUser)}): os parâmetros <b>{nameof(companyId)}</b> e <b>{nameof(userId)}</b> devem ser preenchidos corretamente.");
         }
 
         // #3 - Verificar se o usuário em questão (userId) está registrado na empresa;
