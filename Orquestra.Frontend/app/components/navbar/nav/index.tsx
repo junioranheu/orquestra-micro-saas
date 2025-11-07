@@ -53,21 +53,21 @@ export default function Navbar() {
                     </div>
 
                     <div className={`${styles.right} ${SYSTEM.ANIMATE}`}>
-                        <Tippy content='Gerencie os dados e informações de suas empresas cadastradas.'>
-                            <span className={me?.currentMainCompany ? '' : styles.effect} onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}>
-                                {
-                                    me?.currentMainCompany ? (
-                                        <Fragment>
-                                            <Icon icon='briefcase' weight='bold' /><span>Gerenciar empresas</span>
-                                        </Fragment>
-                                    ) : (
-                                        <Fragment>
-                                            <Icon icon='plus-circle' weight='bold' /><span>Cadastrar sua empresa</span>
-                                        </Fragment>
-                                    )
-                                }
-                            </span>
-                        </Tippy>
+                        {
+                            me?.currentMainCompany ? (
+                                <Tippy content='Gerencie os dados e informações de suas empresas cadastradas.'>
+                                    <span onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}>
+                                        <Icon icon='briefcase' weight='bold' /><span>Gerenciar empresas</span>
+                                    </span>
+                                </Tippy>
+                            ) : (
+                                <Tippy content={`Cadastre agora mesmo sua empresa para começar a usar o ${SYSTEM.NAME}.`}>
+                                    <span className={styles.effect} onClick={() => router.push(ROUTES.EMPRESA_GERENCIAR)}>
+                                        <Icon icon='plus-circle' weight='bold' /><span>Cadastrar sua empresa</span>
+                                    </span>
+                                </Tippy>
+                            )
+                        }
 
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (

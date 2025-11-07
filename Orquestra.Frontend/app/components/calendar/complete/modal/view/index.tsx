@@ -375,7 +375,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                         !editing ? (
                                             <Fragment>
                                                 {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir evento' handleFunction={() => handleDisable(event)} isStyleSimple={true} />}
-                                                <Button label='Habilitar edição' handleFunction={() => setEditing(true)} isDisabled={formData.scheduleStatus === 2} />
+                                                <Button label='Editar' handleFunction={() => setEditing(true)} isDisabled={formData.scheduleStatus === 2} />
                                             </Fragment>
                                         ) : (
                                             <Fragment>

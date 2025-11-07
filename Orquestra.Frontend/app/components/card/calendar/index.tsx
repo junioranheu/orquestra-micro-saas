@@ -63,6 +63,11 @@ export default function CardCalendar({ me }: iProps) {
                                         buttonLabel='Criar uma nova empresa agora mesmo'
                                         buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s}
+                                        buttonStyle={{
+                                            background: 'linear-gradient(135deg, var(--contrast), var(--contrast))',
+                                            color: 'var(--white-og)',
+                                            transition: 'all 0.2s ease-in-out'
+                                        }}
                                     />
                                 )
                             }

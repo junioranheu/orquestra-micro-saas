@@ -2,6 +2,7 @@ import iCompanyOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
 import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
+import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputImage from '@/app/components/input/image';
@@ -301,10 +302,10 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                                 {
                                     !editing ? (
                                         <Fragment>
-                                            <Button label='Plano e faturas' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} isStyleSimple={true} />
-                                            <Button label='Colaboradores' handleFunction={() => window.open(ROUTES.EMPRESA_COLABORADORES, '_blank')} isStyleSimple={true} />
-                                            <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} />
-                                            <Button label='Habilitar edição' handleFunction={() => setEditing(true)} />
+                                            <Button label='Plano e faturas' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} isStyleSimple={true} icon_feather={<Icon icon='tag' size='small' />} />
+                                            <Button label='Colaboradores' handleFunction={() => window.open(ROUTES.EMPRESA_COLABORADORES, '_blank')} isStyleSimple={true} icon_feather={<Icon icon='users' size='small' />} />
+                                            <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} icon_feather={<Icon icon='user-check' size='small' />} />
+                                            <Button label='Editar' handleFunction={() => setEditing(true)} />
                                         </Fragment>
                                     ) : (
                                         <Fragment>

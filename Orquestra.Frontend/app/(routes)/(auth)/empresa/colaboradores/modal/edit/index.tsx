@@ -180,7 +180,7 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
                         {
                             !editing ? (
                                 <Fragment>
-                                    <Button label='Habilitar edição' handleFunction={() => setEditing(true)} />
+                                    <Button label='Editar' handleFunction={() => setEditing(true)} />
                                 </Fragment>
                             ) : (
                                 <Fragment>

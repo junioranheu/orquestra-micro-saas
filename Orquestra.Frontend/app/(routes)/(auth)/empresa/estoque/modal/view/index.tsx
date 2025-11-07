@@ -204,7 +204,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
                                 {
                                     !editing ? (
                                         <Fragment>
-                                            <Button label='Habilitar edição' handleFunction={() => setEditing(true)} />
+                                            <Button label='Editar' handleFunction={() => setEditing(true)} />
                                         </Fragment>
                                     ) : (
                                         <Fragment>

@@ -11,6 +11,7 @@ export type iProps = {
     buttonLabel?: string;
     buttonDisabled?: boolean;
     buttonFunction?: () => void;
+    buttonStyle?: CSSProperties;
     className?: string;
     style?: CSSProperties;
     hasCardAltStyle?: boolean;
@@ -24,6 +25,7 @@ export default function CardSimple({
     buttonLabel,
     buttonDisabled = false,
     buttonFunction,
+    buttonStyle,
     className,
     style,
     hasCardAltStyle = false
@@ -66,6 +68,7 @@ export default function CardSimple({
                                     <Button
                                         label={buttonLabel}
                                         handleFunction={() => !buttonDisabled && buttonFunction()}
+                                        style={buttonStyle}
                                         isDisabled={buttonDisabled}
                                     />
                                 </div>
