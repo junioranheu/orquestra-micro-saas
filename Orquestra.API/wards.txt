@@ -28,7 +28,6 @@ Criar front
 
 ⦁	Módulo de Estoque:
 Criar endpoint
-Criar teste de integração
 Criar front
 
 ⦁	Módulo de Nota fiscal:
