@@ -147,8 +147,8 @@
 
 // Media queries
 // hi-res laptops and desktops 
-@media (max-width:1281px),
-(max-height: 500px) {
+@media (max-width:1366px),
+(max-height: 768px) {
     .sidebar {
         // background-color: orange !important;
         min-width: fit-content;
@@ -164,11 +164,13 @@
         nav {
             .group {
                 ul {
-                    gap: 0rem;
+                    // gap: 0rem;
+                    gap: 0.15rem;
 
                     li {
                         // background-color: purple !important;
-                        font-size: 0.8rem;
+                        // font-size: 0.8rem;
+                        font-size: 0.9rem;
                         gap: 0.5rem;
                     }
 
