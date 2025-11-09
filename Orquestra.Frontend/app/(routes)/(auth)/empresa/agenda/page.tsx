@@ -1,12 +1,9 @@
 'use client';
 import CalendarComplete, { iEvent } from '@/app/components/calendar/complete';
-import Mascot from '@/app/components/mascot';
-import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import useTitle from '@/app/hooks/useTitle';
-import Link from 'next/link';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -36,33 +33,18 @@ export default function EmpresaAgendamentos() {
     }, []);
 
     return (
-        <Fragment>
-            <section className={SYSTEM.ANIMATE} ref={sectionRef}>
-                {
-                    availableHeight && me && me?.currentMainCompany ? (
-                        <CalendarComplete
-                            me={me}
-                            events={events}
-                            customElementHeight={(availableHeight)}
-                            companyId={me?.currentMainCompany?.companyId}
-                            setEvents={setEvents}
-                        />
-                    ) : <Fragment></Fragment>
-                }
-            </section>
-
-            <Mascot
-                isCentralized={false}
-                tippyContent={
-                    <div>
-                        Oi! Tudo em dia com seus agendamentos?<br /><br />
-                        Aliás, caso queira me dispensar por um tempo, é só ajustar isso na aba de personalização, nas <Link href={ROUTES.USUARIO_CONFIGURACOES}>configurações</Link> do {SYSTEM.NAME}. 😅
-                    </div>
-                }
-                tippyPlacement='right'
-                flip={true}
-                absolutePosition='bottom-left'
-            />
-        </Fragment>
+        <section className={SYSTEM.ANIMATE} ref={sectionRef}>
+            {
+                availableHeight && me && me?.currentMainCompany ? (
+                    <CalendarComplete
+                        me={me}
+                        events={events}
+                        customElementHeight={(availableHeight)}
+                        companyId={me?.currentMainCompany?.companyId}
+                        setEvents={setEvents}
+                    />
+                ) : <Fragment></Fragment>
+            }
+        </section>
     )
 }

@@ -2,7 +2,7 @@
 import Button from '@/app/components/input/button';
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
-import { useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
+import { useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
 import Tippy from '@tippyjs/react';
 import { useEffect, useState } from 'react';
@@ -23,6 +23,7 @@ export default function UsuarioConfiguracoesTabPersonalizacao() {
 function InterfaceCustomizer() {
 
     const [showMascot, setShowMascot] = useState<boolean>(true);
+    const [showChatbot, setShowChatbot] = useShowChatbot();
     const [showExpandedSidebar, setShowExpandedSidebar] = useShowExpandedSidebar();
 
     useEffect(() => {
@@ -36,6 +37,11 @@ function InterfaceCustomizer() {
     function handleToggleMascot() {
         localStorage.setItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT, (!showMascot).toString());
         setShowMascot((prev) => !prev);
+    }
+
+    function handleToggleChatbot() {
+        localStorage.setItem(SYSTEM.LOCAL_STORAGE_SHOW_CHATBOT, (!showChatbot).toString());
+        setShowChatbot((prev) => !prev);
     }
 
     function handleToggleExpandedSidebar() {
@@ -70,6 +76,21 @@ function InterfaceCustomizer() {
                 </div>
 
                 <button onClick={handleToggleMascot} className={`${styles.toggle} ${showMascot ? styles.toggleActive : ''}`}>
+                    <span className={styles.toggleThumb} />
+                </button>
+            </div>
+
+            <div className={styles.toggleContainer}>
+                <div className={styles.toggleInfo}>
+                    <div className={styles.toggleText}>
+                        <h3 className={styles.toggleTitle}>Exibir chatbot</h3>
+                        <p className={styles.toggleDescription}>
+                            {showChatbot ? 'O chatbot está ativado e visível todo o tempo.' : 'O chatbot está desativado.'}
+                        </p>
+                    </div>
+                </div>
+
+                <button onClick={handleToggleChatbot} className={`${styles.toggle} ${showChatbot ? styles.toggleActive : ''}`}>
                     <span className={styles.toggleThumb} />
                 </button>
             </div>

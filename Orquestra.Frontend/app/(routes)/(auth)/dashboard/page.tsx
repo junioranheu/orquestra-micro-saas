@@ -13,11 +13,12 @@ import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import CardDailyAgenda from './components/card-daily-agenda';
 import CardNotifications from './components/card-notifications';
 import styles from './page.module.scss';
@@ -26,6 +27,9 @@ export default function Dashboard() {
 
     const router = useRouter();
     const [auth,] = useUserContext();
+    const [showChatbot, setShowChatbot] = useShowChatbot();
+    const [, setIsOpenChatbot] = useIsOpenChatbot();
+
     const me = useApiGetMe({});
     useTitle(me ? `Olá, ${handleGetFirstName(me?.userName)}` : 'Dashboard');
 
@@ -48,7 +52,8 @@ export default function Dashboard() {
                     tippyContent={
                         <div>
                             Oi! Eu sou o {SYSTEM.MASCOT}. 🐱✨<br /><br />
-                            Se pintar alguma dúvida, dá uma passadinha na <Link href={ROUTES.ETC_AJUDA}>central de ajuda</Link> ou fala com a gente pelo <WhatsappHyperlink showIcon={false} />.<br /><br />
+                            Se pintar alguma dúvida, dá uma passadinha na <Link href={ROUTES.ETC_AJUDA}>central de ajuda</Link> ou fala com o suporte pelo <WhatsappHyperlink showIcon={false} />.<br /><br />
+                            {showChatbot && <Fragment>Ah! Você também pode falar diretamente comigo <Link href='#' onClick={() => setIsOpenChatbot(true)}>clicando aqui</Link>.<br /><br /></Fragment>}
                             Caso queira me dispensar por um tempo, é só ajustar isso na aba de personalização, nas <Link href={ROUTES.USUARIO_CONFIGURACOES}>configurações</Link> do {SYSTEM.NAME}. 😅
                         </div>
                     }

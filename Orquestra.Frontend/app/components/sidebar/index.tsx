@@ -1,3 +1,4 @@
+import ChatBot from '@/app/components/chat-bot';
 import Icon from '@/app/components/icon';
 import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
@@ -5,11 +6,11 @@ import SYSTEM from '@/app/consts/system';
 import { PACIFICO } from '@/app/fonts/fonts';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
-import { useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
+import { useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import Tippy from '@tippyjs/react';
 import feather from 'feather-icons';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iMenuItem {
@@ -32,7 +33,8 @@ export default function Sidebar() {
     const me = useApiGetMe({});
 
     const [active, setActive] = useState<string>('');
-    const [showExpandedSidebar, _] = useShowExpandedSidebar();
+    const [showExpandedSidebar,] = useShowExpandedSidebar();
+    const [showChatbot,] = useShowChatbot();
 
     const [openPopover, setOpenPopover] = useState<string | null>(null);
     const [popoverPos, setPopoverPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
@@ -102,84 +104,92 @@ export default function Sidebar() {
     }
 
     return (
-        <aside className={`${styles.sidebar} notSelectable`}>
-            <h1>{showExpandedSidebar}</h1>
+        <Fragment>
+            <aside className={`${styles.sidebar} notSelectable`}>
+                <h1>{showExpandedSidebar}</h1>
 
-            <div className={styles.brand}>
-                <Icon icon='calendar' weight='bold' />
-                <span className={PACIFICO.className}>{SYSTEM.NAME}</span>
-            </div>
+                <div className={styles.brand}>
+                    <Icon icon='calendar' weight='bold' />
+                    <span className={PACIFICO.className}>{SYSTEM.NAME}</span>
+                </div>
 
-            <nav className={SYSTEM.ANIMATE_DELAY_0_5s}>
-                {
-                    MENU_GROUPS?.map((group, gIndex) => {
-                        const visibleItems = group.items.filter(x => x.hasAccess);
+                <nav className={SYSTEM.ANIMATE_DELAY_0_5s}>
+                    {
+                        MENU_GROUPS?.map((group, gIndex) => {
+                            const visibleItems = group.items.filter(x => x.hasAccess);
 
-                        if (visibleItems.length === 0) {
-                            return null;
-                        }
+                            if (visibleItems.length === 0) {
+                                return null;
+                            }
 
-                        const isExpanded = group.label === 'Geral' || group.label === 'Sistema' || showExpandedSidebar;
+                            const isExpanded = group.label === 'Geral' || group.label === 'Sistema' || showExpandedSidebar;
 
-                        return (
-                            <div key={gIndex} className={styles.group}>
-                                <div
-                                    className={styles.groupHeader}
-                                    onClick={isExpanded ? undefined : (e) => handleGroupClick(e, group.label)}
-                                >
-                                    <span className={styles.groupLabel}>{group.label}</span>
-                                    {!isExpanded && <Icon icon='chevron-right' />}
+                            return (
+                                <div key={gIndex} className={styles.group}>
+                                    <div
+                                        className={styles.groupHeader}
+                                        onClick={isExpanded ? undefined : (e) => handleGroupClick(e, group.label)}
+                                    >
+                                        <span className={styles.groupLabel}>{group.label}</span>
+                                        {!isExpanded && <Icon icon='chevron-right' />}
+                                    </div>
+
+                                    {
+                                        isExpanded && (
+                                            <ul>
+                                                {
+                                                    visibleItems.map((item, index) => (
+                                                        <Tippy key={index} content={item.description} placement='right'>
+                                                            <li
+                                                                className={active === item.route ? styles.active : ''}
+                                                                onClick={() => router.push(item.route)}
+                                                            >
+                                                                <Icon icon={item.icon} />
+                                                                <span>{item.label}</span>
+                                                            </li>
+                                                        </Tippy>
+                                                    ))
+                                                }
+                                            </ul>
+                                        )
+                                    }
                                 </div>
+                            );
+                        })
+                    }
+                </nav>
 
-                                {
-                                    isExpanded && (
-                                        <ul>
-                                            {
-                                                visibleItems.map((item, index) => (
-                                                    <Tippy key={index} content={item.description} placement='right'>
-                                                        <li
-                                                            className={active === item.route ? styles.active : ''}
-                                                            onClick={() => router.push(item.route)}
-                                                        >
-                                                            <Icon icon={item.icon} />
-                                                            <span>{item.label}</span>
-                                                        </li>
-                                                    </Tippy>
-                                                ))
-                                            }
-                                        </ul>
-                                    )
-                                }
-                            </div>
-                        );
-                    })
+
+                {
+                    openPopover && (
+                        <div
+                            ref={popoverRef}
+                            className={styles.popover}
+                            style={{ top: popoverPos.top, left: popoverPos.left }}
+                        >
+                            {
+                                MENU_GROUPS.find(g => g.label === openPopover)?.items.filter(x => x.hasAccess).map((item, index) => (
+                                    <Tippy key={index} content={item.description} placement='right'>
+                                        <div
+                                            className={`${styles.popoverItem} ${active === item.route ? styles.active : ''}`}
+                                            onClick={() => { router.push(item.route); setOpenPopover(null); }}
+                                        >
+                                            <Icon icon={item.icon} />
+                                            <span>{item.label}</span>
+                                        </div>
+                                    </Tippy>
+                                ))
+                            }
+                        </div>
+                    )
                 }
-            </nav>
-
+            </aside>
 
             {
-                openPopover && (
-                    <div
-                        ref={popoverRef}
-                        className={styles.popover}
-                        style={{ top: popoverPos.top, left: popoverPos.left }}
-                    >
-                        {
-                            MENU_GROUPS.find(g => g.label === openPopover)?.items.filter(x => x.hasAccess).map((item, index) => (
-                                <Tippy key={index} content={item.description} placement='right'>
-                                    <div
-                                        className={`${styles.popoverItem} ${active === item.route ? styles.active : ''}`}
-                                        onClick={() => { router.push(item.route); setOpenPopover(null); }}
-                                    >
-                                        <Icon icon={item.icon} />
-                                        <span>{item.label}</span>
-                                    </div>
-                                </Tippy>
-                            ))
-                        }
-                    </div>
+                showChatbot && (
+                    <ChatBot />
                 )
             }
-        </aside>
+        </Fragment>
     )
 }

@@ -4,6 +4,13 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState
 type GlobalContextType = {
     isRequestLoading: boolean;
     setIsRequestLoading: Dispatch<SetStateAction<boolean>>;
+
+    showChatbot: boolean;
+    setShowChatbot: Dispatch<SetStateAction<boolean>>;
+
+    isOpenChatbot: boolean;
+    setIsOpenShowChatbot: Dispatch<SetStateAction<boolean>>;
+
     showExpandedSidebar: boolean;
     setShowExpandedSidebar: Dispatch<SetStateAction<boolean>>;
 };
@@ -13,9 +20,14 @@ export const GlobalContext = createContext<GlobalContextType | undefined>(undefi
 export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
     const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
-    const [showExpandedSidebar, setShowExpandedSidebar] = useState<boolean>(false);
+    const [showChatbot, setShowChatbot] = useState<boolean>(true);
+    const [isOpenChatbot, setIsOpenShowChatbot] = useState<boolean>(false);
+    const [showExpandedSidebar, setShowExpandedSidebar] = useState<boolean>(true);
 
     useEffect(() => {
+        const valueChatbot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_CHATBOT);
+        setShowChatbot(valueChatbot === null ? true : valueChatbot === 'true');
+
         const valueExpandedSidebar = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR);
         setShowExpandedSidebar(valueExpandedSidebar === null ? true : valueExpandedSidebar === 'true');
     }, []);
@@ -23,6 +35,8 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     return (
         <GlobalContext.Provider value={{
             isRequestLoading, setIsRequestLoading,
+            showChatbot, setShowChatbot,
+            isOpenChatbot, setIsOpenShowChatbot,
             showExpandedSidebar, setShowExpandedSidebar
         }}>
             {children}

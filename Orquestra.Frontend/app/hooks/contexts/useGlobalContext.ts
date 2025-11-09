@@ -13,6 +13,30 @@ export function useIsRequestLoading() {
 
 }
 
+export function useShowChatbot() {
+
+    const context = useContext(GlobalContext);
+
+    if (!context) {
+        throw new Error('useGlobalContext');
+    }
+
+    return [context.showChatbot, context.setShowChatbot] as const;
+
+}
+
+export function useIsOpenChatbot() {
+
+    const context = useContext(GlobalContext);
+
+    if (!context) {
+        throw new Error('useGlobalContext');
+    }
+
+    return [context.isOpenChatbot, context.setIsOpenShowChatbot] as const;
+
+}
+
 export function useShowExpandedSidebar() {
 
     const context = useContext(GlobalContext);
