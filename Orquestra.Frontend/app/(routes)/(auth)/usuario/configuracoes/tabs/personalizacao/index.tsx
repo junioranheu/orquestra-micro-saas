@@ -63,7 +63,7 @@ function InterfaceCustomizer() {
             <div className={styles.toggleContainer}>
                 <div className={styles.toggleInfo}>
                     <div className={styles.toggleText}>
-                        <h3 className={styles.toggleTitle}>Exibir mascote de ajuda</h3>
+                        <h3 className={styles.toggleTitle}>Exibir assistente virtual</h3>
                         <p className={styles.toggleDescription}>
                             Receba dicas e ajuda do {SYSTEM.MASCOT}.
                         </p>

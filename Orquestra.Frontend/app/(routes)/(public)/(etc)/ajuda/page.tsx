@@ -280,19 +280,19 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Mascote e dicas do sistema',
-        description: `Conheça o mascote ${SYSTEM.MASCOT}, que aparece para dar dicas e orientações dentro do ${SYSTEM.NAME}.`,
+        topic: 'Assistente virtual e dicas do sistema',
+        description: `Conheça o assistente virtual ${SYSTEM.MASCOT}, que aparece para dar dicas e orientações dentro do ${SYSTEM.NAME}.`,
         items: [
             {
-                title: 'Para que serve o mascote?',
+                title: 'Para que serve o assistente virtual?',
                 description: `O ${SYSTEM.MASCOT} aparece em pontos estratégicos do sistema para dar dicas, ajudar na navegação e mostrar informações importantes.`
             },
             {
                 title: 'Como interagir com ele?',
-                description: `Você pode passar o mouse sobre o mascote ou clicar nele para visualizar mensagens e links úteis.`
+                description: `Você pode passar o mouse sobre o assistente virtual ou clicar nele para visualizar mensagens e links úteis.`
             },
             {
-                title: 'Posso desativar o mascote?',
+                title: 'Posso desativar o assistente virtual?',
                 description: `Sim! Se você preferir que o ${SYSTEM.MASCOT} não apareça, é possível desligá-lo diretamente nas configurações/aba personalização.`
             },
             {
@@ -301,7 +301,7 @@ export const HELP_TOPICS = [
             },
             {
                 title: 'Se eu o desativei, como ativá-lo novamente?',
-                description: `Se mudar de ideia, basta voltar nas configurações/aba personalização e ligar o mascote novamente.`
+                description: `Se mudar de ideia, basta voltar nas configurações/aba personalização e ligar o assistente virtual novamente.`
             },
         ]
     },

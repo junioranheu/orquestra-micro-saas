@@ -25,7 +25,7 @@ export default function ChatBot() {
     useEffect(() => {
         setMessages((prev) => [
             ...prev,
-            { role: 'bot', text: `Olá! ${handleGetTimeGreeting({ mustIncludeUmUma: false })}.<br/>Eu sou o <b>${SYSTEM.MASCOT}</b>. 🐱<br/>Como eu posso te ajudar?` },
+            { role: 'bot', text: `Olá! ${handleGetTimeGreeting({ mustIncludeUmUma: false })}.<br/>Eu sou o <b>${SYSTEM.MASCOT}</b>, seu assistente virtual. 🐱<br/>Como posso te ajudar hoje?` },
         ]);
     }, []);
 
@@ -132,7 +132,7 @@ export default function ChatBot() {
                 isOpenChatbot ? (
                     <div className={styles.window}>
                         <div className={styles.header}>
-                            <div className={styles.headerTitle}>Conversa com o {SYSTEM.MASCOT}</div>
+                            <div className={styles.headerTitle}>{SYSTEM.MASCOT}, seu assistente virtual</div>
 
                             <Tippy content='Fechar'>
                                 <button className={styles.closeBtn} onClick={() => setIsOpenChatbot(false)}>×</button>
@@ -181,7 +181,7 @@ export default function ChatBot() {
                         </form>
                     </div>
                 ) : (
-                    <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`}>
+                    <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`} placement='left'>
                         <button className={styles.bubbleButton} onClick={() => setIsOpenChatbot(true)}>
                             <Icon icon='message-square' />
                         </button>
