@@ -6,9 +6,13 @@
     font-family: inherit;
 
     .bubbleButton {
-        background: var(--main);
-        border: none;
-        color: var(--white-og);
+        // background: var(--main);
+        // border: none;
+        // color: var(--white-og);
+
+        background-color: var(--white);
+        border: 2px solid var(--main);
+
         padding: 14px;
         border-radius: 50%;
         width: 56px;

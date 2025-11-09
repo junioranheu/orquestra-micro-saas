@@ -1,4 +1,4 @@
-import ImgLoading from '@/app/assets/gif/loading-cat.gif';
+import ImgMaestro from '@/app/assets/gif/maestro.gif';
 import SYSTEM from '@/app/consts/system';
 import Tippy from '@tippyjs/react';
 import Image from 'next/image';
@@ -86,7 +86,7 @@ export default function Mascot({
                 }}
                 onClick={(e) => handleClick(e)}
             >
-                <Image src={ImgLoading} width={width} height={width} alt='' unoptimized={true} />
+                <Image src={ImgMaestro} width={width} height={width} alt='' unoptimized={true} />
             </div>
         </Tippy>
     )

@@ -1,12 +1,13 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
-import Icon from '@/app/components/icon';
+import ImgMaestro from '@/app/assets/png/maestro.png';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { handleGetTimeGreeting } from '@/app/functions/get.greeting';
 import { useIsOpenChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import Tippy from '@tippyjs/react';
+import Image from 'next/image';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';
 
@@ -73,7 +74,7 @@ export default function ChatBot({ me }: iProps) {
 
         // Checar plano atual;
         if (me?.currentMainCompany?.planType?.toString() !== '3') {
-            setMessages((prev) => [...prev, { role: 'bot', text: `Opa, ${handleGetFirstName(me?.userName)}! <a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!` },]);
+            setMessages((prev) => [...prev, { role: 'bot', text: `Opa, ${handleGetFirstName(me?.userName)}!<br/><br/><a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!<br/><br/>Caso queira ocultar o chatbot, <a href="${ROUTES.USUARIO_CONFIGURACOES}">entre nas configurações</a>.` }]);
             setLoading(false);
             return;
         }
@@ -206,7 +207,7 @@ export default function ChatBot({ me }: iProps) {
                 ) : (
                     <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`} placement='left'>
                         <button className={styles.bubbleButton} onClick={() => setIsOpenChatbot(true)}>
-                            <Icon icon='message-square' />
+                            <Image src={ImgMaestro} width={30} height={30} alt='' priority={true} />
                         </button>
                     </Tippy>
                 )
