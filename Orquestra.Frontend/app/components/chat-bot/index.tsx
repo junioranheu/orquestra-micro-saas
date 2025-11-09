@@ -13,6 +13,7 @@ import styles from './index.module.scss';
 
 interface iProps {
     me: iMe | undefined;
+    showButtonAbsolute: boolean;
 }
 
 interface iMessage {
@@ -20,7 +21,7 @@ interface iMessage {
     text: string
 }
 
-export default function ChatBot({ me }: iProps) {
+export default function ChatBot({ me, showButtonAbsolute }: iProps) {
 
     const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY;
 
@@ -74,7 +75,7 @@ export default function ChatBot({ me }: iProps) {
 
         // Checar plano atual;
         if (me?.currentMainCompany?.planType?.toString() !== '3') {
-            setMessages((prev) => [...prev, { role: 'bot', text: `Opa, ${handleGetFirstName(me?.userName)}!<br/><br/><a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!<br/><br/>Caso queira ocultar o chatbot, <a href="${ROUTES.USUARIO_CONFIGURACOES}">entre nas configurações</a>.` }]);
+            setMessages((prev) => [...prev, { role: 'bot', text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!<br/><br/>Caso queira ocultar o chatbot, <a href="${ROUTES.USUARIO_CONFIGURACOES}">entre nas configurações</a>.` }]);
             setLoading(false);
             return;
         }
@@ -205,11 +206,13 @@ export default function ChatBot({ me }: iProps) {
                         </form>
                     </div>
                 ) : (
-                    <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`} placement='left'>
-                        <button className={styles.bubbleButton} onClick={() => setIsOpenChatbot(true)}>
-                            <Image src={ImgMaestro} width={30} height={30} alt='' priority={true} />
-                        </button>
-                    </Tippy>
+                    showButtonAbsolute && (
+                        <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`} placement='left'>
+                            <button className={styles.bubbleButton} onClick={() => setIsOpenChatbot(true)}>
+                                <Image src={ImgMaestro} width={30} height={30} alt='' priority={true} />
+                            </button>
+                        </Tippy>
+                    )
                 )
             }
         </div>

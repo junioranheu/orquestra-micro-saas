@@ -6,6 +6,7 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
@@ -19,6 +20,9 @@ export default function Navbar() {
 
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [modalPosition, setModalPosition] = useState<iModalCustomPosition>({});
+
+    const [showChatbot,] = useShowChatbot();
+    const [, setIsOpenChatbot] = useIsOpenChatbot();
 
     function handleModalClick() {
         setIsMenuOpen(true);
@@ -80,6 +84,14 @@ export default function Navbar() {
                         <Tippy content='Notificações'>
                             <span onClick={() => router.push(ROUTES.USUARIO_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
                         </Tippy>
+
+                        {
+                            showChatbot && (
+                                <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`}>
+                                    <span onClick={() => setIsOpenChatbot(true)}><Icon icon='message-square' weight='bold' /></span>
+                                </Tippy>
+                            )
+                        }
 
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
