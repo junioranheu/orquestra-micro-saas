@@ -75,7 +75,7 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
 
         // Checar plano atual;
         if (me?.currentMainCompany?.planType?.toString() !== '3') {
-            setMessages((prev) => [...prev, { role: 'bot', text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!<br/><br/>Caso queira ocultar o chatbot, <a href="${ROUTES.USUARIO_CONFIGURACOES}">entre nas configurações</a>.` }]);
+            setMessages((prev) => [...prev, { role: 'bot', text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!<br/><br/>Caso queira ocultar o assistente virtual, <a href="${ROUTES.USUARIO_CONFIGURACOES}">entre nas configurações</a>.` }]);
             setLoading(false);
             return;
         }
