@@ -187,7 +187,7 @@ export default function Sidebar() {
 
             {
                 showChatbot && (
-                    <ChatBot />
+                    <ChatBot me={me} />
                 )
             }
         </Fragment>

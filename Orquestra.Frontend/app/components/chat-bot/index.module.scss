@@ -81,6 +81,10 @@
             gap: 8px;
             background: #f6f6f6;
 
+            &::-webkit-scrollbar {
+                width: 0.25rem;
+            }
+
             .messageRow {
                 display: flex;
                 width: 100%;

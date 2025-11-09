@@ -15,6 +15,7 @@ interface iProps {
     flipInterval?: number;    // Intervalo da inversão periódica;
     absolutePosition?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
     hasAnimateDelay?: boolean;
+    handleFunction?: ((param?: any) => void) | null;
 }
 
 export default function Mascot({
@@ -26,7 +27,8 @@ export default function Mascot({
     flipPeriodic = false,
     flipInterval = 3000,
     absolutePosition,
-    hasAnimateDelay = true
+    hasAnimateDelay = true,
+    handleFunction
 }: iProps) {
 
     const [flipped, setFlipped] = useState<boolean>(flip);
@@ -61,6 +63,12 @@ export default function Mascot({
         zIndex: 9999
     } : {};
 
+    async function handleClick(e: any) {
+        if (handleFunction) {
+            handleFunction(e);
+        }
+    }
+
     if (!showMascot) {
         return null;
     }
@@ -73,8 +81,10 @@ export default function Mascot({
                     margin: isCentralized ? 'auto' : 'none',
                     transform: flipped ? 'scaleX(-1)' : 'scaleX(1)',
                     transition: 'transform 0.5s ease',
+                    cursor: (handleFunction ? 'pointer' : ''),
                     ...absoluteStyle
                 }}
+                onClick={(e) => handleClick(e)}
             >
                 <Image src={ImgLoading} width={width} height={width} alt='' unoptimized={true} />
             </div>

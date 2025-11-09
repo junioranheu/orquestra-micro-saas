@@ -1,18 +1,25 @@
 'use client';
+import { iMe } from '@/app/api/consts/auth';
 import Icon from '@/app/components/icon';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { handleGetTimeGreeting } from '@/app/functions/get.greeting';
 import { useIsOpenChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import Tippy from '@tippyjs/react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';
 
+interface iProps {
+    me: iMe | undefined;
+}
+
 interface iMessage {
     role: 'user' | 'bot';
     text: string
 }
 
-export default function ChatBot() {
+export default function ChatBot({ me }: iProps) {
 
     const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY;
 
@@ -23,11 +30,15 @@ export default function ChatBot() {
     const chatEndRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        if (!me?.userName) {
+            return;
+        }
+
         setMessages((prev) => [
             ...prev,
-            { role: 'bot', text: `Olá! ${handleGetTimeGreeting({ mustIncludeUmUma: false })}.<br/>Eu sou o <b>${SYSTEM.MASCOT}</b>, seu assistente virtual. 🐱<br/>Como posso te ajudar hoje?` },
+            { role: 'bot', text: `Olá, ${handleGetFirstName(me?.userName)}! ${handleGetTimeGreeting({ mustIncludeUmUma: false })}.<br/>Eu sou o <b>${SYSTEM.MASCOT}</b>, seu assistente virtual. 🐱<br/>Como posso te ajudar hoje?` },
         ]);
-    }, []);
+    }, [me]);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,6 +57,16 @@ export default function ChatBot() {
             setMessages((prev) => [
                 ...prev,
                 { role: 'bot', text: 'Nenhuma API key encontrada' },
+            ]);
+
+            return;
+        }
+
+        // Checar plano atual;
+        if (me?.currentMainCompany?.planType?.toString() === '1') {
+            setMessages((prev) => [
+                ...prev,
+                { role: 'bot', text: `Opa, parece que seu plano atual é o <b>básico</b>. <a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para usar o assistente virtual!` },
             ]);
 
             return;
@@ -113,7 +134,8 @@ export default function ChatBot() {
             'remarc', 'agenda', 'notifica', 'notificação', 'notificacao', 'pagamento',
             'fatura', 'plano', 'empresa', 'cadast', 'login', 'senha', 'checkout',
             'se chama', 'seu nome', 'hora', 'evento', 'configura', 'cliente', 'follow',
-            'ordem', 'estoque', 'nota', 'ajuda', SYSTEM.NAME
+            'ordem', 'estoque', 'nota', 'ajuda', SYSTEM.NAME, 'obrigad', 'whatsapp', 'zap',
+            'consult', 'paciente', 'colaborador', 'equipe'
         ];
 
         // Se achar qualquer keyword retorna true;

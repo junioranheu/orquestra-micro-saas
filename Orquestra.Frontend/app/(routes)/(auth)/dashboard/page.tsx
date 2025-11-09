@@ -60,6 +60,7 @@ export default function Dashboard() {
                     tippyPlacement='bottom'
                     flipPeriodic={true}
                     flipInterval={handleGetRandomNumber(5000, 10000)}
+                    handleFunction={() => setIsOpenChatbot(true)}
                 />
             </span>
 
