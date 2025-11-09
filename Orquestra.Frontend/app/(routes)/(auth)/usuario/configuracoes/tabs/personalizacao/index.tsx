@@ -5,7 +5,7 @@ import SYSTEM from '@/app/consts/system';
 import { useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
 import Tippy from '@tippyjs/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function UsuarioConfiguracoesTabPersonalizacao() {
@@ -26,13 +26,20 @@ function InterfaceCustomizer() {
     const [showChatbot, setShowChatbot] = useShowChatbot();
     const [showExpandedSidebar, setShowExpandedSidebar] = useShowExpandedSidebar();
 
-    useEffect(() => {
+    const handleInitSettings = useCallback(() => {
         const valueMascot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);
         setShowMascot(valueMascot === null ? true : valueMascot === 'true');
 
+        const valueChatbot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_CHATBOT);
+        setShowChatbot(valueChatbot === null ? true : valueChatbot === 'true');
+
         const valueExpandedSidebar = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR);
         setShowExpandedSidebar(valueExpandedSidebar === null ? true : valueExpandedSidebar === 'true');
-    }, []);
+    }, [setShowMascot, setShowChatbot, setShowExpandedSidebar]);
+
+    useEffect(() => {
+        handleInitSettings();
+    }, [handleInitSettings]);
 
     function handleToggleMascot() {
         localStorage.setItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT, (!showMascot).toString());

@@ -27,7 +27,7 @@ export default function Dashboard() {
 
     const router = useRouter();
     const [auth,] = useUserContext();
-    const [showChatbot, setShowChatbot] = useShowChatbot();
+    const [showChatbot,] = useShowChatbot();
     const [, setIsOpenChatbot] = useIsOpenChatbot();
 
     const me = useApiGetMe({});

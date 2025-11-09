@@ -1,6 +1,5 @@
 'use client';
 import { CONSTS_INVENTORY, iInventory } from '@/app/api/consts/inventory';
-import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
@@ -12,7 +11,6 @@ import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -40,9 +38,6 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         imageFormFile: null,
         imageBase64: ''
     });
-
-    const [countries, setCountries] = useState<string[] | undefined>([]);
-    useApiRequestToSetterOnUrlChange<string[]>({ apiUrlRequest: CONSTS_UTILITY.getCountry, setter: setCountries });
 
     const handleClose = useCallback(() => {
         setSaving(false);
@@ -83,6 +78,11 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             return;
         }
 
+        if (!formData.companyId) {
+            swal({ content: 'Falha interna ao recuperar valor da variável "companyId".', icon: 'warning' });
+            return;
+        }
+
         setEditing(false);
         setSaving(true);
 
@@ -91,7 +91,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         const formDataInput = new FormData();
 
         formDataInput.append('InventoryId', input.inventoryId ? input.inventoryId.toString() : Guid.create().toString());
-        formDataInput.append('CompanyId', input.companyId?.toString()!);
+        formDataInput.append('CompanyId', input.companyId ? input.companyId?.toString() : Guid.create().toString());
         formDataInput.append('Name', input.name ?? '');
         formDataInput.append('Description', input.description ?? '');
         formDataInput.append('Quantity', input?.quantity && input?.quantity > 0 ? input.quantity?.toString() : '0');
