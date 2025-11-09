@@ -28,16 +28,25 @@ export default function ChatBot({ me }: iProps) {
     const [input, setInput] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const chatEndRef = useRef<HTMLDivElement | null>(null);
+    const hasGreetedRef = useRef(false);
+
+    const SYSTEM_DEFAULT_PROMPT = `Você é o Maestro, o assistente virtual oficial do sistema ${SYSTEM.NAME} — uma plataforma que ajuda empresas a gerenciar agendamentos, serviços e clientes de forma simples e eficiente. Você é prestativo, responde de forma objetiva e mantém um tom natural e leve nas conversas.`;
+    const conversationRef = useRef<any[]>([]);
 
     useEffect(() => {
-        if (!me?.userName) {
+        if (hasGreetedRef.current || !me?.userName) {
             return;
         }
 
         setMessages((prev) => [
             ...prev,
-            { role: 'bot', text: `Olá, ${handleGetFirstName(me?.userName)}! ${handleGetTimeGreeting({ mustIncludeUmUma: false })}.<br/>Eu sou o <b>${SYSTEM.MASCOT}</b>, seu assistente virtual. 🐱<br/>Como posso te ajudar hoje?` },
+            {
+                role: 'bot',
+                text: `Olá, ${handleGetFirstName(me?.userName)}! ${handleGetTimeGreeting({ mustIncludeUmUma: false })}.<br/>Eu sou o <b>${SYSTEM.MASCOT}</b>, seu assistente virtual. 🐱<br/>Como posso te ajudar hoje?`
+            },
         ]);
+
+        hasGreetedRef.current = true;
     }, [me]);
 
     useEffect(() => {
@@ -45,81 +54,72 @@ export default function ChatBot({ me }: iProps) {
     }, [messages]);
 
     async function handleSendMessage(e?: FormEvent) {
-        if (e) {
-            e.preventDefault();
-        }
+        e?.preventDefault();
 
         if (!input.trim()) {
             return;
         }
 
         if (!API_KEY) {
-            setMessages((prev) => [
-                ...prev,
-                { role: 'bot', text: 'Nenhuma API key encontrada' },
-            ]);
-
-            return;
-        }
-
-        // Checar plano atual;
-        if (me?.currentMainCompany?.planType?.toString() === '1') {
-            setMessages((prev) => [
-                ...prev,
-                { role: 'bot', text: `Opa, parece que seu plano atual é o <b>básico</b>. <a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para usar o assistente virtual!` },
-            ]);
-
+            setMessages(p => [...p, { role: 'bot', text: 'Nenhuma API key encontrada 💀' }]);
+            setLoading(false);
             return;
         }
 
         const userMessage = input.trim();
-        setMessages((prev) => [...prev, { role: 'user', text: userMessage }]);
+        setMessages(p => [...p, { role: 'user', text: userMessage }]);
         setInput('');
         setLoading(true);
 
+        // Checar plano atual;
+        if (me?.currentMainCompany?.planType?.toString() !== '3') {
+            setMessages((prev) => [...prev, { role: 'bot', text: `Opa, ${handleGetFirstName(me?.userName)}! <a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!` },]);
+            setLoading(false);
+            return;
+        }
+
+        // Checar se o assunto é pertinente;
         if (!handleCheckIfIsAboutThePlataform(userMessage)) {
             setMessages(prev => [...prev, { role: 'bot', text: `Desculpe — eu só respondo sobre a plataforma ${SYSTEM.NAME}.` }]);
             setLoading(false);
             return;
         }
 
+        const isFirstMessage = conversationRef.current.length === 0;
+
+        // Monta o conteúdo a ser enviado;
+        const contents = [
+            ...(isFirstMessage ? [{ role: 'model', parts: [{ text: SYSTEM_DEFAULT_PROMPT }] }] : []),
+            ...conversationRef.current,
+            { role: 'user', parts: [{ text: userMessage }] },
+        ];
+
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
-            const SYSTEM_DEFAULT_PROMPT = `Você é o Maestro, o assistente virtual oficial do sistema ${SYSTEM.NAME} — uma plataforma que ajuda empresas a gerenciar agendamentos, serviços e clientes de forma simples e eficiente. Você é prestativo, responde de forma objetiva e mantém um tom natural e leve nas conversas.`;
-
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-goog-api-key': API_KEY
-                },
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            role: 'user',
-                            parts: [
-                                { text: SYSTEM_DEFAULT_PROMPT },
-                                { text: userMessage }
-                            ]
-                        }
-                    ]
-                })
-            });
-
-            if (!res.ok) {
-                const text = await res.text();
-                console.error('gemini err', res.status, text);
-                setMessages((prev) => [...prev, { role: 'bot', text: `Erro da API: ${res.status}` }]);
-                return;
-            }
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': API_KEY,
+                    },
+                    body: JSON.stringify({ contents })
+                }
+            );
 
             const data = await res.json();
             const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Não entendi 🤔';
             const replyNormalized = reply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            setMessages((prev) => [...prev, { role: 'bot', text: replyNormalized }]);
+
+            // Atualiza o histórico (sem o prompt)
+            conversationRef.current.push(
+                { role: 'user', parts: [{ text: userMessage }] },
+                { role: 'model', parts: [{ text: reply }] }
+            );
+
+            setMessages(p => [...p, { role: 'bot', text: replyNormalized }]);
         } catch (err) {
             console.error(err);
-            setMessages((prev) => [...prev, { role: 'bot', text: 'Erro ao conectar com o bot 😞' }]);
+            setMessages(p => [...p, { role: 'bot', text: 'Erro ao conectar com o bot 😞' }]);
         } finally {
             setLoading(false);
         }
@@ -129,13 +129,14 @@ export default function ChatBot({ me }: iProps) {
         const s = text.toLowerCase();
 
         const keywords = [
-            'oi', 'olá', 'tudo bem', 'como vai', 'beleza',
+            'oi', 'olá', 'tudo bem', 'como vai', 'beleza', 'oxe', 'oxi',
             'agend', 'serviço', 'servico', 'cliente', 'horár', 'horar', 'cancel', 'marc',
             'remarc', 'agenda', 'notifica', 'notificação', 'notificacao', 'pagamento',
             'fatura', 'plano', 'empresa', 'cadast', 'login', 'senha', 'checkout',
             'se chama', 'seu nome', 'hora', 'evento', 'configura', 'cliente', 'follow',
             'ordem', 'estoque', 'nota', 'ajuda', SYSTEM.NAME, 'obrigad', 'whatsapp', 'zap',
-            'consult', 'paciente', 'colaborador', 'equipe'
+            'consult', 'paciente', 'colaborador', 'equipe', 'sobre o sistema', 'sistema',
+            'suporte', 'fatura'
         ];
 
         // Se achar qualquer keyword retorna true;

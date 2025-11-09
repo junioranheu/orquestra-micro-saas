@@ -18,7 +18,7 @@ public enum PlanTypeEnum
     [PlanTypeHelper.Price(19.99)]
     [PlanTypeHelper.SchedulingLimit(500)]
     [PlanTypeHelper.Description("Pequenas equipes")]
-    [PlanTypeHelper.Perks(["Limite de agendamentos alto (500 agendamentos/mês)", "Integração completa com o WhatsApp", "Assistente virtual", "Suporte básico"])]
+    [PlanTypeHelper.Perks(["Limite de agendamentos alto (500 agendamentos/mês)", "Integração completa com o WhatsApp", "Suporte básico"])]
     [PlanTypeHelper.DurationDays(SystemConsts.Time.PlanDurationDays)]
     Basic = 2,
 
@@ -26,7 +26,7 @@ public enum PlanTypeEnum
     [PlanTypeHelper.Price(34.99)]
     [PlanTypeHelper.SchedulingLimit(int.MaxValue)]
     [PlanTypeHelper.Description("Grandes operações")]
-    [PlanTypeHelper.Perks(["Agendamentos ilimitados", "Relatórios completos e detalhados", "Suporte prioritário"])]
+    [PlanTypeHelper.Perks(["Agendamentos ilimitados", "Relatórios completos e detalhados", "Assistente virtual", "Suporte prioritário"])]
     [PlanTypeHelper.DurationDays(SystemConsts.Time.PlanDurationDays)]
     Premium = 3
 }
