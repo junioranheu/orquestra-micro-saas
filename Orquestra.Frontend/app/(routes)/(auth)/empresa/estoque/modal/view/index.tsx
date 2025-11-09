@@ -91,7 +91,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         const formDataInput = new FormData();
 
         formDataInput.append('InventoryId', input.inventoryId ? input.inventoryId.toString() : Guid.create().toString());
-        formDataInput.append('CompanyId', input.companyId ? input.companyId?.toString() : Guid.create().toString());
+        formDataInput.append('CompanyId', input.companyId ? input.companyId?.toString() : Guid.EMPTY);
         formDataInput.append('Name', input.name ?? '');
         formDataInput.append('Description', input.description ?? '');
         formDataInput.append('Quantity', input?.quantity && input?.quantity > 0 ? input.quantity?.toString() : '0');
@@ -101,9 +101,11 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             formDataInput.append('ImageFormFile', input.imageFormFile as Blob, input.imageFormFile.name);
         }
 
-        if (!companyId) {
-            swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamnete, e se o erro persistir, contate o suporte.', icon: 'error' });
-            return;
+        if (type === 'edit') {
+            if (!companyId) {
+                swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
+                return;
+            }
         }
 
         input.companyId = companyId;

@@ -8,7 +8,7 @@ export const CONSTS_INVENTORY = {
     post: `${BASE}/${controller}`,
     put: `${BASE}/${controller}`,
     getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`,
-    disable: `${BASE}/${controller}`
+    disable: `${BASE}/${controller}/disable`
 };
 
 export interface iInventory {

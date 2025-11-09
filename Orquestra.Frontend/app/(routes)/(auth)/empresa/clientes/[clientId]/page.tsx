@@ -1,6 +1,6 @@
 'use client';
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
-import { handleDisableClient } from '@/app/(routes)/(auth)/empresa/clientes/page';
+import { handleDisable } from '@/app/(routes)/(auth)/empresa/clientes/page';
 import { iMe } from '@/app/api/consts/auth';
 import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
@@ -167,7 +167,7 @@ function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iCl
             </div>
 
             <div className={styles.clientHeader__actions}>
-                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisableClient(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} />}
+                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} />}
                 <Button label='Editar cliente' handleFunction={() => onEdit()} />
             </div>
         </div>

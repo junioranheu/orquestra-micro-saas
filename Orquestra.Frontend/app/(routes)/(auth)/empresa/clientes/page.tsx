@@ -100,7 +100,7 @@ export default function EmpresaClientes() {
         ...(me?.isUserAdmOfCurrentMainCompany ? [
             {
                 label: 'Remover cliente',
-                function: (e: iClient) => handleDisableClient(e, setTrigger),
+                function: (e: iClient) => handleDisable(e, setTrigger),
                 icon: <Icon icon='user-x' />
             }
         ] : [])
@@ -175,7 +175,7 @@ export default function EmpresaClientes() {
     )
 }
 
-export async function handleDisableClient(member: iClient, setTrigger: Dispatch<SetStateAction<Date>>) {
+export async function handleDisable(member: iClient, setTrigger: Dispatch<SetStateAction<Date>>) {
     swal({
         content: 'Você tem certeza que deseja remover este cliente?',
         confirmBtnText: 'Sim, desejo remover',

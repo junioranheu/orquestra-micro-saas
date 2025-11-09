@@ -16,7 +16,7 @@ public partial class InventoryBase(Context context, ICheckIfUserIsLinkedCompanyU
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         #region dados básicos
-        if (!IsNameValid(input.Name))
+        if (!IsNameValid(input.Name) || string.IsNullOrEmpty(input.Name))
         {
             throw new ArgumentException("O nome do item de inventário não é válido.");
         }
@@ -43,11 +43,14 @@ public partial class InventoryBase(Context context, ICheckIfUserIsLinkedCompanyU
         #endregion
 
         #region duplicidade
-        bool exists = await _context.Inventories.AsNoTracking().AnyAsync(x => x.CompanyId == input.CompanyId && x.Name.Equals(input.Name, StringComparison.CurrentCultureIgnoreCase));
-
-        if (isCreate && exists)
+        if (isCreate)
         {
-            throw new InvalidOperationException("Já existe um item de inventário com esse nome nesta empresa.");
+            bool exists = await _context.Inventories.AsNoTracking().AnyAsync(x => x.CompanyId == input.CompanyId && x.Name.ToLower() == input.Name.ToLower());
+
+            if (exists)
+            {
+                throw new InvalidOperationException("Já existe um item de inventário com esse nome nesta empresa.");
+            }
         }
         #endregion
     }

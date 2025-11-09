@@ -80,7 +80,7 @@ export default function EmpresaEstoque() {
         ...(me?.isUserAdmOfCurrentMainCompany ? [
             {
                 label: 'Remover item',
-                function: (e: iInventory) => handleDisableClient(e, setTrigger),
+                function: (e: iInventory) => handleDisable(e, setTrigger),
                 icon: <Icon icon='x' />
             }
         ] : [])
@@ -155,15 +155,14 @@ export default function EmpresaEstoque() {
     )
 }
 
-export async function handleDisableClient(item: iInventory, setTrigger: Dispatch<SetStateAction<Date>>) {
+export async function handleDisable(item: iInventory, setTrigger: Dispatch<SetStateAction<Date>>) {
     swal({
         content: 'Você tem certeza que deseja remover este item?',
         confirmBtnText: 'Sim, desejo remover',
         confirmFunction: async () => {
-            const input = { inventoryId: item.inventoryId };
-            const schedule = await Fetch.put({ url: CONSTS_INVENTORY.disable, body: input });
+            const inventory = await Fetch.put({ url: `${CONSTS_INVENTORY.disable}?inventoryId=${item.inventoryId}` });
 
-            if (schedule) {
+            if (inventory) {
                 toast({ content: 'Item removido com sucesso.' });
                 setTrigger(new Date());
                 return;

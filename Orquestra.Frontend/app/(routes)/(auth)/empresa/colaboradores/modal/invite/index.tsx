@@ -45,7 +45,7 @@ export default function EmpresaMembrosModalInvite({ isModalOpen, setIsModalOpen,
         setSaving(true);
 
         if (!companyId) {
-            swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamnete, e se o erro persistir, contate o suporte.', icon: 'error' });
+            swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
             return;
         }
 
