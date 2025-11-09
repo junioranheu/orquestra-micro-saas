@@ -13,6 +13,7 @@ env:
   NODE_VERSION: '22'
   FRONTEND_DIR: 'Orquestra.Frontend'
   NEXT_PUBLIC_API_URL_BASE: ${{ secrets.NEXT_PUBLIC_API_URL_BASE }}
+  NEXT_PUBLIC_GOOGLE_AI_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_AI_API_KEY }}
   AZURE_WEBAPP_NAME: 'orquestra-web'
   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_NEXTJS_PUBLISH_PROFILE }}
 
@@ -48,6 +49,7 @@ jobs:
         run: npm run build
         env: 
           NEXT_PUBLIC_API_URL_BASE: ${{ env.NEXT_PUBLIC_API_URL_BASE }}
+          NEXT_PUBLIC_GOOGLE_AI_API_KEY: ${{ env.NEXT_PUBLIC_GOOGLE_AI_API_KEY }}
 
       # 6️⃣ Remove devDependencies (opcional)
       - name: Prune dev dependencies
