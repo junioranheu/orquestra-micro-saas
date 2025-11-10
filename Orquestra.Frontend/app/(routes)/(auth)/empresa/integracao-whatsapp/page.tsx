@@ -132,7 +132,7 @@ export default function EmpresaIntegracaoWhatsapp() {
                 me?.isUserAdmOfCurrentMainCompany && (
                     <Button
                         key='add'
-                        label='Salvar configurações de integração com WhatsApp'
+                        label='Salvar configurações de integração'
                         handleFunction={() => handleSave()}
                         icon_feather={<Icon icon='check' size='small' />}
                         isDisabled={!hasPermitionToSave}

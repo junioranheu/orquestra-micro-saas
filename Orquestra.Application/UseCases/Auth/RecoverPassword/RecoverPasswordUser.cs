@@ -35,13 +35,15 @@ public sealed class RecoverPasswordUser(
     private readonly ICreateVerification _createVerification = createVerification;
     private readonly IGenericPublisher _publisher = publisher;
 
+    private const string WARNING_NO_RECOVER_ANSWER = "Aparentemente sua conta não tem nenhuma resposta de recuperação de conta. Caso necessário, contate o suporte.";
+
     public async Task SendEmail(string email)
     {
         UserOutput user = await _getUser.Execute(userId: null, email: email, throwIfStatusFalse: true);
 
         if (user.RecoverPasswordQuestion == 0 || string.IsNullOrEmpty(user.RecoverPasswordAnswer))
         {
-            throw new InvalidOperationException("Aparentemente sua conta não tem nenhuma resposta de recuperação de conta. Caso necessário, contate o suporte.");
+            throw new InvalidOperationException(WARNING_NO_RECOVER_ANSWER);
         }
 
         Verification verification = await SaveVerification(user);
@@ -59,7 +61,7 @@ public sealed class RecoverPasswordUser(
 
         if (result.RecoverPasswordQuestion == 0 || string.IsNullOrEmpty(result.RecoverPasswordAnswer))
         {
-            throw new InvalidOperationException("Aparentemente sua conta não tem nenhuma resposta de recuperação de conta. Caso necessário, contate o suporte.");
+            throw new InvalidOperationException(WARNING_NO_RECOVER_ANSWER);
         }
 
         // Alterar senha;

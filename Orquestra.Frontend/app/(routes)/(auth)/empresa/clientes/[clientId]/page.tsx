@@ -89,7 +89,7 @@ export default function ClientProfile() {
 
     return (
         <Fragment>
-            <TemplatePageHeader title={`Detalhes do cliente ${handleGetFirstName(client.fullName)}`}>
+            <TemplatePageHeader title={`Detalhes • ${handleGetFirstName(client.fullName)}`}>
                 <div className={styles.clientProfile}>
                     <div className={styles.clientProfile__container}>
                         <ClientHeader
