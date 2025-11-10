@@ -50,11 +50,14 @@ $shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
         }
 
         .userInfo {
+            // background-color: tomato;
             display: flex;
             flex-direction: column;
 
             .name {
+                // background-color: tomato;
                 font-weight: 600;
+                width: fit-content;
             }
 
             .email {

@@ -99,7 +99,7 @@ export default function EmpresaEstoque() {
     return (
         <Fragment>
             <TemplatePageHeader
-                title='Itens cadastrados'
+                title='Estoque'
                 actions={[
                     <Button
                         key='search'

@@ -3,8 +3,11 @@ import Icon from '@/app/components/icon';
 import ModalGeneric, { iModalCustomPosition } from '@/app/components/modal/generic';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
+import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
+import Tippy from '@tippyjs/react';
 import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, JSX, SetStateAction, useEffect, useState } from 'react';
@@ -82,6 +85,7 @@ export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Elem
 
     const router = useRouter();
     const windowSize = useWindowSize();
+    const [auth,] = useUserContext();
 
     function handleRedirect(route: (typeof ROUTES)[keyof typeof ROUTES]) {
         setIsModalOpen(false);
@@ -91,7 +95,9 @@ export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Elem
     return (
         <div className={styles.main} role='menu'>
             <div className={styles.header}>
-                <div className={styles.avatar}>{handleGetNameInitials(me?.userName)}</div>
+                <Tippy content={`Sessão válida até ${handleFormatDate(auth?.refreshTokenExpirationDate, DATE_STYLE.DIA_MES_ANO)}`}>
+                    <div className={`${styles.avatar} notSelectable`}>{handleGetNameInitials(me?.userName)}</div>
+                </Tippy>
 
                 <div className={styles.userInfo}>
                     <div className={styles.name}>{handleGetFirstName(me?.userName)}</div>
