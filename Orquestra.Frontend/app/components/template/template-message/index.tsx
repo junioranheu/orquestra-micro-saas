@@ -21,13 +21,13 @@ export default function LayoutTemplateMessage({
     description,
     showHelpPage = false
 }: iProps) {
+
     const router = useRouter();
     const [isVisible, setIsVisible] = useState(false);
 
     useDisableScroll();
 
     useEffect(() => {
-        // Animação de entrada
         const timer = setTimeout(() => setIsVisible(true), 100);
         return () => clearTimeout(timer);
     }, []);
@@ -92,17 +92,21 @@ export default function LayoutTemplateMessage({
                     </div>
                 </div>
 
-                {code && (
-                    <span className={styles.code} data-variant={variant}>
-                        {code}
-                    </span>
-                )}
+                {
+                    code && (
+                        <span className={styles.code} data-variant={variant}>
+                            {code}
+                        </span>
+                    )
+                }
 
-                {title && (
-                    <div className={styles.divTitle}>
-                        <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
-                    </div>
-                )}
+                {
+                    title && (
+                        <div className={styles.divTitle}>
+                            <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
+                        </div>
+                    )
+                }
 
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
 
@@ -126,5 +130,5 @@ export default function LayoutTemplateMessage({
                 </div>
             </div>
         </main>
-    );
+    )
 }

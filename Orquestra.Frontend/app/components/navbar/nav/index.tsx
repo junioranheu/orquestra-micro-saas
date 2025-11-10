@@ -89,7 +89,7 @@ export default function Navbar() {
                         {
                             showChatbot && (
                                 <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`}>
-                                    <span onClick={() => { setIsOpenChatbot(true), setIsMenuOpen(false) }}><Icon icon='message-square' weight='bold' /></span>
+                                    <span onClick={() => { setIsOpenChatbot(true); setIsMenuOpen(false); }}><Icon icon='message-square' weight='bold' /></span>
                                 </Tippy>
                             )
                         }
