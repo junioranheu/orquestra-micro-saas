@@ -52,6 +52,8 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         setSaving(false);
         setEditing(false);
 
+        console.log('companyId', companyId);
+
         if (type === 'create') {
             setEditing(true);
             return;
@@ -61,11 +63,9 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             return;
         }
 
-        console.log(item.imageFormFile);
-
         setFormData({
             inventoryId: item ? item.inventoryId : Guid.create(),
-            companyId: item ? item.companyId : Guid.create(),
+            companyId: companyId,
             name: item ? item.name : null,
             description: item && item.description ? item.description : null,
             quantity: item && item.quantity ? item.quantity : 0,
@@ -73,16 +73,11 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             imageFormFile: item && item.imageBase64 ? handleConvertBase64ToFile(item?.imageBase64, 'logo') : null,
             imageBase64: item && item.imageBase64 ? item.imageBase64 : ''
         });
-    }, [isModalOpen, type, item, setIsModalOpen, handleClose]);
+    }, [isModalOpen, type, item, companyId, setIsModalOpen, handleClose]);
 
     async function handleSave() {
         if (!formData.name || !formData.quantity || !formData.unitPrice) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
-            return;
-        }
-
-        if (!formData.companyId) {
-            swal({ content: 'Falha interna ao recuperar valor da variável "companyId".', icon: 'warning' });
             return;
         }
 
@@ -93,8 +88,8 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         const input = data.json as iInventory;
         const formDataInput = new FormData();
 
-        formDataInput.append('InventoryId', input.inventoryId ? input.inventoryId.toString() : Guid.create().toString());
-        formDataInput.append('CompanyId', input.companyId ? input.companyId?.toString() : Guid.EMPTY);
+        formDataInput.append('InventoryId', input.inventoryId ? input.inventoryId.toString() : SYSTEM.EMPTY_GUID.toString());
+        formDataInput.append('CompanyId', companyId!.toString());
         formDataInput.append('Name', input.name ?? '');
         formDataInput.append('Description', input.description ?? '');
         formDataInput.append('Quantity', input?.quantity && input?.quantity > 0 ? input.quantity?.toString() : '0');
@@ -104,11 +99,9 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             formDataInput.append('ImageFormFile', input.imageFormFile as Blob, input.imageFormFile.name);
         }
 
-        if (type === 'edit') {
-            if (!companyId) {
-                swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
-                return;
-            }
+        if (!companyId) {
+            swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
+            return;
         }
 
         input.companyId = companyId;
@@ -188,8 +181,8 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
                     <div className='modal-layout-grid'>
                         <InputMask title='Nome' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='Descrição' fieldName='description' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Quantidade' fieldName='quantity' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Preço por unidade' fieldName='unitPrice' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Quantidade' type='number' fieldName='quantity' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Preço por unidade' type='number' fieldName='unitPrice' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputImage title='Imagem' fieldName='imageFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar imagem' />
                     </div>
                 </main>
