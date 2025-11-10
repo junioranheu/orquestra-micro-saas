@@ -11,7 +11,7 @@ export default function UsuarioSenhaRedefinida() {
 
     useEffect(() => {
         swal({
-            content: `Sua senha foi redefinida e agora ela é idêntica à sua resposta de recuperação de senha.
+            content: `Sua senha foi redefinida e agora ela é <b>idêntica à sua resposta de recuperação de senha</b>.
                     <br/><br/>Faça login rapidamente e troque a senha manualmente, nas configurações da sua conta, para manter sua conta mais segura.`,
             icon: 'success',
             mustConfirm: true,

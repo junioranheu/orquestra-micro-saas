@@ -1,6 +1,6 @@
 import confetti from 'canvas-confetti';
 
-export function handleLaunchConfetti(durationMs: number = 3500) {
+export function handleLaunchConfetti(durationMs: number = 5000) {
     const end = Date.now() + durationMs;
 
     const myCanvas = document.createElement('canvas');

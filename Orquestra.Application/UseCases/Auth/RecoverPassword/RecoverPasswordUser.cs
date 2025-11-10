@@ -65,7 +65,7 @@ public sealed class RecoverPasswordUser(
         }
 
         // Alterar senha;
-        result.Password = EncryptPassword(result.RecoverPasswordAnswer);
+        result.Password = result.RecoverPasswordAnswer;
 
         _context.ChangeTracker.Clear();
         _context.Update(result);
