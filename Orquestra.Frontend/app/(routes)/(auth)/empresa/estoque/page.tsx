@@ -96,6 +96,10 @@ export default function EmpresaEstoque() {
         setIsModalViewOpen(true);
     }
 
+    useEffect(() => {
+        console.log(items);
+    }, [items]);
+
     return (
         <Fragment>
             <TemplatePageHeader

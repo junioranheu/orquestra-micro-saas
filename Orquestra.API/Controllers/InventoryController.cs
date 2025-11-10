@@ -69,7 +69,7 @@ public class InventoryController(
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        (IEnumerable<Inventory> output, int count) = await _getInventoryByCompanyId.Execute(paginationInput, userIdAuth, companyId.GetValueOrDefault(), input);
+        (IEnumerable<InventoryOutput> output, int count) = await _getInventoryByCompanyId.Execute(paginationInput, userIdAuth, companyId.GetValueOrDefault(), input);
 
         return Ok(new { output, count });
     }

@@ -9,6 +9,7 @@ import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
+import handleConvertBase64ToFile from '@/app/functions/convert.base64ToFile';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { Guid } from 'guid-typescript';
@@ -60,6 +61,8 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             return;
         }
 
+        console.log(item.imageFormFile);
+
         setFormData({
             inventoryId: item ? item.inventoryId : Guid.create(),
             companyId: item ? item.companyId : Guid.create(),
@@ -67,7 +70,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             description: item && item.description ? item.description : null,
             quantity: item && item.quantity ? item.quantity : 0,
             unitPrice: item && item.unitPrice ? item.unitPrice : 0,
-            imageFormFile: item && item.imageFormFile ? item.imageFormFile : null,
+            imageFormFile: item && item.imageBase64 ? handleConvertBase64ToFile(item?.imageBase64, 'logo') : null,
             imageBase64: item && item.imageBase64 ? item.imageBase64 : ''
         });
     }, [isModalOpen, type, item, setIsModalOpen, handleClose]);

@@ -145,7 +145,7 @@ public sealed class GetCompany(Context context, ICheckIfUserIsLinkedCompanyUser 
 
         Dictionary<Guid, CompanyOutput> outputById = output.Where(x => x.CompanyId != Guid.Empty).ToDictionary(x => x.CompanyId);
 
-        foreach (var company in result)
+        foreach (var company in result.Where(x => !string.IsNullOrEmpty(x.LogoContentType)).ToList())
         {
             if (company.Logo is not null && company.Logo.Length > 0 && outputById.TryGetValue(company.CompanyId, out CompanyOutput? companyOutput))
             {
