@@ -51,7 +51,11 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
                 formDataInput.append('CompanyId', me?.currentMainCompany?.companyId?.toString() ?? Guid.EMPTY);
                 formDataInput.append('PlanType', plan.planType.toString());
 
-                const output = await Fetch.put({ url: CONSTS_COMPANY.updatePlanType, body: formDataInput, isFormData: true }) as iCompanyInvoice;
+                const output = await Fetch.put({
+                    url: CONSTS_COMPANY.updatePlanType,
+                    body: formDataInput,
+                    isFormData: true
+                }) as iCompanyInvoice;
 
                 if (output) {
                     handleLaunchConfetti(5000);
@@ -73,7 +77,7 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
     }
 
     async function handlePay(e: iCompanyInvoice) {
-        const pendingPayment = 1; // De acordo com o back-end (CompanySituationEnum);
+        const pendingPayment = 1;
 
         if (e.companyInvoiceSituation.toString() !== pendingPayment.toString()) {
             swal({
@@ -96,61 +100,141 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
             return;
         }
 
-        toast({ content: 'Não foi possível pagar esta fatura. Tente novamente mais tarde.' });
+        toast({
+            content: 'Não foi possível pagar esta fatura. Tente novamente mais tarde.'
+        });
+    }
+
+    function handleGetPlanStatus(plan: iPlanType) {
+        const isCurrentPlan = plan.planType.toString() === me?.currentMainCompany?.planType?.toString();
+        const isFree = plan.planTypeName === 'Free';
+        const isPaymentPendent = me?.currentMainCompany?.companySituation?.toString() === '1';
+
+        return { isCurrentPlan, isFree, isPaymentPendent };
+    }
+
+    function handleGetPlanButtonText(plan: iPlanType, status: ReturnType<typeof handleGetPlanStatus>) {
+        if (status.isCurrentPlan && status.isPaymentPendent) {
+            return 'Pagamento pendente';
+        }
+
+        return `Plano ${plan.planTypeDescription.toLocaleLowerCase()}`;
     }
 
     return (
         <section className={styles.pricingSection}>
-            <CardCreamWithChildren
-                title='Planos que crescem com você'
-                subtitle={
+            <CardCreamWithChildren title='Planos que crescem com você' subtitle={
+                <div className={styles.headerWrapper}>
                     <Tippy content={`Lembre-se que, ${messageInvoice.toLowerCase()}`} placement='right'>
-                        <p className={styles.subtitle} style={{ cursor: 'help' }}>Sem contratos. Cancele quando quiser. <span style={{ color: 'var(--contrast)', fontWeight: 'bold' }}>*</span></p>
+                        <p className={styles.subtitle}>
+                            Sem contratos. Cancele quando quiser.
+                            <span className={styles.infoIcon}>*</span>
+                        </p>
                     </Tippy>
-                }
-            >
+                </div>
+            }>
+                <div className={styles.header}>
+                    <div className={styles.headerContent}>
+                        <div className={styles.headerItem}>
+                            <span className={styles.headerIcon}>🔒</span>
+                            <div>
+                                <h5>Pagamento seguro</h5>
+                                <p>Seus dados protegidos com criptografia.</p>
+                            </div>
+                        </div>
+
+                        <div className={styles.headerItem}>
+                            <span className={styles.headerIcon}>💳</span>
+                            <div>
+                                <h5>Sem surpresas</h5>
+                                <p>Cancele a qualquer momento, sem multas.</p>
+                            </div>
+                        </div>
+
+                        <div className={styles.headerItem}>
+                            <span className={styles.headerIcon}>🚀</span>
+                            <div>
+                                <h5>Ativação imediata</h5>
+                                <p>Seu plano ativo em instantes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div className={styles.grid}>
                     {
-                        plans?.plans?.map((p, i) => {
-                            const isCurrentPlan = p.planType.toString() === me?.currentMainCompany?.planType?.toString();
-                            const isFree = p.planTypeName === 'Free';
-                            const isPaymentPendent = me?.currentMainCompany?.companySituation?.toString() === '1';
-                            const isDisabled = (isFree || (isCurrentPlan && !isPaymentPendent));
+                        plans?.plans?.map((plan, index) => {
+                            const status = handleGetPlanStatus(plan);
+                            const isDisabled = status.isFree || (status.isCurrentPlan && !status.isPaymentPendent);
+                            const buttonText = handleGetPlanButtonText(plan, status);
 
                             return (
-                                <div key={i} className={`${styles.cardWrapper} ${(isFree && 'notAllowed')}`}>
-                                    {isCurrentPlan && <div className={styles.badge}>Plano atual</div>}
+                                <div
+                                    key={index}
+                                    className={`${styles.cardWrapper} ${status.isFree ? styles.notAllowed : ''} ${status.isCurrentPlan ? styles.current : ''}`}
+                                >
+                                    {
+                                        status.isCurrentPlan && (
+                                            <div className={styles.badge}>
+                                                <span className={styles.badgeIcon}>✓</span>
+                                                Plano atual
+                                            </div>
+                                        )
+                                    }
 
                                     <div className={`${styles.card} ${styles.cardNormal}`}>
-                                        <h3 className={styles.planHeading}>{p.planTypeDescription}</h3>
-                                        <p className={styles.planSub}>{p.description}</p>
-
-                                        <div className={styles.priceWrap}>
-                                            <span className={styles.price}>R$ {p.price}</span>
-                                            {!isFree && <span className={styles.pricePerMonth}>/mês</span>}
+                                        <div className={styles.cardHeader}>
+                                            <h3 className={styles.planHeading}>{plan.planTypeDescription}</h3>
+                                            <p className={styles.planSub}>{plan.description}</p>
                                         </div>
 
-                                        <ul className={styles.perksList}>
+                                        <div className={styles.priceSection}>
+                                            <div className={styles.priceWrap}>
+                                                <span className={styles.currency}>R$</span>
+                                                <span className={styles.price}>{plan.price}</span>
+                                                {!status.isFree && <span className={styles.pricePerMonth}>/mês</span>}
+                                            </div>
+
                                             {
-                                                p.perks.map((perk) => (
-                                                    <li key={perk} className={styles.perkItem}>
-                                                        <span className={styles.perkIcon}>✓</span>
+                                                !status.isFree && (
+                                                    <p className={styles.billingInfo}>Cobrado mensalmente</p>
+                                                )
+                                            }
+                                        </div>
+
+                                        <div className={styles.divider}></div>
+
+                                        <div className={styles.perksSection}>
+                                            <h4 className={styles.perksTitle}>O que está incluído:</h4>
+                                            <ul className={styles.perksList}>
+                                                {plan.perks.map((perk, perkIndex) => (
+                                                    <li key={perkIndex} className={styles.perkItem}>
+                                                        <span className={styles.perkIcon}>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                <path d="M13.3333 4L6 11.3333L2.66666 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                            </svg>
+                                                        </span>
                                                         <span className={styles.perkText}>{perk}</span>
                                                     </li>
-                                                ))
-                                            }
-                                        </ul>
+                                                ))}
+                                            </ul>
+                                        </div>
 
-                                        <Link
-                                            href='#'
-                                            className={`${styles.ctaButton} ${isDisabled ? styles.disabled : ''}`}
-                                            onClick={isDisabled ? undefined : () => handleChooseNewPlan(p)}
-                                        >
-                                            {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
-                                        </Link>
+                                        <div className={styles.cardFooter}>
+                                            <Link
+                                                href='#'
+                                                className={`${styles.ctaButton} ${isDisabled ? styles.disabled : ''} ${status.isCurrentPlan ? styles.current : ''}`}
+                                                onClick={isDisabled ? undefined : () => handleChooseNewPlan(plan)}
+                                            >
+                                                {status.isPaymentPendent && status.isCurrentPlan && (
+                                                    <span className={styles.warningIcon}>⚠</span>
+                                                )}
+                                                {buttonText}
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
-                            );
+                            )
                         })
                     }
                 </div>

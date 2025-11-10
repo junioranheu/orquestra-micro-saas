@@ -13,7 +13,14 @@ export default function CardCreamWithChildren({ title, subtitle, children }: iPr
         <CardSimpleWithChildren style={{ backgroundColor: 'var(--cream)', padding: '4rem 1rem', border: 'none' }}>
             <div className={styles.header}>
                 <h2 className={styles.title}>{title}</h2>
-                {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+
+                {
+                    subtitle && (typeof subtitle === 'string' ? (
+                        <p className={styles.subtitle}>{subtitle}</p>
+                    ) : (
+                        <div className={styles.subtitle}>{subtitle}</div>
+                    ))
+                }
             </div>
 
             <div className={styles.content}>

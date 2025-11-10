@@ -1,172 +1,364 @@
 .main {
-    // background-color: orange !important;
     display: flex;
     width: 100%;
     margin: auto;
     margin-top: 1rem;
 
     .pricingSection {
-        // background: tomato !important;
         margin: auto;
         width: 100%;
 
         @media (min-width: 1366px) {
-            // background-color: orange !important;
             width: 100%;
         }
 
         @media (min-width: 1512px) {
-            // background-color: blue !important;
-            width: 80%;
+            width: 85%;
+        }
+
+        .headerWrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            .subtitle {
+                cursor: help;
+                font-size: 1rem;
+                color: #6b7280;
+                margin: 0;
+
+                .infoIcon {
+                    color: var(--contrast);
+                    font-weight: bold;
+                    margin-left: 0.25rem;
+                }
+            }
+
+            .description {
+                font-size: 0.95rem;
+                color: #9ca3af;
+                margin: 0;
+                font-weight: 400;
+            }
         }
 
         .grid {
-            // background-color: tomato;
             display: grid;
-            gap: 1.25rem;
+            gap: 1.5rem;
             grid-template-columns: 1fr;
             margin-top: 3rem;
 
+            @media (min-width: 768px) {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             @media (min-width: 1025px) {
-                // background-color: orange !important;
                 grid-template-columns: repeat(3, 1fr);
-                gap: 1.5rem;
+                gap: 2rem;
             }
 
             .cardWrapper {
                 position: relative;
-                transition: transform 0.3s ease, z-index 0.3s;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-                &:hover {
-                    transform: translateY(-6px);
+                &:hover:not(.notAllowed) {
+                    transform: translateY(-8px);
+                    z-index: 10;
+                }
+
+                &.current {
+                    .card {
+                        border: 2px solid var(--main);
+                        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+                    }
+                }
+
+                &.notAllowed {
+                    opacity: 0.7;
+                    cursor: not-allowed;
                 }
 
                 .badge {
                     position: absolute;
-                    top: -1rem;
-                    left: 2rem;
-                    padding: 0.35rem 0.9rem;
-                    background: linear-gradient(90deg, var(--main), var(--main-dark));
+                    top: -0.75rem;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    padding: 0.5rem 1.25rem;
+                    background: linear-gradient(135deg, var(--main), var(--main-dark));
                     color: var(--white-og);
                     font-weight: 700;
-                    font-size: 0.85rem;
+                    font-size: 0.875rem;
                     border-radius: 9999px;
-                    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    z-index: 1;
+
+                    .badgeIcon {
+                        font-size: 0.75rem;
+                    }
                 }
 
                 .card {
-                    // background-color: orange !important;
                     background-color: var(--white-og);
                     height: 100%;
-                    padding: 2rem;
-                    border-radius: var(--border-radius);
-                    border: 1px solid rgba(0, 0, 0, 0.04);
+                    padding: 2.5rem;
+                    border-radius: 1rem;
+                    border: 1px solid #e5e7eb;
                     display: flex;
                     flex-direction: column;
-                    transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative;
+                    overflow: hidden;
 
-                    &.cardNormal {
-                        border: 1px solid var(--gray-light);
-
-                        &:hover {
-                            background: var(--white-og);
-                            box-shadow: 0 8px 26px rgba(10, 10, 10, 0.06);
-                        }
-                    }
-
-                    .planHeading {
-                        font-size: 1.375rem;
-                        font-weight: 800;
-                        margin-bottom: 0.35rem;
-                        color: #111827;
-                    }
-
-                    .planSub {
-                        color: #6b7280;
-                        font-size: 0.95rem;
-                        margin-bottom: 1rem;
-                    }
-
-                    .priceWrap {
-                        margin-bottom: 1.25rem;
-                        display: flex;
-                        align-items: baseline;
-                        gap: 0.5rem;
-
-                        .price {
-                            font-size: 2rem;
-                            font-weight: 900;
-                            background: linear-gradient(90deg, var(--main), var(--main-dark));
-                            -webkit-background-clip: text;
-                            background-clip: text;
-                            color: transparent;
-                        }
-
-                        .pricePerMonth {
-                            color: #6b7280;
-                            font-size: 0.95rem;
-                        }
-                    }
-
-                    .perksList {
-                        // background-color: orange !important;
-                        margin-bottom: 1.5rem;
-                        display: flex;
-                        flex-direction: column;
-                        gap: 0.6rem;
-                        list-style: none;
-                        padding: 0;
-
-                        .perkItem {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.75rem;
-                            color: #374151;
-                            font-size: 0.95rem;
-
-                            .perkIcon {
-                                // background-color: orange !important;
-                                min-width: 1.25rem;
-                                height: 1.25rem;
-                                border-radius: 50%;
-                                color: var(--main);
-                                display: inline-flex;
-                                align-items: center;
-                                justify-content: center;
-                                font-weight: 700;
-                                font-size: 0.75rem;
-                            }
-
-                            .perkText {
-                                font-size: 0.95rem;
-                            }
-                        }
-                    }
-
-                    .ctaButton {
-                        margin-top: auto; // empurra pra baixo
-                        display: inline-flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 100%;
-                        padding: 0.8rem 1rem;
-                        font-weight: 800;
-                        color: var(--white-og);
-                        border-radius: var(--border-radius-sm);
-                        text-decoration: none;
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 4px;
                         background: linear-gradient(90deg, var(--main), var(--main-dark));
-                        transition: box-shadow 0.2s ease, transform 0.15s ease;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    }
 
-                        &:hover {
-                            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-                            transform: translateY(-2px);
+                    &:hover {
+                        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+                        border-color: var(--main);
+
+                        &::before {
+                            opacity: 1;
+                        }
+                    }
+
+                    .cardHeader {
+                        margin-bottom: 1.5rem;
+
+                        .planHeading {
+                            font-size: 1.75rem;
+                            font-weight: 800;
+                            margin-bottom: 0.5rem;
+                            color: #111827;
+                            letter-spacing: -0.02em;
                         }
 
-                        &.disabled {
-                            opacity: 0.6;
-                            pointer-events: none;
-                            cursor: not-allowed;
+                        .planSub {
+                            color: #6b7280;
+                            font-size: 1rem;
+                            line-height: 1.5;
+                            margin: 0;
                         }
+                    }
+
+                    .priceSection {
+                        margin-bottom: 1.5rem;
+
+                        .priceWrap {
+                            display: flex;
+                            align-items: baseline;
+                            gap: 0.25rem;
+                            margin-bottom: 0.5rem;
+
+                            .currency {
+                                font-size: 1.5rem;
+                                font-weight: 700;
+                                color: #6b7280;
+                            }
+
+                            .price {
+                                font-size: 3rem;
+                                font-weight: 900;
+                                background: linear-gradient(135deg, var(--main), var(--main-dark));
+                                -webkit-background-clip: text;
+                                background-clip: text;
+                                color: transparent;
+                                line-height: 1;
+                                letter-spacing: -0.02em;
+                            }
+
+                            .pricePerMonth {
+                                color: #9ca3af;
+                                font-size: 1rem;
+                                font-weight: 500;
+                            }
+                        }
+
+                        .billingInfo {
+                            color: #9ca3af;
+                            font-size: 0.875rem;
+                            margin: 0;
+                        }
+                    }
+
+                    .divider {
+                        height: 1px;
+                        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+                        margin: 1.5rem 0;
+                    }
+
+                    .perksSection {
+                        flex: 1;
+                        margin-bottom: 2rem;
+
+                        .perksTitle {
+                            font-size: 0.875rem;
+                            font-weight: 700;
+                            text-transform: uppercase;
+                            letter-spacing: 0.05em;
+                            color: #6b7280;
+                            margin-bottom: 1rem;
+                        }
+
+                        .perksList {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 0.875rem;
+                            list-style: none;
+                            padding: 0;
+                            margin: 0;
+
+                            .perkItem {
+                                display: flex;
+                                align-items: flex-start;
+                                gap: 0.875rem;
+                                color: #374151;
+                                font-size: 0.9375rem;
+                                line-height: 1.6;
+
+                                .perkIcon {
+                                    min-width: 1.5rem;
+                                    height: 1.5rem;
+                                    border-radius: 50%;
+                                    background: linear-gradient(135deg, var(--main), var(--main-dark));
+                                    color: var(--white-og);
+                                    display: inline-flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    margin-top: 0.125rem;
+
+                                    svg {
+                                        width: 0.875rem;
+                                        height: 0.875rem;
+                                    }
+                                }
+
+                                .perkText {
+                                    flex: 1;
+                                    font-size: 0.9375rem;
+                                }
+                            }
+                        }
+                    }
+
+                    .cardFooter {
+                        margin-top: auto;
+
+                        .ctaButton {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.5rem;
+                            width: 100%;
+                            padding: 1rem 1.5rem;
+                            font-weight: 700;
+                            font-size: 1rem;
+                            color: var(--white-og);
+                            border-radius: 0.75rem;
+                            text-decoration: none;
+                            background: linear-gradient(135deg, var(--main), var(--main-dark));
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+                            position: relative;
+                            overflow: hidden;
+
+                            &::before {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: -100%;
+                                width: 100%;
+                                height: 100%;
+                                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                                transition: left 0.5s ease;
+                            }
+
+                            &:hover:not(.disabled) {
+                                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+                                transform: translateY(-2px);
+
+                                &::before {
+                                    left: 100%;
+                                }
+                            }
+
+                            &:active:not(.disabled) {
+                                transform: translateY(0);
+                            }
+
+                            &.disabled {
+                                opacity: 0.5;
+                                pointer-events: none;
+                                cursor: not-allowed;
+                                box-shadow: none;
+                            }
+
+                            &.current {
+                                background: #e5e7eb;
+                                color: #6b7280;
+                                box-shadow: none;
+                            }
+
+                            .warningIcon {
+                                font-size: 1.125rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .header {
+            // margin-top: 4rem;
+            margin-top: 2rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(var(--main-rgb), 0.03), rgba(var(--main-dark-rgb), 0.03));
+            border-radius: 1rem;
+            border: 1px solid var(--gray-light);
+
+            .headerContent {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 2rem;
+
+                @media (min-width: 768px) {
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 2.5rem;
+                }
+
+                .headerItem {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 1rem;
+
+                    .headerIcon {
+                        font-size: 2rem;
+                        flex-shrink: 0;
+                    }
+
+                    h5 {
+                        font-size: 1rem;
+                        font-weight: 700;
+                        color: #111827;
+                        margin: 0 0 0.25rem 0;
+                    }
+
+                    p {
+                        font-size: 0.875rem;
+                        color: #6b7280;
+                        margin: 0;
+                        line-height: 1.5;
                     }
                 }
             }
