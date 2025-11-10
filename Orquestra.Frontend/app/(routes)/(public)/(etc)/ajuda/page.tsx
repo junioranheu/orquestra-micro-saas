@@ -159,7 +159,7 @@ export const HELP_TOPICS = [
             },
             {
                 title: 'Quem pode gerenciar os módulos?',
-                description: 'Apenas administradores têm permissão para atribuir ou remover módulos de outros colaboradores da equipe. Isso pode ser feito acessando "Gerenciar empresa" (/empresa/gerenciar) ou pela tela de "Plano e faturas" (/empresa/uso-e-plano).'
+                description: 'Apenas administradores têm permissão para atribuir ou remover módulos de outros colaboradores da equipe. Isso pode ser feito acessando "Gerenciar empresa" (/empresa/gerenciar) ou pela tela de "Planos e faturas" (/empresa/planos-e-faturas).'
             },
             {
                 title: 'Posso ativar ou desativar módulos?',
@@ -189,7 +189,7 @@ export const HELP_TOPICS = [
             },
             {
                 title: 'Alterar ou cancelar plano',
-                description: 'O plano pode ser alterado ou cancelado a qualquer momento em "Plano e faturas" (/empresa/uso-e-plano). Mudanças de plano são aplicadas imediatamente após a confirmação.'
+                description: 'O plano pode ser alterado ou cancelado a qualquer momento em "Planos e faturas" (/empresa/planos-e-faturas). Mudanças de plano são aplicadas imediatamente após a confirmação.'
             }
         ]
     },
@@ -267,7 +267,7 @@ export const HELP_TOPICS = [
             },
             {
                 title: 'Histórico de faturas',
-                description: `Todas as faturas emitidas ficam registradas na aba "Histórico de faturas" dentro de "Plano e faturas" (/empresa/uso-e-plano). Lá é possível visualizar datas, valores, status e descrições detalhadas.`
+                description: `Todas as faturas emitidas ficam registradas na aba "Histórico de faturas" dentro de "Planos e faturas" (/empresa/planos-e-faturas). Lá é possível visualizar datas, valores, status e descrições detalhadas.`
             },
             {
                 title: 'Situação da fatura',

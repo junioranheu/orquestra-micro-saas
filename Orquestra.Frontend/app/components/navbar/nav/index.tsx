@@ -77,7 +77,7 @@ export default function Navbar() {
                         {
                             (me && me?.isUserAdmOfCurrentMainCompany) && (
                                 <Tippy content='Entenda mais sobre o plano atual da sua empresa e explore novos; também, consulte suas faturas.'>
-                                    <span className={styles.hideIfSmall} onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /><span className={styles.hideIfSmall}>Plano e faturas</span></span>
+                                    <span className={styles.hideIfSmall} onClick={() => router.push(ROUTES.EMPRESA_USO_E_PLANO)}><Icon icon='tag' weight='bold' /><span className={styles.hideIfSmall}>Planos e faturas</span></span>
                                 </Tippy>
                             )
                         }

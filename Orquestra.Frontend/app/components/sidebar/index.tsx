@@ -59,7 +59,7 @@ export default function Sidebar() {
                 { label: 'Início', description: `Visão geral e estatísticas rápidas do ${SYSTEM.NAME}.`, icon: 'home', route: ROUTES.DASHBOARD, hasAccess: true },
                 // { label: 'Empresas', description: 'Gerencie os dados e informações de suas empresas cadastradas.', icon: 'briefcase', route: ROUTES.EMPRESA_GERENCIAR, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
                 // ...((me && me?.isUserAdmOfCurrentMainCompany) ? [
-                //     { label: 'Plano e faturas', description: 'Visualize o plano atual e gerencie suas faturas.', icon: 'tag', route: ROUTES.EMPRESA_USO_E_PLANO, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
+                //     { label: 'Planos e faturas', description: 'Visualize o plano atual e gerencie suas faturas.', icon: 'tag', route: ROUTES.EMPRESA_USO_E_PLANO, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
                 // ] : []),
                 { label: 'Configurações', description: 'Personalize o sistema, altere informações da conta e troque sua senha.', icon: 'settings', route: ROUTES.USUARIO_CONFIGURACOES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
             ]

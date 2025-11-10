@@ -18,7 +18,7 @@ const ROUTES = {
     ETC_TERMOS_DE_USO: '/termos-de-uso',
     EMPRESA_GERENCIAR: '/empresa/gerenciar',
     EMPRESA_VERIFICADA: '/empresa/verificada',
-    EMPRESA_USO_E_PLANO: '/empresa/uso-e-plano',
+    EMPRESA_USO_E_PLANO: '/empresa/planos-e-faturas',
     EMPRESA_COLABORADORES: '/empresa/colaboradores',
     EMPRESA_CLIENTES: '/empresa/clientes',
     EMPRESA_FINANCEIRO: '/empresa/financeiro',
