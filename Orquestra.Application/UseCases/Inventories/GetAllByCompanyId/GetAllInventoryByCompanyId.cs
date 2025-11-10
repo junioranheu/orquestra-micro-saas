@@ -26,7 +26,9 @@ public sealed class GetAllInventoryByCompanyId(Context context, ICheckIfUserIsLi
                         (string.IsNullOrEmpty(input.Name) || x.Name.ToLower().Contains(input.Name.ToLower())) &&
                         (string.IsNullOrEmpty(input.Description) || x.Description!.ToLower().Contains(input.Description!.ToLower())) &&
                         (input.Quantity.GetValueOrDefault() == 0 || x.Quantity == input.Quantity)
-                    ).OrderBy(x => x.Name);
+                    ).
+                    OrderByDescending(x => x.LastModificationDate ?? DateTime.MinValue).
+                    ThenByDescending(x => x.CreatedDate);
 
         (IEnumerable<Inventory> result, int count) = await PagedQuery.Execute(query, pagination);
 
@@ -36,6 +38,7 @@ public sealed class GetAllInventoryByCompanyId(Context context, ICheckIfUserIsLi
         return (output, count);
     }
 
+    #region extras
     private static void NormalizeImage(List<Inventory>? result, List<InventoryOutput>? output)
     {
         if (result is null || result.Count == 0 || output is null || output.Count == 0)
@@ -53,4 +56,5 @@ public sealed class GetAllInventoryByCompanyId(Context context, ICheckIfUserIsLi
             }
         }
     }
+    #endregion
 }

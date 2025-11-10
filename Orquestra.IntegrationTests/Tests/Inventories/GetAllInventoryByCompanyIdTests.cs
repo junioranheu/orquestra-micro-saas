@@ -63,7 +63,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
-        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, new());
+        (IEnumerable<InventoryOutput> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, new());
 
         // Assert;
         Assert.Equal(2, count);
@@ -98,7 +98,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
-        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, new());
+        (IEnumerable<InventoryOutput> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, new());
 
         // Assert;
         Assert.Empty(output);
@@ -177,7 +177,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         InventoryInput input = new() { Name = "cadeira" };
 
         // Act;
-        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
+        (IEnumerable<InventoryOutput> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
 
         // Assert;
         Assert.Single(output);
@@ -230,7 +230,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         InventoryInput input = new() { Description = "4k" };
 
         // Act;
-        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
+        (IEnumerable<InventoryOutput> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
 
         // Assert;
         Assert.Single(output);
@@ -283,7 +283,7 @@ public sealed class GetAllInventoryByCompanyIdTests
         InventoryInput input = new() { Quantity = 10 };
 
         // Act;
-        (IEnumerable<Inventory> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
+        (IEnumerable<InventoryOutput> output, int count) = await sut.Execute(pagination, user.UserId, company.CompanyId, input);
 
         // Assert;
         Assert.Single(output);
