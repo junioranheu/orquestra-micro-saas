@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@gsap/react": "^2.1.2",
+        "@reactour/tour": "^3.8.0",
         "@tippyjs/react": "^4.2.6",
         "@types/canvas-confetti": "^1.9.0",
         "@types/nprogress": "^0.2.3",
