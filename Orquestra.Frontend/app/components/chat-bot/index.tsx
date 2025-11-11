@@ -1,4 +1,5 @@
 'use client';
+import { HELP_TOPICS } from '@/app/(routes)/(public)/(etc)/ajuda/page';
 import { iMe } from '@/app/api/consts/auth';
 import ImgMaestro from '@/app/assets/png/maestro.png';
 import ROUTES from '@/app/consts/routes';
@@ -32,7 +33,8 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
     const chatEndRef = useRef<HTMLDivElement | null>(null);
     const hasGreetedRef = useRef(false);
 
-    const SYSTEM_DEFAULT_PROMPT = `Você é o Maestro, o assistente virtual oficial do sistema ${SYSTEM.NAME} — uma plataforma que ajuda empresas a gerenciar agendamentos, serviços e clientes de forma simples e eficiente. Você é prestativo, responde de forma objetiva e mantém um tom natural e leve nas conversas.`;
+    const SYSTEM_DEFAULT_PROMPT = `Você é o assistente do sistema ${SYSTEM.NAME}. Responda de forma objetiva. Use o contexto apenas como ajuda, nunca diga que ele é limitado.`;
+
     const conversationRef = useRef<any[]>([]);
 
     useEffect(() => {
@@ -75,27 +77,39 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
 
         // Checar plano atual;
         if (me?.currentMainCompany?.planType?.toString() !== '3') {
-            setMessages((prev) => [...prev, { role: 'bot', text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href="${ROUTES.EMPRESA_USO_E_PLANO}">Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual!` }]);
+            setMessages((prev) => [...prev, { role: 'bot', text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href='${ROUTES.EMPRESA_USO_E_PLANO}'>Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual! 😸` }]);
             setLoading(false);
             return;
         }
 
         // Checar se o assunto é pertinente;
         if (!handleCheckIfIsAboutThePlataform(userMessage)) {
-            setMessages(prev => [...prev, { role: 'bot', text: `Desculpe — eu só respondo sobre a plataforma ${SYSTEM.NAME}.` }]);
+            setMessages(prev => [...prev, { role: 'bot', text: `Desculpe — eu só respondo sobre a plataforma ${SYSTEM.NAME}. 🤔` }]);
             setLoading(false);
             return;
         }
 
-        const isFirstMessage = conversationRef.current.length === 0;
+        // Filtro de tópicos relevantes;
+        const bestItem = handleFindMostRelevantItem(userMessage, HELP_TOPICS);
+        // console.log('bestItem', bestItem);
+
+        // Monta a mensagem final que vai pra IA;
+        const finalUserMessage = bestItem ? `${userMessage} ${bestItem.description}` : userMessage;
+        // console.log('finalUseMessage', finalUserMessage);
 
         // Monta o conteúdo a ser enviado;
+        const isFirstMessage = conversationRef.current.length === 0;
+
         const contents = [
             ...(isFirstMessage ? [{ role: 'model', parts: [{ text: SYSTEM_DEFAULT_PROMPT }] }] : []),
             ...conversationRef.current,
-            { role: 'user', parts: [{ text: userMessage }] },
+            { role: 'user', parts: [{ text: finalUserMessage }] },
         ];
 
+        // console.clear();
+        // console.log('contents', contents);
+
+        // Requisição à API;
         try {
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`,
                 {
@@ -131,14 +145,14 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
         const s = text.toLowerCase();
 
         const keywords = [
-            'oi', 'olá', 'tudo bem', 'como vai', 'beleza', 'oxe', 'oxi',
+            'oi', 'olá', 'ola', 'tudo bem', 'como vai', 'beleza', 'oxe', 'oxi', 'td bem', 'blz',
             'agend', 'serviço', 'servico', 'cliente', 'horár', 'horar', 'cancel', 'marc',
             'remarc', 'agenda', 'notifica', 'notificação', 'notificacao', 'pagamento',
             'fatura', 'plano', 'empresa', 'cadast', 'login', 'senha', 'checkout',
             'se chama', 'seu nome', 'hora', 'evento', 'configura', 'cliente', 'follow',
             'ordem', 'estoque', 'nota', 'ajuda', SYSTEM.NAME, 'obrigad', 'whatsapp', 'zap',
             'consult', 'paciente', 'colaborador', 'equipe', 'sobre o sistema', 'sistema',
-            'suporte', 'fatura'
+            'suporte', 'fatura', 'como você vai'
         ];
 
         // Se achar qualquer keyword retorna true;
@@ -217,4 +231,54 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
             }
         </div>
     )
+}
+
+interface iHelpItem {
+    title: string;
+    description: string;
+}
+
+interface iHelpTopic {
+    topic: string;
+    description: string;
+    items: iHelpItem[];
+}
+
+function handleNormalize(text: string): string {
+    return text.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
+
+function handleCleanText(text: string) {
+    const STOP_WORDS = [
+        'como', 'sua', 'seu', 'seus', 'suas',
+        'fazer', 'sabe', 'os', 'as', 'o', 'a', 'um', 'uma',
+        'de', 'do', 'da', 'e', 'no', 'na', 'não', 'é', 'já',
+        'por', 'ou', 'serao', 'para', 'pelo', 'pela',
+        'cada', 'posso', 'tanto', 'voce', 'pode', 'caso',
+        'ao', 'aos', 'as', 'que', 'quais', 'qual', 'oi',
+        'olá', 'ola', 'tudo', 'bem', 'vai'
+    ];
+
+    return handleNormalize(text).replace(/[?.!,]/g, '').split(/\s+/).filter(w => w.length > 2 && !STOP_WORDS.includes(w)).join(' ');
+}
+
+function handleFindMostRelevantItem(userMessage: string, topics: iHelpTopic[]): iHelpItem | null {
+    const userWords = handleCleanText(userMessage).split(' ').filter(Boolean);
+    let bestItem: iHelpItem | null = null;
+    let maxScore = 0;
+
+    for (const t of topics) {
+        for (const item of t.items) {
+            const itemWords = handleCleanText(item.title + ' ' + item.description).split(' ');
+            const score = userWords.reduce((acc, w) => acc + (itemWords.includes(w) ? 1 : 0), 0);
+            // console.log(itemWords, score)
+
+            if (score > maxScore) {
+                maxScore = score;
+                bestItem = item;
+            }
+        }
+    }
+
+    return bestItem;
 }

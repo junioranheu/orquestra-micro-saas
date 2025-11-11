@@ -2,7 +2,7 @@
 import { iMe } from '@/app/api/consts/auth';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
-import ImgThought from '@/app/assets/webp/thought.webp';
+import ImgClean from '@/app/assets/svg/clean.svg';
 import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import WhatsappWebShortcut from '@/app/components/whatsapp/whatsapp-web-shortcut';
@@ -133,7 +133,7 @@ export default function CardDailyAgenda({ me }: iProps) {
                         <p>Nenhum agendamento para hoje</p>
 
                         <div className={styles.center}>
-                            <Image src={ImgThought} alt='' priority={true} />
+                            <Image src={ImgClean} alt='' priority={true} />
                         </div>
                     </div>
                 )
