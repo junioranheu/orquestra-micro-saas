@@ -8,6 +8,7 @@ import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
+import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -22,6 +23,9 @@ export default function CardCalendar({ me }: iProps) {
     const router = useRouter();
     const windowSize = useWindowSize();
     const [hasAccessToSchedule, setHasAccessToSchedule] = useState<boolean>(false);
+
+    const [showChatbot,] = useShowChatbot();
+    const [, setIsOpenChatbot] = useIsOpenChatbot();
 
     useEffect(() => {
         const hasAccess = handleCheckShowElement({ me, rolesRequired: [MODULES.Scheduling] });
@@ -51,8 +55,18 @@ export default function CardCalendar({ me }: iProps) {
                                         img={SvgOne}
                                         isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                         title='Tudo certo!'
-                                        description={`A empresa <b>${me?.currentMainCompany?.name}</b> já está prontinha para começar a criar novos agendamentos.<br/>Comece a gerenciar seus compromissos agora mesmo clicando no botão do card ao lado.`}
+                                        description={`A empresa <b>${me?.currentMainCompany?.name}</b> já está prontinha para começar a criar novos agendamentos. ${showChatbot ? `<br/>Qualquer dúvida, fale com o assistente virtual, o ${SYSTEM.MASCOT}.` : ''}`}
+                                        {...(showChatbot && {
+                                            buttonLabel: 'Conversar com o assistente virtual',
+                                            buttonFunction: () => setIsOpenChatbot(true),
+                                        })}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s}
+                                        buttonStyle={{
+                                            background: 'transparent',
+                                            border: '1px solid var(--gray)',
+                                            color: 'var(--gray-dark)',
+                                            transition: 'all 0.2s ease-in-out'
+                                        }}
                                     />
                                 ) : (
                                     <CardSimple
@@ -76,7 +90,7 @@ export default function CardCalendar({ me }: iProps) {
                                 img={SvgTwo}
                                 isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                 title='Simplifique a gestão da sua empresa'
-                                description='Gestão de horários simples, rápida e sem dor de cabeça.<br/>Seu negócio afinado como uma orquestra.'
+                                description={`Gestão de horários simples, rápida e sem dor de cabeça.<br/>${SYSTEM.NAME}. ${SYSTEM.DESCRIPTION}.`}
                                 buttonLabel='Acessar agenda'
                                 buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
                                 buttonDisabled={!hasAccessToSchedule}

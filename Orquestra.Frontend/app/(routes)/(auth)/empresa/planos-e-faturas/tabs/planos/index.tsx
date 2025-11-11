@@ -36,7 +36,7 @@ export default function EmpresaUsoEPlanoTabPlanos({ me }: iProps) {
 
 function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | undefined }) {
 
-    const messageInvoice = 'Ao adquirir um novo plano, uma nova fatura será gerada automaticamente e o plano atual, caso exista, será substituído.';
+    const messageInvoice = 'Ao adquirir um novo plano, uma nova fatura será gerada automaticamente e o plano atual será substituído.';
 
     async function handleChooseNewPlan(plan: iPlanType) {
         swal({
