@@ -43,14 +43,13 @@ public partial class UserBase(IGetUser getUser)
         #endregion
 
         #region name
+        input.FullName = NormalizeToProperName(input.FullName ?? string.Empty);
         bool checkName = IsFullNameValid(input.FullName ?? string.Empty);
 
         if (!checkName)
         {
             throw new ArgumentException("O nome não é válido. Insira seu nome completo, por favor.");
         }
-
-        input.FullName = NormalizeToProperName(input.FullName ?? string.Empty);
         #endregion
 
         #region password

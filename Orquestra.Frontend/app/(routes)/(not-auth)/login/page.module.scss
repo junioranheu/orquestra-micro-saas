@@ -161,16 +161,6 @@
             .left {
                 .form {
                     padding: 3rem 3rem;
-
-                    .welcome {
-                        // background-color: tomato;
-
-                        img {
-                            // background-color: orange;
-                            width: 25%;
-                            height: 100%;
-                        }
-                    }
                 }
             }
         }
@@ -198,6 +188,16 @@
                 .form {
                     background-color: transparent;
                     padding: 3rem 2rem;
+
+                    .welcome {
+                        // background-color: tomato;
+
+                        img {
+                            // background-color: orange;
+                            width: 30%;
+                            height: 100%;
+                        }
+                    }
                 }
             }
 

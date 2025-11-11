@@ -59,7 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
                             {
                                 !hideHeader && (
-                                    <UpNav />
+                                    <UpNav showNav={false} />
                                 )
                             }
 

@@ -4,6 +4,7 @@ import { iModalCustomPosition } from '@/app/components/modal/generic';
 import ModalMenu from '@/app/components/navbar/modal/menu';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { handleTruncateText } from '@/app/functions/format.url';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
@@ -97,7 +98,7 @@ export default function Navbar() {
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
                                 <span className={styles.hideIfSmall}>
-                                    <ContentLoaderText content={(me && me?.currentMainCompany) ? me?.currentMainCompany?.name : `Olá, ${me?.userName ? handleGetFirstName(me?.userName) : ''}`} />
+                                    <ContentLoaderText content={(me && me?.currentMainCompany) ? handleTruncateText(me?.currentMainCompany?.name, 20) : `Olá, ${me?.userName ? handleGetFirstName(me?.userName) : ''}`} />
                                 </span>
 
                                 <Icon icon='chevron-down' weight='bold' />

@@ -45,3 +45,11 @@ export default function handleNormalizeUrl(url: string | undefined) {
     // console.log(urlAjustada);
     return normalizedUrl;
 }
+
+export function handleTruncateText(text: string, maxLength: number): string {
+    if (text.length <= maxLength) {
+        return text;
+    }
+
+    return text.slice(0, maxLength) + '...';
+}

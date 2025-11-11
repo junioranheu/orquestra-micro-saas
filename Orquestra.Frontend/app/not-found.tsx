@@ -17,7 +17,7 @@ export default function NotFound() {
 
     return (
         <section className={INTER.className}>
-            <UpNav />
+            <UpNav showNav={false} />
 
             <section>
                 <LayoutTemplateMessage

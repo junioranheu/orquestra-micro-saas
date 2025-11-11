@@ -28,7 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
                     <body className={`body ${INTER.className}`}>
                         <Toaster expand={false} closeButton={false} />
-                        <UpNav />
+                        <UpNav showNav={false} />
 
                         <main>
                             {children}

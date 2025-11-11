@@ -6,7 +6,11 @@ import useWindowSize from '@/app/hooks/useWindowSize';
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
-export default function UpNav() {
+interface iProps {
+    showNav: boolean;
+}
+
+export default function UpNav({ showNav }: iProps) {
 
     const [greeting, setGreeting] = useState<string>('');
     const windowSize = useWindowSize();
@@ -15,7 +19,7 @@ export default function UpNav() {
         setGreeting(`Bem-vindo ao ${SYSTEM.NAME}! Tenha ${handleGetRandomGreeting({ mustIncludeUmUma: true }).toLocaleLowerCase()} ✨`);
     }, []);
 
-    if (windowSize.width > 0 && windowSize.width < 801) {
+    if (!showNav || (windowSize.width > 0 && windowSize.width < 801)) {
         return null;
     }
 
