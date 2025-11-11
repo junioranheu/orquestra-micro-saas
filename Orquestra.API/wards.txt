@@ -1,6 +1,6 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
-Atualizar o sistema para o .NET 10 (dia 11/11); 
+Atualizar o sistema para o .NET 10 (dia 11/11); (Ver se o PostgreSQL já atualizou...) 
 
 ⦁	Módulo de Follow-up:
 Criar classe

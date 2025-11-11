@@ -123,7 +123,7 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
             );
 
             const data = await res.json();
-            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Não entendi 🤔';
+            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Parece que houve uma falha interna. Tente novamente mais tarde 💀';
             const replyNormalized = reply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
             // Atualiza o histórico (sem o prompt)
