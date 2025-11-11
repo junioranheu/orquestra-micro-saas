@@ -42,7 +42,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                 <Toaster expand={false} closeButton={false} />
 
                 {
-                    !hideHeader && <UpNav />
+                    !hideHeader && <UpNav showNav={false} />
                 }
 
                 <header>
