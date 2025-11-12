@@ -10,8 +10,8 @@ public enum ModuleEnum
     [Description("Integração com WhatsApp")]
     IntegrationWhatsApp = 2,
 
-    [Description("Follow-up")]
-    CostumerFollowUp = 3,
+    [Description("Acompanhamento")]
+    ClientFollowUp = 3,
 
     [Description("Nota fiscal")]
     Invoice = 4,

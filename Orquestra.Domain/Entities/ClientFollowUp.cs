@@ -18,5 +18,7 @@ public sealed class ClientFollowUp : Audit
 
     public ClientFollowUpStatus ClientFollowUpStatus { get; set; } = ClientFollowUpStatus.Pending;
 
-    public List<byte[]> Images { get; set; } = [];
+    public List<byte[]>? Images { get; set; } = [];
+
+    public List<string>? ImagesContentType { get; set; } = [];
 }

@@ -6,7 +6,6 @@ using Orquestra.Application.UseCases.Inventories.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Inventories.Shared;
 using Orquestra.Application.UseCases.Inventories.Update;
 using Orquestra.Application.UseCases.Shared;
-using Orquestra.Domain.Entities;
 
 namespace Orquestra.API.Controllers;
 
