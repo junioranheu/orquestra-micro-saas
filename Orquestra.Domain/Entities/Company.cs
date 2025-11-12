@@ -68,4 +68,6 @@ public sealed class Company: Audit
     public IEnumerable<Schedule>? Schedules { get; init; }
 
     public IEnumerable<Client>? Clients { get; init; }
+
+    public IEnumerable<ClientFollowUp>? ClientFollowUps { get; init; }
 }
