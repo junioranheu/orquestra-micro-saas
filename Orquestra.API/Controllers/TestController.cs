@@ -2,14 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Orquestra.API.Filters;
+using Orquestra.Application.UseCases.Locations.States.Get;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 
 namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TestController() : BaseController<TestController>
+public class TestController(IGetState getState) : BaseController<TestController>
 {
+    private readonly IGetState _getState = getState;
+
     #region ascii
     private const string ascii = @"
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠴⠒⠒⠲⠤⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -45,5 +49,14 @@ public class TestController() : BaseController<TestController>
     public ActionResult GetAuth()
     {
         return Ok(ascii); 
+    }
+
+    [AllowAnonymous]
+    [HttpGet("GetState")]
+    public async Task<ActionResult> GetState()
+    {
+        List<LocationState>? output = await _getState.Execute();
+
+        return Ok(output);
     }
 }

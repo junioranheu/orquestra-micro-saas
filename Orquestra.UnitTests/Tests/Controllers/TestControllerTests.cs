@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
+using Moq;
 using Orquestra.API.Controllers;
 using Orquestra.API.Filters;
+using Orquestra.Application.UseCases.Locations.States.Get;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using System.Security.Claims;
 
@@ -16,7 +19,17 @@ public sealed class TestControllerTests
     public void GetAnonymous_ShouldReturn_OkWithAscii()
     {
         // Arrange;
-        TestController controller = new();
+        Mock<IGetState> mockGetState = new();
+
+        List<LocationState> expected =
+        [
+            new() { LocationStateId = 1, Name = "SP" },
+            new() { LocationStateId = 2, Name = "RJ" }
+        ];
+
+        mockGetState.Setup(x => x.Execute()).ReturnsAsync(expected);
+
+        TestController controller = new(mockGetState.Object);
 
         // Act;
         ActionResult result = controller.GetAnonymous();
