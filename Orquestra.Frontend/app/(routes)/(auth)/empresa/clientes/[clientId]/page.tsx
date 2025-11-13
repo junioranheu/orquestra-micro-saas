@@ -6,6 +6,7 @@ import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
 import iClientFollowUp, { CONSTS_CLIENT_FOLLOW_UP } from '@/app/api/consts/client-follow-up';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
+import ImgThought from '@/app/assets/svg/thought.svg';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
@@ -16,6 +17,7 @@ import { handleGuessGender } from '@/app/functions/get.guessGender';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import styles from './page.module.scss';
@@ -39,6 +41,10 @@ interface iContactInfoProps {
 
 interface iAppointmentHistoryProps {
     schedules: iSchedule[];
+}
+
+interface iFollowUpHistoryProps {
+    clientsFollowUps: iClientFollowUp[];
 }
 
 // Componente Principal
@@ -85,11 +91,6 @@ export default function ClientProfile() {
         setIsModalViewOpen(true);
     }
 
-    useEffect(() => {
-        alert('xd');
-        console.log();
-    }, [clientsFollowUps]);
-
     if (!client) {
         return (
             <TemplatePageHeader title='Carregando informações do cliente...' isLoading={true}></TemplatePageHeader>
@@ -128,7 +129,7 @@ export default function ClientProfile() {
                             </div>
 
                             <div className={styles.clientProfile__main}>
-                                <FollowUpHistory />
+                                <FollowUpHistory clientsFollowUps={clientsFollowUps} />
                             </div>
                         </div>
                     </div>
@@ -276,7 +277,7 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 }
 
 // Componente de Histórico de Agendamentos
-function FollowUpHistory() {
+function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
 
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
@@ -284,39 +285,45 @@ function FollowUpHistory() {
         <div className={`${styles.card} ${styles.appointmentHistory}`}>
             <h2 className={styles.card__title}>Acompanhamentos/follow-up</h2>
 
-            {/* <div className={styles.appointmentHistory__list}>
+            <div className={styles.appointmentHistory__list}>
                 {
-                    schedules?.length ? schedules.map((schedule, index) => (
-                        <div key={index} className={`${styles.appointmentItem} ${styles[`appointmentItem--${schedule.scheduleStatus}`]}`}>
-                            <div className={styles.appointmentItem__content}>
+                    clientsFollowUps?.length ? clientsFollowUps.map((followUp, index) => (
+                        <div key={index} className={styles.appointmentItem}>
+                            {/* <div className={styles.appointmentItem__content}>
                                 <div className={styles.appointmentItem__info}>
                                     <h3 className={styles.appointmentItem__title}>
-                                        {schedule.customTitle ? schedule.customTitle : `Agendamento para ${handleFormatDate(schedule.dateStart, DATE_STYLE.DIA_MES_ANO)}`}
+                                        {followUp.customTitle ? followUp.customTitle : `Agendamento para ${handleFormatDate(followUp.dateStart, DATE_STYLE.DIA_MES_ANO)}`}
                                     </h3>
 
                                     <p className={styles.appointmentItem__datetime}>
-                                        {handleFormatDate(schedule.dateStart, DATE_STYLE.DETALHADO)}
+                                        {handleFormatDate(followUp.dateStart, DATE_STYLE.DETALHADO)}
                                     </p>
                                 </div>
 
                                 <div className={styles.appointmentItem__meta}>
                                     <span className={styles.appointmentItem__price}>
-                                        R$ {schedule.amountReceived ?? 0}
+                                        R$ {followUp.amountReceived ?? 0}
                                     </span>
 
-                                    <span className={`${styles.appointmentItem__status} ${styles[`appointmentItem__status--${schedule.scheduleStatus}`]}`}>
-                                        {clientFollowUpStatusEnum?.find(x => x.value === schedule.scheduleStatus)?.label?.toString() ?? ''}
+                                    <span className={`${styles.appointmentItem__status} ${styles[`appointmentItem__status--${followUp.scheduleStatus}`]}`}>
+                                        {clientFollowUpStatusEnum?.find(x => x.value === followUp.scheduleStatus)?.label?.toString() ?? ''}
                                     </span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     )) : (
-                        <p className={styles.appointmentHistory__empty}>
-                            Nenhum agendamento encontrado.
-                        </p>
+                        <div className={styles.appointmentHistory__empty}>
+                            <p>
+                                Nenhum acompanhamento encontrado.
+                            </p>
+
+                            <div className={styles.center}>
+                                <Image src={ImgThought} alt='' priority={true} />
+                            </div>
+                        </div>
                     )
                 }
-            </div> */}
+            </div>
         </div>
     )
 }
