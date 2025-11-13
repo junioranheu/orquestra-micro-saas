@@ -3,7 +3,7 @@ import Button from '@/app/components/input/button';
 import ROUTES from '@/app/consts/routes';
 import useDisableScroll from '@/app/hooks/useDisableScroll';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -12,6 +12,8 @@ interface iProps {
     title?: string;
     description: string;
     showHelpPage?: boolean;
+    customButtonLabel?: string;
+    customButtonRoute?: string;
 }
 
 export default function LayoutTemplateMessage({
@@ -19,11 +21,13 @@ export default function LayoutTemplateMessage({
     code,
     title,
     description,
-    showHelpPage = false
+    showHelpPage = false,
+    customButtonLabel,
+    customButtonRoute
 }: iProps) {
 
     const router = useRouter();
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState<boolean>(false);
 
     useDisableScroll();
 
@@ -111,22 +115,41 @@ export default function LayoutTemplateMessage({
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
 
                 <div className={styles.actions}>
-                    <Button
-                        label='Voltar ao início'
-                        icon_feather={<Icon icon='home' />}
-                        handleFunction={() => router.push(ROUTES.LOGIN)}
-                        isBig={true}
-                    />
+                    {
+                        !customButtonLabel && (
+                            <Fragment>
+                                <Button
+                                    label='Voltar ao início'
+                                    icon_feather={<Icon icon='home' />}
+                                    handleFunction={() => router.push(ROUTES.LOGIN)}
+                                    isBig={true}
+                                />
 
-                    {showHelpPage && (
-                        <Button
-                            label='Central de ajuda'
-                            icon_feather={<Icon icon='help-circle' />}
-                            handleFunction={() => router.push(ROUTES.ETC_AJUDA)}
-                            isStyleSimple={true}
-                            isBig={true}
-                        />
-                    )}
+                                {
+                                    showHelpPage && (
+                                        <Button
+                                            label='Central de ajuda'
+                                            icon_feather={<Icon icon='help-circle' />}
+                                            handleFunction={() => router.push(ROUTES.ETC_AJUDA)}
+                                            isStyleSimple={true}
+                                            isBig={true}
+                                        />
+                                    )
+                                }
+
+                            </Fragment>
+                        )
+                    }
+
+                    {
+                        customButtonLabel && customButtonRoute && (
+                            <Button
+                                label={customButtonLabel}
+                                handleFunction={() => router.push(customButtonRoute)}
+                                isBig={true}
+                            />
+                        )
+                    }
                 </div>
             </div>
         </main>
