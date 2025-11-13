@@ -165,10 +165,14 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                 </header>
 
                 <main className={styles.modalContent}>
-                    <div className='modal-layout-grid'>
-                        <InputMask title='Observações' fieldName='observation' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                    <div className='modal-layout-flex'>
+                        <div className={styles.div}>
+                            <label>Observações do follow-up</label>
+                            <textarea value={formData.observation ?? ''} className={styles.textarea} readOnly={!editing} rows={5} maxLength={512} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
+                        </div>
+
                         <InputMask title='Status' fieldName='clientFollowUpStatus' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputImage title='Logo' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' multiple={true} />
+                        <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' multiple={true} />
                     </div>
                 </main>
 

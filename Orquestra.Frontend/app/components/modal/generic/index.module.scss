@@ -120,66 +120,66 @@
                 // grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 1rem;
+            }
 
-                .div {
-                    // background-color: orange !important;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1px;
+            .div {
+                // background-color: tomato !important;
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
 
-                    label {
-                        // background-color: purple !important;
-                        color: var(--black);
-                        font-size: 0.75rem;
-                        font-weight: 500;
-                        font-family: inherit;
-                        margin-right: auto;
-                        margin-bottom: 1px;
+                label {
+                    // background-color: purple !important;
+                    color: var(--black);
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    font-family: inherit;
+                    margin-right: auto;
+                    margin-bottom: 1px;
+                }
+
+                input {
+                    font-size: 0.75rem;
+                }
+
+                .textarea {
+                    resize: vertical;
+                    min-height: 7.2rem;
+                    padding: 1rem;
+                    background: transparent;
+                    border-radius: var(--border-radius);
+                    border: 1px solid var(--gray-light);
+                    font-size: 0.8rem;
+                    color: #495057;
+                    font-family: inherit;
+                    line-height: 1.6;
+                    resize: none;
+                    transition: all 0.2s ease;
+
+                    &:disabled,
+                    &:read-only {
+                        background: rgba(221, 221, 221, 0.25) !important;
+                        color: var(--gray-dark) !important;
+                        cursor: not-allowed !important;
                     }
 
-                    input {
-                        font-size: 0.75rem;
+                    &::-webkit-scrollbar {
+                        width: 6px;
                     }
 
-                    .textarea {
-                        resize: vertical;
-                        min-height: 7.2rem;
-                        padding: 1rem;
+                    &::-webkit-scrollbar-track {
                         background: transparent;
-                        border-radius: var(--border-radius);
-                        border: 1px solid var(--gray-light);
-                        font-size: 0.8rem;
-                        color: #495057;
-                        font-family: inherit;
-                        line-height: 1.6;
-                        resize: none;
-                        transition: all 0.2s ease;
+                    }
 
-                        &:disabled,
-                        &:read-only {
-                            background: rgba(221, 221, 221, 0.25) !important;
-                            color: var(--gray-dark) !important;
-                            cursor: not-allowed !important;
-                        }
+                    &::-webkit-scrollbar-thumb {
+                        background: #cbd5e0;
+                        border-radius: 3px;
+                    }
 
-                        &::-webkit-scrollbar {
-                            width: 6px;
-                        }
-
-                        &::-webkit-scrollbar-track {
-                            background: transparent;
-                        }
-
-                        &::-webkit-scrollbar-thumb {
-                            background: #cbd5e0;
-                            border-radius: 3px;
-                        }
-
-                        &:focus,
-                        &:focus-visible {
-                            outline: none;
-                            border-color: none;
-                        }
+                    &:focus,
+                    &:focus-visible {
+                        outline: none;
+                        border-color: none;
                     }
                 }
             }

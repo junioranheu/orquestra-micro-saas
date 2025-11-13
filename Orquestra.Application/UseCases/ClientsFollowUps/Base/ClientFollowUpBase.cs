@@ -13,6 +13,8 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
+    private readonly int MAX_FILES = 3;
+
     public async Task Validate(ClientFollowUpInput input, Guid userIdAuth)
     {
         Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId && x.Status == true).FirstOrDefaultAsync() ?? throw new ArgumentException(SystemConsts.Warnings.NotFoundClient);
@@ -21,6 +23,11 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
 
         if (input.ImagesFormFile is not null || input.ImagesFormFile?.Count > 0)
         {
+            if (input.ImagesFormFile.Count > MAX_FILES)
+            {
+                throw new ArgumentException($"Você pode subir no máximo {MAX_FILES} anexos por acompanhamento.");
+            }
+
             foreach (var item in input.ImagesFormFile)
             {
                 ValidateMaxSizeFile(file: item, maxMegabytes: 3);
