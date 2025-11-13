@@ -89,7 +89,7 @@ public sealed class UpdateClientFollowUpTests
             ClientFollowUpId = Guid.NewGuid(),
             ClientId = client.ClientId,
             Observation = "Tentativa de atualizar inexistente.",
-            ClientFollowUpStatus = ClientFollowUpStatusEnum.Pending
+            ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress
         };
 
         // Act & Assert;

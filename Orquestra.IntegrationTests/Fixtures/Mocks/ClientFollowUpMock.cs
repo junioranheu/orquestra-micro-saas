@@ -15,7 +15,7 @@ public static class ClientFollowUpMock
             ClientId = client.ClientId,
             Client = client,
             Observation = "Cliente demonstrou interesse em retornar na próxima semana para revisão do tratamento.",
-            ClientFollowUpStatus = ClientFollowUpStatusEnum.Pending,
+            ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress,
             Images =
             [
                 // Simula imagens em binário;
