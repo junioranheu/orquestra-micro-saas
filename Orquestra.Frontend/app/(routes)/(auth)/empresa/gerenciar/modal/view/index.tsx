@@ -112,7 +112,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
             country: company?.country ?? '',
 
             logoBase64: company?.logoBase64 ?? '',
-            logoFormFile: company?.logoBase64 ? handleConvertBase64ToFile(company?.logoBase64, 'logo') : null,
+            logoFormFile: company?.logoBase64 ? handleConvertBase64ToFile(company?.logoBase64, 'img') : null,
             color: company?.color ?? '',
 
             companySituation: company?.companySituation ?? '',

@@ -90,7 +90,7 @@
     }
 
     &[data-variant='info']::before {
-        background: linear-gradient(90deg, transparent 0%, #3b82f6 50%, transparent 100%);
+        background: linear-gradient(90deg, transparent 0%, var(--main) 50%, transparent 100%);
     }
 
     @media (max-width: 640px) {
@@ -180,7 +180,7 @@
 
     &[data-variant='info'] {
         &::before {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, var(--main) 0%, var(--main) 100%);
         }
 
         &::after {
@@ -226,7 +226,7 @@
     }
 
     &[data-variant='info'] {
-        color: #2563eb;
+        color: var(--main);
     }
 
     @keyframes iconFloat {

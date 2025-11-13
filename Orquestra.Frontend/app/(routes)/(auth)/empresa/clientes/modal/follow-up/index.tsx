@@ -151,8 +151,6 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                         <h1 className={styles.inputTitle}>
                             {type === 'create' ? 'Cadastrar novo acompanhamento' : 'Editar acompanhamento'}
                         </h1>
-
-                        <h1>{editing.toString()} {type}</h1>
                     </div>
 
                     <div className={styles.modalHeaderRight}>
@@ -170,7 +168,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                     <div className='modal-layout-grid'>
                         <InputMask title='Observações' fieldName='observation' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='Status' fieldName='clientFollowUpStatus' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputImage title='Logo' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' />
+                        <InputImage title='Logo' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' multiple={true} />
                     </div>
                 </main>
 

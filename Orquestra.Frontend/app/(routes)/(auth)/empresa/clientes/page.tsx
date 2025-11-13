@@ -46,7 +46,20 @@ export default function EmpresaClientes() {
         {
             title: 'Nome completo',
             dataIndex: 'fullName',
-            key: 'fullName'
+            key: 'fullName',
+            render: (value: string, record: iClient) => (
+                <span
+                    onClick={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${record.clientId}`)}
+                    style={{
+                        cursor: 'pointer',
+                        fontWeight: 500,
+                        textDecoration: 'underline dashed var(--contrast)',
+                        textUnderlineOffset: '4px'
+                    }}
+                >
+                    {value}
+                </span>
+            )
         },
         {
             title: 'CPF',

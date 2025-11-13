@@ -12,7 +12,6 @@
         margin-bottom: -5px;
 
         .obligatory {
-            // background-color: orange;
             color: var(--contrast);
             font-weight: 800;
             font-size: 1rem;
@@ -21,7 +20,8 @@
 
     .wrapper {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
         gap: 12px;
 
         .uploadButton {
@@ -50,6 +50,7 @@
             border: 1px solid var(--gray) !important;
             color: var(--gray-dark) !important;
             transition: 0.3s !important;
+            font-size: 0.8rem;
 
             &:hover {
                 border: 1px solid var(--contrast) !important;
@@ -70,6 +71,70 @@
                 background-color: #ccc;
                 box-shadow: none;
                 transform: translateY(0px);
+            }
+        }
+
+        /* ===== PREVIEWS MULTIPLOS ===== */
+        .previewsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        .previewItem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--border-radius-sm);
+            padding: 8px;
+            background-color: var(--white-og);
+            box-shadow: var(--box-shadow-light);
+            transition: all 0.2s ease;
+            width: fit-content;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--box-shadow);
+            }
+
+            .previewThumb {
+                width: 100%;
+                height: 80px;
+                object-fit: cover;
+                border-radius: var(--border-radius-xs);
+            }
+
+            .previewInfo {
+                // background-color: tomato;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+
+                .previewName {
+                    font-size: 0.7rem;
+                    font-weight: 500;
+                    color: var(--gray-dark);
+                    text-align: center;
+                    word-break: break-all;
+                    max-width: 100%;
+                }
+
+                .previewActions {
+                    display: flex;
+                    gap: 4px;
+
+                    .simpleButton {
+                        padding: 4px 8px;
+                        font-size: 0.65rem;
+                        border-radius: var(--border-radius-xs);
+                    }
+                }
             }
         }
     }

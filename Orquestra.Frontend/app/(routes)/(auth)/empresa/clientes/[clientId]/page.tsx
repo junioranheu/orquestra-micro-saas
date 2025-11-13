@@ -173,7 +173,6 @@ export default function ClientProfile() {
 // Componente de Header do Cliente;
 function ClientHeader({ me, name, memberSince, onEdit, handleOpenModalFollowUp, client, setTrigger }: iClientHeaderProps) {
 
-    const router = useRouter();
     const [emoji, setEmoji] = useState<string>('👤');
 
     useEffect(() => {
@@ -337,7 +336,7 @@ function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
                     )) : (
                         <div className={styles.appointmentHistory__empty}>
                             <p>
-                                Nenhum acompanhamento encontrado. Adicione um novo registro clicando no botão "Criar novo acompanhamento" acima.
+                                Nenhum acompanhamento encontrado. Adicione um novo registro clicando no botão &quot;Criar novo acompanhamento&quot; acima.
                             </p>
 
                             <div className={styles.center}>
