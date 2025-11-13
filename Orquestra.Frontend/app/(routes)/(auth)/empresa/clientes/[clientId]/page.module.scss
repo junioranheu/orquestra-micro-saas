@@ -123,8 +123,10 @@ $spacing-unit: 0.5rem;
     }
 
     &__avatar {
-        width: 5rem;
-        height: 5rem;
+        // width: 5rem;
+        // height: 5rem;
+        min-width: 80px;
+        min-height: 80px;
         border-radius: 50%;
         background: linear-gradient(135deg, var(--main), var(--main));
         display: flex;
