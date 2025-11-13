@@ -306,6 +306,14 @@ function FollowUpHistory({ me, clientsFollowUps }: iFollowUpHistoryProps) {
 
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
+    function handleOpenFiles(followUp: iClientFollowUp) {
+        alert(followUp.observation);
+    }
+
+    async function handleDelete(followUp: iClientFollowUp) {
+        alert(followUp.observation);
+    }
+
     return (
         <div className={`${styles.card} ${styles.appointmentHistory}`}>
             <h2 className={styles.card__title}>Acompanhamentos</h2>
@@ -339,7 +347,10 @@ function FollowUpHistory({ me, clientsFollowUps }: iFollowUpHistoryProps) {
                                     {
                                         followUp.imagesBase64?.length ? (
                                             <Fragment>
-                                                <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}>
+                                                <span
+                                                    className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
+                                                    onClick={() => handleOpenFiles(followUp)}
+                                                >
                                                     <Icon icon='paperclip' size='small' /> {followUp.imagesBase64?.length > 1 ? 'Ver anexos' : 'Ver anexo'}
                                                 </span>
                                             </Fragment>
@@ -350,7 +361,10 @@ function FollowUpHistory({ me, clientsFollowUps }: iFollowUpHistoryProps) {
 
                                     {
                                         me?.isUserAdmOfCurrentMainCompany && (
-                                            <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}>
+                                            <span
+                                                className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
+                                                onClick={() => handleDelete(followUp)}
+                                            >
                                                 <Icon icon='trash' size='small' /> Excluir
                                             </span>
                                         )
