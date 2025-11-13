@@ -11,6 +11,7 @@ import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
+import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
@@ -48,17 +49,19 @@ export default function EmpresaClientes() {
             dataIndex: 'fullName',
             key: 'fullName',
             render: (value: string, record: iClient) => (
-                <span
-                    onClick={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${record.clientId}`)}
-                    style={{
-                        cursor: 'pointer',
-                        fontWeight: 500,
-                        textDecoration: 'underline dashed var(--contrast)',
-                        textUnderlineOffset: '4px'
-                    }}
-                >
-                    {value}
-                </span>
+                <Tippy content={`Visualizar detalhes do cliente ${record.fullName}`} placement='right'>
+                    <span
+                        onClick={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${record.clientId}`)}
+                        style={{
+                            cursor: 'pointer',
+                            fontWeight: 500,
+                            textDecoration: 'underline dashed var(--contrast)',
+                            textUnderlineOffset: '4px'
+                        }}
+                    >
+                        {value}
+                    </span>
+                </Tippy>
             )
         },
         {

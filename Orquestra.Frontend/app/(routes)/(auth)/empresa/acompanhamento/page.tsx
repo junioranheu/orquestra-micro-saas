@@ -10,7 +10,7 @@ export default function EmpresaAcompanhamento() {
     return (
         <LayoutTemplateMessage
             variant='info'
-            title='Opa, parado aí'
+            title='Opa, espera aí'
             description='Para acompanhar o follow-up dos clientes, acesse a tela de gestão de clientes clicando no botão abaixo e selecione o cliente que deseja visualizar.'
             customButtonLabel='Visualizar clientes'
             customButtonRoute={ROUTES.EMPRESA_CLIENTES}

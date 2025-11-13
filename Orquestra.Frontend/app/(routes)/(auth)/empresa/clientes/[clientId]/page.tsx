@@ -261,7 +261,10 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
         <div className={`${styles.card} ${styles.appointmentHistory}`}>
             <h2 className={styles.card__title}>Histórico de agendamentos</h2>
 
-            <div className={styles.appointmentHistory__list}>
+            <div
+                className={styles.appointmentHistory__list}
+                style={{ maxHeight: '50vh' }}
+            >
                 {
                     schedules?.length ? schedules.map((schedule, index) => (
                         <div key={index} className={`${styles.appointmentItem} ${styles[`appointmentItem--${schedule.scheduleStatus}`]}`}>
@@ -298,7 +301,7 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
     )
 }
 
-// Componente de Histórico de Agendamentos;
+// Componente de Histórico de Follow-ups;
 function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
 
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
@@ -307,7 +310,10 @@ function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
         <div className={`${styles.card} ${styles.appointmentHistory}`}>
             <h2 className={styles.card__title}>Acompanhamentos</h2>
 
-            <div className={styles.appointmentHistory__list}>
+            <div
+                className={styles.appointmentHistory__list}
+                style={{ maxHeight: '80vh' }}
+            >
                 {
                     clientsFollowUps?.length ? clientsFollowUps.map((followUp, index) => (
                         <div key={index} className={styles.appointmentItem}>
