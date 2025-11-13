@@ -26,6 +26,14 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
             }
         }
 
+        if (!isCreate)
+        {
+            if (input.ClientFollowUpStatus != ClientFollowUpStatusEnum.InProgress)
+            {
+                throw new ArgumentException($"Apenas acompanhamentos com o status <b>{GetStatusDesc(ClientFollowUpStatusEnum.InProgress).ToLowerInvariant()}</b> podem sem editados.");
+            }
+        }
+
         Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId && x.Status == true).FirstOrDefaultAsync() ?? throw new ArgumentException(SystemConsts.Warnings.NotFoundClient);
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: client.CompanyId, userId: userIdAuth, needCompanyAdmin: false);

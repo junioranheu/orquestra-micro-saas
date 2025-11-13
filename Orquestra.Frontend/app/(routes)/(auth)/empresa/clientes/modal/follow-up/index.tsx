@@ -68,15 +68,11 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
             }
         }
 
-        const followUpStatus = clientFollowUpStatusEnum.find(x => x.value.toString() === followUpClicked?.clientFollowUpStatus?.toString());
-        console.log(followUpStatus, clientFollowUpStatusEnum);
-
         setFormData({
             clientFollowUpId: followUpClicked ? followUpClicked.clientFollowUpId : SYSTEM.EMPTY_GUID,
             clientId: clientId,
             observation: followUpClicked ? followUpClicked.observation : '',
-            // @ts-expect-error: dinâmico e pode não ter props compatíveis;
-            clientFollowUpStatus: followUpStatus,
+            clientFollowUpStatus: followUpClicked ? followUpClicked.clientFollowUpStatus : '',
             imagesBase64: followUpClicked?.imagesBase64 ?? [],
             imagesFormFile: followUpClicked?.imagesBase64 ?
                 handleConvertBase64ListToFiles(
@@ -102,6 +98,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         setEditing(false);
         setSaving(true);
 
+        let hasImages = false;
         const data = handleLoopFormData(formData);
         const input = data.json as iClientFollowUp;
         const formDataInput = new FormData();
@@ -113,6 +110,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
 
         if (input.imagesFormFile && (Array.isArray(input.imagesFormFile) && input.imagesFormFile.every(f => f instanceof File))) {
             for (const file of input.imagesFormFile) {
+                hasImages = true;
                 formDataInput.append('ImagesFormFile', file, file.name);
             }
         }
@@ -125,7 +123,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                     content: 'Acompanhamento registrado com sucesso.',
                     confirmFunction: () => {
                         setTrigger(new Date());
-                        swalLoading({ handleFunction: () => handleClose() });
+                        swalLoading({ handleFunction: () => handleClose(), timeoutMs: (hasImages ? 3500 : 1000) });
                     },
                     icon: 'success'
                 });
@@ -144,7 +142,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                 content: 'Acompanhamento atualizado com sucesso.',
                 confirmFunction: () => {
                     setTrigger(new Date());
-                    swalLoading({ handleFunction: () => handleClose() });
+                    swalLoading({ handleFunction: () => handleClose(), timeoutMs: (hasImages ? 3500 : 1000) });
                 },
                 icon: 'success'
             });
@@ -196,8 +194,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                             <textarea value={formData.observation ?? ''} className={styles.textarea} readOnly={!editing} rows={5} maxLength={512} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
                         </div>
 
-                        {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
-                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={formData.clientFollowUpStatus ?? undefined} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
+                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={clientFollowUpStatusEnum?.find(x => x.value.toString() === followUpClicked?.clientFollowUpStatus?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
                         <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' isMultiple={true} />
                     </div>
                 </main>
@@ -217,7 +214,8 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                                 {
                                     !editing ? (
                                         <Fragment>
-                                            <Button label='Editar' handleFunction={() => setEditing(true)} />
+                                            {/* 1 = Em progresso */}
+                                            <Button label='Editar' handleFunction={() => setEditing(true)} isDisabled={followUpClicked?.clientFollowUpStatus?.toString() !== '1'} />
                                         </Fragment>
                                     ) : (
                                         <Fragment>

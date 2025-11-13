@@ -48,7 +48,7 @@ public sealed class UpdateClientFollowUpTests
         // Cria input com os novos dados;
         ClientFollowUpInput input = clientFollowUp.Adapt<ClientFollowUpInput>();
         input.Observation = "Cliente reagendou para próxima semana.";
-        input.ClientFollowUpStatus = ClientFollowUpStatusEnum.Completed;
+        input.ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress;
 
         // Act;
         await sut.Execute(user.UserId, input);
@@ -132,6 +132,44 @@ public sealed class UpdateClientFollowUpTests
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, input));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenStatusIsInvalidOnEdit()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        // Vincula o user à mesma empresa do client;
+        CompanyUser companyUser = new()
+        {
+            CompanyUserId = Guid.NewGuid(),
+            CompanyId = client.CompanyId,
+            UserId = user.UserId,
+            CompanyUserRole = CompanyUserRoleEnum.Administrator
+        };
+
+        await Fixture.Save(context, companyUser);
+
+        // Cria um follow-up existente;
+        ClientFollowUp clientFollowUp = ClientFollowUpMock.Create(client);
+        await Fixture.Save(context, clientFollowUp);
+
+        UpdateClientFollowUp sut = CreateSut(context, user);
+
+        // Cria input com os novos dados;
+        ClientFollowUpInput input = clientFollowUp.Adapt<ClientFollowUpInput>();
+        input.Observation = "Cliente reagendou para próxima semana.";
+        input.ClientFollowUpStatus = ClientFollowUpStatusEnum.Completed;
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));
     }
 
     #region helper

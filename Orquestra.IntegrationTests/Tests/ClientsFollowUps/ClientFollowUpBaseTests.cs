@@ -174,6 +174,35 @@ public sealed class ClientFollowUpBaseTests
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId, isCreate: true));
     }
 
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenStatusIsInvalidOnEdit()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        Client client = ClientMock.Create();
+        client.CompanyId = company.CompanyId;
+        await Fixture.Save(context, client);
+
+        ClientFollowUpBase sut = CreateSut(context, user);
+
+        ClientFollowUpInput input = new()
+        {
+            ClientId = client.ClientId,
+            Observation = "editando...",
+            ClientFollowUpStatus = ClientFollowUpStatusEnum.Completed
+        };
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId, isCreate: false));
+    }
+
     #region helper
     private static ClientFollowUpBase CreateSut(Context context, User user)
     {
