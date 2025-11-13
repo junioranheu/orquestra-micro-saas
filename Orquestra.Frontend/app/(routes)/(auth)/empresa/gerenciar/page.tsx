@@ -89,9 +89,9 @@ export default function EmpresaGerenciar() {
             confirmBtnText: 'Sim, desejo sair',
             confirmFunction: async () => {
                 const input = { companyId: company.companyId, userId: me?.userId };
-                const schedule = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });
+                const member = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });
 
-                if (schedule) {
+                if (member) {
                     router.push(ROUTES.DASHBOARD);
 
                     swal({

@@ -146,9 +146,9 @@ export default function EmpresaMembros() {
             confirmBtnText: isSameUser ? 'Sim, desejo sair' : 'Sim, desejo remover',
             confirmFunction: async () => {
                 const input = { companyId: me?.currentMainCompany?.companyId, userId: member.userId };
-                const schedule = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });
+                const output = await Fetch.put({ url: CONSTS_COMPANY_USER.disable, body: input });
 
-                if (schedule) {
+                if (output) {
                     if (!isSameUser) {
                         toast({ content: 'Colaborador removido da equipe com sucesso.' });
                     }

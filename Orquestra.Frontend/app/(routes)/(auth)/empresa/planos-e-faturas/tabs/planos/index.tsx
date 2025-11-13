@@ -88,9 +88,9 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
             return;
         }
 
-        const schedule = await Fetch.put({ url: `${CONSTS_COMPANY_INVOICE.pay}/${e.companyInvoiceId}` });
+        const output = await Fetch.put({ url: `${CONSTS_COMPANY_INVOICE.pay}/${e.companyInvoiceId}` });
 
-        if (schedule) {
+        if (output) {
             swal({
                 content: 'Fatura foi paga com sucesso.',
                 confirmFunction: () => window.location.reload(),

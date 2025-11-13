@@ -199,9 +199,9 @@ export async function handleDisable(member: iClient, setTrigger: Dispatch<SetSta
         checkboxLabel: 'Sim, confirmo',
         confirmFunction: async () => {
             const input = { clientId: member.clientId };
-            const schedule = await Fetch.put({ url: CONSTS_CLIENT.disable, body: input });
+            const client = await Fetch.put({ url: CONSTS_CLIENT.disable, body: input });
 
-            if (schedule) {
+            if (client) {
                 toast({ content: 'Cliente removido com sucesso.' });
                 setTrigger(new Date());
                 return;

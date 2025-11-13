@@ -15,6 +15,8 @@ import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { handleGuessGender } from '@/app/functions/get.guessGender';
+import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
@@ -48,6 +50,7 @@ interface iAppointmentHistoryProps {
 interface iFollowUpHistoryProps {
     me: iMe | undefined;
     clientsFollowUps: iClientFollowUp[];
+    setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
 // Componente principal;
@@ -142,7 +145,11 @@ export default function ClientProfile() {
                             </div>
 
                             <div className={styles.clientProfile__main}>
-                                <FollowUpHistory me={me} clientsFollowUps={clientsFollowUps?.output ?? []} />
+                                <FollowUpHistory
+                                    me={me}
+                                    clientsFollowUps={clientsFollowUps?.output ?? []}
+                                    setTrigger={setTrigger}
+                                />
                             </div>
                         </div>
                     </div>
@@ -302,7 +309,7 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 }
 
 // Componente de Histórico de Follow-ups;
-function FollowUpHistory({ me, clientsFollowUps }: iFollowUpHistoryProps) {
+function FollowUpHistory({ me, clientsFollowUps, setTrigger }: iFollowUpHistoryProps) {
 
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
@@ -310,8 +317,26 @@ function FollowUpHistory({ me, clientsFollowUps }: iFollowUpHistoryProps) {
         alert(followUp.observation);
     }
 
-    async function handleDelete(followUp: iClientFollowUp) {
-        alert(followUp.observation);
+    async function handleDisable(followUp: iClientFollowUp) {
+        swal({
+            content: 'Você tem certeza que deseja remover este acompanhamento? Este processo é irreversível.',
+            confirmBtnText: 'Sim, desejo remover',
+            mustConfirm: true,
+            checkboxLabel: 'Sim, confirmo',
+            confirmFunction: async () => {
+                const output = await Fetch.put({ url: `${CONSTS_CLIENT_FOLLOW_UP.disable}?clientFollowUpId=${followUp.clientFollowUpId}` });
+
+                if (output) {
+                    toast({ content: 'Acompanhamento removido com sucesso.' });
+                    setTrigger(new Date());
+                    return;
+                }
+
+                toast({ content: 'Não foi possível remover este acompanhamento. Tente novamente mais tarde.' });
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'question'
+        });
     }
 
     return (
@@ -363,7 +388,7 @@ function FollowUpHistory({ me, clientsFollowUps }: iFollowUpHistoryProps) {
                                         me?.isUserAdmOfCurrentMainCompany && (
                                             <span
                                                 className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
-                                                onClick={() => handleDelete(followUp)}
+                                                onClick={() => handleDisable(followUp)}
                                             >
                                                 <Icon icon='trash' size='small' /> Excluir
                                             </span>
