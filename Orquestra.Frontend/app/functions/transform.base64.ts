@@ -44,3 +44,19 @@ export function handleConvertBase64ListToFiles(base64List: { base64: string; fil
         return new File([u8arr], filename, { type: mime });
     }).filter((file): file is File => !!file); // Remove nulls;
 }
+
+export function handleOpenBase64InNewTab(base64: string) {
+    const [meta, data] = base64.split(',');
+    const mime = meta.match(/:(.*?);/)?.[1] || 'image/png';
+    const byteString = atob(data);
+    const array = new Uint8Array(byteString.length);
+
+    for (let i = 0; i < byteString.length; i++) {
+        array[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([array], { type: mime });
+    const url = URL.createObjectURL(blob);
+
+    window.open(url, '_blank');
+}

@@ -17,12 +17,14 @@ import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { handleGuessGender } from '@/app/functions/get.guessGender';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
+import { handleOpenBase64InNewTab } from '@/app/functions/transform.base64';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import styles from './page.module.scss';
 
 // Interfaces
@@ -314,7 +316,45 @@ function FollowUpHistory({ me, clientsFollowUps, setTrigger }: iFollowUpHistoryP
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
     function handleOpenFiles(followUp: iClientFollowUp) {
-        alert(followUp.observation);
+        const imagesHtml = followUp.imagesBase64?.map((base64, idx) => `
+        <div style="display:flex;flex-direction:column;align-items:center;margin:6px;">
+            <img 
+                src="${base64}" 
+                style="
+                    width: 140px;
+                    height: 140px;
+                    object-fit: cover;
+                    border-radius: var(--border-radius-xs);
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+                "
+            />
+            <button id="btn-open-${idx}" style="
+                margin-top: 8px !important;
+                padding: 8px !important;
+                border: 1px solid var(--gray) !important;
+                border-radius: 4px !important;
+                background: transparent !important;
+                color: var(--gray-dark) !important;
+                cursor: pointer !important;
+                box-shadow: none !important;
+                font-family: inherit !important;
+            ">Abrir em outra aba</button>
+        </div>
+    `).join('') ?? '';
+
+        Swal.fire({
+            // title: 'Anexos',
+            html: `<div style="display:flex;flex-wrap:wrap;justify-content:center;">${imagesHtml}</div>`,
+            width: 700,
+            showConfirmButton: true,
+            confirmButtonText: 'Voltar',
+            didOpen: () => {
+                followUp.imagesBase64?.forEach((base64, idx) => {
+                    const btn = document.getElementById(`btn-open-${idx}`);
+                    btn?.addEventListener('click', () => handleOpenBase64InNewTab(base64));
+                });
+            }
+        });
     }
 
     async function handleDisable(followUp: iClientFollowUp) {
