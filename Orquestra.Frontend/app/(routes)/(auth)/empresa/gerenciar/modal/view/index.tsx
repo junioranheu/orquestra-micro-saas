@@ -12,7 +12,7 @@ import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import handleConvertBase64ToFile from '@/app/functions/convert.base64ToFile';
+import { handleConvertBase64ToFile } from '@/app/functions/convert.base64ToFile';
 import { handleFetchCEP } from '@/app/functions/fetch.CEP';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import { handleGetOnlyNumbers } from '@/app/functions/format.string';

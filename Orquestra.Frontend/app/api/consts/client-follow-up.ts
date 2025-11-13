@@ -11,10 +11,11 @@ export const CONSTS_CLIENT_FOLLOW_UP = {
 };
 
 export default interface iClientFollowUp {
-    clientFollowUpId: Guid;
-    clientId: Guid;
-    observation: string;
-    clientFollowUpStatus: string;
-    imagesBase64: string;
-    imagesContentType: string;
+    clientFollowUpId?: Guid;
+    clientId?: Guid;
+    observation?: string;
+    clientFollowUpStatus?: string;
+    imagesFormFile?: globalThis.File[] | null | []; // Input;
+    imagesBase64?: string[]; // Output;
+    createdDate?: Date;
 }

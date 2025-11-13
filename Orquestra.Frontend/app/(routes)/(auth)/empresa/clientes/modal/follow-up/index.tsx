@@ -1,15 +1,17 @@
 'use client';
-import { CONSTS_INVENTORY, iInventory } from '@/app/api/consts/inventory';
+import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import iClientFollowUp from '@/app/api/consts/client-follow-up';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
-import InputImage from '@/app/components/input/image';
+import Dropdown from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
-import { handleConvertBase64ToFile } from '@/app/functions/convert.base64ToFile';
+import { handleConvertBase64ListToFiles } from '@/app/functions/convert.base64ToFile';
+import { handleGetOnlyNumbers } from '@/app/functions/format.string';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { Guid } from 'guid-typescript';
@@ -19,25 +21,22 @@ interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
-    item: iInventory | undefined;
-    companyId: Guid | undefined;
+    clientId: Guid | undefined;
+    followUpClicked: iClientFollowUp | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
-export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, type, item, companyId, setTrigger }: iProps) {
+export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOpen, type, clientId, followUpClicked, setTrigger }: iProps) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
-    const [formData, setFormData] = useState<iInventory>({
-        inventoryId: SYSTEM.EMPTY_GUID,
-        companyId: SYSTEM.EMPTY_GUID,
-        name: null,
-        description: '',
-        quantity: 0,
-        unitPrice: 0,
-        imageFormFile: null,
-        imageBase64: ''
+    const [formData, setFormData] = useState<iClientFollowUp>({
+        clientId: SYSTEM.EMPTY_GUID,
+        observation: '',
+        clientFollowUpStatus: '',
+        imagesFormFile: [],
+        imagesBase64: []
     });
 
     const handleClose = useCallback(() => {
@@ -52,32 +51,33 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         setSaving(false);
         setEditing(false);
 
-        console.log('companyId', companyId);
-
-        if (type === 'create') {
-            setEditing(true);
-            return;
-        }
-
-        if (!isModalOpen || !item) {
+        if (!isModalOpen || !followUpClicked || !clientId) {
             return;
         }
 
         setFormData({
-            inventoryId: item ? item.inventoryId : Guid.create(),
-            companyId: companyId,
-            name: item ? item.name : null,
-            description: item && item.description ? item.description : null,
-            quantity: item && item.quantity ? item.quantity : 0,
-            unitPrice: item && item.unitPrice ? item.unitPrice : 0,
-            imageFormFile: item && item.imageBase64 ? handleConvertBase64ToFile(item?.imageBase64, 'img') : null,
-            imageBase64: item && item.imageBase64 ? item.imageBase64 : ''
+            clientId: clientId,
+            observation: followUpClicked ? followUpClicked.observation : '',
+            clientFollowUpStatus: followUpClicked ? followUpClicked.clientFollowUpStatus : '',
+            imagesBase64: followUpClicked?.imagesBase64 ?? [],
+            imagesFormFile: followUpClicked?.imagesBase64 ?
+                handleConvertBase64ListToFiles(
+                    followUpClicked.imagesBase64.map(img => ({
+                        base64: img,
+                        filename: 'img',
+                    }))
+                ) : [],
         });
-    }, [isModalOpen, type, item, companyId, setIsModalOpen, handleClose]);
+    }, [isModalOpen, type, clientId, followUpClicked, setIsModalOpen, handleClose]);
 
     async function handleSave() {
-        if (!formData.name || !formData.quantity || !formData.unitPrice) {
+        if (!formData.clientId || !formData.clientFollowUpStatus) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
+            return;
+        }
+
+        if (!formData.observation && !formData.imagesFormFile) {
+            swal({ content: 'Adicione pelo menos a observação ou um anexo.', icon: 'warning' });
             return;
         }
 
@@ -85,18 +85,14 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         setSaving(true);
 
         const data = handleLoopFormData(formData);
-        const input = data.json as iInventory;
-        const formDataInput = new FormData();
+        const input = data.json as iClient;
 
-        formDataInput.append('InventoryId', input.inventoryId ? input.inventoryId.toString() : SYSTEM.EMPTY_GUID.toString());
-        formDataInput.append('CompanyId', companyId!.toString());
-        formDataInput.append('Name', input.name ?? '');
-        formDataInput.append('Description', input.description ?? '');
-        formDataInput.append('Quantity', input?.quantity && input?.quantity > 0 ? input.quantity?.toString() : '0');
-        formDataInput.append('UnitPrice', input?.unitPrice && input?.unitPrice > 0 ? input.unitPrice?.toString() : '0');
+        if (input.cpf) {
+            input.cpf = handleGetOnlyNumbers(input.cpf);
+        }
 
-        if (input.imageFormFile && input.imageFormFile instanceof File) {
-            formDataInput.append('ImageFormFile', input.imageFormFile as Blob, input.imageFormFile.name);
+        if (input.phone) {
+            input.phone = handleGetOnlyNumbers(input.phone);
         }
 
         if (!companyId) {
@@ -109,11 +105,11 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         // console.log(input);
 
         if (type === 'create') {
-            const output = await Fetch.post({ url: CONSTS_INVENTORY.post, body: formDataInput, isFormData: true });
+            const output = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as iClient;
 
             if (output) {
                 swal({
-                    content: 'Item registrado com sucesso.',
+                    content: 'Cliente registrado com sucesso.',
                     confirmFunction: () => setTrigger(new Date()),
                     icon: 'success'
                 });
@@ -127,11 +123,17 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
             return;
         }
 
-        const output = await Fetch.put({ url: CONSTS_INVENTORY.put, body: formDataInput, isFormData: true });
+        if (!client?.clientId) {
+            swal({ content: 'Erro interno: O ID do cliente está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
+            return;
+        }
+
+        input.clientId = client.clientId;
+        const output = await Fetch.put({ url: CONSTS_CLIENT.put, body: input }) as iClient;
 
         if (output) {
             swal({
-                content: 'Item atualizado com sucesso.',
+                content: 'Cliente atualizado com sucesso.',
                 confirmFunction: () => setTrigger(new Date()),
                 icon: 'success'
             });
@@ -162,7 +164,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            {type === 'create' ? (formData.name ? `Novo item: ${formData.name}` : 'Cadastrar novo item') : <ContentLoaderText content={(`Editar item: ${formData?.name ?? item?.name}`)} />}
+                            {type === 'create' ? (formData.fullName ? `Novo cliente: ${formData.fullName}` : 'Cadastrar novo cliente') : <ContentLoaderText content={(`Editar cliente: ${formData?.fullName ?? client?.fullName}`)} />}
                         </h1>
                     </div>
 
@@ -179,11 +181,18 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
 
                 <main className={styles.modalContent}>
                     <div className='modal-layout-grid'>
-                        <InputMask title='Nome' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Descrição' fieldName='description' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Quantidade' type='number' fieldName='quantity' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='Preço por unidade' type='number' fieldName='unitPrice' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <InputImage title='Imagem' fieldName='imageFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar imagem' />
+                        <InputMask title='Nome' fieldName='fullName' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='CPF' fieldName='cpf' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='000000000-00' isObligatory={true} />
+                        <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='(00) 00000-0000' />
+                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' handleOnChange={(e) => handleGetCEP(e)} />
+                        <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Número do endereço' fieldName='addressNumber' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
+                        <InputMask type='date' title='Data de aniversário' fieldName='dateOfBirth' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Anotações' fieldName='notes' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                     </div>
                 </main>
 

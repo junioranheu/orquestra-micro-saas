@@ -1,4 +1,5 @@
 'use client';
+import EmpresaClientesModalFollowUp from '@/app/(routes)/(auth)/empresa/clientes/modal/follow-up';
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
 import { handleDisable } from '@/app/(routes)/(auth)/empresa/clientes/page';
 import { iMe } from '@/app/api/consts/auth';
@@ -28,6 +29,7 @@ interface iClientHeaderProps {
     name: string;
     memberSince: string;
     onEdit: () => void;
+    handleOpenModalFollowUp: () => void;
     client: iClient;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
@@ -91,6 +93,16 @@ export default function ClientProfile() {
         setIsModalViewOpen(true);
     }
 
+    const [isModalFollowUpOpen, setIsModalFollowUpOpen] = useState<boolean>(false);
+    const [followUpClicked, setFollowUpClicked] = useState<iClientFollowUp | undefined>(undefined);
+    const [typeModalFollowUp, setTypeModalFollowUp] = useState<('create' | 'edit')>('create');
+
+    function handleOpenModalFollowUp(followUp: iClientFollowUp | undefined, type: 'create' | 'edit') {
+        setTypeModalFollowUp(type);
+        setFollowUpClicked(followUp);
+        setIsModalFollowUpOpen(true);
+    }
+
     if (!client) {
         return (
             <TemplatePageHeader title='Carregando informações do cliente...' isLoading={true}></TemplatePageHeader>
@@ -107,6 +119,7 @@ export default function ClientProfile() {
                             name={client?.fullName}
                             memberSince={handleFormatDate(client?.createdDate, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO)}
                             onEdit={() => handleOpenModalView(client)}
+                            handleOpenModalFollowUp={() => handleOpenModalFollowUp(client, 'create')}
                             client={client}
                             setTrigger={setTrigger}
                         />
@@ -144,12 +157,21 @@ export default function ClientProfile() {
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
             />
+
+            <EmpresaClientesModalFollowUp
+                isModalOpen={isModalFollowUpOpen}
+                setIsModalOpen={setIsModalFollowUpOpen}
+                type={typeModalFollowUp}
+                clientId={clientClicked?.clientId}
+                followUpClicked={followUpClicked}
+                setTrigger={setTrigger}
+            />
         </Fragment>
     )
 }
 
 // Componente de Header do Cliente;
-function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iClientHeaderProps) {
+function ClientHeader({ me, name, memberSince, onEdit, handleOpenModalFollowUp, client, setTrigger }: iClientHeaderProps) {
 
     const router = useRouter();
     const [emoji, setEmoji] = useState<string>('👤');
@@ -181,6 +203,7 @@ function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iCl
 
             <div className={styles.clientHeader__actions}>
                 {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='user-x' />} />}
+                <Button label='Criar novo acompanhamento' handleFunction={() => handleOpenModalFollowUp()} isStyleSimple={true} style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='repeat' />} />
                 <Button label='Editar cliente' handleFunction={() => onEdit()} icon_feather={<Icon icon='edit' />} />
             </div>
         </div>
@@ -289,32 +312,32 @@ function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
                 {
                     clientsFollowUps?.length ? clientsFollowUps.map((followUp, index) => (
                         <div key={index} className={styles.appointmentItem}>
-                            {/* <div className={styles.appointmentItem__content}>
+                            <div className={styles.appointmentItem__content}>
                                 <div className={styles.appointmentItem__info}>
                                     <h3 className={styles.appointmentItem__title}>
-                                        {followUp.customTitle ? followUp.customTitle : `Agendamento para ${handleFormatDate(followUp.dateStart, DATE_STYLE.DIA_MES_ANO)}`}
+                                        XD
                                     </h3>
 
                                     <p className={styles.appointmentItem__datetime}>
-                                        {handleFormatDate(followUp.dateStart, DATE_STYLE.DETALHADO)}
+                                        {handleFormatDate(followUp.createdDate, DATE_STYLE.DETALHADO)}
                                     </p>
                                 </div>
 
                                 <div className={styles.appointmentItem__meta}>
                                     <span className={styles.appointmentItem__price}>
-                                        R$ {followUp.amountReceived ?? 0}
+                                        {followUp.observation}
                                     </span>
 
-                                    <span className={`${styles.appointmentItem__status} ${styles[`appointmentItem__status--${followUp.scheduleStatus}`]}`}>
-                                        {clientFollowUpStatusEnum?.find(x => x.value === followUp.scheduleStatus)?.label?.toString() ?? ''}
+                                    <span className={styles.appointmentItem__status}>
+                                        {clientFollowUpStatusEnum?.find(x => x.value === followUp.clientFollowUpStatus)?.label?.toString() ?? ''}
                                     </span>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
                     )) : (
                         <div className={styles.appointmentHistory__empty}>
                             <p>
-                                Nenhum acompanhamento encontrado.
+                                Nenhum acompanhamento encontrado. Adicione um novo registro clicando no botão "Criar novo acompanhamento" acima.
                             </p>
 
                             <div className={styles.center}>

@@ -9,5 +9,5 @@ public sealed class ClientFollowUpOutput
     public string? Observation { get; set; }
     public ClientFollowUpStatusEnum ClientFollowUpStatus { get; set; }
     public List<string> ImagesBase64 { get; set; } = []; // Base64;
-    public List<string>? ImagesContentType { get; set; } = [];
+    public DateTime? CreatedDate { get; set; }  
 }
