@@ -52,6 +52,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
 
     const [countries, setCountries] = useState<string[] | undefined>([]);
     useApiRequestToSetterOnUrlChange<string[]>({ apiUrlRequest: CONSTS_UTILITY.getCountry, setter: setCountries });
+    const setCountryOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.country ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     const handleClose = useCallback(() => {
         setSaving(false);
@@ -89,8 +90,6 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
             phone: client && client?.phone ? client.phone : null
         });
     }, [isModalOpen, type, client, setIsModalOpen, handleClose]);
-
-    const setCountryOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.country ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
         if (!formData.fullName || !formData.cpf) {

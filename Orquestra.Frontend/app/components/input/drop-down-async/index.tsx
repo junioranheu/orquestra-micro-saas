@@ -7,7 +7,7 @@ import AsyncSelect from 'react-select/async';
 
 interface iProps {
     title?: string;
-    multiple?: boolean;
+    isMultiple?: boolean;
     setSelectedOption: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
     apiUrl: string;
     placeholder?: string;
@@ -17,7 +17,7 @@ interface iProps {
 
 export default function DropdownAsync({
     title,
-    multiple = false,
+    isMultiple = false,
     setSelectedOption,
     apiUrl,
     placeholder,
@@ -97,7 +97,7 @@ export default function DropdownAsync({
                 loadOptions={handleLoadOptions}
                 onInputChange={handleInputChange}
                 onChange={handleChange}
-                isMulti={multiple}
+                isMulti={isMultiple}
                 placeholder={(placeholder ?? 'Selecione')}
                 styles={customStyle}
                 noOptionsMessage={() => 'Nenhuma opção encontrada'}

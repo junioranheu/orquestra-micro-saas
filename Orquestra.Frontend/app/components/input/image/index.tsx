@@ -16,7 +16,8 @@ interface iProps<T> {
     isObligatory?: boolean;
     showPreview?: boolean;
     svg_component?: ReactNode;
-    multiple?: boolean;
+    isMultiple?: boolean;
+    maxFileSizeMb?: number;
 }
 
 export default function InputImage<T>({
@@ -32,7 +33,8 @@ export default function InputImage<T>({
     isObligatory = false,
     showPreview = true,
     svg_component = null,
-    multiple = false,
+    isMultiple = false,
+    maxFileSizeMb = 3
 }: iProps<T>) {
 
     // Pode ser File | string | number[] | File[] | string[] | null;
@@ -61,6 +63,23 @@ export default function InputImage<T>({
         }
 
         const files = Array.from(filesList);
+        const MAX_BYTES = maxFileSizeMb * 1024 * 1024;
+        const invalids = files.filter(f => f.size > MAX_BYTES);
+
+        if (invalids.length > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Arquivo muito grande!',
+                text: `Cada arquivo deve ter no máximo ${maxFileSizeMb}MB. (${invalids.map(f => f.name).join(', ')})`,
+            });
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+
+            return;
+        }
+
         const createdUrls: string[] = [];
 
         const newPreviews = files.map(f => {
@@ -77,7 +96,7 @@ export default function InputImage<T>({
         setFileNames(files.map(f => f.name));
 
         if (setFormData) {
-            if (multiple) {
+            if (isMultiple) {
                 // Salva array de File;
                 setFormData((prev: T) => ({
                     ...prev,
@@ -140,7 +159,7 @@ export default function InputImage<T>({
             if (setFormData) {
                 setFormData((prev: T) => ({
                     ...prev,
-                    [fieldName]: [] as unknown as T[keyof T],
+                    [fieldName]: [] as unknown as T[keyof T]
                 }));
             }
         }
@@ -235,13 +254,13 @@ export default function InputImage<T>({
                 {svg_component && svg_component}
 
                 <label className={`${styles.uploadButton} ${isDisabled ? styles.disabled : ''}`}>
-                    {fileNames.length > 0 ? (multiple ? `${fileNames.length} arquivo(s) selecionado(s)` : '1 arquivo selecionado') : (placeholder ?? (multiple ? 'Selecionar imagens' : 'Selecionar imagem'))}
+                    {fileNames.length > 0 ? (isMultiple ? `${fileNames.length} arquivo(s) selecionado(s)` : '1 arquivo selecionado') : (placeholder ?? (isMultiple ? 'Selecionar imagens' : 'Selecionar imagem'))}
 
                     <input
                         ref={fileInputRef}
                         type='file'
                         accept='image/*'
-                        multiple={multiple}
+                        multiple={isMultiple}
                         className={classes}
                         style={style}
                         disabled={isDisabled}

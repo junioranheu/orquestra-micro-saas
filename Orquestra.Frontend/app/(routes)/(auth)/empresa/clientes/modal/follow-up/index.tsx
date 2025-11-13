@@ -2,15 +2,17 @@
 import iClientFollowUp, { CONSTS_CLIENT_FOLLOW_UP } from '@/app/api/consts/client-follow-up';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button';
+import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputImage from '@/app/components/input/image';
-import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
 import { handleConvertBase64ListToFiles } from '@/app/functions/convert.base64ToFile';
-import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
+import handleGetPropName from '@/app/functions/get.propName';
+import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -35,6 +37,9 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         imagesFormFile: [],
         imagesBase64: []
     });
+
+    const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
+    const setClientFollowUpStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientFollowUpStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     const handleClose = useCallback(() => {
         setSaving(false);
@@ -93,10 +98,21 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
 
         const data = handleLoopFormData(formData);
         const input = data.json as iClientFollowUp;
-        // console.log(input);
+        const formDataInput = new FormData();
+
+        formDataInput.append('ClientFollowUpId', input.clientFollowUpId ? input.clientFollowUpId.toString() : SYSTEM.EMPTY_GUID.toString());
+        formDataInput.append('ClientId', clientId!.toString());
+        formDataInput.append('Observation', input.observation ?? '');
+        formDataInput.append('ClientFollowUpStatus', input.clientFollowUpStatus ?? '');
+
+        if (input.imagesFormFile && (Array.isArray(input.imagesFormFile) && input.imagesFormFile.every(f => f instanceof File))) {
+            for (const file of input.imagesFormFile) {
+                formDataInput.append('ImagesFormFile', file, file.name);
+            }
+        }
 
         if (type === 'create') {
-            const output = await Fetch.post({ url: CONSTS_CLIENT_FOLLOW_UP.post, body: input });
+            const output = await Fetch.post({ url: CONSTS_CLIENT_FOLLOW_UP.post, body: formDataInput, isFormData: true });
 
             if (output) {
                 swal({
@@ -114,7 +130,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
             return;
         }
 
-        const output = await Fetch.put({ url: CONSTS_CLIENT_FOLLOW_UP.put, body: input });
+        const output = await Fetch.put({ url: CONSTS_CLIENT_FOLLOW_UP.put, body: formDataInput, isFormData: true });
 
         if (output) {
             swal({
@@ -167,12 +183,13 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                 <main className={styles.modalContent}>
                     <div className='modal-layout-flex'>
                         <div className={styles.div}>
-                            <label>Observações do follow-up</label>
+                            <label>Observações do acompanhamento</label>
                             <textarea value={formData.observation ?? ''} className={styles.textarea} readOnly={!editing} rows={5} maxLength={512} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
                         </div>
 
-                        <InputMask title='Status' fieldName='clientFollowUpStatus' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' multiple={true} />
+                        {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
+                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={formData.clientFollowUpStatus ?? undefined} setSelectedOption={setClientFollowUpStatusOption} />
+                        <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' isMultiple={true} />
                     </div>
                 </main>
 
