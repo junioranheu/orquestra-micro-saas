@@ -54,7 +54,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         setSaving(false);
         setEditing(false);
 
-        if (!isModalOpen || !clientId) {
+        if (!isModalOpen || !clientId || !clientFollowUpStatusEnum || !clientFollowUpStatusEnum?.length) {
             return;
         }
 
@@ -68,11 +68,15 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
             }
         }
 
+        const followUpStatus = clientFollowUpStatusEnum.find(x => x.value.toString() === followUpClicked?.clientFollowUpStatus?.toString());
+        console.log(followUpStatus, clientFollowUpStatusEnum);
+
         setFormData({
             clientFollowUpId: followUpClicked ? followUpClicked.clientFollowUpId : SYSTEM.EMPTY_GUID,
             clientId: clientId,
             observation: followUpClicked ? followUpClicked.observation : '',
-            clientFollowUpStatus: followUpClicked ? followUpClicked.clientFollowUpStatus : '',
+            // @ts-expect-error: dinâmico e pode não ter props compatíveis;
+            clientFollowUpStatus: followUpStatus,
             imagesBase64: followUpClicked?.imagesBase64 ?? [],
             imagesFormFile: followUpClicked?.imagesBase64 ?
                 handleConvertBase64ListToFiles(

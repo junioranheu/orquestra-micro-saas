@@ -404,14 +404,16 @@ $spacing-unit: 0.5rem;
 
         // Etc
         &--999 {
-            background: var(--gray);
+            background-color: transparent;
             color: #595757;
+            border: 1px solid var(--gray-light);
             transition: 0.3s;
 
             &:hover {
                 cursor: pointer;
-                color: var(--white);
-                background: var(--gray-dark);
+                color: var(--black);
+                background: var(--gray);
+                border: 1px solid var(--gray);
             }
         }
     }
