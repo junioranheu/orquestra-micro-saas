@@ -8,6 +8,7 @@ import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
@@ -139,6 +140,7 @@ export default function ClientProfile() {
 // Componente de Header do Cliente
 function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iClientHeaderProps) {
 
+    const router = useRouter();
     const [emoji, setEmoji] = useState<string>('👤');
 
     useEffect(() => {
@@ -167,8 +169,9 @@ function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iCl
             </div>
 
             <div className={styles.clientHeader__actions}>
-                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} />}
-                <Button label='Editar cliente' handleFunction={() => onEdit()} />
+                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='user-x' />} />}
+                <Button label='Acompanhamento' handleFunction={() => router.push(`${ROUTES.EMPRESA_ACOMPANHAMENTO}/${client.clientId}`)} icon_feather={<Icon icon='repeat' />} />
+                <Button label='Editar cliente' handleFunction={() => onEdit()} icon_feather={<Icon icon='edit' />} />
             </div>
         </div>
     )

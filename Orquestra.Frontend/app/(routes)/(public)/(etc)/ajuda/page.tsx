@@ -306,20 +306,20 @@ export const HELP_TOPICS = [
         ]
     },
     {
-        topic: 'Módulo: follow-up',
+        topic: 'Módulo: acompanhamento',
         description: 'Acompanhe e gerencie o histórico de contatos e retornos com seus clientes.',
         items: [
             {
-                title: 'Registrar follow-up',
-                description: 'Crie registros de follow-up para cada cliente, anotando datas, observações e próximos passos.'
+                title: 'Registrar acompanhamento',
+                description: 'Crie registros de acompanhamento para cada cliente, anotando datas, observações e próximos passos.'
             },
             {
                 title: 'Filtrar por status',
-                description: 'Veja apenas os follow-ups pendentes, concluídos ou atrasados para organizar sua rotina.'
+                description: 'Veja apenas os acompanhamento pendentes, concluídos ou atrasados para organizar sua rotina.'
             },
             {
                 title: 'Notificações automáticas',
-                description: 'Receba alertas de follow-ups programados para não perder nenhuma oportunidade de contato.'
+                description: 'Receba alertas de acompanhamento programados para não perder nenhuma oportunidade de contato.'
             }
         ]
     },
