@@ -4,7 +4,6 @@ using Orquestra.Application.UseCases.ClientsFollowUps.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Orquestra.Application.UseCases.ClientsFollowUps.Create;
 

@@ -26,6 +26,10 @@ public class GenericConsumerHostedService<TMessage>(GenericConsumer<TMessage> co
         {
             _logger.LogCritical(ex, "Erro fatal no GenericConsumerHostedService para {MessageType}.", typeof(TMessage).Name);
         }
+        finally
+        {
+            await _consumer.DisposeAsync(); 
+        }
     }
 
     public override async Task StopAsync(CancellationToken cancellationToken)

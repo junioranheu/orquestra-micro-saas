@@ -16,7 +16,7 @@ public sealed class ClientFollowUp : Audit
     [MaxLength(1024)]
     public string? Observation { get; set; }
 
-    public ClientFollowUpStatus ClientFollowUpStatus { get; set; } = ClientFollowUpStatus.Pending;
+    public ClientFollowUpStatusEnum ClientFollowUpStatus { get; set; } = ClientFollowUpStatusEnum.Pending;
 
     public List<byte[]>? Images { get; set; } = [];
 

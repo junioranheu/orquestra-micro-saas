@@ -2,7 +2,7 @@
 
 namespace Orquestra.Domain.Enums;
 
-public enum ClientFollowUpStatus
+public enum ClientFollowUpStatusEnum
 {
     [Description("Pendente")]
     Pending = 1,
