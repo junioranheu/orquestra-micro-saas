@@ -11,6 +11,7 @@ import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import swalLoading from '@/app/functions/swal.loading';
 import { handleConvertBase64ListToFiles } from '@/app/functions/transform.base64';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { Guid } from 'guid-typescript';
@@ -118,11 +119,12 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
             if (output) {
                 swal({
                     content: 'Acompanhamento registrado com sucesso.',
-                    confirmFunction: () => setTrigger(new Date()),
+                    confirmFunction: () => {
+                        setTrigger(new Date());
+                        swalLoading({ handleFunction: () => handleClose() });
+                    },
                     icon: 'success'
                 });
-
-                handleClose();
                 return;
             }
 
@@ -136,11 +138,13 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         if (output) {
             swal({
                 content: 'Acompanhamento atualizado com sucesso.',
-                confirmFunction: () => setTrigger(new Date()),
+                confirmFunction: () => {
+                    setTrigger(new Date());
+                    swalLoading({ handleFunction: () => handleClose() });
+                },
                 icon: 'success'
             });
 
-            handleClose();
             return;
         }
 

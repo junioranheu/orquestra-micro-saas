@@ -18,6 +18,7 @@ interface iProps<T> {
     svg_component?: ReactNode;
     isMultiple?: boolean;
     maxFileSizeMb?: number;
+    overwriteOnSelect?: boolean;
 }
 
 export default function InputImage<T>({
@@ -34,7 +35,8 @@ export default function InputImage<T>({
     showPreview = true,
     svg_component = null,
     isMultiple = false,
-    maxFileSizeMb = 3
+    maxFileSizeMb = 3,
+    overwriteOnSelect = false
 }: iProps<T>) {
 
     // Pode ser File | string | number[] | File[] | string[] | null;
@@ -92,23 +94,42 @@ export default function InputImage<T>({
         // Armazena objectUrls para cleanup futuro;
         objectUrlsRef.current.push(...createdUrls);
 
-        setPreviews(newPreviews);
-        setFileNames(files.map(f => f.name));
+        if (overwriteOnSelect) {
+            // Limpa os antigos objectURLs;
+            handleCleanupObjectUrls(objectUrlsRef.current);
+            objectUrlsRef.current = [];
+
+            setPreviews(newPreviews);
+            setFileNames(files.map(f => f.name));
+        } else {
+            setPreviews(prev => [...prev, ...newPreviews]);
+            setFileNames(prev => [...prev, ...files.map(f => f.name)]);
+        }
 
         if (setFormData) {
-            if (isMultiple) {
-                // Salva array de File;
-                setFormData((prev: T) => ({
+            setFormData((prev: T) => {
+                if (overwriteOnSelect) {
+                    return {
+                        ...prev,
+                        [fieldName]: isMultiple
+                            ? files as unknown as T[keyof T]
+                            : files[0] as unknown as T[keyof T]
+                    };
+                }
+
+                if (isMultiple) {
+                    const prevArr = Array.isArray(value_formData) ? value_formData as File[] : [];
+                    return {
+                        ...prev,
+                        [fieldName]: [...prevArr, ...files] as unknown as T[keyof T],
+                    };
+                }
+
+                return {
                     ...prev,
-                    [fieldName]: files as unknown as T[keyof T],
-                }));
-            } else {
-                // Salva apenas o primeiro File;
-                setFormData((prev: T) => ({
-                    ...prev,
-                    [fieldName]: files[0] as unknown as T[keyof T],
-                }));
-            }
+                    [fieldName]: files[0] as unknown as T[keyof T]
+                };
+            });
         }
 
         // Reset input para permitir selecionar mesmo arquivo novamente;
