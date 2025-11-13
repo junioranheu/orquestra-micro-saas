@@ -31,6 +31,11 @@ public sealed class UpdateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
 
         if (input.ImagesFormFile is not null || input.ImagesFormFile?.Count > 0)
         {
+            clientFollowUp.Images ??= [];
+            clientFollowUp.ImagesContentType ??= [];
+            clientFollowUp.Images.Clear();
+            clientFollowUp.ImagesContentType.Clear();
+
             foreach (var item in input.ImagesFormFile)
             {
                 using MemoryStream ms = new();

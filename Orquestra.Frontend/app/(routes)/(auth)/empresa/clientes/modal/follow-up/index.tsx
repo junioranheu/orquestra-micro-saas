@@ -68,6 +68,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         }
 
         setFormData({
+            clientFollowUpId: followUpClicked ? followUpClicked.clientFollowUpId : SYSTEM.EMPTY_GUID,
             clientId: clientId,
             observation: followUpClicked ? followUpClicked.observation : '',
             clientFollowUpStatus: followUpClicked ? followUpClicked.clientFollowUpStatus : '',
@@ -188,7 +189,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                         </div>
 
                         {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
-                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={formData.clientFollowUpStatus ?? undefined} setSelectedOption={setClientFollowUpStatusOption} />
+                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={formData.clientFollowUpStatus ?? undefined} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
                         <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' isMultiple={true} />
                     </div>
                 </main>

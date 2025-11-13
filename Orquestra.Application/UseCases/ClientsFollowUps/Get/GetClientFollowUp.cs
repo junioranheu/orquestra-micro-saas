@@ -29,8 +29,7 @@ public sealed class GetClientFollowUp(Context context, ICheckIfUserIsLinkedCompa
         var query = _context.ClientsFollowUps.
                     AsNoTracking().
                     Where(x => x.ClientId == input.ClientId && x.Status == true).
-                    OrderByDescending(x => x.LastModificationDate ?? DateTime.MinValue).
-                    ThenByDescending(x => x.CreatedDate);
+                    OrderByDescending(x => x.CreatedDate);
 
         (IEnumerable<ClientFollowUp> result, int count) = await PagedQuery.Execute(query, pagination);
 
