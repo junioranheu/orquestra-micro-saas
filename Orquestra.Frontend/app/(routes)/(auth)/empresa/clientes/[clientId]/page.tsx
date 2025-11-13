@@ -46,6 +46,7 @@ interface iAppointmentHistoryProps {
 }
 
 interface iFollowUpHistoryProps {
+    me: iMe | undefined;
     clientsFollowUps: iClientFollowUp[];
 }
 
@@ -54,6 +55,7 @@ export default function ClientProfile() {
 
     useTitle('Detalhes');
 
+    const me = useApiGetMe({});
     const router = useRouter();
     const params = useParams();
     const query = params.clientId;
@@ -80,8 +82,6 @@ export default function ClientProfile() {
 
         handleFetch();
     }, [query, router, trigger]);
-
-    const me = useApiGetMe({});
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
     const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);
@@ -142,7 +142,7 @@ export default function ClientProfile() {
                             </div>
 
                             <div className={styles.clientProfile__main}>
-                                <FollowUpHistory clientsFollowUps={clientsFollowUps?.output ?? []} />
+                                <FollowUpHistory me={me} clientsFollowUps={clientsFollowUps?.output ?? []} />
                             </div>
                         </div>
                     </div>
@@ -302,7 +302,7 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 }
 
 // Componente de Histórico de Follow-ups;
-function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
+function FollowUpHistory({ me, clientsFollowUps }: iFollowUpHistoryProps) {
 
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
@@ -328,20 +328,33 @@ function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
                                     </p>
                                 </div>
 
-                                <div className={styles.appointmentItem__meta}>
+                                <div
+                                    className={styles.appointmentItem__meta}
+                                    style={{ flexDirection: 'column' }}
+                                >
+                                    <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--${followUp.clientFollowUpStatus}`]}`}>
+                                        {clientFollowUpStatusEnum?.find(x => x.value === followUp.clientFollowUpStatus)?.label?.toString() ?? ''}
+                                    </span>
+
                                     {
                                         followUp.imagesBase64?.length ? (
-                                            <span className={styles.appointmentItem__price}>
-                                                {followUp.imagesBase64?.length > 1 ? 'Visualizar anexos' : 'Visualizar anexo'}
-                                            </span>
+                                            <Fragment>
+                                                <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}>
+                                                    <Icon icon='paperclip' size='small' /> {followUp.imagesBase64?.length > 1 ? 'Ver anexos' : 'Ver anexo'}
+                                                </span>
+                                            </Fragment>
                                         ) : (
                                             <Fragment></Fragment>
                                         )
                                     }
 
-                                    <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--${followUp.clientFollowUpStatus}`]}`}>
-                                        {clientFollowUpStatusEnum?.find(x => x.value === followUp.clientFollowUpStatus)?.label?.toString() ?? ''}
-                                    </span>
+                                    {
+                                        me?.isUserAdmOfCurrentMainCompany && (
+                                            <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}>
+                                                <Icon icon='trash' size='small' /> Excluir
+                                            </span>
+                                        )
+                                    }
                                 </div>
                             </div>
                         </div>

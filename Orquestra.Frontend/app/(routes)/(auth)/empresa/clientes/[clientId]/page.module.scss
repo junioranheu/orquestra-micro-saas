@@ -329,15 +329,21 @@ $spacing-unit: 0.5rem;
     }
 
     &__meta {
+        // background-color: tomato;
         display: flex;
-        align-items: center;
-        gap: 1rem;
+        justify-content: center;
+        gap: 0.5rem;
         flex-shrink: 0;
     }
 
     &__price {
+        // background-color: orange;
         font-weight: 600;
         color: $text-primary;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     &__status {
@@ -366,13 +372,17 @@ $spacing-unit: 0.5rem;
         }
     }
 
-
     &__status_follow_up {
         // background: tomato !important;
         padding: 0.25rem 0.75rem;
         border-radius: 9999px;
         font-size: 0.875rem;
         font-weight: 500;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.35rem;
 
         // Em progresso;
         &--1 {
@@ -390,6 +400,19 @@ $spacing-unit: 0.5rem;
         &--3 {
             background: $error-bg;
             color: $error-text;
+        }
+
+        // Etc
+        &--999 {
+            background: var(--gray);
+            color: #595757;
+            transition: 0.3s;
+
+            &:hover {
+                cursor: pointer;
+                color: var(--white);
+                background: var(--gray-dark);
+            }
         }
     }
 }
