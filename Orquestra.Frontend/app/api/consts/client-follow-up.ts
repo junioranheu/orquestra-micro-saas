@@ -10,7 +10,7 @@ export const CONSTS_CLIENT_FOLLOW_UP = {
     get: `${BASE}/${controller}`
 };
 
-export default interface iClientFollowUp {
+export interface iClientFollowUp {
     clientFollowUpId?: Guid;
     clientId?: Guid;
     observation?: string;
@@ -18,4 +18,9 @@ export default interface iClientFollowUp {
     imagesFormFile?: globalThis.File[] | null | []; // Input;
     imagesBase64?: string[]; // Output;
     createdDate?: Date;
+}
+
+export interface iClientFollowUpPaginated {
+    output: iClientFollowUp[];
+    count: number;
 }

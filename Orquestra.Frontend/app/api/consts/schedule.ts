@@ -1,7 +1,7 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
-import iClient from './client';
-import iCompanyOutput from './company';
+import { iClient } from './client';
+import { iCompanyOutput } from './company';
 import { iUserPaginated } from './user';
 
 const controller = 'api/Schedule';
@@ -15,7 +15,7 @@ export const CONSTS_SCHEDULE = {
     getAllByClientId: `${BASE}/${controller}/GetAllByClientId`
 };
 
-export default interface iSchedule {
+export interface iSchedule {
     scheduleId: Guid;
     dateStart: Date | string;
     timeStart: string;

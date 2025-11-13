@@ -1,6 +1,6 @@
 import { iMe } from '@/app/api/consts/auth';
-import iClient from '@/app/api/consts/client';
-import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { iClient } from '@/app/api/consts/client';
+import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import { iEvent } from '@/app/components/calendar/complete';

@@ -1,5 +1,5 @@
 'use client';
-import iClientFollowUp, { CONSTS_CLIENT_FOLLOW_UP } from '@/app/api/consts/client-follow-up';
+import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUp } from '@/app/api/consts/client-follow-up';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';

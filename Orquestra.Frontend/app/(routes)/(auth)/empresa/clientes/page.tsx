@@ -1,5 +1,5 @@
 'use client';
-import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
+import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';

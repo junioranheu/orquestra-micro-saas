@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { UserRoleEnum } from '@/app/enums/userRoleEnum';
-import iCompanyOutput from './company';
+import { iCompanyOutput } from './company';
 
 const controller = 'api/Auth';
 

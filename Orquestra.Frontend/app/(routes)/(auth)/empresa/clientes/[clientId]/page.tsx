@@ -3,9 +3,9 @@ import EmpresaClientesModalFollowUp from '@/app/(routes)/(auth)/empresa/clientes
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
 import { handleDisable } from '@/app/(routes)/(auth)/empresa/clientes/page';
 import { iMe } from '@/app/api/consts/auth';
-import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
-import iClientFollowUp, { CONSTS_CLIENT_FOLLOW_UP } from '@/app/api/consts/client-follow-up';
-import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { CONSTS_CLIENT, iClient } from '@/app/api/consts/client';
+import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUp, iClientFollowUpPaginated } from '@/app/api/consts/client-follow-up';
+import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import ImgThought from '@/app/assets/svg/thought.svg';
 import Icon from '@/app/components/icon';
@@ -60,7 +60,7 @@ export default function ClientProfile() {
 
     const [client, setClient] = useState<iClient | null>();
     const [schedules, setSchedules] = useState<iSchedule[]>([]);
-    const [clientsFollowUps, setClientsFollowUps] = useState<iClientFollowUp[]>([]);
+    const [clientsFollowUps, setClientsFollowUps] = useState<iClientFollowUpPaginated>();
     const [trigger, setTrigger] = useState<Date>(new Date());
 
     useEffect(() => {
@@ -69,7 +69,7 @@ export default function ClientProfile() {
 
             const client = await Fetch.get({ url: `${CONSTS_CLIENT.get}?clientId=${clientId}` }) as iClient;
             const schedules = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByClientId}?companyId=${client.companyId}&clientId=${clientId}` }) as iSchedule[];
-            const clientsFollowUps = await Fetch.get({ url: `${CONSTS_CLIENT_FOLLOW_UP.get}?clientId=${client.clientId}` }) as iClientFollowUp[];
+            const clientsFollowUps = await Fetch.get({ url: `${CONSTS_CLIENT_FOLLOW_UP.get}?clientId=${client.clientId}` }) as iClientFollowUpPaginated;
 
             setTimeout(() => {
                 setClient(client);
@@ -142,7 +142,7 @@ export default function ClientProfile() {
                             </div>
 
                             <div className={styles.clientProfile__main}>
-                                <FollowUpHistory clientsFollowUps={clientsFollowUps} />
+                                <FollowUpHistory clientsFollowUps={clientsFollowUps?.output ?? []} />
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
-import iCompanyOutput from './company';
+import { iCompanyOutput } from './company';
 import { iUser } from './user';
 
 const controller = 'api/CompanyUser';

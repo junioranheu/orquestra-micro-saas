@@ -1,4 +1,4 @@
-import iCompanyOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
+import { CONSTS_COMPANY, iCompanyOutput } from '@/app/api/consts/company';
 import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';

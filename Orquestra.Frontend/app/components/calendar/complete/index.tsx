@@ -1,8 +1,8 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
-import iClient, { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
+import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
-import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
 import { iUserPaginated } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';

@@ -1,5 +1,5 @@
 import { CONSTS_AUTH } from '@/app/api/consts/auth';
-import iCompanyOutput from '@/app/api/consts/company';
+import { iCompanyOutput } from '@/app/api/consts/company';
 import { Fetch } from '@/app/api/fetch';
 import { useEffect, useState } from 'react';
 

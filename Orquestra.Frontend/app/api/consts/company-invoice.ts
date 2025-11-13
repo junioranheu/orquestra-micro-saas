@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
-import iCompanyOutput from './company';
+import { iCompanyOutput } from './company';
 
 const controller = 'api/CompanyInvoice';
 

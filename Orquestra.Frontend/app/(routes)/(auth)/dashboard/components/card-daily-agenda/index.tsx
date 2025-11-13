@@ -1,6 +1,6 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
-import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
+import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import ImgClean from '@/app/assets/svg/clean.svg';
 import ArrowUpRight from '@/app/components/arrow-up-right';

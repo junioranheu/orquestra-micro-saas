@@ -1,6 +1,6 @@
 'use client';
 import { iClientFormDataModalFilter } from '@/app/(routes)/(auth)/empresa/clientes/modal/filter';
-import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import { CONSTS_CLIENT, iClient } from '@/app/api/consts/client';
 import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';

@@ -1,6 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
-import iCompanyOutput from './company';
+import { iCompanyOutput } from './company';
 
 const controller = 'api/Client';
 
@@ -13,7 +13,7 @@ export const CONSTS_CLIENT = {
     disable: `${BASE}/${controller}/Disable`
 };
 
-export default interface iClient {
+export interface iClient {
     clientId: Guid;
     fullName: string;
     email: string;

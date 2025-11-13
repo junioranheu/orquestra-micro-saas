@@ -1,5 +1,5 @@
 'use client';
-import iCompanyOutput, { CONSTS_COMPANY } from '@/app/api/consts/company';
+import { CONSTS_COMPANY, iCompanyOutput } from '@/app/api/consts/company';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import { Fetch } from '@/app/api/fetch';
 import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';

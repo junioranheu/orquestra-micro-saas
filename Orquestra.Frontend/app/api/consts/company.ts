@@ -15,7 +15,7 @@ export const CONSTS_COMPANY = {
     resendVerifyEmailCompany: `${BASE}/${controller}/ResendVerifyEmailCompany`
 };
 
-export default interface iCompanyOutput {
+export interface iCompanyOutput {
     companyId: Guid;
 
     name: string;
