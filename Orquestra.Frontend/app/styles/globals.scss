@@ -434,7 +434,7 @@ input:-webkit-autofill {
     // background-color: orange !important;
     background-color: var(--white) !important;
     padding: 2.5rem 2rem !important;
-    border-radius: var(--border-radius) !important;
+    border-radius: var(--border-radius-sm) !important;
     box-shadow: var(--box-shadow-dark);
     font-family: inherit !important;
     z-index: 9999999999999999999999999 !important;
@@ -509,7 +509,7 @@ input:-webkit-autofill {
 
     .swal2-image {
         // background-color: orange !important;
-        border-radius: var(--border-radius) !important;
+        border-radius: var(--border-radius-xs) !important;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
         width: 100% !important;
         height: auto !important;

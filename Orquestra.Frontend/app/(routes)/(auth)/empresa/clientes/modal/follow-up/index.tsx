@@ -1,17 +1,14 @@
 'use client';
-import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
-import iClientFollowUp from '@/app/api/consts/client-follow-up';
+import iClientFollowUp, { CONSTS_CLIENT_FOLLOW_UP } from '@/app/api/consts/client-follow-up';
 import { Fetch } from '@/app/api/fetch';
-import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
-import Dropdown from '@/app/components/input/drop-down';
+import InputImage from '@/app/components/input/image';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
 import { handleConvertBase64ListToFiles } from '@/app/functions/convert.base64ToFile';
-import { handleGetOnlyNumbers } from '@/app/functions/format.string';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { Guid } from 'guid-typescript';
@@ -51,8 +48,18 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         setSaving(false);
         setEditing(false);
 
-        if (!isModalOpen || !followUpClicked || !clientId) {
+        if (!isModalOpen || !clientId) {
             return;
+        }
+
+        if (type === 'create') {
+            setEditing(true);
+        }
+
+        if (type === 'edit') {
+            if (!followUpClicked) {
+                return;
+            }
         }
 
         setFormData({
@@ -85,31 +92,15 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         setSaving(true);
 
         const data = handleLoopFormData(formData);
-        const input = data.json as iClient;
-
-        if (input.cpf) {
-            input.cpf = handleGetOnlyNumbers(input.cpf);
-        }
-
-        if (input.phone) {
-            input.phone = handleGetOnlyNumbers(input.phone);
-        }
-
-        if (!companyId) {
-            swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
-            return;
-        }
-
-        input.companyId = companyId;
-
+        const input = data.json as iClientFollowUp;
         // console.log(input);
 
         if (type === 'create') {
-            const output = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as iClient;
+            const output = await Fetch.post({ url: CONSTS_CLIENT_FOLLOW_UP.post, body: input });
 
             if (output) {
                 swal({
-                    content: 'Cliente registrado com sucesso.',
+                    content: 'Acompanhamento registrado com sucesso.',
                     confirmFunction: () => setTrigger(new Date()),
                     icon: 'success'
                 });
@@ -123,17 +114,11 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
             return;
         }
 
-        if (!client?.clientId) {
-            swal({ content: 'Erro interno: O ID do cliente está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
-            return;
-        }
-
-        input.clientId = client.clientId;
-        const output = await Fetch.put({ url: CONSTS_CLIENT.put, body: input }) as iClient;
+        const output = await Fetch.put({ url: CONSTS_CLIENT_FOLLOW_UP.put, body: input });
 
         if (output) {
             swal({
-                content: 'Cliente atualizado com sucesso.',
+                content: 'Acompanhamento atualizado com sucesso.',
                 confirmFunction: () => setTrigger(new Date()),
                 icon: 'success'
             });
@@ -164,8 +149,10 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            {type === 'create' ? (formData.fullName ? `Novo cliente: ${formData.fullName}` : 'Cadastrar novo cliente') : <ContentLoaderText content={(`Editar cliente: ${formData?.fullName ?? client?.fullName}`)} />}
+                            {type === 'create' ? 'Cadastrar novo acompanhamento' : 'Editar acompanhamento'}
                         </h1>
+
+                        <h1>{editing.toString()} {type}</h1>
                     </div>
 
                     <div className={styles.modalHeaderRight}>
@@ -181,18 +168,9 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
 
                 <main className={styles.modalContent}>
                     <div className='modal-layout-grid'>
-                        <InputMask title='Nome' fieldName='fullName' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='CPF' fieldName='cpf' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='000000000-00' isObligatory={true} />
-                        <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='(00) 00000-0000' />
-                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' handleOnChange={(e) => handleGetCEP(e)} />
-                        <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Número do endereço' fieldName='addressNumber' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
-                        <InputMask type='date' title='Data de aniversário' fieldName='dateOfBirth' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Anotações' fieldName='notes' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Observações' fieldName='observation' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Status' fieldName='clientFollowUpStatus' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputImage title='Logo' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' />
                     </div>
                 </main>
 

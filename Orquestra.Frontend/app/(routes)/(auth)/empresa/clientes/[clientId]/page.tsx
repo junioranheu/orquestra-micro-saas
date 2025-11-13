@@ -162,7 +162,7 @@ export default function ClientProfile() {
                 isModalOpen={isModalFollowUpOpen}
                 setIsModalOpen={setIsModalFollowUpOpen}
                 type={typeModalFollowUp}
-                clientId={clientClicked?.clientId}
+                clientId={followUpClicked?.clientId}
                 followUpClicked={followUpClicked}
                 setTrigger={setTrigger}
             />
