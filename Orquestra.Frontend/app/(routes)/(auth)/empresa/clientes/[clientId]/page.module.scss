@@ -258,8 +258,12 @@ $spacing-unit: 0.5rem;
         flex-direction: column;
         gap: 0.75rem;
 
-        max-height: 60vh;
+        max-height: 50vh;
         overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 0.5rem;
+        }
     }
 }
 

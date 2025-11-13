@@ -3,12 +3,12 @@ import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/mod
 import { handleDisable } from '@/app/(routes)/(auth)/empresa/clientes/page';
 import { iMe } from '@/app/api/consts/auth';
 import iClient, { CONSTS_CLIENT } from '@/app/api/consts/client';
+import iClientFollowUp, { CONSTS_CLIENT_FOLLOW_UP } from '@/app/api/consts/client-follow-up';
 import iSchedule, { CONSTS_SCHEDULE } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
-import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
@@ -52,6 +52,7 @@ export default function ClientProfile() {
 
     const [client, setClient] = useState<iClient | null>();
     const [schedules, setSchedules] = useState<iSchedule[]>([]);
+    const [clientsFollowUps, setClientsFollowUps] = useState<iClientFollowUp[]>([]);
     const [trigger, setTrigger] = useState<Date>(new Date());
 
     useEffect(() => {
@@ -60,10 +61,12 @@ export default function ClientProfile() {
 
             const client = await Fetch.get({ url: `${CONSTS_CLIENT.get}?clientId=${clientId}` }) as iClient;
             const schedules = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByClientId}?companyId=${client.companyId}&clientId=${clientId}` }) as iSchedule[];
+            const clientsFollowUps = await Fetch.get({ url: `${CONSTS_CLIENT_FOLLOW_UP.get}?clientId=${client.clientId}` }) as iClientFollowUp[];
 
             setTimeout(() => {
                 setClient(client);
                 setSchedules(schedules);
+                setClientsFollowUps(clientsFollowUps);
             }, 1000);
         }
 
@@ -81,6 +84,11 @@ export default function ClientProfile() {
         setClientClicked(client);
         setIsModalViewOpen(true);
     }
+
+    useEffect(() => {
+        alert('xd');
+        console.log();
+    }, [clientsFollowUps]);
 
     if (!client) {
         return (
@@ -115,10 +123,12 @@ export default function ClientProfile() {
                                     <h2 className={styles.card__title}>Notas internas</h2>
                                     <p className={styles.internalNotes__text}>{client?.notes ? client?.notes : 'Nenhuma anotação no momento.'}</p>
                                 </div>
+
+                                <AppointmentHistory schedules={schedules} />
                             </div>
 
                             <div className={styles.clientProfile__main}>
-                                <AppointmentHistory schedules={schedules} />
+                                <FollowUpHistory />
                             </div>
                         </div>
                     </div>
@@ -170,7 +180,6 @@ function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iCl
 
             <div className={styles.clientHeader__actions}>
                 {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='user-x' />} />}
-                <Button label='Acompanhamento' handleFunction={() => router.push(`${ROUTES.EMPRESA_ACOMPANHAMENTO}/${client.clientId}`)} icon_feather={<Icon icon='repeat' />} />
                 <Button label='Editar cliente' handleFunction={() => onEdit()} icon_feather={<Icon icon='edit' />} />
             </div>
         </div>
@@ -262,6 +271,52 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
                     )
                 }
             </div>
+        </div>
+    )
+}
+
+// Componente de Histórico de Agendamentos
+function FollowUpHistory() {
+
+    const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
+
+    return (
+        <div className={`${styles.card} ${styles.appointmentHistory}`}>
+            <h2 className={styles.card__title}>Acompanhamentos/follow-up</h2>
+
+            {/* <div className={styles.appointmentHistory__list}>
+                {
+                    schedules?.length ? schedules.map((schedule, index) => (
+                        <div key={index} className={`${styles.appointmentItem} ${styles[`appointmentItem--${schedule.scheduleStatus}`]}`}>
+                            <div className={styles.appointmentItem__content}>
+                                <div className={styles.appointmentItem__info}>
+                                    <h3 className={styles.appointmentItem__title}>
+                                        {schedule.customTitle ? schedule.customTitle : `Agendamento para ${handleFormatDate(schedule.dateStart, DATE_STYLE.DIA_MES_ANO)}`}
+                                    </h3>
+
+                                    <p className={styles.appointmentItem__datetime}>
+                                        {handleFormatDate(schedule.dateStart, DATE_STYLE.DETALHADO)}
+                                    </p>
+                                </div>
+
+                                <div className={styles.appointmentItem__meta}>
+                                    <span className={styles.appointmentItem__price}>
+                                        R$ {schedule.amountReceived ?? 0}
+                                    </span>
+
+                                    <span className={`${styles.appointmentItem__status} ${styles[`appointmentItem__status--${schedule.scheduleStatus}`]}`}>
+                                        {clientFollowUpStatusEnum?.find(x => x.value === schedule.scheduleStatus)?.label?.toString() ?? ''}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    )) : (
+                        <p className={styles.appointmentHistory__empty}>
+                            Nenhum agendamento encontrado.
+                        </p>
+                    )
+                }
+            </div> */}
         </div>
     )
 }

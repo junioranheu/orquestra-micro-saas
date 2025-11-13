@@ -93,11 +93,6 @@ export default function EmpresaClientes() {
             icon: <Icon icon='search' />
         },
         {
-            label: 'Acompanhamento do cliente',
-            function: (e) => router.push(`${ROUTES.EMPRESA_ACOMPANHAMENTO}/${e.clientId}`),
-            icon: <Icon icon='repeat' />
-        },
-        {
             label: 'Editar cliente',
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />

@@ -58,8 +58,8 @@ public class ClientFollowUpController(
     }
 
     [AuthorizeFilter]
-    [HttpGet("GetAllByCompanyId")]
-    public async Task<ActionResult> GetAllByCompanyId(ClientFollowUpInput input)
+    [HttpGet]
+    public async Task<ActionResult> Get(ClientFollowUpInput input)
     {
         if (input is null || input.ClientId is null || input.ClientId == Guid.Empty)
         {
