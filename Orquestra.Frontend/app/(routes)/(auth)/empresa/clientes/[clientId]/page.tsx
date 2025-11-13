@@ -52,6 +52,7 @@ interface iAppointmentHistoryProps {
 interface iFollowUpHistoryProps {
     me: iMe | undefined;
     clientsFollowUps: iClientFollowUp[];
+    handleOpenModalFollowUp: (followUp: iClientFollowUp | undefined, type: 'edit' | 'create') => void;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
@@ -150,6 +151,7 @@ export default function ClientProfile() {
                                 <FollowUpHistory
                                     me={me}
                                     clientsFollowUps={clientsFollowUps?.output ?? []}
+                                    handleOpenModalFollowUp={handleOpenModalFollowUp}
                                     setTrigger={setTrigger}
                                 />
                             </div>
@@ -311,7 +313,7 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 }
 
 // Componente de Histórico de Follow-ups;
-function FollowUpHistory({ me, clientsFollowUps, setTrigger }: iFollowUpHistoryProps) {
+function FollowUpHistory({ me, clientsFollowUps, handleOpenModalFollowUp, setTrigger }: iFollowUpHistoryProps) {
 
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
@@ -423,6 +425,13 @@ function FollowUpHistory({ me, clientsFollowUps, setTrigger }: iFollowUpHistoryP
                                             <Fragment></Fragment>
                                         )
                                     }
+
+                                    <span
+                                        className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
+                                        onClick={() => handleOpenModalFollowUp(followUp, 'edit')}
+                                    >
+                                        <Icon icon='edit' size='small' /> Editar
+                                    </span>
 
                                     {
                                         me?.isUserAdmOfCurrentMainCompany && (
