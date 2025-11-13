@@ -64,12 +64,15 @@ $spacing-unit: 0.5rem;
     }
 
     &__grid {
+        // background-color: purple;
         display: grid;
         grid-template-columns: 1fr;
         gap: 1.5rem;
 
-        @media (min-width: 1024px) {
-            grid-template-columns: 1fr 2fr;
+        // @media (min-width: 1024px) {
+        @media (min-width: 1330px) {
+            // background-color: orange;
+            grid-template-columns: 2fr 3fr;
         }
     }
 
@@ -318,7 +321,9 @@ $spacing-unit: 0.5rem;
     }
 
     &__datetime {
+        // background-color: orange;
         font-size: 0.875rem;
+        line-height: 1.25rem;
         color: $text-secondary;
         margin: 0;
     }

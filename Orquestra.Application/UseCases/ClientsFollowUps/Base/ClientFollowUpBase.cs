@@ -3,6 +3,7 @@ using Orquestra.Application.UseCases.ClientsFollowUps.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -14,9 +15,17 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
     private readonly int MAX_FILES = 3;
-
-    public async Task Validate(ClientFollowUpInput input, Guid userIdAuth)
+     
+    public async Task Validate(ClientFollowUpInput input, Guid userIdAuth, bool isCreate)
     {
+        if (isCreate)
+        {
+            if (input.ClientFollowUpStatus != ClientFollowUpStatusEnum.InProgress)
+            {
+                throw new ArgumentException($"O status de um acompanhamento recém criado deve ser <b>{GetStatusDesc(ClientFollowUpStatusEnum.InProgress).ToLowerInvariant()}</b>.");
+            }
+        }
+
         Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId && x.Status == true).FirstOrDefaultAsync() ?? throw new ArgumentException(SystemConsts.Warnings.NotFoundClient);
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: client.CompanyId, userId: userIdAuth, needCompanyAdmin: false);
@@ -34,4 +43,11 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
             }
         }
     }
+
+    #region extras
+    private static string GetStatusDesc(ClientFollowUpStatusEnum status)
+    {
+        return GetEnumDesc(status).ToLowerInvariant();
+    }
+    #endregion
 }

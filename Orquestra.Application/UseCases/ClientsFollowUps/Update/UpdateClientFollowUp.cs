@@ -19,7 +19,7 @@ public sealed class UpdateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
             Where(x => x.ClientFollowUpId == input.ClientFollowUpId).
             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
 
-        await Validate(input, userIdAuth);
+        await Validate(input, userIdAuth, isCreate: false);
         await Update(input, clientFollowUp);
     }
 

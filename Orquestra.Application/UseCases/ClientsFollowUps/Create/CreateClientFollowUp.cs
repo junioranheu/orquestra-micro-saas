@@ -13,7 +13,7 @@ public sealed class CreateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
 
     public async Task Execute(Guid userIdAuth, ClientFollowUpInput input)
     {
-        await Validate(input, userIdAuth);
+        await Validate(input, userIdAuth, isCreate: true);
         await Save(input);
     }
 
