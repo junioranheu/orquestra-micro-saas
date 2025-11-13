@@ -379,8 +379,8 @@ $spacing-unit: 0.5rem;
 
         // Finalizado;
         &--2 {
-            background: $error-bg;
-            color: $error-text;
+            background: var(--contrast);
+            color: $white;
         }
 
         // Cancelado

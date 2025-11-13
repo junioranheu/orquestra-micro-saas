@@ -314,18 +314,24 @@ function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
                             <div className={styles.appointmentItem__content}>
                                 <div className={styles.appointmentItem__info}>
                                     <h3 className={styles.appointmentItem__title}>
-                                        XD
+                                        {handleFormatDate(followUp.createdDate, DATE_STYLE.DETALHADO)}
                                     </h3>
 
                                     <p className={styles.appointmentItem__datetime}>
-                                        {handleFormatDate(followUp.createdDate, DATE_STYLE.DETALHADO)}
+                                        {followUp.observation}
                                     </p>
                                 </div>
 
                                 <div className={styles.appointmentItem__meta}>
-                                    <span className={styles.appointmentItem__price}>
-                                        {followUp.observation}
-                                    </span>
+                                    {
+                                        followUp.imagesBase64?.length ? (
+                                            <span className={styles.appointmentItem__price}>
+                                                {followUp.imagesBase64?.length > 1 ? 'Visualizar anexos' : 'Visualizar anexo'}
+                                            </span>
+                                        ) : (
+                                            <Fragment></Fragment>
+                                        )
+                                    }
 
                                     <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--${followUp.clientFollowUpStatus}`]}`}>
                                         {clientFollowUpStatusEnum?.find(x => x.value === followUp.clientFollowUpStatus)?.label?.toString() ?? ''}
