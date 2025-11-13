@@ -338,6 +338,7 @@ $spacing-unit: 0.5rem;
     }
 
     &__status {
+        // background: purple !important;
         padding: 0.25rem 0.75rem;
         border-radius: 9999px;
         font-size: 0.875rem;
@@ -356,6 +357,33 @@ $spacing-unit: 0.5rem;
         }
 
         // Cancelado;
+        &--3 {
+            background: $error-bg;
+            color: $error-text;
+        }
+    }
+
+
+    &__status_follow_up {
+        // background: tomato !important;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+
+        // Em progresso;
+        &--1 {
+            background: $success-bg;
+            color: $success-text;
+        }
+
+        // Finalizado;
+        &--2 {
+            background: $error-bg;
+            color: $error-text;
+        }
+
+        // Cancelado
         &--3 {
             background: $error-bg;
             color: $error-text;

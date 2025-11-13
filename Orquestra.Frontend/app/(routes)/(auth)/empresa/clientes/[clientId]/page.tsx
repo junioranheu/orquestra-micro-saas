@@ -305,7 +305,7 @@ function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
 
     return (
         <div className={`${styles.card} ${styles.appointmentHistory}`}>
-            <h2 className={styles.card__title}>Acompanhamentos/follow-up</h2>
+            <h2 className={styles.card__title}>Acompanhamentos</h2>
 
             <div className={styles.appointmentHistory__list}>
                 {
@@ -327,7 +327,7 @@ function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
                                         {followUp.observation}
                                     </span>
 
-                                    <span className={styles.appointmentItem__status}>
+                                    <span className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--${followUp.clientFollowUpStatus}`]}`}>
                                         {clientFollowUpStatusEnum?.find(x => x.value === followUp.clientFollowUpStatus)?.label?.toString() ?? ''}
                                     </span>
                                 </div>
