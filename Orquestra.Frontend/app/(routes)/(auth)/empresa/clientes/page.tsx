@@ -177,8 +177,10 @@ export default function EmpresaClientes() {
 
 export async function handleDisable(member: iClient, setTrigger: Dispatch<SetStateAction<Date>>) {
     swal({
-        content: 'Você tem certeza que deseja remover este cliente?',
+        content: 'Você tem certeza que deseja remover este cliente? Este processo é irreversível.',
         confirmBtnText: 'Sim, desejo remover',
+        mustConfirm: true,
+        checkboxLabel: 'Sim, confirmo',
         confirmFunction: async () => {
             const input = { clientId: member.clientId };
             const schedule = await Fetch.put({ url: CONSTS_CLIENT.disable, body: input });

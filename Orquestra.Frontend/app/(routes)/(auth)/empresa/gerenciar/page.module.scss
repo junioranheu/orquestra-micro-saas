@@ -23,6 +23,10 @@
     position: relative;
     font-family: inherit !important;
 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
     &:hover {
         transform: translateY(-4px);
         border-color: #d1d5db;

@@ -47,7 +47,7 @@ interface iFollowUpHistoryProps {
     clientsFollowUps: iClientFollowUp[];
 }
 
-// Componente Principal
+// Componente principal;
 export default function ClientProfile() {
 
     useTitle('Detalhes');
@@ -148,7 +148,7 @@ export default function ClientProfile() {
     )
 }
 
-// Componente de Header do Cliente
+// Componente de Header do Cliente;
 function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iClientHeaderProps) {
 
     const router = useRouter();
@@ -187,7 +187,7 @@ function ClientHeader({ me, name, memberSince, onEdit, client, setTrigger }: iCl
     )
 }
 
-// Componente de Informações de Contato
+// Componente de Informações de Contato;
 function ContactInfo({ email, phone, birthDate, address }: iContactInfoProps) {
     return (
         <div className={`${styles.card} ${styles.contactInfo}`}>
@@ -230,7 +230,7 @@ function ContactInfo({ email, phone, birthDate, address }: iContactInfoProps) {
     )
 }
 
-// Componente de Histórico de Agendamentos
+// Componente de Histórico de Agendamentos;
 function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 
     const scheduleStatusEnum = useApiGetEnum({ enumName: 'ScheduleStatusEnum' });
@@ -276,7 +276,7 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
     )
 }
 
-// Componente de Histórico de Agendamentos
+// Componente de Histórico de Agendamentos;
 function FollowUpHistory({ clientsFollowUps }: iFollowUpHistoryProps) {
 
     const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
