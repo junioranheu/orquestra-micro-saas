@@ -161,12 +161,16 @@ public sealed class UpdateClientFollowUpTests
         ClientFollowUp clientFollowUp = ClientFollowUpMock.Create(client);
         await Fixture.Save(context, clientFollowUp);
 
+        clientFollowUp.ClientFollowUpStatus = ClientFollowUpStatusEnum.Completed;
+        context.Update(clientFollowUp);
+        await context.SaveChangesAsync();
+
         UpdateClientFollowUp sut = CreateSut(context, user);
 
         // Cria input com os novos dados;
         ClientFollowUpInput input = clientFollowUp.Adapt<ClientFollowUpInput>();
         input.Observation = "Cliente reagendou para próxima semana.";
-        input.ClientFollowUpStatus = ClientFollowUpStatusEnum.Completed;
+        input.ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress;
 
         // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, input));

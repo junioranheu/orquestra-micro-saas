@@ -28,7 +28,9 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
 
         if (!isCreate)
         {
-            if (input.ClientFollowUpStatus != ClientFollowUpStatusEnum.InProgress)
+            ClientFollowUp? clientFollowUp = await _context.ClientsFollowUps.AsNoTracking().Where(x => x.ClientFollowUpId == input.ClientFollowUpId && x.Status == true).FirstOrDefaultAsync() ?? throw new ArgumentException(SystemConsts.Warnings.NotFoundData);
+
+            if (clientFollowUp.ClientFollowUpStatus != ClientFollowUpStatusEnum.InProgress)
             {
                 throw new ArgumentException($"Apenas acompanhamentos com o status <b>{GetStatusDesc(ClientFollowUpStatusEnum.InProgress).ToLowerInvariant()}</b> podem sem editados.");
             }
