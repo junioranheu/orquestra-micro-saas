@@ -4,20 +4,11 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import feather from 'feather-icons';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface iProps {
     me: iMe | undefined;
-}
-
-export interface iTourGroup {
-    selector: string;
-    content: string;
-}
-
-interface iUseMenuGroupsReturn {
-    MENU_GROUPS: iMenuGroup[];
-    TOUR_STEPS: iTourGroup[];
 }
 
 export interface iMenuGroup {
@@ -32,10 +23,10 @@ export interface iMenuGroup {
     }[];
 }
 
-export function useMenuGroups({ me }: iProps): iUseMenuGroupsReturn {
+export function useMenuGroups({ me }: iProps): iMenuGroup[] {
 
-    const [menuGroups, setMenuGroups] = useState<iMenuGroup[]>([]);
-    const [tourSteps, setTourSteps] = useState<iTourGroup[]>([]);
+    const pathname = usePathname();
+    const [menu, setMenu] = useState<iMenuGroup[]>([]);
 
     useEffect(() => {
         const MENU_GROUPS: iMenuGroup[] = [
@@ -79,24 +70,9 @@ export function useMenuGroups({ me }: iProps): iUseMenuGroupsReturn {
             }
         ];
 
-        const TOUR_STEPS = MENU_GROUPS.flatMap(group =>
-            group.items.filter(item => item.hasAccess).map(item => ({
-                selector: `#${item.id}`,
-                content: item.description || item.label
-            }))
-        );
+        setMenu(MENU_GROUPS);
+    }, [me, pathname]);
 
-        const activeGroups = MENU_GROUPS.filter(group =>
-            group.items.some(item => item.hasAccess)
-        );
-
-        setMenuGroups(MENU_GROUPS);
-        setTourSteps(activeGroups.length > 1 ? TOUR_STEPS : []);
-    }, [me]);
-
-    return {
-        MENU_GROUPS: menuGroups,
-        TOUR_STEPS: tourSteps
-    };
+    return menu;
 
 }

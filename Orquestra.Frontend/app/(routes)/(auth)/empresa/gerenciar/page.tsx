@@ -372,7 +372,6 @@ export default function EmpresaGerenciar() {
                 setIsModalOpen={setIsModalOpen}
                 type={typeModal}
                 company={companyClicked}
-                amountOfCompanies={companies?.length ?? 0}
             />
         </Fragment>
     )

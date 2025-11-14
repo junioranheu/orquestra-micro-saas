@@ -21,10 +21,8 @@ import swal from '@/app/functions/swal';
 import { handleConvertBase64ToFile } from '@/app/functions/transform.base64';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
-import { CONST_TOUR } from '@/app/hooks/useTourSidebar';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
-import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iProps {
@@ -32,14 +30,11 @@ interface iProps {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
     company: iCompanyOutput | undefined;
-    amountOfCompanies: number;
 }
 
-export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen, type, company, amountOfCompanies }: iProps) {
+export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen, type, company }: iProps) {
 
-    const router = useRouter();
     const windowSize = useWindowSize();
-
     const companyTypeEnum = useApiGetEnum({ enumName: 'CompanyTypeEnum' });
     const companySituationEnum = useApiGetEnum({ enumName: 'CompanySituationEnum' });
     const planTypeEnum = useApiGetEnum({ enumName: 'PlanTypeEnum' });
@@ -169,18 +164,12 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         // console.log('formDataInput', formDataInput);
 
         if (type === 'create') {
-            const isFirstCompany = amountOfCompanies === 0;
             const company = await Fetch.post({ url: CONSTS_COMPANY.post, body: formDataInput, isFormData: true }) as iCompanyOutput;
 
             if (company) {
                 swal({
                     content: 'Empresa registrada com sucesso. Além disso, ela foi definida como sua empresa principal.',
                     confirmFunction: () => {
-                        if (isFirstCompany) {
-                            router.push(`${ROUTES.DASHBOARD}?${CONST_TOUR}=true`);
-                            return;
-                        }
-
                         window.location.reload();
                     },
                     icon: 'success'

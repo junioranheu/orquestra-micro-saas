@@ -1,8 +1,8 @@
-import { iMe } from '@/app/api/consts/auth';
 import ChatBot from '@/app/components/chat-bot';
 import Icon from '@/app/components/icon';
 import SYSTEM from '@/app/consts/system';
 import { PACIFICO } from '@/app/fonts/fonts';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import { useMenuGroups } from '@/app/hooks/useGetMenuGroups';
 import Tippy from '@tippyjs/react';
@@ -10,15 +10,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';
 
-interface iProps {
-    me: iMe | undefined;
-}
+export default function Sidebar() {
 
-export default function Sidebar({ me }: iProps) {
-
+    const me = useApiGetMe({});
     const router = useRouter();
     const pathname = usePathname();
-    const { MENU_GROUPS } = useMenuGroups({ me });
+    const menu = useMenuGroups({ me });
 
     const [active, setActive] = useState<string>('');
     const [showExpandedSidebar,] = useShowExpandedSidebar();
@@ -59,7 +56,7 @@ export default function Sidebar({ me }: iProps) {
 
                 <nav className={SYSTEM.ANIMATE_DELAY_0_5s}>
                     {
-                        MENU_GROUPS?.map((group, gIndex) => {
+                        menu?.map((group, gIndex) => {
                             const visibleItems = group.items.filter(x => x.hasAccess);
 
                             if (visibleItems.length === 0) {
@@ -104,7 +101,6 @@ export default function Sidebar({ me }: iProps) {
                     }
                 </nav>
 
-
                 {
                     openPopover && (
                         <div
@@ -113,7 +109,7 @@ export default function Sidebar({ me }: iProps) {
                             style={{ top: popoverPos.top, left: popoverPos.left }}
                         >
                             {
-                                MENU_GROUPS.find(g => g.label === openPopover)?.items.filter(x => x.hasAccess).map((item, index) => (
+                                menu.find(g => g.label === openPopover)?.items.filter(x => x.hasAccess).map((item, index) => (
                                     <Tippy key={index} content={item.description} placement='right'>
                                         <div
                                             className={`${styles.popoverItem} ${active === item.route ? styles.active : ''}`}

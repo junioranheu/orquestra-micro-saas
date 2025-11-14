@@ -16,7 +16,6 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useTitle from '@/app/hooks/useTitle';
-import { useTourSidebar } from '@/app/hooks/useTourSidebar';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Fragment, useEffect } from 'react';
@@ -33,7 +32,6 @@ export default function Dashboard() {
 
     const me = useApiGetMe({});
     useTitle(me ? `Olá, ${handleGetFirstName(me?.userName)}` : 'Dashboard');
-    useTourSidebar({});
 
     // Verificar se o usuário autenticado pelo back e front são o mesmo;
     useEffect(() => {

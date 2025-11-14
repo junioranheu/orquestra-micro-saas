@@ -10,6 +10,7 @@ import { Fetch } from '@/app/api/fetch';
 import ImgThought from '@/app/assets/svg/thought.svg';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
+import { iDropdownOption } from '@/app/components/input/drop-down';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -22,6 +23,7 @@ import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';
+import { Guid } from 'guid-typescript';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
@@ -53,6 +55,7 @@ interface iAppointmentHistoryProps {
 interface iFollowUpHistoryProps {
     me: iMe | undefined;
     clientsFollowUps: iClientFollowUp[];
+    clientFollowUpStatusEnum: iDropdownOption<string | number | Guid>[] | undefined;
     handleOpenModalFollowUp: (followUp: iClientFollowUp | undefined, type: 'edit' | 'create') => void;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
@@ -66,6 +69,8 @@ export default function ClientProfile() {
     const isLoading = useFakeLoading();
     const params = useParams();
     const query = params.clientId;
+
+    const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
     const [client, setClient] = useState<iClient | null>();
     const [schedules, setSchedules] = useState<iSchedule[]>([]);
@@ -152,6 +157,7 @@ export default function ClientProfile() {
                                 <FollowUpHistory
                                     me={me}
                                     clientsFollowUps={clientsFollowUps?.output ?? []}
+                                    clientFollowUpStatusEnum={clientFollowUpStatusEnum}
                                     handleOpenModalFollowUp={handleOpenModalFollowUp}
                                     setTrigger={setTrigger}
                                 />
@@ -177,6 +183,7 @@ export default function ClientProfile() {
                 clientId={client?.clientId}
                 followUpClicked={followUpClicked}
                 setTrigger={setTrigger}
+                clientFollowUpStatusEnum={clientFollowUpStatusEnum}
             />
         </Fragment>
     )
@@ -314,9 +321,7 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 }
 
 // Componente de Histórico de Follow-ups;
-function FollowUpHistory({ me, clientsFollowUps, handleOpenModalFollowUp, setTrigger }: iFollowUpHistoryProps) {
-
-    const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
+function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handleOpenModalFollowUp, setTrigger }: iFollowUpHistoryProps) {
 
     function handleOpenFiles(followUp: iClientFollowUp) {
         const imagesHtml = followUp.imagesBase64?.map((base64, idx) => `

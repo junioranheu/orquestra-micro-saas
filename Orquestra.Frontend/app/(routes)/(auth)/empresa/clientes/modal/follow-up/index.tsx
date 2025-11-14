@@ -13,7 +13,6 @@ import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from
 import swal from '@/app/functions/swal';
 import swalLoading from '@/app/functions/swal.loading';
 import { handleConvertBase64ListToFiles } from '@/app/functions/transform.base64';
-import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -23,10 +22,11 @@ interface iProps {
     type: 'edit' | 'create';
     clientId: Guid | undefined;
     followUpClicked: iClientFollowUp | undefined;
+    clientFollowUpStatusEnum: iDropdownOption<string | number | Guid>[] | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
-export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOpen, type, clientId, followUpClicked, setTrigger }: iProps) {
+export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOpen, type, clientId, followUpClicked, clientFollowUpStatusEnum, setTrigger }: iProps) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -39,7 +39,6 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         imagesBase64: []
     });
 
-    const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
     const setClientFollowUpStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientFollowUpStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     const handleClose = useCallback(() => {
