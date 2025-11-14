@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.Companies.Shared;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using System.Data;
@@ -25,7 +26,11 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
             return (null, false);
         }
 
-        CompanyOutput outputAdapt = output.Company.Adapt<CompanyOutput>();
+        // Ignorar o campo CompanyUsers;
+        TypeAdapterConfig config = new();
+        config.NewConfig<Company, CompanyOutput>().Ignore(x => x.CompanyUsers!);
+
+        CompanyOutput outputAdapt = output.Company.Adapt<CompanyOutput>(config);
         outputAdapt.UserModules = output.UserModules;
 
         if (outputAdapt is null)

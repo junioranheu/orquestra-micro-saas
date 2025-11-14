@@ -221,6 +221,8 @@ export default function EmpresaMembros() {
                 apiUrlRequest={apiUrlRequest}
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
+                companyUserRoleEnum={companyUserRoleEnum}
+                moduleEnum={moduleEnum}
             />
 
             <EmpresaMembrosModalEdit
@@ -228,6 +230,8 @@ export default function EmpresaMembros() {
                 setIsModalOpen={setIsModalEditOpen}
                 user={userClicked}
                 setTrigger={setTrigger}
+                companyUserRoleEnum={companyUserRoleEnum}
+                moduleEnum={moduleEnum}
             />
 
             <EmpresaMembrosModalInvite

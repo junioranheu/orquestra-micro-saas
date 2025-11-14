@@ -11,7 +11,6 @@ import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
-import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -20,6 +19,8 @@ interface iProps {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     user: iCompanyUser | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
+    companyUserRoleEnum: iDropdownOption<string | number | Guid>[] | undefined;
+    moduleEnum: iDropdownOption<string | number | Guid>[] | undefined;
 }
 
 interface iFormData {
@@ -29,7 +30,14 @@ interface iFormData {
     companyId: Guid | undefined;
 }
 
-export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, user, setTrigger }: iProps) {
+export default function EmpresaMembrosModalEdit({
+    isModalOpen,
+    setIsModalOpen,
+    user,
+    setTrigger,
+    companyUserRoleEnum,
+    moduleEnum
+}: iProps) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -40,9 +48,6 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
         userId: user?.userId,
         companyId: user?.companyId
     });
-
-    const companyUserRoleEnum = useApiGetEnum({ enumName: 'CompanyUserRoleEnum' });
-    const moduleEnum = useApiGetEnum({ enumName: 'ModuleEnum' });
 
     const setCompanyUserRoleOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.companyUserRole)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setModuleOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.userModules)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
@@ -110,7 +115,7 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
 
     useEffect(() => {
         // @ts-expect-error: dinâmico e pode não ter props compatíveis; 
-        if (formData.companyUserRole?.label === 'Administrador') {
+        if (formData.companyUserRole?.label === 'Administrador' || formData.companyUserRole === 'Administrador') {
             setIsAdmSelected(true);
             setFormData(prev => ({ ...prev, userModules: [] }));
         } else {
@@ -160,14 +165,18 @@ export default function EmpresaMembrosModalEdit({ isModalOpen, setIsModalOpen, u
                             isDisabled={!editing}
                         />
 
-                        <Dropdown
-                            title='Módulos atribuídos'
-                            options={moduleEnum ?? []}
-                            selectedOption={moduleEnum?.filter(x => formData.userModules?.map(String).includes(String(x.value))) ?? []}
-                            setSelectedOption={setModuleOption}
-                            isDisabled={!editing || isAdmSelected}
-                            isMultiple={true}
-                        />
+                        {
+                            !isAdmSelected && (
+                                <Dropdown
+                                    title='Módulos atribuídos'
+                                    options={moduleEnum ?? []}
+                                    selectedOption={moduleEnum?.filter(x => formData.userModules?.map(String).includes(String(x.value))) ?? []}
+                                    setSelectedOption={setModuleOption}
+                                    isDisabled={!editing || isAdmSelected}
+                                    isMultiple={true}
+                                />
+                            )
+                        }
                     </div>
                 </main>
 
