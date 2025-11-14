@@ -125,7 +125,7 @@ export default function ClientProfile() {
                             name={client?.fullName}
                             memberSince={handleFormatDate(client?.createdDate, DATE_STYLE.DIA_DA_SEMANA_E_DIA_DO_MES_E_ANO)}
                             onEdit={() => handleOpenModalView(client)}
-                            handleOpenModalFollowUp={() => handleOpenModalFollowUp(client, 'create')}
+                            handleOpenModalFollowUp={() => handleOpenModalFollowUp(undefined, 'create')}
                             client={client}
                             setTrigger={setTrigger}
                         />
@@ -173,7 +173,7 @@ export default function ClientProfile() {
                 isModalOpen={isModalFollowUpOpen}
                 setIsModalOpen={setIsModalFollowUpOpen}
                 type={typeModalFollowUp}
-                clientId={followUpClicked?.clientId}
+                clientId={client?.clientId}
                 followUpClicked={followUpClicked}
                 setTrigger={setTrigger}
             />
@@ -426,12 +426,17 @@ function FollowUpHistory({ me, clientsFollowUps, handleOpenModalFollowUp, setTri
                                         )
                                     }
 
-                                    <span
-                                        className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
-                                        onClick={() => handleOpenModalFollowUp(followUp, 'edit')}
-                                    >
-                                        <Icon icon='edit' size='small' /> Editar
-                                    </span>
+                                    {
+                                        // clientFollowUpStatus 1 = Em progresso
+                                        followUp?.clientFollowUpStatus?.toString() === '1' && (
+                                            <span
+                                                className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
+                                                onClick={() => handleOpenModalFollowUp(followUp, 'edit')}
+                                            >
+                                                <Icon icon='edit' size='small' /> Editar
+                                            </span>
+                                        )
+                                    }
 
                                     {
                                         me?.isUserAdmOfCurrentMainCompany && (

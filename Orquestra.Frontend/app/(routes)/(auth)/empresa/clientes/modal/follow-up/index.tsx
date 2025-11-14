@@ -68,13 +68,15 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
             }
         }
 
+        const clientFollowUpStatusInProgress = clientFollowUpStatusEnum?.find(x => x.value.toString() === '1');
+
         setFormData({
             clientFollowUpId: followUpClicked ? followUpClicked.clientFollowUpId : SYSTEM.EMPTY_GUID,
             clientId: clientId,
             observation: followUpClicked ? followUpClicked.observation : '',
-            clientFollowUpStatus: followUpClicked ? followUpClicked.clientFollowUpStatus : '',
-            imagesBase64: followUpClicked?.imagesBase64 ?? [],
-            imagesFormFile: followUpClicked?.imagesBase64 ?
+            clientFollowUpStatus: followUpClicked ? followUpClicked.clientFollowUpStatus : clientFollowUpStatusInProgress?.value?.toString(),
+            imagesBase64: followUpClicked?.imagesBase64?.length ? followUpClicked?.imagesBase64 : [],
+            imagesFormFile: followUpClicked?.imagesBase64?.length ?
                 handleConvertBase64ListToFiles(
                     followUpClicked.imagesBase64.map(img => ({
                         base64: img,
@@ -194,7 +196,13 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                             <textarea value={formData.observation ?? ''} className={styles.textarea} readOnly={!editing} rows={5} maxLength={512} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
                         </div>
 
-                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={clientFollowUpStatusEnum?.find(x => x.value.toString() === formData?.clientFollowUpStatus?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
+                        {
+                            type === 'create' ? (
+                                <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={clientFollowUpStatusEnum?.find(x => x.value.toString() === '1')} setSelectedOption={setClientFollowUpStatusOption} isDisabled={true} isObligatory={true} />
+                            ) : (
+                                <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={clientFollowUpStatusEnum?.find(x => x.value.toString() === formData?.clientFollowUpStatus?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
+                            )
+                        }
                         <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' isMultiple={true} />
                     </div>
                 </main>
@@ -214,8 +222,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                                 {
                                     !editing ? (
                                         <Fragment>
-                                            {/* 1 = Em progresso */}
-                                            <Button label='Editar' handleFunction={() => setEditing(true)} isDisabled={followUpClicked?.clientFollowUpStatus?.toString() !== '1'} />
+                                            <Button label='Editar' handleFunction={() => setEditing(true)} />
                                         </Fragment>
                                     ) : (
                                         <Fragment>
