@@ -52,7 +52,7 @@
 
         option {
             &[disabled] {
-                color: rgba(221, 221, 221, 0.13) !important;
+                color: var(--gray-light) !important;
                 cursor: not-allowed !important;
             }
         }
@@ -63,7 +63,7 @@
         cursor: not-allowed !important;
 
         div {
-            background-color: rgba(221, 221, 221, 0.13) !important;
+            background-color: var(--gray-light) !important;
             border-bottom: 0 !important;
             border-radius: var(--border-radius-xs) !important;
         }

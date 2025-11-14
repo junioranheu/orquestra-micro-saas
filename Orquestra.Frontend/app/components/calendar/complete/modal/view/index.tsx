@@ -330,10 +330,10 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                         <InputMask title='Hora de encerramento' type='time' fieldName='timeEnd' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
                         <Dropdown title='Colaboradores da equipe' options={companyUsersDropDown ?? []} isMultiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
 
-                        <div className={styles.div}>
-                            <label>Este agendamento é específico a um ou mais colaboradores?</label>
+                        {/* <div className={styles.div}>
+                            <label>É um gendamento específico a um ou mais colaboradores?</label>
                             <input type='text' value={formData?.usersIds?.length > 0 ? `Sim, para ${formData?.usersIds?.length} colaborador${formData?.usersIds?.length > 1 ? 'es' : ''}` : 'Não — Liberado para qualquer colaborador'} readOnly={true} disabled={true} />
-                        </div>
+                        </div> */}
 
                         <InputMask title='Valor recebido' type='number' fieldName='amountReceived' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Tipo de pagamento' options={paymentTypeEnum ?? []} selectedOption={paymentTypeEnum?.find(x => x.value.toLocaleString() === formData.paymentType?.toString())} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />

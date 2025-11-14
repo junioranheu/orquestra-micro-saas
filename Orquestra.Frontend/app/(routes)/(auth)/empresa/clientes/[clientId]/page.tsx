@@ -20,6 +20,7 @@ import toast from '@/app/functions/toast';
 import { handleOpenBase64InNewTab } from '@/app/functions/transform.base64';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
+import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -62,6 +63,7 @@ export default function ClientProfile() {
     useTitle('Detalhes');
 
     const me = useApiGetMe({});
+    const isLoading = useFakeLoading();
     const router = useRouter();
     const params = useParams();
     const query = params.clientId;
@@ -109,7 +111,7 @@ export default function ClientProfile() {
         setIsModalFollowUpOpen(true);
     }
 
-    if (!client) {
+    if (!client || isLoading) {
         return (
             <TemplatePageHeader title='Carregando informações do cliente...' isLoading={true}></TemplatePageHeader>
         )
