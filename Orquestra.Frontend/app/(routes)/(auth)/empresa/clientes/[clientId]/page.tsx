@@ -75,15 +75,15 @@ export default function ClientProfile() {
         async function handleFetch() {
             const clientId = query?.toString();
 
-            const client = await Fetch.get({ url: `${CONSTS_CLIENT.get}?clientId=${clientId}` }) as iClient;
-            const schedules = await Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByClientId}?companyId=${client.companyId}&clientId=${clientId}` }) as iSchedule[];
-            const clientsFollowUps = await Fetch.get({ url: `${CONSTS_CLIENT_FOLLOW_UP.get}?clientId=${client.clientId}` }) as iClientFollowUpPaginated;
+            const [client, schedules, clientsFollowUps] = await Promise.all([
+                Fetch.get({ url: `${CONSTS_CLIENT.get}?clientId=${clientId}` }) as Promise<iClient>,
+                Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByClientId}?companyId=${clientId}&clientId=${clientId}` }) as Promise<iSchedule[]>,
+                Fetch.get({ url: `${CONSTS_CLIENT_FOLLOW_UP.get}?clientId=${clientId}` }) as Promise<iClientFollowUpPaginated>
+            ]);
 
-            setTimeout(() => {
-                setClient(client);
-                setSchedules(schedules);
-                setClientsFollowUps(clientsFollowUps);
-            }, 1000);
+            setClient(client);
+            setSchedules(schedules);
+            setClientsFollowUps(clientsFollowUps);
         }
 
         handleFetch();

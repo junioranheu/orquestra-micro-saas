@@ -194,7 +194,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                             <textarea value={formData.observation ?? ''} className={styles.textarea} readOnly={!editing} rows={5} maxLength={512} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
                         </div>
 
-                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={clientFollowUpStatusEnum?.find(x => x.value.toString() === followUpClicked?.clientFollowUpStatus?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
+                        <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={clientFollowUpStatusEnum?.find(x => x.value.toString() === formData?.clientFollowUpStatus?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
                         <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' isMultiple={true} />
                     </div>
                 </main>
