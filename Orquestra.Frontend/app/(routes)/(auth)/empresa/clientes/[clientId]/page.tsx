@@ -23,7 +23,7 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import styles from './page.module.scss';
@@ -64,7 +64,6 @@ export default function ClientProfile() {
 
     const me = useApiGetMe({});
     const isLoading = useFakeLoading();
-    const router = useRouter();
     const params = useParams();
     const query = params.clientId;
 
@@ -89,7 +88,7 @@ export default function ClientProfile() {
         }
 
         handleFetch();
-    }, [query, router, trigger]);
+    }, [query, trigger]);
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
     const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);

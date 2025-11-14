@@ -84,7 +84,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                     }))
                 ) : [],
         });
-    }, [isModalOpen, type, clientId, followUpClicked, setIsModalOpen, handleClose]);
+    }, [isModalOpen, type, clientId, followUpClicked, clientFollowUpStatusEnum, setIsModalOpen, handleClose]);
 
     async function handleSave() {
         if (!formData.clientId || !formData.clientFollowUpStatus) {
