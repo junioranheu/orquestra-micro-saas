@@ -11,6 +11,7 @@ import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { INTER } from '@/app/fonts/fonts';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
 import useFontSize from '@/app/hooks/useFontSize';
 import useShowNProgressOnPageLoad from '@/app/hooks/useShowNProgressOnPageLoad';
@@ -27,14 +28,15 @@ import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
 
+    const me = useApiGetMe({});
+    const pathname = usePathname();
+    const hideHeader = pathname?.includes(ROUTES.EMPRESA_AGENDAMENTOS);
+
     useStandardIntructions();
     useCheckAzureServer();
     useShowNProgressOnPageLoad();
     useTheme();
     useFontSize();
-
-    const pathname = usePathname();
-    const hideHeader = pathname?.includes(ROUTES.EMPRESA_AGENDAMENTOS);
 
     useEffect(() => {
         feather.replace();
@@ -57,13 +59,13 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                         }
 
                         <div className='auth'>
-                            <Sidebar />
+                            <Sidebar me={me} />
 
                             <main>
                                 {
                                     !hideHeader && (
                                         <header>
-                                            <Navbar />
+                                            <Navbar me={me} />
                                         </header>
                                     )
                                 }

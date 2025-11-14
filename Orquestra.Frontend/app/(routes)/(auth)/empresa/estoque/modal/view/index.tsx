@@ -52,8 +52,6 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         setSaving(false);
         setEditing(false);
 
-        console.log('companyId', companyId);
-
         if (type === 'create') {
             setEditing(true);
             return;

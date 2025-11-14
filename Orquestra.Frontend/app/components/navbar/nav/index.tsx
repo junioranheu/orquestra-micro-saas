@@ -1,3 +1,4 @@
+import { iMe } from '@/app/api/consts/auth';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Icon from '@/app/components/icon';
 import { iModalCustomPosition } from '@/app/components/modal/generic';
@@ -6,7 +7,6 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleTruncateText } from '@/app/functions/format.url';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
-import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
@@ -14,10 +14,13 @@ import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
 import styles from './index.module.scss';
 
-export default function Navbar() {
+interface iProps {
+    me: iMe | undefined;
+}
+
+export default function Navbar({ me }: iProps) {
 
     const router = useRouter();
-    const me = useApiGetMe({});
 
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [modalPosition, setModalPosition] = useState<iModalCustomPosition>({});

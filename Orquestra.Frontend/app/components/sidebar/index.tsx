@@ -1,8 +1,8 @@
+import { iMe } from '@/app/api/consts/auth';
 import ChatBot from '@/app/components/chat-bot';
 import Icon from '@/app/components/icon';
 import SYSTEM from '@/app/consts/system';
 import { PACIFICO } from '@/app/fonts/fonts';
-import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import { useMenuGroups } from '@/app/hooks/useGetMenuGroups';
 import Tippy from '@tippyjs/react';
@@ -10,9 +10,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';
 
-export default function Sidebar() {
+interface iProps {
+    me: iMe | undefined;
+}
 
-    const me = useApiGetMe({});
+export default function Sidebar({ me }: iProps) {
+
     const router = useRouter();
     const pathname = usePathname();
     const menu = useMenuGroups({ me });
