@@ -4,7 +4,7 @@ namespace Orquestra.Domain.Enums;
 
 public enum ClientFollowUpStatusEnum
 {
-    [Description("Em progresso")]
+    [Description("Em andamento")]
     InProgress = 1,
 
     [Description("Finalizado")]

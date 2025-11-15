@@ -51,14 +51,10 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
     useEffect(() => {
         handleClearFormData(setFormData);
         setSaving(false);
-        setEditing(false);
+        setEditing(true);
 
         if (!isModalOpen || !clientId || !clientFollowUpStatusEnum || !clientFollowUpStatusEnum?.length) {
             return;
-        }
-
-        if (type === 'create') {
-            setEditing(true);
         }
 
         if (type === 'edit') {

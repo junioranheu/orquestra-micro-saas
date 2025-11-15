@@ -64,10 +64,9 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
     useEffect(() => {
         handleClearFormData(setFormData);
         setSaving(false);
-        setEditing(false);
+        setEditing(true);
 
         if (type === 'create') {
-            setEditing(true);
             return;
         }
 

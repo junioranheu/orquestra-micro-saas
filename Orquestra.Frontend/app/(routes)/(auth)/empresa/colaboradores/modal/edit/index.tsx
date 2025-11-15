@@ -62,7 +62,7 @@ export default function EmpresaMembrosModalEdit({
     useEffect(() => {
         handleClearFormData(setFormData);
         setSaving(false);
-        setEditing(false);
+        setEditing(true);
 
         if (!isModalOpen) {
             return;

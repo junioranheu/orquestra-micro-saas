@@ -50,10 +50,9 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
     useEffect(() => {
         handleClearFormData(setFormData);
         setSaving(false);
-        setEditing(false);
+        setEditing(true);
 
         if (type === 'create') {
-            setEditing(true);
             return;
         }
 
