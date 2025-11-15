@@ -55,21 +55,17 @@ export default function InputMask<T>({
     const [showErrorIcon, setShowErrorIcon] = useState<boolean>(true);
     const svgDefaultProps = { width: 20 };
 
-    // function handleDefaultHandleChange(e: ChangeEvent<HTMLInputElement>) {
-    //     if (setFormData) {
-    //         setFormData((prev: T) => ({
-    //             ...prev,
-    //             [fieldName]: e.target.value as T[keyof T]
-    //         }));
-    //     }
-    // }
-
     function handleDefaultHandleChange(e: ChangeEvent<HTMLInputElement>) {
         if (!setFormData) {
             return;
         }
 
         let value = e.target.value;
+
+        // Não permitir negativo no type number;
+        if (type === 'number') {
+            value = value.replace(/-/g, '');
+        }
 
         if (mask && mask?.length > 0) {
             // Extrai apenas os dígitos;
