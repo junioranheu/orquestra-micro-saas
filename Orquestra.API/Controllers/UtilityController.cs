@@ -42,6 +42,25 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
         return Ok(build);
     }
 
+    [ResponseCache(Duration = SystemConsts.Time.OneWeek)]
+    [AllowAnonymous]
+    [HttpGet("GetControllers")]
+    public IActionResult GetControllers()
+    {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        var controllers = assembly.GetTypes().
+            Where(x => x.IsClass && !x.IsAbstract && typeof(ControllerBase).IsAssignableFrom(x)).
+            Select(controller => new
+            {
+                Controller = controller.Name.Replace("Controller", string.Empty),
+                Actions = controller.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).Where(x => !x.IsSpecialName).Select(x => x.Name).ToList()
+            }).
+            OrderBy(x => x.Controller).ToList();
+
+        return Ok(controllers);
+    }
+
     [ResponseCache(Duration = SystemConsts.Time.OneYear)]
     [AllowAnonymous]
     [HttpGet("GetState")]

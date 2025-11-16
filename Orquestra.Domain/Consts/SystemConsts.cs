@@ -20,6 +20,7 @@ public static class SystemConsts
         public const int OneHour = 3600;
         public const int HalfDay = 43200;
         public const int OneDay = 86400;
+        public const int OneWeek = 604800;
         public const int OneMonth = 2629800;
         public const int OneYear = 31536000;
 
