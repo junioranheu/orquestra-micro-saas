@@ -4,6 +4,7 @@ const controller = 'api/Utility';
 
 export const CONSTS_UTILITY = {
     getBuildVersion: `${BASE}/${controller}/GetBuildVersion`,
+    getControllers: `${BASE}/${controller}/GetControllers`,
     getState: `${BASE}/${controller}/GetState`,
     getCity: `${BASE}/${controller}/GetCity`,
     getCountry: `${BASE}/${controller}/GetCountry`,
@@ -32,4 +33,9 @@ export interface iPlanType {
     description: string;
     perks: string[];
     durationDays: number;
+}
+
+export interface iControllerInfo {
+    controller: string;
+    actions: string[];
 }
