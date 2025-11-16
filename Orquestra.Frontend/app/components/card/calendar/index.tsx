@@ -58,6 +58,7 @@ export default function CardCalendar({ me }: iProps) {
                                         description={`A empresa <b>${me?.currentMainCompany?.name}</b> já está prontinha para começar a criar novos agendamentos. ${showChatbot ? `<br/>Qualquer dúvida, fale com o assistente virtual, o ${SYSTEM.MASCOT}.` : ''}`}
                                         {...(showChatbot && {
                                             buttonLabel: 'Conversar com o assistente virtual',
+                                            buttonIcon: 'message-square',
                                             buttonFunction: () => setIsOpenChatbot(true),
                                         })}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s}
@@ -75,6 +76,7 @@ export default function CardCalendar({ me }: iProps) {
                                         title='Crie sua própria empresa!'
                                         description='No momento você não está vinculado a nenhuma empresa, ou sua empresa ainda não ativou/não te concedeu acesso ao módulo de Agendamentos.'
                                         buttonLabel='Criar uma nova empresa agora mesmo'
+                                        buttonIcon='plus-circle'
                                         buttonFunction={() => router.push(ROUTES.EMPRESA_GERENCIAR)}
                                         className={SYSTEM.ANIMATE_DELAY_0_5s}
                                         buttonStyle={{
@@ -92,6 +94,7 @@ export default function CardCalendar({ me }: iProps) {
                                 title='Simplifique a gestão da sua empresa'
                                 description={`Gestão de horários simples, rápida e sem dor de cabeça.<br/>${SYSTEM.NAME}. ${SYSTEM.DESCRIPTION}.`}
                                 buttonLabel='Acessar agenda'
+                                buttonIcon='calendar'
                                 buttonFunction={() => router.push(ROUTES.EMPRESA_AGENDAMENTOS)}
                                 buttonDisabled={!hasAccessToSchedule}
                                 className={SYSTEM.ANIMATE_DELAY_0_5s}

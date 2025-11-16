@@ -1,4 +1,6 @@
+import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
+import feather from 'feather-icons';
 import Image, { StaticImageData } from 'next/image';
 import { CSSProperties } from 'react';
 import styles from './index.module.scss';
@@ -9,6 +11,7 @@ export type iProps = {
     title?: string;
     description?: string;
     buttonLabel?: string;
+    buttonIcon?: keyof typeof feather.icons;
     buttonDisabled?: boolean;
     buttonFunction?: () => void;
     buttonStyle?: CSSProperties;
@@ -23,6 +26,7 @@ export default function CardSimple({
     title,
     description,
     buttonLabel,
+    buttonIcon,
     buttonDisabled = false,
     buttonFunction,
     buttonStyle,
@@ -67,6 +71,7 @@ export default function CardSimple({
                                 <div className={styles.actions}>
                                     <Button
                                         label={buttonLabel}
+                                        icon_feather={(buttonIcon ? <Icon icon={buttonIcon} size='small' /> : null)}
                                         handleFunction={() => !buttonDisabled && buttonFunction()}
                                         style={buttonStyle}
                                         isDisabled={buttonDisabled}
