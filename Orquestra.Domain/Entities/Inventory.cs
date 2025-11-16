@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Orquestra.Domain.Entities;
@@ -19,6 +20,8 @@ public sealed class Inventory : Audit
     public string? Description { get; set; }
 
     public int Quantity { get; set; }
+
+    [Precision(10, 2)]
     public decimal? UnitPrice { get; set; }
 
     public byte[]? Image { get; set; }

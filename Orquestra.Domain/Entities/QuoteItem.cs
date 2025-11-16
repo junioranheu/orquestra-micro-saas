@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Orquestra.Domain.Entities;
 
-public sealed class QuoteItem
+public sealed class QuoteItem : Audit
 {
     [Key]
     public Guid QuoteItemId { get; set; }
@@ -13,7 +13,7 @@ public sealed class QuoteItem
     [ForeignKey(nameof(QuoteId))]
     public Quote? Quote { get; set; }
 
-    [MaxLength(200)]
+    [MaxLength(120)]
     public string Title { get; set; } = string.Empty;
 
     [MaxLength(500)]
@@ -21,9 +21,9 @@ public sealed class QuoteItem
 
     public int Quantity { get; set; } = 1;
 
-    [Precision(18, 2)]
+    [Precision(10, 2)]
     public decimal UnitPrice { get; set; }
 
-    [Precision(18, 2)]
+    [Precision(10, 2)]
     public decimal TotalPrice { get; set; }
 }

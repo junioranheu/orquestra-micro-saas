@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Orquestra.Domain.Enums;
+﻿using Orquestra.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -28,9 +27,6 @@ public sealed class Quote : Audit
 
     [MaxLength(50)]
     public QuoteStatusEnum QuoteStatus { get; set; } = QuoteStatusEnum.Draft;
-
-    [Precision(18, 2)]
-    public decimal TotalAmount { get; set; }
 
     public List<QuoteItem> Items { get; set; } = [];
 }
