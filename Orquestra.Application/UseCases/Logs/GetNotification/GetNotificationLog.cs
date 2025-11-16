@@ -40,7 +40,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             }
         }
 
-        var (endpointMap, linq, count) = await GetLogs(pagination, userIdAuth, companyId, isDashboard);
+        var (endpointMap, linq, count) = await GetLogs(pagination, companyId, isDashboard);
 
         if (count < 1)
         {
@@ -187,7 +187,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
     }
 
     #region extras
-    private async Task<(Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid userIdAuth, Guid companyId, bool isDashboard)
+    private async Task<(Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid companyId, bool isDashboard)
     {
         Dictionary<string, string> endpointMap = new()
         {

@@ -26,4 +26,7 @@ public sealed class QuoteItem : Audit
 
     [Precision(10, 2)]
     public decimal TotalPrice { get; set; }
+
+    [NotMapped]
+    public decimal? TotalValue => Quantity * UnitPrice;
 }

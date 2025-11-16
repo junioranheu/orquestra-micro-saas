@@ -17,15 +17,14 @@ public sealed class Quote : Audit
     [ForeignKey(nameof(ClientId))]
     public Client? Client { get; set; }
 
-    [MaxLength(300)]
+    [MaxLength(120)]
     public string? Title { get; set; }
 
-    [MaxLength(500)]
+    [MaxLength(255)]
     public string? Observation { get; set; }
 
     public DateTime? ValidUntil { get; set; }
 
-    [MaxLength(50)]
     public QuoteStatusEnum QuoteStatus { get; set; } = QuoteStatusEnum.Draft;
 
     public List<QuoteItem> Items { get; set; } = [];

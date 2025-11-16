@@ -13,7 +13,7 @@ public partial class InventoryBase(Context context, ICheckIfUserIsLinkedCompanyU
 
     public async Task Validate(InventoryInput input, Guid userIdAuth, bool isCreate)
     {
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: input.CompanyId, userId: userIdAuth, needCompanyAdmin: false);
 
         #region dados básicos
         if (!IsNameValid(input.Name) || string.IsNullOrEmpty(input.Name))
@@ -23,7 +23,7 @@ public partial class InventoryBase(Context context, ICheckIfUserIsLinkedCompanyU
 
         if (!IsDescriptionValid(input.Description))
         {
-            throw new ArgumentException("A descrição do item de inventário é muito longa.");
+            throw new ArgumentException("A descrição do item de inventário não é válida.");
         }
 
         if (!IsQuantityValid(input.Quantity.GetValueOrDefault()))

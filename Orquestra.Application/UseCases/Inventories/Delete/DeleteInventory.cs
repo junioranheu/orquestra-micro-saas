@@ -14,9 +14,9 @@ public sealed class DeleteInventory(Context context, ICheckIfUserIsLinkedCompany
     public async Task Execute(Guid userIdAuth, Guid inventoryId)
     {
         Inventory? inventory = await _context.Inventories.
-                              // AsNoTracking(). // Propositalmente sem AsNoTracking;
-                              Where(x => x.InventoryId == inventoryId && x.Status == true).
-                              FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
+                               // AsNoTracking(). // Propositalmente sem AsNoTracking;
+                               Where(x => x.InventoryId == inventoryId && x.Status == true).
+                               FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: inventory.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
