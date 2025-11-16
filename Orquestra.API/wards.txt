@@ -1,10 +1,8 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
-Atualizar o sistema para o .NET 10 (dia 11/11); (Ver se o PostgreSQL já atualizou...) 
+Atualizar o sistema para o .NET 10 (dia 11/11); (PostgreSQL já atualizou?) 
 
 ⦁	Módulo de Orçamento:
-Criar classe
-Criar tabela
 Criar UseCase e dependências
 Criar endpoint
 Criar teste de integração
@@ -12,7 +10,6 @@ Criar front
 
 ⦁	Módulo de Ordem de serviço:
 Criar classe
-Criar tabela
 Criar UseCase e dependências
 Criar endpoint
 Criar teste de integração
@@ -20,7 +17,6 @@ Criar front
 
 ⦁	Módulo de Nota fiscal:
 Criar classe
-Criar tabela
 Criar UseCase e dependências
 Criar endpoint
 Criar teste de integração
@@ -28,7 +24,6 @@ Criar front
 
 ⦁	Módulo de Gestão financeira:
 Criar classe
-Criar tabela
 Criar UseCase e dependências
 Criar endpoint
 Criar teste de integração
