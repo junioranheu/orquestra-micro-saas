@@ -4,6 +4,7 @@ import { Fetch } from '@/app/api/fetch';
 import CardCreamWithChildren from '@/app/components/card/cream-with-children';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
+import Mascot from '@/app/components/mascot';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
@@ -171,10 +172,14 @@ export default function EmpresaIntegracaoWhatsapp() {
                         </div>
 
                         <div className={styles.tipSection}>
-                            <Icon icon='info' />
+                            <Mascot
+                                tippyContent='Segue essa dica!'
+                                flip={true}
+                                elementIfShowMascotIsFalse={<Icon icon='info' />}
+                            />
+
                             <div>
-                                <strong>Dica:</strong>
-                                &nbsp;você pode usar as variáveis dinâmicas:
+                                Você pode usar as variáveis dinâmicas:
                                 <code>&#123;cliente&#125;</code>,
                                 <code>&#123;data&#125;</code>,
                                 <code>&#123;hora&#125;</code>,

@@ -10,7 +10,11 @@ export type iProps = {
 
 export default function CardCreamWithChildren({ title, subtitle, children }: iProps) {
     return (
-        <CardSimpleWithChildren style={{ backgroundColor: 'var(--cream)', padding: '4rem 1rem', border: 'none' }}>
+        <CardSimpleWithChildren style={{
+            backgroundColor: 'var(--cream)',
+            padding: '4rem 1rem',
+            border: '1px solid var(--gray-light)'
+        }}>
             <div className={styles.header}>
                 <h2 className={styles.title}>{title}</h2>
 

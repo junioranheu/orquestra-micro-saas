@@ -4,7 +4,6 @@ import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
 import useTitle from '@/app/hooks/useTitle';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import AjudaListCards from './components/list-cards';
 import AjudaSearchInput from './components/seach-input';
 import styles from './page.module.scss';
@@ -422,12 +421,6 @@ export const HELP_TOPICS = [
 export default function Ajuda() {
 
     useTitle('Central de ajuda');
-    const [showMascot, setShowMascot] = useState<boolean | null>(null);
-
-    useEffect(() => {
-        const value = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);
-        setShowMascot(value === null ? true : value === 'true');
-    }, []);
 
     return (
         <section className={styles.main}>
@@ -435,23 +428,20 @@ export default function Ajuda() {
                 <span>Central de ajuda</span>
 
                 <div className={SYSTEM.ANIMATE_DELAY_0_5s}>
-                    {
-                        showMascot ? (
-                            <Mascot
-                                isCentralized={false}
-                                tippyContent={
-                                    <div>
-                                        Qualquer dúvida sobre o {SYSTEM.NAME}, pode ser sanada aqui!
-                                    </div>
-                                }
-                                tippyPlacement='right'
-                            />
-                        ) : (
+                    <Mascot
+                        isCentralized={false}
+                        tippyContent={
+                            <div>
+                                Qualquer dúvida sobre o {SYSTEM.NAME}, pode ser sanada aqui!
+                            </div>
+                        }
+                        tippyPlacement='right'
+                        elementIfShowMascotIsFalse={
                             <div className={SYSTEM.ANIMATE_PULSE_INFINITE}>
                                 <Image src={ImgMeditation} alt='' priority={true} />
                             </div>
-                        )
-                    }
+                        }
+                    />
                 </div>
             </div>
 

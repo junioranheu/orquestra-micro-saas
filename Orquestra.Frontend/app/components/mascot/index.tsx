@@ -2,7 +2,7 @@ import ImgMaestro from '@/app/assets/gif/maestro.gif';
 import SYSTEM from '@/app/consts/system';
 import Tippy from '@tippyjs/react';
 import Image from 'next/image';
-import { CSSProperties, ReactNode, useEffect, useState } from 'react';
+import { CSSProperties, ReactElement, ReactNode, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -16,6 +16,7 @@ interface iProps {
     absolutePosition?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
     hasAnimateDelay?: boolean;
     handleFunction?: ((param?: any) => void) | null;
+    elementIfShowMascotIsFalse?: ReactElement;
 }
 
 export default function Mascot({
@@ -28,7 +29,8 @@ export default function Mascot({
     flipInterval = 3000,
     absolutePosition,
     hasAnimateDelay = true,
-    handleFunction
+    handleFunction,
+    elementIfShowMascotIsFalse
 }: iProps) {
 
     const [flipped, setFlipped] = useState<boolean>(flip);
@@ -70,6 +72,10 @@ export default function Mascot({
     }
 
     if (!showMascot) {
+        if (elementIfShowMascotIsFalse) {
+            return elementIfShowMascotIsFalse;
+        }
+
         return null;
     }
 
