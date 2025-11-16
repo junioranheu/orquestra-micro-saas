@@ -13,12 +13,12 @@ public sealed class CreateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
 
     public async Task Execute(Guid userIdAuth, ClientFollowUpInput input)
     {
-        await Validate(input, userIdAuth, isCreate: true);
-        await Save(input);
+        Guid companyId = await Validate(input, userIdAuth, isCreate: true);
+        await Save(input, companyId);
     }
 
     #region extras
-    private async Task Save(ClientFollowUpInput input)
+    private async Task Save(ClientFollowUpInput input, Guid companyId)
     {
         var clientFollowUp = input.Adapt<ClientFollowUp>();
 
@@ -39,6 +39,9 @@ public sealed class CreateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
             clientFollowUp.ImagesContentType = null;
 
         }
+
+        // Atualizar props;
+        clientFollowUp.CompanyId = companyId;
 
         await _context.AddAsync(clientFollowUp);
         await _context.SaveChangesAsync();

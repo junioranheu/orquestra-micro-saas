@@ -41,7 +41,8 @@ public sealed class ClientFollowUpBaseTests
         };
 
         // Act & Assert;
-        await sut.Validate(input, user.UserId, isCreate: true);
+        Guid companyId = await sut.Validate(input, user.UserId, isCreate: true);
+        Assert.True(companyId != Guid.Empty);
     }
 
     [Fact]

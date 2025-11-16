@@ -23,6 +23,8 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
     public DbSet<CompanyInvoice> CompanyInvoices { get; set; }
     public DbSet<IntegrationWhatsApp> IntegrationsWhatsApp { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
+    public DbSet<Quote> Quotes { get; set; }
+    public DbSet<QuoteItem> QuoteItems { get; set; }
 
     #region extras
     protected override void OnModelCreating(ModelBuilder modelBuilder)

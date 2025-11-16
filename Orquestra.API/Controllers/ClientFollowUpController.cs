@@ -26,6 +26,11 @@ public class ClientFollowUpController(
     [HttpPost]
     public async Task<ActionResult> Create(ClientFollowUpInput input)
     {
+        if (input is null || input.ClientId is null || input.ClientId == Guid.Empty)
+        {
+            throw new ArgumentException($"O parâmetro {nameof(input.ClientId)} está vazio.");
+        }
+
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         await _create.Execute(userIdAuth, input);
 

@@ -16,7 +16,7 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
 
     private readonly int MAX_FILES = 3;
      
-    public async Task Validate(ClientFollowUpInput input, Guid userIdAuth, bool isCreate)
+    public async Task<Guid> Validate(ClientFollowUpInput input, Guid userIdAuth, bool isCreate)
     {
         if (isCreate)
         {
@@ -37,8 +37,9 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
         }
 
         Client? client = await _context.Clients.AsNoTracking().Where(x => x.ClientId == input.ClientId && x.Status == true).FirstOrDefaultAsync() ?? throw new ArgumentException(SystemConsts.Warnings.NotFoundClient);
+        Guid companyId = client.CompanyId;
 
-        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: client.CompanyId, userId: userIdAuth, needCompanyAdmin: false);
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         if (input.ImagesFormFile is not null || input.ImagesFormFile?.Count > 0)
         {
@@ -52,6 +53,8 @@ public partial class ClientFollowUpBase(Context context, ICheckIfUserIsLinkedCom
                 ValidateMaxSizeFile(file: item, maxMegabytes: 3);
             }
         }
+
+        return companyId;
     }
 
     #region extras

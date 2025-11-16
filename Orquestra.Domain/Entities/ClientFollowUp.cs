@@ -13,6 +13,10 @@ public sealed class ClientFollowUp : Audit
     [ForeignKey(nameof(ClientId))]
     public Client? Client { get; set; }
 
+    public Guid CompanyId { get; set; }
+    [ForeignKey(nameof(CompanyId))]
+    public Company? Company { get; set; }
+
     [MaxLength(1024)]
     public string? Observation { get; set; }
 

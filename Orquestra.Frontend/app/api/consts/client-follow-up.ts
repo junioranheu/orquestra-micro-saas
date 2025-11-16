@@ -13,6 +13,7 @@ export const CONSTS_CLIENT_FOLLOW_UP = {
 export interface iClientFollowUp {
     clientFollowUpId?: Guid;
     clientId?: Guid;
+    companyId?: Guid;
     observation?: string;
     clientFollowUpStatus?: string;
     imagesFormFile?: globalThis.File[] | null | []; // Input;

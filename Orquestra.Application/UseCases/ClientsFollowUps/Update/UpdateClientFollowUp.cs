@@ -19,12 +19,12 @@ public sealed class UpdateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
             Where(x => x.ClientFollowUpId == input.ClientFollowUpId).
             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
 
-        await Validate(input, userIdAuth, isCreate: false);
-        await Update(input, clientFollowUp);
+        Guid companyId = await Validate(input, userIdAuth, isCreate: false);
+        await Update(input, clientFollowUp, companyId);
     }
 
     #region extras
-    private async Task Update(ClientFollowUpInput input, ClientFollowUp clientFollowUp)
+    private async Task Update(ClientFollowUpInput input, ClientFollowUp clientFollowUp, Guid companyId)
     {
         clientFollowUp.Observation = input.Observation;
         clientFollowUp.ClientFollowUpStatus = input.ClientFollowUpStatus;
@@ -50,6 +50,9 @@ public sealed class UpdateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
             clientFollowUp.Images = [];
             clientFollowUp.ImagesContentType = null;
         }
+
+        // Atualizar props;
+        clientFollowUp.CompanyId = companyId;
 
         _context.Update(clientFollowUp);
         await _context.SaveChangesAsync();
