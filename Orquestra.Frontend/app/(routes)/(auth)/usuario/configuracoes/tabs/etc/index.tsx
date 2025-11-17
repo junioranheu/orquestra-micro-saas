@@ -7,6 +7,7 @@ import SvgVersion from '@/app/assets/svg/version.svg';
 import CardSimple from '@/app/components/card/simple';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { UserRoleEnum } from '@/app/enums/userRoleEnum';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
@@ -15,11 +16,19 @@ import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function UsuarioConfiguracoesTabEtc() {
+
+    const [auth,] = useUserContext();
+
     return (
         <section className={styles.main}>
             <CardSession />
             <CardBuild />
-            <CardControllers />
+
+            {
+                auth?.role === UserRoleEnum.Administrator && (
+                    <CardControllers />
+                )
+            }
         </section>
     )
 }
