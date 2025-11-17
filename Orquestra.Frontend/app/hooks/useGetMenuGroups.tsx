@@ -34,7 +34,7 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
                 label: 'Geral',
                 items: [
                     { id: 'inicio', label: 'Início', description: `Visão geral e estatísticas rápidas do ${SYSTEM.NAME}.`, icon: 'home', route: ROUTES.DASHBOARD, hasAccess: true },
-                    { id: 'configuracoes', label: 'Configurações', description: 'Personalize o sistema, altere informações da conta e troque sua senha.', icon: 'settings', route: ROUTES.USUARIO_CONFIGURACOES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
+                    { id: 'configuracoes', label: 'Configurações', description: 'Personalize o sistema, altere informações da conta e troque sua senha.', icon: 'settings', route: ROUTES.USUARIO_CONFIGURACOES, hasAccess: true },
                 ]
             },
             {

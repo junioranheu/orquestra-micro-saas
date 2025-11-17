@@ -5,6 +5,7 @@ import { Fetch } from '@/app/api/fetch';
 import ImgClean from '@/app/assets/svg/clean.svg';
 import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
+import Button from '@/app/components/input/button';
 import WhatsappWebShortcut from '@/app/components/whatsapp/whatsapp-web-shortcut';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
@@ -131,6 +132,14 @@ export default function CardDailyAgenda({ me }: iProps) {
                 schedules?.length === 0 && (
                     <div className={styles.empty}>
                         <p>Nenhum agendamento para hoje</p>
+
+                        <Button
+                            label='Criar novo agendamento'
+                            isStyleSimple={true}
+                            style={{ boxShadow: 'none', marginTop: '0.5rem' }}
+                            url={ROUTES.EMPRESA_AGENDAMENTOS}
+                            isNewTab={false}
+                        />
 
                         <div className={styles.center}>
                             <Image src={ImgClean} alt='' priority={true} />
