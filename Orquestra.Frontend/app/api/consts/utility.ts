@@ -9,7 +9,8 @@ export const CONSTS_UTILITY = {
     getCity: `${BASE}/${controller}/GetCity`,
     getCountry: `${BASE}/${controller}/GetCountry`,
     getEnum: `${BASE}/${controller}/GetEnum`,
-    getPlanType: `${BASE}/${controller}/GetPlanType`
+    getPlanType: `${BASE}/${controller}/GetPlanType`,
+    getTestServer: `${BASE}/${controller}/GetTestServer`,
 };
 
 export interface iBuildVersion {

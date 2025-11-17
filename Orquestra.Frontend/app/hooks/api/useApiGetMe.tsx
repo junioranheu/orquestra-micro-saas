@@ -22,6 +22,7 @@ export default function useApiGetMe({ isFetch = true, trigger = undefined }: iPr
             const result = await Fetch.get({ url: CONSTS_AUTH.me }) as iMe;
             // console.log(result);     
 
+            // Verificar situação da empresa;
             if (
                 result?.currentMainCompany?.companySituation?.toString() === pendingPayment.toString() &&
                 (pathname !== ROUTES.EMPRESA_USO_E_PLANO && pathname !== ROUTES.EMPRESA_GERENCIAR && pathname !== ROUTES.EMPRESA_VERIFICADA && pathname !== ROUTES.LOGOUT)

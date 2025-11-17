@@ -1,4 +1,4 @@
-import { CONSTS_AUTH } from '@/app/api/consts/auth';
+import { CONSTS_UTILITY } from '@/app/api/consts/utility';
 import { Fetch } from '@/app/api/fetch';
 import swal from '@/app/functions/swal';
 import { useEffect, useState } from 'react';
@@ -23,7 +23,7 @@ export default function useCheckAzureServer() {
         async function handleCheck() {
             try {
                 // await fetchGetFake();
-                await Fetch.get({ url: CONSTS_AUTH.meSimple });
+                await Fetch.get({ url: CONSTS_UTILITY.getTestServer });
             } catch (error: unknown) {
                 const errorMsg = error instanceof Error ? error.message : String(error);
                 swal({ content: errorMsg });

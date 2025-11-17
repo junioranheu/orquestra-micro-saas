@@ -40,7 +40,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 
     useEffect(() => {
         feather.replace();
-    }, [])
+    }, []);
 
     return (
         <html lang='pt-BR'>

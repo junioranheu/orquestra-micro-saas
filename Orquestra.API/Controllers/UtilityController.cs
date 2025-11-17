@@ -151,4 +151,11 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
 
         return Ok(output);
     }
+
+    [AllowAnonymous]
+    [HttpGet("TestServer")]
+    public ActionResult GetTestServer()
+    {
+        return Ok(true);
+    }
 }

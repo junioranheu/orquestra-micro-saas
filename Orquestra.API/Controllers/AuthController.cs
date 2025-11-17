@@ -149,8 +149,8 @@ public class AuthController(
             }
         }
 
-        // Cache de apenas 1 segundo para ajudar nas requisições repetidas;
-        _memoryCache.Set(cacheKey, output, TimeSpan.FromSeconds(1));
+        // Cache de apenas x segundos para ajudar nas requisições repetidas;
+        _memoryCache.Set(cacheKey, output, TimeSpan.FromSeconds(1.5));
 
         return Ok(output);
     }
