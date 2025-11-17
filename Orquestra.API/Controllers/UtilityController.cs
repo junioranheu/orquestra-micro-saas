@@ -153,7 +153,7 @@ public class UtilityController(IGetState getState, IGetCity getCity) : BaseContr
     }
 
     [AllowAnonymous]
-    [HttpGet("TestServer")]
+    [HttpGet("GetTestServer")]
     public ActionResult GetTestServer()
     {
         return Ok(true);

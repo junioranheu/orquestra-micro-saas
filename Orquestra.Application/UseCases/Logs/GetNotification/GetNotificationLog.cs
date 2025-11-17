@@ -173,7 +173,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                 Story = story,
                 Date = log.CreatedDate
             };
-        }).Where(x => x is not null).Select(x => x)];
+        }).Where(x => x is not null).Select(x => x!)];
 
         if (isDashboard)
         {
