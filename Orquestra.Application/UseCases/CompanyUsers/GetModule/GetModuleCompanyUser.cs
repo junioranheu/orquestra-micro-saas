@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
@@ -12,17 +13,21 @@ public sealed class GetModuleCompanyUser(Context context, ICheckIfUserIsLinkedCo
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
+    private static readonly Func<Context, Guid, Guid, Task<CompanyUser?>> _compiledGetUser =
+        EF.CompileAsyncQuery((Context ctx, Guid companyId, Guid userIdAuth) =>
+            ctx.CompanyUsers.
+                AsNoTracking().
+                Include(x => x.User).
+                Include(x => x.Company).
+                Where(x => x.CompanyId == companyId && x.UserId == userIdAuth).
+                OrderByDescending(x => x.CreatedDate).
+                FirstOrDefault());
+
     public async Task<(ModuleEnum[] modules, List<string> modulesStr)> Execute(Guid userIdAuth, Guid companyId)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
-        var result = await _context.CompanyUsers.
-                     Include(x => x.User).
-                     Include(x => x.Company).
-                     AsNoTracking().
-                     Where(x => x.CompanyId == companyId && x.UserId == userIdAuth).
-                     OrderByDescending(x => x.CreatedDate).
-                     FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
+        CompanyUser result = await _compiledGetUser(_context, companyId, userIdAuth) ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundUser);
 
         if (!result.Status || result.User is null || (result.User is not null && !result.User.Status))
         {

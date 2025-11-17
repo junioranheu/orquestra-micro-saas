@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
+using System;
 using System.Data;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -13,13 +14,16 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
 {
     private readonly Context _context = context;
 
+    private static readonly Func<Context, Guid, Task<CompanyUser?>> _compiledGet =
+        EF.CompileAsyncQuery((Context ctx, Guid uid) =>
+            ctx.CompanyUsers.
+            AsNoTracking().
+            Include(x => x.Company).
+            FirstOrDefault(x => x.UserId == uid && x.IsCurrentMainCompanyUser == true && x.Status == true));
+
     public async Task<(CompanyOutput? currentMainCompany, bool isUserAdm)> Execute(Guid userId)
     {
-        var output = await _context.CompanyUsers.
-                     Include(x => x.Company).
-                     AsNoTracking().
-                     Where(x => x.UserId == userId && x.IsCurrentMainCompanyUser == true && x.Status == true).
-                     FirstOrDefaultAsync();
+        CompanyUser? output = await _compiledGet(_context, userId);
 
         if (output is null || output?.Company is null)
         {

@@ -88,7 +88,7 @@ public class AuthController(
 
     [AuthorizeFilter]
     [HttpGet("Me")]
-    public async Task<ActionResult> Me()
+    public async Task<ActionResult> Me(bool checkExpirationDate = false)
     {
         // Misc;
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
@@ -107,13 +107,20 @@ public class AuthController(
         // Current main company;
         (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
 
-        // Token;
-        string? token = Request.Cookies[SystemConsts.Cookies.Auth];
-        JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-        (_, _, DateTime validTo) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
+        DateTime tokenExpirationDate = DateTime.MinValue;
+        DateTime refreshTokenExpirationDate = DateTime.MinValue;
 
-        // Refresh token;
-        RefreshToken? refreshToken = await _getRefreshToken.GetLatestNotRevokedToken(userIdAuth);
+        if (checkExpirationDate)
+        {
+            // Token;
+            string? token = Request.Cookies[SystemConsts.Cookies.Auth];
+            JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            (_, _, tokenExpirationDate) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
+
+            // Refresh token;
+            RefreshToken? refreshToken = await _getRefreshToken.GetLatestNotRevokedToken(userIdAuth);
+            refreshTokenExpirationDate = refreshToken?.ExpiredDate ?? DateTime.MinValue;
+        }
 
         // Output;
         MeOutput output = new()
@@ -125,8 +132,8 @@ public class AuthController(
             Roles = userRoles,
             RolesStr = userRolesStr,
             CurrentMainCompany = currentMainCompany,
-            TokenExpirationDate = validTo,
-            RefreshTokenExpirationDate = refreshToken?.ExpiredDate.GetValueOrDefault() ?? DateTime.MinValue,
+            TokenExpirationDate = tokenExpirationDate,
+            RefreshTokenExpirationDate = refreshTokenExpirationDate,
             IsUserAdmOfCurrentMainCompany = isUserAdm
         };
 
