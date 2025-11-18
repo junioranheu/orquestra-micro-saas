@@ -45,7 +45,7 @@ public static class DbInitializer
         }
     }
 
-    public static async Task Seed(Context context, DateTime _)
+    private static async Task Seed(Context context, DateTime _)
     {
         await SeedLocationStates.Seed(context);
         await SeedLocationCities.Seed(context);
