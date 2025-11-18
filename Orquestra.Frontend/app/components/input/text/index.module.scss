@@ -14,10 +14,10 @@
     .title {
         // background-color: tomato;
         color: var(--black);
-        font-size: 0.75rem;
-        font-weight: 500;
+        font-size: 0.8rem;
+        font-weight: 400;
         margin-right: auto;
-        margin-bottom: 1px;
+        margin-bottom: 3px;
         display: inline-block;
 
         .obligatory {
@@ -32,7 +32,6 @@
         // background-color: orange !important;
         // height: 2.5rem !important;
         height: 40px !important;
-        font-size: 0.8rem !important;
         font-family: inherit !important;
     }
 }

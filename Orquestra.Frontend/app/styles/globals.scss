@@ -258,9 +258,9 @@ input[type='date'],
 input[type='time'],
 input[type='email'],
 input[type='password'] {
-    font-size: 0.9rem;
-    font-weight: 500;
-    height: 2.5rem;
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    height: 2.5rem !important;
 
     font-style: inherit !important;
     background-color: transparent;
