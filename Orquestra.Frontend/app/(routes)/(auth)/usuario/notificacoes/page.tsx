@@ -49,7 +49,26 @@ export default function UsuarioNotificacoes() {
         {
             title: 'Detalhes',
             dataIndex: 'description',
-            key: 'description'
+            key: 'description',
+            render: (value: string) => {
+                let parsed: any;
+
+                try {
+                    parsed = JSON.parse(value);
+                } catch {
+                    parsed = value;
+                }
+
+                return (
+                    <pre style={{
+                        whiteSpace: 'pre-wrap',
+                        wordWrap: 'break-word',
+                        margin: 0
+                    }}>
+                        {typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : parsed}
+                    </pre>
+                );
+            }
         },
     ] as iTableColumn[];
 

@@ -36,7 +36,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             // Cache;
             if (_cache.TryGetValue(cacheKey, out (List<LogNotificationOutput> output, int count) cached))
             {
-               return cached;
+                return cached;
             }
         }
 
@@ -57,6 +57,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                 LogTypeEnum.Exception => "🔴",
                 LogTypeEnum.Request => "🟢",
                 LogTypeEnum.Job => "🟡",
+                LogTypeEnum.Audit => "🟢",
                 _ => "⚪"
             };
 
@@ -64,6 +65,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             {
                 LogTypeEnum.Exception => "Erro",
                 LogTypeEnum.Request => "Sucesso",
+                LogTypeEnum.Audit => "Auditoria",
                 _ => string.Empty
             };
 
@@ -169,7 +171,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                 RequestType = requestTypeNormalized,
                 EndpointName = endpointName,
                 RawEndpoint = log.Endpoint,
-                Description = RemoveHtmlTags(description),
+                Description = log.LogType == LogTypeEnum.Audit && !isDashboard ? NormalizeJsonLog(RemoveHtmlTags(log.Parameters)) : RemoveHtmlTags(description),
                 Story = story,
                 Date = log.CreatedDate
             };
@@ -191,12 +193,12 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
     {
         Dictionary<string, string> endpointMap = new()
         {
-            { "/Client", "Cliente" },
-            { "/CompanyInvoice", "Fatura" },
-            { "/CompanyUser", "Colaborador" },
-            { "/Schedule", "Agendamento" },
-            { "/User", "Usuário" },
-            { "/Company", "Empresa" }
+            { "Client", "Cliente" },
+            { "CompanyInvoice", "Fatura" },
+            { "CompanyUser", "Colaborador" },
+            { "Schedule", "Agendamento" },
+            { "User", "Usuário" },
+            { "Company", "Empresa" }
         };
 
         bool isXUnit = IsRunningFromXUnit();

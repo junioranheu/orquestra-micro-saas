@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Orquestra.Domain.Consts;
 using System.ComponentModel;
+using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Tests.Utils;
@@ -770,7 +771,7 @@ public sealed class GetTests
     [InlineData("")]
     [InlineData(null)]
     [InlineData(" ")]
-    [InlineData("529.982.247")] 
+    [InlineData("529.982.247")]
     public void Should_Return_False_For_Null_Or_Invalid_Length(string? cpf)
     {
         // Act;
@@ -888,7 +889,7 @@ public sealed class GetTests
     [InlineData("987654321012345")]
     [InlineData("abc")]
     [InlineData("+999999999999999")]
-    [InlineData("00982716339")] 
+    [InlineData("00982716339")]
     public void NormalizeBrazilianPhone_ShouldReturnNull_WhenInvalid(string input)
     {
         string? result = NormalizeBrazilianPhone(input);

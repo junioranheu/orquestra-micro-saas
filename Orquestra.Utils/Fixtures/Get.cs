@@ -720,6 +720,31 @@ public static partial class Get
     }
 
     /// <summary>
+    /// Normaliza um JSON de mudança, ajustando os nomes dos campos "Before" e "After"
+    /// para "Antes" e "Depois", e formatando o JSON com identação.
+    /// </summary>
+    /// <param name="json">JSON original com campos "Before" e "After".</param>
+    /// <returns>JSON formatado com campos "Antes" e "Depois".</returns>
+    public static string NormalizeJsonLog(string json)
+    {
+        using var doc = JsonDocument.Parse(json);
+        JsonElement root = doc.RootElement;
+
+        var normalized = new
+        {
+            Antes = root.GetProperty("Before"),
+            Depois = root.GetProperty("After")
+        };
+
+        JsonSerializerOptions options = new()
+        {
+            WriteIndented = true
+        };
+
+        return JsonSerializer.Serialize(normalized, options);
+    }
+
+    /// <summary>
     /// Tenta extrair uma propriedade de um JSON e converter para o tipo desejado.
     /// </summary>
     /// <typeparam name="T">Tipo de retorno desejado (ex: Guid, int, string, bool).</typeparam>
