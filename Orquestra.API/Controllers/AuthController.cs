@@ -5,21 +5,17 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Caching.Memory;
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Auth.CreateTokenJWT;
-using Orquestra.Application.UseCases.Auth.GetRefreshTokenJWT;
+using Orquestra.Application.UseCases.Auth.GetMe;
 using Orquestra.Application.UseCases.Auth.Logout;
 using Orquestra.Application.UseCases.Auth.RecoverPassword;
 using Orquestra.Application.UseCases.Auth.Shared;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.GetCurrentMain;
-using Orquestra.Application.UseCases.CompanyUsers.GetModule;
 using Orquestra.Application.UseCases.Users.Shared;
 using Orquestra.Domain.Consts;
-using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
-using Orquestra.Infrastructure.Auth.Token;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
-using System.IdentityModel.Tokens.Jwt;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;
@@ -30,23 +26,19 @@ public class AuthController(
         IMemoryCache memoryCache,
         IEnvService env,
         ICreateToken createToken,
-        IJwtTokenGenerator jwtTokenGenerator,
-        IGetRefreshToken getRefreshToken,
         IGetCurrentMainCompanyUser getCurrentMainCompanyUser,
-        IGetModuleCompanyUser getModuleCompanyUser,
         ILogoutUser logoutUser,
-        IRecoverPasswordUser recoverPasswordUser
+        IRecoverPasswordUser recoverPasswordUser,
+        IGetMeOutput getMeOutput
     ) : BaseController<AuthController>
 {
     private readonly IMemoryCache _memoryCache = memoryCache;
     private readonly IEnvService _env = env;
     private readonly ICreateToken _createToken = createToken;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
-    private readonly IGetRefreshToken _getRefreshToken = getRefreshToken;
     private readonly IGetCurrentMainCompanyUser _getCurrentMainCompanyUser = getCurrentMainCompanyUser;
-    private readonly IGetModuleCompanyUser _getModuleCompanyUser = getModuleCompanyUser;
     private readonly ILogoutUser _logoutUser = logoutUser;
     private readonly IRecoverPasswordUser _recoverPasswordUser = recoverPasswordUser;
+    private readonly IGetMeOutput _getMeOutput = getMeOutput;
 
     [AllowAnonymous]
     [EnableRateLimiting(SystemConsts.Policies.RateLimiting)]
@@ -103,58 +95,9 @@ public class AuthController(
         string nameAuth = GetUserNameAuth();
         string emailAuth = GetUserEmailAuth();
         (UserRoleEnum[] userRoles, string[] userRolesStr) = GetUserRolesAuth();
+        string? token = Request.Cookies[SystemConsts.Cookies.Auth];
 
-        // Current main company;
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
-
-        DateTime tokenExpirationDate = DateTime.MinValue;
-        DateTime refreshTokenExpirationDate = DateTime.MinValue;
-
-        if (checkExpirationDate)
-        {
-            // Token;
-            string? token = Request.Cookies[SystemConsts.Cookies.Auth];
-            JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            (_, _, tokenExpirationDate) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
-
-            // Refresh token;
-            RefreshToken? refreshToken = await _getRefreshToken.GetLatestNotRevokedToken(userIdAuth);
-            refreshTokenExpirationDate = refreshToken?.ExpiredDate ?? DateTime.MinValue;
-        }
-
-        // Output;
-        MeOutput output = new()
-        {
-            IsAuth = isAuth,
-            UserId = userIdAuth,
-            UserName = nameAuth,
-            Email = emailAuth,
-            Roles = userRoles,
-            RolesStr = userRolesStr,
-            CurrentMainCompany = currentMainCompany,
-            TokenExpirationDate = tokenExpirationDate,
-            RefreshTokenExpirationDate = refreshTokenExpirationDate,
-            IsUserAdmOfCurrentMainCompany = isUserAdm
-        };
-
-        // Módulos;
-        if (currentMainCompany is not null && output.CurrentMainCompany is not null)
-        {
-            if (isUserAdm)
-            {
-                var moduleEnum = GetEnumListWithDescriptions<ModuleEnum>();
-
-                output.CurrentMainCompany.UserModules = [.. moduleEnum.Select(x => x.Value)];
-                output.CurrentMainCompany.UserModulesStr = [.. moduleEnum.Select(x => x.Description)];
-            }
-            else
-            {
-                (ModuleEnum[] modules, List<string> modulesStr) = await _getModuleCompanyUser.Execute(userIdAuth, companyId: currentMainCompany.CompanyId);
-
-                output.CurrentMainCompany.UserModules = modules;
-                output.CurrentMainCompany.UserModulesStr = modulesStr;
-            }
-        }
+        MeOutput output = await _getMeOutput.Execute(checkExpirationDate, token, userIdAuth, isAuth, nameAuth, emailAuth, userRoles, userRolesStr);
 
         // Cache de apenas x segundos para ajudar nas requisições repetidas;
         _memoryCache.Set(cacheKey, output, TimeSpan.FromSeconds(1.5));
