@@ -142,7 +142,7 @@ export default function ClientProfile() {
                                     email={client?.email ? client?.email : '-'}
                                     phone={client?.phone ? client?.phone : '-'}
                                     birthDate={client?.dateOfBirth ? handleFormatDate(client?.dateOfBirth ? new Date(new Date(client.dateOfBirth).getTime() + 3 * 60 * 60 * 1000) : '-', DATE_STYLE.DIA_MES_ANO) : '-'}
-                                    address={client?.address ? client?.address : '-'}
+                                    address={client?.city && client?.address ? `${client.city}, ${client.address}` : client?.city || client?.address || '-'}
                                 />
 
                                 <div className={`${styles.card} ${styles.internalNotes}`}>
