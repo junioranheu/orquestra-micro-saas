@@ -5,6 +5,7 @@ import SvgAuth from '@/app/assets/svg/auth.svg';
 import SvgCode from '@/app/assets/svg/code.svg';
 import SvgVersion from '@/app/assets/svg/version.svg';
 import CardSimple from '@/app/components/card/simple';
+import Footer from '@/app/components/footer';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { UserRoleEnum } from '@/app/enums/userRoleEnum';
@@ -29,6 +30,8 @@ export default function UsuarioConfiguracoesTabEtc() {
                     <CardControllers />
                 )
             }
+
+            <Footer />
         </section>
     )
 }

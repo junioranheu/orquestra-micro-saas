@@ -4,7 +4,6 @@ import TemplatePageHeader from '@/app/components/template/template-page-header';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';
-import styles from './page.module.scss';
 import UsuarioConfiguracoesTabConta from './tabs/conta';
 import UsuarioConfiguracoesTabEtc from './tabs/etc';
 import UsuarioConfiguracoesTabPersonalizacao from './tabs/personalizacao';
@@ -23,7 +22,7 @@ export default function UsuarioConfiguracoes() {
     }
 
     return (
-        <section className={styles.main}>
+        <section>
             <Tabs
                 tabs={['Personalização', 'Configurações da conta', 'Mais']}
                 contents={[
