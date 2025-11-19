@@ -11,5 +11,8 @@ public enum LogTypeEnum
     Request = 2,
 
     [Description("Job")]
-    Job = 3
+    Job = 3,
+
+    [Description("Auditoria")]
+    Audit = 4
 }

@@ -102,7 +102,7 @@ public static class DependencyInjection
         services.AddControllers(x =>
         {
             x.Filters.Add<ErrorFilter>();
-            x.Filters.Add<RequestFilter>();
+            // x.Filters.Add<RequestFilter>(); // Substituído pelo ChangeLogInterceptor;
         }).
            AddJsonOptions(x =>
            {

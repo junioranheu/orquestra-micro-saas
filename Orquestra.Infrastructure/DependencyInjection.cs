@@ -212,11 +212,17 @@ public static class DependencyInjection
 
         services.AddDbContextPool<Context>((serviceProvider, options) =>
         {
+            // Interceptor #1;
             ILogger<SlowQueryDebugInterceptor> logger = serviceProvider.GetRequiredService<ILogger<SlowQueryDebugInterceptor>>();
             IWebHostEnvironment env = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            SlowQueryDebugInterceptor interceptor = new(logger, env);
+            SlowQueryDebugInterceptor slowQueryDebugInterceptor = new(logger, env);
 
-            options.UseNpgsql(con).AddInterceptors(interceptor);
+            // Interceptor #2;
+            IHttpContextAccessor httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+            ChangeLogInterceptor changeLogInterceptor = new(httpContextAccessor);
+
+            // Npgsql;
+            options.UseNpgsql(con).AddInterceptors(slowQueryDebugInterceptor, changeLogInterceptor);
         });
     }
 

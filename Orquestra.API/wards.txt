@@ -1,6 +1,7 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
-Atualizar o sistema para o .NET 10 (dia 11/11); (PostgreSQL já atualizou?) 
+Atualizar o sistema para o .NET 10 (dia 11/11); (PostgreSQL já atualizou?);
+Refazer a parte de notificações para incluir agora o "LogTypeEnum.Audit";
 
 ⦁	Módulo de Orçamento:
 Criar UseCase e dependências
