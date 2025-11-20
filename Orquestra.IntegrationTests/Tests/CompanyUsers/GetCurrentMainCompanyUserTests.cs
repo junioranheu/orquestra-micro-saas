@@ -38,7 +38,7 @@ public sealed class GetCurrentMainCompanyUserTests
         GetCurrentMainCompanyUser sut = CreateSut(context);
 
         // Act;
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await sut.Execute(user.UserId);
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await sut.GetCurrentMainCompany(user.UserId);
 
         // Assert;
         Assert.NotNull(currentMainCompany);
@@ -76,7 +76,7 @@ public sealed class GetCurrentMainCompanyUserTests
         GetCurrentMainCompanyUser sut = CreateSut(context);
 
         // Act;
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await sut.Execute(user.UserId);
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await sut.GetCurrentMainCompany(user.UserId);
 
         // Assert;
         Assert.NotNull(currentMainCompany);
@@ -111,7 +111,7 @@ public sealed class GetCurrentMainCompanyUserTests
         GetCurrentMainCompanyUser sut = CreateSut(context);
 
         // Act;
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await sut.Execute(user.UserId);
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await sut.GetCurrentMainCompany(user.UserId);
 
         // Assert;
         Assert.Null(currentMainCompany);

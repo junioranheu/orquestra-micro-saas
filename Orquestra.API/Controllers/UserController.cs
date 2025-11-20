@@ -33,7 +33,7 @@ public class UserController(
     private readonly IVerifyUser _verify = verify;
     private readonly ILogoutUser _logout = logout;
 
-    [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
+    [AuthorizeFilter(roles: [UserRoleEnum.Administrator, UserRoleEnum.Maintainer])]
     [HttpGet]
     public async Task<ActionResult> Get([FromQuery] PaginationInput paginationInput)
     {

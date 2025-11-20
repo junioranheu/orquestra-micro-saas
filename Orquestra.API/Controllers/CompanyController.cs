@@ -76,7 +76,7 @@ public class CompanyController(
         return Ok(invoice);
     }
 
-    [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
+    [AuthorizeFilter(roles: [UserRoleEnum.Administrator, UserRoleEnum.Maintainer])]
     [HttpGet("GetAll")]
     public async Task<ActionResult> GetAll(bool onlyStatusTrue)
     {

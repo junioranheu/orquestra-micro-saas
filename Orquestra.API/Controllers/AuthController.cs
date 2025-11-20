@@ -111,7 +111,7 @@ public class AuthController(
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
 
-        (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.Execute(userIdAuth);
+        (CompanyOutput? currentMainCompany, bool _) = await _getCurrentMainCompanyUser.GetCurrentMainCompany(userIdAuth);
         CompanyOutput currentMainCompanySimple = currentMainCompany.Adapt<CompanyOutput>();
 
         return Ok(currentMainCompanySimple);
@@ -127,7 +127,7 @@ public class AuthController(
         }
 
         // Current main company;
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userId.GetValueOrDefault());
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.GetCurrentMainCompany(userId.GetValueOrDefault());
 
         if (isUserAdm)
         {

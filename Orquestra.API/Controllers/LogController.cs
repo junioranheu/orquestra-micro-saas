@@ -16,7 +16,7 @@ public class LogController(IGetLog get, IGetNotificationLog getNotificationLog) 
     private readonly IGetLog _get = get;
     private readonly IGetNotificationLog _getNotificationLog = getNotificationLog;
 
-    [AuthorizeFilter(UserRoleEnum.Administrator, UserRoleEnum.Maintainer)]
+    [AuthorizeFilter(roles: [UserRoleEnum.Administrator, UserRoleEnum.Maintainer])]
     [HttpGet]
     public async Task<ActionResult> Get([FromQuery] PaginationInput paginationInput, [FromQuery] Guid? userId)
     {
