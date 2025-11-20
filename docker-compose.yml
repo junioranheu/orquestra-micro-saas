@@ -1,0 +1,15 @@
+services:
+  orquestra-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env 
+    container_name: orquestra-api
+    restart: unless-stopped
+
+# docker compose up --build
+# http://localhost:5000/api/Utility/GetState
+# http://localhost:5000/swagger/index.html
