@@ -7,6 +7,7 @@ import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
+import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import { Dispatch, SetStateAction } from 'react';
 
 interface iProps {
@@ -28,6 +29,8 @@ export default function EmpresaEstoqueModalFilters({
     setApiUrlRequest,
     setCurrentPage
 }: iProps) {
+
+    const [isModalGrid,] = useIsModalGrid();
 
     function handleSubmit() {
         const data = handleLoopFormData(modalFilterFormData, 'label');
@@ -68,7 +71,7 @@ export default function EmpresaEstoqueModalFilters({
                 </header>
 
                 <main className={styles.modalContent}>
-                    <div className={styles.grid}>
+                    <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Nome do item' fieldName='name' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask title='Descrição' fieldName='description' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask type='number' title='Quantidade' fieldName='quantity' formData={modalFilterFormData} setFormData={setModalFilterFormData} />

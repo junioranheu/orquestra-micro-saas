@@ -9,10 +9,13 @@ type GlobalContextType = {
     setShowChatbot: Dispatch<SetStateAction<boolean>>;
 
     isOpenChatbot: boolean;
-    setIsOpenShowChatbot: Dispatch<SetStateAction<boolean>>;
+    setIsOpenChatbot: Dispatch<SetStateAction<boolean>>;
 
     showExpandedSidebar: boolean;
     setShowExpandedSidebar: Dispatch<SetStateAction<boolean>>;
+
+    isModalGrid: boolean;
+    setIsModalGrid: Dispatch<SetStateAction<boolean>>;
 };
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -21,8 +24,9 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
     const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
     const [showChatbot, setShowChatbot] = useState<boolean>(true);
-    const [isOpenChatbot, setIsOpenShowChatbot] = useState<boolean>(false);
+    const [isOpenChatbot, setIsOpenChatbot] = useState<boolean>(false);
     const [showExpandedSidebar, setShowExpandedSidebar] = useState<boolean>(true);
+    const [isModalGrid, setIsModalGrid] = useState<boolean>(true);
 
     useEffect(() => {
         const valueChatbot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_CHATBOT);
@@ -30,14 +34,18 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
         const valueExpandedSidebar = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR);
         setShowExpandedSidebar(valueExpandedSidebar === null ? true : valueExpandedSidebar === 'true');
+
+        const valueModalGrid = localStorage.getItem(SYSTEM.LOCAL_STORAGE_IS_MODAL_GRID);
+        setIsModalGrid(valueModalGrid === null ? true : valueModalGrid === 'true');
     }, []);
 
     return (
         <GlobalContext.Provider value={{
             isRequestLoading, setIsRequestLoading,
             showChatbot, setShowChatbot,
-            isOpenChatbot, setIsOpenShowChatbot,
-            showExpandedSidebar, setShowExpandedSidebar
+            isOpenChatbot, setIsOpenChatbot,
+            showExpandedSidebar, setShowExpandedSidebar,
+            isModalGrid, setIsModalGrid
         }}>
             {children}
         </GlobalContext.Provider>

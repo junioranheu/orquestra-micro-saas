@@ -6,6 +6,7 @@ import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
+import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import { Dispatch, SetStateAction } from 'react';
 
 interface iProps {
@@ -42,6 +43,8 @@ export default function EmpresaClientesModalFilters({
     setApiUrlRequest,
     setCurrentPage
 }: iProps) {
+
+    const [isModalGrid,] = useIsModalGrid();
 
     function handleSubmit() {
         const data = handleLoopFormData(modalFilterFormData, 'label');
@@ -82,7 +85,7 @@ export default function EmpresaClientesModalFilters({
                 </header>
 
                 <main className={styles.modalContent}>
-                    <div className={styles.grid}>
+                    <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask title='CPF' fieldName='cpf' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />

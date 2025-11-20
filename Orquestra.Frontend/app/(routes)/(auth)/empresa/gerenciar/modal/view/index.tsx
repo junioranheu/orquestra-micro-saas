@@ -21,6 +21,7 @@ import swal from '@/app/functions/swal';
 import { handleConvertBase64ToFile } from '@/app/functions/transform.base64';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
+import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -35,6 +36,7 @@ interface iProps {
 export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen, type, company }: iProps) {
 
     const windowSize = useWindowSize();
+    const [isModalGrid,] = useIsModalGrid();
     const companyTypeEnum = useApiGetEnum({ enumName: 'CompanyTypeEnum' });
     const companySituationEnum = useApiGetEnum({ enumName: 'CompanySituationEnum' });
     const planTypeEnum = useApiGetEnum({ enumName: 'PlanTypeEnum' });
@@ -254,7 +256,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                 </header>
 
                 <main className={styles.modalContent}>
-                    <div className={styles.grid}>
+                    <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Nome da empresa' fieldName='name' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} mask='(00) 00000-0000' />

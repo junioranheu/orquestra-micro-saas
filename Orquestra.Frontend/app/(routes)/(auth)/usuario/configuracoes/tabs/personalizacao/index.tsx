@@ -2,10 +2,10 @@
 import Button from '@/app/components/input/button';
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
-import { useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
+import { useIsModalGrid, useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
 import Tippy from '@tippyjs/react';
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function UsuarioConfiguracoesTabPersonalizacao() {
@@ -20,11 +20,32 @@ export default function UsuarioConfiguracoesTabPersonalizacao() {
     )
 }
 
+interface iToggleContainerProps {
+    toggleInfoContent: ReactNode;
+    handleToggle: () => void;
+    boolToggle: boolean;
+}
+
+function ToggleContainer({ toggleInfoContent, handleToggle, boolToggle }: iToggleContainerProps) {
+    return (
+        <div className={styles.toggleContainer}>
+            <div className={styles.toggleInfo}>
+                {toggleInfoContent}
+            </div>
+
+            <button onClick={handleToggle} className={`${styles.toggle} ${boolToggle ? styles.toggleActive : ''}`}>
+                <span className={styles.toggleThumb} />
+            </button>
+        </div>
+    )
+}
+
 function InterfaceCustomizer() {
 
     const [showMascot, setShowMascot] = useState<boolean>(true);
     const [showChatbot, setShowChatbot] = useShowChatbot();
     const [showExpandedSidebar, setShowExpandedSidebar] = useShowExpandedSidebar();
+    const [isModalGrid, setIsModalGrid] = useIsModalGrid();
 
     const handleInitSettings = useCallback(() => {
         const valueMascot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);
@@ -35,7 +56,10 @@ function InterfaceCustomizer() {
 
         const valueExpandedSidebar = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_EXPANDED_SIDEBAR);
         setShowExpandedSidebar(valueExpandedSidebar === null ? true : valueExpandedSidebar === 'true');
-    }, [setShowMascot, setShowChatbot, setShowExpandedSidebar]);
+
+        const valueModalGrid = localStorage.getItem(SYSTEM.LOCAL_STORAGE_IS_MODAL_GRID);
+        setIsModalGrid(valueModalGrid === null ? true : valueModalGrid === 'true');
+    }, [setShowMascot, setShowChatbot, setShowExpandedSidebar, setIsModalGrid]);
 
     useEffect(() => {
         handleInitSettings();
@@ -56,66 +80,80 @@ function InterfaceCustomizer() {
         setShowExpandedSidebar((prev) => !prev);
     }
 
+    function handleToggleIsModalGrid() {
+        localStorage.setItem(SYSTEM.LOCAL_STORAGE_IS_MODAL_GRID, (!isModalGrid).toString());
+        setIsModalGrid((prev) => !prev);
+    }
+
     return (
         <div className={styles.card}>
             <h2 className={styles.cardTitle}>Interface</h2>
 
-            <div className={styles.toggleContainer}>
-                <div className={styles.toggleInfo}>
-                    <div className={styles.toggleText}>
-                        <h3 className={styles.toggleTitle}>Exibir assistente virtual</h3>
-                        <p className={styles.toggleDescription}>
-                            Receba dicas e ajuda do {SYSTEM.MASCOT}.
-                        </p>
-                    </div>
+            <ToggleContainer
+                toggleInfoContent={
+                    <Fragment>
+                        <div className={styles.toggleText}>
+                            <h3 className={styles.toggleTitle}>Exibir assistente virtual</h3>
+                            <p className={styles.toggleDescription}>
+                                Receba dicas e ajuda do {SYSTEM.MASCOT}.
+                            </p>
+                        </div>
 
-                    {
-                        showMascot && (
-                            <Mascot
-                                width={36}
-                                isCentralized={false}
-                                tippyContent={<div>Olá, eu sou o {SYSTEM.MASCOT}! 💚</div>}
-                                tippyPlacement='right'
-                                flipPeriodic={true}
-                            />
-                        )
-                    }
-                </div>
+                        {
+                            showMascot && (
+                                <Mascot
+                                    width={36}
+                                    isCentralized={false}
+                                    tippyContent={<div>Olá, eu sou o {SYSTEM.MASCOT}! 💚</div>}
+                                    tippyPlacement='right'
+                                    flipPeriodic={true}
+                                />
+                            )
+                        }
+                    </Fragment>
+                }
+                handleToggle={handleToggleMascot}
+                boolToggle={showMascot}
+            />
 
-                <button onClick={handleToggleMascot} className={`${styles.toggle} ${showMascot ? styles.toggleActive : ''}`}>
-                    <span className={styles.toggleThumb} />
-                </button>
-            </div>
-
-            <div className={styles.toggleContainer}>
-                <div className={styles.toggleInfo}>
+            <ToggleContainer
+                toggleInfoContent={
                     <div className={styles.toggleText}>
                         <h3 className={styles.toggleTitle}>Exibir chatbot</h3>
                         <p className={styles.toggleDescription}>
                             {showChatbot ? 'O chatbot está ativado e visível todo o tempo.' : 'O chatbot está desativado.'}
                         </p>
                     </div>
-                </div>
+                }
+                handleToggle={handleToggleChatbot}
+                boolToggle={showChatbot}
+            />
 
-                <button onClick={handleToggleChatbot} className={`${styles.toggle} ${showChatbot ? styles.toggleActive : ''}`}>
-                    <span className={styles.toggleThumb} />
-                </button>
-            </div>
-
-            <div className={styles.toggleContainer}>
-                <div className={styles.toggleInfo}>
+            <ToggleContainer
+                toggleInfoContent={
                     <div className={styles.toggleText}>
-                        <h3 className={styles.toggleTitle}>Exibir menu lateral expandido</h3>
+                        <h3 className={styles.toggleTitle}>Expandir menu lateral</h3>
                         <p className={styles.toggleDescription}>
                             {showExpandedSidebar ? 'O menu lateral está expandido. Aqui você vê todas as opções disponíveis de uma vez.' : 'O menu lateral está recolhido. Clique para expandir e ver mais opções de uma vez.'}
                         </p>
                     </div>
-                </div>
+                }
+                handleToggle={handleToggleExpandedSidebar}
+                boolToggle={showExpandedSidebar}
+            />
 
-                <button onClick={handleToggleExpandedSidebar} className={`${styles.toggle} ${showExpandedSidebar ? styles.toggleActive : ''}`}>
-                    <span className={styles.toggleThumb} />
-                </button>
-            </div>
+            <ToggleContainer
+                toggleInfoContent={
+                    <div className={styles.toggleText}>
+                        <h3 className={styles.toggleTitle}>Conteúdo dos painéis lado a lado</h3>
+                        <p className={styles.toggleDescription}>
+                            {isModalGrid ? 'Sempre que possível, o conteúdo dos painéis (modais) será exibido de forma padrão: lado a lado.' : 'O conteúdo será sempre exibido um abaixo do outro.'}
+                        </p>
+                    </div>
+                }
+                handleToggle={handleToggleIsModalGrid}
+                boolToggle={isModalGrid}
+            />
         </div>
     )
 }

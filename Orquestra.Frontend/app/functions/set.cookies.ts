@@ -42,7 +42,7 @@ interface iRemoveProps {
 export async function handleRemoveCookieAndLogout({ setAuth, router }: iRemoveProps) {
     await Fetch.delete({ url: CONSTS_AUTH.logout });
     Cookies.remove(SYSTEM.COOKIE_AUTH_FRONT, { path: '/' });
-    localStorage.clear();
+    // localStorage.clear();
     setAuth(null);
     router.push(ROUTES.LOGIN);
 }

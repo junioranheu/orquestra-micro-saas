@@ -8,6 +8,7 @@ import Tags from '@/app/components/tags';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
+import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import { Guid } from 'guid-typescript';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -42,6 +43,7 @@ export default function EmpresaMembrosModalFilters({
     moduleEnum
 }: iProps) {
 
+    const [isModalGrid,] = useIsModalGrid();
     const setCompanyUserRoleOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.companyUserRole)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setModuleOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.modules)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
@@ -84,7 +86,7 @@ export default function EmpresaMembrosModalFilters({
                 </header>
 
                 <main className={styles.modalContent}>
-                    <div className={styles.grid}>
+                    <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}

@@ -22,6 +22,7 @@ import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
+import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
 import { useRouter } from 'next/navigation';
@@ -44,6 +45,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
     const router = useRouter();
     const windowSize = useWindowSize();
+    const [isModalGrid,] = useIsModalGrid();
 
     const [canEdit,] = useState<boolean>(true);
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
@@ -320,9 +322,8 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                     </div>
                 </header>
 
-                {/* <div className={`${styles.grid} modal-layout-flex`}></div> */}
                 <main className={styles.modalContent}>
-                    <div className={styles.grid}>
+                    <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Status' options={scheduleStatusEnum ?? []} selectedOption={scheduleStatusEnum?.find(x => x.value.toString() === formData.scheduleStatus?.toString())} setSelectedOption={setScheduleStatusOption} isDisabled={!editing || (type === 'create')} isObligatory={true} />
                         <InputMask title='Data de início' type='date' fieldName='dateStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />

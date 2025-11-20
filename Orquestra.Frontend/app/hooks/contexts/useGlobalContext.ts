@@ -33,7 +33,7 @@ export function useIsOpenChatbot() {
         throw new Error('useGlobalContext');
     }
 
-    return [context.isOpenChatbot, context.setIsOpenShowChatbot] as const;
+    return [context.isOpenChatbot, context.setIsOpenChatbot] as const;
 
 }
 
@@ -46,5 +46,17 @@ export function useShowExpandedSidebar() {
     }
 
     return [context.showExpandedSidebar, context.setShowExpandedSidebar] as const;
+
+}
+
+export function useIsModalGrid() {
+
+    const context = useContext(GlobalContext);
+
+    if (!context) {
+        throw new Error('useGlobalContext');
+    }
+
+    return [context.isModalGrid, context.setIsModalGrid] as const;
 
 }
