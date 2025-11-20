@@ -1,4 +1,5 @@
 import { iMe } from '@/app/api/consts/auth';
+import { TIPPY_CHATBOT } from '@/app/components/chat-bot';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Icon from '@/app/components/icon';
 import { iModalCustomPosition } from '@/app/components/modal/generic';
@@ -92,7 +93,7 @@ export default function Navbar({ me }: iProps) {
 
                         {
                             showChatbot && (
-                                <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`}>
+                                <Tippy content={TIPPY_CHATBOT}>
                                     <span onClick={() => { setIsOpenChatbot(true); setIsMenuOpen(false); }}><Icon icon='message-square' weight='bold' /></span>
                                 </Tippy>
                             )

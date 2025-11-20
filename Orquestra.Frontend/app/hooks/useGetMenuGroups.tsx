@@ -1,11 +1,13 @@
 import { iMe } from '@/app/api/consts/auth';
+import { TIPPY_CHATBOT } from '@/app/components/chat-bot';
 import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import feather from 'feather-icons';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useIsOpenChatbot, useShowChatbot } from './contexts/useGlobalContext';
 
 interface iProps {
     me: iMe | undefined;
@@ -18,14 +20,18 @@ export interface iMenuGroup {
         label: string;
         description: string;
         icon: keyof typeof feather.icons;
-        route: (typeof ROUTES)[keyof typeof ROUTES];
+        route?: (typeof ROUTES)[keyof typeof ROUTES];
+        onClick?: () => void;
         hasAccess: boolean;
     }[];
 }
 
 export function useMenuGroups({ me }: iProps): iMenuGroup[] {
 
+    const router = useRouter();
     const pathname = usePathname();
+    const [showChatbot,] = useShowChatbot();
+    const [, setIsOpenChatbot] = useIsOpenChatbot();
     const [menu, setMenu] = useState<iMenuGroup[]>([]);
 
     useEffect(() => {
@@ -35,14 +41,16 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
                 items: [
                     { id: 'inicio', label: 'Início', description: `Visão geral e estatísticas rápidas do ${SYSTEM.NAME}.`, icon: 'home', route: ROUTES.DASHBOARD, hasAccess: true },
                     { id: 'configuracoes', label: 'Configurações', description: 'Personalize o sistema, altere informações da conta e troque sua senha.', icon: 'settings', route: ROUTES.USUARIO_CONFIGURACOES, hasAccess: true },
+                    // @ts-expect-error: dynamic;
+                    ...(showChatbot ? [{ id: 'chatbot', label: 'Chatbot', description: TIPPY_CHATBOT, icon: 'message-square', onClick: () => setIsOpenChatbot(true), hasAccess: true }] : [])
                 ]
             },
             {
                 label: 'Operacional',
                 items: [
                     { id: 'agenda', label: 'Agenda', description: 'Gerencie todos os agendamentos.', icon: 'calendar', route: ROUTES.EMPRESA_AGENDAMENTOS, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Scheduling] }) },
-                    { id: 'colaboradores', label: 'Colaboradores', description: 'Controle os usuários e profissionais da empresa.', icon: 'users', route: ROUTES.EMPRESA_COLABORADORES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
-                    { id: 'clientes', label: 'Clientes', description: 'Gerencie informações e histórico dos clientes.', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, rolesRequired: [] }) },
+                    { id: 'colaboradores', label: 'Colaboradores', description: 'Controle os usuários e profissionais da empresa.', icon: 'users', route: ROUTES.EMPRESA_COLABORADORES, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Members] }) },
+                    { id: 'clientes', label: 'Clientes', description: 'Gerencie informações e histórico dos clientes.', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Clients] }) },
                     { id: 'acompanhamentos', label: 'Acompanhamentos', description: 'Acompanhe retornos e contatos com clientes.', icon: 'repeat', route: ROUTES.EMPRESA_ACOMPANHAMENTO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.CostumerFollowUp] }) },
                     { id: 'orcamentos', label: 'Orçamentos', description: 'Crie e acompanhe propostas de serviço.', icon: 'file', route: ROUTES.EMPRESA_ORCAMENTO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Quote] }) },
                     { id: 'ordem-de-servico', label: 'Ordens de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.ServiceOrder] }) },
@@ -65,13 +73,14 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
             {
                 label: 'Sistema',
                 items: [
-                    { id: 'logs', label: 'Logs', description: 'Visualize registros e auditorias do sistema.', icon: 'terminal', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, rolesRequired: [], mustBeSystemAdmin: true }) }
+                    { id: 'logs', label: 'Logs', description: 'Visualize registros e auditorias do sistema.', icon: 'terminal', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, rolesRequired: [], mustBeSystemAdmin: true }) },
+                    { id: 'logoff', label: 'Finalizar sessão', description: `Encerre sua sessão atual no ${SYSTEM.NAME}.`, icon: 'log-out', onClick: () => router.push(ROUTES.LOGOUT), hasAccess: true },
                 ]
             }
         ];
 
         setMenu(MENU_GROUPS);
-    }, [me, pathname]);
+    }, [me, pathname, showChatbot, setIsOpenChatbot, router]);
 
     return menu;
 

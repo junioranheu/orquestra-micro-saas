@@ -40,7 +40,6 @@ export default function Sidebar({ me }: iProps) {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [pathname]);
 
-
     function handleGroupClick(e: React.MouseEvent, groupLabel: string) {
         const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
         setPopoverPos({ top: rect.top, left: rect.right + 0 }); // Posição ao lado;
@@ -87,7 +86,14 @@ export default function Sidebar({ me }: iProps) {
                                                             <li
                                                                 id={item.id}
                                                                 className={active === item.route ? styles.active : ''}
-                                                                onClick={() => router.push(item.route)}
+                                                                onClick={() => {
+                                                                    if (item.onClick) {
+                                                                        item.onClick();
+                                                                    } else if (item.route) {
+                                                                        router.push(item.route);
+                                                                        setActive(item.route);
+                                                                    }
+                                                                }}
                                                             >
                                                                 <Icon icon={item.icon} />
                                                                 <span>{item.label}</span>
@@ -116,7 +122,15 @@ export default function Sidebar({ me }: iProps) {
                                     <Tippy key={index} content={item.description} placement='right'>
                                         <div
                                             className={`${styles.popoverItem} ${active === item.route ? styles.active : ''}`}
-                                            onClick={() => { router.push(item.route); setOpenPopover(null); }}
+                                            onClick={() => {
+                                                if (item.onClick) {
+                                                    item.onClick();
+                                                } else if (item.route) {
+                                                    router.push(item.route);
+                                                }
+
+                                                setOpenPopover(null);
+                                            }}
                                         >
                                             <Icon icon={item.icon} />
                                             <span>{item.label}</span>

@@ -150,7 +150,7 @@ export default function InputMask<T>({
             }
 
             <div className={`${styles.wrapper} ${(svg_component || svg_staticImageData) && styles.wrapSvg}`}>
-                {/* @ts-expect-error: svg_component é dinâmico e pode não ter props compatíveis; */}
+                {/* @ts-expect-error: svg_component é dynamic; */}
                 {svg_component && cloneElement(svg_component, svgDefaultProps)}
                 {svg_staticImageData && <Image src={svg_staticImageData} alt='' />}
 

@@ -22,6 +22,8 @@ interface iMessage {
     text: string
 }
 
+export const TIPPY_CHATBOT = `Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`;
+
 export default function ChatBot({ me, showButtonAbsolute }: iProps) {
 
     const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY;
@@ -221,7 +223,7 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
                     </div>
                 ) : (
                     showButtonAbsolute && (
-                        <Tippy content={`Converse com o ${SYSTEM.MASCOT} e tire todas suas dúvidas sobre o ${SYSTEM.NAME}!`} placement='left'>
+                        <Tippy content={TIPPY_CHATBOT} placement='left'>
                             <button className={styles.bubbleButton} onClick={() => setIsOpenChatbot(true)}>
                                 <Image src={ImgMaestro} width={30} height={30} alt='' priority={true} />
                             </button>

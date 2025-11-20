@@ -89,9 +89,9 @@ export default function EmpresaMembrosModalFilters({
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Nome' fieldName='fullName' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask title='E-mail' fieldName='email' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                        {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
+                        {/* @ts-expect-error: dynamic; */}
                         <Dropdown title='Tipo de colaborador' options={companyUserRoleEnum ?? []} selectedOption={modalFilterFormData.companyUserRole ?? undefined} setSelectedOption={setCompanyUserRoleOption} />
-                        {/* @ts-expect-error: dinâmico e pode não ter props compatíveis; */}
+                        {/* @ts-expect-error: dynamic; */}
                         <Dropdown title='Módulos atribuídos' options={moduleEnum ?? []} selectedOption={modalFilterFormData.modules ?? undefined} setSelectedOption={setModuleOption} />
                     </div>
                 </main>

@@ -5,5 +5,5 @@ namespace Orquestra.Application.UseCases.Quotes.GetAllByCompanyId;
 
 public interface IGetAllQuoteByCompanyId
 {
-    Task<(IEnumerable<QuoteOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId, QuoteInput input);
+    Task<(IEnumerable<QuoteOutput> output, int count)> Execute(PaginationInput pagination, QuoteInput input, Guid userIdAuth, Guid companyId);
 }

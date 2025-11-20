@@ -60,7 +60,7 @@ public sealed class GetAllQuoteByCompanyIdTests
         QuoteInput filter = new() { Title = "Teste", Observation = "Observação" };
 
         // Act;
-        (IEnumerable<QuoteOutput> output, int count) = await sut.Execute(pagination, user.UserId, companyId, filter);
+        (IEnumerable<QuoteOutput> output, int count) = await sut.Execute(pagination, filter, user.UserId, companyId);
 
         // Assert;
         Assert.Equal(2, count);
@@ -85,7 +85,7 @@ public sealed class GetAllQuoteByCompanyIdTests
         QuoteInput filter = new() { Title = "Não existe", Observation = "Nada" };
 
         // Act;
-        (IEnumerable<QuoteOutput> output, int count) = await sut.Execute(pagination, user.UserId, companyId, filter);
+        (IEnumerable<QuoteOutput> output, int count) = await sut.Execute(pagination, filter, user.UserId, companyId);
 
         // Assert;
         Assert.Empty(output);

@@ -14,10 +14,18 @@ const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [
 ];
 
 export const MODULES_PERMISSIONS: Record<string, string[]> = {
-    [ROUTES.EMPRESA_CLIENTES]: ['*'],
-    [ROUTES.EMPRESA_COLABORADORES]: ['*'],
+    // [ROUTES.EMPRESA_CLIENTES]: ['*'],
+    // [ROUTES.EMPRESA_COLABORADORES]: ['*'],
+    [ROUTES.EMPRESA_COLABORADORES]: [MODULES.Members.toString()],
+    [ROUTES.EMPRESA_CLIENTES]: [MODULES.Clients.toString()],
     [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULES.Scheduling.toString()],
-    [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales.toString()]
+    [ROUTES.EMPRESA_INTEGRACAO_WHATSAPP]: [MODULES.IntegrationWhatsApp.toString()],
+    [ROUTES.EMPRESA_ACOMPANHAMENTO]: [MODULES.CostumerFollowUp.toString()],
+    [ROUTES.EMPRESA_NOTA_FISCAL]: [MODULES.Invoice.toString()],
+    [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales.toString()],
+    [ROUTES.EMPRESA_ORCAMENTO]: [MODULES.Quote.toString()],
+    [ROUTES.EMPRESA_ORDEM_DE_SERVICO]: [MODULES.ServiceOrder.toString()],
+    [ROUTES.EMPRESA_ESTOQUE]: [MODULES.Inventory.toString()]
 };
 
 export async function middleware(request: NextRequest) {

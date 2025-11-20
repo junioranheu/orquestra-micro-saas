@@ -4,27 +4,33 @@ namespace Orquestra.Domain.Enums;
 
 public enum ModuleEnum
 {
+    [Description("Colaboradores")]
+    Members = 1,
+
+    [Description("Clientes")]
+    Clients = 2,
+
     [Description("Agenda")]
-    Scheduling = 1,
+    Scheduling = 3,
 
     [Description("Integração com WhatsApp")]
-    IntegrationWhatsApp = 2,
+    IntegrationWhatsApp = 4,
 
     [Description("Acompanhamento")]
-    ClientFollowUp = 3,
+    ClientFollowUp = 5,
 
     [Description("Nota fiscal")]
-    Invoice = 4,
+    Invoice = 6,
 
     [Description("Financeiro")]
-    Sales = 5,
+    Sales = 7,
 
     [Description("Orçamento")]
-    Quote = 6,
+    Quote = 8,
 
     [Description("Ordem de serviço")]
-    ServiceOrder = 7,
+    ServiceOrder = 9,
 
     [Description("Estoque")]
-    Inventory = 8
+    Inventory = 10
 }

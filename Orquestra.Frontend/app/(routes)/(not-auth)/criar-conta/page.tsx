@@ -91,7 +91,7 @@ export default function CriarConta() {
             return;
         }
 
-        // @ts-expect-error: valor dinâmico;
+        // @ts-expect-error: dynamic;
         const recoverPasswordQuestion = formData.recoverPasswordQuestion?.value;
 
         const user = {

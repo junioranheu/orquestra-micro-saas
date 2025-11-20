@@ -13,7 +13,7 @@ public sealed class GetAllQuoteByCompanyId(Context context, ICheckIfUserIsLinked
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<(IEnumerable<QuoteOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId, QuoteInput input)
+    public async Task<(IEnumerable<QuoteOutput> output, int count)> Execute(PaginationInput pagination, QuoteInput input, Guid userIdAuth, Guid companyId)
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 

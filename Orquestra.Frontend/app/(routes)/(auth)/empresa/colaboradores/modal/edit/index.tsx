@@ -114,7 +114,7 @@ export default function EmpresaMembrosModalEdit({
     const [isAdmSelected, setIsAdmSelected] = useState<boolean>(false);
 
     useEffect(() => {
-        // @ts-expect-error: dinâmico e pode não ter props compatíveis; 
+        // @ts-expect-error: dynamic; 
         if (formData.companyUserRole?.label === 'Administrador' || formData.companyUserRole === 'Administrador') {
             setIsAdmSelected(true);
             setFormData(prev => ({ ...prev, userModules: [] }));
