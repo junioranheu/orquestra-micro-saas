@@ -251,7 +251,12 @@ export default function EmpresaGerenciar() {
 
                                                 <div className={styles.infoItem}>
                                                     <span className={styles.infoLabel}>E-mail:</span>
-                                                    <span className={`${styles.infoValue} ${styles.email}`}>{company.email.toLowerCase()}</span>
+
+                                                    <Tippy content={company.email.toLowerCase()} placement='bottom'>
+                                                        <span className={`${styles.infoValue} ${styles.email}`} style={{ cursor: 'help' }}>
+                                                            {company.email.toLowerCase()}
+                                                        </span>
+                                                    </Tippy>
                                                 </div>
 
                                                 {
