@@ -6,7 +6,6 @@ using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.Clients.Update;
-using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Shared;
 
 namespace Orquestra.API.Controllers;
@@ -46,7 +45,6 @@ public class ClientController(
 
         return Ok(true);
     }
-
 
     [AuthorizeFilter]
     [HttpPut("Disable")]

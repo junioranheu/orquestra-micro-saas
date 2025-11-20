@@ -1,0 +1,57 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Orquestra.API.Filters;
+using Orquestra.Application.UseCases.Quotes.Create;
+using Orquestra.Application.UseCases.Quotes.GetAllByCompanyId;
+using Orquestra.Application.UseCases.Quotes.Shared;
+using Orquestra.Application.UseCases.Quotes.Update;
+using Orquestra.Application.UseCases.Shared;
+
+namespace Orquestra.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class QuoteController(
+        IGetAllQuoteByCompanyId getQuoteByCompanyId,
+        ICreateQuote create,
+        IUpdateQuote update
+    ) : BaseController<QuoteController>
+{
+    private readonly IGetAllQuoteByCompanyId _getQuoteByCompanyId = getQuoteByCompanyId;
+    private readonly ICreateQuote _create = create;
+    private readonly IUpdateQuote _update = update;
+
+    [AuthorizeFilter]
+    [HttpPost]
+    public async Task<ActionResult> Create(QuoteInput input)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _create.Execute(userIdAuth, input);
+
+        return Ok(true);
+    }
+
+    [AuthorizeFilter]
+    [HttpPut]
+    public async Task<ActionResult> Update(QuoteInput input)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        await _update.Execute(userIdAuth, input);
+
+        return Ok(true);
+    }
+
+    [AuthorizeFilter]
+    [HttpGet("GetAllByCompanyId")]
+    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, [FromQuery] QuoteInput input)
+    {
+        if (input.CompanyId == Guid.Empty || input.CompanyId is null)
+        {
+            return NoContent();
+        }
+
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        (IEnumerable<QuoteOutput> output, int count) = await _getQuoteByCompanyId.Execute(paginationInput, input, userIdAuth, companyId: input.CompanyId.GetValueOrDefault());
+
+        return Ok(new { output, count });
+    }
+}
