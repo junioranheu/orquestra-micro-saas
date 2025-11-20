@@ -4,7 +4,6 @@ using Orquestra.Application.UseCases.Quotes.Base;
 using Orquestra.Application.UseCases.Quotes.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Quotes.Update;

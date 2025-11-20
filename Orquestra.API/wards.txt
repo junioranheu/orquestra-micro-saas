@@ -3,9 +3,7 @@ Resolver o TO DO em PayCompanyInvoice;
 Atualizar o sistema para o .NET 10 (dia 11/11); (PostgreSQL já atualizou?);
 
 ⦁	Módulo de Orçamento:
-Criar UseCase e dependências
 Criar endpoint
-Criar teste de integração
 Criar front
 
 ⦁	Módulo de Ordem de serviço:

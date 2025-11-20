@@ -53,7 +53,7 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
     #region extras
     protected static bool IsNameValid(string? name) => !string.IsNullOrWhiteSpace(name) && name.Trim().Length is >= 2 and <= 120;
     protected static bool IsDescriptionValid(string? description) => description == null || description.Trim().Length <= 255;
-    protected static bool IsQuantityValid(int quantity) => quantity >= 0;
+    protected static bool IsQuantityValid(int quantity) => quantity > 0;
     protected static bool IsUnitPriceValid(decimal? unitPrice) => unitPrice is null or >= 0;
     #endregion
 }
