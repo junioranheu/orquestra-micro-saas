@@ -320,6 +320,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                     </div>
                 </header>
 
+                {/* <div className={`${styles.grid} modal-layout-flex`}></div> */}
                 <main className={styles.modalContent}>
                     <div className={styles.grid}>
                         <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
@@ -337,7 +338,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
                         <InputMask title='Valor recebido' type='number' fieldName='amountReceived' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Tipo de pagamento' options={paymentTypeEnum ?? []} selectedOption={paymentTypeEnum?.find(x => x.value.toLocaleString() === formData.paymentType?.toString())} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
-                        <InputMask title='Título customizado' fieldName='customTitle' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <InputMask title='Título do evento' fieldName='customTitle' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='URL' fieldName='customUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
                         <div className={styles.div}>
