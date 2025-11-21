@@ -1,11 +1,10 @@
 .banner {
     z-index: 99999;
-    background: linear-gradient(135deg, #ffecb3, #ffd769);
-    border: 1px solid #f1c553;
+    background: linear-gradient(135deg, #0b996f, var(--main));
+    border: 1px solid var(--main);
     padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), 0 0 20px rgba(255, 215, 100, 0.4);
+    border-radius: var(--border-radius-xs);
+    box-shadow: var(--box-shadow);
 
     display: flex;
     align-items: center;
@@ -20,35 +19,54 @@
         margin: 0;
         font-weight: 700;
         font-size: 0.95rem;
-        color: #8a6500;
+        color: #e6fff8;
         letter-spacing: 0.3px;
-        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
 
         a {
             margin-left: 0.25rem;
             color: inherit;
             text-decoration-line: underline;
             text-decoration-style: dashed;
-            text-decoration-color: var(--main);
+            text-decoration-color: #a3ffdb;
             text-underline-offset: 5px;
         }
     }
 }
 
+// .banner {
+//     z-index: 99999;
+//     background: linear-gradient(135deg, #ffecb3, #ffd769);
+//     border: 1px solid #f1c553;
+//     padding: 0.75rem 1.5rem;
+//     border-radius: 10px;
 
-@keyframes glow {
-    0% {
-        text-shadow: 0 0 5px #fff, 0 0 10px #ffd700, 0 0 15px #ffb700, 0 0 20px #ffaa00;
-        color: #fff;
-    }
+//     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), 0 0 20px rgba(255, 215, 100, 0.4);
 
-    50% {
-        text-shadow: 0 0 10px #fff, 0 0 20px #ffd700, 0 0 30px #ffb700, 0 0 40px #ffaa00;
-        color: #fffacd;
-    }
+//     display: flex;
+//     align-items: center;
+//     width: fit-content;
 
-    100% {
-        text-shadow: 0 0 5px #fff, 0 0 10px #ffd700, 0 0 15px #ffb700, 0 0 20px #ffaa00;
-        color: #fff;
-    }
-}
+//     user-select: none;
+//     -webkit-user-select: none;
+//     -moz-user-select: none;
+//     -ms-user-select: none;
+
+//     .text {
+//         margin: 0;
+//         font-weight: 700;
+//         font-size: 0.95rem;
+//         color: #8a6500;
+//         letter-spacing: 0.3px;
+//         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+
+//         a {
+//             margin-left: 0.25rem;
+//             color: inherit;
+//             text-decoration-line: underline;
+//             text-decoration-style: dashed;
+//             text-decoration-color: var(--main);
+//             text-underline-offset: 5px;
+//         }
+//     }
+// }
