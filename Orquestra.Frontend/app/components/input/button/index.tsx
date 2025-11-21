@@ -80,6 +80,7 @@ export default function Button({
             onClick={(e) => handleClick(e)}
             ref={refBtn}
             disabled={isDisabledInternal || isDisabled}
+            type='button'
         >
             {icon_feather && cloneElement(icon_feather)}
             {/* @ts-expect-error: svg_component pode não ter props compatíveis; */}

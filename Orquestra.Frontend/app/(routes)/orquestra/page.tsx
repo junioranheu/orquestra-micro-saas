@@ -95,22 +95,24 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
 
                 {/* Desktop Nav */}
                 <nav className='hidden lg:flex items-center gap-1'>
-                    {[
-                        { label: 'Funcionalidades', id: 'features' },
-                        { label: 'Como funciona', id: 'process' },
-                        { label: 'Preços', id: 'pricing' },
-                        { label: 'Depoimentos', id: 'testimonials' }
-                    ].map((item) => (
-                        <a
-                            key={item.id}
-                            href={`#${item.id}`}
-                            onClick={(e) => handleScroll(e as any, item.id)}
-                            className='px-4 py-2 text-gray-700 hover:text-[var(--main)] font-medium transition-colors relative group'
-                        >
-                            {item.label}
-                            <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--main)] group-hover:w-full transition-all duration-300' />
-                        </a>
-                    ))}
+                    {
+                        [
+                            { label: 'Funcionalidades', id: 'features' },
+                            { label: 'Como funciona', id: 'process' },
+                            { label: 'Preços', id: 'pricing' },
+                            { label: 'Depoimentos', id: 'testimonials' }
+                        ].map((item) => (
+                            <Link
+                                key={item.id}
+                                href={`#${item.id}`}
+                                onClick={(e) => handleScroll(e as any, item.id)}
+                                className='px-4 py-2 text-gray-700 hover:text-[var(--main)] font-medium transition-colors relative group'
+                            >
+                                {item.label}
+                                <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--main)] group-hover:w-full transition-all duration-300' />
+                            </Link>
+                        ))
+                    }
                 </nav>
 
                 {/* Actions */}
@@ -154,21 +156,23 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                 open && (
                     <div className='lg:hidden border-t border-[var(--main-light)]/50 bg-white/50 backdrop-blur-md animate-in fade-in duration-200'>
                         <div className='max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2'>
-                            {[
-                                { label: 'Funcionalidades', id: 'features' },
-                                { label: 'Como funciona', id: 'process' },
-                                { label: 'Preços', id: 'pricing' },
-                                { label: 'Depoimentos', id: 'testimonials' }
-                            ].map((item) => (
-                                <a
-                                    key={item.id}
-                                    href={`#${item.id}`}
-                                    onClick={(e) => handleScroll(e as any, item.id)}
-                                    className='px-4 py-2.5 text-gray-700 hover:text-[var(--main)] hover:bg-[var(--main-light)] rounded-lg transition-colors font-medium'
-                                >
-                                    {item.label}
-                                </a>
-                            ))}
+                            {
+                                [
+                                    { label: 'Funcionalidades', id: 'features' },
+                                    { label: 'Como funciona', id: 'process' },
+                                    { label: 'Preços', id: 'pricing' },
+                                    { label: 'Depoimentos', id: 'testimonials' }
+                                ].map((item) => (
+                                    <Link
+                                        key={item.id}
+                                        href={`#${item.id}`}
+                                        onClick={(e) => handleScroll(e as any, item.id)}
+                                        className='px-4 py-2.5 text-gray-700 hover:text-[var(--main)] hover:bg-[var(--main-light)] rounded-lg transition-colors font-medium'
+                                    >
+                                        {item.label}
+                                    </Link>
+                                ))
+                            }
 
                             <div className='flex gap-2 pt-2 border-t border-[var(--main-light)]/50'>
                                 {
@@ -602,34 +606,34 @@ function Footer() {
                             </Tippy>
 
                             <Tippy content='Contatar suporte via e-mail.'>
-                                <a
+                                <Link
                                     href={`mailto:${SYSTEM.EMAIL_SUPPORT}`}
                                     className='w-10 h-10 rounded-lg bg-[#2c2c2c] hover:bg-[#444] flex items-center justify-center text-[#ccc] hover:text-white transition-all'
                                 >
                                     <Icon icon='mail' />
-                                </a>
+                                </Link>
                             </Tippy>
 
                             <Tippy content={`GitHub ${SYSTEM.AUTHOR}.`}>
-                                <a
+                                <Link
                                     href={SYSTEM.URL_GITHUB}
                                     target='_blank'
                                     rel='noopener noreferrer'
                                     className='w-10 h-10 rounded-lg bg-[#2c2c2c] hover:bg-[#444] flex items-center justify-center text-[#ccc] hover:text-white transition-all'
                                 >
                                     <Icon icon='github' />
-                                </a>
+                                </Link>
                             </Tippy>
 
                             <Tippy content={`LinkedIn ${SYSTEM.AUTHOR}.`}>
-                                <a
+                                <Link
                                     href={SYSTEM.URL_LINKEDIN}
                                     target='_blank'
                                     rel='noopener noreferrer'
                                     className='w-10 h-10 rounded-lg bg-[#2c2c2c] hover:bg-[#444] flex items-center justify-center text-[#ccc] hover:text-white transition-all'
                                 >
                                     <Icon icon='linkedin' />
-                                </a>
+                                </Link>
                             </Tippy>
                         </div>
                     </div>
