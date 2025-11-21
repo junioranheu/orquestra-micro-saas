@@ -16,7 +16,7 @@ public class CompanyInvoiceController(IGetCompanyInvoice get, IPayCompanyInvoice
     private readonly IGetCompanyInvoice _get = get;
     private readonly IPayCompanyInvoice _pay = pay;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Invoice])]
     [HttpGet]
     public async Task<ActionResult> Get([FromQuery] PaginationInput paginationInput, Guid companyId, CompanyInvoiceSituationEnum? companyInvoiceSituationEnum)
     {
@@ -26,7 +26,7 @@ public class CompanyInvoiceController(IGetCompanyInvoice get, IPayCompanyInvoice
         return Ok(new { output, count });
     }
 
-    [AllowAnonymous]
+    [AuthorizeFilter(modules: [ModuleEnum.Invoice])]
     [HttpPut("Pay/{companyInvoiceId}")]
     public async Task<IActionResult> Pay(Guid companyInvoiceId)
     {

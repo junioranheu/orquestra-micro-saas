@@ -43,7 +43,7 @@ export default function CardDailyAgenda({ me }: iProps) {
         const upcoming: iSchedule[] = [];
         const past: iSchedule[] = [];
 
-        schedules.forEach((schedule) => {
+        schedules?.forEach((schedule) => {
             const startDate = handleToBrazilDate(schedule.dateStart);
             const endDate = handleToBrazilDate(schedule.dateEnd);
 

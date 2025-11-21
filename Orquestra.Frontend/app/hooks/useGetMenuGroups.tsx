@@ -1,8 +1,8 @@
 import { iMe } from '@/app/api/consts/auth';
 import { TIPPY_CHATBOT } from '@/app/components/chat-bot';
-import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { MODULE_ENUM } from '@/app/enums/modulesEnum';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import feather from 'feather-icons';
 import { usePathname, useRouter } from 'next/navigation';
@@ -48,32 +48,32 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
             {
                 label: 'Operacional',
                 items: [
-                    { id: 'agenda', label: 'Agenda', description: 'Gerencie todos os agendamentos.', icon: 'calendar', route: ROUTES.EMPRESA_AGENDAMENTOS, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Scheduling] }) },
-                    { id: 'colaboradores', label: 'Colaboradores', description: 'Controle os usuários e profissionais da empresa.', icon: 'users', route: ROUTES.EMPRESA_COLABORADORES, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Members] }) },
-                    { id: 'clientes', label: 'Clientes', description: 'Gerencie informações e histórico dos clientes.', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Clients] }) },
-                    { id: 'acompanhamentos', label: 'Acompanhamentos', description: 'Acompanhe retornos e contatos com clientes.', icon: 'repeat', route: ROUTES.EMPRESA_ACOMPANHAMENTO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.CostumerFollowUp] }) },
-                    { id: 'orcamentos', label: 'Orçamentos', description: 'Crie e acompanhe propostas de serviço.', icon: 'file', route: ROUTES.EMPRESA_ORCAMENTO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Quote] }) },
-                    { id: 'ordem-de-servico', label: 'Ordens de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.ServiceOrder] }) },
-                    { id: 'estoque', label: 'Estoque', description: 'Controle produtos e materiais disponíveis.', icon: 'package', route: ROUTES.EMPRESA_ESTOQUE, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Inventory] }) },
+                    { id: 'agenda', label: 'Agenda', description: 'Gerencie todos os agendamentos.', icon: 'calendar', route: ROUTES.EMPRESA_AGENDAMENTOS, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Scheduling] }) },
+                    { id: 'colaboradores', label: 'Colaboradores', description: 'Controle os usuários e profissionais da empresa.', icon: 'users', route: ROUTES.EMPRESA_COLABORADORES, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Member] }) },
+                    { id: 'clientes', label: 'Clientes', description: 'Gerencie informações e histórico dos clientes.', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Client] }) },
+                    { id: 'acompanhamentos', label: 'Acompanhamentos', description: 'Acompanhe retornos e contatos com clientes.', icon: 'repeat', route: ROUTES.EMPRESA_ACOMPANHAMENTO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.CostumerFollowUp] }) },
+                    { id: 'orcamentos', label: 'Orçamentos', description: 'Crie e acompanhe propostas de serviço.', icon: 'file', route: ROUTES.EMPRESA_ORCAMENTO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Quote] }) },
+                    { id: 'ordem-de-servico', label: 'Ordens de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.ServiceOrder] }) },
+                    { id: 'estoque', label: 'Estoque', description: 'Controle produtos e materiais disponíveis.', icon: 'package', route: ROUTES.EMPRESA_ESTOQUE, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Inventory] }) },
                 ]
             },
             {
                 label: 'Integração',
                 items: [
-                    { id: 'whatsapp', label: 'WhatsApp', description: 'Configure e envie mensagens automáticas via WhatsApp.', icon: 'message-circle', route: ROUTES.EMPRESA_INTEGRACAO_WHATSAPP, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.IntegrationWhatsApp] }) }
+                    { id: 'whatsapp', label: 'WhatsApp', description: 'Configure e envie mensagens automáticas via WhatsApp.', icon: 'message-circle', route: ROUTES.EMPRESA_INTEGRACAO_WHATSAPP, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.IntegrationWhatsApp] }) }
                 ]
             },
             {
                 label: 'Financeiro',
                 items: [
-                    { id: 'nota-fiscal', label: 'Nota fiscal', description: 'Emita e gerencie notas fiscais eletrônicas.', icon: 'file-text', route: ROUTES.EMPRESA_NOTA_FISCAL, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Invoice] }) },
-                    { id: 'gestao-financeira', label: 'Gestão financeira', description: 'Acompanhe receitas, despesas e veja se a empresa teve lucro ou prejuízo.', icon: 'dollar-sign', route: ROUTES.EMPRESA_FINANCEIRO, hasAccess: handleCheckShowElement({ me, rolesRequired: [MODULES.Sales] }) }
+                    { id: 'nota-fiscal', label: 'Nota fiscal', description: 'Emita e gerencie notas fiscais eletrônicas.', icon: 'file-text', route: ROUTES.EMPRESA_NOTA_FISCAL, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Invoice] }) },
+                    { id: 'gestao-financeira', label: 'Gestão financeira', description: 'Acompanhe receitas, despesas e veja se a empresa teve lucro ou prejuízo.', icon: 'dollar-sign', route: ROUTES.EMPRESA_FINANCEIRO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Sales] }) }
                 ]
             },
             {
                 label: 'Sistema',
                 items: [
-                    { id: 'logs', label: 'Logs', description: 'Visualize registros e auditorias do sistema.', icon: 'terminal', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, rolesRequired: [], mustBeSystemAdmin: true }) },
+                    { id: 'logs', label: 'Logs', description: 'Visualize registros e auditorias do sistema.', icon: 'terminal', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, modulesRequired: [], mustBeSystemAdmin: true }) },
                     { id: 'logoff', label: 'Finalizar sessão', description: `Encerre sua sessão atual no ${SYSTEM.NAME}.`, icon: 'log-out', onClick: () => router.push(ROUTES.LOGOUT), hasAccess: true },
                 ]
             }

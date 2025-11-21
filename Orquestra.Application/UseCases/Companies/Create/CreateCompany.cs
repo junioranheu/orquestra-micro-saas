@@ -30,7 +30,7 @@ public sealed class CreateCompany(CompanyBaseDependencies deps) : CompanyBase(de
 
         // Criar;
         Company company = await Save(input);
-        UserOutput user = await _getUser.Execute(userId: userIdAuth, throwIfStatusFalse: true);
+        (UserOutput user, _) = await _getUser.Execute(userId: userIdAuth, throwIfStatusFalse: true);
         await SaveCompanyFirstAdministrator(userIdAuth, company, user);
 
         // E-mail;

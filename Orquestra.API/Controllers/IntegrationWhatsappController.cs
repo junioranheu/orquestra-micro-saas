@@ -3,6 +3,7 @@ using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Create;
 using Orquestra.Application.UseCases.Integrations.WhatsApp.Get;
 using Orquestra.Domain.Entities;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
@@ -13,7 +14,7 @@ public class IntegrationWhatsAppController(ICreateIntegrationWhatsApp create, IG
     private readonly ICreateIntegrationWhatsApp _create = create;
     private readonly IGetIntegrationWhatsApp _get = get;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.IntegrationWhatsApp])]
     [HttpPost]
     public async Task<ActionResult> Create(IntegrationWhatsApp input)
     {
@@ -28,7 +29,7 @@ public class IntegrationWhatsAppController(ICreateIntegrationWhatsApp create, IG
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.IntegrationWhatsApp])]
     [HttpGet]
     public async Task<ActionResult> Get(Guid? companyId)
     {

@@ -9,6 +9,8 @@ import Mascot from '@/app/components/mascot';
 import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { MODULE_ENUM } from '@/app/enums/modulesEnum';
+import { handleCheckShowElement } from '@/app/functions/check.permission';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import handleGetRandomNumber from '@/app/functions/get.randomNumber';
 import swalUnauthorized from '@/app/functions/swal.unauthorized';
@@ -69,7 +71,7 @@ export default function Dashboard() {
             </div>
 
             {
-                me?.currentMainCompany && (
+                (me && handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Scheduling] })) && (
                     <div className={styles.flex}>
                         <CardDailyAgenda me={me} />
                         <CardNotifications me={me} />
@@ -77,27 +79,9 @@ export default function Dashboard() {
                 )
             }
 
-            {
-                !me?.currentMainCompany ? (
-                    <div className={styles.flex}>
-                        <CardSimple
-                            img={SvgUserArrow}
-                            title='Configurações avançadas'
-                            description='Personalize a plataforma do seu jeito: gerencie preferências, permissões e integrações em um só lugar.'
-                            buttonLabel='Abrir configurações'
-                            buttonFunction={() => router.push(ROUTES.USUARIO_CONFIGURACOES)}
-                        />
-
-                        <CardSimple
-                            img={SvgUserEnvelope}
-                            title='Central de ajuda'
-                            description='Encontre respostas rápidas, tutoriais e suporte para tirar suas dúvidas e aproveitar ao máximo a plataforma.'
-                            buttonLabel='Acessar central de ajuda'
-                            buttonFunction={() => router.push(ROUTES.ETC_AJUDA)}
-                        />
-                    </div>
-                ) : (
-                    <div className={styles.flex}>
+            <div className={styles.flex}>
+                {
+                    (me && handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Member] })) && (
                         <CardSimple
                             img={SvgUserArrow}
                             title='Colaboradores'
@@ -105,7 +89,11 @@ export default function Dashboard() {
                             buttonLabel='Gerenciar equipe'
                             buttonFunction={() => router.push(ROUTES.EMPRESA_COLABORADORES)}
                         />
+                    )
+                }
 
+                {
+                    (me && handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Client] })) && (
                         <CardSimple
                             img={SvgUserEnvelope}
                             title='Clientes'
@@ -113,9 +101,9 @@ export default function Dashboard() {
                             buttonLabel='Gerenciar clientes'
                             buttonFunction={() => router.push(ROUTES.EMPRESA_CLIENTES)}
                         />
-                    </div>
-                )
-            }
+                    )
+                }
+            </div>
 
             <Footer />
         </section>

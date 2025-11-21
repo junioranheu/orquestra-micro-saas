@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.Quotes.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Quotes.Shared;
 using Orquestra.Application.UseCases.Quotes.Update;
 using Orquestra.Application.UseCases.Shared;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
@@ -20,7 +21,7 @@ public class QuoteController(
     private readonly ICreateQuote _create = create;
     private readonly IUpdateQuote _update = update;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Quote])]
     [HttpPost]
     public async Task<ActionResult> Create(QuoteInput input)
     {
@@ -30,7 +31,7 @@ public class QuoteController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Quote])]
     [HttpPut]
     public async Task<ActionResult> Update(QuoteInput input)
     {
@@ -40,7 +41,7 @@ public class QuoteController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Quote])]
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, [FromQuery] QuoteInput input)
     {

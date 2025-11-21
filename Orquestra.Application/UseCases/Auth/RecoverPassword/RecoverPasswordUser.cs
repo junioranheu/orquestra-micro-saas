@@ -12,7 +12,6 @@ using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
-using static Orquestra.Utils.Fixtures.Encrypt;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Auth.RecoverPassword;
@@ -39,15 +38,15 @@ public sealed class RecoverPasswordUser(
 
     public async Task SendEmail(string email)
     {
-        UserOutput user = await _getUser.Execute(userId: null, email: email, throwIfStatusFalse: true);
+        (UserOutput output, string? recoverPasswordAnswer) = await _getUser.Execute(userId: null, email: email, throwIfStatusFalse: true);
 
-        if (user.RecoverPasswordQuestion == 0 || string.IsNullOrEmpty(user.RecoverPasswordAnswer))
+        if (output.RecoverPasswordQuestion == 0 || string.IsNullOrEmpty(recoverPasswordAnswer))
         {
             throw new InvalidOperationException(WARNING_NO_RECOVER_ANSWER);
         }
 
-        Verification verification = await SaveVerification(user);
-        await SendEmail(verification, user);
+        Verification verification = await SaveVerification(user: output);
+        await SendEmail(verification, user: output);
     }
 
     public async Task Verify(string token)

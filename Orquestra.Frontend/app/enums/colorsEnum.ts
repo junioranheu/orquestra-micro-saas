@@ -1,6 +1,6 @@
 import { iDropdownOption } from '@/app/components/input/drop-down';
 
-export const COLORS = [
+export const COLORS_ENUM = [
     { value: '#FF6B6B', label: 'Coral suave' },
     { value: '#4ECDC4', label: 'Turquesa' },
     { value: '#6C5CE7', label: 'Violeta' },
@@ -15,4 +15,4 @@ export const COLORS = [
     { value: '#CAF0F8', label: 'Azul pastel' },
 ].sort((a, b) => a.label.localeCompare(b.label)) as iDropdownOption<string>[];
 
-export type Color = typeof COLORS[keyof typeof COLORS];
+export type Color = typeof COLORS_ENUM[keyof typeof COLORS_ENUM];

@@ -13,6 +13,9 @@ public sealed class GetAllCompanyUserByCompanyId(Context context) : IGetAllCompa
 {
     private readonly Context _context = context;
 
+    /// <summary>
+    /// Obter dados sem páginação. A lista é direta e é um dos únicos (senão o único) caso que o "Status" pode ser false (o porquê disso só Deus sabe);
+    /// </summary>
     public async Task<List<CompanyUserOutput>?> Execute(Guid companyId, Guid? userId = null)
     {
         var result = await _context.CompanyUsers.
@@ -39,6 +42,9 @@ public sealed class GetAllCompanyUserByCompanyId(Context context) : IGetAllCompa
         return output;
     }
 
+    /// <summary>
+    /// Obter dados com páginação;
+    /// </summary>
     public async Task<(IEnumerable<CompanyUserOutput> output, int count)> Execute(PaginationInput pagination, CompanyUserFilterInput input, Guid userIdAuth, Guid companyId)
     {
         bool hasPermission = await _context.CompanyUsers.

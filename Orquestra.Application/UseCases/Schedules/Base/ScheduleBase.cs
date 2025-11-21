@@ -193,7 +193,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
         string clientName = schedule.Client?.FullName ?? "cliente";
         string date = schedule.DateStart.ToString("dd/MM/yyyy");
         string time = schedule.DateStart.ToString("HH:mm");
-        string companyName = schedule.Company?.Name ?? "";
+        string companyName = schedule.Company?.Name ?? string.Empty;
         TimeSpan diff = schedule.DateStart - GetDate();
 
         // Pega o template certo dependendo do contexto;

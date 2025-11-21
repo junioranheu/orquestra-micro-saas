@@ -21,7 +21,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
 
     public async Task<(List<LogNotificationOutput> output, int count)> Execute(PaginationInput pagination, Guid userIdAuth, bool isDashboard = false)
     {
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.Execute(userId: userIdAuth);
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.GetCurrentMainCompany(userId: userIdAuth);
 
         if (currentMainCompany is null)
         {

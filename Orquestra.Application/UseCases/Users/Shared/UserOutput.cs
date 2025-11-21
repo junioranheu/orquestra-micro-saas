@@ -14,8 +14,6 @@ public sealed class UserOutput
 
     public RecoverPasswordQuestionEnum RecoverPasswordQuestion { get; set; }
 
-    public string RecoverPasswordAnswer { get; set; } = string.Empty;
-
     public bool Status { get; set; }
 
     public DateTime CreatedDate { get; set; }

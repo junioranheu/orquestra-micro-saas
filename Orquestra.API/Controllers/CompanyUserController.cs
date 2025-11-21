@@ -10,6 +10,7 @@ using Orquestra.Application.UseCases.CompanyUsers.UpdateCurrentMain;
 using Orquestra.Application.UseCases.CompanyUsers.Verify;
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
 
@@ -35,7 +36,7 @@ public class CompanyUserController(
     private readonly IUpdateCompanyUser _updateModuleCompanyUser = updateModuleCompanyUser;
     private readonly IDeleteCompanyUser _delete = delete;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Member])]
     [HttpPost("InviteUser")]
     public async Task<ActionResult> InviteUser(CompanyUserInviteInput input)
     {
@@ -45,7 +46,7 @@ public class CompanyUserController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Member])]
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, [FromQuery] CompanyUserFilterInput input)
     {
@@ -72,7 +73,7 @@ public class CompanyUserController(
         return Redirect(url);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Member])]
     [HttpPut("UpdateCurrentMainCompanyUser")]
     public async Task<ActionResult> UpdateCurrentMainCompanyUser(Guid companyId)
     {
@@ -82,7 +83,7 @@ public class CompanyUserController(
         return NoContent();
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Member])]
     [HttpPut]
     public async Task<IActionResult> Update(CompanyUserInput input)
     {
@@ -92,7 +93,7 @@ public class CompanyUserController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Member])]
     [HttpPut("Disable")]
     public async Task<ActionResult> Disable(CompanyUserInput input)
     {

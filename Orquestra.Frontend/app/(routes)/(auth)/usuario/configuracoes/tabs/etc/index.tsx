@@ -8,7 +8,7 @@ import CardSimple from '@/app/components/card/simple';
 import Footer from '@/app/components/footer';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import { UserRoleEnum } from '@/app/enums/userRoleEnum';
+import { USER_ROLE_ENUM } from '@/app/enums/userRoleEnum';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import useApiGetBuildVersion from '@/app/hooks/api/useApiGetBuildVersion';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
@@ -26,7 +26,7 @@ export default function UsuarioConfiguracoesTabEtc() {
             <CardBuild />
 
             {
-                auth?.role === UserRoleEnum.Administrator && (
+                auth?.role === USER_ROLE_ENUM.Administrator && (
                     <CardControllers />
                 )
             }

@@ -7,6 +7,7 @@ using Orquestra.Application.UseCases.Schedules.GetAllByClientId;
 using Orquestra.Application.UseCases.Schedules.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Schedules.Shared;
 using Orquestra.Application.UseCases.Schedules.Update;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
@@ -28,7 +29,7 @@ public class ScheduleController(
     private readonly IUpdateSchedule _update = update;
     private readonly IDeleteSchedule _delete = delete;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Scheduling])]
     [HttpPost]
     public async Task<ActionResult> Create(ScheduleInput input)
     {
@@ -38,7 +39,7 @@ public class ScheduleController(
         return Ok(output);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Scheduling])]
     [HttpPut]
     public async Task<ActionResult> Update(ScheduleInput input)
     {
@@ -48,7 +49,7 @@ public class ScheduleController(
         return Ok(output);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Scheduling])]
     [HttpPut("Disable")]
     public async Task<ActionResult> Disable(ScheduleInput input)
     {
@@ -63,7 +64,7 @@ public class ScheduleController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Scheduling])]
     [HttpGet]
     public async Task<ActionResult> Get(Guid scheduleId)
     {
@@ -73,7 +74,7 @@ public class ScheduleController(
         return Ok(output);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Scheduling])]
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId(Guid companyId, int? year = null, int? month = null, bool? getOnlyNearbyDates = false)
     {
@@ -83,7 +84,7 @@ public class ScheduleController(
         return Ok(output);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Scheduling])]
     [HttpGet("GetAllByClientId")]
     public async Task<ActionResult> GetScheduleByClientId(Guid companyId, Guid clientId)
     {
