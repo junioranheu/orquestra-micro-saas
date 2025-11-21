@@ -66,6 +66,13 @@ public sealed class AuthorizeFilter(UserRoleEnum[] rolesRequired, ModuleEnum[] m
             return;
         }
 
+        bool isAdmin = rolesFromToken.Any(x => x == UserRoleEnum.Administrator);
+
+        if (isAdmin)
+        {
+            return;
+        }
+
         bool hasRoles = CheckRoles(context, rolesFromToken ?? [], _rolesRequired);
 
         if (!hasRoles)

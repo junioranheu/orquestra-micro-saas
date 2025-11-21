@@ -43,7 +43,7 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
         CompanyOutput outputAdapt = output.Company.Adapt<CompanyOutput>(config);
 
         // Normalizar a prop Modules;
-        (ModuleEnum[] modules, List<string> modulesStr)  = NormalizeModules(companyUser: output, companyUserRole);
+        (ModuleEnum[] modules, List<string> modulesStr) = NormalizeModules(companyUser: output, companyUserRole);
         outputAdapt.UserModules = modules;
         outputAdapt.UserModulesStr = modulesStr;
 
@@ -63,9 +63,9 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
     {
         CompanyUser? output = await _compiledGetSimple(_context, userId);
 
-        if (output is null || output?.Company is null)
+        if (output is null)
         {
-            return ([] , []);
+            return ([], []);
         }
 
         (ModuleEnum[] modules, List<string> modulesStr) = NormalizeModules(companyUser: output, companyUserRole: output.CompanyUserRole);
@@ -74,11 +74,11 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
     }
 
     #region extras
-    private static (ModuleEnum[] modules,List<string> modulesStr) NormalizeModules(CompanyUser companyUser, CompanyUserRoleEnum companyUserRole)
+    private static (ModuleEnum[] modules, List<string> modulesStr) NormalizeModules(CompanyUser companyUser, CompanyUserRoleEnum companyUserRole)
     {
         if (companyUser is null)
         {
-           return ([], []);
+            return ([], []);
         }
 
         ModuleEnum[] modules = [];
