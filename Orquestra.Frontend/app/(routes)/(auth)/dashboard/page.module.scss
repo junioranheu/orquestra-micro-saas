@@ -25,6 +25,10 @@
         gap: 2rem;
         justify-content: center;
 
+        &:not(:has(*)) {
+            display: none;
+        }
+
         >* {
             // background-color: tomato;
             flex: 0 0 calc(50% - 1rem);

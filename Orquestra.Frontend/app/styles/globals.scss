@@ -288,7 +288,6 @@ input[type='password'] {
 
     &:focus {
         outline: none;
-        border-color: var(--main);
         background-color: var(--white);
         box-shadow: 0 0 0 3px rgba(var(--main, 0, 123, 255), 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
         transition: 0.3s;
