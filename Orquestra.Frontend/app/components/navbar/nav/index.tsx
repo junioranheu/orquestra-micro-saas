@@ -7,7 +7,6 @@ import ModalMenu from '@/app/components/navbar/modal/menu';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleTruncateText } from '@/app/functions/format.url';
-import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import { useOnResize } from '@/app/hooks/useOnResize';
 import Tippy from '@tippyjs/react';
@@ -46,7 +45,7 @@ export default function Navbar({ me }: iProps) {
             height = element.getBoundingClientRect().height / 2;
         }
 
-        setModalPosition({ top: height + 79, left: window.innerWidth - 192 } as iModalCustomPosition);
+        setModalPosition({ top: height + 60, left: window.innerWidth - 192 } as iModalCustomPosition);
     }
 
     useOnResize(() => {
@@ -102,7 +101,7 @@ export default function Navbar({ me }: iProps) {
                         <Tippy content='Gerencie seu perfil, plano, configurações e muito mais.'>
                             <span onClick={() => handleModalClick()}>
                                 <span className={styles.hideIfSmall}>
-                                    <ContentLoaderText content={(me && me?.currentMainCompany) ? handleTruncateText(me?.currentMainCompany?.name, 20) : `Olá, ${me?.userName ? handleGetFirstName(me?.userName) : ''}`} />
+                                    <ContentLoaderText content={(me && me?.currentMainCompany) ? handleTruncateText(me?.currentMainCompany?.name, 20) : 'Menu'} />
                                 </span>
 
                                 <Icon icon='chevron-down' weight='bold' />
