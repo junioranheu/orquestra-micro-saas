@@ -608,12 +608,12 @@ input:-webkit-autofill {
     }
 
     .swal2-icon.swal2-warning {
-        color: #F2C94C;
-        border-color: #F2C94C !important;
+        color: var(--contrast);
+        border-color: var(--contrast) !important;
     }
 
     .swal2-icon.swal2-warning .swal2-icon-content {
-        color: #F2C94C !important;
+        color: var(--contrast) !important;
     }
 
     .swal2-icon.swal2-error {

@@ -41,7 +41,6 @@ export default function Login() {
     const [isModalRecuperarSenhaOpen, setIsModalRecuperarSenhaOpen] = useState<boolean>(false);
 
     const isIncognito = useIsIncognito({ mustShowModalIfIncognito: true });
-
     const refButton = useRef<HTMLButtonElement>(null);
 
     function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
