@@ -28,6 +28,9 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
             FirstOrDefault(x => x.UserId == id && x.IsCurrentMainCompanyUser == true && x.Status == true));
     #endregion
 
+    /// <summary>
+    /// Completo, com inner join e todas as normalizações necessárias;
+    /// </summary>
     public async Task<(CompanyOutput? currentMainCompany, bool isUserAdm)> GetCurrentMainCompany(Guid userId)
     {
         CompanyUser? output = await _compiledGet(_context, userId);

@@ -45,25 +45,23 @@ public sealed class GetUser(Context context) : IGetUser
         return (output, password);
     }
 
-    public async Task<UserOutput> Execute(Guid? userId, string? email = "", bool throwIfStatusFalse = true)
+    public async Task<(UserOutput output, string? recoverPasswordAnswer)> Execute(Guid? userId, string? email = "", bool throwIfStatusFalse = true)
     {
         if ((userId == Guid.Empty || userId == null) && string.IsNullOrEmpty(email))
         {
             throw new ArgumentException($"Todos os parâmetros estão nulos ({nameof(GetUser)}/{nameof(Execute)}).");
         }
 
-        email = GetNormalizedLowerStr(email);
-
         var result = await _context.Users.
                      AsNoTracking().
                      Where(x =>
                         ((userId == Guid.Empty || userId == null) || x.UserId == userId) &&
-                        (string.IsNullOrEmpty(email) || x.Email.ToLower() == email)
+                        (string.IsNullOrEmpty(email) || x.Email.ToLower() == GetNormalizedLowerStr(email))
                      ).FirstOrDefaultAsync();
 
         if (result is null && !throwIfStatusFalse)
         {
-            return new();
+            return (new(), string.Empty);
         }
         else if (result is null && throwIfStatusFalse)
         {
@@ -77,7 +75,7 @@ public sealed class GetUser(Context context) : IGetUser
 
         var output = result.Adapt<UserOutput>();
 
-        return output;
+        return (output, recoverPasswordAnswer: result?.RecoverPasswordAnswer);
     }
 
     public async Task<(IEnumerable<UserOutput> output, int count)> Execute(PaginationInput pagination)

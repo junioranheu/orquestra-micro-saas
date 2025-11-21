@@ -59,7 +59,7 @@ public sealed class InviteCompanyUser(
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: true);
 
         CompanyOutput company = await _getCompany.Execute(userIdAuth: userIdAuth, companyId: companyId, throwIfStatusFalse: !isFirstAdministrator);
-        UserOutput user = await _getUser.Execute(userId: Guid.Empty, email: email, throwIfStatusFalse: false);
+        (UserOutput user, _) = await _getUser.Execute(userId: Guid.Empty, email: email, throwIfStatusFalse: false);
 
         if (!isFirstAdministrator && (user is null || user.UserId == Guid.Empty))
         {

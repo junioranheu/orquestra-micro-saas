@@ -94,7 +94,7 @@ public sealed class GetUserTests
         GetUser sut = CreateSut(context);
 
         // Act;
-        UserOutput output = await sut.Execute(user.UserId);
+        (UserOutput output, _) = await sut.Execute(user.UserId);
 
         // Assert;
         Assert.NotNull(output);
@@ -109,7 +109,7 @@ public sealed class GetUserTests
         GetUser sut = CreateSut(context);
 
         // Act;
-        UserOutput output = await sut.Execute(Guid.NewGuid(), throwIfStatusFalse: false);
+        (UserOutput output, _) = await sut.Execute(Guid.NewGuid(), throwIfStatusFalse: false);
 
         // Assert;
         Assert.NotNull(output);
@@ -162,7 +162,7 @@ public sealed class GetUserTests
         GetUser sut = CreateSut(context);
 
         // Act;
-        UserOutput output = await sut.Execute(user.UserId, throwIfStatusFalse: false);
+        (UserOutput output, _) = await sut.Execute(user.UserId, throwIfStatusFalse: false);
 
         // Assert;
         Assert.NotNull(output);
