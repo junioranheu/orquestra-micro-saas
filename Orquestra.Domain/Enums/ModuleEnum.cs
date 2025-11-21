@@ -5,10 +5,10 @@ namespace Orquestra.Domain.Enums;
 public enum ModuleEnum
 {
     [Description("Colaboradores")]
-    Members = 1,
+    Member = 1,
 
     [Description("Clientes")]
-    Clients = 2,
+    Client = 2,
 
     [Description("Agenda")]
     Scheduling = 3,

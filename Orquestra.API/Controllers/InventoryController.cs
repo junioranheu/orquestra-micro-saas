@@ -6,6 +6,7 @@ using Orquestra.Application.UseCases.Inventories.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Inventories.Shared;
 using Orquestra.Application.UseCases.Inventories.Update;
 using Orquestra.Application.UseCases.Shared;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
@@ -23,7 +24,7 @@ public class InventoryController(
     private readonly IUpdateInventory _update = update;
     private readonly IDeleteInventory _delete = delete;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Inventory])]
     [HttpPost]
     public async Task<ActionResult> Create(InventoryInput input)
     {
@@ -33,7 +34,7 @@ public class InventoryController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Inventory])]
     [HttpPut]
     public async Task<ActionResult> Update(InventoryInput input)
     {
@@ -43,7 +44,7 @@ public class InventoryController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Inventory])]
     [HttpPut("Disable")]
     public async Task<ActionResult> Disable(InventoryInput input)
     {
@@ -58,7 +59,7 @@ public class InventoryController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Inventory])]
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, Guid? companyId, InventoryInput input)
     {

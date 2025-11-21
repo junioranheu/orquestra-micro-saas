@@ -1,5 +1,5 @@
 import { BASE } from '@/app/api/fetch';
-import { UserRoleEnum } from '@/app/enums/userRoleEnum';
+import { USER_ROLE_ENUM } from '@/app/enums/userRoleEnum';
 
 const controller = 'api/User';
 
@@ -26,7 +26,7 @@ export interface iUser {
     userId: string;
     fullName: string;
     email: string;
-    role: UserRoleEnum;
+    role: USER_ROLE_ENUM;
     status: boolean;
     createdDate: Date;
     refreshTokenExpirationDate: string;

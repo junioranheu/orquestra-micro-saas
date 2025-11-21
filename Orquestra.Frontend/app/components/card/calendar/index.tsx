@@ -4,9 +4,9 @@ import SvgOne from '@/app/assets/svg/one.svg';
 import SvgTwo from '@/app/assets/svg/two.svg';
 import CalendarSimple from '@/app/components/calendar/simple';
 import CardSimple from '@/app/components/card/simple';
-import { MODULES } from '@/app/consts/modules';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
+import { MODULE_ENUM } from '@/app/enums/modulesEnum';
 import { handleCheckShowElement } from '@/app/functions/check.permission';
 import { useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
@@ -28,7 +28,7 @@ export default function CardCalendar({ me }: iProps) {
     const [, setIsOpenChatbot] = useIsOpenChatbot();
 
     useEffect(() => {
-        const hasAccess = handleCheckShowElement({ me, rolesRequired: [MODULES.Scheduling] });
+        const hasAccess = handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Scheduling] });
         setHasAccessToSchedule(hasAccess);
     }, [me]);
 

@@ -5,6 +5,7 @@ using Orquestra.Application.UseCases.ClientsFollowUps.Delete;
 using Orquestra.Application.UseCases.ClientsFollowUps.Get;
 using Orquestra.Application.UseCases.ClientsFollowUps.Shared;
 using Orquestra.Application.UseCases.ClientsFollowUps.Update;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
@@ -22,7 +23,7 @@ public class ClientFollowUpController(
     private readonly IUpdateClientFollowUp _update = update;
     private readonly IDeleteClientFollowUp _delete = delete;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.ClientFollowUp])]
     [HttpPost]
     public async Task<ActionResult> Create(ClientFollowUpInput input)
     {
@@ -37,7 +38,7 @@ public class ClientFollowUpController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.ClientFollowUp])]
     [HttpPut]
     public async Task<ActionResult> Update(ClientFollowUpInput input)
     {
@@ -47,7 +48,7 @@ public class ClientFollowUpController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.ClientFollowUp])]
     [HttpPut("Disable")]
     public async Task<ActionResult> Disable(ClientFollowUpInput input)
     {
@@ -62,7 +63,7 @@ public class ClientFollowUpController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.ClientFollowUp])]
     [HttpGet]
     public async Task<ActionResult> Get(ClientFollowUpInput input)
     {

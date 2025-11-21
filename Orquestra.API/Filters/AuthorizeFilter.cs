@@ -6,44 +6,30 @@ using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Filters;
 
+#region attribute
 public sealed class AuthorizeFilterAttribute : TypeFilterAttribute
 {
     public AuthorizeFilterAttribute() : base(typeof(AuthorizeFilter))
     {
-        Arguments =
-        [
-            Array.Empty<UserRoleEnum>(),
-            Array.Empty<ModuleEnum>()
-        ];
+        Arguments = [Array.Empty<UserRoleEnum>(), Array.Empty<ModuleEnum>()];
     }
 
     public AuthorizeFilterAttribute(UserRoleEnum[] roles) : base(typeof(AuthorizeFilter))
     {
-        Arguments =
-        [
-            roles ?? [],
-            Array.Empty<ModuleEnum>()
-        ];
+        Arguments = [roles ?? [], Array.Empty<ModuleEnum>()];
     }
 
     public AuthorizeFilterAttribute(ModuleEnum[] modules) : base(typeof(AuthorizeFilter))
     {
-        Arguments =
-        [
-            Array.Empty<UserRoleEnum>(),
-            modules ?? []
-        ];
+        Arguments = [Array.Empty<UserRoleEnum>(), modules ?? []];
     }
 
     public AuthorizeFilterAttribute(UserRoleEnum[] roles, ModuleEnum[] modules) : base(typeof(AuthorizeFilter))
     {
-        Arguments =
-        [
-            roles ?? [],
-            modules ?? []
-        ];
+        Arguments = [roles ?? [], modules ?? []];
     }
 }
+#endregion
 
 public sealed class AuthorizeFilter(UserRoleEnum[] rolesRequired, ModuleEnum[] modulesRequired, IGetCurrentMainCompanyUser getCurrentMainCompanyUser) : IAsyncAuthorizationFilter
 {
@@ -88,6 +74,7 @@ public sealed class AuthorizeFilter(UserRoleEnum[] rolesRequired, ModuleEnum[] m
         }
     }
 
+    #region extras
     private static bool IsAuthenticated(AuthorizationFilterContext context)
     {
         if (!context.HttpContext.User.Identity?.IsAuthenticated ?? true)
@@ -144,4 +131,5 @@ public sealed class AuthorizeFilter(UserRoleEnum[] rolesRequired, ModuleEnum[] m
 
         return true;
     }
+    #endregion
 }

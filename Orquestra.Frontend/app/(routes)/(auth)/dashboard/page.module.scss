@@ -29,10 +29,10 @@
             // background-color: tomato;
             flex: 0 0 calc(50% - 1rem);
             box-sizing: border-box;
-        }
 
-        .wrapper {
-            background-color: blue;
+            &:only-child {
+                flex: 0 0 100%;
+            }
         }
     }
 }

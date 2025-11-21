@@ -13,18 +13,20 @@ public sealed class GetCurrentMainCompanyUser(Context context) : IGetCurrentMain
 {
     private readonly Context _context = context;
 
+    #region compiled_queries
     private static readonly Func<Context, Guid, Task<CompanyUser?>> _compiledGet =
-        EF.CompileAsyncQuery((Context ctx, Guid id) =>
-            ctx.CompanyUsers.
+        EF.CompileAsyncQuery((Context context, Guid id) =>
+            context.CompanyUsers.
             AsNoTracking().
             Include(x => x.Company).
             FirstOrDefault(x => x.UserId == id && x.IsCurrentMainCompanyUser == true && x.Status == true));
 
     private static readonly Func<Context, Guid, Task<CompanyUser?>> _compiledGetSimple =
-        EF.CompileAsyncQuery((Context ctx, Guid id) =>
-            ctx.CompanyUsers.
+        EF.CompileAsyncQuery((Context context, Guid id) =>
+            context.CompanyUsers.
             AsNoTracking().
             FirstOrDefault(x => x.UserId == id && x.IsCurrentMainCompanyUser == true && x.Status == true));
+    #endregion
 
     public async Task<(CompanyOutput? currentMainCompany, bool isUserAdm)> GetCurrentMainCompany(Guid userId)
     {

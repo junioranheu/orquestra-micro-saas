@@ -7,6 +7,7 @@ using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.Clients.Update;
 using Orquestra.Application.UseCases.Shared;
+using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
 
@@ -26,7 +27,7 @@ public class ClientController(
     private readonly IUpdateClient _update = update;
     private readonly IDeleteClient _delete = delete;
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Client])]
     [HttpPost]
     public async Task<ActionResult> Create(ClientInput input)
     {
@@ -36,7 +37,7 @@ public class ClientController(
         return Ok(true);
     } 
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Client])]
     [HttpPut]
     public async Task<ActionResult> Update(ClientInput input)
     {
@@ -46,7 +47,7 @@ public class ClientController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Client])]
     [HttpPut("Disable")]
     public async Task<ActionResult> Disable(ClientInput input)
     {
@@ -61,7 +62,7 @@ public class ClientController(
         return Ok(true);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Client])]
     [HttpGet]
     public async Task<ActionResult> Get(Guid clientId)
     {
@@ -71,7 +72,7 @@ public class ClientController(
         return Ok(output);
     }
 
-    [AuthorizeFilter]
+    [AuthorizeFilter(modules: [ModuleEnum.Client])]
     [HttpGet("GetAllByCompanyId")]
     public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, [FromQuery] ClientInput input)
     {

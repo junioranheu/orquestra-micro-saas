@@ -1,5 +1,5 @@
 import { BASE } from '@/app/api/fetch';
-import { UserRoleEnum } from '@/app/enums/userRoleEnum';
+import { USER_ROLE_ENUM } from '@/app/enums/userRoleEnum';
 import { iCompanyOutput } from './company';
 
 const controller = 'api/Auth';
@@ -21,7 +21,7 @@ export interface iMeSimple {
     userName: string;
     email: string;
     roles: string[];
-    rolesStr: UserRoleEnum[];
+    rolesStr: USER_ROLE_ENUM[];
 }
 
 export interface iMe extends iMeSimple {

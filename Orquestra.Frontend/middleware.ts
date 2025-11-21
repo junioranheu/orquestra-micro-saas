@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { CONSTS_AUTH } from './app/api/consts/auth';
-import { MODULES } from './app/consts/modules';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
+import { MODULE_ENUM } from './app/enums/modulesEnum';
 
 const PUBLIC_PATHS = [
     ROUTES.LANDING_PAGE, ROUTES.ETC_AJUDA, ROUTES.ETC_SEGURANCA,
@@ -16,16 +16,16 @@ const PUBLIC_PATHS_BLOCKED_WITH_TOKEN = [
 export const MODULES_PERMISSIONS: Record<string, string[]> = {
     // [ROUTES.EMPRESA_CLIENTES]: ['*'],
     // [ROUTES.EMPRESA_COLABORADORES]: ['*'],
-    [ROUTES.EMPRESA_COLABORADORES]: [MODULES.Members.toString()],
-    [ROUTES.EMPRESA_CLIENTES]: [MODULES.Clients.toString()],
-    [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULES.Scheduling.toString()],
-    [ROUTES.EMPRESA_INTEGRACAO_WHATSAPP]: [MODULES.IntegrationWhatsApp.toString()],
-    [ROUTES.EMPRESA_ACOMPANHAMENTO]: [MODULES.CostumerFollowUp.toString()],
-    [ROUTES.EMPRESA_NOTA_FISCAL]: [MODULES.Invoice.toString()],
-    [ROUTES.EMPRESA_FINANCEIRO]: [MODULES.Sales.toString()],
-    [ROUTES.EMPRESA_ORCAMENTO]: [MODULES.Quote.toString()],
-    [ROUTES.EMPRESA_ORDEM_DE_SERVICO]: [MODULES.ServiceOrder.toString()],
-    [ROUTES.EMPRESA_ESTOQUE]: [MODULES.Inventory.toString()]
+    [ROUTES.EMPRESA_COLABORADORES]: [MODULE_ENUM.Member.toString()],
+    [ROUTES.EMPRESA_CLIENTES]: [MODULE_ENUM.Client.toString()],
+    [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULE_ENUM.Scheduling.toString()],
+    [ROUTES.EMPRESA_INTEGRACAO_WHATSAPP]: [MODULE_ENUM.IntegrationWhatsApp.toString()],
+    [ROUTES.EMPRESA_ACOMPANHAMENTO]: [MODULE_ENUM.CostumerFollowUp.toString()],
+    [ROUTES.EMPRESA_NOTA_FISCAL]: [MODULE_ENUM.Invoice.toString()],
+    [ROUTES.EMPRESA_FINANCEIRO]: [MODULE_ENUM.Sales.toString()],
+    [ROUTES.EMPRESA_ORCAMENTO]: [MODULE_ENUM.Quote.toString()],
+    [ROUTES.EMPRESA_ORDEM_DE_SERVICO]: [MODULE_ENUM.ServiceOrder.toString()],
+    [ROUTES.EMPRESA_ESTOQUE]: [MODULE_ENUM.Inventory.toString()]
 };
 
 export async function middleware(request: NextRequest) {
