@@ -18,7 +18,8 @@ export default function Logs() {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [logs, setLogs] = useState<iLogPaginated>();
-    useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: 15 });
+    const MAX_PAGE_SIZE = 30;
+    useApiRequestToSetterOnUrlChange<iLogPaginated>({ apiUrlRequest: CONSTS_LOG.get, setter: setLogs, hasPaginationInput: true, index: currentPage, limit: MAX_PAGE_SIZE });
 
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -88,6 +89,7 @@ export default function Logs() {
                 idPropName='logId'
                 columns={columns}
                 data={logs?.output ?? []}
+                maxPageSize={MAX_PAGE_SIZE}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalRowsCount={logs?.count}

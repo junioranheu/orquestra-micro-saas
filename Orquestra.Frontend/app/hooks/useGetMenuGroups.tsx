@@ -43,8 +43,6 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
                     { id: 'configuracoes', label: 'Configurações', description: 'Personalize o sistema, altere informações da conta e troque sua senha.', icon: 'settings', route: ROUTES.USUARIO_CONFIGURACOES, hasAccess: true },
                     // @ts-expect-error: wtf;
                     ...(showChatbot ? [{ id: 'chatbot', label: 'Chatbot', description: TIPPY_CHATBOT, icon: 'message-square', onClick: () => setIsOpenChatbot(true), hasAccess: true }] : []),
-                    // @ts-expect-error: wtf;
-                    { id: 'logs', label: 'Logs', description: 'Visualize registros e auditorias do sistema.', icon: 'terminal', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, modulesRequired: [], mustBeSystemAdmin: true }) },
                 ]
             },
             {
@@ -75,6 +73,7 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
             {
                 label: 'Sistema',
                 items: [
+                    { id: 'logs', label: 'Logs', description: 'Visualize registros e auditorias do sistema.', icon: 'terminal', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, modulesRequired: [], mustBeSystemAdmin: true }) },
                     { id: 'logoff', label: 'Finalizar sessão', description: `Encerre sua sessão atual no ${SYSTEM.NAME}.`, icon: 'log-out', onClick: () => router.push(ROUTES.LOGOUT), hasAccess: true },
                 ]
             }

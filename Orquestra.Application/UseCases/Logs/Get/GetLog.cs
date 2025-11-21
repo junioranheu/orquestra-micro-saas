@@ -11,11 +11,14 @@ public sealed class GetLog(Context context) : IGetLog
 
     public async Task<(IEnumerable<Log> output, int count)> Execute(PaginationInput pagination, Guid? userId)
     {
+        List<string> excludedEndpoints = ["RefreshToken"];
+
         var query = _context.Logs.
                     Include(x => x.User).
                     AsNoTracking().
                     Where(x =>
-                       ((userId == null || userId == Guid.Empty) || x.User!.UserId == userId)
+                       ((userId == null || userId == Guid.Empty) || x.User!.UserId == userId) &&
+                       !excludedEndpoints.Contains(x.Endpoint!)
                     ).OrderByDescending(x => x.CreatedDate);
 
         (IEnumerable<Log> output, int count) = await PagedQuery.Execute(query, pagination);
