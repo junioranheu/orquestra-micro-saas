@@ -2,7 +2,7 @@
 import { iMeSimple } from '@/app/api/consts/auth';
 import { CONSTS_UTILITY, iPlanTypeOutput } from '@/app/api/consts/utility';
 import ImgLogo from '@/app/assets/png/logo-simple.png';
-import Img from '@/app/assets/png/server.png';
+import SvgServer from '@/app/assets/svg/server.svg';
 import Icon from '@/app/components/icon';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import Splash from '@/app/components/splash';
@@ -304,7 +304,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
 
                     <div className='hidden lg:flex lg:w-[30%] justify-center items-center'>
                         <figure className='max-w-[28rem] w-full pointer-events-none select-none'>
-                            <Image src={Img} alt='' priority={true} />
+                            <Image src={SvgServer} alt='' priority={true} />
                         </figure>
                     </div>
                 </div>

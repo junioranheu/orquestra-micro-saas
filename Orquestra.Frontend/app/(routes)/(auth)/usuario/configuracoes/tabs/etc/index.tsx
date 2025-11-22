@@ -79,7 +79,7 @@ function CardControllers() {
                 const sortedActions = x.actions.sort((a, b) => a.localeCompare(b)).map((action, idx, arr) => idx === arr.length - 1 ? `${action}.` : action);
 
                 return `
-                <div style="line-height: 1.5; margin-bottom: 1rem;">
+                <div style="line-height: 1.5; margin-bottom: 0.25rem;">
                     <strong>${x.controller}</strong>: 
                     <span>${sortedActions.join(', ')}</span>
                 </div>`;

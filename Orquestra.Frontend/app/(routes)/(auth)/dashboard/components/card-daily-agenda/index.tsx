@@ -2,7 +2,7 @@
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
-import ImgClean from '@/app/assets/svg/clean.svg';
+import SvgEmpty from '@/app/assets/svg/empty.svg';
 import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import Button from '@/app/components/input/button';
@@ -142,7 +142,7 @@ export default function CardDailyAgenda({ me }: iProps) {
                         />
 
                         <div className={styles.center}>
-                            <Image src={ImgClean} alt='' priority={true} />
+                            <Image src={SvgEmpty} alt='' priority={true} />
                         </div>
                     </div>
                 )

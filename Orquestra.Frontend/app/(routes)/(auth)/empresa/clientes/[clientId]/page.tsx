@@ -7,7 +7,7 @@ import { CONSTS_CLIENT, iClient } from '@/app/api/consts/client';
 import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUp, iClientFollowUpPaginated } from '@/app/api/consts/client-follow-up';
 import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
-import ImgThought from '@/app/assets/svg/thought.svg';
+import SvgYoga from '@/app/assets/svg/yoga.svg';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import { iDropdownOption } from '@/app/components/input/drop-down';
@@ -464,7 +464,7 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
                             </p>
 
                             <div className={styles.center}>
-                                <Image src={ImgThought} alt='' priority={true} />
+                                <Image src={SvgYoga} alt='' priority={true} />
                             </div>
                         </div>
                     )

@@ -2,7 +2,7 @@
 import { CONSTS_COMPANY, iCompanyOutput } from '@/app/api/consts/company';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import { Fetch } from '@/app/api/fetch';
-import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
+import SvgEmpty from '@/app/assets/svg/empty.svg';
 import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
@@ -150,7 +150,7 @@ export default function EmpresaGerenciar() {
                     {
                         companies?.length === 0 && (
                             <CardSimple
-                                img={SvgUserArrow}
+                                img={SvgEmpty}
                                 title={`${handleGetFirstName(me?.userName)}, tudo parece tão vazio por aqui...`}
                                 description='Aparentemente você não faz parte de nenhuma empresa.<br/>Por que não cadastra a sua agora mesmo?'
                                 buttonLabel={`Cadastrar sua empresa no ${SYSTEM.NAME}`}

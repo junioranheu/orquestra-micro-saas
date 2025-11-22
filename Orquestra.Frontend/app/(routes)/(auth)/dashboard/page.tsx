@@ -1,6 +1,6 @@
 'use client';
-import SvgUserArrow from '@/app/assets/svg/user-arrow.svg';
-import SvgUserEnvelope from '@/app/assets/svg/user-envelope.svg';
+import SvgClient from '@/app/assets/svg/client.svg';
+import SvgMember from '@/app/assets/svg/member.svg';
 import CardCalendar from '@/app/components/card/calendar';
 import CardSimple from '@/app/components/card/simple';
 import ContentLoaderText from '@/app/components/content-loader/text';
@@ -83,7 +83,7 @@ export default function Dashboard() {
                 {
                     (me && handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Member] })) && (
                         <CardSimple
-                            img={SvgUserArrow}
+                            img={SvgMember}
                             title='Colaboradores'
                             description='Adicione, gerencie e defina permissões para os profissionais da sua empresa.<br/>Mantenha sua equipe organizada e com os acessos certos.'
                             buttonLabel='Gerenciar equipe'
@@ -95,7 +95,7 @@ export default function Dashboard() {
                 {
                     (me && handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Client] })) && (
                         <CardSimple
-                            img={SvgUserEnvelope}
+                            img={SvgClient}
                             title='Clientes'
                             description='Acompanhe e gerencie os dados dos seus clientes em um só lugar.<br/>Visualize histórico de atendimentos, contatos e informações importantes com facilidade.'
                             buttonLabel='Gerenciar clientes'
