@@ -71,14 +71,11 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
     async function handleSendMessage(e?: FormEvent) {
         e?.preventDefault();
 
-        if (!input.trim()) {
-            return;
-        }
+        if (!input.trim()) return;
 
         if (!API_KEY) {
             setMessages(p => [...p, { role: 'bot', text: 'Nenhuma API key encontrada 💀' }]);
-            setLoading(false);
-            return;
+            return setLoading(false);
         }
 
         const userMessage = input.trim();
@@ -86,70 +83,64 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
         setInput('');
         setLoading(true);
 
-        // Checar plano atual;
+        // Verificar plano;
         if (me?.currentMainCompany?.planType?.toString() !== '3') {
-            setMessages((prev) => [...prev, { role: 'bot', text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href='${ROUTES.EMPRESA_USO_E_PLANO}'>Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual! 😸` }]);
-            setLoading(false);
-            return;
+            setMessages(prev => [...prev, {
+                role: 'bot',
+                text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href='${ROUTES.EMPRESA_USO_E_PLANO}'>Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual! 😸`
+            }]);
+            return setLoading(false);
         }
 
-        // Checar se o assunto é pertinente;
+        // Filtro da plataforma;
         if (!handleCheckIfIsAboutThePlataform(userMessage)) {
-            setMessages(prev => [...prev, { role: 'bot', text: `Desculpe — eu só respondo sobre a plataforma ${SYSTEM.NAME}. 🤔` }]);
-            setLoading(false);
-            return;
+            setMessages(prev => [...prev, { role: 'bot', text: `Só posso ajudar com o ${SYSTEM.NAME}.` }]);
+            return setLoading(false);
         }
 
-        // Filtro de tópicos relevantes;
         const bestItem = handleFindMostRelevantItem(userMessage, HELP_TOPICS);
-        // console.log('bestItem', bestItem);
-
-        // Monta a mensagem final que vai pra IA;
         const finalUserMessage = bestItem ? `${userMessage} ${bestItem.description}` : userMessage;
-        // console.log('finalUseMessage', finalUserMessage);
-
-        // Monta o conteúdo a ser enviado;
-        const isFirstMessage = conversationRef.current.length === 0;
 
         const contents = [
-            ...(isFirstMessage ? [{ role: 'model', parts: [{ text: SYSTEM_DEFAULT_PROMPT }] }] : []),
+            {
+                role: 'system',
+                parts: [{ text: SYSTEM_DEFAULT_PROMPT }]
+            },
             ...conversationRef.current,
-            { role: 'user', parts: [{ text: finalUserMessage }] },
+            {
+                role: 'user',
+                parts: [{ text: finalUserMessage }]
+            }
         ];
 
-        // console.clear();
-        // console.log('contents', contents);
-
-        // Requisição à API;
         try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': API_KEY,
-                    },
-                    body: JSON.stringify({ contents })
-                }
-            );
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': API_KEY,
+                },
+                body: JSON.stringify({ contents })
+            });
 
             const data = await res.json();
-            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Parece que houve uma falha interna. Tente novamente mais tarde 💀';
+            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Erro interno 💀';
+
             const replyNormalized = reply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
-            // Atualiza o histórico (sem o prompt)
             conversationRef.current.push(
                 { role: 'user', parts: [{ text: userMessage }] },
                 { role: 'model', parts: [{ text: reply }] }
             );
 
             setMessages(p => [...p, { role: 'bot', text: replyNormalized }]);
+
         } catch (err) {
             console.error(err);
-            setMessages(p => [...p, { role: 'bot', text: 'Erro ao conectar com o bot 😞' }]);
-        } finally {
-            setLoading(false);
+            setMessages(p => [...p, { role: 'bot', text: 'Erro ao conectar 😞' }]);
         }
+
+        setLoading(false);
     }
 
     function handleCheckIfIsAboutThePlataform(text: string) {
