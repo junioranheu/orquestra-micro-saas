@@ -886,7 +886,9 @@ public static partial class Get
     public static string GetChangedFieldsFromBeforeAndAfter(string? json)
     {
         if (string.IsNullOrEmpty(json))
+        {
             return string.Empty;
+        }
 
         using JsonDocument doc = JsonDocument.Parse(json);
         JsonElement root = doc.RootElement;
@@ -894,43 +896,35 @@ public static partial class Get
         bool beforeExists = root.TryGetProperty("Before", out JsonElement before);
         bool afterExists = root.TryGetProperty("After", out JsonElement after);
 
-        if (!beforeExists || before.ValueKind == JsonValueKind.Null)
+        if (!beforeExists || !afterExists || before.ValueKind == JsonValueKind.Null || after.ValueKind == JsonValueKind.Null)
+        {
             return string.Empty;
-
-        HashSet<string> ignoredProps = new HashSet<string> { "LastModificationDate" };
-        Dictionary<string, (string Before, string After)> changed = new();
-
-        if (afterExists && after.ValueKind != JsonValueKind.Null)
-        {
-            // Compara Before x After e pega só os diferentes
-            foreach (var prop in before.EnumerateObject())
-            {
-                string name = prop.Name;
-                if (ignoredProps.Contains(name))
-                    continue;
-
-                string beforeVal = prop.Value.ToString();
-
-                if (!after.TryGetProperty(name, out JsonElement afterEl))
-                    continue;
-
-                string afterVal = afterEl.ToString();
-
-                if (!string.Equals(beforeVal, afterVal, StringComparison.Ordinal))
-                    changed[name] = (beforeVal, afterVal);
-            }
         }
-        else
-        {
-            // Só tem Before → pega todos os campos
-            foreach (var prop in before.EnumerateObject())
-            {
-                string name = prop.Name;
-                if (ignoredProps.Contains(name))
-                    continue;
 
-                string beforeVal = prop.Value.ToString();
-                changed[name] = (beforeVal, beforeVal); // Before e After iguais
+        HashSet<string> ignoredProps = ["LastModificationDate", "LastModificationBy"];
+        Dictionary<string, (string Before, string After)> changed = [];
+
+        foreach (var prop in before.EnumerateObject())
+        {
+            string name = prop.Name;
+
+            if (ignoredProps.Contains(name))
+            {
+                continue;
+            }
+
+            string beforeVal = prop.Value.ToString();
+
+            if (!after.TryGetProperty(name, out JsonElement afterEl))
+            {
+                continue;
+            }
+
+            string afterVal = afterEl.ToString();
+
+            if (!string.Equals(beforeVal, afterVal, StringComparison.Ordinal))
+            {
+                changed[name] = (beforeVal, afterVal);
             }
         }
 
@@ -944,7 +938,7 @@ public static partial class Get
         );
 
         string jsonOutput = JsonSerializer.Serialize(changedObj, _jsonOptions);
+
         return jsonOutput;
     }
-
 }
