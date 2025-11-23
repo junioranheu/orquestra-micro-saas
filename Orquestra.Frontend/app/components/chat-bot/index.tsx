@@ -35,7 +35,16 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
     const chatEndRef = useRef<HTMLDivElement | null>(null);
     const hasGreetedRef = useRef(false);
 
-    const SYSTEM_DEFAULT_PROMPT = `Você é o assistente do sistema ${SYSTEM.NAME}. Responda de forma objetiva. Use o contexto apenas como ajuda, nunca diga que ele é limitado.`;
+    // const SYSTEM_DEFAULT_PROMPT = `Você é o assistente do sistema ${SYSTEM.NAME}. Responda de forma objetiva. Use o contexto apenas como ajuda, nunca diga que ele é limitado.`;
+    const SYSTEM_DEFAULT_PROMPT = `
+    Você é o assistente do sistema ${SYSTEM.NAME}.
+    Suas respostas devem ser sempre extremamente curtas: no máximo 1 ou 2 frases.
+    Só responda perguntas diretamente relacionadas ao ${SYSTEM.NAME}.
+    Não explique conceitos.
+    Não dê exemplos.
+    Não faça textos longos.
+    Não use rodeios.
+    Nunca ultrapasse 2 frases, mesmo que o usuário peça.`;
 
     const conversationRef = useRef<any[]>([]);
 
