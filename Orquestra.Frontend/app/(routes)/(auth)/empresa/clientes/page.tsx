@@ -8,6 +8,7 @@ import TemplatePageHeader from '@/app/components/template/template-page-header';
 import ROUTES from '@/app/consts/routes';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
@@ -15,6 +16,7 @@ import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
+import EmpresaClientesModalFollowUp from './modal/follow-up';
 import EmpresaClientesModalView from './modal/view';
 
 export default function EmpresaClientes() {
@@ -30,6 +32,8 @@ export default function EmpresaClientes() {
     const [trigger, setTrigger] = useState<Date>(new Date());
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_CLIENT.getAllByCompanyId);
     useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequest, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
+
+    const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
@@ -109,6 +113,11 @@ export default function EmpresaClientes() {
             icon: <Icon icon='search' />
         },
         {
+            label: 'Criar novo acompanhamento',
+            function: (e) => handleOpenModalFollowUp(e),
+            icon: <Icon icon='repeat' />
+        },
+        {
             label: 'Editar cliente',
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />
@@ -125,11 +134,17 @@ export default function EmpresaClientes() {
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
     const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);
     const [typeModal, setTypeModal] = useState<('edit' | 'create')>('create');
+    const [isModalFollowUpOpen, setIsModalFollowUpOpen] = useState<boolean>(false);
 
     function handleOpenModalView(client: iClient | undefined) {
         setTypeModal(client ? 'edit' : 'create');
         setClientClicked(client);
         setIsModalViewOpen(true);
+    }
+
+    function handleOpenModalFollowUp(client: iClient) {
+        setClientClicked(client);
+        setIsModalFollowUpOpen(true);
     }
 
     return (
@@ -186,6 +201,16 @@ export default function EmpresaClientes() {
                 client={clientClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
+            />
+
+            <EmpresaClientesModalFollowUp
+                isModalOpen={isModalFollowUpOpen}
+                setIsModalOpen={setIsModalFollowUpOpen}
+                type='create'
+                clientId={clientClicked?.clientId}
+                followUpClicked={undefined}
+                setTrigger={setTrigger}
+                clientFollowUpStatusEnum={clientFollowUpStatusEnum}
             />
         </Fragment>
     )

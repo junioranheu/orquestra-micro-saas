@@ -340,7 +340,7 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
                 margin-top: 8px !important;
                 padding: 8px !important;
                 border: 1px solid var(--gray) !important;
-                border-radius: 4px !important;
+                border-radius: var(--border-radius-xs) !important;
                 background: transparent !important;
                 color: var(--gray-dark) !important;
                 cursor: pointer !important;

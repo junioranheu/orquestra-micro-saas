@@ -145,9 +145,9 @@ function InterfaceCustomizer() {
             <ToggleContainer
                 toggleInfoContent={
                     <div className={styles.toggleText}>
-                        <h3 className={styles.toggleTitle}>Conteúdo dos painéis lado a lado</h3>
+                        <h3 className={styles.toggleTitle}>Campos de cadastro/edição ficam lado a lado</h3>
                         <p className={styles.toggleDescription}>
-                            {isModalGrid ? 'Sempre que possível, o conteúdo dos painéis (modais) será exibido de forma padrão: lado a lado.' : 'O conteúdo será sempre exibido um abaixo do outro.'}
+                            {isModalGrid ? 'Sempre que houver espaço, os campos de cadastro/edição aparecem lado a lado, ocupando duas colunas.' : 'Os campos de cadastro/edição aparecem um embaixo do outro.'}
                         </p>
                     </div>
                 }
