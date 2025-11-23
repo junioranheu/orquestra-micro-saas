@@ -35,17 +35,6 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
     const chatEndRef = useRef<HTMLDivElement | null>(null);
     const hasGreetedRef = useRef(false);
 
-    // const SYSTEM_DEFAULT_PROMPT = `Você é o assistente do sistema ${SYSTEM.NAME}. Responda de forma objetiva. Use o contexto apenas como ajuda, nunca diga que ele é limitado.`;
-    const SYSTEM_DEFAULT_PROMPT = `
-    Você é o assistente do sistema ${SYSTEM.NAME}.
-    Suas respostas devem ser sempre extremamente curtas: no máximo 1 ou 2 frases.
-    Só responda perguntas diretamente relacionadas ao ${SYSTEM.NAME}.
-    Não explique conceitos.
-    Não dê exemplos.
-    Não faça textos longos.
-    Não use rodeios.
-    Nunca ultrapasse 2 frases, mesmo que o usuário peça.`;
-
     const conversationRef = useRef<any[]>([]);
 
     useEffect(() => {
@@ -83,7 +72,7 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
         setInput('');
         setLoading(true);
 
-        // Verificar plano;
+        // PLANO PREMIUM
         if (me?.currentMainCompany?.planType?.toString() !== '3') {
             setMessages(prev => [...prev, {
                 role: 'bot',
@@ -92,19 +81,32 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
             return setLoading(false);
         }
 
-        // Filtro da plataforma;
+        // FILTRO DE PERTINÊNCIA
         if (!handleCheckIfIsAboutThePlataform(userMessage)) {
-            setMessages(prev => [...prev, { role: 'bot', text: `Só posso ajudar com o ${SYSTEM.NAME}.` }]);
+            setMessages(prev => [...prev, { role: 'bot', text: `Desculpe — só posso ajudar com o ${SYSTEM.NAME}. 🤔` }]);
             return setLoading(false);
         }
 
+        // TÓPICO MAIS RELEVANTE
         const bestItem = handleFindMostRelevantItem(userMessage, HELP_TOPICS);
-        const finalUserMessage = bestItem ? `${userMessage} ${bestItem.description}` : userMessage;
+        const finalUserMessage = bestItem
+            ? `${userMessage}. Contexto: ${bestItem.description}`
+            : userMessage;
+
+        // PROMPT DO SISTEMA COMO PRIMEIRA MENSAGEM
+        const SYSTEM_PROMPT_FOR_GEMINI = `
+            Você é o assistente oficial do sistema ${SYSTEM.NAME}.
+            Regra ABSOLUTA:
+            - Responda sempre em no máximo 2 frases.
+            - Nunca explique conceitos.
+            - Nunca dê exemplos.
+            - Nunca peça mais detalhes.
+            `.trim();
 
         const contents = [
             {
-                role: 'system',
-                parts: [{ text: SYSTEM_DEFAULT_PROMPT }]
+                role: 'user',
+                parts: [{ text: SYSTEM_PROMPT_FOR_GEMINI }]
             },
             ...conversationRef.current,
             {
@@ -114,33 +116,42 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
         ];
 
         try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-goog-api-key': API_KEY,
-                },
-                body: JSON.stringify({ contents })
-            });
+            const res = await fetch(
+                'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': API_KEY,
+                    },
+                    body: JSON.stringify({ contents }),
+                }
+            );
 
             const data = await res.json();
-            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Erro interno 💀';
 
-            const replyNormalized = reply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            const reply =
+                data?.candidates?.[0]?.content?.parts?.[0]?.text ??
+                'Erro interno 💀';
 
+            const replyNormalized = reply.replace(
+                /\*\*(.*?)\*\*/g,
+                '<b>$1</b>'
+            );
+
+            // Atualiza histórico SEM system prompt
             conversationRef.current.push(
                 { role: 'user', parts: [{ text: userMessage }] },
                 { role: 'model', parts: [{ text: reply }] }
             );
 
-            setMessages(p => [...p, { role: 'bot', text: replyNormalized }]);
-
+            setMessages((p) => [...p, { role: 'bot', text: replyNormalized }]);
         } catch (err) {
             console.error(err);
-            setMessages(p => [...p, { role: 'bot', text: 'Erro ao conectar 😞' }]);
+            setMessages((p) => [...p, { role: 'bot', text: 'Erro ao conectar 😞' }]);
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     }
 
     function handleCheckIfIsAboutThePlataform(text: string) {
