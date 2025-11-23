@@ -34,7 +34,6 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const chatEndRef = useRef<HTMLDivElement | null>(null);
     const hasGreetedRef = useRef(false);
-
     const conversationRef = useRef<any[]>([]);
 
     useEffect(() => {
@@ -72,28 +71,27 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
         setInput('');
         setLoading(true);
 
-        // PLANO PREMIUM
+        // Plano premium;
         if (me?.currentMainCompany?.planType?.toString() !== '3') {
             setMessages(prev => [...prev, {
                 role: 'bot',
                 text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href='${ROUTES.EMPRESA_USO_E_PLANO}'>Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual! 😸`
             }]);
+
             return setLoading(false);
         }
 
-        // FILTRO DE PERTINÊNCIA
+        // Filtro de pertinência;
         if (!handleCheckIfIsAboutThePlataform(userMessage)) {
-            setMessages(prev => [...prev, { role: 'bot', text: `Desculpe — só posso ajudar com o ${SYSTEM.NAME}. 🤔` }]);
+            setMessages(prev => [...prev, { role: 'bot', text: `Desculpe, eu não te entendi muito bem. Mas ainda estou à disposição para auxiliar você por aqui no ${SYSTEM.NAME}. 🤠` }]);
             return setLoading(false);
         }
 
-        // TÓPICO MAIS RELEVANTE
+        // Tópico mais relevante;
         const bestItem = handleFindMostRelevantItem(userMessage, HELP_TOPICS);
-        const finalUserMessage = bestItem
-            ? `${userMessage}. Contexto: ${bestItem.description}`
-            : userMessage;
+        const finalUserMessage = bestItem ? `${userMessage}. Contexto: ${bestItem.description}` : userMessage;
 
-        // PROMPT DO SISTEMA COMO PRIMEIRA MENSAGEM
+        // Prompt do sistema como primeira mensagem para contexto;
         const SYSTEM_PROMPT_FOR_GEMINI = `
             Você é o assistente oficial do sistema ${SYSTEM.NAME}.
             Regra ABSOLUTA:
@@ -116,8 +114,7 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
         ];
 
         try {
-            const res = await fetch(
-                'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+            const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
                 {
                     method: 'POST',
                     headers: {
@@ -130,16 +127,10 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
 
             const data = await res.json();
 
-            const reply =
-                data?.candidates?.[0]?.content?.parts?.[0]?.text ??
-                'Erro interno 💀';
+            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Erro interno 💀';
+            const replyNormalized = reply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
-            const replyNormalized = reply.replace(
-                /\*\*(.*?)\*\*/g,
-                '<b>$1</b>'
-            );
-
-            // Atualiza histórico SEM system prompt
+            // Atualiza histórico SEM system prompt;
             conversationRef.current.push(
                 { role: 'user', parts: [{ text: userMessage }] },
                 { role: 'model', parts: [{ text: reply }] }
@@ -159,7 +150,8 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
 
         const keywords = [
             'oi', 'olá', 'ola', 'tudo bem', 'como vai', 'beleza', 'oxe', 'oxi', 'td bem', 'blz',
-            'agend', 'serviço', 'servico', 'cliente', 'horár', 'horar', 'cancel', 'marc',
+            'agend', 'serviço', 'servico', 'horá', 'hora', 'horario', 'agendamento', 'evento',
+            'cancelar', 'cancel', 'marc', 'marcar', 'remarcarcar', 'excluir', 'cadastrar', 'registrar',
             'remarc', 'agenda', 'notifica', 'notificação', 'notificacao', 'pagamento',
             'fatura', 'plano', 'empresa', 'cadast', 'login', 'senha', 'checkout',
             'se chama', 'seu nome', 'hora', 'evento', 'configura', 'cliente', 'follow',
