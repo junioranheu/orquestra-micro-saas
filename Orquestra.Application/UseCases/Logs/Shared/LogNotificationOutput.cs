@@ -11,6 +11,7 @@ public sealed class LogNotificationOutput
     public string? Description { get; set; } = string.Empty;
     public string? Story { get; set; } = string.Empty;
     public DateTime Date { get; set; }
+    public string? ChangedFields { get; set; } = string.Empty;
 
     public override string ToString()
     {

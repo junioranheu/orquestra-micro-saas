@@ -38,6 +38,7 @@ export interface iLogNotificationOutput {
     description?: string;
     story?: string;
     date: Date;
+    changedFields?: string;
 }
 
 export interface iLogNotificationOutputPaginated {

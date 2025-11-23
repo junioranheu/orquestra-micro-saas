@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Logs.Get;
 
@@ -25,9 +26,11 @@ public sealed class GetLog(Context context) : IGetLog
 
         Parallel.ForEach(output, log =>
         {
-            if (log.User is not null) { 
+            if (log.User is not null)
+            {
                 log.User.Password = string.Empty;
                 log.User.RecoverPasswordAnswer = string.Empty;
+                log.ChangedFields = GetChangedFieldsFromBeforeAndAfter(log.Parameters);
             }
         });
 

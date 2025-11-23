@@ -13,6 +13,8 @@ namespace Orquestra.Utils.Fixtures;
 
 public static partial class Get
 {
+    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+
     /// <summary>
     /// Obtém o horário atual, forçando ao horário de Brasilia;
     /// </summary>
@@ -736,12 +738,7 @@ public static partial class Get
             Depois = root.GetProperty("After")
         };
 
-        JsonSerializerOptions options = new()
-        {
-            WriteIndented = true
-        };
-
-        return JsonSerializer.Serialize(normalized, options);
+        return JsonSerializer.Serialize(normalized, _jsonOptions);
     }
 
     /// <summary>
@@ -871,5 +868,77 @@ public static partial class Get
         }
 
         return template;
+    }
+
+    /// <summary>
+    /// Recebe um JSON no formato { "Before": {...}, "After": {...} } e retorna um JSON
+    /// contendo apenas os campos que mudaram entre "Before" e "After".
+    /// - Compara valor a valor e ignora campos especificados.
+    /// - Retorna JSON serializado, pronto para enviar pro front.
+    /// </summary>
+    /// <param name="json">O JSON de entrada com os objetos "Before" e "After".</param>
+    /// <returns>JSON string contendo apenas os campos alterados, no formato:
+    /// {
+    ///   "Campo1": { "Before": "valor antigo", "After": "valor novo" },
+    ///   "Campo2": { "Before": "...", "After": "..." }
+    /// }
+    /// </returns>
+    public static string GetChangedFieldsFromBeforeAndAfter(string? json)
+    {
+        if (string.IsNullOrEmpty(json))
+        {
+            return string.Empty;
+        }
+
+        using JsonDocument doc = JsonDocument.Parse(json);
+        JsonElement root = doc.RootElement;
+
+        bool beforeExists = root.TryGetProperty("Before", out JsonElement before);
+        bool afterExists = root.TryGetProperty("After", out JsonElement after);
+
+        if (!beforeExists || !afterExists || before.ValueKind == JsonValueKind.Null || after.ValueKind == JsonValueKind.Null)
+        {
+            return string.Empty;
+        }
+
+        HashSet<string> ignoredProps = ["LastModificationDate"];
+        Dictionary<string, (string Before, string After)> changed = [];
+
+        foreach (var prop in before.EnumerateObject())
+        {
+            string name = prop.Name;
+
+            if (ignoredProps.Contains(name))
+            {
+                continue;
+            }
+
+            string beforeVal = prop.Value.ToString();
+
+            if (!after.TryGetProperty(name, out JsonElement afterEl))
+            {
+                continue;
+            }
+
+            string afterVal = afterEl.ToString();
+
+            if (!string.Equals(beforeVal, afterVal, StringComparison.Ordinal))
+            {
+                changed[name] = (beforeVal, afterVal);
+            }
+        }
+
+        var changedObj = changed.ToDictionary(
+            x => x.Key,
+            x => new
+            {
+                Antes = x.Value.Before ?? string.Empty,
+                Depois = x.Value.After ?? string.Empty
+            }
+        );
+
+        string jsonOutput = JsonSerializer.Serialize(changedObj, _jsonOptions);
+
+        return jsonOutput;
     }
 }

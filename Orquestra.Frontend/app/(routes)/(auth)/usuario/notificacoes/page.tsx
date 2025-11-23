@@ -47,9 +47,9 @@ export default function UsuarioNotificacoes() {
             key: 'story'
         },
         {
-            title: 'Detalhes',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'Modificações',
+            dataIndex: 'changedFields',
+            key: 'changedFields',
             render: (value: string) => {
                 let parsed: any;
 
@@ -69,7 +69,7 @@ export default function UsuarioNotificacoes() {
                     </pre>
                 );
             }
-        },
+        }
     ] as iTableColumn[];
 
     if (isLoading) {

@@ -158,7 +158,7 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
             'ordem', 'estoque', 'nota', 'ajuda', SYSTEM.NAME, 'obrigad', 'whatsapp', 'zap',
             'consult', 'paciente', 'colaborador', 'equipe', 'sistema', 'suporte',
             'crio', 'excluo', 'registro', 'cadastro', 'criar', 'registrar', 'cadastrar', 'excluir',
-            'email', 'e-mail', 'senha', 'esqueci'
+            'email', 'e-mail', 'senha', 'esqueci', 'custa', 'mensalidade'
         ]);
 
         for (const kw of keywords) {

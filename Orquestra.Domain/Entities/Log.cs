@@ -29,4 +29,7 @@ public sealed class Log
     public User? User { get; init; }
 
     public DateTime CreatedDate { get; set; } = GetDate();
+
+    [NotMapped]
+    public string? ChangedFields { get; set; } = string.Empty;
 }

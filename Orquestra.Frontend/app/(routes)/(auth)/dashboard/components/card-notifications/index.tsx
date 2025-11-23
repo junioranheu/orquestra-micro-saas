@@ -49,7 +49,7 @@ export default function CardNotifications({ me }: iProps) {
                     </Tippy>
 
                     <div className={styles.service}>
-                        <span><b>{notification.logType}</b>{notification.description ? `: ${notification.description}` : ''}</span>
+                        <span><b>{notification.logType}</b>{notification.changedFields ? `: ${notification.changedFields}` : ''}</span>
                     </div>
                 </div>
 

@@ -173,7 +173,8 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                 RawEndpoint = log.Endpoint,
                 Description = log.LogType == LogTypeEnum.Audit && !isDashboard ? NormalizeJsonLog(RemoveHtmlTags(log.Parameters)) : RemoveHtmlTags(description),
                 Story = story,
-                Date = log.CreatedDate
+                Date = log.CreatedDate,
+                ChangedFields = log.LogType == LogTypeEnum.Audit ? GetChangedFieldsFromBeforeAndAfter(log.Parameters) : string.Empty
             };
         }).Where(x => x is not null).Select(x => x!)];
 
