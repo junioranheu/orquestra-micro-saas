@@ -148,23 +148,21 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
     function handleCheckIfIsAboutThePlataform(text: string) {
         const s = text.toLowerCase();
 
-        const keywords = [
-            'oi', 'olá', 'ola', 'tudo bem', 'como vai', 'beleza', 'oxe', 'oxi', 'td bem', 'blz',
-            'agend', 'serviço', 'servico', 'horá', 'hora', 'horario', 'agendamento', 'evento',
-            'cancelar', 'cancel', 'marc', 'marcar', 'remarcarcar', 'excluir', 'cadastrar', 'registrar',
+        const keywords = new Set([
+            'oi', 'olá', 'ola', 'tudo bem', 'como vai', 'beleza', 'oxe', 'oxi', 'td bem',
+            'blz', 'como você vai', 'agend', 'serviço', 'servico', 'horá', 'hora', 'horario',
+            'agendamento', 'evento', 'cancelar', 'cancel', 'marc', 'marcar', 'remarcar',
             'remarc', 'agenda', 'notifica', 'notificação', 'notificacao', 'pagamento',
             'fatura', 'plano', 'empresa', 'cadast', 'login', 'senha', 'checkout',
-            'se chama', 'seu nome', 'hora', 'evento', 'configura', 'cliente', 'follow',
+            'se chama', 'seu nome', 'configura', 'cliente', 'follow',
             'ordem', 'estoque', 'nota', 'ajuda', SYSTEM.NAME, 'obrigad', 'whatsapp', 'zap',
-            'consult', 'paciente', 'colaborador', 'equipe', 'sobre o sistema', 'sistema',
-            'suporte', 'fatura', 'como você vai'
-        ];
+            'consult', 'paciente', 'colaborador', 'equipe', 'sistema', 'suporte',
+            'crio', 'excluo', 'registro', 'cadastro', 'criar', 'registrar', 'cadastrar', 'excluir',
+            'email', 'e-mail', 'senha', 'esqueci'
+        ]);
 
-        // Se achar qualquer keyword retorna true;
         for (const kw of keywords) {
-            if (s.includes(kw)) {
-                return true;
-            }
+            if (s.includes(kw)) return true;
         }
 
         return false;
