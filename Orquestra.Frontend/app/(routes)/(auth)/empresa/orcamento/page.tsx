@@ -10,6 +10,7 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSet
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
+import EmpresaQuotesModalView from './modal/view';
 
 export default function EmpresaOrcamento() {
 
@@ -137,6 +138,15 @@ export default function EmpresaOrcamento() {
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
             /> */}
+
+            <EmpresaQuotesModalView
+                isModalOpen={isModalViewOpen}
+                setIsModalOpen={setIsModalViewOpen}
+                type={typeModal}
+                quote={quoteClicked}
+                companyId={me?.currentMainCompany?.companyId}
+                setTrigger={setTrigger}
+            />
         </Fragment>
     )
 }

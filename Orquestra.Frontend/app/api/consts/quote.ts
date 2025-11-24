@@ -1,4 +1,5 @@
 import { BASE } from '@/app/api/fetch';
+import { Guid } from 'guid-typescript';
 import { iClient } from './client';
 import { iCompanyOutput } from './company';
 
@@ -12,27 +13,27 @@ export const CONSTS_QUOTE = {
 };
 
 export interface iQuote {
-    quoteId: string;
-    companyId: string;
+    quoteId?: Guid;
+    companyId?: Guid;
     company?: iCompanyOutput | null;
-    clientId: string;
+    clientId: Guid;
     client?: iClient | null;
     title?: string | null;
     observation?: string | null;
     validUntil?: Date | null;
-    quoteStatus: string;
-    items: iQuoteItem[];
+    quoteStatus?: string;
+    items?: iQuoteItem[];
 }
 
 export interface iQuoteItem {
-    quoteItemId: string;
-    quoteId: string;
+    quoteItemId?: Guid;
+    quoteId?: Guid;
     quote?: iQuote | null;
-    title: string;
+    title?: string;
     description?: string | null;
-    quantity: number;
-    unitPrice: number;
-    totalPrice: number;
+    quantity?: number;
+    unitPrice?: number;
+    totalPrice?: number;
     totalValue?: number | null;
 }
 
