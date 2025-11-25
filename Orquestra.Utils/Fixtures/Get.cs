@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
 namespace Orquestra.Utils.Fixtures;
@@ -883,7 +884,7 @@ public static partial class Get
     ///   "Campo2": { "Before": "...", "After": "..." }
     /// }
     /// </returns>
-    public static string GetChangedFieldsFromBeforeAndAfter(string? json, bool ignoreExtrasProps)
+    public static string GetChangedFieldsFromBeforeAndAfter(string? json)
     {
         if (string.IsNullOrWhiteSpace(json))
         {
@@ -904,16 +905,15 @@ public static partial class Get
             return string.Empty;
         }
 
-        HashSet<string> ignoredProps = ignoreExtrasProps ?
-            ["Id", "By", "LastModificationDate", "Status"] : 
-            ["By", "LastModificationDate", "Status"];
+        HashSet<string> ignoredProps = ["LastModificationDate", "Status"];
+        bool ShouldIgnore(string propName) => ignoredProps.Contains(propName) | propName.EndsWith("Id", StringComparison.OrdinalIgnoreCase) | propName.EndsWith("By", StringComparison.OrdinalIgnoreCase);
 
         // #1 - Fluxo de novos registros: só AFTER → retorna tudo como new record;
         if (!hasBefore && hasAfter)
         {
             var createdObj = after.EnumerateObject().
                              Where(x =>
-                                !ignoredProps.Contains(x.Name) &&
+                                !(ShouldIgnore(x.Name)) &&
                                 !string.IsNullOrWhiteSpace(x.Value.ToString())
                              ).ToDictionary(
                                 x => x.Name,
@@ -930,7 +930,7 @@ public static partial class Get
         {
             string name = prop.Name;
 
-            if (ignoredProps.Contains(name))
+            if (ShouldIgnore(name))
             {
                 continue;
             }
