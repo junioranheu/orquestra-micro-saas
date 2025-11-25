@@ -84,31 +84,44 @@ public class Context(DbContextOptions<Context> options, IHttpContextAccessor htt
         }
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    private void ApplyAuditLogRules()
     {
         foreach (var entry in ChangeTracker.Entries<Audit>())
         {
-            switch (entry.State)
+            if (entry.Entity is Audit audit)
             {
-                case EntityState.Added:
-                    if (entry.Entity.CreatedDate is null)
-                    {
-                        entry.Entity.CreatedDate = GetDate();
-                        entry.Entity.CreatedBy = UserIdAuth;
-                        entry.Entity.Status = true;
-                    }
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        if (audit.CreatedDate is null)
+                        {
+                            audit.CreatedDate = GetDate();
+                            audit.CreatedBy = UserIdAuth;
+                            audit.Status = true;
+                        }
 
-                    break;
+                        break;
 
-                case EntityState.Modified:
-                    entry.Entity.LastModificationDate = GetDate();
-                    entry.Entity.LastModificationBy = UserIdAuth;
+                    case EntityState.Modified:
+                        audit.LastModificationDate = GetDate();
+                        audit.LastModificationBy = UserIdAuth;
 
-                    break;
+                        break;
+                }
             }
         }
+    }
 
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ApplyAuditLogRules();
         return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override int SaveChanges()
+    {
+        ApplyAuditLogRules();
+        return base.SaveChanges();
     }
     #endregion
 }
