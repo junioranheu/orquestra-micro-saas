@@ -1,4 +1,5 @@
 'use client';
+import EmpresaQuotesItemsEditor from '@/app/(routes)/(auth)/empresa/orcamento/quote-item';
 import { CONSTS_QUOTE, iQuote } from '@/app/api/consts/quote';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
@@ -171,6 +172,14 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
                         <div className={`${styles.div} ${styles.full}`}>
                             <label>Observações</label>
                             <textarea value={formData.observation ?? ''} className={styles.textarea} readOnly={!editing} rows={5} maxLength={512} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
+                        </div>
+
+                        <div className={`${styles.div} ${styles.full}`}>
+                            <EmpresaQuotesItemsEditor
+                                formData={formData}
+                                setFormData={setFormData}
+                                editing={editing}
+                            />
                         </div>
                     </div>
                 </main>

@@ -1,0 +1,146 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    font-family: inherit;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .addButton {
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-xs);
+            border: 1px solid var(--main);
+            background: var(--main);
+            color: var(--white);
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:disabled {
+                opacity: .4;
+                cursor: not-allowed;
+            }
+
+            &:hover {
+                opacity: 0.85;
+                transition: 0.3s;
+            }
+        }
+    }
+
+    .tableWrapper {
+        overflow-x: auto;
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+
+            thead {
+                background: var(--gray-light);
+
+                th {
+                    text-align: center;
+                    padding: .75rem;
+                    color: var(--text);
+                    font-weight: 600;
+
+                    &:first-child {
+                        // background-color: orange;
+                        border-top-left-radius: var(--border-radius) !important;
+                        border-bottom-left-radius: var(--border-radius) !important;
+                    }
+
+                    &:last-child {
+                        // background-color: orange;
+                        border-top-right-radius: var(--border-radius) !important;
+                        border-bottom-right-radius: var(--border-radius) !important;
+                    }
+                }
+            }
+
+            tbody {
+                tr {
+                    text-align: center;
+                    border-bottom: 1px solid var(--gray-light);
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+
+                    td {
+                        padding: .75rem;
+
+                        .input {
+                            width: 100%;
+                            padding: 0.5rem .75rem;
+                            font-family: inherit;
+
+                            &:disabled {
+                                background: var(--gray-light);
+                            }
+                        }
+
+                        &.total {
+                            // background-color: orange;
+                            min-width: 125px;
+                            max-width: 125px;
+                            font-weight: 500;
+                        }
+
+                        .removeButton {
+                            padding: 0.35rem .75rem;
+                            border-radius: var(--border-radius);
+                            border: none;
+                            background: var(--contrast);
+                            color: var(--white);
+                            font-family: inherit;
+                            cursor: pointer;
+                            transition: 0.3s;
+
+                            &:disabled {
+                                opacity: .4;
+                                cursor: not-allowed;
+                            }
+
+                            &:hover {
+                                opacity: 0.85;
+                                transition: 0.3s;
+                            }
+                        }
+                    }
+                }
+
+                .empty {
+                    text-align: center;
+                    padding: 1.5rem;
+                    color: var(--gray-dark);
+
+                    strong {
+                        color: var(--main);
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-light);
+
+        strong {
+            margin-left: .5rem;
+        }
+    }
+}
