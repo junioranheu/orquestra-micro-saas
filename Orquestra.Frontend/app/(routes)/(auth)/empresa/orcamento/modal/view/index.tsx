@@ -95,12 +95,6 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
     const setQuoteStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.quoteStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
-        console.clear();
-        const teste = handleLoopFormData(formData);
-        const teste2 = teste.json as iQuote;
-        console.log(teste2);
-        return;
-
         if (!formData.companyId || !formData.clientId || !formData.title || !formData.quoteStatus || !formData.items || !formData.items?.length) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
@@ -188,8 +182,6 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
                         <InputMask title='Título' fieldName='title' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask type='date' title='Válido até' fieldName='validUntil' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Status do orçamento' options={quoteStatusEnum ?? []} selectedOption={quoteStatusEnum?.find(x => x.value === formData.quoteStatus) ?? undefined} setSelectedOption={setQuoteStatusOption} isDisabled={!editing} isObligatory={true} />
-
-                        <div />
 
                         <div className={`${styles.div} ${styles.full}`}>
                             <label>Observações</label>

@@ -21,6 +21,7 @@
             color: var(--contrast);
             font-weight: 800;
             font-size: 1rem;
+            line-height: 1px;
         }
     }
 
@@ -77,77 +78,3 @@
         }
     }
 }
-
-// .main {
-//     // background-color: orange;
-//     display: flex;
-//     flex-direction: column;
-//     gap: 0rem;
-//     font-family: inherit !important;
-
-//     text-rendering: optimizelegibility;
-//     -moz-osx-font-smoothing: grayscale;
-//     -webkit-font-smoothing: antialiased;
-//     -moz-font-smoothing: antialiased;
-
-//     .title {
-//         // background-color: tomato;
-//         color: var(--black);
-//         font-size: 0.8rem;
-//         font-weight: 400;
-//         margin-right: auto;
-//         margin-bottom: 3px;
-
-//         .obligatory {
-//             // background-color: orange;
-//             color: var(--contrast);
-//             font-weight: 800;
-//             font-size: 1rem;
-//         }
-//     }
-
-//     .dropdown {
-//         // background-color: blue !important;
-//         background-color: transparent !important;
-//         border: none !important;
-//         border-bottom: 1px solid var(--gray) !important;
-//         border-radius: 0 !important;
-//         color: var(--black) !important;
-//         font-size: 0.8rem !important;
-//         // height: 2.5rem !important;
-//         // height: 40px !important;
-//         min-height: 40px !important;
-//         transition: 0.3s !important;
-
-//         >div:first-of-type {
-//             // background-color: tomato !important;
-//             background-color: transparent !important;
-//         }
-
-//         &:hover,
-//         &:focus {
-//             outline: none !important;
-//             transition: 0.3s ease !important;
-//         }
-
-//         option {
-//             &[disabled] {
-//                 color: var(--gray-light) !important;
-//                 cursor: not-allowed !important;
-//             }
-//         }
-//     }
-
-//     &.disabled {
-//         // background-color: orange !important;
-//         cursor: not-allowed !important;
-
-//         div {
-//             background-color: var(--gray-light) !important;
-//             border-bottom: 0 !important;
-//             border-radius: var(--border-radius-xs) !important;
-//             border: none !important;
-//             color: #999999 !important;
-//         }
-//     }
-// }
