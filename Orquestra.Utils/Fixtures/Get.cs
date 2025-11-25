@@ -883,9 +883,9 @@ public static partial class Get
     ///   "Campo2": { "Before": "...", "After": "..." }
     /// }
     /// </returns>
-    public static string GetChangedFieldsFromBeforeAndAfter(string? json)
+    public static string GetChangedFieldsFromBeforeAndAfter(string? json, bool ignoreExtrasProps)
     {
-        if (string.IsNullOrEmpty(json))
+        if (string.IsNullOrWhiteSpace(json))
         {
             return string.Empty;
         }
@@ -893,16 +893,38 @@ public static partial class Get
         using JsonDocument doc = JsonDocument.Parse(json);
         JsonElement root = doc.RootElement;
 
-        bool beforeExists = root.TryGetProperty("Before", out JsonElement before);
-        bool afterExists = root.TryGetProperty("After", out JsonElement after);
+        root.TryGetProperty("Before", out JsonElement before);
+        root.TryGetProperty("After", out JsonElement after);
 
-        if (!beforeExists || !afterExists || before.ValueKind == JsonValueKind.Null || after.ValueKind == JsonValueKind.Null)
+        bool hasBefore = before.ValueKind != JsonValueKind.Undefined && before.ValueKind != JsonValueKind.Null;
+        bool hasAfter = after.ValueKind != JsonValueKind.Undefined && after.ValueKind != JsonValueKind.Null;
+
+        if (!hasBefore && !hasAfter)
         {
             return string.Empty;
         }
 
-        HashSet<string> ignoredProps = ["LastModificationDate", "LastModificationBy"];
-        Dictionary<string, (string Before, string After)> changed = [];
+        HashSet<string> ignoredProps = ignoreExtrasProps ?
+            ["Id", "By", "LastModificationDate", "Status"] : 
+            ["By", "LastModificationDate", "Status"];
+
+        // #1 - Fluxo de novos registros: só AFTER → retorna tudo como new record;
+        if (!hasBefore && hasAfter)
+        {
+            var createdObj = after.EnumerateObject().
+                             Where(x =>
+                                !ignoredProps.Contains(x.Name) &&
+                                !string.IsNullOrWhiteSpace(x.Value.ToString())
+                             ).ToDictionary(
+                                x => x.Name,
+                                x => x.Value.ToString()
+                             );
+
+            return JsonSerializer.Serialize(createdObj, _jsonOptions);
+        }
+
+        // #2 Fluxo de modificação: comparar before vs after;
+        Dictionary<string, (string Before, string After)> changed = new();
 
         foreach (var prop in before.EnumerateObject())
         {
@@ -937,8 +959,6 @@ public static partial class Get
             }
         );
 
-        string jsonOutput = JsonSerializer.Serialize(changedObj, _jsonOptions);
-
-        return jsonOutput;
+        return JsonSerializer.Serialize(changedObj, _jsonOptions);
     }
 }
