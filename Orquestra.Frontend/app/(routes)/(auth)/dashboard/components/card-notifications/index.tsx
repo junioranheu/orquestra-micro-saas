@@ -63,13 +63,13 @@ export default function CardNotifications({ me }: iProps) {
     return (
         <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
             <Tippy content='Os dados são atualizados automaticamente a cada 10 minutos.'>
-                <h2 className={styles.title} style={{ cursor: 'help' }}>Notificações do sistema <ArrowUpRight href={ROUTES.USUARIO_NOTIFICACOES} tippyContent='Visualizar todas as notificações' tippyPlacement='bottom' /></h2>
+                <h2 className={styles.title} style={{ cursor: 'help' }}>Notificações do sistema <ArrowUpRight href={ROUTES.EMPRESA_NOTIFICACOES} tippyContent='Visualizar todas as notificações' tippyPlacement='bottom' /></h2>
             </Tippy>
 
             {
                 notifications.length > 0 && (
                     <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Resumo das últimas notificações da empresa {me?.currentMainCompany.name}</h3>
+                        <h3 className={styles.sectionTitle}>Resumo das notificações da empresa {me?.currentMainCompany.name}</h3>
                         {notifications.map((notification) => handleRenderNotification(notification))}
                     </div>
                 )

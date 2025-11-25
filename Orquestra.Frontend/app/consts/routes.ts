@@ -11,7 +11,6 @@ const ROUTES = {
     USUARIO_VERIFICADO: '/usuario/verificado',
     USUARIO_SENHA_REDEFINIDA: '/usuario/senha-redefinida',
     USUARIO_CONFIGURACOES: '/usuario/configuracoes',
-    USUARIO_NOTIFICACOES: '/usuario/notificacoes',
     ETC_AJUDA: '/ajuda',
     ETC_SEGURANCA: '/seguranca',
     ETC_PRIVACIDADE: '/privacidade',
@@ -29,6 +28,7 @@ const ROUTES = {
     EMPRESA_ORCAMENTO: '/empresa/orcamento',
     EMPRESA_ORDEM_DE_SERVICO: '/empresa/ordem-de-servico',
     EMPRESA_ESTOQUE: '/empresa/estoque',
+    EMPRESA_NOTIFICACOES: '/empresa/notificacoes',
     DASHBOARD: '/dashboard'
 };
 

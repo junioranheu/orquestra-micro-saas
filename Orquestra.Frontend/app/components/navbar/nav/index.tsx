@@ -87,7 +87,7 @@ export default function Navbar({ me }: iProps) {
                         }
 
                         <Tippy content='Notificações'>
-                            <span onClick={() => router.push(ROUTES.USUARIO_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
+                            <span onClick={() => router.push(ROUTES.EMPRESA_NOTIFICACOES)}><Icon icon='bell' weight='bold' /></span>
                         </Tippy>
 
                         {

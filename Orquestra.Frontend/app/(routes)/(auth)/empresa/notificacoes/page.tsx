@@ -80,7 +80,7 @@ export default function UsuarioNotificacoes() {
     }
 
     return (
-        <TemplatePageHeader title={`Notificações da empresa ${currentMainCompany?.name ?? ''}`} >
+        <TemplatePageHeader title={`Notificações • ${currentMainCompany?.name ?? ''}`} >
             <TableGeneric
                 idPropName='logId'
                 columns={columns}

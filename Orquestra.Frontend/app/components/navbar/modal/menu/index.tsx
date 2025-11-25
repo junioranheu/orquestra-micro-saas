@@ -114,7 +114,7 @@ export function ProfileMenu({ setIsModalOpen, me }: iPropsProfileMenu): JSX.Elem
                     (me && me?.isUserAdmOfCurrentMainCompany) && (
                         <Fragment>
                             <MenuItem icon='tag' label='Planos e faturas' handleFunction={() => handleRedirect(ROUTES.EMPRESA_USO_E_PLANO)} />
-                            <MenuItem icon='bell' label='Notificações' handleFunction={() => handleRedirect(ROUTES.USUARIO_NOTIFICACOES)} />
+                            <MenuItem icon='bell' label='Notificações' handleFunction={() => handleRedirect(ROUTES.EMPRESA_NOTIFICACOES)} />
                             <div className={styles.separator} />
                         </Fragment>
                     )
