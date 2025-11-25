@@ -3,7 +3,7 @@ import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_COMPANY_USER } from '@/app/api/consts/company-user';
 import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
-import { iUserPaginated } from '@/app/api/consts/user';
+import { iUser, iUserPaginated } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
 import { DATE_STYLE, handleFormatDate, handleParseDateFromString } from '@/app/functions/format.date';
@@ -141,11 +141,11 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
 
     // Clientes;
     const [clients, setClients] = useState<iClientPaginated>();
-    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${companyId}`, setter: setClients });
+    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${companyId}`, setter: setClients, isSelectAll: true });
 
     // CompanyUser;
     const [companyUsers, setCompanyUsers] = useState<iUserPaginated>();
-    useApiRequestToSetterOnUrlChange<iUserPaginated>({ apiUrlRequest: `${CONSTS_COMPANY_USER.getAllByCompanyId}?companyId=${companyId}`, setter: setCompanyUsers, hasPaginationInput: true, isSelectAll: true });
+    useApiRequestToSetterOnUrlChange<iUserPaginated>({ apiUrlRequest: `${CONSTS_COMPANY_USER.getAllByCompanyId}?companyId=${companyId}`, setter: setCompanyUsers, isSelectAll: true });
 
     // Buscar a query data na URL; caso exista: abra o modal de novo evento na data;
     useEffect(() => {
@@ -265,8 +265,8 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
                 me={me}
                 event={eventClicked}
                 companyId={companyId}
-                companyUsers={companyUsers?.output ?? []}
-                clients={clients?.output as iClient[]}
+                companyUsers={companyUsers?.output as iUser[] ?? []}
+                clients={clients?.output as iClient[] ?? []}
                 handleGetSchedules={() => handleGetSchedules(companyId, date.getFullYear(), date.getMonth() + 1, view)}
             />
         </Fragment>

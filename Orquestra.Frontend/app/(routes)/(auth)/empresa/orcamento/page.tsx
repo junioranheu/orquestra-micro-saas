@@ -1,4 +1,5 @@
 'use client';
+import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_QUOTE, iQuote, iQuoteItem, iQuotePaginated } from '@/app/api/consts/quote';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
@@ -21,14 +22,18 @@ export default function EmpresaOrcamento() {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [quotes, setQuotes] = useState<iQuotePaginated>();
-
     const [trigger, setTrigger] = useState<Date>(new Date());
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_QUOTE.getAllByCompanyId);
     useApiRequestToSetterOnUrlChange<iQuotePaginated>({ apiUrlRequest: apiUrlRequest, setter: setQuotes, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
 
+    const [clients, setClients] = useState<iClientPaginated>();
+    const [apiUrlRequestClients, setApiUrlRequestClients] = useState<string>(CONSTS_CLIENT.getAllByCompanyId);
+    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequestClients, setter: setClients, isSelectAll: true });
+
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
             setApiUrlRequest(`${CONSTS_QUOTE.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}`);
+            setApiUrlRequestClients(`${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}`);
         }
     }, [me]);
 
@@ -143,6 +148,7 @@ export default function EmpresaOrcamento() {
                 isModalOpen={isModalViewOpen}
                 setIsModalOpen={setIsModalViewOpen}
                 type={typeModal}
+                clients={clients?.output as iClient[] ?? []}
                 quote={quoteClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}

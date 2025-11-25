@@ -35,7 +35,7 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>):
                 }
 
                 const separator = apiUrlRequest.includes('?') ? '&' : '?';
-                const paginationInput = (hasPaginationInput ? `${separator}index=${(index - 1)}&limit=${limit}&isSelectAll=${isSelectAll}` : '')
+                const paginationInput = ((hasPaginationInput || isSelectAll) ? `${separator}index=${(index - 1)}&limit=${limit}&isSelectAll=${isSelectAll}` : '')
                 const url = `${apiUrlRequest}${paginationInput}`;
 
                 const blobExportName = ''; // TO DO (?);

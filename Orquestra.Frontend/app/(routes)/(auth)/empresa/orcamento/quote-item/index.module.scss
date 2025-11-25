@@ -9,29 +9,17 @@
         align-items: center;
         justify-content: space-between;
 
-        h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
+        .title {
+            color: var(--black);
+            font-size: 0.85rem;
+            font-weight: 400;
+            margin-right: auto;
+            margin-bottom: 0px;
 
-        .addButton {
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius-xs);
-            border: 1px solid var(--main);
-            background: var(--main);
-            color: var(--white);
-            font-family: inherit;
-            cursor: pointer;
-            transition: 0.3s;
-
-            &:disabled {
-                opacity: .4;
-                cursor: not-allowed;
-            }
-
-            &:hover {
-                opacity: 0.85;
-                transition: 0.3s;
+            .obligatory {
+                color: var(--contrast);
+                font-weight: 800;
+                font-size: 1rem;
             }
         }
     }

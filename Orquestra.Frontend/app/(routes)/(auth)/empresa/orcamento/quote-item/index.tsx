@@ -1,4 +1,6 @@
 import { iQuote, iQuoteItem } from '@/app/api/consts/quote';
+import Icon from '@/app/components/icon';
+import Button from '@/app/components/input/button';
 import { Guid } from 'guid-typescript';
 import { useEffect } from 'react';
 import styles from './index.module.scss';
@@ -13,7 +15,7 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
 
     const LABEL_BTN_ADD = 'Adicionar novo item';
 
-    function recalcTotals(items: iQuoteItem[]) {
+    function handleRecalcTotals(items: iQuoteItem[]) {
         return items.map((it) => ({
             ...it,
             totalPrice: Number(((it.quantity ?? 0) * (it.unitPrice ?? 0)).toFixed(2))
@@ -22,6 +24,7 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
 
     function handleAddItem() {
         const newItem: iQuoteItem = {
+            quoteItemId: Guid.create(),
             title: '',
             description: '',
             quantity: 1,
@@ -31,47 +34,79 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
 
         setFormData(prev => ({
             ...prev,
-            items: recalcTotals([...(prev.items ?? []), newItem])
+            items: handleRecalcTotals([...(prev.items ?? []), newItem])
         }));
     }
 
     function handleRemoveItem(id: Guid) {
         setFormData(prev => ({
             ...prev,
-            items: recalcTotals(prev.items!.filter(i => i.quoteItemId !== id))
+            items: handleRecalcTotals(prev.items!.filter(i => i.quoteItemId !== id))
         }));
     }
 
-    function handleUpdateItem(id: Guid, field: keyof Omit<iQuoteItem, 'quoteItemId' | 'totalPrice'>, value: any) {
+    function handleUpdateItem(id: Guid, field: keyof Omit<iQuoteItem, 'quoteItemId' | 'totalPrice'>, value: any, min?: number, max?: number) {
         setFormData(prev => {
             const items = prev.items!.map(it => {
-                if (it.quoteItemId !== id) return it;
+                if (it.quoteItemId !== id) {
+                    return it;
+                }
 
                 const updated = { ...it };
 
-                if (field === 'quantity') updated.quantity = Number(value) || 0;
-                else if (field === 'unitPrice') updated.unitPrice = Number(value) || 0;
-                else updated[field] = value;
+                if (field === 'quantity') {
+                    let num = Math.floor(Number(value) || 0);
+
+                    if (min !== undefined) {
+                        num = Math.max(min, num);
+                    }
+
+                    if (max !== undefined) {
+                        num = Math.min(max, num);
+                    }
+
+                    updated.quantity = num;
+                }
+                else if (field === 'unitPrice') {
+                    let num = Number(value) || 0;
+
+                    if (min !== undefined) {
+                        num = Math.max(min, num);
+                    }
+
+                    if (max !== undefined) {
+                        num = Math.min(max, num);
+                    }
+
+                    updated.unitPrice = Number(num.toFixed(2));
+                }
+                else {
+                    updated[field] = value;
+                }
 
                 return updated;
             });
 
-            return { ...prev, items: recalcTotals(items) };
+            return { ...prev, items: handleRecalcTotals(items) };
         });
     }
 
     function handleBlurNormalizeNumber(id: Guid, field: 'quantity' | 'unitPrice') {
         setFormData(prev => {
             const items = prev.items!.map(it => {
-                if (it.quoteItemId !== id) return it;
+                if (it.quoteItemId !== id) {
+                    return it;
+                }
 
                 const updated = { ...it };
 
-                if (field === 'quantity')
+                if (field === 'quantity') {
                     updated.quantity = Math.max(0, Math.floor(updated.quantity ?? 0));
+                }
 
-                if (field === 'unitPrice')
+                if (field === 'unitPrice') {
                     updated.unitPrice = Number((updated.unitPrice ?? 0).toFixed(2));
+                }
 
                 updated.totalPrice = Number(((updated.quantity ?? 0) * (updated.unitPrice ?? 0)).toFixed(2));
 
@@ -86,27 +121,27 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
         if (formData.items) {
             setFormData(prev => ({
                 ...prev,
-                items: recalcTotals(prev.items!)
+                items: handleRecalcTotals(prev.items!)
             }));
         }
     }, []);
 
-    function getGrandTotal() {
+    function handleGetGrandTotal() {
         return (formData.items ?? []).reduce((sum, it) => sum + (it.totalPrice ?? 0), 0).toFixed(2);
     }
 
     return (
         <section className={styles.container}>
             <div className={styles.header}>
-                <h3>Itens</h3>
-                <button
-                    type='button'
-                    onClick={handleAddItem}
-                    disabled={!editing}
-                    className={styles.addButton}
-                >
-                    {LABEL_BTN_ADD}
-                </button>
+                <span className={styles.title}>Itens do orçamento <span className={styles.obligatory}>*</span></span>
+
+                <Button
+                    label={LABEL_BTN_ADD}
+                    handleFunction={handleAddItem}
+                    isDisabled={!editing}
+                    icon_feather={<Icon icon='plus-circle' size='small' />}
+                    style={{ fontSize: '0.85rem' }}
+                />
             </div>
 
             <div className={styles.tableWrapper}>
@@ -130,9 +165,7 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
                                             type='text'
                                             className={styles.input}
                                             value={item.description ?? ''}
-                                            onChange={(e) =>
-                                                handleUpdateItem(item.quoteItemId!, 'description', e.target.value)
-                                            }
+                                            onChange={(e) => handleUpdateItem(item.quoteItemId!, 'description', e.target.value)}
                                             disabled={!editing}
                                             placeholder='Descrição'
                                         />
@@ -141,16 +174,11 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
                                     <td>
                                         <input
                                             type='number'
-                                            min={0}
                                             step={1}
                                             className={styles.input}
                                             value={item.quantity ?? 0}
-                                            onChange={(e) =>
-                                                handleUpdateItem(item.quoteItemId!, 'quantity', e.target.value)
-                                            }
-                                            onBlur={() =>
-                                                handleBlurNormalizeNumber(item.quoteItemId!, 'quantity')
-                                            }
+                                            onChange={(e) => handleUpdateItem(item.quoteItemId!, 'quantity', e.target.value, 0, 9999)}
+                                            onBlur={() => handleBlurNormalizeNumber(item.quoteItemId!, 'quantity')}
                                             disabled={!editing}
                                         />
                                     </td>
@@ -158,16 +186,11 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
                                     <td>
                                         <input
                                             type='number'
-                                            min={0}
                                             step={0.01}
                                             className={styles.input}
                                             value={item.unitPrice ?? 0}
-                                            onChange={(e) =>
-                                                handleUpdateItem(item.quoteItemId!, 'unitPrice', e.target.value)
-                                            }
-                                            onBlur={() =>
-                                                handleBlurNormalizeNumber(item.quoteItemId!, 'unitPrice')
-                                            }
+                                            onChange={(e) => handleUpdateItem(item.quoteItemId!, 'unitPrice', e.target.value, 0, 999999)}
+                                            onBlur={() => handleBlurNormalizeNumber(item.quoteItemId!, 'unitPrice')}
                                             disabled={!editing}
                                         />
                                     </td>
@@ -204,7 +227,7 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
             </div>
 
             <div className={styles.footer}>
-                Total geral: <strong>R$ {getGrandTotal()}</strong>
+                Total geral: <strong>R$ {handleGetGrandTotal()}</strong>
             </div>
         </section>
     )

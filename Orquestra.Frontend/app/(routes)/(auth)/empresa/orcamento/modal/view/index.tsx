@@ -1,5 +1,6 @@
 'use client';
 import EmpresaQuotesItemsEditor from '@/app/(routes)/(auth)/empresa/orcamento/quote-item';
+import { iClient } from '@/app/api/consts/client';
 import { CONSTS_QUOTE, iQuote } from '@/app/api/consts/quote';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
@@ -13,6 +14,7 @@ import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import { Guid } from 'guid-typescript';
@@ -22,14 +24,17 @@ interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
+    clients: iClient[];
     quote: iQuote | undefined;
     companyId: Guid | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
-export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, type, quote, companyId, setTrigger }: iProps) {
+export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, type, clients, quote, companyId, setTrigger }: iProps) {
 
     const [isModalGrid,] = useIsModalGrid();
+    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
+
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
@@ -56,7 +61,15 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
         setSaving(false);
         setEditing(true);
 
+        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', ['fullName', 'phone', 'email']);
+        setClientsDropDown(optionsClients);
+
         if (type === 'create') {
+            setFormData(prev => ({
+                ...prev,
+                companyId: companyId
+            }));
+
             return;
         }
 
@@ -66,7 +79,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
 
         setFormData({
             quoteId: quote ? quote.quoteId : SYSTEM.EMPTY_GUID,
-            companyId: quote ? quote.companyId : SYSTEM.EMPTY_GUID,
+            companyId: companyId,
             clientId: quote ? quote.clientId : SYSTEM.EMPTY_GUID,
             title: quote && quote.title ? quote.title : '',
             observation: quote && quote.observation ? quote.observation : null,
@@ -74,12 +87,20 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
             quoteStatus: quote ? quote.quoteStatus : '',
             items: quote && quote.items ? quote.items : []
         });
-    }, [isModalOpen, type, quote, setIsModalOpen, handleClose]);
+    }, [isModalOpen, type, clients, quote, companyId, setIsModalOpen, handleClose]);
 
     const quoteStatusEnum = useApiGetEnum({ enumName: 'QuoteStatusEnum' });
+
+    const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setQuoteStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.quoteStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
+        console.clear();
+        const teste = handleLoopFormData(formData);
+        const teste2 = teste.json as iQuote;
+        console.log(teste2);
+        return;
+
         if (!formData.companyId || !formData.clientId || !formData.title || !formData.quoteStatus || !formData.items || !formData.items?.length) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
@@ -163,6 +184,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
 
                 <main className={styles.modalContent}>
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
+                        <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
                         <InputMask title='Título' fieldName='title' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask type='date' title='Válido até' fieldName='validUntil' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Status do orçamento' options={quoteStatusEnum ?? []} selectedOption={quoteStatusEnum?.find(x => x.value === formData.quoteStatus) ?? undefined} setSelectedOption={setQuoteStatusOption} isDisabled={!editing} isObligatory={true} />
