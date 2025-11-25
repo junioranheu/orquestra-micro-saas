@@ -32,6 +32,42 @@ public sealed class GetAllQuoteByCompanyId(Context context, ICheckIfUserIsLinked
 
         var output = result.Adapt<List<QuoteOutput>>();
 
+        output = await PopulateItems(output);
+
         return (output, count);
     }
+
+    #region extras
+    private async Task<List<QuoteOutput>> PopulateItems(List<QuoteOutput> quotes)
+    {
+        if (quotes.Count == 0)
+        {
+            return quotes;
+        }
+
+        List<Guid> ids = quotes.Where(q => q.QuoteId != Guid.Empty).Select(q => q.QuoteId).Distinct().ToList();
+
+        if (ids.Count == 0)
+        {
+            return quotes;
+        }
+
+        List<QuoteItem> items = await _context.QuoteItems.AsNoTracking().Where(i => ids.Contains(i.QuoteId)).ToListAsync();
+        Dictionary<Guid, List<QuoteItem>> grouped = items.GroupBy(i => i.QuoteId).ToDictionary(g => g.Key, g => g.ToList());
+
+        foreach (var q in quotes)
+        {
+            if (grouped.TryGetValue(q.QuoteId, out var list))
+            {
+                q.Items = list.Adapt<List<QuoteItem>>();
+            }
+            else
+            {
+                q.Items = [];
+            }
+        }
+
+        return quotes;
+    }
+    #endregion
 }

@@ -5,7 +5,6 @@ import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
-import ROUTES from '@/app/consts/routes';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
@@ -75,11 +74,6 @@ export default function EmpresaOrcamento() {
     ] as iTableColumn[];
 
     const managingOptions = [
-        {
-            label: 'Visualizar detalhes',
-            function: (e) => router.push(`${ROUTES.EMPRESA_CLIENTES}/${e.clientId}`),
-            icon: <Icon icon='search' />
-        },
         {
             label: 'Editar orçamento',
             function: (e) => handleOpenModalView(e),
