@@ -10,6 +10,7 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSet
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
+import EmpresaQuotesModalFilters from './modal/filter';
 import EmpresaQuotesModalView from './modal/view';
 
 export default function EmpresaOrcamento() {
@@ -38,9 +39,9 @@ export default function EmpresaOrcamento() {
 
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 
-    // const [modalFilterFormData, setModalFilterFormData] = useState<iClientFormDataModalFilter>({
-    //     fullName: null, email: null, cpf: null, address: null, addressNumber: null, city: null, state: null, zipCode: null, country: null, dateOfBirth: null, notes: null, phone: null
-    // });
+    const [modalFilterFormData, setModalFilterFormData] = useState<iQuote>({
+        title: null, validUntil: null
+    });
 
     const columns = [
         {
@@ -121,14 +122,14 @@ export default function EmpresaOrcamento() {
                     setCurrentPage={setCurrentPage}
                     totalRowsCount={quotes?.count}
                     managingOptions={managingOptions}
-                    // modalFilterFormData={modalFilterFormData}
-                    // setModalFilterFormData={setModalFilterFormData}
+                    modalFilterFormData={modalFilterFormData}
+                    setModalFilterFormData={setModalFilterFormData}
                     apiUrlRequest={apiUrlRequest}
                     setApiUrlRequest={setApiUrlRequest}
                 />
             </TemplatePageHeader>
 
-            {/* <EmpresaClientesModalFilters
+            <EmpresaQuotesModalFilters
                 isModalOpen={isModalFilterOpen}
                 setIsModalOpen={setIsModalFilterOpen}
                 modalFilterFormData={modalFilterFormData}
@@ -136,7 +137,7 @@ export default function EmpresaOrcamento() {
                 apiUrlRequest={apiUrlRequest}
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
-            /> */}
+            />
 
             <EmpresaQuotesModalView
                 isModalOpen={isModalViewOpen}

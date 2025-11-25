@@ -137,7 +137,10 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
 
             name: 'Nome',
             description: 'Descrição',
-            quantity: 'Quantidade'
+            quantity: 'Quantidade',
+
+            title: 'Título',
+            validUntil: 'Validade'
         };
 
         if (dictionary[content]) {

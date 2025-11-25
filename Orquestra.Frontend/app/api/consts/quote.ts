@@ -16,7 +16,7 @@ export interface iQuote {
     quoteId?: Guid;
     companyId?: Guid;
     company?: iCompanyOutput | null;
-    clientId: Guid;
+    clientId?: Guid;
     client?: iClient | null;
     title?: string | null;
     observation?: string | null;

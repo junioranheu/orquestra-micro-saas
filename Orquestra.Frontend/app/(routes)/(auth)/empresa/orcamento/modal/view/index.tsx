@@ -92,7 +92,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
 
     const quoteStatusEnum = useApiGetEnum({ enumName: 'QuoteStatusEnum' });
 
-    const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setQuoteStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.quoteStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
@@ -108,7 +108,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
         const input = data.json as iQuote;
 
         // #region normalizar_props
-        input.clientId = handleNormalizeGuidField(input.clientId);
+        input.clientId = handleNormalizeGuidField(input.clientId ?? SYSTEM.EMPTY_GUID);
 
         input.items?.forEach(element => {
             if (element.quoteItemId) {

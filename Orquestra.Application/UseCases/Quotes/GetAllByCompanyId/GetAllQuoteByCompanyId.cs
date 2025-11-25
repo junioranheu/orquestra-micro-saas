@@ -23,7 +23,8 @@ public sealed class GetAllQuoteByCompanyId(Context context, ICheckIfUserIsLinked
                         x.CompanyId == companyId &&
                         x.Status == true &&
                         (string.IsNullOrEmpty(input.Title) || x.Title!.ToLower().Contains(input.Title.ToLower())) &&
-                        (string.IsNullOrEmpty(input.Observation) || x.Observation!.ToLower().Contains(input.Observation!.ToLower()))
+                        (string.IsNullOrEmpty(input.Observation) || x.Observation!.ToLower().Contains(input.Observation!.ToLower())) &&
+                        (input.ValidUntil == null || input.ValidUntil == DateTime.MinValue || (x.ValidUntil >= input.ValidUntil.Value.Date && x.ValidUntil < input.ValidUntil.Value.Date.AddDays(1)))
                     ).
                     OrderByDescending(x => x.LastModificationDate ?? DateTime.MinValue).
                     ThenByDescending(x => x.CreatedDate);
