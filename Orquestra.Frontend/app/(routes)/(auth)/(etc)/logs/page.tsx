@@ -38,7 +38,8 @@ export default function Logs() {
                 const map: Record<number, string> = {
                     1: 'Exceção',
                     2: 'Requisição',
-                    3: 'Job'
+                    3: 'Job',
+                    4: 'Auditoria'
                 };
 
                 return map[value] ?? '-';
