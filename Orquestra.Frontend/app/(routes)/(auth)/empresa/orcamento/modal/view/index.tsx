@@ -3,16 +3,17 @@ import { CONSTS_QUOTE, iQuote } from '@/app/api/consts/quote';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
-import Dropdown from '@/app/components/input/drop-down';
+import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
-import { handleFormatDateToInputValue } from '@/app/functions/format.date';
-import { handleGetOnlyNumbers } from '@/app/functions/format.string';
-import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
+import handleGetPropName from '@/app/functions/get.propName';
+import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
+import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -27,6 +28,7 @@ interface iProps {
 
 export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, type, quote, companyId, setTrigger }: iProps) {
 
+    const [isModalGrid,] = useIsModalGrid();
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
@@ -67,14 +69,17 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
             clientId: quote ? quote.clientId : SYSTEM.EMPTY_GUID,
             title: quote && quote.title ? quote.title : '',
             observation: quote && quote.observation ? quote.observation : null,
-            validUntil: quote && quote.validUntil ? handleFormatDateToInputValue(new Date(quote.validUntil)) : SYSTEM.EMPTY_DATE,
+            validUntil: quote && quote.validUntil ? new Date(quote.validUntil) : SYSTEM.EMPTY_DATE,
             quoteStatus: quote ? quote.quoteStatus : '',
             items: quote && quote.items ? quote.items : []
         });
     }, [isModalOpen, type, quote, setIsModalOpen, handleClose]);
 
+    const quoteStatusEnum = useApiGetEnum({ enumName: 'QuoteStatusEnum' });
+    const setQuoteStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.quoteStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+
     async function handleSave() {
-        if (!formData.fullName || !formData.cpf) {
+        if (!formData.companyId || !formData.clientId || !formData.title || !formData.quoteStatus || !formData.items || !formData.items?.length) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
         }
@@ -84,23 +89,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
 
         const data = handleLoopFormData(formData);
         const input = data.json as iQuote;
-
-        if (input.cpf) {
-            input.cpf = handleGetOnlyNumbers(input.cpf);
-        }
-
-        if (input.phone) {
-            input.phone = handleGetOnlyNumbers(input.phone);
-        }
-
-        if (!companyId) {
-            swal({ content: 'Erro interno: O ID da empresa está vazio. Tente novamente, e se o erro persistir, contate o suporte.', icon: 'error' });
-            return;
-        }
-
-        input.companyId = companyId;
-
-        // console.log(input);
+        console.log(input);
 
         if (type === 'create') {
             const output = await Fetch.post({ url: CONSTS_QUOTE.post, body: input }) as iQuote;
@@ -156,7 +145,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
                 <header className={styles.modalHeader}>
                     <div className={styles.modalHeaderLeft}>
                         <h1 className={styles.inputTitle}>
-                            {type === 'create' ? (formData.title ? `Novo orçamento: ${formData.title}` : 'Registrar novo orçamento') : <ContentLoaderText content={(`Editar orçamento: ${formData?.title}`)} />}
+                            {type === 'create' ? (formData.title ? `Registrar novo orçamento: ${formData.title}` : 'Registrar novo orçamento') : <ContentLoaderText content={(`Editar orçamento: ${formData?.title}`)} />}
                         </h1>
                     </div>
 
@@ -172,19 +161,17 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
                 </header>
 
                 <main className={styles.modalContent}>
-                    <div className='modal-layout-grid'>
-                        <InputMask title='Nome' fieldName='fullName' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
-                        <InputMask title='CPF' fieldName='cpf' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='000000000-00' isObligatory={true} />
-                        <InputMask title='E-mail' fieldName='email' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Telefone' fieldName='phone' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='(00) 00000-0000' />
-                        <InputMask title='CEP' fieldName='zipCode' formData={formData} setFormData={setFormData} isDisabled={!editing} mask='00000-000' handleOnChange={(e) => handleGetCEP(e)} />
-                        <InputMask title='Rua' fieldName='address' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Número do endereço' fieldName='addressNumber' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Cidade' fieldName='city' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Estado' fieldName='state' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <Dropdown title='País' options={(countries ?? []).map(country => ({ value: country, label: country }))} selectedOption={(countries ?? []).map(country => ({ value: country, label: country })).find(x => x.value === formData.country)} setSelectedOption={setCountryOption} isDisabled={!editing} />
-                        <InputMask type='date' title='Data de aniversário' fieldName='dateOfBirth' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <InputMask title='Anotações' fieldName='notes' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                    <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
+                        <InputMask title='Título' fieldName='title' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask type='date' title='Válido até' fieldName='validUntil' formData={formData} setFormData={setFormData} isDisabled={!editing} />
+                        <Dropdown title='Status do orçamento' options={quoteStatusEnum ?? []} selectedOption={quoteStatusEnum?.find(x => x.value === formData.quoteStatus) ?? undefined} setSelectedOption={setQuoteStatusOption} isDisabled={!editing} isObligatory={true} />
+
+                        <div />
+
+                        <div className={`${styles.div} ${styles.full}`}>
+                            <label>Observações</label>
+                            <textarea value={formData.observation ?? ''} className={styles.textarea} readOnly={!editing} rows={5} maxLength={512} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
+                        </div>
                     </div>
                 </main>
 

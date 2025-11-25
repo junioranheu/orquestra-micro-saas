@@ -342,14 +342,14 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                         <InputMask title='Título do evento' fieldName='customTitle' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='URL' fieldName='customUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
-                        <div className={styles.div}>
+                        <div className={`${styles.div} ${styles.full}`}>
                             <label>Observações da equipe</label>
                             <textarea className={styles.textarea} rows={3} value={formData.observation ?? ''} readOnly={!editing} onChange={(e) => setFormData((prev: typeof formData) => ({ ...prev, observation: e.target.value }))} />
                         </div>
 
                         {
                             type === 'edit' && (
-                                <div className={styles.div}>
+                                <div className={`${styles.div} ${styles.full}`}>
                                     <label>Observações do sistema</label>
                                     <textarea className={styles.textarea} rows={3} value={(formData.observations ?? []).join('\n')} readOnly={true} />
                                 </div>
