@@ -30,8 +30,9 @@ public sealed class GetLog(Context context) : IGetLog
             {
                 log.User.Password = string.Empty;
                 log.User.RecoverPasswordAnswer = string.Empty;
-                log.ChangedFields = GetChangedFieldsFromBeforeAndAfter(log.Parameters);
             }
+
+            log.ChangedFields = GetChangedFieldsFromBeforeAndAfter(log.Parameters);
         });
 
         return (output, count);
