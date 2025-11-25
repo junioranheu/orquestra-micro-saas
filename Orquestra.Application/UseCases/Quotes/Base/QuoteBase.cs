@@ -1,5 +1,6 @@
 ﻿using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Quotes.Shared;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Quotes.Base;
 
@@ -21,6 +22,8 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
             throw new ArgumentException("A observação não é válida.");
         }
 
+        IsDateValidUntilValid(input.ValidUntil);
+
         if (input.Items is null || input.Items.Count == 0)
         {
             throw new ArgumentException("Nenhum item foi adicionado ao orçamento.");
@@ -28,24 +31,19 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
 
         foreach (var item in input.Items)
         {
-            if (!IsNameValid(item.Title) || string.IsNullOrEmpty(input.Title))
+            if (!IsNameValid(item.Title) || string.IsNullOrEmpty(item.Title))
             {
-                throw new ArgumentException("O nome do item não é válido.");
-            }
-
-            if (!IsDescriptionValid(item.Description))
-            {
-                throw new ArgumentException("A descrição do item não é válida.");
+                throw new ArgumentException($"O nome de um dos itens não é válido: <b>{item.Title}</b>.");
             }
 
             if (!IsQuantityValid(item.Quantity))
             {
-                throw new ArgumentException($"{item.Title}: a quantidade deve ser um número igual ou maior que zero.");
+                throw new ArgumentException($"<b>{item.Title}</b>: a quantidade deve ser um número igual ou maior que zero.");
             }
 
             if (!IsUnitPriceValid(item.UnitPrice))
             {
-                throw new ArgumentException($"{item.Title}: O preço unitário deve ser um valor positivo.");
+                throw new ArgumentException($"<b>{item.Title}</b>: o preço unitário deve ser um valor positivo.");
             }
         }
     }
@@ -55,5 +53,28 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
     protected static bool IsDescriptionValid(string? description) => description == null || description.Trim().Length <= 255;
     protected static bool IsQuantityValid(int quantity) => quantity > 0;
     protected static bool IsUnitPriceValid(decimal? unitPrice) => unitPrice is null or >= 0;
+
+    protected static void IsDateValidUntilValid(DateTime? validUntil)
+    {
+        if (validUntil is null) {
+            // throw new ArgumentException("A data de validade é obrigatória.");
+            return;
+        }
+
+        DateTime date;
+
+        try
+        {
+            date = validUntil.Value.Date;
+        }
+        catch
+        {
+            throw new ArgumentException("A data de validade é inválida.");
+        }
+
+        if (date.Date < GetDate().Date) { 
+            throw new ArgumentException("A data de validade não pode ser anterior a hoje.");
+        }
+    }
     #endregion
 }

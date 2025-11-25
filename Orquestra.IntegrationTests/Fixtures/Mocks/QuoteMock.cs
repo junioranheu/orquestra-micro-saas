@@ -29,7 +29,6 @@ public static class QuoteMock
                 {
                     QuoteId = quoteId,
                     Title = "Item 1",
-                    Description = "Descrição item 1",
                     Quantity = 2,
                     UnitPrice = 50,
 
@@ -42,7 +41,6 @@ public static class QuoteMock
                 {
                     QuoteId = quoteId,
                     Title = "Item 2",
-                    Description = "Descrição item 2",
                     Quantity = 1,
                     UnitPrice = 100,
 

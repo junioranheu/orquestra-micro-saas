@@ -2,7 +2,6 @@ import { iQuote, iQuoteItem } from '@/app/api/consts/quote';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import { Guid } from 'guid-typescript';
-import { useEffect } from 'react';
 import styles from './index.module.scss';
 
 interface iProps {
@@ -26,7 +25,6 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
         const newItem: iQuoteItem = {
             quoteItemId: Guid.create(),
             title: '',
-            description: '',
             quantity: 1,
             unitPrice: 0,
             totalPrice: 0,
@@ -117,15 +115,6 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
         });
     }
 
-    useEffect(() => {
-        if (formData.items) {
-            setFormData(prev => ({
-                ...prev,
-                items: handleRecalcTotals(prev.items!)
-            }));
-        }
-    }, []);
-
     function handleGetGrandTotal() {
         return (formData.items ?? []).reduce((sum, it) => sum + (it.totalPrice ?? 0), 0).toFixed(2);
     }
@@ -164,8 +153,8 @@ export default function ItemsEditor({ formData, setFormData, editing }: iProps) 
                                         <input
                                             type='text'
                                             className={styles.input}
-                                            value={item.description ?? ''}
-                                            onChange={(e) => handleUpdateItem(item.quoteItemId!, 'description', e.target.value)}
+                                            value={item.title ?? ''}
+                                            onChange={(e) => handleUpdateItem(item.quoteItemId!, 'title', e.target.value)}
                                             disabled={!editing}
                                             placeholder='Descrição'
                                         />

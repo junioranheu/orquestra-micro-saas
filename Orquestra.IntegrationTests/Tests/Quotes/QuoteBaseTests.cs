@@ -7,6 +7,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Quotes;
 
@@ -33,7 +34,6 @@ public sealed class QuoteBaseTests
                 new QuoteItem
                 {
                     Title = "Item ok",
-                    Description = "desc",
                     Quantity = 1,
                     UnitPrice = 10
                 }
@@ -65,7 +65,6 @@ public sealed class QuoteBaseTests
                 new QuoteItem
                 {
                     Title = "Item ok",
-                    Description = "desc",
                     Quantity = 1,
                     UnitPrice = 10
                 }
@@ -120,39 +119,6 @@ public sealed class QuoteBaseTests
                 new QuoteItem
                 {
                     Title = "",
-                    Description = "desc",
-                    Quantity = 1,
-                    UnitPrice = 10
-                }
-            ]
-        };
-
-        // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId));
-    }
-
-    [Fact]
-    public async Task Validate_ShouldThrow_WhenItemDescriptionInvalid()
-    {
-        // Arrange;
-        Context context = Fixture.CreateContext();
-
-        User user = UserMock.Create();
-        await Fixture.Save(context, user);
-
-        QuoteBase sut = CreateSut(context, user);
-
-        QuoteInput input = new()
-        {
-            Title = "Orçamento",
-            Observation = "obs",
-            CompanyId = Guid.NewGuid(),
-            Items =
-            [
-                new QuoteItem
-                {
-                    Title = "Item",
-                    Description = new string('a', 260),
                     Quantity = 1,
                     UnitPrice = 10
                 }
@@ -184,7 +150,6 @@ public sealed class QuoteBaseTests
                 new QuoteItem
                 {
                     Title = "Item",
-                    Description = "desc",
                     Quantity = -1,
                     UnitPrice = 10
                 }
@@ -216,7 +181,6 @@ public sealed class QuoteBaseTests
                 new QuoteItem
                 {
                     Title = "Item",
-                    Description = "desc",
                     Quantity = 1,
                     UnitPrice = -10
                 }
@@ -248,7 +212,6 @@ public sealed class QuoteBaseTests
                 new QuoteItem
                 {
                     Title = "Item ok",
-                    Description = "desc",
                     Quantity = 5,
                     UnitPrice = 35
                 }
@@ -260,6 +223,134 @@ public sealed class QuoteBaseTests
 
         // Assert;
         Assert.Equal("Orçamento Top", input.Title);
+    }
+
+    [Fact]
+    public async Task Validate_ShouldNotThrow_WhenValidUntilIsNull()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        QuoteBase sut = CreateSut(context, user);
+
+        QuoteInput input = new()
+        {
+            Title = "Orçamento",
+            Observation = "obs",
+            CompanyId = Guid.NewGuid(),
+            ValidUntil = null,
+            Items =
+            [
+                new QuoteItem
+                {
+                    Title = "Item",
+                    Quantity = 1,
+                    UnitPrice = 10
+                }
+            ]
+        };
+
+        // Act & Assert;
+        await sut.Validate(input, user.UserId);
+    }
+
+    [Fact]
+    public async Task Validate_ShouldThrow_WhenValidUntilBeforeToday()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        QuoteBase sut = CreateSut(context, user);
+
+        QuoteInput input = new()
+        {
+            Title = "Orçamento",
+            Observation = "obs",
+            CompanyId = Guid.NewGuid(),
+            ValidUntil = GetDate().Date.AddDays(-1),
+            Items =
+            [
+                new QuoteItem
+                {
+                    Title = "Item",
+                    Quantity = 1,
+                    UnitPrice = 10
+                }
+            ]
+        };
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, user.UserId));
+    }
+
+    [Fact]
+    public async Task Validate_ShouldNotThrow_WhenValidUntilIsToday()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        QuoteBase sut = CreateSut(context, user);
+
+        QuoteInput input = new()
+        {
+            Title = "Orçamento",
+            Observation = "obs",
+            CompanyId = Guid.NewGuid(),
+            ValidUntil = GetDate(),
+            Items =
+            [
+                new QuoteItem
+                {
+                    Title = "Item",
+                    Quantity = 1,
+                    UnitPrice = 10
+                }
+            ]
+        };
+
+        // Act & Assert;
+        await sut.Validate(input, user.UserId);
+    }
+
+    [Fact]
+    public async Task Validate_ShouldNotThrow_WhenValidUntilIsFuture()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        QuoteBase sut = CreateSut(context, user);
+
+        QuoteInput input = new()
+        {
+            Title = "Orçamento",
+            Observation = "obs",
+            CompanyId = Guid.NewGuid(),
+            ValidUntil = GetDate().Date.AddDays(7),
+            Items =
+            [
+                new QuoteItem
+                {
+                    Title = "Item",
+                    Quantity = 1,
+                    UnitPrice = 10
+                }
+            ]
+        };
+
+        // Act & Assert;
+        await sut.Validate(input, user.UserId);
     }
 
     #region helpers

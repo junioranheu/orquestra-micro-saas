@@ -30,7 +30,6 @@ export interface iQuoteItem {
     quoteId?: Guid;
     quote?: iQuote | null;
     title?: string;
-    description?: string | null;
     quantity?: number;
     unitPrice?: number;
     totalPrice?: number;

@@ -12,6 +12,7 @@ import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
+import { handleNormalizeGuidField } from '@/app/functions/normalize.guid';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
@@ -105,7 +106,18 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
 
         const data = handleLoopFormData(formData);
         const input = data.json as iQuote;
-        console.log(input);
+
+        // #region normalizar_props
+        input.clientId = handleNormalizeGuidField(input.clientId);
+
+        input.items?.forEach(element => {
+            if (element.quoteItemId) {
+                element.quoteItemId = handleNormalizeGuidField(element.quoteItemId)
+            }
+        });
+
+        // console.log(input);
+        // #endregion
 
         if (type === 'create') {
             const output = await Fetch.post({ url: CONSTS_QUOTE.post, body: input }) as iQuote;

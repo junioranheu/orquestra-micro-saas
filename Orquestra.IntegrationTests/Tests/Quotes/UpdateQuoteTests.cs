@@ -119,7 +119,6 @@ public sealed class UpdateQuoteTests
             QuoteItemId = Guid.NewGuid(),
             QuoteId = Guid.Empty, 
             Title = "Item Original",
-            Description = "desc",
             Quantity = 1,
             UnitPrice = 10,
             CreatedBy = user.UserId,
@@ -163,7 +162,6 @@ public sealed class UpdateQuoteTests
                 new QuoteItem
                 {
                     Title = existingItem.Title,
-                    Description = existingItem.Description,
                     Quantity = existingItem.Quantity,
                     UnitPrice = existingItem.UnitPrice
                 }
@@ -199,7 +197,6 @@ public sealed class UpdateQuoteTests
             QuoteItemId = Guid.NewGuid(),
             QuoteId = quote.QuoteId,
             Title = "Item Existente",
-            Description = "Desc existente",
             Quantity = 1,
             UnitPrice = 50,
             CreatedBy = user.UserId,
@@ -223,7 +220,6 @@ public sealed class UpdateQuoteTests
                 new QuoteItem
                 {
                     Title = "Novo Item",
-                    Description = "desc",
                     Quantity = 5,
                     UnitPrice = 10,
                     QuoteId = quote.QuoteId // Opcional, mas evita problema de tracking;

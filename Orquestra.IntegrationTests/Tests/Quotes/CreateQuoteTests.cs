@@ -33,7 +33,6 @@ public sealed class CreateQuoteTests
                 new QuoteItem
                 {
                     Title = "Item válido",
-                    Description = "desc",
                     Quantity = 1,
                     UnitPrice = 10
                 }
@@ -67,14 +66,12 @@ public sealed class CreateQuoteTests
                 new QuoteItem
                 {
                     Title = "Item 1",
-                    Description = "desc",
                     Quantity = 2,
                     UnitPrice = 50
                 },
                 new QuoteItem
                 {
                     Title = "Item 2",
-                    Description = "desc 2",
                     Quantity = 1,
                     UnitPrice = 100
                 }
@@ -117,7 +114,6 @@ public sealed class CreateQuoteTests
                 new QuoteItem
                 {
                     Title = "Item X",
-                    Description = "desc",
                     Quantity = 10,
                     UnitPrice = 25
                 }
@@ -205,12 +201,11 @@ public sealed class CreateQuoteTests
             Items =
             [
                 new QuoteItem
-            {
-                Title = "Item inválido",
-                Description = "desc",
-                Quantity = 0, // Inválido;
-                UnitPrice = 10
-            }
+                {
+                    Title = "Item inválido",
+                    Quantity = 0, // Inválido;
+                    UnitPrice = 10
+                }
             ]
         };
 

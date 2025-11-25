@@ -16,9 +16,6 @@ public sealed class QuoteItem : Audit
     [MaxLength(120)]
     public string Title { get; set; } = string.Empty;
 
-    [MaxLength(500)]
-    public string? Description { get; set; }
-
     public int Quantity { get; set; } = 1;
 
     [Precision(10, 2)]
