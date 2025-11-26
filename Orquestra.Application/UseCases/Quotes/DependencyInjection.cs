@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Orquestra.Application.UseCases.Quotes.Create;
 using Orquestra.Application.UseCases.Quotes.Delete;
+using Orquestra.Application.UseCases.Quotes.GeneratePDF;
 using Orquestra.Application.UseCases.Quotes.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Quotes.Update;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateQuote, CreateQuote>();
         services.AddScoped<IUpdateQuote, UpdateQuote>();
         services.AddScoped<IDeleteQuote, DeleteQuote>();
+        // services.AddScoped<IGeneratePDFQuote, GeneratePDFQuote>();
 
         return services;
     }

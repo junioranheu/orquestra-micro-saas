@@ -42,6 +42,7 @@ public static class DependencyInjection
         AddRabbitMQ(services);
         AddContext(services, builder);
         AddJobs(services);
+        AddNugetPackages();
 
         return services;
     }
@@ -230,5 +231,10 @@ public static class DependencyInjection
     {
         services.AddHostedService<CompanyPlanJob>();
         services.AddHostedService<ScheduleStatusJob>();
+    }
+
+    private static void AddNugetPackages()
+    {
+        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
     }
 }
