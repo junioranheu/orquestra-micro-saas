@@ -15,7 +15,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateQuote, CreateQuote>();
         services.AddScoped<IUpdateQuote, UpdateQuote>();
         services.AddScoped<IDeleteQuote, DeleteQuote>();
-        // services.AddScoped<IGeneratePDFQuote, GeneratePDFQuote>();
+        services.AddScoped<IGeneratePDFQuote, GeneratePDFQuote>();
 
         return services;
     }
