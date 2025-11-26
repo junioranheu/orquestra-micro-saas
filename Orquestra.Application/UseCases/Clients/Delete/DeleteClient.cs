@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
-using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Clients.Delete;
 
-public sealed class DeleteClient(Context context) : IDeleteClient
+public sealed class DeleteClient(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IDeleteClient
 {
     private readonly Context _context = context;
+    private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
     public async Task Execute(Guid userIdAuth, Guid clientId)
     {
@@ -17,17 +18,9 @@ public sealed class DeleteClient(Context context) : IDeleteClient
                          Where(x => x.ClientId == clientId).
                          FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundClient);
 
-        CompanyUser? user = await _context.CompanyUsers.
-                            AsNoTracking().
-                            Where(x =>
-                               x.CompanyId == client.CompanyId &&
-                               x.UserId == userIdAuth &&
-                               x.CompanyUserRole == CompanyUserRoleEnum.Administrator &&
-                               x.Status == true
-                            ).FirstOrDefaultAsync() ?? throw new UnauthorizedAccessException("Você não tem permissão para excluir este cliente.");
+        await _checkIfUserIsLinkedCompanyUser.Execute(companyId: client.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         client.Status = false;
-
         _context.Update(client);
         await _context.SaveChangesAsync();
     }

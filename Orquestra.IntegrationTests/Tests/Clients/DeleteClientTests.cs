@@ -1,4 +1,7 @@
-﻿using Orquestra.Application.UseCases.Clients.Delete;
+﻿using Microsoft.AspNetCore.Http;
+using Orquestra.Application.UseCases.Clients.Delete;
+using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
+using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -32,7 +35,7 @@ public sealed class DeleteClientTests
 
         await Fixture.Save(context, companyUser);
 
-        DeleteClient sut = CreateSut(context);
+        DeleteClient sut = CreateSut(context, user);
 
         // Act;
         await sut.Execute(user.UserId, client.ClientId);
@@ -52,7 +55,7 @@ public sealed class DeleteClientTests
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
-        DeleteClient sut = CreateSut(context);
+        DeleteClient sut = CreateSut(context, user);
 
         // Act & Assert;
         await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, Guid.NewGuid()));
@@ -82,16 +85,20 @@ public sealed class DeleteClientTests
 
         await Fixture.Save(context, companyUser);
 
-        DeleteClient sut = CreateSut(context);
+        DeleteClient sut = CreateSut(context, user);
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, client.ClientId));
     }
 
     #region helper
-    private static DeleteClient CreateSut(Context context)
+    private static DeleteClient CreateSut(Context context, User user)
     {
-        DeleteClient deleteClient = new(context);
+        IHttpContextAccessor httpContextAccessor = Fixture.CreateIHttpContextAccessor(user);
+        GetAllCompanyUserByCompanyId getCompanyUserByCompanyId = new(context);
+        CheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser = new(getCompanyUserByCompanyId, httpContextAccessor);
+
+        DeleteClient deleteClient = new(context, checkIfUserIsLinkedCompanyUser);
 
         return deleteClient;
     }

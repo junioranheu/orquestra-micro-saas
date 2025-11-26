@@ -9,7 +9,8 @@ export const CONSTS_QUOTE = {
     post: `${BASE}/${controller}`,
     put: `${BASE}/${controller}`,
     get: `${BASE}/${controller}`,
-    getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`
+    getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`,
+    disable: `${BASE}/${controller}/Disable`
 };
 
 export interface iQuote {

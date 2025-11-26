@@ -2,9 +2,6 @@
 Resolver o TO DO em PayCompanyInvoice;
 Atualizar o sistema para o .NET 10 (dia 11/11); (PostgreSQL já atualizou?);
 
-⦁	Módulo de Orçamento:
-Criar DeleteQuote (integrar com front)
-
 ⦁	Módulo de Ordem de serviço:
 Criar classe
 Criar UseCase e dependências

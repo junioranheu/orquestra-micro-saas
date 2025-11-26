@@ -1,15 +1,18 @@
 'use client';
 import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_QUOTE, iQuote, iQuoteItem, iQuotePaginated } from '@/app/api/consts/quote';
+import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
+import swal from '@/app/functions/swal';
+import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaQuotesModalFilters from './modal/filter';
 import EmpresaQuotesModalView from './modal/view';
 
@@ -79,7 +82,14 @@ export default function EmpresaOrcamento() {
             label: 'Editar orçamento',
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />
-        }
+        },
+        ...(me?.isUserAdmOfCurrentMainCompany ? [
+            {
+                label: 'Desativar orçamento',
+                function: (e: iQuote) => handleDisable(e, setTrigger),
+                icon: <Icon icon='x' />
+            }
+        ] : [])
     ] as iTableManagingOptions[];
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
@@ -150,4 +160,26 @@ export default function EmpresaOrcamento() {
             />
         </Fragment>
     )
+}
+
+async function handleDisable(quote: iQuote, setTrigger: Dispatch<SetStateAction<Date>>) {
+    swal({
+        content: 'Você tem certeza que deseja desativar este orçamento? Este processo é irreversível.',
+        confirmBtnText: 'Sim, desejo desativar',
+        mustConfirm: true,
+        checkboxLabel: 'Sim, confirmo',
+        confirmFunction: async () => {
+            const client = await Fetch.put({ url: `${CONSTS_QUOTE.disable}?quoteId=${quote.quoteId}` });
+
+            if (client) {
+                toast({ content: 'Orçamento desativado com sucesso.' });
+                setTrigger(new Date());
+                return;
+            }
+
+            toast({ content: 'Não foi possível desativar este orçamento. Tente novamente mais tarde.' });
+        },
+        cancelBtnText: 'Voltar',
+        icon: 'question'
+    });
 }
