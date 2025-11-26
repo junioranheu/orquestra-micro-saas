@@ -32,17 +32,6 @@ public sealed class CreateQuote(Context context, ICheckIfUserIsLinkedCompanyUser
 
         await _context.AddAsync(quote);
         await _context.SaveChangesAsync();
-
-        //if (input.Items is not null && input.Items.Count > 0)
-        //{
-        //    foreach (var item in input.Items)
-        //    {
-        //        item.QuoteItemId = Guid.Empty;
-        //    }
-
-        //    await _context.AddRangeAsync(input.Items);
-        //    await _context.SaveChangesAsync();
-        //}
     }
     #endregion
 }

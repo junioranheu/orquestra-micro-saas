@@ -26,19 +26,34 @@ public sealed class UpdateQuote(Context context, ICheckIfUserIsLinkedCompanyUser
     #region extras
     private async Task Update(QuoteInput input, Quote quote)
     {
+        quote.ClientId = input.ClientId.GetValueOrDefault();
         quote.Title = input.Title;
         quote.Observation = input.Observation;
         quote.ValidUntil = input.ValidUntil.GetValueOrDefault();
         quote.QuoteStatus = input.QuoteStatus.GetValueOrDefault();
 
-        _context.Update(quote);
-        await _context.SaveChangesAsync();
-
         if (input.Items is not null && input.Items.Count > 0)
         {
-            await _context.AddRangeAsync(input.Items);
-            await _context.SaveChangesAsync();
+            List<QuoteItem> previousItems = await _context.QuoteItems.Where(x => x.QuoteId == quote.QuoteId).ToListAsync();
+
+            if (previousItems.Count != 0)
+            {
+                _context.RemoveRange(previousItems);
+                await _context.SaveChangesAsync();
+            }
+
+            quote.Items.Clear();
+
+            foreach (var item in input.Items)
+            {
+                item.QuoteItemId = Guid.Empty;
+                item.QuoteId = quote.QuoteId;
+                quote.Items.Add(item);
+            }
         }
+
+        _context.Update(quote);
+        await _context.SaveChangesAsync();
     }
     #endregion
 }

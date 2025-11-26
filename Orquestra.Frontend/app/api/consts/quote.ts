@@ -20,7 +20,7 @@ export interface iQuote {
     client?: iClient | null;
     title?: string | null;
     observation?: string | null;
-    validUntil?: Date | null;
+    validUntil?: Date | string | null;
     quoteStatus?: string;
     items?: iQuoteItem[];
 }

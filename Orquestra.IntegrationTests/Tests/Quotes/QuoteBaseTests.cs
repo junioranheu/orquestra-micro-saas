@@ -273,7 +273,7 @@ public sealed class QuoteBaseTests
             Title = "Orçamento",
             Observation = "obs",
             CompanyId = Guid.NewGuid(),
-            ValidUntil = GetDate().Date.AddDays(-1),
+            ValidUntil = GetDate().Date.AddDays(-2),
             Items =
             [
                 new QuoteItem

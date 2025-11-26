@@ -9,6 +9,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Quotes;
 
@@ -122,7 +123,7 @@ public sealed class UpdateQuoteTests
             Quantity = 1,
             UnitPrice = 10,
             CreatedBy = user.UserId,
-            CreatedDate = DateTime.UtcNow
+            CreatedDate = GetDate()
         };
 
         Quote quote = new()
@@ -131,11 +132,11 @@ public sealed class UpdateQuoteTests
             CompanyId = Guid.NewGuid(),
             Title = "Original",
             Observation = "Obs original",
-            ValidUntil = DateTime.UtcNow.AddDays(5),
+            ValidUntil = GetDate().AddDays(5),
             QuoteStatus = QuoteStatusEnum.Draft,
 
             CreatedBy = user.UserId,
-            CreatedDate = DateTime.UtcNow,
+            CreatedDate = GetDate(),
             LastModificationBy = null,
             LastModificationDate = null,
 
@@ -200,7 +201,7 @@ public sealed class UpdateQuoteTests
             Quantity = 1,
             UnitPrice = 50,
             CreatedBy = user.UserId,
-            CreatedDate = DateTime.UtcNow
+            CreatedDate = GetDate()
         };
 
         quote.Items.Add(existingItem);
@@ -222,7 +223,7 @@ public sealed class UpdateQuoteTests
                     Title = "Novo Item",
                     Quantity = 5,
                     UnitPrice = 10,
-                    QuoteId = quote.QuoteId // Opcional, mas evita problema de tracking;
+                    QuoteId = quote.QuoteId
                 }
             ]
         };
@@ -234,13 +235,10 @@ public sealed class UpdateQuoteTests
         List<QuoteItem> items = [.. context.QuoteItems.Where(x => x.QuoteId == quote.QuoteId)];
 
         // Quantidade;
-        Assert.Equal(4, items.Count);
+        Assert.Single(items);
 
         // Item novo;
         Assert.Contains(items, x => x.Title == "Novo Item");
-
-        // Item existente mantido;
-        Assert.Contains(items, x => x.Title == existingItem.Title);
     }
 
     #region helpers

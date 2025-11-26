@@ -11,6 +11,7 @@ import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
+import { handleFormatDateToInputValue } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeGuidField } from '@/app/functions/normalize.guid';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -84,7 +85,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
             clientId: quote ? quote.clientId : SYSTEM.EMPTY_GUID,
             title: quote && quote.title ? quote.title : '',
             observation: quote && quote.observation ? quote.observation : null,
-            validUntil: quote && quote.validUntil ? new Date(quote.validUntil) : SYSTEM.EMPTY_DATE,
+            validUntil: quote && quote.validUntil ? handleFormatDateToInputValue(new Date(quote?.validUntil)) : SYSTEM.EMPTY_DATE,
             quoteStatus: quote ? quote.quoteStatus : '',
             items: quote && quote.items ? quote.items : []
         });

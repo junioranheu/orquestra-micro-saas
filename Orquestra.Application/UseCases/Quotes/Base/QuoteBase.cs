@@ -56,7 +56,8 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
 
     protected static void IsDateValidUntilValid(DateTime? validUntil)
     {
-        if (validUntil is null) {
+        if (validUntil is null)
+        {
             // throw new ArgumentException("A data de validade é obrigatória.");
             return;
         }
@@ -72,7 +73,8 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
             throw new ArgumentException("A data de validade é inválida.");
         }
 
-        if (date.Date < GetDate().Date) { 
+        if (date.Date < ConvertToBrasiliaTime(GetDate()).Date)
+        {
             throw new ArgumentException("A data de validade não pode ser anterior a hoje.");
         }
     }
