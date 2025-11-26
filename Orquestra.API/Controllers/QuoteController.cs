@@ -2,6 +2,7 @@
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Quotes.Create;
 using Orquestra.Application.UseCases.Quotes.Delete;
+using Orquestra.Application.UseCases.Quotes.GeneratePDF;
 using Orquestra.Application.UseCases.Quotes.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Quotes.Shared;
 using Orquestra.Application.UseCases.Quotes.Update;
@@ -16,13 +17,15 @@ public class QuoteController(
         IGetAllQuoteByCompanyId getQuoteByCompanyId,
         ICreateQuote create,
         IUpdateQuote update,
-        IDeleteQuote delete
+        IDeleteQuote delete,
+        IGeneratePDFQuote pdf
     ) : BaseController<QuoteController>
 {
     private readonly IGetAllQuoteByCompanyId _getQuoteByCompanyId = getQuoteByCompanyId;
     private readonly ICreateQuote _create = create;
     private readonly IUpdateQuote _update = update;
     private readonly IDeleteQuote _delete = delete;
+    private readonly IGeneratePDFQuote _pdf = pdf;
 
     [AuthorizeFilter(modules: [ModuleEnum.Quote])]
     [HttpPost]
@@ -72,5 +75,15 @@ public class QuoteController(
         (IEnumerable<QuoteOutput> output, int count) = await _getQuoteByCompanyId.Execute(paginationInput, input, userIdAuth, companyId: input.CompanyId.GetValueOrDefault());
 
         return Ok(new { output, count });
+    }
+
+    [AuthorizeFilter(modules: [ModuleEnum.Quote])]
+    [HttpGet("GetPDF")]
+    public async Task<IActionResult> GetQuotePdf([FromQuery] Guid quoteId)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        byte[] pdf = await _pdf.Execute(userIdAuth, quoteId);
+
+        return File(pdf, "application/pdf", $"Orçamento - {quoteId}.pdf");
     }
 }

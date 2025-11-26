@@ -3,7 +3,6 @@ Resolver o TO DO em PayCompanyInvoice;
 
 ⦁	Módulo de Orçamento:
 Criar GeneratePDFQuote
-Criar teste de integração
 Integrar front
 
 ⦁	Módulo de Ordem de serviço:
