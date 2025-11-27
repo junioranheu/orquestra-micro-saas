@@ -6,14 +6,7 @@ namespace Orquestra.Infrastructure.Services.PDF;
 
 public sealed class PDFService : IPDFService
 {
-    public PDFService() { }
-
-    /// <summary>
-    /// Gera um PDF em memória a partir de um modelo T;
-    /// Recebe um 'builder' que define o conteúdo do PDF usando a API do QuestPDF;
-    /// Retorna byte[] pronto pra salvar/retornar por API;
-    /// </summary>
-    public byte[] GeneratePdfFromModel<T>(T model, Action<IContainer, T> buildContent)
+    public byte[] GeneratePdfFromModel<T>(T model, Action<IContainer, T> buildContent, string titleDocument, bool addSignatureSection, bool showPageCounter, byte[]? logoBytes = null)
     {
         ArgumentNullException.ThrowIfNull(buildContent);
 
@@ -25,23 +18,93 @@ public sealed class PDFService : IPDFService
                 page.Margin(25);
                 page.DefaultTextStyle(x => x.FontSize(11));
 
-                page.Header().
-                     AlignCenter().
-                     Text("Documento gerado").
-                     SemiBold().FontSize(14);
+                // Header;
+                page.Header().Element(header =>
+                {
+                    header.Row(row =>
+                    {
+                        // Logo;
+                        if (logoBytes is not null && logoBytes.Length > 0)
+                        {
+                            row.ConstantItem(70).Height(50).Element(img =>
+                            {
+                                img.Image(logoBytes).FitArea();
+                            });
+                        }
 
-                page.Content().
-                     PaddingVertical(10).
-                     Element(x => buildContent(x, model));
+                        // Título;
+                        row.RelativeItem().Element(title =>
+                        {
+                            title.AlignCenter().PaddingTop(6).Text(t =>
+                            {
+                                t.Span(titleDocument).FontSize(16).Bold();
+                            });
+                        });
 
-                page.Footer().
-                     AlignCenter().
-                     Text(text =>
-                     {
-                         text.CurrentPageNumber();
-                         text.Span(" / ");
-                         text.TotalPages();
-                     });
+                        // Data;
+                        row.ConstantItem(120).Element(date =>
+                        {
+                            date.AlignRight().PaddingTop(6).Text(t =>
+                            {
+                                t.Span(DateTime.Now.ToString("dd/MM/yyyy")).FontSize(10);
+                            });
+                        });
+                    });
+                });
+
+                // Conteúdo;
+                page.Content().PaddingVertical(12).Column(col =>
+                {
+                    // Linha separadora;
+                    col.Item().Element(x =>
+                    {
+                        x.PaddingBottom(6).BorderBottom(1).BorderColor(Colors.Grey.Medium);
+                    });
+
+                    // Conteúdo dinâmico do documento;
+                    col.Item().Element(x => buildContent(x, model));
+
+                    // Seção de assinatura opcional;
+                    if (addSignatureSection)
+                    {
+                        col.Item().Element(sig =>
+                        {
+                            sig.PaddingTop(24).Column(signatureCol =>
+                            {
+                                signatureCol.Item().PaddingBottom(8).Text(t =>
+                                {
+                                    t.Span("Assinaturas").FontSize(13).Bold();
+                                });
+
+                                signatureCol.Item().Row(row =>
+                                {
+                                    row.RelativeItem().Element(c =>
+                                    {
+                                        c.PaddingTop(24).BorderTop(1).BorderColor(Colors.Grey.Lighten2).PaddingBottom(16).Text("Assinatura do cliente").FontSize(10);
+                                    });
+
+                                    row.ConstantItem(24).Element(_ => { });
+
+                                    row.RelativeItem().Element(c =>
+                                    {
+                                        c.PaddingTop(24).BorderTop(1).BorderColor(Colors.Grey.Lighten2).PaddingBottom(16).Text("Assinatura do responsável").FontSize(10);
+                                    });
+                                });
+                            });
+                        });
+                    }
+                });
+
+                // Contador;
+                if (showPageCounter)
+                {
+                    page.Footer().AlignCenter().Text(text =>
+                    {
+                        text.CurrentPageNumber();
+                        text.Span(" / ");
+                        text.TotalPages();
+                    });
+                }
             });
         });
 

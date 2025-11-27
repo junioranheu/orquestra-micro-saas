@@ -82,8 +82,8 @@ public class QuoteController(
     public async Task<IActionResult> GetQuotePdf([FromQuery] Guid quoteId)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        byte[] pdf = await _pdf.Execute(userIdAuth, quoteId);
+        (byte[] pdf, string title) = await _pdf.Execute(userIdAuth, quoteId);
 
-        return File(pdf, "application/pdf", $"Orçamento - {quoteId}.pdf");
+        return File(pdf, "application/pdf", $"{title}.pdf");
     }
 }

@@ -2,5 +2,5 @@
 
 public interface IGeneratePDFQuote
 {
-    Task<byte[]> Execute(Guid userIdAuth, Guid quoteId);
+    Task<(byte[] pdf, string title)> Execute(Guid userIdAuth, Guid quoteId);
 }

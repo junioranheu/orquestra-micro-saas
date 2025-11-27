@@ -18,13 +18,16 @@ public sealed class GetAllQuoteByCompanyId(Context context, ICheckIfUserIsLinked
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         var query = _context.Quotes.
+                    Include(x => x.Client).
+                    Include(x => x.Company).
                     AsNoTracking().
                     Where(x =>
                         x.CompanyId == companyId &&
-                        x.Status == true &&
+                        ((input.QuoteId == null || input.QuoteId == Guid.Empty) || x.QuoteId == input.QuoteId) &&
                         (string.IsNullOrEmpty(input.Title) || x.Title!.ToLower().Contains(input.Title.ToLower())) &&
                         (string.IsNullOrEmpty(input.Observation) || x.Observation!.ToLower().Contains(input.Observation!.ToLower())) &&
-                        (input.ValidUntil == null || input.ValidUntil == DateTime.MinValue || (x.ValidUntil >= input.ValidUntil.Value.Date && x.ValidUntil < input.ValidUntil.Value.Date.AddDays(1)))
+                        (input.ValidUntil == null || input.ValidUntil == DateTime.MinValue || (x.ValidUntil >= input.ValidUntil.Value.Date && x.ValidUntil < input.ValidUntil.Value.Date.AddDays(1))) &&
+                        x.Status == true
                     ).
                     OrderByDescending(x => x.LastModificationDate ?? DateTime.MinValue).
                     ThenByDescending(x => x.CreatedDate);

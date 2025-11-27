@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.CompanyUsers.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Quotes.GeneratePDF;
+using Orquestra.Application.UseCases.Quotes.GetAllByCompanyId;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
@@ -23,6 +24,9 @@ public sealed class GeneratePDFQuoteTests
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
         Guid companyId = Guid.NewGuid();
 
         Quote quote = new()
@@ -31,7 +35,8 @@ public sealed class GeneratePDFQuoteTests
             Title = "Orçamento PDF Teste",
             CompanyId = companyId,
             Status = true,
-            Client = new Client { FullName = "Cliente Teste" },
+            ClientId = client.ClientId,
+            Client = client,
             Items =
             [
                 new() { Title = "Item 1", Quantity = 2, UnitPrice = 50 },
@@ -44,11 +49,11 @@ public sealed class GeneratePDFQuoteTests
         GeneratePDFQuote sut = CreateSut(context, user);
 
         // Act;
-        byte[] pdfBytes = await sut.Execute(user.UserId, quote.QuoteId);
+        (byte[] pdf, string _) = await sut.Execute(user.UserId, quote.QuoteId);
 
         // Assert;
-        Assert.NotNull(pdfBytes);
-        Assert.True(pdfBytes.Length > 0);
+        Assert.NotNull(pdf);
+        Assert.True(pdf.Length > 0);
     }
 
     [Fact]
@@ -63,7 +68,7 @@ public sealed class GeneratePDFQuoteTests
         GeneratePDFQuote sut = CreateSut(context, user);
 
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, Guid.NewGuid()));
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(user.UserId, Guid.NewGuid()));
     }
 
     [Fact]
@@ -118,11 +123,12 @@ public sealed class GeneratePDFQuoteTests
         IHttpContextAccessor accessor = Fixture.CreateIHttpContextAccessor(user);
         GetAllCompanyUserByCompanyId getAll = new(context);
         CheckIfUserIsLinkedCompanyUser check = new(getAll, accessor);
+        GetAllQuoteByCompanyId getAllQuote = new(context, check);
 
         QuestPDF.Settings.License = LicenseType.Community;
         IPDFService pdfService = new PDFService();
 
-        GeneratePDFQuote generatePDFQuote = new(context, check, pdfService);
+        GeneratePDFQuote generatePDFQuote = new(context, getAllQuote, check, pdfService);
 
         return generatePDFQuote;
     }

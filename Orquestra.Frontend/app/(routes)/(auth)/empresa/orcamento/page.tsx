@@ -76,12 +76,17 @@ export default function EmpresaOrcamento() {
             render: (items?: iQuoteItem[]) => items?.length ?? 0
         }
     ] as iTableColumn[];
-
+    CONSTS_QUOTE
     const managingOptions = [
         {
             label: 'Editar orçamento',
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />
+        },
+        {
+            label: 'Baixar orçamento em PDF',
+            function: (e: iQuote) => handleDownloadPDF(e),
+            icon: <Icon icon='file-text' />
         },
         ...(me?.isUserAdmOfCurrentMainCompany ? [
             {
@@ -100,6 +105,47 @@ export default function EmpresaOrcamento() {
         setTypeModal(quote ? 'edit' : 'create');
         setQuoteClicked(quote);
         setIsModalViewOpen(true);
+    }
+
+    async function handleDisable(quote: iQuote, setTrigger: Dispatch<SetStateAction<Date>>) {
+        swal({
+            content: 'Você tem certeza que deseja desativar este orçamento? Este processo é irreversível.',
+            confirmBtnText: 'Sim, desejo desativar',
+            mustConfirm: true,
+            checkboxLabel: 'Sim, confirmo',
+            confirmFunction: async () => {
+                const output = await Fetch.put({ url: `${CONSTS_QUOTE.disable}?quoteId=${quote.quoteId}` });
+
+                if (output) {
+                    toast({ content: 'Orçamento desativado com sucesso.' });
+                    setTrigger(new Date());
+                    return;
+                }
+
+                toast({ content: 'Não foi possível desativar este orçamento. Tente novamente mais tarde.' });
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'question'
+        });
+    }
+
+    async function handleDownloadPDF(quote: iQuote) {
+        swal({
+            content: 'Deseja gerar um PDF deste orçamento?',
+            confirmBtnText: 'Sim',
+            confirmFunction: async () => {
+                const output = await Fetch.get({ url: `${CONSTS_QUOTE.getPDF}?quoteId=${quote.quoteId}`, blobExportName: `${quote.company?.name} • Orçamento • ${quote.client?.fullName}.pdf` });
+
+                if (output) {
+                    toast({ content: 'PDF gerado com sucesso.' });
+                    return;
+                }
+
+                toast({ content: 'Não foi possível gerar um PDF para este orçamento. Tente novamente mais tarde.' });
+            },
+            cancelBtnText: 'Voltar',
+            icon: 'question'
+        });
     }
 
     return (
@@ -160,26 +206,4 @@ export default function EmpresaOrcamento() {
             />
         </Fragment>
     )
-}
-
-async function handleDisable(quote: iQuote, setTrigger: Dispatch<SetStateAction<Date>>) {
-    swal({
-        content: 'Você tem certeza que deseja desativar este orçamento? Este processo é irreversível.',
-        confirmBtnText: 'Sim, desejo desativar',
-        mustConfirm: true,
-        checkboxLabel: 'Sim, confirmo',
-        confirmFunction: async () => {
-            const client = await Fetch.put({ url: `${CONSTS_QUOTE.disable}?quoteId=${quote.quoteId}` });
-
-            if (client) {
-                toast({ content: 'Orçamento desativado com sucesso.' });
-                setTrigger(new Date());
-                return;
-            }
-
-            toast({ content: 'Não foi possível desativar este orçamento. Tente novamente mais tarde.' });
-        },
-        cancelBtnText: 'Voltar',
-        icon: 'question'
-    });
 }

@@ -2,8 +2,7 @@
 Resolver o TO DO em PayCompanyInvoice;
 
 ⦁	Módulo de Orçamento:
-Criar GeneratePDFQuote
-Integrar front
+Refatorar 
 
 ⦁	Módulo de Ordem de serviço:
 Criar classe
