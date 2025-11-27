@@ -82,6 +82,16 @@
             max-width: calc(40% - 1rem);
         }
 
+        /* Se tiver 3 OU MENOS itens */
+        &:has(> :nth-child(3):last-child),
+        &:has(> :nth-child(2):last-child),
+        &:has(> :nth-child(1):last-child) {
+            >* {
+                flex: 1 1 calc(33.333% - 1rem);
+                max-width: calc(33.333% - 1rem);
+            }
+        }
+
         button {
             // background-color: purple !important;
             font-size: 0.65rem;

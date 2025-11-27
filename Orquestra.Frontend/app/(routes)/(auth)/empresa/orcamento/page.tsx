@@ -131,7 +131,7 @@ export default function EmpresaOrcamento() {
 
     async function handleDownloadPDF(quote: iQuote) {
         swal({
-            content: 'Deseja gerar um PDF deste orçamento?',
+            content: 'Deseja gerar e baixar um PDF deste orçamento?',
             confirmBtnText: 'Sim',
             confirmFunction: async () => {
                 const output = await Fetch.get({ url: `${CONSTS_QUOTE.getPDF}?quoteId=${quote.quoteId}`, blobExportName: `${quote.company?.name} • Orçamento • ${quote.client?.fullName}.pdf` });
