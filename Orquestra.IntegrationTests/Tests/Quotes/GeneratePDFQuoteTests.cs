@@ -24,19 +24,21 @@ public sealed class GeneratePDFQuoteTests
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
         Client client = ClientMock.Create();
         await Fixture.Save(context, client);
-
-        Guid companyId = Guid.NewGuid();
 
         Quote quote = new()
         {
             QuoteId = Guid.NewGuid(),
             Title = "Orçamento PDF Teste",
-            CompanyId = companyId,
-            Status = true,
+            CompanyId = company.CompanyId,
+            Company = company,
             ClientId = client.ClientId,
             Client = client,
+            Status = true,
             Items =
             [
                 new() { Title = "Item 1", Quantity = 2, UnitPrice = 50 },

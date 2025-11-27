@@ -8,6 +8,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Quotes;
 
@@ -22,32 +23,42 @@ public sealed class GetAllQuoteByCompanyIdTests
         User user = UserMock.Create();
         await Fixture.Save(context, user);
 
-        Guid companyId = Guid.NewGuid();
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
 
         // Cria algumas quotes manualmente;
         Quote quote1 = new()
         {
             QuoteId = Guid.NewGuid(),
-            CompanyId = companyId,
+            CompanyId = company.CompanyId,
+            Company = company,
+            ClientId = client.ClientId,
+            Client = client,
             Title = "Teste 1",
             Observation = "Observação 1",
             Status = true,
             CreatedBy = user.UserId,
-            CreatedDate = DateTime.UtcNow.AddDays(-2),
-            LastModificationDate = DateTime.UtcNow.AddDays(-1),
+            CreatedDate = GetDate().AddDays(-2),
+            LastModificationDate = GetDate().AddDays(-1),
             Items = []
         };
 
         Quote quote2 = new()
         {
             QuoteId = Guid.NewGuid(),
-            CompanyId = companyId,
+            CompanyId = company.CompanyId,
+            Company = company,
+            ClientId = client.ClientId,
+            Client = client,
             Title = "Teste 2",
             Observation = "Observação 2",
             Status = true,
             CreatedBy = user.UserId,
-            CreatedDate = DateTime.UtcNow.AddDays(-3),
-            LastModificationDate = DateTime.UtcNow,
+            CreatedDate = GetDate().AddDays(-3),
+            LastModificationDate = GetDate(),
             Items = []
         };
 
@@ -60,7 +71,7 @@ public sealed class GetAllQuoteByCompanyIdTests
         QuoteInput filter = new() { Title = "Teste", Observation = "Observação" };
 
         // Act;
-        (IEnumerable<QuoteOutput> output, int count) = await sut.Execute(pagination, filter, user.UserId, companyId);
+        (IEnumerable<QuoteOutput> output, int count) = await sut.Execute(pagination, filter, user.UserId, company.CompanyId);
 
         // Assert;
         Assert.Equal(2, count);
