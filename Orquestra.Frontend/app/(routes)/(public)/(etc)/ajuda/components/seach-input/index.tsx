@@ -47,7 +47,6 @@ export default function AjudaSearchInput({ keySearch, hasAltStyle = false }: iPr
                     type='text'
                     formData={formData}
                     setFormData={setFormData}
-                    style={{ padding: 0 }}
                     placeholder='Procure por um tópico como "agendamento" ou "empresa", por exemplo'
                     handleKeyDown={handleKeyDown}
                 />

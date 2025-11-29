@@ -124,7 +124,7 @@ function Header({ me, open, setOpen, scrolled }: { me: iMeSimple | undefined; op
                                     Dashboard
                                 </Link>
 
-                                <button onClick={() => router.push(ROUTES.LOGOUT)} className='px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors font-medium'>
+                                <button onClick={() => router.push(ROUTES.LOGOUT)} className='px-4 py-2 bg-purple-50 text-gray-700 hover:bg-purple-100 rounded-lg transition-colors font-medium'>
                                     Finalizar sessão
                                 </button>
                             </Fragment>
@@ -260,7 +260,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                                 me?.isAuth ? (
                                     <Fragment>
                                         <Link href={ROUTES.DASHBOARD} className='px-8 py-3.5 bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] text-white rounded-lg font-bold hover:shadow-xl hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 group'>
-                                            Ir para dashboard
+                                            Ir para o dashboard
                                             <Icon icon='arrow-right' className='group-hover:translate-x-1 transition-transform' />
                                         </Link>
 
@@ -276,7 +276,7 @@ function Hero({ me }: { me: iMeSimple | undefined }) {
                                         </Link>
 
                                         <Link href={ROUTES.ETC_AJUDA} className='px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-lg font-bold hover:border-[var(--main-light)] hover:bg-[var(--main-light)] transition-all inline-flex items-center justify-center'>
-                                            Ver documentação
+                                            Central de ajuda
                                         </Link>
                                     </Fragment>
                                 )
@@ -457,8 +457,14 @@ function Pricing({ me, plans }: { me: iMeSimple | undefined, plans: iPlanTypeOut
                                     }
                                 </ul>
 
-                                <Link href={me?.isAuth ? ROUTES.EMPRESA_USO_E_PLANO : ROUTES.LOGIN} className='block w-full py-3 px-4 text-center font-bold rounded-lg transition-all duration-300 text-white bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] hover:shadow-lg hover:-translate-y-0.5'>
-                                    {`Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`}
+                                <Link href={me?.isAuth ? ROUTES.EMPRESA_USO_E_PLANO : ROUTES.CRIAR_CONTA} className='block w-full py-3 px-4 text-center font-bold rounded-lg transition-all duration-300 text-white bg-gradient-to-r from-[var(--main)] to-[var(--main-dark)] hover:shadow-lg hover:-translate-y-0.5'>
+                                    {
+                                        me?.isAuth ? (
+                                            `Escolher plano ${p.planTypeDescription.toLocaleLowerCase()}`
+                                        ) : (
+                                            'Criar conta'
+                                        )
+                                    }
                                 </Link>
                             </div>
                         </div>
