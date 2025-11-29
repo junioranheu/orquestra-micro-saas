@@ -194,12 +194,16 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
     {
         Dictionary<string, string> endpointMap = new()
         {
-            { "Client", "Cliente" },
-            { "CompanyInvoice", "Fatura" },
-            { "CompanyUser", "Colaborador" },
-            { "Schedule", "Agendamento" },
-            { "User", "Usuário" },
-            { "Company", "Empresa" }
+            { nameof(Client), "Cliente" },
+            { nameof(ClientFollowUp), "Acompanhamento" },
+            { nameof(Company), "Empresa" },
+            { nameof(CompanyInvoice), "Fatura" },
+            { nameof(CompanyUser), "Colaborador" },
+            { nameof(IntegrationWhatsApp), "Colaborador" },
+            { nameof(Inventory), "Estoque" },
+            { nameof(Quote), "Orçamento" },
+            { nameof(Schedule), "Agendamento" },
+            { nameof(User), "Usuário" }
         };
 
         bool isXUnit = IsRunningFromXUnit();

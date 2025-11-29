@@ -9,10 +9,10 @@ import TemplatePageHeader from '@/app/components/template/template-page-header';
 import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
+import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
-import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaQuotesModalFilters from './modal/filter';
 import EmpresaQuotesModalView from './modal/view';
@@ -22,7 +22,7 @@ export default function EmpresaOrcamento() {
     useTitle('Orçamentos');
 
     const me = useApiGetMe({});
-    const router = useRouter();
+    const quoteStatusEnum = useApiGetEnum({ enumName: 'QuoteStatusEnum' });
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [quotes, setQuotes] = useState<iQuotePaginated>();
@@ -68,7 +68,21 @@ export default function EmpresaOrcamento() {
         {
             title: 'Status',
             dataIndex: 'quoteStatus',
-            key: 'quoteStatus'
+            key: 'quoteStatus',
+            render: (value: number) => {
+                const item = quoteStatusEnum?.find(x => x.value === value);
+                const text = item?.label ?? '-';
+
+                if (value === 5) {
+                    return (
+                        <span style={{ color: 'var(--red)', fontWeight: 600 }}>
+                            {text}
+                        </span>
+                    );
+                }
+
+                return text;
+            }
         },
         {
             title: 'Qtd. de itens',
