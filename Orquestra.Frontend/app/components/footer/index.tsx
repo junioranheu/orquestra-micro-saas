@@ -19,7 +19,8 @@ export default function Footer({ resetBorderRadius = false }: iProps) {
             <div className={styles.wrapper}>
                 <span className={styles.content}>
                     <span>{SYSTEM.NAME}: {SYSTEM.DESCRIPTION}.</span>
-                    <span>Todos os direitos reservados © {new Date().getFullYear()} — Desenvolvido por <Tippy content='LinkedIn.'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>{SYSTEM.AUTHOR}</Link></Tippy>.</span>
+                    <span>CNPJ {SYSTEM.COMPANY_CNPJ} • {SYSTEM.COMPANY_LOCATION}</span>
+                    <span>Todos os direitos reservados © {new Date().getFullYear()} • Desenvolvido por <Tippy content='LinkedIn.'><Link href={SYSTEM.URL_LINKEDIN} target='_blank'>{SYSTEM.AUTHOR}</Link></Tippy>.</span>
                 </span>
 
                 <div className={styles.right}>

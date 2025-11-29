@@ -4,6 +4,8 @@ const SYSTEM = {
     NAME: 'Orquestra',
     DESCRIPTION: 'Harmonia na gestão do seu negócio',
     AUTHOR: '@junioranheu',
+    COMPANY_CNPJ: '00.000.000/0001-00',
+    COMPANY_LOCATION: 'Rua Bartholomeu do Canto, 94, São Paulo/SP • CEP 02726-090.',
     COLOR: '#f0fcdc',
     MASCOT: 'Maestro',
 

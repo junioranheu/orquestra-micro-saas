@@ -5,6 +5,7 @@ import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } f
 import { Fetch } from '@/app/api/fetch';
 import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
+import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -44,12 +45,20 @@ export default function CardNotifications({ me }: iProps) {
         return (
             <div key={notification.logId.toString()} className={styles.scheduleItem}>
                 <div className={styles.info}>
-                    <Tippy content={`${notification.emoji} ${notification.logType}.`}>
+                    <Tippy content={`${notification.emoji} ${notification.logType}`}>
                         <div className={styles.name} style={{ cursor: 'help' }}>{notification.story}</div>
                     </Tippy>
 
                     <div className={styles.service}>
-                        <span><b>{notification.logType}</b>{notification.changedFields ? `: ${notification.changedFields}` : ''}</span>
+                        {/* <span>{notification.logType}</span> */}
+
+                        <pre style={{
+                            whiteSpace: 'pre-wrap',
+                            wordWrap: 'break-word',
+                            margin: 0
+                        }}>
+                            {typeof notification.changedFields === 'object' ? JSON.stringify(notification.changedFields, null, 2) : notification.changedFields}
+                        </pre>
                     </div>
                 </div>
 
@@ -62,9 +71,17 @@ export default function CardNotifications({ me }: iProps) {
 
     return (
         <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
-            <Tippy content='Os dados são atualizados automaticamente a cada 10 minutos.'>
-                <h2 className={styles.title} style={{ cursor: 'help' }}>Notificações do sistema <ArrowUpRight href={ROUTES.EMPRESA_NOTIFICACOES} tippyContent='Visualizar todas as notificações' tippyPlacement='bottom' /></h2>
-            </Tippy>
+            <h2 className={styles.title}>
+                <span>Notificações</span>
+
+                <Tippy content='Os dados das notificações são atualizados automaticamente a cada 10 minutos.' placement='top'>
+                    <span style={{ marginLeft: '0.035rem', cursor: 'help' }}>
+                        <Icon icon='info' size='small' color='var(--main)' weight='bold' />
+                    </span>
+                </Tippy>
+
+                <ArrowUpRight href={ROUTES.EMPRESA_NOTIFICACOES} tippyContent='Visualizar todas as notificações' tippyPlacement='top' />
+            </h2>
 
             {
                 notifications.length > 0 && (
