@@ -39,7 +39,6 @@ public sealed class UpdateQuote(Context context, ICheckIfUserIsLinkedCompanyUser
             if (previousItems.Count != 0)
             {
                 _context.RemoveRange(previousItems);
-                await _context.SaveChangesAsync();
             }
 
             quote.Items.Clear();

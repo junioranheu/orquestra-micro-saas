@@ -56,14 +56,20 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
 
     protected static void IsDateValidUntilValid(QuoteInput input)
     {
-        if (input?.ValidUntil is null)
+        // Workaround;
+        if (input?.ValidUntil?.Date == DateTime.MinValue || input?.ValidUntil?.Date == new DateTime(2001, 1, 1))
+        {
+            input.ValidUntil = null;
+        }
+
+        if (input?.ValidUntil is null || input?.ValidUntil?.Date == DateTime.MinValue || input?.ValidUntil?.Date == new DateTime(2001, 1, 1))
         {
             // throw new ArgumentException("A data de validade é obrigatória.");
             return;
         }
 
         // Normalizar a data do input (que vem do front-end), para ficar UTC;
-        input.ValidUntil = ConvertToBrasiliaTime(input.ValidUntil.GetValueOrDefault()); 
+        input!.ValidUntil = ConvertToBrasiliaTime(input.ValidUntil.GetValueOrDefault()); 
 
         // Comparar apenas com a data;
         DateTime date;
