@@ -97,10 +97,11 @@ export const Fetch = {
             // Blob download;
             if (blobExportName) {
                 const blob = await response.blob();
+                // console.log(response.status, 'blob response.status');
 
-                if (!blob.size) {
+                if (!blob.size || response.status === 400) {
                     swal({ content: 'Não foi possível gerar o arquivo.', icon: 'error' });
-                    throw new Error('Null blob.');
+                    return;
                 }
 
                 const urlObj = window.URL.createObjectURL(blob);

@@ -6,6 +6,7 @@ import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
+import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
@@ -62,7 +63,7 @@ export default function EmpresaOrcamento() {
             dataIndex: 'validUntil',
             key: 'validUntil',
             render: (value?: Date) =>
-                value ? new Date(value).toLocaleDateString('pt-BR') : '-'
+                value ? new Date(handleToBrazilDate(value)).toLocaleDateString('pt-BR') : '-'
         },
         {
             title: 'Status',
@@ -76,7 +77,7 @@ export default function EmpresaOrcamento() {
             render: (items?: iQuoteItem[]) => items?.length ?? 0
         }
     ] as iTableColumn[];
-    CONSTS_QUOTE
+
     const managingOptions = [
         {
             label: 'Editar orçamento',
