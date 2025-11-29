@@ -2,6 +2,7 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Globalization;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure.Services.PDF;
@@ -14,6 +15,9 @@ public sealed class PDFService : IPDFService
     public byte[] GeneratePdfFromModel<T>(T model, Action<IContainer, T> buildContent, string titleDocument, bool addSignatureSection, bool showPageCounter, byte[]? logoBytes = null)
     {
         ArgumentNullException.ThrowIfNull(buildContent);
+
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
 
         Document document = Document.Create(container =>
         {

@@ -22,7 +22,7 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
             throw new ArgumentException("A observação não é válida.");
         }
 
-        IsDateValidUntilValid(input.ValidUntil);
+        IsDateValidUntilValid(input);
 
         if (input.Items is null || input.Items.Count == 0)
         {
@@ -54,19 +54,23 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
     protected static bool IsQuantityValid(int quantity) => quantity > 0;
     protected static bool IsUnitPriceValid(decimal? unitPrice) => unitPrice is null or >= 0;
 
-    protected static void IsDateValidUntilValid(DateTime? validUntil)
+    protected static void IsDateValidUntilValid(QuoteInput input)
     {
-        if (validUntil is null)
+        if (input?.ValidUntil is null)
         {
             // throw new ArgumentException("A data de validade é obrigatória.");
             return;
         }
 
+        // Normalizar a data do input (que vem do front-end), para ficar UTC;
+        input.ValidUntil = ConvertToBrasiliaTime(input.ValidUntil.GetValueOrDefault()); 
+
+        // Comparar apenas com a data;
         DateTime date;
 
         try
         {
-            date = validUntil.Value.Date;
+            date = input.ValidUntil.Value.Date;
         }
         catch
         {

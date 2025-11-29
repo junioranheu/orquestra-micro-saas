@@ -33,6 +33,14 @@ public sealed class GeneratePDFQuote(
     {
         Quote quote = await GetQuote(userIdAuth, quoteId);
 
+        if (quote.ValidUntil is not null && quote.ValidUntil != DateTime.MinValue)
+        {
+            if (quote.ValidUntil.GetValueOrDefault().Date < ConvertToBrasiliaTime(GetDate()).Date)
+            {
+                throw new ArgumentException("Não é possível gerar um documento com a data de validade expirada.");
+            }
+        }
+   
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: quote.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
         string title = $"Orçamento: {quote.Company?.Name} • {GetFirstWord(quote.Client?.FullName)}";
@@ -126,7 +134,7 @@ public sealed class GeneratePDFQuote(
 
                     header.Cell().Element(HeaderStyle).Text("#").FontColor(Colors.White).FontSize(10);
                     header.Cell().Element(HeaderStyle).Text("Descrição").FontColor(Colors.White).FontSize(10);
-                    header.Cell().Element(HeaderStyle).AlignRight().Text("Qtd").FontColor(Colors.White).FontSize(10); // Alinhado a direita;
+                    header.Cell().Element(HeaderStyle).AlignRight().Text("Qtd").FontColor(Colors.White).FontSize(10); // Alinhado à direita;
                     header.Cell().Element(HeaderStyle).AlignRight().Text("Unitário").FontColor(Colors.White).FontSize(10);
                     header.Cell().Element(HeaderStyle).AlignRight().Text("Total").FontColor(Colors.White).FontSize(10);
                 });

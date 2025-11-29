@@ -10,6 +10,7 @@ using Orquestra.Infrastructure.Services.PDF;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
 using QuestPDF.Infrastructure;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Quotes;
 
@@ -38,6 +39,7 @@ public sealed class GeneratePDFQuoteTests
             Company = company,
             ClientId = client.ClientId,
             Client = client,
+            ValidUntil = GetDate().AddDays(22),
             Status = true,
             Items =
             [
@@ -117,6 +119,46 @@ public sealed class GeneratePDFQuoteTests
 
         // Act & Assert;
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Execute(user.UserId, quote.QuoteId));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldThrow_WhenDateValidUntilIsInvalid()
+    {
+        // Arrange;
+        Context context = Fixture.CreateContext();
+
+        User user = UserMock.Create();
+        await Fixture.Save(context, user);
+
+        Company company = CompanyMock.Create();
+        await Fixture.Save(context, company);
+
+        Client client = ClientMock.Create();
+        await Fixture.Save(context, client);
+
+        Quote quote = new()
+        {
+            QuoteId = Guid.NewGuid(),
+            Title = "Orçamento PDF Teste",
+            CompanyId = company.CompanyId,
+            Company = company,
+            ClientId = client.ClientId,
+            Client = client,
+            ValidUntil = GetDate().AddDays(-22),
+            Status = true,
+            Items =
+            [
+                new() { Title = "Item 1", Quantity = 2, UnitPrice = 50 },
+                new() { Title = "Item 2", Quantity = 1, UnitPrice = 100 }
+            ]
+        };
+
+        await Fixture.Save(context, quote);
+
+        GeneratePDFQuote sut = CreateSut(context, user);
+
+        // Act & Assert;
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(user.UserId, quote.QuoteId));
     }
 
     #region helpers
