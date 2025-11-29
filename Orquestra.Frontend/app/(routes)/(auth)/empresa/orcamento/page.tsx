@@ -75,7 +75,7 @@ export default function EmpresaOrcamento() {
 
                 if (value === 5) {
                     return (
-                        <span style={{ color: 'var(--red)', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--contrast)', fontWeight: 600 }}>
                             {text}
                         </span>
                     );

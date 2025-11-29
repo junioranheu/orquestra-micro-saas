@@ -67,7 +67,7 @@ export default function EmpresaUsoEPlanoTabFaturas({ me }: iProps) {
                 const text = map[value] ?? '-';
 
                 if (value === 1) {
-                    return <span style={{ color: 'var(--red)', fontWeight: 600 }}>⚠️ {text}</span>; // vermelho pro pendente
+                    return <span style={{ color: 'var(--contrast)', fontWeight: 600 }}>⚠️ {text}</span>; // vermelho pro pendente
                 }
 
                 return text;

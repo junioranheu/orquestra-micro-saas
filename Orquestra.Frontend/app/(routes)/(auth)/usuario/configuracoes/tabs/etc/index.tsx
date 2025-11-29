@@ -48,7 +48,7 @@ function CardSession() {
             description={`Sua sessão é válida até dia ${handleFormatDate(auth?.refreshTokenExpirationDate, DATE_STYLE.DETALHADO_APENAS_REFERENCIA_DIA)}.`}
             buttonLabel='Finalizar sessão'
             buttonFunction={() => router.push(ROUTES.LOGOUT)}
-            buttonStyle={{ background: 'var(--red)', opacity: 0.8 }}
+            buttonStyle={{ background: 'var(--contrast)', opacity: 0.8 }}
             buttonIcon='log-out'
         />
     )
