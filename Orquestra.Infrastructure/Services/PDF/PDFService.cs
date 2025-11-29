@@ -93,7 +93,7 @@ public sealed class PDFService : IPDFService
                 row.RelativeItem().Column(c =>
                 {
                     c.Item().Height(40).BorderBottom(1).BorderColor(Colors.Grey.Lighten2);
-                    c.Item().PaddingTop(5).AlignCenter().Text("Assinatura do Cliente").FontSize(9).FontColor(SECONDARY_COLOR);
+                    c.Item().PaddingTop(5).AlignCenter().Text("Assinatura do cliente").FontSize(9).FontColor(SECONDARY_COLOR);
                 });
 
                 // Espaço entre as assinaturas;
@@ -103,7 +103,7 @@ public sealed class PDFService : IPDFService
                 row.RelativeItem().Column(c =>
                 {
                     c.Item().Height(40).BorderBottom(1).BorderColor(Colors.Grey.Lighten2);
-                    c.Item().PaddingTop(5).AlignCenter().Text("Responsável Técnico").FontSize(9).FontColor(SECONDARY_COLOR);
+                    c.Item().PaddingTop(5).AlignCenter().Text("Responsável").FontSize(9).FontColor(SECONDARY_COLOR);
                 });
             });
         });

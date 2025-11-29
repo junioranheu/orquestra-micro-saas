@@ -9,6 +9,7 @@ using Orquestra.Domain.Entities;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.PDF;
 using QuestPDF.Fluent;
+using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using static Orquestra.Utils.Fixtures.Get;
 
@@ -25,6 +26,8 @@ public sealed class GeneratePDFQuote(
     private readonly IGetAllQuoteByCompanyId _getAllQuoteByCompanyId = getAllQuoteByCompanyId;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
     private readonly IPDFService _pdfService = pdfService;
+
+    private static readonly string MAIN_COLOR = Colors.Green.Darken2;
 
     public async Task<(byte[] pdf, string title)> Execute(Guid userIdAuth, Guid quoteId)
     {
@@ -72,55 +75,112 @@ public sealed class GeneratePDFQuote(
         return model;
     }
 
-    private static void BuildQuoteContent(IContainer container, Quote input)
+    private void BuildQuoteContent(IContainer container, Quote input)
     {
         container.Column(col =>
         {
-            // Título do orçamento;
-            col.Item().Text(input.Title ?? "Orçamento").FontSize(16).Bold();
+            // 1. Cabeçalho do conteúdo: dados do cliente e validade;
+            col.Item().Element(c =>
+            {
+                c.Background(Colors.Grey.Lighten4).
+                  Border(1).
+                  BorderColor(Colors.Grey.Lighten2).
+                  Padding(10).
+                  Row(row =>
+                  {
+                      // Lado esquerdo: cliente;
+                      row.RelativeItem().Column(info =>
+                      {
+                          info.Item().Text("Cliente").FontSize(9).FontColor(Colors.Grey.Medium);
+                          info.Item().Text(input.Client?.FullName ?? "N/A").FontSize(11).SemiBold();
+                      });
 
-            col.Spacing(8);
+                      // Lado direito: validade e título;
+                      row.RelativeItem().Column(info =>
+                      {
+                          info.Item().AlignRight().Text("Validade da proposta").FontSize(9).FontColor(Colors.Grey.Medium);
+                          info.Item().AlignRight().Text($"{input.ValidUntil:dd/MM/yyyy}").FontSize(11).SemiBold();
+                      });
+                  });
+            });
 
-            // Dados do cliente;
-            col.Item().Text($"Cliente: {input.Client?.FullName}").FontSize(12);
-            col.Item().Text($"Validade: {input.ValidUntil:dd/MM/yyyy}").FontSize(12);
+            col.Spacing(20);
 
-            col.Spacing(12);
-
-            // Itens;
+            // 2. Tabela de Itens
             col.Item().Table(table =>
             {
-                table.ColumnsDefinition(cols =>
+                // Definição das colunas;
+                table.ColumnsDefinition(columns =>
                 {
-                    cols.RelativeColumn(4); // Título;
-                    cols.RelativeColumn(1); // Quantidade;
-                    cols.RelativeColumn(2); // Preço unitário;
-                    cols.RelativeColumn(2); // Total;
+                    columns.ConstantColumn(30); // # (Índice);
+                    columns.RelativeColumn(4); // Descrição;
+                    columns.RelativeColumn(1); // Qtd;
+                    columns.RelativeColumn(2); // Valor unitário;
+                    columns.RelativeColumn(2); // Total;
                 });
 
-                // Cabeçalho;
+                // Cabeçalho da tabela;
                 table.Header(header =>
                 {
-                    header.Cell().Text("Item").Bold();
-                    header.Cell().Text("Qtd").Bold();
-                    header.Cell().Text("Valor").Bold();
-                    header.Cell().Text("Total").Bold();
+                    IContainer HeaderStyle(IContainer x) => x.Background(MAIN_COLOR).PaddingVertical(5).PaddingHorizontal(5);
+
+                    header.Cell().Element(HeaderStyle).Text("#").FontColor(Colors.White).FontSize(10);
+                    header.Cell().Element(HeaderStyle).Text("Descrição").FontColor(Colors.White).FontSize(10);
+                    header.Cell().Element(HeaderStyle).AlignRight().Text("Qtd").FontColor(Colors.White).FontSize(10); // Alinhado a direita;
+                    header.Cell().Element(HeaderStyle).AlignRight().Text("Unitário").FontColor(Colors.White).FontSize(10);
+                    header.Cell().Element(HeaderStyle).AlignRight().Text("Total").FontColor(Colors.White).FontSize(10);
                 });
 
-                // Linhas;
-                foreach (var item in input.Items)
+                // Linhas da tabela;
+                for (int i = 0; i < input.Items.Count; i++)
                 {
-                    table.Cell().Text(item.Title);
-                    table.Cell().Text(item.Quantity.ToString());
-                    table.Cell().Text(item.UnitPrice.ToString("C2"));
-                    table.Cell().Text(item.TotalPrice.ToString("C2"));
+                    QuoteItem item = input.Items[i];
+                    int index = i + 1;
+
+                    // Efeito zebra: linhas pares brancas, ímpares cinza clarinho;
+                    Color backgroundColor = index % 2 == 0 ? Colors.White : Colors.Grey.Lighten5;
+                    IContainer CellStyle(IContainer c) => c.Background(backgroundColor).BorderBottom(1).BorderColor(Colors.Grey.Lighten3).PaddingVertical(5).PaddingHorizontal(5);
+
+                    table.Cell().Element(CellStyle).Text($"{index}").FontSize(10).FontColor(Colors.Grey.Darken2);
+                    table.Cell().Element(CellStyle).Text(item.Title).FontSize(10).FontColor(Colors.Grey.Darken2);
+                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.Quantity}").FontSize(10).FontColor(Colors.Grey.Darken2);
+                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice:C2}").FontSize(10).FontColor(Colors.Grey.Darken2);
+                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.TotalPrice:C2}").FontSize(10).FontColor(Colors.Grey.Darken2);
                 }
-            });    
+            });
 
-            col.Spacing(12);
+            col.Spacing(10);
 
-            decimal grandTotal = input.Items.Sum(x => x.TotalPrice);
-            col.Item().Text($"Total: {grandTotal:C2}").FontSize(14).Bold();
+            // 3. Seção de totais (alinhada à direita);
+            col.Item().Row(row =>
+            {
+                // Espaço vazio na esquerda para empurrar o total para a direita;
+                row.RelativeItem();
+
+                // Bloco de totais;
+                row.ConstantItem(200).Column(totalCol =>
+                {
+                    // Linha final do total;
+                    totalCol.Item().Background(Colors.Grey.Lighten4).Padding(10).Row(r =>
+                    {
+                        decimal grandTotal = input.Items.Sum(x => x.TotalPrice);
+
+                        r.RelativeItem().AlignLeft().Text("TOTAL").FontSize(12).SemiBold().FontColor(MAIN_COLOR);
+                        r.RelativeItem().AlignRight().Text($"{grandTotal:C2}").FontSize(12).Bold().FontColor(MAIN_COLOR);
+                    });
+                });
+            });
+
+            if (!string.IsNullOrEmpty(input.Observation))
+            {
+                col.Spacing(20);
+
+                col.Item().PaddingTop(10).BorderTop(1).BorderColor(Colors.Grey.Lighten2).Column(obs =>
+                {
+                    obs.Item().PaddingTop(10).Text("Observações:").FontSize(10).Bold();
+                    obs.Item().Text(input.Observation).FontSize(9).FontColor(Colors.Grey.Medium);
+                });
+            }
         });
     }
     #endregion
