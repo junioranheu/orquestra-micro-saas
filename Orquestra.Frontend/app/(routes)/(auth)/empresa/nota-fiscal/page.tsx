@@ -8,7 +8,6 @@ export default function EmpresaNotaFiscal() {
 
     return (
         <section className={styles.main}>
-            <h1>Olá... Nota fiscal</h1>
         </section>
     )
 }

@@ -23,6 +23,7 @@ export interface iMenuGroup {
         route?: (typeof ROUTES)[keyof typeof ROUTES];
         onClick?: () => void;
         hasAccess: boolean;
+        isDisabled?: boolean;
     }[];
 }
 
@@ -53,7 +54,7 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
                     { id: 'clientes', label: 'Clientes', description: 'Gerencie informações e histórico dos clientes.', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Client] }) },
                     { id: 'acompanhamentos', label: 'Acompanhamentos', description: 'Acompanhe retornos e contatos com clientes.', icon: 'repeat', route: ROUTES.EMPRESA_ACOMPANHAMENTO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.CostumerFollowUp] }) },
                     { id: 'orcamentos', label: 'Orçamentos', description: 'Crie e acompanhe propostas de serviço.', icon: 'file', route: ROUTES.EMPRESA_ORCAMENTO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Quote] }) },
-                    { id: 'ordem-de-servico', label: 'Ordens de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.ServiceOrder] }) },
+                    { id: 'ordem-de-servico', label: 'Ordens de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.ServiceOrder] }), isDisabled: true },
                     { id: 'estoque', label: 'Estoque', description: 'Controle produtos e materiais disponíveis.', icon: 'package', route: ROUTES.EMPRESA_ESTOQUE, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Inventory] }) },
                 ]
             },
@@ -66,7 +67,7 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
             {
                 label: 'Financeiro',
                 items: [
-                    { id: 'nota-fiscal', label: 'Nota fiscal', description: 'Emita e gerencie notas fiscais eletrônicas.', icon: 'file-text', route: ROUTES.EMPRESA_NOTA_FISCAL, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Invoice] }) },
+                    { id: 'nota-fiscal', label: 'Nota fiscal', description: 'Emita e gerencie notas fiscais eletrônicas.', icon: 'file-text', route: ROUTES.EMPRESA_NOTA_FISCAL, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Invoice] }), isDisabled: true },
                     { id: 'gestao-financeira', label: 'Gestão financeira', description: 'Acompanhe receitas, despesas e veja se a empresa teve lucro ou prejuízo.', icon: 'dollar-sign', route: ROUTES.EMPRESA_FINANCEIRO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Sales] }) }
                 ]
             },

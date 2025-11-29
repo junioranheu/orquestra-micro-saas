@@ -96,6 +96,15 @@
                             stroke: var(--main);
                         }
                     }
+
+                    &.disabled {
+                        // background-color: orange;
+                        cursor: not-allowed;
+
+                        &:hover {
+                            background-color: var(--contrast-light);
+                        }
+                    }
                 }
             }
         }

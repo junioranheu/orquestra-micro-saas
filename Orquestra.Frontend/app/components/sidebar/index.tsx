@@ -49,8 +49,6 @@ export default function Sidebar({ me }: iProps) {
     return (
         <Fragment>
             <aside className={`${styles.sidebar} notSelectable`}>
-                <h1>{showExpandedSidebar}</h1>
-
                 <div className={styles.brand}>
                     <Icon icon='calendar' weight='bold' />
                     <span className={PACIFICO.className}>{SYSTEM.NAME}</span>
@@ -82,11 +80,15 @@ export default function Sidebar({ me }: iProps) {
                                             <ul>
                                                 {
                                                     visibleItems.map((item, index) => (
-                                                        <Tippy key={index} content={item.description} placement='right'>
+                                                        <Tippy key={index} content={item.isDisabled ? `⚠️ Em desenvolvimento: ${item.description}` : item.description} placement='right'>
                                                             <li
                                                                 id={item.id}
-                                                                className={active === item.route ? styles.active : ''}
+                                                                className={`${(active === item.route ? styles.active : '')} ${item.isDisabled ? styles.disabled : ''}`}
                                                                 onClick={() => {
+                                                                    if (item.isDisabled) {
+                                                                        return;
+                                                                    }
+
                                                                     if (item.onClick) {
                                                                         item.onClick();
                                                                     } else if (item.route) {

@@ -8,7 +8,6 @@ export default function EmpresaOrdemDeServico() {
 
     return (
         <section className={styles.main}>
-            <h1>Olá... Ordem de serviço</h1>
         </section>
     )
 }
