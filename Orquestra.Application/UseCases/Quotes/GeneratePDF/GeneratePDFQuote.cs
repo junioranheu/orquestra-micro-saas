@@ -10,6 +10,7 @@ using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Services.PDF;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Quotes.GeneratePDF;
 
@@ -31,7 +32,7 @@ public sealed class GeneratePDFQuote(
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: quote.CompanyId, userId: userIdAuth, needCompanyAdmin: true);
 
-        string title = $"{quote.Company?.Name} • Orçamento • {quote.Client?.FullName}";
+        string title = $"Orçamento: {quote.Company?.Name} • {GetFirstWord(quote.Client?.FullName)}";
         byte[] pdf = _pdfService.GeneratePdfFromModel(model: quote, buildContent: BuildQuoteContent, titleDocument: title, addSignatureSection: true, showPageCounter: false);
 
         return (pdf, title);

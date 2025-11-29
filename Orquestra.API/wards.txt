@@ -1,9 +1,6 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
 
-⦁	Módulo de Orçamento:
-Refatorar 
-
 ⦁	Módulo de Ordem de serviço:
 Criar classe
 Criar UseCase e dependências
