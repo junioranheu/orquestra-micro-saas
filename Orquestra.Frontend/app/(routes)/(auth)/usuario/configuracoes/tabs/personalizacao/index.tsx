@@ -2,7 +2,7 @@
 import Button from '@/app/components/input/button';
 import Mascot from '@/app/components/mascot';
 import SYSTEM from '@/app/consts/system';
-import { useIsModalGrid, useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
+import { useIsModalGrid, useShowChatbot, useShowExpandedSidebar, useShowLogsDashboard } from '@/app/hooks/contexts/useGlobalContext';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
 import Tippy from '@tippyjs/react';
 import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react';
@@ -46,6 +46,7 @@ function InterfaceCustomizer() {
     const [showChatbot, setShowChatbot] = useShowChatbot();
     const [showExpandedSidebar, setShowExpandedSidebar] = useShowExpandedSidebar();
     const [isModalGrid, setIsModalGrid] = useIsModalGrid();
+    const [showLogsDashboard, setShowLogsDashboard] = useShowLogsDashboard();
 
     const handleInitSettings = useCallback(() => {
         const valueMascot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_MASCOT);
@@ -59,7 +60,10 @@ function InterfaceCustomizer() {
 
         const valueModalGrid = localStorage.getItem(SYSTEM.LOCAL_STORAGE_IS_MODAL_GRID);
         setIsModalGrid(valueModalGrid === null ? true : valueModalGrid === 'true');
-    }, [setShowMascot, setShowChatbot, setShowExpandedSidebar, setIsModalGrid]);
+
+        const valueShowLogsDashboard = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_LOGS_DASHBOARD);
+        setShowLogsDashboard(valueShowLogsDashboard === null ? true : valueShowLogsDashboard === 'true');
+    }, [setShowMascot, setShowChatbot, setShowExpandedSidebar, setIsModalGrid, setShowLogsDashboard]);
 
     useEffect(() => {
         handleInitSettings();
@@ -83,6 +87,11 @@ function InterfaceCustomizer() {
     function handleToggleIsModalGrid() {
         localStorage.setItem(SYSTEM.LOCAL_STORAGE_IS_MODAL_GRID, (!isModalGrid).toString());
         setIsModalGrid((prev) => !prev);
+    }
+
+    function handleToggleShowLogsDashboard() {
+        localStorage.setItem(SYSTEM.LOCAL_STORAGE_SHOW_LOGS_DASHBOARD, (!showLogsDashboard).toString());
+        setShowLogsDashboard((prev) => !prev);
     }
 
     return (
@@ -153,6 +162,19 @@ function InterfaceCustomizer() {
                 }
                 handleToggle={handleToggleIsModalGrid}
                 boolToggle={isModalGrid}
+            />
+
+            <ToggleContainer
+                toggleInfoContent={
+                    <div className={styles.toggleText}>
+                        <h3 className={styles.toggleTitle}>Exibir painel de notificações no dashboard</h3>
+                        <p className={styles.toggleDescription}>
+                            {showLogsDashboard ? 'O painel está ativado e visível no dashboard.' : 'O painel está oculto.'}
+                        </p>
+                    </div>
+                }
+                handleToggle={handleToggleShowLogsDashboard}
+                boolToggle={showLogsDashboard}
             />
         </div>
     )

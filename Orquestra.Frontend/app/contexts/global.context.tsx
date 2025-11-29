@@ -16,6 +16,9 @@ type GlobalContextType = {
 
     isModalGrid: boolean;
     setIsModalGrid: Dispatch<SetStateAction<boolean>>;
+
+    showLogsDashboard: boolean;
+    setShowLogsDashboard: Dispatch<SetStateAction<boolean>>;
 };
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -27,6 +30,7 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [isOpenChatbot, setIsOpenChatbot] = useState<boolean>(false);
     const [showExpandedSidebar, setShowExpandedSidebar] = useState<boolean>(true);
     const [isModalGrid, setIsModalGrid] = useState<boolean>(true);
+    const [showLogsDashboard, setShowLogsDashboard] = useState<boolean>(true);
 
     useEffect(() => {
         const valueChatbot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_CHATBOT);
@@ -37,6 +41,9 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
         const valueModalGrid = localStorage.getItem(SYSTEM.LOCAL_STORAGE_IS_MODAL_GRID);
         setIsModalGrid(valueModalGrid === null ? true : valueModalGrid === 'true');
+
+        const valueShowLogsDashboard = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_LOGS_DASHBOARD);
+        setShowLogsDashboard(valueShowLogsDashboard === null ? true : valueShowLogsDashboard === 'true');
     }, []);
 
     return (
@@ -45,7 +52,8 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
             showChatbot, setShowChatbot,
             isOpenChatbot, setIsOpenChatbot,
             showExpandedSidebar, setShowExpandedSidebar,
-            isModalGrid, setIsModalGrid
+            isModalGrid, setIsModalGrid,
+            showLogsDashboard, setShowLogsDashboard
         }}>
             {children}
         </GlobalContext.Provider>

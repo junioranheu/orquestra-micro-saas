@@ -9,8 +9,10 @@ import Icon from '@/app/components/icon';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
+import { useShowLogsDashboard } from '@/app/hooks/contexts/useGlobalContext';
 import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import Tippy from '@tippyjs/react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 interface iProps {
@@ -18,6 +20,8 @@ interface iProps {
 }
 
 export default function CardNotifications({ me }: iProps) {
+
+    const [showLogsDashboard,] = useShowLogsDashboard();
 
     const [notifications, setNotifications] = useState<iLogNotificationOutput[]>([]);
     const isLoading = useFakeLoading();
@@ -28,8 +32,10 @@ export default function CardNotifications({ me }: iProps) {
             setNotifications(items.output ?? []);
         }
 
-        handleFetchNotifications();
-    }, []);
+        if (showLogsDashboard) {
+            handleFetchNotifications();
+        }
+    }, [showLogsDashboard]);
 
     if (isLoading) {
         return (
@@ -37,7 +43,7 @@ export default function CardNotifications({ me }: iProps) {
         )
     }
 
-    if (!notifications?.length) {
+    if (!showLogsDashboard || !notifications?.length) {
         return null;
     }
 
@@ -74,13 +80,22 @@ export default function CardNotifications({ me }: iProps) {
             <h2 className={styles.title}>
                 <span>Notificações</span>
 
-                <Tippy content='Os dados das notificações são atualizados automaticamente a cada 10 minutos.' placement='top'>
+                <Tippy
+                    placement='top'
+                    interactive={true}
+                    content={
+                        <div>
+                            Os dados das notificações são atualizados automaticamente a cada 10 minutos.<br /><br />
+                            Você pode ocultar este painel nas <Link href={ROUTES.USUARIO_CONFIGURACOES}>configurações</Link>.
+                        </div>
+                    }
+                >
                     <span style={{ marginLeft: '0.035rem', cursor: 'help' }}>
                         <Icon icon='info' size='small' color='var(--main)' weight='bold' />
                     </span>
                 </Tippy>
 
-                <ArrowUpRight href={ROUTES.EMPRESA_NOTIFICACOES} tippyContent='Visualizar todas as notificações' tippyPlacement='top' />
+                <ArrowUpRight href={ROUTES.EMPRESA_NOTIFICACOES} tippyContent='Visualizar todas as notificações.' tippyPlacement='top' />
             </h2>
 
             {
@@ -95,7 +110,7 @@ export default function CardNotifications({ me }: iProps) {
             {
                 notifications?.length === 0 && (
                     <div className={styles.empty}>
-                        <p>Nenhuma notificação disponível</p>
+                        <p>Nenhuma notificação disponível.</p>
                     </div>
                 )
             }

@@ -131,7 +131,7 @@ export default function CardDailyAgenda({ me }: iProps) {
             {
                 schedules?.length === 0 && (
                     <div className={styles.empty}>
-                        <p>Nenhum agendamento para hoje</p>
+                        <p>Nenhum agendamento para hoje.</p>
 
                         <Button
                             label='Criar novo agendamento'

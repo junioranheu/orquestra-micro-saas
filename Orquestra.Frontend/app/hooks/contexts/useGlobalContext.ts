@@ -60,3 +60,15 @@ export function useIsModalGrid() {
     return [context.isModalGrid, context.setIsModalGrid] as const;
 
 }
+
+export function useShowLogsDashboard() {
+
+    const context = useContext(GlobalContext);
+
+    if (!context) {
+        throw new Error('useGlobalContext');
+    }
+
+    return [context.showLogsDashboard, context.setShowLogsDashboard] as const;
+
+}
