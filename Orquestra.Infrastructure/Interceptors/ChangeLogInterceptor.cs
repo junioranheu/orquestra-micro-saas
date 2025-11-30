@@ -12,7 +12,7 @@ namespace Orquestra.Infrastructure.Interceptors;
 public sealed class ChangeLogInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-    private static readonly string[] KEYS_TO_HIDE = ["senha", "password", "token"];
+    private static readonly string[] KEYS_TO_HIDE = ["senha", "password", "token", "Images", "ImagesContentType"];
 
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
