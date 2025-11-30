@@ -52,6 +52,7 @@ export default function EmpresaClientes() {
             title: 'Nome completo',
             dataIndex: 'fullName',
             key: 'fullName',
+            width: '12rem',
             render: (value: string, record: iClient) => (
                 <Tippy content={`Visualizar detalhes do cliente ${record.fullName}`} placement='right'>
                     <span

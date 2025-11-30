@@ -460,8 +460,17 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
                     )) : (
                         <div className={styles.appointmentHistory__empty}>
                             <p>
-                                Nenhum acompanhamento encontrado. Adicione um novo registro clicando no botão &quot;Criar novo acompanhamento&quot; acima.
+                                Nenhum acompanhamento encontrado.
                             </p>
+
+                            <Button
+                                label='Criar novo acompanhamento'
+                                isStyleSimple={true}
+                                style={{ boxShadow: 'none', marginTop: '0.5rem' }}
+                                handleFunction={() => handleOpenModalFollowUp(undefined, 'create')}
+                                isNewTab={false}
+                                icon_feather={<Icon icon='repeat' size='small' />}
+                            />
 
                             <div className={styles.center}>
                                 <Image src={SvgYoga} alt='' priority={true} />

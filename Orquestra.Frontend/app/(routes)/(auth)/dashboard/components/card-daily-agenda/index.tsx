@@ -5,6 +5,7 @@ import { Fetch } from '@/app/api/fetch';
 import SvgEmpty from '@/app/assets/svg/empty.svg';
 import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
+import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import WhatsappWebShortcut from '@/app/components/whatsapp/whatsapp-web-shortcut';
 import ROUTES from '@/app/consts/routes';
@@ -139,6 +140,7 @@ export default function CardDailyAgenda({ me }: iProps) {
                             style={{ boxShadow: 'none', marginTop: '0.5rem' }}
                             url={ROUTES.EMPRESA_AGENDAMENTOS}
                             isNewTab={false}
+                            icon_feather={<Icon icon='calendar' size='small' />}
                         />
 
                         <div className={styles.center}>

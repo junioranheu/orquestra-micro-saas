@@ -101,7 +101,7 @@ export default function CardNotifications({ me }: iProps) {
             {
                 notifications.length > 0 && (
                     <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Resumo das notificações da empresa {me?.currentMainCompany.name}</h3>
+                        <h3 className={styles.sectionTitle}>Resumo das notificações da empresa {me?.currentMainCompany.name}.</h3>
                         {notifications.map((notification) => handleRenderNotification(notification))}
                     </div>
                 )
