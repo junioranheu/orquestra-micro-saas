@@ -5,15 +5,18 @@ namespace Orquestra.IntegrationTests.Fixtures.Mocks;
 
 public static class ClientFollowUpMock
 {
-    public static ClientFollowUp Create(Client? client = null)
+    public static ClientFollowUp Create(Client? client = null, Company? company = null)
     {
         client ??= ClientMock.Create();
+        company ??= CompanyMock.Create();
 
         ClientFollowUp input = new()
         {
             ClientFollowUpId = Guid.NewGuid(),
             ClientId = client.ClientId,
             Client = client,
+            CompanyId = company.CompanyId,
+            Company = company,
             Observation = "Cliente demonstrou interesse em retornar na próxima semana para revisão do tratamento.",
             ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress,
             Images =

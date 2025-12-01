@@ -33,11 +33,11 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
         context.Update(client);
         await context.SaveChangesAsync();
 
-        ClientFollowUp follow1 = ClientFollowUpMock.Create(client);
+        ClientFollowUp follow1 = ClientFollowUpMock.Create(client, company);
         follow1.Status = true;
         await Fixture.Save(context, follow1);
 
-        ClientFollowUp follow2 = ClientFollowUpMock.Create(client);
+        ClientFollowUp follow2 = ClientFollowUpMock.Create(client, company);
         follow2.Status = true;
         await Fixture.Save(context, follow2);
 
@@ -52,9 +52,9 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
         await Fixture.Save(context, companyUser);
 
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
-        ClientFollowUpInput input = new();
+        ClientFollowUpInput input = new() { CompanyId = company.CompanyId };
 
-        var sut = CreateSut(context, user);
+        GetAllClientFollowUpByCompanyId sut = CreateSut(context, user);
 
         // Act;
         (IEnumerable<ClientFollowUpOutput> output, int count) = await sut.Execute(pagination, input, user.UserId, company.CompanyId);
@@ -87,9 +87,10 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
         await context.SaveChangesAsync();
 
         List<ClientFollowUp> follows = [];
+
         for (int i = 0; i < 5; i++)
         {
-            ClientFollowUp f = ClientFollowUpMock.Create(client);
+            ClientFollowUp f = ClientFollowUpMock.Create(client, company);
             f.Status = true;
             await Fixture.Save(context, f);
             follows.Add(f);
@@ -106,7 +107,7 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
         await Fixture.Save(context, companyUser);
 
         PaginationInput pagination = new() { Index = 0, Limit = 3 };
-        ClientFollowUpInput input = new();
+        ClientFollowUpInput input = new() { CompanyId = company.CompanyId };
 
         GetAllClientFollowUpByCompanyId sut = CreateSut(context, user);
 
@@ -142,11 +143,11 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
         context.UpdateRange(client1, client2);
         await context.SaveChangesAsync();
 
-        ClientFollowUp f1 = ClientFollowUpMock.Create(client1);
+        ClientFollowUp f1 = ClientFollowUpMock.Create(client1, company);
         f1.Status = true;
         await Fixture.Save(context, f1);
 
-        ClientFollowUp f2 = ClientFollowUpMock.Create(client2);
+        ClientFollowUp f2 = ClientFollowUpMock.Create(client2, company);
         f2.Status = true;
         await Fixture.Save(context, f2);
 
@@ -157,10 +158,11 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
             UserId = user.UserId,
             CompanyUserRole = CompanyUserRoleEnum.Member
         };
+
         await Fixture.Save(context, companyUser);
 
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
-        ClientFollowUpInput input = new() { ClientId = client1.ClientId };
+        ClientFollowUpInput input = new() { ClientId = client1.ClientId, CompanyId = company.CompanyId };
 
         GetAllClientFollowUpByCompanyId sut = CreateSut(context, user);
 
@@ -193,12 +195,12 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
         context.Update(client);
         await context.SaveChangesAsync();
 
-        ClientFollowUp f1 = ClientFollowUpMock.Create(client);
+        ClientFollowUp f1 = ClientFollowUpMock.Create(client, company);
         f1.ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress;
         f1.Status = true;
         await Fixture.Save(context, f1);
 
-        ClientFollowUp f2 = ClientFollowUpMock.Create(client);
+        ClientFollowUp f2 = ClientFollowUpMock.Create(client, company);
         f2.ClientFollowUpStatus = ClientFollowUpStatusEnum.Completed;
         f2.Status = true;
         await Fixture.Save(context, f2);
@@ -214,7 +216,7 @@ public sealed class GetAllClientFollowUpByCompanyIdTests
         await Fixture.Save(context, companyUser);
 
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
-        ClientFollowUpInput input = new() { ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress };
+        ClientFollowUpInput input = new() { ClientFollowUpStatus = ClientFollowUpStatusEnum.InProgress, CompanyId = company.CompanyId };
 
         GetAllClientFollowUpByCompanyId sut = CreateSut(context, user);
 
