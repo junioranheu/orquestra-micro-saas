@@ -18,6 +18,8 @@ public sealed class ScheduleInput
 
     public ScheduleStatusEnum ScheduleStatus { get; set; }
 
+    public ScheduleTypeEnum ScheduleType { get; set; }
+
     public Guid ClientId { get; set; }
 
     public Guid CompanyId { get; set; }

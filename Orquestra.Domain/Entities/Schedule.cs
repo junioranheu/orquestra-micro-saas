@@ -13,7 +13,7 @@ public sealed class Schedule : Audit
 
     public DateTime DateStart { get; set; }
 
-    public string TimeStart  => DateStart.ToString("HH:mm");
+    public string TimeStart => DateStart.ToString("HH:mm");
 
     public DateTime DateEnd { get; set; }
 
@@ -23,6 +23,8 @@ public sealed class Schedule : Audit
 
     public ScheduleStatusEnum ScheduleStatus { get; set; }
 
+    public ScheduleTypeEnum ScheduleType { get; set; }
+  
     public Guid ClientId { get; set; }
     [ForeignKey(nameof(ClientId))]
     public Client? Client { get; set; }

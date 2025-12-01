@@ -21,6 +21,8 @@ public sealed class ScheduleOutput
 
     public ScheduleStatusEnum ScheduleStatus { get; set; }
 
+    public ScheduleTypeEnum ScheduleType { get; set; }
+
     public Guid ClientId { get; set; }
     public ClientOutput? Client { get; set; }
 

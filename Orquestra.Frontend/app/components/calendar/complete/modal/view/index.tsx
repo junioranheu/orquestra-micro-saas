@@ -56,6 +56,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
     const paymentTypeEnum = useApiGetEnum({ enumName: 'PaymentTypeEnum' });
     const scheduleStatusEnum = useApiGetEnum({ enumName: 'ScheduleStatusEnum' });
+    const scheduleTypeEnum = useApiGetEnum({ enumName: 'ScheduleTypeEnum' });
 
     const [formData, setFormData] = useState<iSchedule>({
         scheduleId: SYSTEM.EMPTY_GUID,
@@ -65,6 +66,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         timeEnd: '',
         paymentType: '',
         scheduleStatus: '',
+        scheduleType: '',
         clientId: SYSTEM.EMPTY_GUID,
         client: undefined,
         companyId: SYSTEM.EMPTY_GUID,
@@ -153,6 +155,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
             timeEnd: handleFormatTimeToInputValue(event.end),
             paymentType: event.schedule.paymentType,
             scheduleStatus: event.schedule.scheduleStatus,
+            scheduleType: event.schedule.scheduleType,
             clientId: event.schedule.clientId,
             client: event.schedule.client,
             companyId: event.schedule.companyId,
@@ -171,13 +174,14 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
     const setClientIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientId)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setPaymentTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.paymentType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setScheduleStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleStatus)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setScheduleTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
         if (!canEdit) {
             return;
         }
 
-        if ((!formData.clientId || formData?.clientId === SYSTEM.EMPTY_GUID) || !formData.dateStart || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus) {
+        if ((!formData.clientId || formData?.clientId === SYSTEM.EMPTY_GUID) || !formData.dateStart || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus || !formData.scheduleType) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
         }
@@ -212,6 +216,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         input.clientId = handleNormalizeGuidField(input.clientId);
         input.companyId = companyId;
         input.scheduleStatus = Number(input.scheduleStatus);
+        input.scheduleType = Number(input.scheduleType);
 
         input.dateStart = new Date(`${input.dateStart}T${input.timeStart}`);
         input.dateEnd = new Date(`${input.dateEnd}T${input.timeEnd}`);
@@ -306,6 +311,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO_SEM_SEGUNDOS), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
                                             { label: scheduleStatusEnum?.find(x => x.value.toString() === formData.scheduleStatus?.toString())?.label ?? '' },
+                                            { label: scheduleTypeEnum?.find(x => x.value.toString() === formData.scheduleType?.toString())?.label ?? '' },
                                             { label: event.schedule?.paymentType },
                                             { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                         ]}
@@ -324,7 +330,11 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
                 <main className={styles.modalContent}>
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
-                        <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
+                        <div className={`${styles.div} ${styles.full}`}>
+                            <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
+                        </div>
+
+                        <Dropdown title='Tipo de agendamento' options={scheduleTypeEnum ?? []} selectedOption={scheduleTypeEnum?.find(x => x.value.toString() === formData.scheduleType?.toString())} setSelectedOption={setScheduleTypeOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Status' options={scheduleStatusEnum ?? []} selectedOption={scheduleStatusEnum?.find(x => x.value.toString() === formData.scheduleStatus?.toString())} setSelectedOption={setScheduleStatusOption} isDisabled={!editing || (type === 'create')} isObligatory={true} />
                         <InputMask title='Data de início' type='date' fieldName='dateStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
                         <InputMask title='Hora de início' type='time' fieldName='timeStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />

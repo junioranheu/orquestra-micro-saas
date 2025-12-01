@@ -23,6 +23,7 @@ export interface iSchedule {
     timeEnd: string;
     paymentType: string;
     scheduleStatus: string | number;
+    scheduleType: string | number;
     clientId: Guid;
     client?: iClient;
     companyId?: Guid;

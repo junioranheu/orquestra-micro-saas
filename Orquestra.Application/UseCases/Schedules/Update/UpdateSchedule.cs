@@ -43,6 +43,7 @@ public sealed class UpdateSchedule(ScheduleBaseDependencies deps) : ScheduleBase
         schedule.DateEnd = input.DateEnd;
         schedule.PaymentType = input.PaymentType;
         schedule.ScheduleStatus = input.ScheduleStatus;
+        schedule.ScheduleType = input.ScheduleType;
         schedule.ClientId = input.ClientId;
         schedule.UsersIds = input.UsersIds;
         schedule.CustomTitle = input.CustomTitle;
