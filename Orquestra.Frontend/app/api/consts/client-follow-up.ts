@@ -1,5 +1,6 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
+import { iClient } from './client';
 
 const controller = 'api/ClientFollowUp';
 
@@ -7,12 +8,14 @@ export const CONSTS_CLIENT_FOLLOW_UP = {
     post: `${BASE}/${controller}`,
     put: `${BASE}/${controller}`,
     disable: `${BASE}/${controller}/Disable`,
-    get: `${BASE}/${controller}`
+    get: `${BASE}/${controller}`,
+    getAllByCompanyId: `${BASE}/${controller}/GetAllByCompanyId`
 };
 
 export interface iClientFollowUp {
     clientFollowUpId?: Guid;
     clientId?: Guid;
+    client?: iClient;
     companyId?: Guid;
     observation?: string;
     clientFollowUpStatus?: string;

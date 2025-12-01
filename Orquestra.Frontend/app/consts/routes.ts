@@ -21,7 +21,7 @@ const ROUTES = {
     EMPRESA_COLABORADORES: '/empresa/colaboradores',
     EMPRESA_CLIENTES: '/empresa/clientes',
     EMPRESA_FINANCEIRO: '/empresa/financeiro',
-    EMPRESA_ACOMPANHAMENTO: '/empresa/acompanhamento',
+    EMPRESA_ACOMPANHAMENTOS: '/empresa/acompanhamentos',
     EMPRESA_NOTA_FISCAL: '/empresa/nota-fiscal',
     EMPRESA_INTEGRACAO_WHATSAPP: '/empresa/integracao-whatsapp',
     EMPRESA_AGENDAMENTOS: '/empresa/agenda',

@@ -20,7 +20,7 @@ export const MODULES_PERMISSIONS: Record<string, string[]> = {
     [ROUTES.EMPRESA_CLIENTES]: [MODULE_ENUM.Client.toString()],
     [ROUTES.EMPRESA_AGENDAMENTOS]: [MODULE_ENUM.Scheduling.toString()],
     [ROUTES.EMPRESA_INTEGRACAO_WHATSAPP]: [MODULE_ENUM.IntegrationWhatsApp.toString()],
-    [ROUTES.EMPRESA_ACOMPANHAMENTO]: [MODULE_ENUM.CostumerFollowUp.toString()],
+    [ROUTES.EMPRESA_ACOMPANHAMENTOS]: [MODULE_ENUM.CostumerFollowUp.toString()],
     [ROUTES.EMPRESA_NOTA_FISCAL]: [MODULE_ENUM.Invoice.toString()],
     [ROUTES.EMPRESA_FINANCEIRO]: [MODULE_ENUM.Sales.toString()],
     [ROUTES.EMPRESA_ORCAMENTO]: [MODULE_ENUM.Quote.toString()],

@@ -18,6 +18,7 @@ public sealed class GetAllClientFollowUpByCompanyId(Context context, ICheckIfUse
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
         var query = _context.ClientsFollowUps.
+                    Include(x => x.Client).
                     AsNoTracking().
                     Where(x =>
                         x.CompanyId == companyId &&
