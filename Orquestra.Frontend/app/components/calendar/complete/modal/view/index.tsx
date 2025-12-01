@@ -16,6 +16,7 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate, handleFormatDateToInputValue, handleFormatTimeToInputValue, handleIsBeforeTodayWithTime } from '@/app/functions/format.date';
 import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
+import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeGuidArrayField, handleNormalizeGuidField } from '@/app/functions/normalize.guid';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -382,7 +383,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                         ) : (
                             <div className={styles.buttonsRow}>
                                 <WhatsappWebShortcut phone={formData.client?.phone} message={formData.messageIntegrationWhatsapp} clientId={formData.clientId} />
-                                <Button label='Cliente' handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} isStyleSimple={true} icon_feather={<Icon icon='user-check' />} />
+                                <Button label={`Detalhes • ${handleGetFirstName(formData.client?.fullName)}`} handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} isStyleSimple={true} icon_feather={<Icon icon='user-check' />} />
 
                                 {
                                     canEdit && (

@@ -81,7 +81,7 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
 
     const formats = {
         monthHeaderFormat: (date: Date) => handleCapitalizeFirstLetter(format(date, `MMMM 'de' yyyy`, { locale: ptBR })),
-        dayRangeHeaderFormat: ({ start, end }: { start: Date, end: Date }) => `${format(start, 'dd', { locale: ptBR })} - ${format(end, 'dd', { locale: ptBR })} de ${format(start, 'MMMM', { locale: ptBR })}`,
+        dayRangeHeaderFormat: ({ start, end }: { start: Date, end: Date }) => `${format(start, 'dd', { locale: ptBR })} • ${format(end, 'dd', { locale: ptBR })} de ${format(start, 'MMMM', { locale: ptBR })}`,
         dayHeaderFormat: (date: Date) => {
             const dayName = format(date, 'EEEE', { locale: ptBR });
             const dayNumber = format(date, 'dd', { locale: ptBR });
@@ -91,7 +91,7 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
         },
         agendaDateFormat: (date: Date) => handleCapitalizeFirstLetter(format(date, `EEE, dd 'de' MMM.`, { locale: ptBR })),
         agendaTimeFormat: (date: Date) => format(date, 'HH:mm', { locale: ptBR }),
-        agendaTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) => `${format(start, 'HH:mm', { locale: ptBR })} - ${format(end, 'HH:mm', { locale: ptBR, })}`
+        agendaTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) => `${format(start, 'HH:mm', { locale: ptBR })} • ${format(end, 'HH:mm', { locale: ptBR, })}`
     };
 
     const [date, setDate] = useState<Date>(new Date());
@@ -290,10 +290,10 @@ export function handleMapSchedulesToEvents(schedules: iSchedule[], view: View): 
         if (view === 'month') {
             const startNormalized = handleFormatDate(start, DATE_STYLE.HORA_MINUTO);
             // const endNormalized = handleFormatDate(end, DATE_STYLE.HORA_MINUTO);
-            // title = `${startNormalized} - ${endNormalized} - ${title}`;
+            // title = `${startNormalized} • ${endNormalized} • ${title}`;
 
             title = handleTruncate(title, getTruncateLength());
-            title = `${startNormalized} - ${title}`;
+            title = `${startNormalized} • ${title}`;
         }
 
         return {
