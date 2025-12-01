@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.ClientsFollowUps.Create;
 using Orquestra.Application.UseCases.ClientsFollowUps.Delete;
 using Orquestra.Application.UseCases.ClientsFollowUps.Get;
+using Orquestra.Application.UseCases.ClientsFollowUps.GetAllByCompanyId;
 using Orquestra.Application.UseCases.ClientsFollowUps.Update;
 
 namespace Orquestra.Application.UseCases.ClientsFollowUps;
@@ -14,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateClientFollowUp, CreateClientFollowUp>();
         services.AddScoped<IUpdateClientFollowUp, UpdateClientFollowUp>();
         services.AddScoped<IDeleteClientFollowUp, DeleteClientFollowUp>();
+        services.AddScoped<IGetAllClientFollowUpByCompanyId, GetAllClientFollowUpByCompanyId>();
 
         return services;
     }

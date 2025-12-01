@@ -459,9 +459,7 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
                         </div>
                     )) : (
                         <div className={styles.appointmentHistory__empty}>
-                            <p>
-                                Nenhum acompanhamento encontrado.
-                            </p>
+                            <p>Nenhum acompanhamento encontrado.</p>
 
                             <Button
                                 label='Criar novo acompanhamento'

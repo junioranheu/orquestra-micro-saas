@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orquestra.API.Filters;
+using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.ClientsFollowUps.Create;
 using Orquestra.Application.UseCases.ClientsFollowUps.Delete;
 using Orquestra.Application.UseCases.ClientsFollowUps.Get;
+using Orquestra.Application.UseCases.ClientsFollowUps.GetAllByCompanyId;
 using Orquestra.Application.UseCases.ClientsFollowUps.Shared;
 using Orquestra.Application.UseCases.ClientsFollowUps.Update;
+using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
@@ -15,13 +18,15 @@ public class ClientFollowUpController(
         IGetClientFollowUp get,
         ICreateClientFollowUp create,
         IUpdateClientFollowUp update,
-        IDeleteClientFollowUp delete
+        IDeleteClientFollowUp delete,
+        IGetAllClientFollowUpByCompanyId getAllByCompanyId
     ) : BaseController<ClientFollowUpController>
 {
     private readonly IGetClientFollowUp _get = get;
     private readonly ICreateClientFollowUp _create = create;
     private readonly IUpdateClientFollowUp _update = update;
     private readonly IDeleteClientFollowUp _delete = delete;
+    private readonly IGetAllClientFollowUpByCompanyId _getAllByCompanyId = getAllByCompanyId;
 
     [AuthorizeFilter(modules: [ModuleEnum.ClientFollowUp])]
     [HttpPost]
@@ -74,6 +79,21 @@ public class ClientFollowUpController(
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
         (IEnumerable<ClientFollowUpOutput> output, int count) = await _get.Execute(userIdAuth, input);
+
+        return Ok(new { output, count });
+    }
+
+    [AuthorizeFilter(modules: [ModuleEnum.ClientFollowUp])]
+    [HttpGet("GetAllByCompanyId")]
+    public async Task<ActionResult> GetAllByCompanyId([FromQuery] PaginationInput paginationInput, [FromQuery] ClientFollowUpInput input)
+    {
+        if (input is null || input.CompanyId is null || input.CompanyId == Guid.Empty)
+        {
+            return NoContent();
+        }
+
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        (IEnumerable<ClientFollowUpOutput> output, int count) = await _getAllByCompanyId.Execute(paginationInput, input, userIdAuth, companyId: input.CompanyId.GetValueOrDefault());
 
         return Ok(new { output, count });
     }

@@ -1,6 +1,11 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
 
+⦁	Módulo de Folow-up:
+Criar GetAllClientFollowUpByCompanyId
+Criar teste de integração
+Criar front
+
 ⦁	Módulo de Ordem de serviço:
 Criar classe
 Criar UseCase e dependências
