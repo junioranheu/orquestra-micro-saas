@@ -4,6 +4,7 @@ import { CONSTS_SCHEDULE, iSchedule } from '@/app/api/consts/schedule';
 import { iUser } from '@/app/api/consts/user';
 import { Fetch } from '@/app/api/fetch';
 import { iEvent } from '@/app/components/calendar/complete';
+import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
@@ -256,7 +257,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
     async function handleDisable(event: iEvent) {
         swal({
-            content: 'Você tem certeza que deseja excluir este agendamento?',
+            content: 'Você tem certeza que deseja excluir este agendamento? Este processo é irreversível.',
             confirmBtnText: 'Sim, desejo excluir',
             confirmFunction: async () => {
                 const input = { scheduleId: event.schedule.scheduleId };
@@ -376,18 +377,19 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                     {
                         type === 'create' ? (
                             <div className={styles.buttonsRow}>
-                                <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
+                                <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} icon_feather={<Icon icon='save' />} />
                             </div>
                         ) : (
                             <div className={styles.buttonsRow}>
                                 <WhatsappWebShortcut phone={formData.client?.phone} message={formData.messageIntegrationWhatsapp} clientId={formData.clientId} />
+                                <Button label='Cliente' handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} isStyleSimple={true} icon_feather={<Icon icon='user-check' />} />
 
                                 {
                                     canEdit && (
                                         !editing ? (
                                             <Fragment>
-                                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir evento' handleFunction={() => handleDisable(event)} isStyleSimple={true} />}
-                                                <Button label='Editar' handleFunction={() => setEditing(true)} isDisabled={formData.scheduleStatus === 2} />
+                                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir evento' handleFunction={() => handleDisable(event)} isStyleSimple={true} icon_feather={<Icon icon='trash' />} />}
+                                                <Button label='Editar' handleFunction={() => setEditing(true)} isDisabled={formData.scheduleStatus === 2} icon_feather={<Icon icon='edit' />} />
                                             </Fragment>
                                         ) : (
                                             <Fragment>
