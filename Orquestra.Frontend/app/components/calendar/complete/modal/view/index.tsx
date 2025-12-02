@@ -373,7 +373,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
                 <footer className={styles.modalFooter}>
                     <div className={styles.buttonsRow} style={{ marginRight: '1rem' }}>
-                        <Button label='Fechar' handleFunction={() => handleClose()} isStyleSimple={true} />
+                        <Button label='Fechar' handleFunction={() => handleClose()} styleType='transparent' />
                     </div>
 
                     {
@@ -384,9 +384,9 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                         ) : (
                             <div className={styles.buttonsRow}>
                                 <WhatsappWebShortcut phone={formData.client?.phone} message={formData.messageIntegrationWhatsapp} clientId={formData.clientId} />
-                                <Button label={`Detalhes • ${handleGetFirstName(formData.client?.fullName)}`} handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} isStyleSimple={true} icon_feather={<Icon icon='user-check' />} />
+                                <Button label={`Detalhes • ${handleGetFirstName(formData.client?.fullName)}`} handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} styleType='transparent' icon_feather={<Icon icon='user-check' />} />
 
-                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir' handleFunction={() => handleDisable(event)} isStyleSimple={true} icon_feather={<Icon icon='trash' />} />}
+                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir' handleFunction={() => handleDisable(event)} styleType='contrast' icon_feather={<Icon icon='trash' />} />}
 
                                 {
                                     // 1 = Marcado;
@@ -397,7 +397,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                             </Fragment>
                                         ) : (
                                             <Fragment>
-                                                <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
+                                                <Button label='Cancelar edição' handleFunction={() => setEditing(false)} styleType='transparent' />
                                                 <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
                                             </Fragment>
                                         )

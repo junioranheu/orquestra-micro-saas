@@ -43,7 +43,7 @@
         cursor: not-allowed;
     }
 
-    &.btnSimple {
+    &.transparent {
         background-color: transparent;
         border: 1px solid var(--gray) !important;
         color: var(--gray-dark) !important;
@@ -52,6 +52,21 @@
         &:hover {
             border: 1px solid var(--contrast) !important;
             color: var(--contrast) !important;
+            transition: 0.3s !important;
+
+            svg {
+                transition: 0.3s !important;
+            }
+        }
+    }
+
+    &.contrast {
+        background-color: var(--contrast) !important;
+        border: 1px solid var(--contrast) !important;
+        color: var(--gray-light) !important;
+        transition: 0.3s !important;
+
+        &:hover {
             transition: 0.3s !important;
 
             svg {

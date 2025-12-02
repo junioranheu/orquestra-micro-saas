@@ -210,7 +210,7 @@ export default function CriarConta() {
                                 label='Entre agora mesmo'
                                 handleFunction={() => router.push(ROUTES.LOGIN)}
                                 isDisabled={isIncognito || isRequestLoading}
-                                isStyleSimple={true}
+                                styleType='transparent'
                                 style={{ height: '3rem', fontWeight: '600' }}
                             />
                         </div>

@@ -184,7 +184,7 @@ export default function EmpresaMembros() {
                     <Button
                         key='search'
                         label='Filtrar'
-                        isStyleSimple={true}
+                        styleType='transparent'
                         handleFunction={() => setIsModalFilterOpen(true)}
                         icon_feather={<Icon icon='search' size='small' />}
                     />,

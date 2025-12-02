@@ -136,7 +136,7 @@ export default function CardDailyAgenda({ me }: iProps) {
 
                         <Button
                             label='Criar novo agendamento'
-                            isStyleSimple={true}
+                            styleType='transparent'
                             style={{ boxShadow: 'none', marginTop: '0.5rem' }}
                             url={ROUTES.EMPRESA_AGENDAMENTOS}
                             isNewTab={false}

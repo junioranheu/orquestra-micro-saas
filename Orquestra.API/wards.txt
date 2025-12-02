@@ -1,7 +1,5 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
-Botões escrito EXCLUIR, REMOVER ou DELETAR, pintar de --contrast-light;
-Criar teste de integração para GetFilterClient
 
 ⦁	Módulo de Ordem de serviço:
 Criar classe;

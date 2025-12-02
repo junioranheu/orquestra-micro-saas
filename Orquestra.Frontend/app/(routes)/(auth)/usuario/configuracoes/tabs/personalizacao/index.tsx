@@ -240,7 +240,7 @@ function FontSizeSelector() {
                 fontSize !== DEFAULT_FONT_SIZE && (
                     <Button
                         label='Resetar ao padrão'
-                        isStyleSimple={true}
+                        styleType='contrast'
                         handleFunction={() => handleResetFontSize()}
                         isDisabled={fontSize === DEFAULT_FONT_SIZE}
                         style={{ marginTop: '1rem' }}

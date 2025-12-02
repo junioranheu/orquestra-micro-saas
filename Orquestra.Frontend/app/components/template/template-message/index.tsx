@@ -131,7 +131,7 @@ export default function LayoutTemplateMessage({
                                             label='Central de ajuda'
                                             icon_feather={<Icon icon='help-circle' />}
                                             handleFunction={() => router.push(ROUTES.ETC_AJUDA)}
-                                            isStyleSimple={true}
+                                            styleType='transparent'
                                             isBig={true}
                                         />
                                     )

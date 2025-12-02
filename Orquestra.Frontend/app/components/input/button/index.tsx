@@ -15,10 +15,10 @@ interface iProps {
     icon_feather?: JSX.Element | null;
     refBtn?: RefObject<HTMLButtonElement | null>;
     isDisabled?: boolean;
-    isStyleSimple?: boolean;
     isBig?: boolean;
     classes?: string;
     style?: CSSProperties;
+    styleType?: 'transparent' | 'contrast';
 }
 
 export default function Button({
@@ -31,10 +31,10 @@ export default function Button({
     icon_feather,
     refBtn,
     isDisabled = false,
-    isStyleSimple = false,
     isBig = false,
     classes,
-    style = {}
+    style = {},
+    styleType = undefined
 }: iProps) {
 
     const router = useRouter();
@@ -75,7 +75,7 @@ export default function Button({
 
     return (
         <button
-            className={`${styles.button} ${classes} ${isStyleSimple && styles.btnSimple} ${isBig && styles.big}`}
+            className={`${styles.button} ${classes} ${styleType && styles[styleType]} ${isBig && styles.big}`}
             style={style}
             onClick={(e) => handleClick(e)}
             ref={refBtn}

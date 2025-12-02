@@ -224,8 +224,8 @@ function ClientHeader({ me, name, memberSince, onEdit, handleOpenModalFollowUp, 
             </div>
 
             <div className={styles.clientHeader__actions}>
-                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} isStyleSimple={true} style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='user-x' />} />}
-                <Button label='Criar novo acompanhamento' handleFunction={() => handleOpenModalFollowUp()} isStyleSimple={true} style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='repeat' />} />
+                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} styleType='contrast' icon_feather={<Icon icon='user-x' />} />}
+                <Button label='Criar novo acompanhamento' handleFunction={() => handleOpenModalFollowUp()} styleType='transparent' style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='repeat' />} />
                 <Button label='Editar cliente' handleFunction={() => onEdit()} icon_feather={<Icon icon='edit' />} />
             </div>
         </div>
@@ -480,7 +480,7 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
 
                             <Button
                                 label='Criar novo acompanhamento'
-                                isStyleSimple={true}
+                                styleType='transparent'
                                 style={{ boxShadow: 'none', marginTop: '0.5rem' }}
                                 handleFunction={() => handleOpenModalFollowUp(undefined, 'create')}
                                 isNewTab={false}

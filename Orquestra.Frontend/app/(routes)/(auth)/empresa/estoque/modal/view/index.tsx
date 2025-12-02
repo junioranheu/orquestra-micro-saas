@@ -186,7 +186,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
 
                 <footer className={styles.modalFooter}>
                     <div className={styles.buttonsRow}>
-                        <Button label='Fechar' handleFunction={() => handleClose()} isStyleSimple={true} />
+                        <Button label='Fechar' handleFunction={() => handleClose()} styleType='transparent' />
                     </div>
 
                     {
@@ -203,7 +203,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
                                         </Fragment>
                                     ) : (
                                         <Fragment>
-                                            <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
+                                            <Button label='Cancelar edição' handleFunction={() => setEditing(false)} styleType='transparent' />
                                             <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
                                         </Fragment>
                                     )

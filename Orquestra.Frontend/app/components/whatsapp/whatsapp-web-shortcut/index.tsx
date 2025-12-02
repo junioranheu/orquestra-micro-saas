@@ -63,7 +63,7 @@ export default function WhatsappWebShortcut({ phone, message = '', label = 'Abri
                         <Button
                             label='Atualizar telefone'
                             handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${clientId}`)}
-                            isStyleSimple={true}
+                            styleType='transparent'
                             icon_feather={<Icon icon='phone' />}
                         />
                     )

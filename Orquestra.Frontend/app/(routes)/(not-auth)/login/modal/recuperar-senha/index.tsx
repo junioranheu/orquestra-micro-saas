@@ -103,7 +103,7 @@ export default function LoginModalRecuperarSenha({ isModalOpen, setIsModalOpen }
 
                 <footer className={styles.modalFooter}>
                     <div className={styles.buttonsRow}>
-                        <Button label='Fechar' handleFunction={() => handleClose()} isStyleSimple={true} />
+                        <Button label='Fechar' handleFunction={() => handleClose()} styleType='transparent' />
                     </div>
 
                     <div className={styles.buttonsRow}>

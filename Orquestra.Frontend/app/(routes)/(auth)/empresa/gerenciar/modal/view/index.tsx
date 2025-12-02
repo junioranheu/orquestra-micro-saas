@@ -292,7 +292,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
                 <footer className={styles.modalFooter}>
                     <div className={styles.buttonsRow}>
-                        <Button label='Fechar' handleFunction={() => handleClose()} isStyleSimple={true} />
+                        <Button label='Fechar' handleFunction={() => handleClose()} styleType='transparent' />
                     </div>
 
                     {
@@ -305,14 +305,14 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
                                 {
                                     !editing ? (
                                         <Fragment>
-                                            <Button label='Planos e faturas' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} isStyleSimple={true} icon_feather={<Icon icon='tag' size='small' />} />
-                                            <Button label='Colaboradores' handleFunction={() => window.open(ROUTES.EMPRESA_COLABORADORES, '_blank')} isStyleSimple={true} icon_feather={<Icon icon='users' size='small' />} />
-                                            <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} isStyleSimple={true} icon_feather={<Icon icon='user-check' size='small' />} />
+                                            <Button label='Planos e faturas' handleFunction={() => window.open(ROUTES.EMPRESA_USO_E_PLANO, '_blank')} styleType='transparent' icon_feather={<Icon icon='tag' size='small' />} />
+                                            <Button label='Colaboradores' handleFunction={() => window.open(ROUTES.EMPRESA_COLABORADORES, '_blank')} styleType='transparent' icon_feather={<Icon icon='users' size='small' />} />
+                                            <Button label='Clientes' handleFunction={() => window.open(ROUTES.EMPRESA_CLIENTES, '_blank')} styleType='transparent' icon_feather={<Icon icon='user-check' size='small' />} />
                                             <Button label='Editar' handleFunction={() => setEditing(true)} />
                                         </Fragment>
                                     ) : (
                                         <Fragment>
-                                            <Button label='Cancelar edição' handleFunction={() => setEditing(false)} isStyleSimple={true} />
+                                            <Button label='Cancelar edição' handleFunction={() => setEditing(false)} styleType='transparent' />
                                             <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
                                         </Fragment>
                                     )

@@ -338,7 +338,7 @@ export default function EmpresaGerenciar() {
                                             <Button
                                                 label='Ver detalhes'
                                                 handleFunction={() => handleOpenModal(company)}
-                                                isStyleSimple={true}
+                                                styleType='transparent'
                                                 icon_feather={<Icon icon='search' size='small' />}
                                             />
 
@@ -347,7 +347,7 @@ export default function EmpresaGerenciar() {
                                                     <Button
                                                         label='Tornar principal'
                                                         handleFunction={() => handleSetCurrentMainCompany(company)}
-                                                        isStyleSimple={true}
+                                                        styleType='transparent'
                                                         icon_feather={<Icon icon='star' size='small' />}
                                                     />
                                                 )
@@ -358,7 +358,7 @@ export default function EmpresaGerenciar() {
                                                     <Button
                                                         label='Sair'
                                                         handleFunction={() => handleLeave(company)}
-                                                        isStyleSimple={true}
+                                                        styleType='contrast'
                                                         icon_feather={<Icon icon='log-out' size='small' />}
                                                     />
                                                 )

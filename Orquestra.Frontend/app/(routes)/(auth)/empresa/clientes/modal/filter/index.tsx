@@ -100,7 +100,7 @@ export default function EmpresaClientesModalFilters({
                     <Button
                         label='Limpar filtros'
                         handleFunction={() => handleClearFormData(setModalFilterFormData)}
-                        isStyleSimple={true}
+                        styleType='transparent'
                         style={{ fontSize: '0.75rem' }}
                     />
 
