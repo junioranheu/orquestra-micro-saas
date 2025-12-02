@@ -39,6 +39,11 @@ public static class SystemConsts
         public const string Refresh = "auth_refreshedToken";
     }
 
+    public static class Cache
+    {
+        public const string CacheKey_FiltersClient = "CacheKey_FiltersClient_companyId_";
+    }
+
     public static class Screens
     {
         public const string Dashboard = "dashboard";

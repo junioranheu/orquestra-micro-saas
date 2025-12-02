@@ -25,6 +25,7 @@ using Orquestra.Infrastructure.Messaging.Publishers;
 using Orquestra.Infrastructure.Services.Email;
 using Orquestra.Infrastructure.Services.Email.Models;
 using Orquestra.Infrastructure.Services.Env;
+using Orquestra.Infrastructure.Services.GenericCache;
 using Orquestra.Infrastructure.Services.PDF;
 using Orquestra.Infrastructure.Services.Sms;
 using System.Text;
@@ -83,6 +84,9 @@ public static class DependencyInjection
 
         // PDF;
         services.AddSingleton<IPDFService, PDFService>();
+
+        // Cache;
+        services.AddSingleton<IGenericCacheService, GenericCacheService>();
     }
 
     private static readonly string[] OnAuthenticationFailed = ["Sua sessão expirou. Por favor, realize o login novamente para continuar."];

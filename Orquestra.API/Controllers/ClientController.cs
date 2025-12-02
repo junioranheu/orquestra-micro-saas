@@ -4,6 +4,7 @@ using Orquestra.Application.UseCases.Clients.Create;
 using Orquestra.Application.UseCases.Clients.Delete;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
+using Orquestra.Application.UseCases.Clients.GetFilter;
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.Clients.Update;
 using Orquestra.Application.UseCases.Shared;
@@ -18,7 +19,8 @@ public class ClientController(
         IGetAllClientByCompanyId getClientByCompanyId,
         ICreateClient create,
         IUpdateClient update,
-        IDeleteClient delete
+        IDeleteClient delete,
+        IGetFilterClient getFilter
     ) : BaseController<ClientController>
 {
     private readonly IGetClient _get = get;
@@ -26,6 +28,7 @@ public class ClientController(
     private readonly ICreateClient _create = create;
     private readonly IUpdateClient _update = update;
     private readonly IDeleteClient _delete = delete;
+    private readonly IGetFilterClient _getFilter = getFilter;
 
     [AuthorizeFilter(modules: [ModuleEnum.Client])]
     [HttpPost]
@@ -85,5 +88,15 @@ public class ClientController(
         (IEnumerable<ClientOutput> output, int count) = await _getClientByCompanyId.Execute(paginationInput, input, userIdAuth, companyId: input.CompanyId.GetValueOrDefault());
 
         return Ok(new { output, count });
+    }
+
+    [AuthorizeFilter(modules: [ModuleEnum.Client])]
+    [HttpGet("GetFilter")]
+    public async Task<ActionResult> GetFilter([FromQuery] Guid companyId)
+    {
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
+        ClientFilterOutput? output = await _getFilter.Execute(userIdAuth, companyId);
+
+        return Ok(output);
     }
 }

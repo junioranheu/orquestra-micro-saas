@@ -3,6 +3,7 @@ using Orquestra.Application.UseCases.Clients.Create;
 using Orquestra.Application.UseCases.Clients.Delete;
 using Orquestra.Application.UseCases.Clients.Get;
 using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
+using Orquestra.Application.UseCases.Clients.GetFilter;
 using Orquestra.Application.UseCases.Clients.Update;
 
 namespace Orquestra.Application.UseCases.Clients;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateClient, CreateClient>();
         services.AddScoped<IUpdateClient, UpdateClient>();
         services.AddScoped<IDeleteClient, DeleteClient>();
+        services.AddScoped<IGetFilterClient, GetFilterClient>();
 
         return services;
     }

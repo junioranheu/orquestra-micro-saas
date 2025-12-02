@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -7,7 +8,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
 namespace Orquestra.Utils.Fixtures;
@@ -552,7 +552,7 @@ public static partial class Get
         string formD = input.Normalize(NormalizationForm.FormD);
 
         // Remove caracteres de acento;
-        string withoutAccents = new(formD.Where(ch => CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark).ToArray());
+        string withoutAccents = new([.. formD.Where(ch => CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)]);
 
         // Converte para lowercase e remove espaços extras
         string output = withoutAccents.ToLowerInvariant().Trim();
@@ -924,7 +924,7 @@ public static partial class Get
         }
 
         // #2 Fluxo de modificação: comparar before vs after;
-        Dictionary<string, (string Before, string After)> changed = new();
+        Dictionary<string, (string Before, string After)> changed = [];
 
         foreach (var prop in before.EnumerateObject())
         {
@@ -960,5 +960,97 @@ public static partial class Get
         );
 
         return JsonSerializer.Serialize(changedObj, _jsonOptions);
+    }
+
+    /// <summary>
+    /// Checa se uma lista (List ou IEnumerable) é vazia;
+    /// </summary>
+    public static bool IsEmptyList<T>(T value)
+    {
+        if (value is IEnumerable enumerable)
+        {
+            return !enumerable.Cast<object>().Any();
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Obtém a descrição de um enum utilizando uma string, que pode ou não existir no Enum;
+    /// Há uma avaliação inicial para checar se o parâmetro passado é realmente um int;
+    /// string description = GetEnumDescByIdString<LogTypeEnum>("1.0");
+    /// </summary>
+    public static string? GetEnumDescByIdString<T>(string? value, string key = ".") where T : Enum
+    {
+        if (!IsStringActuallyNumber(value))
+        {
+            return value;
+        }
+
+        int id = Convert.ToInt32(GetSubstringBeforeKey(input: value, key));
+        string? enumValue = GetEnumDescById<T>(id);
+
+        return enumValue;
+    }
+
+    /// <summary>
+    /// Obtem toda a string anterior à palavra-chave;
+    /// string input = "4.0";
+    /// string result = GetSubstringBeforeKey(input, "."); // Output: "4";
+    /// </summary>
+    public static string? GetSubstringBeforeKey(string? input, string key)
+    {
+        if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(key))
+        {
+            return input;
+        }
+
+        int keyIndex = input.IndexOf(key);
+
+        return keyIndex >= 0 ? input[..keyIndex] : input;
+    }
+
+    /// <summary>
+    /// Checa se a string é um número;
+    /// </summary>
+    public static bool IsStringActuallyNumber(string? input)
+    {
+        return double.TryParse(input, out _);
+    }
+
+    /// <summary>
+    /// Obtém a descrição de um enum utilizando um de seus IDs;
+    /// string description = GetEnumDescById<LogTypeEnum>(id);
+    /// </summary>
+    public static string? GetEnumDescById<T>(int value) where T : Enum
+    {
+        T enumValue = (T)(object)value;
+        FieldInfo? fieldInfo = enumValue.GetType().GetField(enumValue.ToString());
+
+        if (fieldInfo is not null)
+        {
+            DescriptionAttribute? descriptionAttribute = fieldInfo.GetCustomAttribute<DescriptionAttribute>();
+
+            if (descriptionAttribute is not null)
+            {
+                return descriptionAttribute.Description;
+            }
+        }
+
+        return enumValue.ToString();
+    }
+
+    /// <summary>
+    /// Extrai valores de string a partir de uma propriedade selecionada,
+    /// removendo nulos e espaços em branco, eliminando duplicados e
+    /// retornando o resultado ordenado alfabeticamente.
+    /// </summary>
+    /// <typeparam name="T">Tipo dos itens da coleção de origem.</typeparam>
+    /// <param name="source">Coleção de origem.</param>
+    /// <param name="selector">Função que seleciona a propriedade string a ser filtrada.</param>
+    /// <returns>Lista de strings distintas, limpas e ordenadas.</returns>
+    public static List<string?> CleanDistinctOrdered<T>(IEnumerable<T> source, Func<T, string?> selector)
+    {
+        return [.. source.Select(selector).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x)];
     }
 }

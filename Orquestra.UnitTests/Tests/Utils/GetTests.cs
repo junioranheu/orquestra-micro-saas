@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Orquestra.Domain.Consts;
 using System.ComponentModel;
-using System.Text.Json;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.UnitTests.Tests.Utils;
@@ -536,7 +535,7 @@ public sealed class GetTests
         List<string> countries = GetCountries();
 
         // Assert;
-        List<string> ordered = countries.OrderBy(x => x).ToList();
+        List<string> ordered = [.. countries.OrderBy(x => x)];
         Assert.Equal(ordered, countries);
     }
 
@@ -896,6 +895,278 @@ public sealed class GetTests
         Assert.Null(result);
     }
 
+    [Fact]
+    public void Should_ReturnTrue_When_ListIsEmpty()
+    {
+        // Arrange;
+        List<int> list = [];
+
+        // Act;
+        bool result = IsEmptyList(list);
+
+        // Assert;
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void Should_ReturnFalse_When_ListHasItems()
+    {
+        // Arrange;
+        List<string> list = ["oi"];
+
+        // Act;
+        bool result = IsEmptyList(list);
+
+        // Assert;
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Should_ReturnFalse_When_ValueIsNotEnumerable()
+    {
+        // Arrange;
+        int value = 42;
+
+        // Act;
+        bool result = IsEmptyList(value);
+
+        // Assert;
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Should_ReturnTrue_When_ArrayIsEmpty()
+    {
+        // Arrange;
+        int[] arr = [];
+
+        // Act;
+        bool result = IsEmptyList(arr);
+
+        // Assert;
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void Should_ReturnFalse_When_ArrayHasItems()
+    {
+        // Arrange;
+        int[] arr = [1, 2, 3];
+
+        // Act;
+        bool result = IsEmptyList(arr);
+
+        // Assert;
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void GetSubstringBeforeKey_Should_ReturnSubstring_When_KeyExists()
+    {
+        string? result = GetSubstringBeforeKey("4.0", ".");
+        Assert.Equal("4", result);
+    }
+
+    [Fact]
+    public void GetSubstringBeforeKey_Should_ReturnWholeString_When_KeyDoesNotExist()
+    {
+        string? result = GetSubstringBeforeKey("abc", "-");
+        Assert.Equal("abc", result);
+    }
+
+    [Fact]
+    public void GetSubstringBeforeKey_Should_ReturnInput_When_InputIsNull()
+    {
+        string? result = GetSubstringBeforeKey(null, ".");
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetSubstringBeforeKey_Should_ReturnInput_When_KeyIsNull()
+    {
+        string? result = GetSubstringBeforeKey("123", null!);
+        Assert.Equal("123", result);
+    }
+
+    [Fact]
+    public void GetSubstringBeforeKey_Should_ReturnInput_When_KeyIsEmpty()
+    {
+        string? result = GetSubstringBeforeKey("123", "");
+        Assert.Equal("123", result);
+    }
+
+    [Theory]
+    [InlineData("10")]
+    [InlineData("3.14")]
+    [InlineData("0")]
+    public void IsStringActuallyNumber_Should_ReturnTrue_ForValidNumbers(string input)
+    {
+        Assert.True(IsStringActuallyNumber(input));
+    }
+
+    [Theory]
+    [InlineData("abc")]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData("10a")]
+    public void IsStringActuallyNumber_Should_ReturnFalse_ForInvalidNumbers(string? input)
+    {
+        Assert.False(IsStringActuallyNumber(input));
+    }
+
+    [Fact]
+    public void GetEnumDescById_Should_ReturnDescription_When_DescriptionExists()
+    {
+        string? result = GetEnumDescById<TestEnum>(0);
+        Assert.Equal("Primeiro valor", result);
+    }
+
+    [Fact]
+    public void GetEnumDescById_Should_ReturnEnumName_When_NoDescriptionExists()
+    {
+        string? result = GetEnumDescById<TestEnum>(2);
+        Assert.Equal("Third", result);
+    }
+
+    [Fact]
+    public void GetEnumDescByIdString_Should_ReturnDescription_When_StringIsValidNumber()
+    {
+        string? result = GetEnumDescByIdString<TestEnum>("1");
+        Assert.Equal("Segundo valor", result);
+    }
+
+    [Fact]
+    public void GetEnumDescByIdString_Should_ReturnDescription_When_NumberHasKey()
+    {
+        string? result = GetEnumDescByIdString<TestEnum>("0.0");
+        Assert.Equal("Primeiro valor", result);
+    }
+
+    [Fact]
+    public void GetEnumDescByIdString_Should_ReturnInput_When_NotANumber()
+    {
+        string? result = GetEnumDescByIdString<TestEnum>("abc");
+        Assert.Equal("abc", result);
+    }
+
+    [Fact]
+    public void GetEnumDescByIdString_Should_ReturnNull_When_InputIsNull()
+    {
+        string? result = GetEnumDescByIdString<TestEnum>(null);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetEnumDescByIdString_Should_ReturnEnumName_When_DescriptionNotExists()
+    {
+        string? result = GetEnumDescByIdString<TestEnum>("2");
+        Assert.Equal("Third", result);
+    }
+
+    private static readonly string[] expectedArray1 = ["abacate", "banana", "laranja"];
+    private static readonly string[] expectedArray2 = ["a", "m", "z"];
+    private static readonly string[] expectedArray3 = ["test"];
+    private static readonly string[] expectedArray4 = ["ok"];
+
+    [Fact]
+    public void Should_FilterDistinctAndOrder()
+    {
+        List<TestItem> items =
+        [
+            new() { Value = "banana" },
+            new() { Value = "  " },
+            new() { Value = null },
+            new() { Value = "abacate" },
+            new() { Value = "banana" },
+            new() { Value = "laranja" }
+        ];
+
+        List<string?> result = CleanDistinctOrdered(items, x => x.Value);
+
+        Assert.Equal(expectedArray1, result);
+    }
+
+    [Fact]
+    public void Should_ReturnEmpty_When_SourceEmpty()
+    {
+        List<string?> result = CleanDistinctOrdered(new List<TestItem>(), x => x.Value);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void Should_ReturnEmpty_When_AllValuesNull()
+    {
+        List<TestItem> items =
+        [
+            new() { Value = null },
+            new() { Value = null }
+        ];
+
+        List<string?> result = CleanDistinctOrdered(items, x => x.Value);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void Should_OrderAlphabetically()
+    {
+        List<TestItem> items =
+        [
+            new() { Value = "z" },
+            new() { Value = "a" },
+            new() { Value = "m" }
+        ];
+
+        List<string?> result = CleanDistinctOrdered(items, x => x.Value);
+
+        Assert.Equal(expectedArray2, result);
+    }
+
+    [Fact]
+    public void Should_NotModifySourceList()
+    {
+        List<TestItem> source =
+        [
+            new() { Value = "x" },
+            new() { Value = "x" }
+        ];
+
+        List<TestItem> original = [.. source];
+
+        _ = CleanDistinctOrdered(source, x => x.Value);
+
+        Assert.Equal(original, source);
+    }
+
+    [Fact]
+    public void Should_IgnoreEmptyStrings()
+    {
+        List<TestItem> items =
+        [
+            new() { Value = "" },
+            new() { Value = "test" }
+        ];
+
+        List<string?> result = CleanDistinctOrdered(items, x => x.Value);
+
+        Assert.Equal(expectedArray3, result);
+    }
+
+    [Fact]
+    public void Should_HandleSelectorReturningNull()
+    {
+        List<TestItem> items =
+        [
+            new() { Value = null },
+            new() { Value = "ok" }
+        ];
+
+        List<string?> result = CleanDistinctOrdered(items, x => x.Value);
+
+        Assert.Equal(expectedArray4, result);
+    }
+
     #region helpers
     private enum TestEnum
     {
@@ -924,6 +1195,11 @@ public sealed class GetTests
         One,
         Two,
         Three
+    }
+
+    private sealed class TestItem
+    {
+        public string? Value { get; set; }
     }
     #endregion
 }
