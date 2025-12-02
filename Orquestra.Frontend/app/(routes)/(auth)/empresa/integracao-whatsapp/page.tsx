@@ -126,7 +126,7 @@ export default function EmpresaIntegracaoWhatsapp() {
                         label='Redefinir tudo'
                         handleFunction={() => handleReset()}
                         icon_feather={<Icon icon='rotate-ccw' size='small' />}
-                        styleType='contrast'
+                        styleType='red'
                         isDisabled={!hasPermitionToSave}
                     />
                 ),

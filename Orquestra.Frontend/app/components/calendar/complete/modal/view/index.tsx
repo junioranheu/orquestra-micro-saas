@@ -386,7 +386,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                 <WhatsappWebShortcut phone={formData.client?.phone} message={formData.messageIntegrationWhatsapp} clientId={formData.clientId} />
                                 <Button label={`Detalhes • ${handleGetFirstName(formData.client?.fullName)}`} handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} styleType='transparent' icon_feather={<Icon icon='user-check' />} />
 
-                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir' handleFunction={() => handleDisable(event)} styleType='contrast' icon_feather={<Icon icon='trash' />} />}
+                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir' handleFunction={() => handleDisable(event)} styleType='red' icon_feather={<Icon icon='trash' />} />}
 
                                 {
                                     // 1 = Marcado;

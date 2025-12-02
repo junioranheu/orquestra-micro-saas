@@ -358,7 +358,7 @@ export default function EmpresaGerenciar() {
                                                     <Button
                                                         label='Sair'
                                                         handleFunction={() => handleLeave(company)}
-                                                        styleType='contrast'
+                                                        styleType='red'
                                                         icon_feather={<Icon icon='log-out' size='small' />}
                                                     />
                                                 )

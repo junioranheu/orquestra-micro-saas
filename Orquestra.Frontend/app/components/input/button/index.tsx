@@ -18,7 +18,7 @@ interface iProps {
     isBig?: boolean;
     classes?: string;
     style?: CSSProperties;
-    styleType?: 'transparent' | 'contrast';
+    styleType?: 'transparent' | 'red';
 }
 
 export default function Button({

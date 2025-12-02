@@ -224,7 +224,7 @@ function ClientHeader({ me, name, memberSince, onEdit, handleOpenModalFollowUp, 
             </div>
 
             <div className={styles.clientHeader__actions}>
-                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} styleType='contrast' icon_feather={<Icon icon='user-x' />} />}
+                {me?.isUserAdmOfCurrentMainCompany && <Button label='Remover cliente' handleFunction={() => handleDisable(client, setTrigger)} styleType='red' icon_feather={<Icon icon='user-x' />} />}
                 <Button label='Criar novo acompanhamento' handleFunction={() => handleOpenModalFollowUp()} styleType='transparent' style={{ background: 'var(--white-og)' }} icon_feather={<Icon icon='repeat' />} />
                 <Button label='Editar cliente' handleFunction={() => onEdit()} icon_feather={<Icon icon='edit' />} />
             </div>
