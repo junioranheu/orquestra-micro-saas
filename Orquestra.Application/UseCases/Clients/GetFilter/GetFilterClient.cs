@@ -1,9 +1,8 @@
 ﻿using Orquestra.Application.UseCases.Clients.GetAllByCompanyId;
 using Orquestra.Application.UseCases.Clients.Shared;
-using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Services.GenericCache;
-using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Application.UseCases.Shared.DropDownOption;
 
 namespace Orquestra.Application.UseCases.Clients.GetFilter;
 
@@ -25,22 +24,16 @@ public sealed class GetFilterClient(IGenericCacheService cache, IGetAllClientByC
     #region extras
     private static ClientFilterOutput ConvertToDropdownOptions(List<ClientOutput> cachedLinq)
     {
-        var finalLinq = cachedLinq.Select(x => new
-        {
-            x.FullName,
-            x.Email
-        }).ToList();
-
         ClientFilterOutputStringify distinctValues = new()
         {
-            FullNames = CleanDistinctOrdered(finalLinq, x => x.FullName),
-            Emails = CleanDistinctOrdered(finalLinq, x => x.Email)
+            FullNames = CleanDistinctOrdered(cachedLinq, x => x.FullName),
+            Emails = CleanDistinctOrdered(cachedLinq, x => x.Email)
         };
 
         ClientFilterOutput output = new()
         {
-            FullNames = distinctValues?.FullNames.Select((x, index) => new DropdownOptionOutput<int> { Label = x ?? string.Empty, Value = index + 1 }).ToList(),
-            Emails = distinctValues?.Emails.Select((x, index) => new DropdownOptionOutput<int> { Label = x ?? string.Empty, Value = index + 1 }).ToList()
+            FullNames = MapToDropdown(distinctValues?.FullNames),
+            Emails = MapToDropdown(distinctValues?.Emails)
         };
 
         return output;

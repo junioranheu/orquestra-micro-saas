@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Orquestra.Application.UseCases.Locations.Cities.Get;
 using Orquestra.Application.UseCases.Locations.States.Get;
-using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Registry;
 using System.Reflection;
+using static Orquestra.Application.UseCases.Shared.DropDownOption;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.API.Controllers;

@@ -1,4 +1,4 @@
-﻿using Orquestra.Application.UseCases.Shared;
+﻿using static Orquestra.Application.UseCases.Shared.DropDownOption;
 
 namespace Orquestra.Application.UseCases.Clients.Shared;
 

@@ -1039,18 +1039,4 @@ public static partial class Get
 
         return enumValue.ToString();
     }
-
-    /// <summary>
-    /// Extrai valores de string a partir de uma propriedade selecionada,
-    /// removendo nulos e espaços em branco, eliminando duplicados e
-    /// retornando o resultado ordenado alfabeticamente.
-    /// </summary>
-    /// <typeparam name="T">Tipo dos itens da coleção de origem.</typeparam>
-    /// <param name="source">Coleção de origem.</param>
-    /// <param name="selector">Função que seleciona a propriedade string a ser filtrada.</param>
-    /// <returns>Lista de strings distintas, limpas e ordenadas.</returns>
-    public static List<string?> CleanDistinctOrdered<T>(IEnumerable<T> source, Func<T, string?> selector)
-    {
-        return [.. source.Select(selector).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x)];
-    }
 }
