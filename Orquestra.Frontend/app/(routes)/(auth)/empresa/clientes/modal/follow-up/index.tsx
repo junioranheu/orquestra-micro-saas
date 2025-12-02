@@ -1,5 +1,6 @@
 'use client';
 import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUp } from '@/app/api/consts/client-follow-up';
+import { iSchedule } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
@@ -8,10 +9,12 @@ import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import Tags from '@/app/components/tags';
 import SYSTEM from '@/app/consts/system';
+import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
 import swalLoading from '@/app/functions/swal.loading';
+import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import { handleConvertBase64ListToFiles } from '@/app/functions/transform.base64';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -24,20 +27,36 @@ interface iProps {
     followUpClicked: iClientFollowUp | undefined;
     clientFollowUpStatusEnum: iDropdownOption<string | number | Guid>[] | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
+    schedules: iSchedule[];
 }
 
-export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOpen, type, clientId, followUpClicked, clientFollowUpStatusEnum, setTrigger }: iProps) {
+export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOpen, type, clientId, followUpClicked, clientFollowUpStatusEnum, setTrigger, schedules }: iProps) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
     const [formData, setFormData] = useState<iClientFollowUp>({
         clientId: SYSTEM.EMPTY_GUID,
+        scheduleId: SYSTEM.EMPTY_GUID,
         observation: '',
         clientFollowUpStatus: '',
         imagesFormFile: [],
         imagesBase64: []
     });
+
+    const [schedulesOptions, setSchedulesOptions] = useState<iDropdownOption<Guid>[]>([]);
+
+    useEffect(() => {
+        if (schedules) {
+            const schedulesWithFormattedDate = schedules.map(schedule => ({
+                ...schedule,
+                dateStart: handleFormatDate(schedule.dateStart, DATE_STYLE.DETALHADO)
+            }));
+
+            const schedulesOptions = handleTransformArrayToDropdownOptionsGuid(schedulesWithFormattedDate ?? [], 'scheduleId', ['dateStart', 'customTitle']);
+            setSchedulesOptions(schedulesOptions ?? []);
+        }
+    }, [schedules]);
 
     const setClientFollowUpStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientFollowUpStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
@@ -198,6 +217,8 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                                 <Dropdown title='Status do acompanhamento' options={clientFollowUpStatusEnum ?? []} selectedOption={clientFollowUpStatusEnum?.find(x => x.value.toString() === formData?.clientFollowUpStatus?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} isObligatory={true} />
                             )
                         }
+
+                        <Dropdown title='Este acompanhamento faz parte do <b>agendamento</b> ocorrido em:' options={schedulesOptions ?? []} selectedOption={schedulesOptions?.find(x => x.value.toString() === formData?.scheduleId?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} />
                         <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' isMultiple={true} />
                     </div>
                 </main>

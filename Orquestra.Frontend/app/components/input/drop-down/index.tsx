@@ -97,7 +97,13 @@ export default function Dropdown({
 
     return (
         <div className={`${styles.main} ${isDisabled && styles.disabled}`}>
-            {title && <span className={styles.title}>{title} {isObligatory && <span className={styles.obligatory}>*</span>}</span>}
+            {
+                title && (
+                    <span className={styles.title}>
+                        <span dangerouslySetInnerHTML={{ __html: title }}></span> {isObligatory && <span className={styles.obligatory}>*</span>}
+                    </span>
+                )
+            }
 
             <Select
                 isClearable={isClearable}

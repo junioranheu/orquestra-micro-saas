@@ -1,6 +1,8 @@
 ﻿using Orquestra.Application.UseCases.Clients.Shared;
+using Orquestra.Application.UseCases.ClientsFollowUps.Shared;
 using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.Users.Shared;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 
 namespace Orquestra.Application.UseCases.Schedules.Shared;
@@ -47,4 +49,6 @@ public sealed class ScheduleOutput
     public UserOutput[]? UsersOutput { get; set; } = [];
 
     public string? MessageIntegrationWhatsapp { get; set; }
+
+    public IEnumerable<ClientFollowUpOutput>? ClientFollowUps { get; init; }
 }

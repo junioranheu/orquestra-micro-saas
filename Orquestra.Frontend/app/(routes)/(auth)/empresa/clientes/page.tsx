@@ -16,7 +16,6 @@ import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaClientesModalFilters, { iClientFormDataModalFilter } from './modal/filter';
-import EmpresaClientesModalFollowUp from './modal/follow-up';
 import EmpresaClientesModalView from './modal/view';
 
 export default function EmpresaClientes() {
@@ -114,11 +113,6 @@ export default function EmpresaClientes() {
             icon: <Icon icon='search' />
         },
         {
-            label: 'Criar novo acompanhamento',
-            function: (e) => handleOpenModalFollowUp(e),
-            icon: <Icon icon='repeat' />
-        },
-        {
             label: 'Editar cliente',
             function: (e) => handleOpenModalView(e),
             icon: <Icon icon='edit' />
@@ -135,17 +129,11 @@ export default function EmpresaClientes() {
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
     const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);
     const [typeModal, setTypeModal] = useState<('edit' | 'create')>('create');
-    const [isModalFollowUpOpen, setIsModalFollowUpOpen] = useState<boolean>(false);
 
     function handleOpenModalView(client: iClient | undefined) {
         setTypeModal(client ? 'edit' : 'create');
         setClientClicked(client);
         setIsModalViewOpen(true);
-    }
-
-    function handleOpenModalFollowUp(client: iClient) {
-        setClientClicked(client);
-        setIsModalFollowUpOpen(true);
     }
 
     return (
@@ -202,16 +190,6 @@ export default function EmpresaClientes() {
                 client={clientClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
-            />
-
-            <EmpresaClientesModalFollowUp
-                isModalOpen={isModalFollowUpOpen}
-                setIsModalOpen={setIsModalFollowUpOpen}
-                type='create'
-                clientId={clientClicked?.clientId}
-                followUpClicked={undefined}
-                setTrigger={setTrigger}
-                clientFollowUpStatusEnum={clientFollowUpStatusEnum}
             />
         </Fragment>
     )

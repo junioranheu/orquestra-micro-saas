@@ -1,6 +1,7 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
 import { iClient } from './client';
+import { iClientFollowUp } from './client-follow-up';
 import { iCompanyOutput } from './company';
 import { iUserPaginated } from './user';
 
@@ -39,4 +40,5 @@ export interface iSchedule {
     observations: string[]; // Avisos do sistema;
     usersOutput?: iUserPaginated[];
     messageIntegrationWhatsapp?: string;
+    clientFollowUps?: iClientFollowUp[];
 }

@@ -9,6 +9,7 @@ public sealed class ClientFollowUpOutput
     public Guid ClientId { get; set; }
     public ClientOutput? Client { get; set; }
     public Guid CompanyId { get; set; }
+    public Guid? ScheduleId { get; set; }
     public string? Observation { get; set; }
     public ClientFollowUpStatusEnum ClientFollowUpStatus { get; set; }
     public List<string> ImagesBase64 { get; set; } = []; // Base64;

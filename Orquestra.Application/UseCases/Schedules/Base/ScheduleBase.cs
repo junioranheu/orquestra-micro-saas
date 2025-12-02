@@ -58,7 +58,7 @@ public partial class ScheduleBase(ScheduleBaseDependencies deps)
 
             if (schedule?.ScheduleStatus == ScheduleStatusEnum.Completed || schedule?.ScheduleStatus == ScheduleStatusEnum.Canceled)
             {
-                throw new InvalidOperationException($"Agendamentos com o status <b>{GetStatusDesc(ScheduleStatusEnum.Completed).ToLowerInvariant()}</b> não podem ser modificados.");
+                throw new InvalidOperationException($"Agendamentos com o status <b>{GetStatusDesc(schedule.ScheduleStatus).ToLowerInvariant()}</b> não podem ser modificados.");
             }
         }
 

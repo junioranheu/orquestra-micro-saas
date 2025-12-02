@@ -49,7 +49,6 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
     const windowSize = useWindowSize();
     const [isModalGrid,] = useIsModalGrid();
 
-    const [canEdit,] = useState<boolean>(true);
     const [companyUsersDropDown, setCompanyUsersDropDown] = useState<iDropdownOption[]>();
     const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
 
@@ -179,10 +178,6 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
     const setScheduleTypeOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleType)[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     async function handleSave() {
-        if (!canEdit) {
-            return;
-        }
-
         if ((!formData.clientId || formData?.clientId === SYSTEM.EMPTY_GUID) || !formData.dateStart || !formData.timeStart || !formData.dateEnd || !formData.timeEnd || !formData.scheduleStatus || !formData.scheduleType) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
@@ -260,6 +255,8 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         swal({
             content: 'Você tem certeza que deseja excluir este agendamento? Este processo é irreversível.',
             confirmBtnText: 'Sim, desejo excluir',
+            mustConfirm: true,
+            checkboxLabel: 'Sim, confirmo',
             confirmFunction: async () => {
                 const input = { scheduleId: event.schedule.scheduleId };
                 const schedule = await Fetch.put({ url: CONSTS_SCHEDULE.disable, body: input });
@@ -350,7 +347,11 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                         </div> */}
 
                         <InputMask title='Valor recebido' type='number' fieldName='amountReceived' formData={formData} setFormData={setFormData} isDisabled={!editing} />
-                        <Dropdown title='Tipo de pagamento' options={paymentTypeEnum ?? []} selectedOption={paymentTypeEnum?.find(x => x.value.toLocaleString() === formData.paymentType?.toString())} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
+
+                        <div className={`${styles.div} ${styles.full}`}>
+                            <Dropdown title='Tipo de pagamento' options={paymentTypeEnum ?? []} selectedOption={paymentTypeEnum?.find(x => x.value.toLocaleString() === formData.paymentType?.toString())} setSelectedOption={setPaymentTypeOption} isDisabled={!editing} />
+                        </div>
+
                         <InputMask title='Título do evento' fieldName='customTitle' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <InputMask title='URL' fieldName='customUrl' formData={formData} setFormData={setFormData} isDisabled={!editing} />
 
@@ -385,11 +386,12 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                 <WhatsappWebShortcut phone={formData.client?.phone} message={formData.messageIntegrationWhatsapp} clientId={formData.clientId} />
                                 <Button label={`Detalhes • ${handleGetFirstName(formData.client?.fullName)}`} handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} isStyleSimple={true} icon_feather={<Icon icon='user-check' />} />
 
+                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir agendamento' handleFunction={() => handleDisable(event)} isStyleSimple={true} icon_feather={<Icon icon='trash' />} />}
+
                                 {
-                                    canEdit && (
+                                    event?.schedule?.scheduleStatus?.toString() === '1' && (
                                         !editing ? (
                                             <Fragment>
-                                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir evento' handleFunction={() => handleDisable(event)} isStyleSimple={true} icon_feather={<Icon icon='trash' />} />}
                                                 <Button label='Editar' handleFunction={() => setEditing(true)} isDisabled={formData.scheduleStatus === 2} icon_feather={<Icon icon='edit' />} />
                                             </Fragment>
                                         ) : (

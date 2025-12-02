@@ -62,4 +62,6 @@ public sealed class Schedule : Audit
     public string? Observation { get; set; }
 
     public decimal? AmountReceived { get; set; } = 0;
+
+    public IEnumerable<ClientFollowUp>? ClientFollowUps { get; init; }
 }

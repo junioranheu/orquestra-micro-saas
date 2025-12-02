@@ -1,26 +1,25 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
-
-⦁	Módulo de Folow-up:
-Criar front
+Adicionar um ou mais Follow-ups em um Schedule;
+Adicionar o Schedule lá nos detalhes do Follow-up (caso foi vinculado a algum - E inclusive, lá no create/update tem que ter como associar);
 
 ⦁	Módulo de Ordem de serviço:
-Criar classe
-Criar UseCase e dependências
-Criar endpoint
-Criar teste de integração
-Criar front
+Criar classe;
+Criar UseCase e dependências;
+Criar endpoint;
+Criar teste de integração;
+Criar front;
 
 ⦁	Módulo de Nota fiscal:
-Criar classe
-Criar UseCase e dependências
-Criar endpoint
-Criar teste de integração
-Criar front
+Criar classe;
+Criar UseCase e dependências;
+Criar endpoint;
+Criar teste de integração;
+Criar front;
 
 ⦁	Módulo de Gestão financeira:
-Criar classe
-Criar UseCase e dependências
-Criar endpoint
-Criar teste de integração
-Criar front
+Criar classe;
+Criar UseCase e dependências;
+Criar endpoint;
+Criar teste de integração;
+Criar front;

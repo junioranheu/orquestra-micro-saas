@@ -83,7 +83,7 @@ export default function ClientProfile() {
 
             const [client, schedules, clientsFollowUps] = await Promise.all([
                 Fetch.get({ url: `${CONSTS_CLIENT.get}?clientId=${clientId}` }) as Promise<iClient>,
-                Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByClientId}?companyId=${clientId}&clientId=${clientId}` }) as Promise<iSchedule[]>,
+                Fetch.get({ url: `${CONSTS_SCHEDULE.getAllByClientId}?companyId=${me?.currentMainCompany?.companyId}&clientId=${clientId}` }) as Promise<iSchedule[]>,
                 Fetch.get({ url: `${CONSTS_CLIENT_FOLLOW_UP.get}?clientId=${clientId}` }) as Promise<iClientFollowUpPaginated>
             ]);
 
@@ -92,8 +92,10 @@ export default function ClientProfile() {
             setClientsFollowUps(clientsFollowUps);
         }
 
-        handleFetch();
-    }, [query, trigger]);
+        if (me?.currentMainCompany?.companyId && query) {
+            handleFetch();
+        }
+    }, [query, trigger, me?.currentMainCompany?.companyId]);
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
     const [clientClicked, setClientClicked] = useState<iClient | undefined>(undefined);
@@ -184,6 +186,7 @@ export default function ClientProfile() {
                 followUpClicked={followUpClicked}
                 setTrigger={setTrigger}
                 clientFollowUpStatusEnum={clientFollowUpStatusEnum}
+                schedules={schedules}
             />
         </Fragment>
     )

@@ -14,7 +14,7 @@ public sealed class UpdateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
 
     public async Task Execute(Guid userIdAuth, ClientFollowUpInput input)
     {
-        ClientFollowUp? clientFollowUp = await _context.ClientsFollowUps.
+        var clientFollowUp = await _context.ClientsFollowUps.
             // AsNoTracking(). // Propositalmente sem AsNoTracking;
             Where(x => x.ClientFollowUpId == input.ClientFollowUpId).
             FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
@@ -51,8 +51,8 @@ public sealed class UpdateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
             clientFollowUp.ImagesContentType = null;
         }
 
-        // Atualizar props;
         clientFollowUp.CompanyId = companyId;
+        clientFollowUp.ScheduleId = input.ScheduleId is not null && input.ScheduleId != Guid.Empty ? input.ScheduleId.GetValueOrDefault() : null;
 
         _context.Update(clientFollowUp);
         await _context.SaveChangesAsync();

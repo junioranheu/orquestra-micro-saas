@@ -1,6 +1,7 @@
 import { BASE } from '@/app/api/fetch';
 import { Guid } from 'guid-typescript';
 import { iClient } from './client';
+import { iSchedule } from './schedule';
 
 const controller = 'api/ClientFollowUp';
 
@@ -17,6 +18,8 @@ export interface iClientFollowUp {
     clientId?: Guid;
     client?: iClient;
     companyId?: Guid;
+    scheduleId?: Guid;
+    schedule?: iSchedule;
     observation?: string;
     clientFollowUpStatus?: string;
     imagesFormFile?: globalThis.File[] | null | []; // Input;
