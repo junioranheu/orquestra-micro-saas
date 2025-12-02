@@ -303,7 +303,6 @@ export default function TableGeneric({
                                     handleFunction={() => option.function(record)}
                                     svg_staticImageData={!isValidElement(option.icon) ? (option.icon as StaticImageData) : null}
                                     icon_feather={isValidElement(option.icon) ? (option.icon as JSX.Element) : null}
-                                    isStyleSimple={false}
                                 />
                             ) : (
                                 <Tippy key={index} content={option.label}>
@@ -382,7 +381,7 @@ export default function TableGeneric({
                                         <Button
                                             label={btn_filter_label}
                                             handleFunction={btn_filter_function}
-                                            isStyleSimple
+                                            styleType='transparent'
                                             icon_feather={<Icon icon='search' size='small' />}
                                             style={{ fontSize: '0.75rem', backgroundColor: 'var(--white-og)' }}
                                         />
@@ -394,7 +393,7 @@ export default function TableGeneric({
                                         <Button
                                             label={btn_import_label}
                                             handleFunction={btn_import_function}
-                                            isStyleSimple
+                                            styleType='transparent'
                                             icon_feather={<Icon icon='upload' size='small' />}
                                             style={{ fontSize: '0.75rem', backgroundColor: 'var(--white-og)' }}
                                         />
@@ -406,7 +405,7 @@ export default function TableGeneric({
                                         <Button
                                             label={btn_export_label}
                                             handleFunction={btn_export_function}
-                                            isStyleSimple
+                                            styleType='transparent'
                                             icon_feather={<Icon icon='download' size='small' />}
                                             style={{ fontSize: '0.75rem', backgroundColor: 'var(--white-og)' }}
                                         />
@@ -430,7 +429,7 @@ export default function TableGeneric({
                                             key={`action-btn-${i}`}
                                             label={btn.label}
                                             handleFunction={btn.onClick}
-                                            isStyleSimple={btn.isSimple}
+                                            styleType={btn.isSimple ? 'transparent' : undefined}
                                             isDisabled={btn.disabled}
                                             svg_staticImageData={!isValidElement(btn.icon) && btn.icon ? (btn.icon as StaticImageData) : null}
                                             icon_feather={isValidElement(btn.icon) ? (btn.icon as JSX.Element) : null}
@@ -444,7 +443,7 @@ export default function TableGeneric({
                                         <Button
                                             label={`${selectionAction.label}${selectedIds.size > 0 ? ` (${selectedIds.size})` : ''}`}
                                             handleFunction={handleSelectionAction}
-                                            isStyleSimple={false}
+                                            styleType='transparent'
                                             svg_staticImageData={!isValidElement(selectionAction.icon) ? (selectionAction.icon as StaticImageData) : null}
                                             icon_feather={isValidElement(selectionAction.icon) ? (selectionAction.icon as JSX.Element) : <Icon icon='check' size='small' />}
                                             style={{ fontSize: '0.75rem', marginLeft: '.5rem' }}
