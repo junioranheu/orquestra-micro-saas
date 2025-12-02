@@ -1,5 +1,5 @@
 'use client';
-import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUpPaginated } from '@/app/api/consts/client-follow-up';
+import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUp, iClientFollowUpPaginated } from '@/app/api/consts/client-follow-up';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
@@ -8,6 +8,7 @@ import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
+import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -36,7 +37,22 @@ export default function EmpresaAcompanhamento() {
             title: 'Cliente',
             dataIndex: 'client.fullName',
             key: 'client.fullName',
-            width: '12rem'
+            width: '12rem',
+            render: (value: string, record: iClientFollowUp) => (
+                <Tippy content={`Visualizar detalhes do cliente ${record.client?.fullName}`} placement='right'>
+                    <span
+                        onClick={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${record.clientId}`)}
+                        style={{
+                            cursor: 'pointer',
+                            fontWeight: 500,
+                            textDecoration: 'underline dashed var(--contrast)',
+                            textUnderlineOffset: '4px'
+                        }}
+                    >
+                        {value}
+                    </span>
+                </Tippy>
+            )
         },
         {
             title: 'Observação',

@@ -372,7 +372,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                 </main>
 
                 <footer className={styles.modalFooter}>
-                    <div className={styles.buttonsRow}>
+                    <div className={styles.buttonsRow} style={{ marginRight: '1rem' }}>
                         <Button label='Fechar' handleFunction={() => handleClose()} isStyleSimple={true} />
                     </div>
 
@@ -386,9 +386,10 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                 <WhatsappWebShortcut phone={formData.client?.phone} message={formData.messageIntegrationWhatsapp} clientId={formData.clientId} />
                                 <Button label={`Detalhes • ${handleGetFirstName(formData.client?.fullName)}`} handleFunction={() => router.push(`${ROUTES.EMPRESA_CLIENTES}/${event?.schedule?.clientId}`)} isStyleSimple={true} icon_feather={<Icon icon='user-check' />} />
 
-                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir agendamento' handleFunction={() => handleDisable(event)} isStyleSimple={true} icon_feather={<Icon icon='trash' />} />}
+                                {me?.isUserAdmOfCurrentMainCompany && <Button label='Excluir' handleFunction={() => handleDisable(event)} isStyleSimple={true} icon_feather={<Icon icon='trash' />} />}
 
                                 {
+                                    // 1 = Marcado;
                                     event?.schedule?.scheduleStatus?.toString() === '1' && (
                                         !editing ? (
                                             <Fragment>

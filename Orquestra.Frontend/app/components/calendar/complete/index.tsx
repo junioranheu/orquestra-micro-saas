@@ -45,6 +45,7 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const queryData = searchParams.get('data');
+    const queryId = searchParams.get('id');
 
     const [eventClicked, setEventClicked] = useState<iEvent | undefined>(undefined);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -156,7 +157,7 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
         const queryDataNormalizedToDate = handleParseDateFromString(queryData) as Date;
         // console.log(queryData, queryDataNormalizedToDate);
 
-        // remove a query "?data" da URL sem recarregar a página;
+        // Remove a query "?data" da URL sem recarregar a página;
         router.replace(pathname);
 
         const event = {
@@ -166,6 +167,26 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
 
         handleAddNewEvent(event);
     }, [queryData, pathname, router, clients, companyUsers]);
+
+    // Buscar a queryId na URL; caso exista: abra o modal de novo evento na data;
+    useEffect(() => {
+        if (!queryId || !clients || !companyUsers) {
+            return;
+        }
+
+        const queryIdJar = queryId;
+        // console.log('queryIdJar', events, queryIdJar);
+
+        const eventFound = events.find(x => x.schedule.scheduleId.toString() === queryIdJar.toString()) as iEvent | undefined;
+        // console.log('eventFound', eventFound);
+
+        // Remove a query "?id" da URL sem recarregar a página;
+        router.replace(pathname);
+
+        if (eventFound) {
+            handleCheckEvent(eventFound);
+        }
+    }, [queryId, pathname, router, events, clients, companyUsers]);
 
     // Adicionar novo evento;
     function handleAddNewEvent(event: SlotInfo) {
