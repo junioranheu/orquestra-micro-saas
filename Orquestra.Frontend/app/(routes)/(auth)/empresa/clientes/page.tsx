@@ -8,7 +8,6 @@ import TemplatePageHeader from '@/app/components/template/template-page-header';
 import ROUTES from '@/app/consts/routes';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
-import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
@@ -31,8 +30,6 @@ export default function EmpresaClientes() {
     const [trigger, setTrigger] = useState<Date>(new Date());
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_CLIENT.getAllByCompanyId);
     useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequest, setter: setClients, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
-
-    const clientFollowUpStatusEnum = useApiGetEnum({ enumName: 'ClientFollowUpStatusEnum' });
 
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {

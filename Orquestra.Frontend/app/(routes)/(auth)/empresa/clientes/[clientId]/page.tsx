@@ -12,6 +12,7 @@ import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
@@ -25,7 +26,7 @@ import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import useTitle from '@/app/hooks/useTitle';
 import { Guid } from 'guid-typescript';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import styles from './page.module.scss';
@@ -326,6 +327,8 @@ function AppointmentHistory({ schedules }: iAppointmentHistoryProps) {
 // Componente de Histórico de Follow-ups;
 function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handleOpenModalFollowUp, setTrigger }: iFollowUpHistoryProps) {
 
+    const router = useRouter();
+
     function handleOpenFiles(followUp: iClientFollowUp) {
         const imagesHtml = followUp.imagesBase64?.map((base64, idx) => `
         <div style="display:flex;flex-direction:column;align-items:center;margin:6px;">
@@ -454,6 +457,17 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
                                                 onClick={() => handleDisable(followUp)}
                                             >
                                                 <Icon icon='trash' size='small' /> Excluir
+                                            </span>
+                                        )
+                                    }
+
+                                    {
+                                        followUp?.scheduleId && (
+                                            <span
+                                                className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
+                                                onClick={() => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?id=${followUp.scheduleId}`)}
+                                            >
+                                                <Icon icon='calendar' size='small' /> Ver agendamento
                                             </span>
                                         )
                                     }

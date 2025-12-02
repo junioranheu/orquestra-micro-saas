@@ -18,7 +18,7 @@ export interface iClientFollowUp {
     clientId?: Guid;
     client?: iClient;
     companyId?: Guid;
-    scheduleId?: Guid;
+    scheduleId?: Guid | null;
     schedule?: iSchedule;
     observation?: string;
     clientFollowUpStatus?: string;

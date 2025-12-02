@@ -1,7 +1,8 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
-Adicionar um ou mais Follow-ups em um Schedule;
-Adicionar o Schedule lá nos detalhes do Follow-up (caso foi vinculado a algum - E inclusive, lá no create/update tem que ter como associar);
+Mostrar todos os follow-ups de um agendamento (no modal do evento);
+Criar mecânica de abrir automaticamente um agendamento (http://localhost:3000/empresa/agenda?id=019adc26-240a-7edd-8fba-dc53eae56245);
+Botões escrito REMOVER ou DELETAR, pintar de --contrast-light;
 
 ⦁	Módulo de Ordem de serviço:
 Criar classe;

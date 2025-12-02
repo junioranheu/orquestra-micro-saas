@@ -37,11 +37,11 @@ public sealed class CreateClientFollowUp(Context context, ICheckIfUserIsLinkedCo
         {
             clientFollowUp.Images = [];
             clientFollowUp.ImagesContentType = null;
-
         }
 
         // Atualizar props;
         clientFollowUp.CompanyId = companyId;
+        clientFollowUp.ScheduleId = input.ScheduleId is not null && input.ScheduleId != Guid.Empty ? input.ScheduleId.GetValueOrDefault() : null;
 
         await _context.AddAsync(clientFollowUp);
         await _context.SaveChangesAsync();

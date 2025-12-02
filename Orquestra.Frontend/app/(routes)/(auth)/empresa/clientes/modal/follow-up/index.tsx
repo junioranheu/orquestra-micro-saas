@@ -37,7 +37,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
 
     const [formData, setFormData] = useState<iClientFollowUp>({
         clientId: SYSTEM.EMPTY_GUID,
-        scheduleId: SYSTEM.EMPTY_GUID,
+        scheduleId: null,
         observation: '',
         clientFollowUpStatus: '',
         imagesFormFile: [],
@@ -59,6 +59,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
     }, [schedules]);
 
     const setClientFollowUpStatusOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.clientFollowUpStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setScheduleIdOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.scheduleId ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     const handleClose = useCallback(() => {
         setSaving(false);
@@ -87,6 +88,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         setFormData({
             clientFollowUpId: followUpClicked ? followUpClicked.clientFollowUpId : SYSTEM.EMPTY_GUID,
             clientId: clientId,
+            scheduleId: followUpClicked ? followUpClicked.scheduleId : null,
             observation: followUpClicked ? followUpClicked.observation : '',
             clientFollowUpStatus: followUpClicked ? followUpClicked.clientFollowUpStatus : clientFollowUpStatusInProgress?.value?.toString(),
             imagesBase64: followUpClicked?.imagesBase64?.length ? followUpClicked?.imagesBase64 : [],
@@ -121,6 +123,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
 
         formDataInput.append('ClientFollowUpId', input.clientFollowUpId ? input.clientFollowUpId.toString() : SYSTEM.EMPTY_GUID.toString());
         formDataInput.append('ClientId', clientId!.toString());
+        formDataInput.append('ScheduleId', input.scheduleId ? input.scheduleId.toString() : SYSTEM.EMPTY_GUID.toString());
         formDataInput.append('Observation', input.observation ?? '');
         formDataInput.append('ClientFollowUpStatus', input.clientFollowUpStatus ?? '');
 
@@ -218,7 +221,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                             )
                         }
 
-                        <Dropdown title='Este acompanhamento faz parte do <b>agendamento</b> ocorrido em:' options={schedulesOptions ?? []} selectedOption={schedulesOptions?.find(x => x.value.toString() === formData?.scheduleId?.toString())} setSelectedOption={setClientFollowUpStatusOption} isDisabled={!editing} />
+                        <Dropdown title='Este acompanhamento faz parte do <b>agendamento</b> ocorrido em...' options={schedulesOptions ?? []} selectedOption={schedulesOptions?.find(x => x.value.toString() === formData?.scheduleId?.toString())} setSelectedOption={setScheduleIdOption} isDisabled={!editing} />
                         <InputImage title='Anexos' fieldName='imagesFormFile' formData={formData} setFormData={setFormData} isDisabled={!editing} placeholder='Selecionar anexos' isMultiple={true} />
                     </div>
                 </main>
