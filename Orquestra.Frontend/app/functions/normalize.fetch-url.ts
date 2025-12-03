@@ -1,11 +1,25 @@
 import { iFormDataLoopResult } from './set.formState';
 
 export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult) {
-    const mark = url.includes('?') ? '&' : '?';
-    const normalizedUrl = `${url}${(data?.url ? `${mark}${data?.url}` : '')}`;
-    // console.log(normalizedUrl);
+    // Separa base da query existente (se houver);
+    const [baseUrl] = url.split('?');
 
-    return normalizedUrl;
+    // Pega a string de params que veio do data (pode ser '' ou undefined);
+    let dataUrl = data?.url ?? '';
+
+    // Normaliza e limpa params vazios;
+    if (dataUrl) {
+        const params = new URLSearchParams(dataUrl);
+
+        for (const [key, value] of Array.from(params.entries())) {
+            if (!value || !value.trim()) params.delete(key);
+        }
+
+        dataUrl = params.toString(); // '' se nada sobrar;
+    }
+
+    // Se sobrou algo válido, anexa com ?, senão retorna apenas a base (sem query);
+    return dataUrl ? `${baseUrl}?${dataUrl}` : baseUrl;
 }
 
 export function handleRemoveDuplicateQueryParams(url: string): string {
@@ -26,7 +40,7 @@ export function handleRemoveDuplicateQueryParams(url: string): string {
     }
 
     // Recria a query string com os últimos valores;
-    const newQuery = Array.from(paramMap.entries()).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
+    const newQuery = Array.from(paramMap.entries()).filter(([, value]) => value?.trim()).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
 
     return `${baseUrl}?${newQuery}`;
 }
