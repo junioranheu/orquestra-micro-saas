@@ -2,6 +2,7 @@
 using Orquestra.Domain.Consts;
 using System.ComponentModel;
 using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Application.UseCases.Shared.DropDownOption;
 
 namespace Orquestra.UnitTests.Tests.Utils;
 
