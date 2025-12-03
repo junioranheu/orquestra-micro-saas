@@ -16,6 +16,10 @@
         width: 0.25rem;
     }
 
+    &::-webkit-scrollbar-track {
+        background: var(--main-light);
+    }
+
     .brand {
         // background-color: orange;
         display: flex;

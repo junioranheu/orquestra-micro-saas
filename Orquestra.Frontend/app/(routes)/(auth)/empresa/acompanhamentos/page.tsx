@@ -1,5 +1,7 @@
 'use client';
 import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUp, iClientFollowUpPaginated } from '@/app/api/consts/client-follow-up';
+import SvgFollowUp from '@/app/assets/svg/follow-up.svg';
+import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
@@ -84,6 +86,15 @@ export default function EmpresaAcompanhamento() {
 
     return (
         <TemplatePageHeader title='Acompanhamentos registrados'>
+            <CardSimple
+                img={SvgFollowUp}
+                title='Acompanhamentos'
+                description='Crie e gerencie acompanhamentos personalizados para cada cliente.<br/>Acesse a tela de clientes e selecione um deles para visualizar o detalhamento e cadastrar novos acompanhamentos.'
+                buttonLabel='Ir para clientes'
+                buttonFunction={() => router.push(ROUTES.EMPRESA_CLIENTES)}
+                style={{ marginBottom: '2rem' }}
+            />
+
             <TableGeneric
                 idPropName='clientId'
                 columns={columns}
