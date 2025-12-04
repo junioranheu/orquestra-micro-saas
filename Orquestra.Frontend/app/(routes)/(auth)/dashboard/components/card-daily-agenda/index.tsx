@@ -61,7 +61,7 @@ export default function CardDailyAgenda({ me }: iProps) {
     }
 
     function handleFormatTimeRange(start: string, end: string) {
-        return `${start.substring(0, 5)} - ${end.substring(0, 5)}`;
+        return `${start.substring(0, 5)} → ${end.substring(0, 5)}`;
     }
 
     function handleRenderScheduleItem(schedule: iSchedule, isActive = false) {

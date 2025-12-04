@@ -53,6 +53,8 @@
 
     .scheduleItem {
         // background-color: pink !important;
+        background-color: rgba(236, 232, 232, 0.25);
+
         display: flex;
         align-items: center;
         gap: 12px;
@@ -62,7 +64,7 @@
         transition: background-color 0.2s ease;
 
         &:hover {
-            background-color: var(--gray-light);
+            background-color: var(--cream);
         }
 
         &:last-child {
@@ -110,6 +112,11 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 width: fit-content;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.25rem;
             }
 
             .service {
@@ -122,6 +129,31 @@
                 display: flex;
                 flex-direction: column;
                 gap: 0.25rem;
+
+                .toggleJson {
+                    // background-color: orange !important;
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    color: var(--gray-dark);
+                    text-decoration: dashed underline;
+                    text-underline-offset: 2px;
+                    transition: opacity 0.2s ease;
+                    text-align: left;
+                    width: fit-content;
+
+                    &:hover {
+                        opacity: 0.7;
+                        color: var(--contrast);
+                    }
+
+                    &:active {
+                        opacity: 0.5;
+                    }
+                }
             }
         }
 

@@ -47,34 +47,6 @@ export default function CardNotifications({ me }: iProps) {
         return null;
     }
 
-    function handleRenderNotification(notification: iLogNotificationOutput) {
-        return (
-            <div key={notification.logId.toString()} className={styles.scheduleItem}>
-                <div className={styles.info}>
-                    <Tippy content={`${notification.emoji} ${notification.logType}`}>
-                        <div className={styles.name} style={{ cursor: 'help' }}>{notification.story}</div>
-                    </Tippy>
-
-                    <div className={styles.service}>
-                        {/* <span>{notification.logType}</span> */}
-
-                        <pre style={{
-                            whiteSpace: 'pre-wrap',
-                            wordWrap: 'break-word',
-                            margin: 0
-                        }}>
-                            {typeof notification.changedFields === 'object' ? JSON.stringify(notification.changedFields, null, 2) : notification.changedFields}
-                        </pre>
-                    </div>
-                </div>
-
-                <div className={styles.right}>
-                    {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
-                </div>
-            </div>
-        )
-    }
-
     return (
         <div className={`${styles.dailyAgenda} ${SYSTEM.ANIMATE}`}>
             <h2 className={styles.title}>
@@ -101,8 +73,13 @@ export default function CardNotifications({ me }: iProps) {
             {
                 notifications.length > 0 && (
                     <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Resumo das notificações da empresa {me?.currentMainCompany.name}.</h3>
-                        {notifications.map((notification) => handleRenderNotification(notification))}
+                        <h3 className={styles.sectionTitle}>Resumo das notificações • {me?.currentMainCompany.name}.</h3>
+
+                        {
+                            notifications.map(notification => (
+                                <NotificationItem key={notification.logId.toString()} notification={notification} />
+                            ))
+                        }
                     </div>
                 )
             }
@@ -114,6 +91,59 @@ export default function CardNotifications({ me }: iProps) {
                     </div>
                 )
             }
+        </div>
+    )
+}
+
+function NotificationItem({ notification }: { notification: iLogNotificationOutput }) {
+
+    const [open, setOpen] = useState<boolean>(false);
+
+    const changed = typeof notification.changedFields === 'object'
+        ? JSON.stringify(notification.changedFields, null, 2)
+        : notification.changedFields;
+
+    return (
+        <div key={notification.logId.toString()} className={styles.scheduleItem}>
+            <div className={styles.info} onClick={() => setOpen(!open)}>
+                <Tippy content={(open ? `${notification.emoji} ${notification.logType}` : 'Visualizar detalhes')}>
+                    <div className={styles.name} style={{ cursor: 'help' }}>
+                        {notification.story}
+                        <Icon icon='info' size='small' color='var(--gray-dark)' />
+                    </div>
+                </Tippy>
+
+                <div className={styles.service}>
+                    <button
+                        className={styles.toggleJson}
+                        onClick={() => setOpen(!open)}
+                    >
+                        {open ? 'Esconder detalhes' : ''}
+                    </button>
+
+                    {
+                        open && (
+                            <pre style={{
+                                whiteSpace: 'pre-wrap',
+                                wordWrap: 'break-word',
+                                margin: 0,
+                                marginTop: '0.5rem',
+                                padding: '0.5rem',
+                                background: '#f4f4f4',
+                                borderRadius: '6px',
+                                maxHeight: '300px',
+                                overflowY: 'auto'
+                            }}>
+                                {changed}
+                            </pre>
+                        )
+                    }
+                </div>
+            </div>
+
+            <div className={styles.right}>
+                {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
+            </div>
         </div>
     )
 }
