@@ -15,7 +15,7 @@ public partial class JobsBase()
         {
             LogType = LogTypeEnum.Job,
             RequestType = "POST",
-            Endpoint = nameof(CompanyPlanJob),
+            Endpoint = string.Empty,
             Parameters = string.Empty,
             Exception = string.Empty,
             Description = description,
