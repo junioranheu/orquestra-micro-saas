@@ -445,7 +445,7 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
                                                 className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
                                                 onClick={() => handleOpenModalFollowUp(followUp, 'edit')}
                                             >
-                                                <Icon icon='edit' size='small' /> Editar
+                                                <Icon icon='edit' size='small' /> Visualizar/Editar
                                             </span>
                                         )
                                     }
@@ -467,7 +467,7 @@ function FollowUpHistory({ me, clientsFollowUps, clientFollowUpStatusEnum, handl
                                                 className={`${styles.appointmentItem__status_follow_up} ${styles[`appointmentItem__status_follow_up--999`]}`}
                                                 onClick={() => router.push(`${ROUTES.EMPRESA_AGENDAMENTOS}?id=${followUp.scheduleId}`)}
                                             >
-                                                <Icon icon='calendar' size='small' /> Ver agendamento
+                                                <Icon icon='calendar' size='small' /> Ir p/ agendamento
                                             </span>
                                         )
                                     }

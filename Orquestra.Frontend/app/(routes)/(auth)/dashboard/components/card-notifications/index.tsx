@@ -6,6 +6,7 @@ import { Fetch } from '@/app/api/fetch';
 import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import Icon from '@/app/components/icon';
+import NotificationJsonVisualize from '@/app/components/notification-json-visualize';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -99,51 +100,28 @@ function NotificationItem({ notification }: { notification: iLogNotificationOutp
 
     const [open, setOpen] = useState<boolean>(false);
 
-    const changed = typeof notification.changedFields === 'object'
-        ? JSON.stringify(notification.changedFields, null, 2)
-        : notification.changedFields;
-
     return (
         <div key={notification.logId.toString()} className={styles.scheduleItem}>
-            <div className={styles.info} onClick={() => setOpen(!open)}>
-                <Tippy content={(open ? `${notification.emoji} ${notification.logType}` : 'Visualizar detalhes')}>
-                    <div className={styles.name} style={{ cursor: 'help' }}>
+            <div className={styles.info}>
+                <Tippy content={(open ? 'Esconder detalhes' : 'Visualizar detalhes')}>
+                    <div className={styles.name} style={{ cursor: 'help' }} onClick={() => setOpen(!open)}>
                         {notification.story}
-                        <Icon icon='info' size='small' color='var(--gray-dark)' />
+                        <Icon icon={open ? 'x' : 'info'} size='small' color='var(--gray-dark)' />
                     </div>
                 </Tippy>
 
                 <div className={styles.service}>
-                    <button
-                        className={styles.toggleJson}
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? 'Esconder detalhes' : ''}
-                    </button>
-
                     {
                         open && (
-                            <pre style={{
-                                whiteSpace: 'pre-wrap',
-                                wordWrap: 'break-word',
-                                margin: 0,
-                                marginTop: '0.5rem',
-                                padding: '0.5rem',
-                                background: '#f4f4f4',
-                                borderRadius: '6px',
-                                maxHeight: '300px',
-                                overflowY: 'auto'
-                            }}>
-                                {changed}
-                            </pre>
+                            <NotificationJsonVisualize notification={notification} />
                         )
                     }
                 </div>
-            </div>
+            </div >
 
             <div className={styles.right}>
                 {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
             </div>
-        </div>
+        </div >
     )
 }
