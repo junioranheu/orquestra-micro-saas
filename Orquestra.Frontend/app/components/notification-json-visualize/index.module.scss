@@ -1,23 +1,87 @@
-.codeBlock {
-    // background: #1e1e1e;
-    // margin-top: 0.5rem;
-    // color: #dcdcdc;
+/* ---------------------- */
+/*        DARK MODE       */
+/* ---------------------- */
 
-    width: fit-content;
-    color: var(--gray-dark);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    max-height: 300px;
-    max-width: 100%;
-    overflow-y: auto;
-    font-family: inherit;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    white-space: pre-wrap;
-    word-break: break-word;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+.jsonBlockDark {
+    width: 100%;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, 'Roboto Mono', 'Segoe UI Mono', monospace;
+    font-size: 13px;
+    padding: 12px;
+    border-radius: 8px;
 
-    &::-webkit-scrollbar {
-        width: 0px;
+    pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    code {
+        display: block;
+    }
+
+    .jsonKeyDark {
+        color: #9cdcfe;
+    }
+
+    .jsonStringDark {
+        color: #ce9178;
+    }
+
+    .jsonNumberDark {
+        color: #b5cea8;
+    }
+
+    .jsonBooleanDark {
+        color: #569cd6;
+    }
+
+    .jsonNullDark {
+        color: #569cd6;
+    }
+}
+
+/* ---------------------- */
+/*      INHERIT MODE      */
+/* ---------------------- */
+
+.jsonBlockInherit {
+    width: 100%;
+    background: inherit;
+    color: var(--black);
+    font-size: 0.85rem;
+    padding: 12px;
+
+    pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    code {
+        display: block;
+    }
+
+    .jsonKeyInherit {
+        color: var(--contrast);
+    }
+
+    .jsonStringInherit {
+        color: #ce9178;
+    }
+
+    .jsonNumberInherit {
+        color: #b5cea8;
+    }
+
+    .jsonBooleanInherit {
+        color: #569cd6;
+    }
+
+    .jsonNullInherit {
+        color: #569cd6;
     }
 }
