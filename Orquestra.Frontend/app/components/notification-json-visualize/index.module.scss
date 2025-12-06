@@ -17,8 +17,7 @@
     word-break: break-word;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
 
-    /* Scrollbar estilo VSCode */
     &::-webkit-scrollbar {
-        width: 8px;
+        width: 2px;
     }
 }

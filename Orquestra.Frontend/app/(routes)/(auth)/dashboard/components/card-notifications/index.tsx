@@ -122,6 +122,6 @@ function NotificationItem({ notification }: { notification: iLogNotificationOutp
             <div className={styles.right}>
                 {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
             </div>
-        </div >
+        </div>
     )
 }
