@@ -19,6 +19,14 @@ export function handleTransformArrayToDropdownOptionsNumber(data: any[], valueFi
     }));
 }
 
+// Versão para string;
+export function handleTransformArrayToDropdownOptionsString(data: any[], valueField: string, labelField: string): iDropdownOption<string>[] {
+    return data?.map(item => ({
+        value: String(handleGetNestedValue(item, valueField)),
+        label: String(handleGetNestedValue(item, labelField))
+    }));
+}
+
 function handleGetNestedValue(obj: any, path: string) {
     return path.split('.').reduce((acc, key) => acc?.[key], obj);
 }
