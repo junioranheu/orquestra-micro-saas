@@ -264,7 +264,7 @@ function DashboardButtonCustomizer() {
     const [dashboardRouteShortcut, setDashboardRouteShortcut] = useDashboardRouteShortcut();
 
     interface iDashboardButtonCustomizerProps {
-        route: iDropdownOption<string>;
+        route: iDropdownOption<string> | undefined;
     }
 
     const [routesOptions, setRoutesOptions] = useState<iDropdownOption<string>[]>([]);
@@ -285,11 +285,15 @@ function DashboardButtonCustomizer() {
 
             // Gerar lista filtrando só os paths que começam com /empresa;
             const empresaRoutes = Object.entries(ROUTES).
-                filter(([, path]) => path.startsWith('/empresa')).
+                filter(([, path]) =>
+                    path.startsWith('/empresa') &&
+                    !path.toLowerCase().includes('verificada')
+                ).
                 map(([key, path]) => ({
                     path,
                     description: handleGetRouteDescription(key)
-                }));
+                })).
+                sort((a, b) => a.description.localeCompare(b.description));
 
             const options = handleTransformArrayToDropdownOptionsString(empresaRoutes, 'path', 'description');
 
@@ -311,20 +315,21 @@ function DashboardButtonCustomizer() {
     const routeChangeCount = useRef(0);
 
     useEffect(() => {
-        if (!formData.route?.value) return;
+        if (!formData.route?.value) {
+            return;
+        }
 
         routeChangeCount.current += 1;
 
         if (routeChangeCount.current >= 2) {
-            toast({ content: 'Configuração da rota do botão do dashboard salva com sucesso.' });
-            console.log('SALVANDO NO LOCAL STORAGE', formData.route);
             setDashboardRouteShortcut(formData.route);
+            localStorage.setItem(SYSTEM.LOCAL_STORAGE_DASHBOARD_ROUTE_SHORTCUT, JSON.stringify(formData.route));
+            toast({ content: 'Configuração da rota do botão do dashboard salva com sucesso.' });
         }
-    }, [formData.route]);
+    }, [formData.route, setDashboardRouteShortcut]);
 
     return (
         <div className={styles.card}>
-            <h1>xd {dashboardRouteShortcut.value}</h1>
             <h2 className={styles.cardTitle}>Rota do botão do dashboard</h2>
 
             <p className={styles.cardDescription}>
@@ -358,7 +363,7 @@ function ThemeSelector() {
             <div className={styles.themeContainer}>
                 {
                     THEMES.map((theme) => (
-                        <Tippy key={theme.id} content={theme.isUsable ? `Tema ${theme.label.toLocaleLowerCase()}.` : `O tema ${theme.label.toLocaleLowerCase()} está indisponível.`} placement='bottom'>
+                        <Tippy key={theme.id} content={theme.isUsable ? `Tema ${theme.label.toLocaleLowerCase()}.` : `O tema ${theme.label.toLocaleLowerCase()} está indisponível no momento. Tente novamente mais tarde.`} placement='bottom'>
                             <button
                                 onClick={() => theme.isUsable && handleSelectTheme(theme.id)}
                                 className={`${styles.themeButton} ${theme.isUsable ? '' : styles.themeButtonDisabled}`}

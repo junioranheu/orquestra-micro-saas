@@ -94,9 +94,9 @@ export default function CardCalendar({ me }: iProps) {
                                 isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                 title='Simplifique a gestão da sua empresa'
                                 description={`Organize tudo em um só lugar, do jeito fácil.<br/>${SYSTEM.NAME}. ${SYSTEM.DESCRIPTION}.`}
-                                buttonLabel={`Acessar ${dashboardRouteShortcut.label.toLocaleLowerCase() ?? 'agendamentos'}`}
+                                buttonLabel={`Acessar ${dashboardRouteShortcut?.label.toLocaleLowerCase() ?? 'agendamentos'}`}
                                 buttonIcon='grid'
-                                buttonFunction={() => router.push(dashboardRouteShortcut.value ?? ROUTES.EMPRESA_AGENDAMENTOS)}
+                                buttonFunction={() => router.push(dashboardRouteShortcut?.value ?? ROUTES.EMPRESA_AGENDAMENTOS)}
                                 buttonDisabled={!hasAccessToSchedule}
                                 className={SYSTEM.ANIMATE_DELAY_0_5s}
                             />

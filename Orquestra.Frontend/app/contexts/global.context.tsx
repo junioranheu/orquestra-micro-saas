@@ -22,8 +22,8 @@ type GlobalContextType = {
     showLogsDashboard: boolean;
     setShowLogsDashboard: Dispatch<SetStateAction<boolean>>;
 
-    dashboardRouteShortcut: iDropdownOption<string>;
-    setDashboardRouteShortcut: Dispatch<SetStateAction<iDropdownOption<string>>>;
+    dashboardRouteShortcut: iDropdownOption<string> | undefined;
+    setDashboardRouteShortcut: Dispatch<SetStateAction<iDropdownOption<string> | undefined>>;
 };
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -37,8 +37,7 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [isModalGrid, setIsModalGrid] = useState<boolean>(true);
     const [showLogsDashboard, setShowLogsDashboard] = useState<boolean>(true);
 
-    const dashboardRouteShortcutDefault = { label: 'Agendamentos', value: ROUTES.EMPRESA_AGENDAMENTOS };
-    const [dashboardRouteShortcut, setDashboardRouteShortcut] = useState<iDropdownOption<string>>(dashboardRouteShortcutDefault);
+    const [dashboardRouteShortcut, setDashboardRouteShortcut] = useState<iDropdownOption<string> | undefined>(undefined);
 
     useEffect(() => {
         const valueChatbot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_CHATBOT);
@@ -54,7 +53,7 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
         setShowLogsDashboard(valueShowLogsDashboard === null ? true : valueShowLogsDashboard === 'true');
 
         const valueDashboardRouteShortcut = localStorage.getItem(SYSTEM.LOCAL_STORAGE_DASHBOARD_ROUTE_SHORTCUT);
-        console.log('valueDashboardRouteShortcut', valueDashboardRouteShortcut);
+        const dashboardRouteShortcutDefault = { label: 'Agendamentos', value: ROUTES.EMPRESA_AGENDAMENTOS };
         setDashboardRouteShortcut(valueDashboardRouteShortcut === null ? dashboardRouteShortcutDefault : JSON.parse(valueDashboardRouteShortcut));
     }, []);
 
