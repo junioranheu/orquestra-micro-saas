@@ -72,3 +72,15 @@ export function useShowLogsDashboard() {
     return [context.showLogsDashboard, context.setShowLogsDashboard] as const;
 
 }
+
+export function useDashboardRouteShortcut() {
+
+    const context = useContext(GlobalContext);
+
+    if (!context) {
+        throw new Error('useGlobalContext');
+    }
+
+    return [context.dashboardRouteShortcut, context.setDashboardRouteShortcut] as const;
+
+}

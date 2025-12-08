@@ -1,3 +1,5 @@
+import { iDropdownOption } from '@/app/components/input/drop-down';
+import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 
@@ -19,6 +21,9 @@ type GlobalContextType = {
 
     showLogsDashboard: boolean;
     setShowLogsDashboard: Dispatch<SetStateAction<boolean>>;
+
+    dashboardRouteShortcut: iDropdownOption<string>;
+    setDashboardRouteShortcut: Dispatch<SetStateAction<iDropdownOption<string>>>;
 };
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -32,6 +37,9 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [isModalGrid, setIsModalGrid] = useState<boolean>(true);
     const [showLogsDashboard, setShowLogsDashboard] = useState<boolean>(true);
 
+    const dashboardRouteShortcutDefault = { label: 'Agendamentos', value: ROUTES.EMPRESA_AGENDAMENTOS };
+    const [dashboardRouteShortcut, setDashboardRouteShortcut] = useState<iDropdownOption<string>>(dashboardRouteShortcutDefault);
+
     useEffect(() => {
         const valueChatbot = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_CHATBOT);
         setShowChatbot(valueChatbot === null ? true : valueChatbot === 'true');
@@ -44,6 +52,10 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
         const valueShowLogsDashboard = localStorage.getItem(SYSTEM.LOCAL_STORAGE_SHOW_LOGS_DASHBOARD);
         setShowLogsDashboard(valueShowLogsDashboard === null ? true : valueShowLogsDashboard === 'true');
+
+        const valueDashboardRouteShortcut = localStorage.getItem(SYSTEM.LOCAL_STORAGE_DASHBOARD_ROUTE_SHORTCUT);
+        console.log('valueDashboardRouteShortcut', valueDashboardRouteShortcut);
+        setDashboardRouteShortcut(valueDashboardRouteShortcut === null ? dashboardRouteShortcutDefault : JSON.parse(valueDashboardRouteShortcut));
     }, []);
 
     return (
@@ -53,7 +65,8 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
             isOpenChatbot, setIsOpenChatbot,
             showExpandedSidebar, setShowExpandedSidebar,
             isModalGrid, setIsModalGrid,
-            showLogsDashboard, setShowLogsDashboard
+            showLogsDashboard, setShowLogsDashboard,
+            dashboardRouteShortcut, setDashboardRouteShortcut
         }}>
             {children}
         </GlobalContext.Provider>

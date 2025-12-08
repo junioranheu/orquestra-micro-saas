@@ -6,11 +6,12 @@ import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleSetDropdownOption } from '@/app/functions/set.formState';
+import toast from '@/app/functions/toast';
 import { handleTransformArrayToDropdownOptionsString } from '@/app/functions/transform.arrayToDropdownOptions';
-import { useIsModalGrid, useShowChatbot, useShowExpandedSidebar, useShowLogsDashboard } from '@/app/hooks/contexts/useGlobalContext';
+import { useDashboardRouteShortcut, useIsModalGrid, useShowChatbot, useShowExpandedSidebar, useShowLogsDashboard } from '@/app/hooks/contexts/useGlobalContext';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
 import Tippy from '@tippyjs/react';
-import { Dispatch, Fragment, ReactNode, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, Fragment, ReactNode, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';
 
 export default function UsuarioConfiguracoesTabPersonalizacao() {
@@ -260,60 +261,77 @@ function FontSizeSelector() {
 
 function DashboardButtonCustomizer() {
 
+    const [dashboardRouteShortcut, setDashboardRouteShortcut] = useDashboardRouteShortcut();
+
     interface iDashboardButtonCustomizerProps {
-        route: string;
+        route: iDropdownOption<string>;
     }
 
     const [routesOptions, setRoutesOptions] = useState<iDropdownOption<string>[]>([]);
 
     useEffect(() => {
+        function handleGetRoutes(): iDropdownOption<string>[] {
+            // Função pra gerar descrição (primeira letra maiúscula);
+            function handleGetRouteDescription(key: string) {
+                let description = key.toLowerCase().replace(/_/g, ' ');
+
+                // Remove "empresa " do começo da string, se existir;
+                if (description.startsWith('empresa ')) {
+                    description = description.slice('empresa '.length);
+                }
+
+                return description.charAt(0).toUpperCase() + description.slice(1);
+            }
+
+            // Gerar lista filtrando só os paths que começam com /empresa;
+            const empresaRoutes = Object.entries(ROUTES).
+                filter(([, path]) => path.startsWith('/empresa')).
+                map(([key, path]) => ({
+                    path,
+                    description: handleGetRouteDescription(key)
+                }));
+
+            const options = handleTransformArrayToDropdownOptionsString(empresaRoutes, 'path', 'description');
+
+            return options;
+        }
+
         const routes = handleGetRoutes();
-        console.log('routes', routes);
+        // console.log('routes', routes);
 
         setRoutesOptions(routes);
-    }, [handleGetRoutes]);
+    }, []);
 
     const [formData, setFormData] = useState<iDashboardButtonCustomizerProps>({
-        route: ''
+        route: dashboardRouteShortcut
     });
 
     const setRouteOption = handleSetDropdownOption(formData, setFormData, handleGetPropName(formData, x => x.route ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
-    function handleGetRoutes(): iDropdownOption<string>[] {
-        // Função pra gerar descrição (primeira letra maiúscula);
-        function handleGetRouteDescription(key: string) {
-            let description = key.toLowerCase().replace(/_/g, ' ');
+    const routeChangeCount = useRef(0);
 
-            // Remove "empresa " do começo da string, se existir;
-            if (description.startsWith('empresa ')) {
-                description = description.slice('empresa '.length);
-            }
+    useEffect(() => {
+        if (!formData.route?.value) return;
 
-            return description.charAt(0).toUpperCase() + description.slice(1);
+        routeChangeCount.current += 1;
+
+        if (routeChangeCount.current >= 2) {
+            toast({ content: 'Configuração da rota do botão do dashboard salva com sucesso.' });
+            console.log('SALVANDO NO LOCAL STORAGE', formData.route);
+            setDashboardRouteShortcut(formData.route);
         }
-
-        // Gerar lista filtrando só os paths que começam com /empresa;
-        const empresaRoutes = Object.entries(ROUTES).
-            filter(([_, path]) => path.startsWith('/empresa')).
-            map(([key, path]) => ({
-                path,
-                description: handleGetRouteDescription(key)
-            }));
-
-        const options = handleTransformArrayToDropdownOptionsString(empresaRoutes, 'path', 'description');
-
-        return options;
-    }
+    }, [formData.route]);
 
     return (
         <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Botão do dashboard</h2>
+            <h1>xd {dashboardRouteShortcut.value}</h1>
+            <h2 className={styles.cardTitle}>Rota do botão do dashboard</h2>
 
             <p className={styles.cardDescription}>
                 Altere o botão exibido no dashboard para acessar rapidamente uma funcionalidade importante para você.
             </p>
 
-            <Dropdown title='' options={routesOptions ?? []} selectedOption={routesOptions?.find(x => x.value.toString() === formData?.route?.toString())} setSelectedOption={setRouteOption} />
+            <Dropdown title='' options={routesOptions ?? []} selectedOption={routesOptions?.find(x => x.value.toString() === formData?.route?.value.toString())} setSelectedOption={setRouteOption} />
         </div>
     )
 }

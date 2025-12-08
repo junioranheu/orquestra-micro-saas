@@ -12,7 +12,22 @@ export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult) 
         const params = new URLSearchParams(dataUrl);
 
         for (const [key, value] of Array.from(params.entries())) {
-            if (!value || !value.trim()) params.delete(key);
+            const isDate = key.toLowerCase().includes('date');
+
+            // Se for campo de data;
+            if (isDate) {
+                // E for um campo de data vazio...
+                if (value === 'undefined' || value === '' || value === null) {
+                    // Simplesmente remove da URL;
+                    params.delete(key);
+                    continue;
+                }
+            }
+
+            // Campos comuns → remove se vazio;
+            if (!value || !value.trim()) {
+                params.delete(key);
+            }
         }
 
         dataUrl = params.toString(); // '' se nada sobrar;
