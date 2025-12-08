@@ -6,8 +6,7 @@ import CalendarSimple from '@/app/components/calendar/simple';
 import CardSimple from '@/app/components/card/simple';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
-import { MODULE_ENUM } from '@/app/enums/modulesEnum';
-import { handleCheckShowElement } from '@/app/functions/check.permission';
+import { hasAccessToAnyModule } from '@/app/functions/check.permission';
 import { useDashboardRouteShortcut, useIsOpenChatbot, useShowChatbot } from '@/app/hooks/contexts/useGlobalContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { useRouter } from 'next/navigation';
@@ -22,21 +21,21 @@ export default function CardCalendar({ me }: iProps) {
 
     const router = useRouter();
     const windowSize = useWindowSize();
-    const [hasAccessToSchedule, setHasAccessToSchedule] = useState<boolean>(false);
+    const [userHasAccessToAnyModule, setUserHasAccessToAnyModule] = useState<boolean>(false);
 
     const [showChatbot,] = useShowChatbot();
     const [, setIsOpenChatbot] = useIsOpenChatbot();
     const [dashboardRouteShortcut,] = useDashboardRouteShortcut();
 
     useEffect(() => {
-        const hasAccess = handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Scheduling] });
-        setHasAccessToSchedule(hasAccess);
+        const hasAccess = hasAccessToAnyModule({ me });
+        setUserHasAccessToAnyModule(hasAccess);
     }, [me]);
 
     return (
         <section className={styles.wrapper}>
             <CalendarSimple
-                isReadOnly={!hasAccessToSchedule}
+                isReadOnly={!userHasAccessToAnyModule}
                 disablePastDays={true}
                 resetBorderRadiusRight={!windowSize.width ? true : windowSize.width > 1366}
                 removeBorderRight={!windowSize.width ? true : windowSize.width > 1366}
@@ -51,14 +50,14 @@ export default function CardCalendar({ me }: iProps) {
 
                         <div className={styles.steps}>
                             {
-                                hasAccessToSchedule ? (
+                                userHasAccessToAnyModule ? (
                                     <CardSimple
                                         img={SvgOne}
                                         isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                         title='Tudo certo!'
-                                        description={`A empresa <b>${me?.currentMainCompany?.name}</b> já está prontinha para começar a criar novos agendamentos. ${showChatbot ? `<br/>Qualquer dúvida, fale com o assistente virtual, o ${SYSTEM.MASCOT}.` : ''}`}
+                                        description={`A empresa <b>${me?.currentMainCompany?.name}</b> já está prontinha para começar a criar novos agendamentos. ${showChatbot ? `<br/>Qualquer dúvida, fale com o assistente virtual do ${SYSTEM.NAME}.` : ''}`}
                                         {...(showChatbot && {
-                                            buttonLabel: 'Conversar com o assistente virtual',
+                                            buttonLabel: `Conversar com o assistente virtual, o ${SYSTEM.MASCOT}`,
                                             buttonIcon: 'message-square',
                                             buttonFunction: () => setIsOpenChatbot(true),
                                         })}
@@ -97,7 +96,7 @@ export default function CardCalendar({ me }: iProps) {
                                 buttonLabel={`Acessar ${dashboardRouteShortcut?.label.toLocaleLowerCase() ?? 'agendamentos'}`}
                                 buttonIcon='grid'
                                 buttonFunction={() => router.push(dashboardRouteShortcut?.value ?? ROUTES.EMPRESA_AGENDAMENTOS)}
-                                buttonDisabled={!hasAccessToSchedule}
+                                buttonDisabled={!userHasAccessToAnyModule}
                                 className={SYSTEM.ANIMATE_DELAY_0_5s}
                             />
                         </div>

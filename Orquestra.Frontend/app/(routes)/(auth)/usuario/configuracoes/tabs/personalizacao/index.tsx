@@ -362,7 +362,7 @@ function ThemeSelector() {
 
             <div className={styles.themeContainer}>
                 {
-                    THEMES.map((theme) => (
+                    THEMES?.map((theme) => (
                         <Tippy key={theme.id} content={theme.isUsable ? `Tema ${theme.label.toLocaleLowerCase()}.` : `O tema ${theme.label.toLocaleLowerCase()} está indisponível no momento. Tente novamente mais tarde.`} placement='bottom'>
                             <button
                                 onClick={() => theme.isUsable && handleSelectTheme(theme.id)}
