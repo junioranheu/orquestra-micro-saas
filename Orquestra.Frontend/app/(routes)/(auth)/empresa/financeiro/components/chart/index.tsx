@@ -1,7 +1,6 @@
 'use client';
 import { iSalesChartOutput } from '@/app/api/consts/sales';
 import ChartGeneric, { iChartSerie } from '@/app/components/chart/generic';
-import { Guid } from 'guid-typescript';
 
 interface iProps {
     chart: iSalesChartOutput[];
@@ -14,7 +13,7 @@ export default function EmpresaFinanceiroChart({ chart }: iProps) {
     }
 
     const series: iChartSerie[] = chart?.map(x => ({
-        id: Guid.create().toString(),
+        id: x.type,
         label: x.type,
         color: x.color,
         object: x.items.map(item => ({

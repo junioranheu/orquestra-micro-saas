@@ -59,7 +59,7 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                         Id = Guid.NewGuid(),
                         Type = GetEnumDesc(ModuleEnum.Inventory),
                         Title = x.Name ?? string.Empty,
-                        Description = $"Item de estoque criado em {x.CreatedDate}",
+                        Description = $"Item de estoque criado em {ConvertToBrasiliaTime(x.CreatedDate.GetValueOrDefault())}",
                         Value = -(x.TotalValue) ?? 0, // Sempre o valor negativo;
                         Date = x.CreatedDate
                     }).
@@ -88,7 +88,7 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                         Id = Guid.NewGuid(),
                         Type = GetEnumDesc(ModuleEnum.Scheduling),
                         Title = x.CustomTitle ?? $"Agendamento {(x.Client != null && !string.IsNullOrEmpty(x.Client.FullName) ? $"• {x.Client.FullName}" : string.Empty)}",
-                        Description = $"Agendamento criado em {x.CreatedDate}",
+                        Description = $"Agendamento criado em {ConvertToBrasiliaTime(x.CreatedDate.GetValueOrDefault())}",
                         Value = x.AmountReceived ?? 0,
                         Date = x.CreatedDate
                     }).

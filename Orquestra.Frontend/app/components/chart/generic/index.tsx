@@ -29,7 +29,17 @@ export interface iChartSerie {
 // #region functions
 function handleFormatDate(d: string) {
     const date = new Date(d);
-    return date.toLocaleString('pt-BR');
+
+    // Subtrai 3 horas (3 * 60 minutos * 60 segundos * 1000 milissegundos);
+    const offsetMillis = 3 * 60 * 60 * 1000;
+
+    // Cria uma nova data compensada;
+    const compensatedDate = new Date(date.getTime() - offsetMillis);
+
+    // Formata usando as configurações locais (pt-BR);
+    const dateBr = compensatedDate.toLocaleString('pt-BR');
+
+    return dateBr;
 }
 
 function handleNormalizeSeriePoints(points: iChartPoint[]) {
@@ -63,9 +73,11 @@ function handleMergeSeries(series: iChartSerie[]) {
 
         for (const p of normalized) {
             const t = p!.time;
+
             if (!map.has(t)) {
                 map.set(t, { time: t });
             }
+
             map.get(t)[s.id] = p!.value;
         }
     }
