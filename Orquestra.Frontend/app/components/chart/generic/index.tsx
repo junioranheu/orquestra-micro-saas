@@ -2,6 +2,7 @@
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import styles from './index.module.scss';
 
+// #region interfaces
 export interface iChartPoint {
     dateTime: Date | string | null | undefined;
     value: number;
@@ -15,71 +16,87 @@ export interface iChartSerie {
 }
 
 interface iChartGenericProps {
-    serie: iChartSerie;
+    series: iChartSerie[];
     height?: number;
     showYAxis?: boolean;
 }
+// #endregion
 
-function handleFormatFullDate(d: Date) {
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    const hh = String(d.getHours()).padStart(2, '0');
-    const mm = String(d.getMinutes()).padStart(2, '0');
-    const ss = String(d.getSeconds()).padStart(2, '0');
-
-    return `${day}/${month}/${year} ${hh}:${mm}:${ss}`;
+// #region functions
+function handleFormatDate(d: string) {
+    const date = new Date(d);
+    return date.toLocaleString('pt-BR');
 }
 
-function handleNormalizeData(points: iChartPoint[]) {
+function handleNormalizeSeriePoints(points: iChartPoint[]) {
     return points.map(p => {
         let d: Date | null = null;
 
-        // Se já é Date;
         if (p.dateTime instanceof Date) {
             d = p.dateTime;
         }
-
-        // Se é string válida;
         else if (typeof p.dateTime === 'string' && p.dateTime.trim() !== '') {
             d = new Date(p.dateTime);
         }
 
-        // Se não virou uma data válida, ignora o ponto;
         if (!d || isNaN(d.getTime())) {
             return null;
         }
 
         return {
-            time: handleFormatFullDate(d),
-            value: p.value,
-            _d: d
+            _d: d,
+            time: d.toISOString(),
+            value: p.value
         };
-    }).
-        filter(Boolean).
-        sort((a, b) => a!._d.getTime() - b!._d.getTime());
+    }).filter(Boolean);
 }
 
-export default function ChartGeneric({ serie, height = 160, showYAxis = true }: iChartGenericProps) {
+function handleMergeSeries(series: iChartSerie[]) {
+    const map = new Map<string, any>();
 
-    const data = handleNormalizeData(serie.object);
-    const color = serie.color || 'var(--main-light)';
+    for (const s of series) {
+        const normalized = handleNormalizeSeriePoints(s.object);
+
+        for (const p of normalized) {
+            const t = p!.time;
+            if (!map.has(t)) {
+                map.set(t, { time: t });
+            }
+            map.get(t)[s.id] = p!.value;
+        }
+    }
+
+    return [...map.values()].sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+}
+// #endregion
+
+export default function ChartGeneric({ series, height = 160, showYAxis = true }: iChartGenericProps) {
+
+    const data = handleMergeSeries(series);
 
     return (
         <div className={styles.card}>
+
             <div className={styles.header}>
-                <span className={styles.badge}>I</span>
-                <span className={styles.title}>{serie.label.toUpperCase()}</span>
+                <span className={styles.badge}>
+                    {series[0]?.label?.charAt(0)?.toUpperCase() ?? ''}
+                </span>
+
+                <span className={styles.title}>
+                    {series?.map(s => s.label.toUpperCase()).join(' / ')}
+                </span>
             </div>
 
             <div className={styles.chartArea} style={{ height }}>
                 <ResponsiveContainer>
-                    <LineChart data={data} margin={{ top: 4, right: 10, left: -10, bottom: 0 }}>
+                    <LineChart data={data} margin={{ top: 0, right: 5, left: 0, bottom: 0 }}>
+
                         <XAxis
                             dataKey='time'
                             tick={{ fontSize: 10 }}
                             stroke='var(--black)'
                             interval='preserveStartEnd'
+                            tickFormatter={handleFormatDate}
                         />
 
                         {
@@ -93,19 +110,24 @@ export default function ChartGeneric({ serie, height = 160, showYAxis = true }: 
                         }
 
                         <Tooltip
+                            labelFormatter={handleFormatDate}
                             labelStyle={{ fontSize: 11 }}
                             itemStyle={{ fontSize: 11 }}
-                            formatter={(v: any) => [v, 'Valor']}
                         />
 
-                        <Line
-                            type='monotone'
-                            dataKey='value'
-                            stroke={color}
-                            strokeWidth={2}
-                            dot={false}
-                            activeDot={{ r: 4 }}
-                        />
+                        {
+                            series.map(s => (
+                                <Line
+                                    key={s.id}
+                                    type='monotone'
+                                    dataKey={s.id}
+                                    stroke={s.color || 'var(--main)'}
+                                    strokeWidth={2}
+                                    dot={{ r: 3 }}
+                                    activeDot={{ r: 5 }}
+                                />
+                            ))
+                        }
                     </LineChart>
                 </ResponsiveContainer>
             </div>

@@ -32,10 +32,10 @@ export default function EmpresaFinanceiroChart({ me }: iProps) {
         />;
     }
 
-    const series: iChartSerie[] = sales?.map(x => ({
+    const series: iChartSerie[] = sales.map(x => ({
         id: Guid.create().toString(),
         label: x.type,
-        color: x.color || 'var(--main)',
+        color: x.color,
         object: x.items.map(item => ({
             dateTime: item.dateTime,
             value: Number(item.value) || 0
@@ -44,11 +44,7 @@ export default function EmpresaFinanceiroChart({ me }: iProps) {
 
     return (
         <div>
-            {
-                series?.map(x => (
-                    <ChartGeneric key={x.id} serie={x} />
-                ))
-            }
+            <ChartGeneric series={series} />
         </div>
     )
 }
