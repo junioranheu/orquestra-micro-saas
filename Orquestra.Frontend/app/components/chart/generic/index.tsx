@@ -79,11 +79,11 @@ export default function ChartGeneric({ series, height = 160, showYAxis = true }:
 
             <div className={styles.header}>
                 <span className={styles.badge}>
-                    {series[0]?.label?.charAt(0)?.toUpperCase() ?? ''}
+                    {series?.map(x => x.label?.charAt(0)?.toUpperCase() ?? '').join(' • ')}
                 </span>
 
                 <span className={styles.title}>
-                    {series?.map(s => s.label.toUpperCase()).join(' / ')}
+                    {series?.map(x => x.label.toUpperCase()).join(', ')}
                 </span>
             </div>
 
@@ -113,6 +113,16 @@ export default function ChartGeneric({ series, height = 160, showYAxis = true }:
                             labelFormatter={handleFormatDate}
                             labelStyle={{ fontSize: 11 }}
                             itemStyle={{ fontSize: 11 }}
+                            formatter={(value: any, name: string) => {
+                                const serieId = name;
+                                const serie = series.find(x => x.id === serieId);
+                                const label = serie?.label ?? '';
+
+                                // const formattedValue = `R$ ${Number(value).toFixed(2)}`;
+                                const formattedValue = 'xd';
+
+                                return [formattedValue, label];
+                            }}
                         />
 
                         {
