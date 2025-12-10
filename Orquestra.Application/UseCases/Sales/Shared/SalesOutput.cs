@@ -1,7 +1,14 @@
 ﻿namespace Orquestra.Application.UseCases.Sales.Shared;
 
-public sealed class SalesChartDTO
+public sealed class SalesOutput
 {
+    public required List<SalesTableOutput> Table { get; set; } = [];
+    public required List<SalesChartOutput> Chart { get; set; } = [];
+}
+
+public sealed class SalesTableOutput
+{
+    public required Guid Id { get; set; }
     public required string Type { get; set; }
     public required string Title { get; set; }
     public required string Description { get; set; }
@@ -11,8 +18,8 @@ public sealed class SalesChartDTO
 
 public sealed class SalesChartOutput
 {
-    public string Type { get; set; } = null!;
-    public string Color { get; set; } = null!;
+    public required string Type { get; set; } = null!;
+    public required string Color { get; set; } = null!;
     public List<SalesChartItemOutput> Items { get; set; } = [];
 }
 

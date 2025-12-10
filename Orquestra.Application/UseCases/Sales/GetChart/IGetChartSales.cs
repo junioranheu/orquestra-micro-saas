@@ -4,5 +4,5 @@ namespace Orquestra.Application.UseCases.Sales.GetChart;
 
 public interface IGetChartSales
 {
-    Task<List<SalesChartOutput>> Execute(Guid userIdAuth, Guid companyId);
+    Task<SalesOutput> Execute(Guid userIdAuth, Guid companyId);
 }

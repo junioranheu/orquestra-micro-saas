@@ -8,6 +8,7 @@ import Tippy from '@tippyjs/react';
 import Image, { StaticImageData } from 'next/image';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
+import ptBR from 'rc-pagination/lib/locale/pt_BR';
 import Table, { ColumnType as RcTableColumnType } from 'rc-table';
 import 'rc-table/assets/index.css';
 import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
@@ -484,12 +485,13 @@ export default function TableGeneric({
                 current={currentPage}
                 pageSize={pageSize}
                 total={safeTotal}
-                showSizeChanger
+                showSizeChanger={true}
                 onChange={handlePageChange}
                 onShowSizeChange={(size: number) => {
                     setPageSize(size);
                     setCurrentPage?.(1);
                 }}
+                locale={ptBR}
             />
         </section>
     )

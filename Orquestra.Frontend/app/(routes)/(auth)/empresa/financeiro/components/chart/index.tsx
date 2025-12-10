@@ -1,29 +1,16 @@
 'use client';
-import { iMe } from '@/app/api/consts/auth';
-import { CONSTS_SALES, iSalesChartOutput } from '@/app/api/consts/sales';
+import { iSalesChartOutput } from '@/app/api/consts/sales';
 import ChartGeneric, { iChartSerie } from '@/app/components/chart/generic';
 import Mascot from '@/app/components/mascot';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
-import { useEffect, useState } from 'react';
 
 interface iProps {
-    me: iMe | undefined;
+    chart: iSalesChartOutput[];
 }
 
-export default function EmpresaFinanceiroChart({ me }: iProps) {
+export default function EmpresaFinanceiroChart({ chart }: iProps) {
 
-    const [sales, setSales] = useState<iSalesChartOutput[] | undefined>([]);
-    const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_SALES.getChart);
-    useApiRequestToSetterOnUrlChange<iSalesChartOutput[]>({ apiUrlRequest: apiUrlRequest, setter: setSales });
-
-    useEffect(() => {
-        if (me && me?.currentMainCompany?.companyId) {
-            setApiUrlRequest(`${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`);
-        }
-    }, [me]);
-
-    if (!sales || !sales.length) {
+    if (!chart || !chart.length) {
         return <Mascot
             tippyContent='Carregando...'
             isCentralized={false}
@@ -32,7 +19,7 @@ export default function EmpresaFinanceiroChart({ me }: iProps) {
         />;
     }
 
-    const series: iChartSerie[] = sales.map(x => ({
+    const series: iChartSerie[] = chart?.map(x => ({
         id: Guid.create().toString(),
         label: x.type,
         color: x.color,
@@ -43,7 +30,7 @@ export default function EmpresaFinanceiroChart({ me }: iProps) {
     }));
 
     return (
-        <div>
+        <div style={{ marginBottom: '2rem' }}>
             <ChartGeneric mode='line' series={series} height={350} />
         </div>
     )

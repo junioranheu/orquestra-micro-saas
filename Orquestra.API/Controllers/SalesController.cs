@@ -8,7 +8,7 @@ namespace Orquestra.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SalesController(IGetChartSales getChart ) : BaseController<SalesController>
+public class SalesController(IGetChartSales getChart) : BaseController<SalesController>
 {
     private readonly IGetChartSales _getChart = getChart;
 
@@ -22,7 +22,7 @@ public class SalesController(IGetChartSales getChart ) : BaseController<SalesCon
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        List<SalesChartOutput> output = await _getChart.Execute(userIdAuth, companyId);
+        SalesOutput output = await _getChart.Execute(userIdAuth, companyId);
 
         return Ok(output);
     }

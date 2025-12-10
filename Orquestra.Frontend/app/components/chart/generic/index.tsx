@@ -4,8 +4,10 @@ import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import styles from './index.module.scss';
 
 // #region interfaces
+type ChartMode = | 'line' | 'bar';
+
 interface iChartGenericProps {
-    mode: 'line' | 'bar';
+    mode: ChartMode;
     series: iChartSerie[];
     height?: number;
     showYAxis?: boolean;
@@ -76,37 +78,41 @@ export default function ChartGeneric({ mode, series, height = 160, showYAxis = t
 
     const data = handleMergeSeries(series);
 
-    function handleRenderLineOrBar(mode: 'line' | 'bar', s: iChartSerie) {
-        if (mode === 'line') {
-            return (
-                <Line
-                    key={s.id}
-                    type='monotone'
-                    dataKey={s.id}
-                    stroke={s.color || 'var(--main)'}
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 5 }}
-                />
-            );
-        }
+    function handleRenderSerie(mode: ChartMode, s: iChartSerie) {
+        switch (mode) {
+            case 'line':
+                return (
+                    <Line
+                        key={s.id}
+                        type='monotone'
+                        dataKey={s.id}
+                        stroke={s.color || 'var(--main)'}
+                        strokeWidth={2}
+                        dot={{ r: 3 }}
+                        activeDot={{ r: 5 }}
+                    />
+                );
 
-        return (
-            <Bar
-                key={s.id}
-                dataKey={s.id}
-                fill={s.color || 'var(--main)'}
-                radius={[4, 4, 0, 0]}
-            />
-        );
+            case 'bar':
+                return (
+                    <Bar
+                        key={s.id}
+                        dataKey={s.id}
+                        fill={s.color || 'var(--main)'}
+                        radius={[4, 4, 0, 0]}
+                    />
+                );
+        }
     }
 
-    function handleRenderChart(mode: 'line' | 'bar', children: ReactNode, data: any) {
-        if (mode === 'line') {
-            return <LineChart data={data}>{children}</LineChart>;
-        }
+    function handleRenderChart(mode: ChartMode, children: ReactNode, data: any) {
+        switch (mode) {
+            case 'line':
+                return <LineChart data={data}>{children}</LineChart>;
 
-        return <BarChart data={data}>{children}</BarChart>;
+            case 'bar':
+                return <BarChart data={data}>{children}</BarChart>;
+        }
     }
 
     return (
@@ -135,13 +141,15 @@ export default function ChartGeneric({ mode, series, height = 160, showYAxis = t
                                     tickFormatter={handleFormatDate}
                                 />
 
-                                {showYAxis && (
-                                    <YAxis
-                                        tick={{ fontSize: 10 }}
-                                        stroke='var(--black)'
-                                        width={35}
-                                    />
-                                )}
+                                {
+                                    showYAxis && (
+                                        <YAxis
+                                            tick={{ fontSize: 10 }}
+                                            stroke='var(--black)'
+                                            width={35}
+                                        />
+                                    )
+                                }
 
                                 <Tooltip
                                     labelFormatter={handleFormatDate}
@@ -151,11 +159,12 @@ export default function ChartGeneric({ mode, series, height = 160, showYAxis = t
                                         const serie = series.find(x => x.id === name);
                                         const label = serie?.label ?? '';
                                         const formatted = `R$ ${Number(value).toFixed(2)}`;
+
                                         return [formatted, label];
                                     }}
                                 />
 
-                                {series.map(s => handleRenderLineOrBar(mode, s))}
+                                {series?.map(s => handleRenderSerie(mode, s))}
                             </Fragment>,
                             data
                         )
