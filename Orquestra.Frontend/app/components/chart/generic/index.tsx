@@ -102,6 +102,7 @@ export default function ChartGeneric({ mode, series, height = 160, showYAxis = t
                         strokeWidth={2}
                         dot={{ r: 3 }}
                         activeDot={{ r: 5 }}
+                        connectNulls={true}
                     />
                 );
 

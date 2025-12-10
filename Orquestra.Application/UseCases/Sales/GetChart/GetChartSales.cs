@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Sales.Shared;
 using Orquestra.Domain.Consts;
+using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using static Orquestra.Utils.Fixtures.Get;
@@ -21,6 +23,7 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
         }
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
+        await ValidateCurrentPlan(companyId);
 
         List<SalesTableOutput> table = [];
 
@@ -45,6 +48,18 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
     }
 
     #region extras
+    private async Task ValidateCurrentPlan(Guid companyId)
+    {
+        Company company = await _context.Companies.AsNoTracking().Where(x => x.CompanyId == companyId).FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundCompany);
+
+        if (company.PlanType == PlanTypeEnum.Premium)
+        {
+            return;
+        }
+
+        throw new InvalidOperationException($"Para acessar o módulo <b>{GetEnumDesc(ModuleEnum.Sales).ToLowerInvariant()}</b> é necessário ter o plano <b>{GetEnumDesc(PlanTypeEnum.Premium).ToLowerInvariant()}</b> ativo.");
+    }
+
     private async Task GetDataFromInventory(List<SalesTableOutput> table, Guid companyId)
     {
         var items = await _context.Inventories.
@@ -121,9 +136,9 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                 Color = g.Key switch
                 {
                    _ when g.Key == inventory => "var(--contrast)",
-                   _ when g.Key == scheduling => "var(--contrast)",
-                   _ when g.Key == serviceOrder => "var(--contrast)",
-                   _ => "var(--main)"
+                   _ when g.Key == scheduling => "var(--main)",
+                   _ when g.Key == serviceOrder =>  "#d7fec8", // Verde alt;
+                   _ => "var(--black)"
                 },
                 Items = [.. g.Select(x => new SalesChartItemOutput
                 {
