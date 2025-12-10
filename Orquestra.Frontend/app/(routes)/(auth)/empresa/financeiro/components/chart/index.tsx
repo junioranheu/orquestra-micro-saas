@@ -1,8 +1,10 @@
 'use client';
 import { iMe } from '@/app/api/consts/auth';
 import { CONSTS_SALES, iSalesChartOutput } from '@/app/api/consts/sales';
-import toast from '@/app/functions/toast';
+import ChartGeneric, { iChartSerie } from '@/app/components/chart/generic';
+import Mascot from '@/app/components/mascot';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
+import { Guid } from 'guid-typescript';
 import { useEffect, useState } from 'react';
 
 interface iProps {
@@ -21,15 +23,32 @@ export default function EmpresaFinanceiroChart({ me }: iProps) {
         }
     }, [me]);
 
-    useEffect(() => {
-        if (sales?.length) {
-            sales?.forEach(element => {
-                toast({ content: JSON.stringify(element) });
-            });
-        }
-    }, [sales]);
+    if (!sales || !sales.length) {
+        return <Mascot
+            tippyContent='Carregando...'
+            isCentralized={false}
+            flip={true}
+            flipPeriodic={true}
+        />;
+    }
+
+    const series: iChartSerie[] = sales?.map(x => ({
+        id: Guid.create().toString(),
+        label: x.type,
+        color: x.color || 'var(--main)',
+        object: x.items.map(item => ({
+            dateTime: item.dateTime,
+            value: Number(item.value) || 0
+        }))
+    }));
 
     return (
-        <h1>xd</h1>
+        <div>
+            {
+                series?.map(x => (
+                    <ChartGeneric key={x.id} serie={x} />
+                ))
+            }
+        </div>
     )
 }

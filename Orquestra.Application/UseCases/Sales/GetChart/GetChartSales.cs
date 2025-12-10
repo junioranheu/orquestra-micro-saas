@@ -21,26 +21,28 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
-        List<SalesChartOutput> output = [];
+        List<SalesChartDTO> DTO = [];
 
-        await GetDataFromInventory(output, companyId);
-        await GetDataFromSchedule(output, companyId);
-        await GetDataFromServiceOrder(output, companyId);
+        await GetDataFromInventory(DTO, companyId);
+        await GetDataFromSchedule(DTO, companyId);
+        await GetDataFromServiceOrder(DTO, companyId);
+
+        List<SalesChartOutput> output = GetOutput(DTO);
 
         return output;
     }
 
     #region extras
-    private async Task GetDataFromInventory(List<SalesChartOutput> output, Guid companyId)
+    private async Task GetDataFromInventory(List<SalesChartDTO> DTO, Guid companyId)
     {
         var items = await _context.Inventories.
                     AsNoTracking().
-                    Where(x => 
-                        x.CompanyId == companyId && 
+                    Where(x =>
+                        x.CompanyId == companyId &&
                         x.Status == true &&
                         x.UnitPrice != 0
                     ).
-                    Select(x => new SalesChartOutput
+                    Select(x => new SalesChartDTO
                     {
                         Type = GetEnumDesc(ModuleEnum.Inventory),
                         Title = x.Name ?? string.Empty,
@@ -55,20 +57,20 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
             return;
         }
 
-        output.AddRange(items);
+        DTO.AddRange(items);
     }
 
-    private async Task GetDataFromSchedule(List<SalesChartOutput> output, Guid companyId)
+    private async Task GetDataFromSchedule(List<SalesChartDTO> DTO, Guid companyId)
     {
         var items = await _context.Schedules.
                     Include(x => x.Client).
                     AsNoTracking().
-                    Where(x => 
-                        x.CompanyId == companyId && 
+                    Where(x =>
+                        x.CompanyId == companyId &&
                         x.Status == true &&
                         x.AmountReceived > 0
                     ).
-                    Select(x => new SalesChartOutput
+                    Select(x => new SalesChartDTO
                     {
                         Type = GetEnumDesc(ModuleEnum.Scheduling),
                         Title = x.CustomTitle ?? $"Agendamento {(x.Client != null && !string.IsNullOrEmpty(x.Client.FullName) ? $"• {x.Client.FullName}" : string.Empty)}",
@@ -83,12 +85,40 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
             return;
         }
 
-        output.AddRange(items);
+        DTO.AddRange(items);
     }
 
-    private async Task GetDataFromServiceOrder(List<SalesChartOutput> output, Guid companyId)
+    private async Task GetDataFromServiceOrder(List<SalesChartDTO> DTO, Guid companyId)
     {
         // TO DO;
+    }
+
+    private static List<SalesChartOutput> GetOutput(List<SalesChartDTO> DTO)
+    {
+        string inventory = GetEnumDesc(ModuleEnum.Inventory);
+        string scheduling = GetEnumDesc(ModuleEnum.Scheduling);
+        string serviceOrder = GetEnumDesc(ModuleEnum.ServiceOrder);
+
+        List<SalesChartOutput> output = [.. DTO.
+            GroupBy(x => x.Type).
+            Select(g => new SalesChartOutput
+            {
+                Type = g.Key,
+                Color = g.Key switch
+                {
+                   _ when g.Key == inventory => "var(--red)",
+                   _ when g.Key == scheduling => "var(--red)",
+                   _ when g.Key == serviceOrder => "var(--red)",
+                   _ => "var(--main)"
+                },
+                Items = [.. g.Select(x => new SalesChartItemOutput
+                {
+                    DateTime = x.Date?.ToString("yyyy-MM-ddTHH:mm:ss") ?? string.Empty,
+                    Value = x.Value
+                })]
+            })];
+
+        return output;
     }
     #endregion
 }

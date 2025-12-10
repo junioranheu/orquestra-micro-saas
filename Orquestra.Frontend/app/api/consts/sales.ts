@@ -8,8 +8,9 @@ export const CONSTS_SALES = {
 
 export interface iSalesChartOutput {
     type: string;
-    title: string;
-    description: string;
-    value: number;
-    date?: Date | null;
+    color: string;
+    items: {
+        dateTime: string;
+        value: number;
+    }[];
 }
