@@ -30,14 +30,14 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
 
         if (table is null || table.Count == 0)
         {
-            throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
+            throw new KeyNotFoundException("Nenhum registro foi encontrado na base de dados para montar os gráficos e tabela da gestão financeira da sua empresa.");
         }
 
         List<SalesChartOutput> chart = GetOutput(table);
 
         SalesOutput output = new()
         {
-            Table = table,
+            Table = [.. table.OrderByDescending(x => x.Date)],
             Chart = chart
         };
 

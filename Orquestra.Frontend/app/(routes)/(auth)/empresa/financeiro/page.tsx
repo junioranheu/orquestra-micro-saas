@@ -98,14 +98,15 @@ export default function EmpresaFinanceiro() {
                 style={{ marginBottom: '2rem' }}
             />
 
-            <EmpresaFinanceiroChart chart={sales?.chart ?? []} />
+            <EmpresaFinanceiroChart
+                chart={sales?.chart ?? []}
+            />
 
             <TableGeneric
                 idPropName='id'
                 columns={columns}
                 data={sales?.table ?? []}
                 currentPage={1}
-                totalRowsCount={99999}
             />
         </TemplatePageHeader>
     )

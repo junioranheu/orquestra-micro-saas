@@ -1,7 +1,6 @@
 'use client';
 import { iSalesChartOutput } from '@/app/api/consts/sales';
 import ChartGeneric, { iChartSerie } from '@/app/components/chart/generic';
-import Mascot from '@/app/components/mascot';
 import { Guid } from 'guid-typescript';
 
 interface iProps {
@@ -11,12 +10,7 @@ interface iProps {
 export default function EmpresaFinanceiroChart({ chart }: iProps) {
 
     if (!chart || !chart.length) {
-        return <Mascot
-            tippyContent='Carregando...'
-            isCentralized={false}
-            flip={true}
-            flipPeriodic={true}
-        />;
+        return null;
     }
 
     const series: iChartSerie[] = chart?.map(x => ({

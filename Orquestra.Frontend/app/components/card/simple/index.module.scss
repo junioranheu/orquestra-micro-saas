@@ -126,6 +126,23 @@
 // big landscape tablets, laptops, and desktops 
 @media (max-width:1025px) {}
 
+@media (max-width:951px) {
+    .wrapper {
+        .card {
+            // background-color: tomato !important;
+
+            .inner {
+                // background-color: purple;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    }
+}
+
 // tablet, landscape iPad, lo-res laptops ands desktops 
 @media (max-width:801px) {}
 

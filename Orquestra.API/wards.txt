@@ -1,5 +1,4 @@
 ﻿⦁	Etc:
-Resolver os TO DO's;
 Resolver o TO DO em PayCompanyInvoice;
 
 ⦁	Módulo de Ordem de serviço:
@@ -17,5 +16,6 @@ Criar teste de integração;
 Criar front;
 
 ⦁	Módulo de Gestão financeira:
+Resolver o TO DO (após finalizar o módulo de ordem de serviço);
 Criar teste de integração;
-Criar front;
+Refatorar gráfico do front;
