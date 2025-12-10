@@ -1,5 +1,5 @@
 'use client';
-import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
+import { CONSTS_LOG, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
@@ -24,27 +24,29 @@ export default function UsuarioNotificacoes() {
             title: 'Data',
             dataIndex: 'date',
             key: 'date',
-            render: (value: string) => new Date(value).toLocaleString('pt-BR')
+            render: (value: string) => new Date(value).toLocaleString('pt-BR'),
+            width: '12rem'
         },
-        {
-            title: 'Tipo',
-            dataIndex: 'logType',
-            key: 'logType',
-            render: (value: string, record: iLogNotificationOutput) => (
-                <div style={{
-                    minWidth: 'fit-content',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                }}>
-                    {record.emoji} {value}
-                </div>
-            )
-        },
+        // {
+        //     title: 'Tipo',
+        //     dataIndex: 'logType',
+        //     key: 'logType',
+        //     render: (value: string, record: iLogNotificationOutput) => (
+        //         <div style={{
+        //             minWidth: 'fit-content',
+        //             whiteSpace: 'nowrap',
+        //             overflow: 'hidden',
+        //             textOverflow: 'ellipsis'
+        //         }}>
+        //             {record.emoji} {value}
+        //         </div>
+        //     )
+        // },
         {
             title: 'Notificação',
             dataIndex: 'story',
-            key: 'story'
+            key: 'story',
+            width: '15rem'
         },
         {
             title: 'Modificações',

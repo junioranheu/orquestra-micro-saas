@@ -905,7 +905,7 @@ public static partial class Get
             return string.Empty;
         }
 
-        HashSet<string> ignoredProps = ["LastModificationDate", "Status"];
+        HashSet<string> ignoredProps = ["LastModificationDate", "Status", "IsCurrentMainCompanyUser"];
         bool ShouldIgnore(string propName) => ignoredProps.Contains(propName) | propName.EndsWith("Id", StringComparison.OrdinalIgnoreCase) | propName.EndsWith("By", StringComparison.OrdinalIgnoreCase);
 
         // #1 - Fluxo de novos registros: só AFTER → retorna tudo como new record;
