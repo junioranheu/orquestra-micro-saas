@@ -16,7 +16,6 @@ Criar teste de integração;
 Criar front;
 
 ⦁	Módulo de Gestão financeira:
-Criar classe;
 Criar UseCase e dependências;
 Criar endpoint;
 Criar teste de integração;

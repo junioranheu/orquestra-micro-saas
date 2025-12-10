@@ -13,6 +13,7 @@ using Orquestra.Application.UseCases.Inventories;
 using Orquestra.Application.UseCases.Locations;
 using Orquestra.Application.UseCases.Logs;
 using Orquestra.Application.UseCases.Quotes;
+using Orquestra.Application.UseCases.Sales;
 using Orquestra.Application.UseCases.Schedules;
 using Orquestra.Application.UseCases.Users;
 using Orquestra.Application.UseCases.Verifications;
@@ -55,6 +56,7 @@ public static class DependencyInjection
         services.AddInventoriesApplication();
         services.AddClientsFollowUpsApplication();
         services.AddQuotesApplication();
+        services.AddSalesApplication();
     }
 
     private static void AddServices(IServiceCollection _)
