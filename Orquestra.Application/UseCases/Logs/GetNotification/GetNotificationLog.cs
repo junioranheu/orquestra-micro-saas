@@ -40,7 +40,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
             }
         }
 
-        var (endpointMap, linq, count) = await GetLogs(pagination, companyId, isDashboard);
+        var (endpointMap, linq, count) = await GetLogs(pagination, companyId);
 
         if (count < 1)
         {
@@ -176,11 +176,11 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                 Date = log.CreatedDate,
                 ChangedFields = log.LogType == LogTypeEnum.Audit ? GetChangedFieldsFromBeforeAndAfter(log.Parameters) : string.Empty
             };
-        }).Where(x => x is not null).Select(x => x!)];
+        }).Where(x => x is not null && x.ChangedFields != "{}").Select(x => x!)];
 
         if (isDashboard)
         {
-            var result = (output, count);
+            (List<LogNotificationOutput> output, int count) result = (output.Take(5).ToList(), count);
 
             // Salva no cache;
             _cache.Set(cacheKey, result, TimeSpan.FromMinutes(CACHE_TIMESPAN));
@@ -190,7 +190,7 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
     }
 
     #region extras
-    private async Task<(Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid companyId, bool isDashboard)
+    private async Task<(Dictionary<string, string> endpointMap, IEnumerable<Log> linq, int count)> GetLogs(PaginationInput pagination, Guid companyId)
     {
         Dictionary<string, string> endpointMap = new()
         {
@@ -215,11 +215,6 @@ public sealed class GetNotificationLog(Context context, IMemoryCache cache, IGet
                         (x.Parameters!.Contains($"\"CompanyId\":\"{companyId}\"")) &&
                         (isXUnit || endpointMap.Keys.Any(k => x.Endpoint!.Contains(k)))
                     ).OrderByDescending(x => x.CreatedDate);
-
-        if (isDashboard)
-        {
-            pagination = new() { Index = 0, Limit = 5, IsSelectAll = false };
-        }
 
         (IEnumerable<Log> linq, int count) = await PagedQuery.Execute(query, pagination);
 
