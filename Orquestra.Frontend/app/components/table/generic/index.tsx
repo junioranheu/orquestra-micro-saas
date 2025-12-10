@@ -14,6 +14,7 @@ import 'rc-table/assets/index.css';
 import { Dispatch, isValidElement, JSX, MouseEvent, ReactElement, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './index.module.scss';
 
+// #region interfaces
 export interface iTableColumn extends RcTableColumnType<any> {
     dataIndex: string;
     key: string;
@@ -85,13 +86,16 @@ interface iProps {
     onSelectionChange?: (ids: string[]) => void;
 }
 
+export const TABLE_PAGINATION_DEFAULT_LIMIT = 15;
+// #endregion
+
 export default function TableGeneric({
     idPropName,
     columns,
     data,
     currentPage,
     setCurrentPage,
-    maxPageSize = 15,
+    maxPageSize = TABLE_PAGINATION_DEFAULT_LIMIT,
     totalRowsCount = 0,
     handleTableRowClick,
     isMainDivBoxShadowed = false,

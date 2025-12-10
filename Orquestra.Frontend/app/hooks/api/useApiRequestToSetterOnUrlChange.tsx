@@ -1,4 +1,5 @@
 import { Fetch } from '@/app/api/fetch';
+import { TABLE_PAGINATION_DEFAULT_LIMIT } from '@/app/components/table/generic';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 
 interface iProps<T> {
@@ -19,7 +20,7 @@ export default function useApiRequestToSetterOnUrlChange<T>(options: iProps<T>):
         apiUrlRequest,
         setter,
         index = 1,
-        limit = 15,
+        limit = TABLE_PAGINATION_DEFAULT_LIMIT,
         isSelectAll = false,
         allowRequestNull = true,
         trigger = undefined,

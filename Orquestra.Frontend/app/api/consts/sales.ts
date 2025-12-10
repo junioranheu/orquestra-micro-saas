@@ -9,6 +9,7 @@ export const CONSTS_SALES = {
 
 export interface iSalesOutput {
     table: iSalesTableOutput[];
+    tableTotalCount: number;
     chart: iSalesChartOutput[];
 }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Orquestra.Application.UseCases.Companies.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Sales.Shared;
+using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
@@ -15,7 +15,7 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<SalesOutput> Execute(Guid userIdAuth, Guid companyId)
+    public async Task<SalesOutput> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId)
     {
         if (companyId == Guid.Empty)
         {
@@ -36,12 +36,14 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
             throw new KeyNotFoundException("Nenhum registro foi encontrado na base de dados para montar os gráficos e tabela da gestão financeira da sua empresa.");
         }
 
-        List<SalesChartOutput> chart = GetOutput(table);
+        List<SalesChartOutput> chartOutput = GetChartOutput(table);
+        List<SalesTableOutput> tableOutput = GetTableOutput(table, pagination);
 
         SalesOutput output = new()
         {
-            Table = [.. table.OrderByDescending(x => x.Date)],
-            Chart = chart
+            Table = tableOutput,
+            TableTotalCount = table.Count,
+            Chart = chartOutput
         };
 
         return output;
@@ -122,13 +124,13 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
         // TO DO;
     }
 
-    private static List<SalesChartOutput> GetOutput(List<SalesTableOutput> table)
+    private static List<SalesChartOutput> GetChartOutput(List<SalesTableOutput> table)
     {
         string inventory = GetEnumDesc(ModuleEnum.Inventory);
         string scheduling = GetEnumDesc(ModuleEnum.Scheduling);
         string serviceOrder = GetEnumDesc(ModuleEnum.ServiceOrder);
 
-        List<SalesChartOutput> chart = [.. table.
+        List<SalesChartOutput> output = [.. table.
             GroupBy(x => x.Type).
             Select(g => new SalesChartOutput
             {
@@ -147,7 +149,17 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                 })]
             })];
 
-        return chart;
+        return output;
+    }
+
+    private static List<SalesTableOutput> GetTableOutput(List<SalesTableOutput> table, PaginationInput pagination)
+    {
+        List<SalesTableOutput> output = [.. table.
+                                        OrderByDescending(x => x.Date).
+                                        Skip(pagination.IsSelectAll ? 0 : pagination.Index * pagination.Limit).
+                                        Take(pagination.IsSelectAll ? int.MaxValue : pagination.Limit)];
+
+        return output;
     }
     #endregion
 }

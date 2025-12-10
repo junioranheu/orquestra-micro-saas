@@ -2,6 +2,7 @@
 using Orquestra.API.Filters;
 using Orquestra.Application.UseCases.Sales.GetChart;
 using Orquestra.Application.UseCases.Sales.Shared;
+using Orquestra.Application.UseCases.Shared;
 using Orquestra.Domain.Enums;
 
 namespace Orquestra.API.Controllers;
@@ -14,7 +15,7 @@ public class SalesController(IGetChartSales getChart) : BaseController<SalesCont
 
     [AuthorizeFilter(modules: [ModuleEnum.Sales])]
     [HttpGet("GetChart")]
-    public async Task<ActionResult> GetChart([FromQuery] Guid companyId)
+    public async Task<ActionResult> GetChart([FromQuery] PaginationInput paginationInput, [FromQuery] Guid companyId)
     {
         if (companyId == Guid.Empty)
         {
@@ -22,7 +23,7 @@ public class SalesController(IGetChartSales getChart) : BaseController<SalesCont
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        SalesOutput output = await _getChart.Execute(userIdAuth, companyId);
+        SalesOutput output = await _getChart.Execute(paginationInput, userIdAuth, companyId);
 
         return Ok(output);
     }

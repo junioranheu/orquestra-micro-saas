@@ -20,9 +20,10 @@ export default function EmpresaFinanceiro() {
     const me = useApiGetMe({});
     const router = useRouter();
 
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const [sales, setSales] = useState<iSalesOutput | undefined>(undefined);
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_SALES.getChart);
-    useApiRequestToSetterOnUrlChange<iSalesOutput>({ apiUrlRequest: apiUrlRequest, setter: setSales });
+    useApiRequestToSetterOnUrlChange<iSalesOutput>({ apiUrlRequest: apiUrlRequest, setter: setSales, hasPaginationInput: true, index: currentPage });
 
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
@@ -106,7 +107,9 @@ export default function EmpresaFinanceiro() {
                 idPropName='id'
                 columns={columns}
                 data={sales?.table ?? []}
-                currentPage={1}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalRowsCount={sales?.tableTotalCount}
             />
         </TemplatePageHeader>
     )
