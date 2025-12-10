@@ -80,7 +80,7 @@ export default function Sidebar({ me }: iProps) {
                                             <ul>
                                                 {
                                                     visibleItems.map((item, index) => (
-                                                        <Tippy key={index} content={item.isDisabled ? `⚠️ Em desenvolvimento: ${item.description}` : item.description} placement='right'>
+                                                        <Tippy key={index} content={item.isDisabled ? `Em desenvolvimento • ${item.description}` : item.description} placement='right'>
                                                             <li
                                                                 id={item.id}
                                                                 className={`${(active === item.route ? styles.active : '')} ${item.isDisabled ? styles.disabled : ''}`}

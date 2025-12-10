@@ -75,7 +75,7 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
                 label: 'Sistema',
                 items: [
                     { id: 'logs', label: 'Logs', description: 'Visualize registros e auditorias do sistema.', icon: 'terminal', route: ROUTES.LOGS, hasAccess: handleCheckShowElement({ me, modulesRequired: [], mustBeSystemAdmin: true }) },
-                    { id: 'logoff', label: 'Finalizar sessão', description: `Encerre sua sessão atual no ${SYSTEM.NAME}.`, icon: 'log-out', onClick: () => router.push(ROUTES.LOGOUT), hasAccess: true },
+                    { id: 'logoff', label: 'Finalizar sessão', description: `Encerre sua sessão atual no ${SYSTEM.NAME}. 👋`, icon: 'log-out', onClick: () => router.push(ROUTES.LOGOUT), hasAccess: true },
                 ]
             }
         ];

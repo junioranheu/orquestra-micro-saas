@@ -1,10 +1,11 @@
 'use client';
-import { CONSTS_SALES, iSalesChartOutput } from '@/app/api/consts/sales';
+import SvgSales from '@/app/assets/svg/sales.svg';
+import CardSimple from '@/app/components/card/simple';
+import TemplatePageHeader from '@/app/components/template/template-page-header';
+import ROUTES from '@/app/consts/routes';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
-import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
-import { useEffect, useState } from 'react';
-import styles from './page.module.scss';
+import EmpresaFinanceiroChart from './components/chart';
 
 export default function EmpresaFinanceiro() {
 
@@ -12,24 +13,17 @@ export default function EmpresaFinanceiro() {
 
     const me = useApiGetMe({});
 
-    const [sales, setSales] = useState<iSalesChartOutput[] | undefined>([]);
-    const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_SALES.getChart);
-    useApiRequestToSetterOnUrlChange<iSalesChartOutput[]>({ apiUrlRequest: apiUrlRequest, setter: setSales });
-
-    useEffect(() => {
-        if (me && me?.currentMainCompany?.companyId) {
-            setApiUrlRequest(`${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`);
-        }
-    }, [me]);
-
-    useEffect(() => {
-        console.clear();
-        console.log(sales);
-    }, [sales]);
-
     return (
-        <section className={styles.main}>
-            <h1>Olá... Financeiro</h1>
-        </section>
+        <TemplatePageHeader title='Gestão financeira'>
+            <CardSimple
+                img={SvgSales}
+                title={`Finanças ${me?.currentMainCompany?.name ? `• ${me.currentMainCompany.name}` : ''}`}
+                description={`Acompanhe as finanças da sua empresa de forma prática e eficiente.<br/>Os dados financeiros são automaticamente atualizados com informações dos módulos <a href='${ROUTES.EMPRESA_AGENDAMENTOS}'>agenda</a>, <a href='${ROUTES.EMPRESA_ORDEM_DE_SERVICO}'>ordens de serviço</a> e <a href='${ROUTES.EMPRESA_ESTOQUE}'>estoque</a>, proporcionando uma visão completa e integrada do seu fluxo de caixa, custos e vendas.`}
+                style={{ marginBottom: '2rem' }}
+            />
+
+            <EmpresaFinanceiroChart me={me} />
+        </TemplatePageHeader>
     )
 }
+
