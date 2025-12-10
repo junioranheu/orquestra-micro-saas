@@ -1,8 +1,16 @@
 'use client';
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Fragment, ReactNode } from 'react';
+import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import styles from './index.module.scss';
 
 // #region interfaces
+interface iChartGenericProps {
+    mode: 'line' | 'bar';
+    series: iChartSerie[];
+    height?: number;
+    showYAxis?: boolean;
+}
+
 export interface iChartPoint {
     dateTime: Date | string | null | undefined;
     value: number;
@@ -13,12 +21,6 @@ export interface iChartSerie {
     label: string;
     color?: string;
     object: iChartPoint[];
-}
-
-interface iChartGenericProps {
-    series: iChartSerie[];
-    height?: number;
-    showYAxis?: boolean;
 }
 // #endregion
 
@@ -70,16 +72,48 @@ function handleMergeSeries(series: iChartSerie[]) {
 }
 // #endregion
 
-export default function ChartGeneric({ series, height = 160, showYAxis = true }: iChartGenericProps) {
+export default function ChartGeneric({ mode, series, height = 160, showYAxis = true }: iChartGenericProps) {
 
     const data = handleMergeSeries(series);
 
+    function handleRenderLineOrBar(mode: 'line' | 'bar', s: iChartSerie) {
+        if (mode === 'line') {
+            return (
+                <Line
+                    key={s.id}
+                    type='monotone'
+                    dataKey={s.id}
+                    stroke={s.color || 'var(--main)'}
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                />
+            );
+        }
+
+        return (
+            <Bar
+                key={s.id}
+                dataKey={s.id}
+                fill={s.color || 'var(--main)'}
+                radius={[4, 4, 0, 0]}
+            />
+        );
+    }
+
+    function handleRenderChart(mode: 'line' | 'bar', children: ReactNode, data: any) {
+        if (mode === 'line') {
+            return <LineChart data={data}>{children}</LineChart>;
+        }
+
+        return <BarChart data={data}>{children}</BarChart>;
+    }
+
     return (
         <div className={styles.card}>
-
             <div className={styles.header}>
                 <span className={styles.badge}>
-                    {series?.map(x => x.label?.charAt(0)?.toUpperCase() ?? '').join(' • ')}
+                    {series?.map(x => x.label?.charAt(0)?.toUpperCase()).join(' • ')}
                 </span>
 
                 <span className={styles.title}>
@@ -89,56 +123,43 @@ export default function ChartGeneric({ series, height = 160, showYAxis = true }:
 
             <div className={styles.chartArea} style={{ height }}>
                 <ResponsiveContainer>
-                    <LineChart data={data} margin={{ top: 0, right: 5, left: 0, bottom: 0 }}>
-
-                        <XAxis
-                            dataKey='time'
-                            tick={{ fontSize: 10 }}
-                            stroke='var(--black)'
-                            interval='preserveStartEnd'
-                            tickFormatter={handleFormatDate}
-                        />
-
-                        {
-                            showYAxis && (
-                                <YAxis
+                    {
+                        handleRenderChart(
+                            mode,
+                            <Fragment>
+                                <XAxis
+                                    dataKey='time'
                                     tick={{ fontSize: 10 }}
                                     stroke='var(--black)'
-                                    width={35}
+                                    interval='preserveStartEnd'
+                                    tickFormatter={handleFormatDate}
                                 />
-                            )
-                        }
 
-                        <Tooltip
-                            labelFormatter={handleFormatDate}
-                            labelStyle={{ fontSize: 11 }}
-                            itemStyle={{ fontSize: 11 }}
-                            formatter={(value: any, name: string) => {
-                                const serieId = name;
-                                const serie = series.find(x => x.id === serieId);
-                                const label = serie?.label ?? '';
+                                {showYAxis && (
+                                    <YAxis
+                                        tick={{ fontSize: 10 }}
+                                        stroke='var(--black)'
+                                        width={35}
+                                    />
+                                )}
 
-                                // const formattedValue = `R$ ${Number(value).toFixed(2)}`;
-                                const formattedValue = 'xd';
-
-                                return [formattedValue, label];
-                            }}
-                        />
-
-                        {
-                            series.map(s => (
-                                <Line
-                                    key={s.id}
-                                    type='monotone'
-                                    dataKey={s.id}
-                                    stroke={s.color || 'var(--main)'}
-                                    strokeWidth={2}
-                                    dot={{ r: 3 }}
-                                    activeDot={{ r: 5 }}
+                                <Tooltip
+                                    labelFormatter={handleFormatDate}
+                                    labelStyle={{ fontSize: 11 }}
+                                    itemStyle={{ fontSize: 11 }}
+                                    formatter={(value: any, name: string) => {
+                                        const serie = series.find(x => x.id === name);
+                                        const label = serie?.label ?? '';
+                                        const formatted = `R$ ${Number(value).toFixed(2)}`;
+                                        return [formatted, label];
+                                    }}
                                 />
-                            ))
-                        }
-                    </LineChart>
+
+                                {series.map(s => handleRenderLineOrBar(mode, s))}
+                            </Fragment>,
+                            data
+                        )
+                    }
                 </ResponsiveContainer>
             </div>
         </div>

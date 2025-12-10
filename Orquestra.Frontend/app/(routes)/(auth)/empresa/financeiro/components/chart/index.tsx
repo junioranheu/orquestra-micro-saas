@@ -44,7 +44,7 @@ export default function EmpresaFinanceiroChart({ me }: iProps) {
 
     return (
         <div>
-            <ChartGeneric series={series} height={350} />
+            <ChartGeneric mode='line' series={series} height={350} />
         </div>
     )
 }

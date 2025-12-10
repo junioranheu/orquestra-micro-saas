@@ -106,9 +106,9 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                 Type = g.Key,
                 Color = g.Key switch
                 {
-                   _ when g.Key == inventory => "var(--red)",
-                   _ when g.Key == scheduling => "var(--red)",
-                   _ when g.Key == serviceOrder => "var(--red)",
+                   _ when g.Key == inventory => "var(--contrast)",
+                   _ when g.Key == scheduling => "var(--contrast)",
+                   _ when g.Key == serviceOrder => "var(--contrast)",
                    _ => "var(--main)"
                 },
                 Items = [.. g.Select(x => new SalesChartItemOutput
