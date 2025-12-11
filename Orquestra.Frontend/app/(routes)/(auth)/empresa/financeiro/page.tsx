@@ -100,6 +100,7 @@ export default function EmpresaFinanceiro() {
             />
 
             <EmpresaFinanceiroChart
+                me={me}
                 chart={sales?.chart ?? []}
             />
 

@@ -1,6 +1,6 @@
 'use client';
 import { Fragment, ReactNode } from 'react';
-import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import styles from './index.module.scss';
 
 // #region interfaces
@@ -11,6 +11,9 @@ interface iChartGenericProps {
     series: iChartSerie[];
     height?: number;
     showYAxis?: boolean;
+    badgeContent?: string;
+    showRedReferenceLine?: boolean;
+    legend?: { label: string; color: string }[];
 }
 
 export interface iChartPoint {
@@ -86,7 +89,7 @@ function handleMergeSeries(series: iChartSerie[]) {
 }
 // #endregion
 
-export default function ChartGeneric({ mode, series, height = 160, showYAxis = true }: iChartGenericProps) {
+export default function ChartGeneric({ mode, series, height = 160, showYAxis = true, badgeContent = '', showRedReferenceLine = false, legend }: iChartGenericProps) {
 
     const data = handleMergeSeries(series);
 
@@ -132,13 +135,19 @@ export default function ChartGeneric({ mode, series, height = 160, showYAxis = t
         <div className={styles.card}>
             <div className={styles.header}>
                 <span className={styles.badge}>
-                    {series?.map(x => x.label?.charAt(0)?.toUpperCase()).join(' • ')}
+                    {badgeContent || series?.map(x => x.label?.charAt(0)?.toUpperCase()).join(' • ')}
                 </span>
 
                 <span className={styles.title}>
                     {series?.map(x => x.label.toUpperCase()).join(', ')}
                 </span>
             </div>
+
+            {
+                legend && legend.length > 0 && (
+                    <ChartLegend items={legend} />
+                )
+            }
 
             <div className={styles.chartArea} style={{ height }}>
                 <ResponsiveContainer>
@@ -164,6 +173,16 @@ export default function ChartGeneric({ mode, series, height = 160, showYAxis = t
                                     )
                                 }
 
+                                {
+                                    showRedReferenceLine && (
+                                        <ReferenceLine
+                                            y={0}
+                                            stroke='var(--red)'
+                                            strokeWidth={1}
+                                        />
+                                    )
+                                }
+
                                 <Tooltip
                                     labelFormatter={handleFormatDate}
                                     labelStyle={{ fontSize: 11 }}
@@ -184,6 +203,24 @@ export default function ChartGeneric({ mode, series, height = 160, showYAxis = t
                     }
                 </ResponsiveContainer>
             </div>
+        </div>
+    )
+}
+
+function ChartLegend({ items }: { items: { label: string; color: string }[] }) {
+    return (
+        <div className={styles.legend}>
+            {
+                items?.map((item, i) => (
+                    <div key={i} className={styles.legendItem}>
+                        <div
+                            className={styles.legendColor}
+                            style={{ background: item.color }}
+                        />
+                        <span>{item.label}</span>
+                    </div>
+                ))
+            }
         </div>
     )
 }

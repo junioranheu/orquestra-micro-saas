@@ -122,7 +122,6 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
     {
         string inventory = GetEnumDesc(ModuleEnum.Inventory);
         string scheduling = GetEnumDesc(ModuleEnum.Scheduling);
-        string serviceOrder = GetEnumDesc(ModuleEnum.ServiceOrder);
 
         List<SalesChartOutput> output = [.. table.
             GroupBy(x => x.Type).
@@ -133,8 +132,7 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                 {
                    _ when g.Key == inventory => "var(--contrast)",
                    _ when g.Key == scheduling => "var(--main)",
-                   _ when g.Key == serviceOrder =>  "#d7fec8", // Verde alt;
-                   _ => "var(--black)"
+                   _ => "var(--gray-dark)"
                 },
                 Items = [.. g.Select(x => new SalesChartItemOutput
                 {
