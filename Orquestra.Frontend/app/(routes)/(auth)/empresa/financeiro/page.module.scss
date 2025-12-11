@@ -1,0 +1,23 @@
+.filter {
+    // background-color: tomato;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1rem;
+
+    background: var(--white-og);
+    border-radius: var(--border-radius);
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--gray-light);
+    margin-bottom: 2rem;
+
+    >* {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    button {
+        // background-color: tomato;
+        margin-bottom: 0.05rem;
+    }
+}

@@ -17,6 +17,7 @@ import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import EmpresaFinanceiroChart from './components/chart';
+import styles from './page.module.scss';
 
 interface iFormDataFilter {
     dateInit: string | null;
@@ -39,8 +40,32 @@ export default function EmpresaFinanceiro() {
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_SALES.getChart);
     useApiRequestToSetterOnUrlChange<iSalesOutput>({ apiUrlRequest: apiUrlRequest, setter: setSales, hasPaginationInput: true, index: currentPage });
 
-    function handleUpdateApiUrlRequest() {
+    useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
+            let url = `${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`;
+            setApiUrlRequest(url);
+        }
+    }, [me, modalFilterFormData])
+
+    useEffect(() => {
+        setModalFilterFormData(prev => ({
+            ...prev,
+            dateEnd: modalFilterFormData?.dateInit
+        }));
+    }, [modalFilterFormData.dateInit])
+
+    function handleFetch() {
+        if (me && me?.currentMainCompany?.companyId) {
+            if (modalFilterFormData.dateInit && modalFilterFormData.dateEnd) {
+                const init = new Date(modalFilterFormData.dateInit);
+                const end = new Date(modalFilterFormData.dateEnd);
+
+                if (end < init) {
+                    toast({ content: 'A data final não pode ser menor que a inicial.' });
+                    return;
+                }
+            }
+
             let url = `${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`;
 
             if (modalFilterFormData.dateInit) {
@@ -51,28 +76,8 @@ export default function EmpresaFinanceiro() {
                 url += `&dateEnd=${modalFilterFormData.dateEnd}`;
             }
 
-            console.clear();
-            console.log('url', url);
             setApiUrlRequest(url);
         }
-    }
-
-    useEffect(() => {
-        handleUpdateApiUrlRequest();
-    }, [me]);
-
-    function handleFetch() {
-        if (dateInit && dateEnd) {
-            const init = new Date(dateInit);
-            const end = new Date(dateEnd);
-
-            if (end < init) {
-                toast.error('A data final não pode ser menor que a inicial 🫠');
-                return;
-            }
-        }
-
-        handleUpdateApiUrlRequest();
     }
 
     const columns = [
@@ -146,8 +151,7 @@ export default function EmpresaFinanceiro() {
                 style={{ marginBottom: '2rem' }}
             />
 
-            <div style={{ backgroundColor: 'tomato' }}>
-                <h1>{apiUrlRequest}</h1>
+            <div className={styles.filter}>
                 <InputMask type='date' title='Data inicial' fieldName='dateInit' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                 <InputMask type='date' title='Data final' fieldName='dateEnd' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
 

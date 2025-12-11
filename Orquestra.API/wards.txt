@@ -13,6 +13,3 @@ Criar UseCase e dependências;
 Criar endpoint;
 Criar teste de integração;
 Criar front;
-
-⦁	Módulo de Gestão financeira (Sales):
-Adicionar um filtro de data;
