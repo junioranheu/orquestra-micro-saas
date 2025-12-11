@@ -8,7 +8,8 @@ interface iProps {
     'CompanyUserRoleEnum' | 'LogTypeEnum' | 'ModuleEnum' |
     'PaymentTypeEnum' | 'ScheduleStatusEnum' | 'UserRoleEnum' |
     'VerificationTypeEnum' | 'PlanTypeEnum' | 'RecoverPasswordQuestionEnum' |
-    'ClientFollowUpStatusEnum' | 'QuoteStatusEnum' | 'ScheduleTypeEnum'; // Sempre que necessário, adicionar os novos enums aqui;
+    'ClientFollowUpStatusEnum' | 'QuoteStatusEnum' | 'ScheduleTypeEnum' |
+    'ServiceOrderStatusEnum'; // Sempre que necessário, adicionar os novos enums aqui;
 }
 
 export default function useApiGetEnum({ enumName }: iProps): iDropdownOption[] | undefined {

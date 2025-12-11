@@ -95,7 +95,7 @@ export default function EmpresaFinanceiro() {
             <CardSimple
                 img={SvgSales}
                 title={`Finanças ${me?.currentMainCompany?.name ? `• ${me.currentMainCompany.name}` : ''}`}
-                description={`Acompanhe as finanças da sua empresa de forma prática e eficiente.<br/>Os dados financeiros são automaticamente atualizados com informações dos módulos <a href='${ROUTES.EMPRESA_AGENDAMENTOS}'>agenda</a>, <a href='${ROUTES.EMPRESA_ORDEM_DE_SERVICO}'>ordens de serviço</a> e <a href='${ROUTES.EMPRESA_ESTOQUE}'>estoque</a>, proporcionando uma visão completa e integrada do seu fluxo de caixa, custos e vendas.`}
+                description={`Acompanhe as finanças da sua empresa de forma prática e eficiente.<br/>Os dados financeiros são automaticamente atualizados com informações dos módulos <a href='${ROUTES.EMPRESA_AGENDAMENTOS}'>agenda</a> e <a href='${ROUTES.EMPRESA_ORDEM_DE_SERVICO}'>ordens de serviço</a>, proporcionando uma visão completa e integrada do seu fluxo de caixa, custos e vendas.`}
                 style={{ marginBottom: '2rem' }}
             />
 

@@ -29,7 +29,6 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
 
         await GetDataFromInventory(table, companyId);
         await GetDataFromSchedule(table, companyId);
-        await GetDataFromServiceOrder(table, companyId);
 
         if (table is null || table.Count == 0)
         {
@@ -117,11 +116,6 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
         }
 
         table.AddRange(items);
-    }
-
-    private async Task GetDataFromServiceOrder(List<SalesTableOutput> table, Guid companyId)
-    {
-        // TO DO;
     }
 
     private static List<SalesChartOutput> GetChartOutput(List<SalesTableOutput> table)

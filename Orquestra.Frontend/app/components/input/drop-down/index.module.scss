@@ -61,17 +61,21 @@
 
         option {
             &[disabled] {
-                color: #999999 !important;
+                color: var(--gray-dark) !important;
                 cursor: not-allowed !important;
             }
         }
     }
 
     &.disabled {
+        // background-color: orange !important;
         cursor: not-allowed !important;
 
+        * {
+            color: var(--gray-dark) !important;
+        }
+
         .dropdown {
-            color: #999999 !important;
             border: 1px solid #e9e4e4 !important;
             background-color: #ececec !important;
             cursor: not-allowed !important;

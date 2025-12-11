@@ -57,7 +57,7 @@ export default function TestEnvironmentBanner({ hideIfProd }: iProps) {
             onMouseDown={handleMouseDown}
         >
             <p className={styles.text}>
-                ⚠️ Ambiente de teste • Desenvolvido por
+                Ambiente de teste • Desenvolvido por
                 <Link href={SYSTEM.URL_LINKEDIN} target='_blank' rel='noopener noreferrer'>
                     <span>{SYSTEM.AUTHOR}</span>
                 </Link>

@@ -2,7 +2,6 @@
 Resolver o TO DO em PayCompanyInvoice;
 
 ⦁	Módulo de Ordem de serviço:
-Criar classe;
 Criar UseCase e dependências;
 Criar endpoint;
 Criar teste de integração;
@@ -15,7 +14,5 @@ Criar endpoint;
 Criar teste de integração;
 Criar front;
 
-⦁	Módulo de Gestão financeira:
-Resolver o TO DO (após finalizar o módulo de ordem de serviço);
-Criar teste de integração;
-Refatorar gráfico do front;
+⦁	Módulo de Gestão financeira (Sales):
+Criar uns KPIs no front-end;

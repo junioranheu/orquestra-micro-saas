@@ -92,7 +92,7 @@ export default function CardCalendar({ me }: iProps) {
                                 img={SvgTwo}
                                 isImgInsideOfCard={!windowSize.width ? false : windowSize.width < 1366}
                                 title='Simplifique a gestão da sua empresa'
-                                description={`Organize tudo em um só lugar, do jeito fácil.<br/>${SYSTEM.NAME}. ${SYSTEM.DESCRIPTION}.`}
+                                description={`Organize tudo o que você precisa em um só lugar, de forma simples, prática e sem complicação.<br/>${SYSTEM.NAME}. ${SYSTEM.DESCRIPTION}.`}
                                 buttonLabel={`Acessar ${dashboardRouteShortcut?.label.toLocaleLowerCase() ?? 'agendamentos'}`}
                                 buttonIcon='grid'
                                 buttonFunction={() => router.push(dashboardRouteShortcut?.value ?? ROUTES.EMPRESA_AGENDAMENTOS)}
