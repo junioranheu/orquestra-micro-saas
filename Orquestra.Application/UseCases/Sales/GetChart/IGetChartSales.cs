@@ -5,5 +5,5 @@ namespace Orquestra.Application.UseCases.Sales.GetChart;
 
 public interface IGetChartSales
 {
-    Task<SalesOutput> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId);
+    Task<SalesOutput> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId, string? dateInit, string? dateEnd);
 }

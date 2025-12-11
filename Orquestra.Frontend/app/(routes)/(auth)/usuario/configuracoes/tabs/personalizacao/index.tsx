@@ -36,13 +36,13 @@ interface iToggleContainerProps {
 function ToggleContainer({ toggleInfoContent, handleToggle, boolToggle }: iToggleContainerProps) {
     return (
         <div className={styles.toggleContainer}>
-            <div className={styles.toggleInfo}>
-                {toggleInfoContent}
-            </div>
-
             <button onClick={handleToggle} className={`${styles.toggle} ${boolToggle ? styles.toggleActive : ''}`}>
                 <span className={styles.toggleThumb} />
             </button>
+
+            <div className={styles.toggleInfo}>
+                {toggleInfoContent}
+            </div>
         </div>
     )
 }

@@ -15,7 +15,7 @@ public class SalesController(IGetChartSales getChart) : BaseController<SalesCont
 
     [AuthorizeFilter(modules: [ModuleEnum.Sales])]
     [HttpGet("GetChart")]
-    public async Task<ActionResult> GetChart([FromQuery] PaginationInput paginationInput, [FromQuery] Guid companyId)
+    public async Task<ActionResult> GetChart([FromQuery] PaginationInput paginationInput, [FromQuery] Guid companyId, [FromQuery] string? dateInit, [FromQuery] string? dateEnd)
     {
         if (companyId == Guid.Empty)
         {
@@ -23,7 +23,7 @@ public class SalesController(IGetChartSales getChart) : BaseController<SalesCont
         }
 
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        SalesOutput output = await _getChart.Execute(paginationInput, userIdAuth, companyId);
+        SalesOutput output = await _getChart.Execute(paginationInput, userIdAuth, companyId, dateInit, dateEnd);
 
         return Ok(output);
     }

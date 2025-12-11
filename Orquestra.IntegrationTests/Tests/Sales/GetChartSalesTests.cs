@@ -64,7 +64,7 @@ public sealed class GetChartSalesTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act;
-        SalesOutput output = await sut.Execute(pagination, user.UserId, company.CompanyId);
+        SalesOutput output = await sut.Execute(pagination, user.UserId, company.CompanyId, string.Empty, string.Empty);
 
         // Assert;
         Assert.NotNull(output);
@@ -94,7 +94,7 @@ public sealed class GetChartSalesTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(pagination, user.UserId, Guid.Empty));
+        await Assert.ThrowsAsync<ArgumentException>(() => sut.Execute(pagination, user.UserId, Guid.Empty, string.Empty, string.Empty));
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public sealed class GetChartSalesTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, company.CompanyId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, company.CompanyId, string.Empty, string.Empty));
     }
 
     [Fact]
@@ -147,7 +147,7 @@ public sealed class GetChartSalesTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, company.CompanyId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Execute(pagination, user.UserId, company.CompanyId, string.Empty, string.Empty));
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public sealed class GetChartSalesTests
         PaginationInput pagination = new() { Index = 0, Limit = 10 };
 
         // Act & Assert;
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(pagination, user.UserId, company.CompanyId));
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.Execute(pagination, user.UserId, company.CompanyId, string.Empty, string.Empty));
     }
 
     #region helpers

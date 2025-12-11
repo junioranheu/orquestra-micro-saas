@@ -15,4 +15,4 @@ Criar teste de integração;
 Criar front;
 
 ⦁	Módulo de Gestão financeira (Sales):
-Criar uns KPIs no front-end;
+Adicionar um filtro de data;

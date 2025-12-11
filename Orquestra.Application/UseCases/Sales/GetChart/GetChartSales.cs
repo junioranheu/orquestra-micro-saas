@@ -15,7 +15,7 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
 
-    public async Task<SalesOutput> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId)
+    public async Task<SalesOutput> Execute(PaginationInput pagination, Guid userIdAuth, Guid companyId, string? dateInit, string? dateEnd)
     {
         if (companyId == Guid.Empty)
         {
@@ -27,12 +27,20 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
 
         List<SalesTableOutput> table = [];
 
-        await GetDataFromInventory(table, companyId);
-        await GetDataFromSchedule(table, companyId);
+        (DateTime? dataInitNormalized, DateTime? dateEndNormalized) = ConvertDates(dateInit, dateEnd);
+        await GetDataFromInventory(table, companyId, dataInitNormalized, dateEndNormalized);
+        await GetDataFromSchedule(table, companyId, dataInitNormalized, dateEndNormalized);
 
         if (table is null || table.Count == 0)
         {
-            throw new KeyNotFoundException("Nenhum registro foi encontrado na base de dados para montar os gráficos e tabela da gestão financeira da sua empresa.");
+            const string NOT_FOUND = "Nenhum registro foi encontrado na base de dados para montar os gráficos e tabela da gestão financeira da sua empresa.";
+
+            if (!string.IsNullOrEmpty(dateInit) || !string.IsNullOrEmpty(dateEnd))
+            {
+                throw new KeyNotFoundException($"Verifique os filtros pois {NOT_FOUND.ToLowerInvariant()}");
+            }
+
+            throw new KeyNotFoundException(NOT_FOUND);
         }
 
         List<SalesChartOutput> chartOutput = GetChartOutput(table);
@@ -65,14 +73,34 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
         throw new InvalidOperationException($"Para acessar o módulo <b>{GetEnumDesc(ModuleEnum.Sales).ToLowerInvariant()}</b> é necessário ter o plano <b>{GetEnumDesc(PlanTypeEnum.Premium).ToLowerInvariant()}</b> ativo.");
     }
 
-    private async Task GetDataFromInventory(List<SalesTableOutput> table, Guid companyId)
+    private static (DateTime? dataInitNormalized, DateTime? dateEndNormalized) ConvertDates(string? dateInit, string? dateEnd)
+    {
+        DateTime? dataInitNormalized = null;
+        DateTime? dateEndNormalized = null;
+
+        if (!string.IsNullOrWhiteSpace(dateInit) && DateTime.TryParse(dateInit, out DateTime init))
+        {
+            dataInitNormalized = init.Date;
+        }
+
+        if (!string.IsNullOrWhiteSpace(dateEnd) && DateTime.TryParse(dateEnd, out DateTime end))
+        {
+            dateEndNormalized = end.Date.AddDays(1).AddTicks(-1);
+        }
+
+        return (dataInitNormalized, dateEndNormalized);
+    }
+
+    private async Task GetDataFromInventory(List<SalesTableOutput> table, Guid companyId, DateTime? dataInit, DateTime? dateEnd)
     {
         var items = await _context.Inventories.
                     AsNoTracking().
                     Where(x =>
                         x.CompanyId == companyId &&
                         x.Status == true &&
-                        x.UnitPrice != 0
+                        x.UnitPrice != 0 &&
+                        (!dataInit.HasValue || x.CreatedDate >= dataInit.Value) &&
+                        (!dateEnd.HasValue || x.CreatedDate <= dateEnd.Value)
                     ).
                     Select(x => new SalesTableOutput
                     {
@@ -93,7 +121,7 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
         table.AddRange(items);
     }
 
-    private async Task GetDataFromSchedule(List<SalesTableOutput> table, Guid companyId)
+    private async Task GetDataFromSchedule(List<SalesTableOutput> table, Guid companyId, DateTime? dataInit, DateTime? dateEnd)
     {
         var items = await _context.Schedules.
                     Include(x => x.Client).
@@ -101,7 +129,9 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                     Where(x =>
                         x.CompanyId == companyId &&
                         x.Status == true &&
-                        x.AmountReceived > 0
+                        x.AmountReceived > 0 &&
+                        (!dataInit.HasValue || x.CreatedDate >= dataInit.Value) &&
+                        (!dateEnd.HasValue || x.CreatedDate <= dateEnd.Value)
                     ).
                     Select(x => new SalesTableOutput
                     {

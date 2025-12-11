@@ -3,9 +3,13 @@ import { CONSTS_SALES, iSalesOutput, iSalesTableOutput } from '@/app/api/consts/
 import SvgSales from '@/app/assets/svg/sales.svg';
 import CardKpi from '@/app/components/card/kpi';
 import CardSimple from '@/app/components/card/simple';
+import Icon from '@/app/components/icon';
+import Button from '@/app/components/input/button';
+import InputMask from '@/app/components/input/text';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import ROUTES from '@/app/consts/routes';
+import { handleClearFormData } from '@/app/functions/set.formState';
 import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
@@ -13,6 +17,11 @@ import useTitle from '@/app/hooks/useTitle';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import EmpresaFinanceiroChart from './components/chart';
+
+interface iFormDataFilter {
+    dateInit: string | null;
+    dateEnd: string | null;
+}
 
 export default function EmpresaFinanceiro() {
 
@@ -22,15 +31,49 @@ export default function EmpresaFinanceiro() {
     const router = useRouter();
 
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [modalFilterFormData, setModalFilterFormData] = useState<iFormDataFilter>({
+        dateInit: null, dateEnd: null
+    });
+
     const [sales, setSales] = useState<iSalesOutput | undefined>(undefined);
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_SALES.getChart);
     useApiRequestToSetterOnUrlChange<iSalesOutput>({ apiUrlRequest: apiUrlRequest, setter: setSales, hasPaginationInput: true, index: currentPage });
 
-    useEffect(() => {
+    function handleUpdateApiUrlRequest() {
         if (me && me?.currentMainCompany?.companyId) {
-            setApiUrlRequest(`${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`);
+            let url = `${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`;
+
+            if (modalFilterFormData.dateInit) {
+                url += `&dateInit=${modalFilterFormData.dateInit}`;
+            }
+
+            if (modalFilterFormData.dateEnd) {
+                url += `&dateEnd=${modalFilterFormData.dateEnd}`;
+            }
+
+            console.clear();
+            console.log('url', url);
+            setApiUrlRequest(url);
         }
+    }
+
+    useEffect(() => {
+        handleUpdateApiUrlRequest();
     }, [me]);
+
+    function handleFetch() {
+        if (dateInit && dateEnd) {
+            const init = new Date(dateInit);
+            const end = new Date(dateEnd);
+
+            if (end < init) {
+                toast.error('A data final não pode ser menor que a inicial 🫠');
+                return;
+            }
+        }
+
+        handleUpdateApiUrlRequest();
+    }
 
     const columns = [
         {
@@ -102,6 +145,25 @@ export default function EmpresaFinanceiro() {
                 description={`Acompanhe as finanças da sua empresa de forma prática e eficiente.<br/>Os dados financeiros são automaticamente atualizados com informações dos módulos <a href='${ROUTES.EMPRESA_AGENDAMENTOS}'>agenda</a> e <a href='${ROUTES.EMPRESA_ORDEM_DE_SERVICO}'>ordens de serviço</a>, proporcionando uma visão completa e integrada do seu fluxo de caixa, custos e vendas.`}
                 style={{ marginBottom: '2rem' }}
             />
+
+            <div style={{ backgroundColor: 'tomato' }}>
+                <h1>{apiUrlRequest}</h1>
+                <InputMask type='date' title='Data inicial' fieldName='dateInit' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+                <InputMask type='date' title='Data final' fieldName='dateEnd' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
+
+                <Button
+                    label='Limpar filtros'
+                    styleType='transparent'
+                    handleFunction={() => handleClearFormData(setModalFilterFormData)}
+                />
+
+                <Button
+                    label='Filtrar'
+                    // styleType='transparent'
+                    handleFunction={() => handleFetch()}
+                    icon_feather={<Icon icon='filter' size='small' />}
+                />
+            </div>
 
             <CardKpi
                 kpis={[
