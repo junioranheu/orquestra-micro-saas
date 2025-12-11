@@ -46,9 +46,6 @@ export default function EmpresaFinanceiro() {
                         case 'estoque':
                             router.push(ROUTES.EMPRESA_ESTOQUE);
                             break;
-                        case 'ordem de serviço':
-                            router.push(ROUTES.EMPRESA_ORDEM_DE_SERVICO);
-                            break;
                         default:
                             toast({ content: 'Navegação não disponível para este tipo de registro.' });
                             break;
@@ -74,7 +71,7 @@ export default function EmpresaFinanceiro() {
             title: 'Título',
             dataIndex: 'title',
             key: 'title',
-            width: '16rem'
+            width: '40rem'
         },
         {
             title: 'Valor',
@@ -115,4 +112,3 @@ export default function EmpresaFinanceiro() {
         </TemplatePageHeader>
     )
 }
-
