@@ -1,5 +1,5 @@
 'use client';
-import Tag from '@/app/components/tag';
+import Tag from '@/app/components/tags/tag';
 import { handleLoopFormData } from '@/app/functions/set.formState';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.module.scss';

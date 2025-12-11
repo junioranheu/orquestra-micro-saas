@@ -37,12 +37,16 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
 
         List<SalesChartOutput> chartOutput = GetChartOutput(table);
         List<SalesTableOutput> tableOutput = GetTableOutput(table, pagination);
+        (decimal cashInflow, decimal cashOutflow, decimal finalBalance) = GetCashFlowSummary(chartOutput);
 
         SalesOutput output = new()
         {
             Table = tableOutput,
             TableTotalCount = table.Count,
-            Chart = chartOutput
+            Chart = chartOutput,
+            CashInflow = cashInflow,
+            CashOutflow = cashOutflow,
+            FinalBalance = finalBalance
         };
 
         return output;
@@ -152,6 +156,15 @@ public sealed class GetChartSales(Context context, ICheckIfUserIsLinkedCompanyUs
                                         Take(pagination.IsSelectAll ? int.MaxValue : pagination.Limit)];
 
         return output;
+    }
+
+    private static (decimal cashInflow, decimal cashOutflow, decimal finalBalance) GetCashFlowSummary(List<SalesChartOutput> chartOutput)
+    {
+        decimal cashInflow = chartOutput.SelectMany(x => x.Items).Where(x => x.Value > 0).Sum(x => x.Value);
+        decimal cashOutflow = chartOutput.SelectMany(x => x.Items).Where(x => x.Value < 0).Sum(x => x.Value);
+        decimal finalBalance = cashInflow - Math.Abs(cashOutflow);
+
+        return (cashInflow, cashOutflow, finalBalance);
     }
     #endregion
 }

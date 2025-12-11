@@ -9,7 +9,7 @@ import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
-import Tags from '@/app/components/tags';
+import TagList from '@/app/components/tags/tag-list';
 import SYSTEM from '@/app/consts/system';
 import { handleFetchCEP } from '@/app/functions/fetch.CEP';
 import { handleFormatDateToInputValue } from '@/app/functions/format.date';
@@ -202,7 +202,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
 
                     <div className={styles.modalHeaderRight}>
                         <div className={styles.metaRow}>
-                            <Tags
+                            <TagList
                                 tags={[
                                     { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                 ]}

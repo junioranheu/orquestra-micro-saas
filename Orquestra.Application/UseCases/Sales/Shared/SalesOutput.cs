@@ -5,6 +5,9 @@ public sealed class SalesOutput
     public required List<SalesTableOutput> Table { get; set; } = [];
     public required int TableTotalCount { get; set; }
     public required List<SalesChartOutput> Chart { get; set; } = [];
+    public required decimal CashInflow { get; set; }
+    public required decimal CashOutflow { get; set; }
+    public required decimal FinalBalance { get; set; }
 }
 
 public sealed class SalesTableOutput

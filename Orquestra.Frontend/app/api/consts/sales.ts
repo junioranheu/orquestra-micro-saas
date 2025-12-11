@@ -11,6 +11,9 @@ export interface iSalesOutput {
     table: iSalesTableOutput[];
     tableTotalCount: number;
     chart: iSalesChartOutput[];
+    cashInflow: number;
+    cashOutflow: number;
+    finalBalance: number;
 }
 
 export interface iSalesTableOutput {

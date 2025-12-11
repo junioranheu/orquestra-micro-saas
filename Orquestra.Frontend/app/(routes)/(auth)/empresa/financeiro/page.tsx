@@ -1,6 +1,7 @@
 'use client';
 import { CONSTS_SALES, iSalesOutput, iSalesTableOutput } from '@/app/api/consts/sales';
 import SvgSales from '@/app/assets/svg/sales.svg';
+import CardKpi from '@/app/components/card/kpi';
 import CardSimple from '@/app/components/card/simple';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
@@ -87,12 +88,27 @@ export default function EmpresaFinanceiro() {
         }
     ] as iTableColumn[];
 
+    function handleFormatCurrencyKpi(amount?: number): string {
+        const value = `R$ ${(amount ?? 0).toFixed(2)}`;
+        const color = (amount ?? 0) === 0 ? 'inherit' : (amount ?? 0) > 0 ? 'var(--main)' : 'var(--red)';
+        return `<span style='color: ${color}'>${value}</span>`;
+    }
+
     return (
         <TemplatePageHeader title='Gestão financeira'>
             <CardSimple
                 img={SvgSales}
                 title={`Finanças ${me?.currentMainCompany?.name ? `• ${me.currentMainCompany.name}` : ''}`}
                 description={`Acompanhe as finanças da sua empresa de forma prática e eficiente.<br/>Os dados financeiros são automaticamente atualizados com informações dos módulos <a href='${ROUTES.EMPRESA_AGENDAMENTOS}'>agenda</a> e <a href='${ROUTES.EMPRESA_ORDEM_DE_SERVICO}'>ordens de serviço</a>, proporcionando uma visão completa e integrada do seu fluxo de caixa, custos e vendas.`}
+                style={{ marginBottom: '2rem' }}
+            />
+
+            <CardKpi
+                kpis={[
+                    { title: 'Entrada', description: handleFormatCurrencyKpi(sales?.cashInflow) },
+                    { title: 'Saída', description: handleFormatCurrencyKpi(sales?.cashOutflow) },
+                    { title: 'Resultado', description: handleFormatCurrencyKpi(sales?.finalBalance) }
+                ]}
                 style={{ marginBottom: '2rem' }}
             />
 

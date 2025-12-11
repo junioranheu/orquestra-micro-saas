@@ -4,7 +4,7 @@ import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
-import Tags from '@/app/components/tags';
+import TagList from '@/app/components/tags/tag-list';
 import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
@@ -76,7 +76,7 @@ export default function EmpresaMembrosModalFilters({
 
                     <div className={styles.modalHeaderRight}>
                         <div className={styles.metaRow}>
-                            <Tags
+                            <TagList
                                 tags={[
                                     { label: '✖', color: 'transparent', handleFunction: () => setIsModalOpen(false), title: 'Fechar' }
                                 ]}

@@ -5,7 +5,7 @@ import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
-import Tags from '@/app/components/tags';
+import TagList from '@/app/components/tags/tag-list';
 import SYSTEM from '@/app/consts/system';
 import { handleClearFormData } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
@@ -86,7 +86,7 @@ export default function LoginModalRecuperarSenha({ isModalOpen, setIsModalOpen }
 
                     <div className={styles.modalHeaderRight}>
                         <div className={styles.metaRow}>
-                            <Tags
+                            <TagList
                                 tags={[
                                     { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                 ]}

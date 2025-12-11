@@ -12,7 +12,7 @@ interface iProps {
     tags: iTagItem[];
 }
 
-export default function Tags({ tags }: iProps) {
+export default function TagList({ tags }: iProps) {
     return (
         <div className={styles.tags}>
             {

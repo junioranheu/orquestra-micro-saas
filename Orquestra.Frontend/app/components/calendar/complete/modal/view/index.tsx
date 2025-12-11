@@ -10,7 +10,7 @@ import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
-import Tags from '@/app/components/tags';
+import TagList from '@/app/components/tags/tag-list';
 import WhatsappWebShortcut from '@/app/components/whatsapp/whatsapp-web-shortcut';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
@@ -306,7 +306,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                         <div className={styles.metaRow}>
                             {
                                 type === 'edit' ? (
-                                    <Tags
+                                    <TagList
                                         tags={[
                                             { label: handleFormatDate(event.start, DATE_STYLE.DETALHADO_SEM_SEGUNDOS), color: handleIsBeforeTodayWithTime(event.start) ? 'var(--gray-dark)' : '' },
                                             { label: scheduleStatusEnum?.find(x => x.value.toString() === formData.scheduleStatus?.toString())?.label ?? '' },
@@ -316,7 +316,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                                         ]}
                                     />
                                 ) : (
-                                    <Tags
+                                    <TagList
                                         tags={[
                                             { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
                                         ]}

@@ -4,7 +4,7 @@ import Button from '@/app/components/input/button';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
-import Tags from '@/app/components/tags';
+import TagList from '@/app/components/tags/tag-list';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
 import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
 import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
@@ -61,7 +61,7 @@ export default function EmpresaEstoqueModalFilters({
 
                     <div className={styles.modalHeaderRight}>
                         <div className={styles.metaRow}>
-                            <Tags
+                            <TagList
                                 tags={[
                                     { label: '✖', color: 'transparent', handleFunction: () => setIsModalOpen(false), title: 'Fechar' }
                                 ]}

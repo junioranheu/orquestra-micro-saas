@@ -9,7 +9,7 @@ import InputImage from '@/app/components/input/image';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
-import Tags from '@/app/components/tags';
+import TagList from '@/app/components/tags/tag-list';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleFetchCEP } from '@/app/functions/fetch.CEP';
@@ -245,7 +245,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
 
                     <div className={styles.modalHeaderRight}>
                         <div className={styles.metaRow}>
-                            <Tags
+                            <TagList
                                 tags={[
                                     ...(type === 'edit' ? [{ label: company?.status ? 'Empresa verificada' : 'Empresa pendente de validação', title: company?.status ? 'Tudo certo! Essa empresa já foi verificada' : 'Parece que essa empresa ainda não foi verificada via e-mail', },] : []),
                                     { label: '✖', color: 'transparent', handleFunction: () => handleClose(), title: 'Fechar' }
