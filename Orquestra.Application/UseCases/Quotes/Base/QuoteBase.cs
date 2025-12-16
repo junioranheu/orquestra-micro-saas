@@ -1,6 +1,6 @@
 ﻿using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Quotes.Shared;
-using static Orquestra.Utils.Fixtures.Get;
+using static Orquestra.Utils.Fixtures.CommonForBases;
 
 namespace Orquestra.Application.UseCases.Quotes.Base;
 
@@ -22,7 +22,7 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
             throw new ArgumentException("A observação não é válida.");
         }
 
-        IsDateValidUntilValid(input);
+        IsDateValid(input, x => x.ValidUntil, (x, value) => x.ValidUntil = value);
 
         if (input.Items is null || input.Items.Count == 0)
         {
@@ -47,46 +47,4 @@ public partial class QuoteBase(ICheckIfUserIsLinkedCompanyUser checkIfUserIsLink
             }
         }
     }
-
-    #region extras
-    protected static bool IsNameValid(string? name) => !string.IsNullOrWhiteSpace(name) && name.Trim().Length is >= 2 and <= 120;
-    protected static bool IsDescriptionValid(string? description) => description == null || description.Trim().Length <= 255;
-    protected static bool IsQuantityValid(int quantity) => quantity > 0;
-    protected static bool IsUnitPriceValid(decimal? unitPrice) => unitPrice is null or >= 0;
-
-    protected static void IsDateValidUntilValid(QuoteInput input)
-    {
-        // Workaround;
-        if (input?.ValidUntil?.Date == DateTime.MinValue || input?.ValidUntil?.Date == new DateTime(2001, 1, 1))
-        {
-            input.ValidUntil = null;
-        }
-
-        if (input?.ValidUntil is null || input?.ValidUntil?.Date == DateTime.MinValue || input?.ValidUntil?.Date == new DateTime(2001, 1, 1))
-        {
-            // throw new ArgumentException("A data de validade é obrigatória.");
-            return;
-        }
-
-        // Normalizar a data do input (que vem do front-end), para ficar UTC;
-        input!.ValidUntil = ConvertToBrasiliaTime(input.ValidUntil.GetValueOrDefault()); 
-
-        // Comparar apenas com a data;
-        DateTime date;
-
-        try
-        {
-            date = input.ValidUntil.Value.Date;
-        }
-        catch
-        {
-            throw new ArgumentException("A data de validade é inválida.");
-        }
-
-        if (date.Date < ConvertToBrasiliaTime(GetDate()).Date)
-        {
-            throw new ArgumentException("A data de validade não pode ser anterior a hoje.");
-        }
-    }
-    #endregion
 }

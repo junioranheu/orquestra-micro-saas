@@ -1,5 +1,6 @@
 ﻿using Orquestra.Application.UseCases.Users.Get;
 using Orquestra.Application.UseCases.Users.Shared;
+using static Orquestra.Utils.Fixtures.CommonForBases;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -66,11 +67,6 @@ public partial class UserBase(IGetUser getUser)
     }
 
     #region extras
-    private static bool IsFullNameValid(string fullName)
-    {
-        return RegexName().IsMatch(fullName);
-    }
-
     // Pelo menos 8 caracteres, 1 digito OU 1 caracter especial;
     private static bool IsPasswordValid(string password)
     {

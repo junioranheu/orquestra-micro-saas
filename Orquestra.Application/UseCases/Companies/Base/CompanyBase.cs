@@ -18,6 +18,7 @@ using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Env.Models;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
+using static Orquestra.Utils.Fixtures.CommonForBases;
 
 namespace Orquestra.Application.UseCases.Companies.Base;
 
@@ -173,11 +174,6 @@ public partial class CompanyBase(CompanyBaseDependencies deps)
 
     #region extras
     // Basic;
-    private static bool IsNameValid(string name)
-    {
-        return !string.IsNullOrWhiteSpace(name);
-    }
-
     private static bool IsEmailValid(string email)
     {
         if (string.IsNullOrWhiteSpace(email))

@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Application.UseCases.Inventories.Shared;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.CommonForBases;
 using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Application.UseCases.Inventories.Base;
@@ -54,11 +55,4 @@ public partial class InventoryBase(Context context, ICheckIfUserIsLinkedCompanyU
         }
         #endregion
     }
-
-    #region extras
-    protected static bool IsNameValid(string? name) => !string.IsNullOrWhiteSpace(name) && name.Trim().Length is >= 2 and <= 120;
-    protected static bool IsDescriptionValid(string? description) => description == null || description.Trim().Length <= 255;
-    protected static bool IsQuantityValid(int quantity) => quantity >= 0;
-    protected static bool IsUnitPriceValid(decimal? unitPrice) => unitPrice is null or >= 0;
-    #endregion
 }

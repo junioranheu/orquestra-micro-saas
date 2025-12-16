@@ -10,7 +10,7 @@ public sealed class ServiceOrderOutput
     public Guid CompanyId { get; set; }
     public Company? Company { get; set; }
 
-    public Guid QuoteId { get; set; }
+    public Guid? QuoteId { get; set; }
     public Quote? Quote { get; set; }
 
     public Guid ClientId { get; set; }

@@ -2,8 +2,6 @@
 Resolver o TO DO em PayCompanyInvoice;
 
 ⦁	Módulo de Ordem de serviço:
-Criar UseCase e dependências;
-Criar endpoint;
 Criar teste de integração;
 Criar front;
 

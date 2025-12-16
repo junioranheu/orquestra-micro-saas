@@ -2,6 +2,7 @@
 using Orquestra.Application.UseCases.Clients.Shared;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Infrastructure.Data;
+using static Orquestra.Utils.Fixtures.CommonForBases;
 using static Orquestra.Utils.Fixtures.Get;
 using static Orquestra.Utils.Fixtures.RegexPatterns;
 
@@ -74,11 +75,6 @@ public partial class ClientBase(Context context, ICheckIfUserIsLinkedCompanyUser
     }
 
     #region extras
-    private static bool IsFullNameValid(string fullName)
-    {
-        return RegexName().IsMatch(fullName);
-    }
-
     private static bool IsPhoneValid(string? phone)
     {
         if (string.IsNullOrWhiteSpace(phone))
