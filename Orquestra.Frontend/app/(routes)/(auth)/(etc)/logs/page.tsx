@@ -1,6 +1,7 @@
 'use client';
-import { CONSTS_LOG, iLog, iLogPaginated } from '@/app/api/consts/log';
+import { CONSTS_LOG, iLog, iLogNotificationOutput, iLogPaginated } from '@/app/api/consts/log';
 import Icon from '@/app/components/icon';
+import NotificationJsonVisualize from '@/app/components/notification-json-visualize';
 import TableGeneric, { iTableColumn, iTableExtraItems, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import SYSTEM from '@/app/consts/system';
@@ -28,7 +29,8 @@ export default function Logs() {
             title: 'Data',
             dataIndex: 'createdDate',
             key: 'createdDate',
-            render: (value: string) => new Date(value).toLocaleString('pt-BR')
+            render: (value: string) => new Date(value).toLocaleString('pt-BR'),
+            width: '1rem'
         },
         {
             title: 'Tipo de log',
@@ -43,44 +45,39 @@ export default function Logs() {
                 };
 
                 return map[value] ?? '-';
-            }
+            },
+            width: '5rem'
         },
         {
             title: 'Status',
             dataIndex: 'status',
-            key: 'status'
+            key: 'status',
+            width: '1rem'
         },
         {
             title: 'Endpoint',
             dataIndex: 'endpoint',
-            key: 'endpoint'
+            key: 'endpoint',
+            width: '5rem'
         },
         {
             title: 'Descrição',
             dataIndex: 'description',
-            key: 'description'
+            key: 'description',
+            width: '8rem'
         },
         {
             title: 'Modificações',
             dataIndex: 'changedFields',
             key: 'changedFields',
+            width: '15rem',
             render: (value: string) => {
-                let parsed: any;
-
-                try {
-                    parsed = JSON.parse(value);
-                } catch {
-                    parsed = value;
-                }
+                const notification: iLogNotificationOutput = {
+                    changedFields: value
+                };
 
                 return (
-                    <pre style={{
-                        whiteSpace: 'pre-wrap',
-                        wordWrap: 'break-word',
-                        margin: 0
-                    }}>
-                        {typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : parsed}
-                    </pre>
+                    <NotificationJsonVisualize notification={notification} theme='inherit' />
                 );
             }
         }

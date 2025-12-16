@@ -1,5 +1,6 @@
 'use client';
-import { CONSTS_LOG, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
+import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
+import NotificationJsonVisualize from '@/app/components/notification-json-visualize';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
@@ -27,21 +28,6 @@ export default function UsuarioNotificacoes() {
             render: (value: string) => new Date(value).toLocaleString('pt-BR'),
             width: '12rem'
         },
-        // {
-        //     title: 'Tipo',
-        //     dataIndex: 'logType',
-        //     key: 'logType',
-        //     render: (value: string, record: iLogNotificationOutput) => (
-        //         <div style={{
-        //             minWidth: 'fit-content',
-        //             whiteSpace: 'nowrap',
-        //             overflow: 'hidden',
-        //             textOverflow: 'ellipsis'
-        //         }}>
-        //             {record.emoji} {value}
-        //         </div>
-        //     )
-        // },
         {
             title: 'Notificação',
             dataIndex: 'story',
@@ -53,22 +39,12 @@ export default function UsuarioNotificacoes() {
             dataIndex: 'changedFields',
             key: 'changedFields',
             render: (value: string) => {
-                let parsed: any;
-
-                try {
-                    parsed = JSON.parse(value);
-                } catch {
-                    parsed = value;
-                }
+                const notification: iLogNotificationOutput = {
+                    changedFields: value
+                };
 
                 return (
-                    <pre style={{
-                        whiteSpace: 'pre-wrap',
-                        wordWrap: 'break-word',
-                        margin: 0
-                    }}>
-                        {typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : parsed}
-                    </pre>
+                    <NotificationJsonVisualize notification={notification} theme='inherit' />
                 );
             }
         }

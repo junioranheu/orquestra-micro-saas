@@ -29,15 +29,15 @@ export interface iLogPaginated {
 }
 
 export interface iLogNotificationOutput {
-    logId: Guid;
-    emoji: string;
+    logId?: Guid;
+    emoji?: string;
     logType?: string;
     requestType?: string;
     endpointName?: string;
     rawEndpoint?: string;
     description?: string;
     story?: string;
-    date: Date;
+    date?: Date;
     changedFields?: string;
 }
 

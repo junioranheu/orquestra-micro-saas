@@ -13,6 +13,7 @@ import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { useShowLogsDashboard } from '@/app/hooks/contexts/useGlobalContext';
 import { useFakeLoading } from '@/app/hooks/useFakeLoader';
 import Tippy from '@tippyjs/react';
+import { Guid } from 'guid-typescript';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -78,7 +79,10 @@ export default function CardNotifications({ me }: iProps) {
 
                         {
                             notifications.map(notification => (
-                                <NotificationItem key={notification.logId.toString()} notification={notification} />
+                                <NotificationItem
+                                    key={notification?.logId ? notification?.logId.toString() : Guid.create().toString()}
+                                    notification={notification}
+                                />
                             ))
                         }
                     </div>
@@ -101,7 +105,7 @@ function NotificationItem({ notification }: { notification: iLogNotificationOutp
     const [open, setOpen] = useState<boolean>(false);
 
     return (
-        <div key={notification.logId.toString()} className={styles.scheduleItem}>
+        <div key={notification?.logId ? notification?.logId.toString() : Guid.create().toString()} className={styles.scheduleItem}>
             <div className={styles.info}>
                 <Tippy content={(open ? 'Esconder detalhes' : 'Visualizar detalhes')}>
                     <div className={styles.name} style={{ cursor: 'help' }} onClick={() => setOpen(!open)}>
@@ -117,7 +121,7 @@ function NotificationItem({ notification }: { notification: iLogNotificationOutp
                         )
                     }
                 </div>
-            </div >
+            </div>
 
             <div className={styles.right}>
                 {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
