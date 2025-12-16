@@ -23,6 +23,7 @@ public sealed class GetAllQuoteByCompanyId(Context context, ICheckIfUserIsLinked
                     AsNoTracking().
                     Where(x =>
                         x.CompanyId == companyId &&
+                        ((input.ClientId == null || input.ClientId == Guid.Empty) || x.ClientId == input.ClientId) &&
                         ((input.QuoteId == null || input.QuoteId == Guid.Empty) || x.QuoteId == input.QuoteId) &&
                         (string.IsNullOrEmpty(input.Title) || x.Title!.ToLower().Contains(input.Title.ToLower())) &&
                         (string.IsNullOrEmpty(input.Observation) || x.Observation!.ToLower().Contains(input.Observation!.ToLower())) &&

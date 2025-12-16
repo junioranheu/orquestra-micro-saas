@@ -90,7 +90,7 @@ export default function EmpresaAcompanhamento() {
                 img={SvgFollowUp}
                 title='Acompanhamentos'
                 description='Crie e gerencie acompanhamentos personalizados para cada cliente.<br/>Acesse a tela de clientes e selecione um deles para visualizar o detalhamento e cadastrar novos acompanhamentos.'
-                buttonLabel='Ir para clientes'
+                buttonLabel='Acessar tela de clientes registrados na sua empresa'
                 buttonFunction={() => router.push(ROUTES.EMPRESA_CLIENTES)}
                 style={{ marginBottom: '2rem' }}
             />

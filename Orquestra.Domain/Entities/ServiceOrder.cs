@@ -13,7 +13,7 @@ public sealed class ServiceOrder : Audit
     [ForeignKey(nameof(CompanyId))]
     public Company? Company { get; set; }
 
-    public Guid QuoteId { get; set; }
+    public Guid? QuoteId { get; set; } // Nullable;
     [ForeignKey(nameof(QuoteId))]
     public Quote? Quote { get; set; }
 

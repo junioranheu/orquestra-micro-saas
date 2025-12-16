@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Orquestra.Application.UseCases.Clients.Delete;
 using Orquestra.Application.UseCases.CompanyUsers.CheckIfUserIsLinked;
 using Orquestra.Domain.Consts;
 using Orquestra.Domain.Entities;
@@ -7,7 +6,7 @@ using Orquestra.Infrastructure.Data;
 
 namespace Orquestra.Application.UseCases.Quotes.Delete;
 
-public sealed class DeleteQuote(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IDeleteClient, IDeleteQuote
+public sealed class DeleteQuote(Context context, ICheckIfUserIsLinkedCompanyUser checkIfUserIsLinkedCompanyUser) : IDeleteQuote
 {
     private readonly Context _context = context;
     private readonly ICheckIfUserIsLinkedCompanyUser _checkIfUserIsLinkedCompanyUser = checkIfUserIsLinkedCompanyUser;
