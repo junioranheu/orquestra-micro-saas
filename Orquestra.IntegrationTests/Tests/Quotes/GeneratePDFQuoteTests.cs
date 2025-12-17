@@ -14,6 +14,7 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Quotes;
 
+[Collection("PDF")]
 public sealed class GeneratePDFQuoteTests
 {
     [Fact]
