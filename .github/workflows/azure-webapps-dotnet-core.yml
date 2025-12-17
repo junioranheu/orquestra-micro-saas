@@ -18,8 +18,7 @@ on:
   workflow_dispatch:
 
 env:
-  # DOTNET_VERSION: '10.x'           
-  DOTNET_VERSION: '10.0.100'
+  DOTNET_VERSION: '10.x'           
   BUILD_CONFIGURATION: 'Release'   
   AZURE_WEBAPP_NAME: 'orquestra-api-linux'  
   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  
@@ -27,8 +26,7 @@ env:
 jobs:
   build-and-test:
     name: Build and test back-end
-    # runs-on: ubuntu-latest
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
  
     steps:
       # 1️⃣ Checkout do código
