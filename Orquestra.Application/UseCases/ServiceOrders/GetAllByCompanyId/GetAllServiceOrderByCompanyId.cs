@@ -17,12 +17,13 @@ public sealed class GetAllServiceOrderByCompanyId(Context context, ICheckIfUserI
     {
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId, userId: userIdAuth, needCompanyAdmin: false);
 
-        var query = _context.ServiceOrder.
+        var query = _context.ServiceOrders.
                     Include(x => x.Client).
                     Include(x => x.Company).
                     AsNoTracking().
                     Where(x =>
                         x.CompanyId == companyId &&
+                        ((input.ServiceOrderId == null || input.ServiceOrderId == Guid.Empty) || x.ServiceOrderId == input.ServiceOrderId) &&
                         ((input.ClientId == null || input.ClientId == Guid.Empty) || x.ClientId == input.ClientId) &&
                         ((input.QuoteId == null || input.QuoteId == Guid.Empty) || x.QuoteId == input.QuoteId) &&
                         (string.IsNullOrEmpty(input.Title) || x.Title!.ToLower().Contains(input.Title.ToLower())) &&

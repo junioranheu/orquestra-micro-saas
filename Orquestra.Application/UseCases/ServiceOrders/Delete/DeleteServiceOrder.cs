@@ -13,9 +13,9 @@ public sealed class DeleteServiceOrder(Context context, ICheckIfUserIsLinkedComp
 
     public async Task Execute(Guid userIdAuth, Guid serviceOrderId)
     {
-        ServiceOrder? order = await _context.ServiceOrder.
+        ServiceOrder? order = await _context.ServiceOrders.
                               // AsNoTracking(). // Propositalmente sem AsNoTracking;
-                              Where(x => x.QuoteId == serviceOrderId).
+                              Where(x => x.ServiceOrderId == serviceOrderId).
                               FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
 
         await _checkIfUserIsLinkedCompanyUser.Execute(companyId: order.CompanyId, userId: userIdAuth, needCompanyAdmin: true);

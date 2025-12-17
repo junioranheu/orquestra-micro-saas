@@ -14,9 +14,9 @@ public sealed class UpdateServiceOrder(Context context, ICheckIfUserIsLinkedComp
 
     public async Task Execute(Guid userIdAuth, ServiceOrderInput input)
     {
-        ServiceOrder? order = await _context.ServiceOrder.
+        ServiceOrder? order = await _context.ServiceOrders.
                               // AsNoTracking(). // Propositalmente sem AsNoTracking;
-                              Where(x => x.QuoteId == input.QuoteId).
+                              Where(x => x.ServiceOrderId == input.ServiceOrderId).
                               FirstOrDefaultAsync() ?? throw new KeyNotFoundException(SystemConsts.Warnings.NotFoundData);
 
         await Validate(input, userIdAuth);
