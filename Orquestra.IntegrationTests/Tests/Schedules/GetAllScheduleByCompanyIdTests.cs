@@ -260,7 +260,7 @@ public sealed class GetAllScheduleByCompanyIdTests
         await Fixture.Save(context, client);
 
         // Todos fora do range (há 5 dias e daqui 5 dias);
-        DateTime today = DateTime.Today;
+        DateTime today = GetDate().Date;
         Schedule oldSched = ScheduleMock.Create(client.ClientId, company.CompanyId);
         oldSched.DateStart = today.AddDays(-5);
         oldSched.Status = true;

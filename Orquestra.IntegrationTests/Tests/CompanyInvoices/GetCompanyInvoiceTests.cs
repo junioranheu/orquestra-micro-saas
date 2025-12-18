@@ -8,6 +8,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.CompanyInvoices;
 
@@ -197,7 +198,7 @@ public sealed class GetCompanyInvoiceTests
             Description = "Plano Premium",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid,
             Status = true,
-            CreatedDate = DateTime.UtcNow.AddDays(-1)
+            CreatedDate = GetDate().AddDays(-1)
         });
 
         await Fixture.Save(context, new CompanyInvoice()
@@ -209,7 +210,7 @@ public sealed class GetCompanyInvoiceTests
             Description = "Plano Básico",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Pending,
             Status = true,
-            CreatedDate = DateTime.UtcNow.AddDays(-2)
+            CreatedDate = GetDate().AddDays(-2)
         });
 
         await Fixture.Save(context, new CompanyInvoice()
@@ -221,7 +222,7 @@ public sealed class GetCompanyInvoiceTests
             Description = "Plano Premium 2",
             CompanyInvoiceSituation = CompanyInvoiceSituationEnum.Paid,
             Status = true,
-            CreatedDate = DateTime.UtcNow
+            CreatedDate = GetDate()
         });
 
         GetCompanyInvoice sut = CreateSut(context, adminUser);

@@ -23,6 +23,7 @@ using Orquestra.Infrastructure.Services.Env;
 using Orquestra.Infrastructure.Services.Sms;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Companies;
 
@@ -90,7 +91,7 @@ public sealed class ResendVerifyEmailCompanyTests
 
         await Fixture.Save(context, oldVerification);
 
-        oldVerification.CreatedDate = DateTime.UtcNow.AddDays(-2); // Mais de 1 dia;
+        oldVerification.CreatedDate = GetDate().AddDays(-2); // Mais de 1 dia;
         context.Update(oldVerification);
         await context.SaveChangesAsync();
 
@@ -128,7 +129,7 @@ public sealed class ResendVerifyEmailCompanyTests
 
         await Fixture.Save(context, recentVerification);
 
-        recentVerification.CreatedDate = DateTime.UtcNow.AddHours(-12); // Menos de 1 dia;
+        recentVerification.CreatedDate = GetDate().AddHours(-12); // Menos de 1 dia;
         context.Update(recentVerification);
         await context.SaveChangesAsync();
 
@@ -158,7 +159,7 @@ public sealed class ResendVerifyEmailCompanyTests
 
         await Fixture.Save(context, oldVerification);
 
-        oldVerification.CreatedDate = DateTime.UtcNow.AddDays(-2); // Mais de 1 dia;
+        oldVerification.CreatedDate = GetDate().AddDays(-2); // Mais de 1 dia;
         context.Update(oldVerification);
         await context.SaveChangesAsync();
 
@@ -171,7 +172,7 @@ public sealed class ResendVerifyEmailCompanyTests
         List<Verification> verifications = await context.Verifications.Where(x => x.EntityId == company.CompanyId && x.VerificationType == VerificationTypeEnum.Company).ToListAsync();
 
         Assert.NotEmpty(verifications);
-        Assert.Contains(verifications, x => x.CreatedDate >= DateTime.UtcNow.AddMinutes(-1)); // Nova verificação criada agora;
+        Assert.Contains(verifications, x => x.CreatedDate >= GetDate().AddMinutes(-1)); // Nova verificação criada agora;
     }
 
     #region helpers

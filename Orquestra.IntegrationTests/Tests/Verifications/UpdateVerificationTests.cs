@@ -86,7 +86,7 @@ public sealed class UpdateVerificationTests
             EntityType = nameof(User),
             Used = false,
             Status = true,
-            ExpirationDate = DateTime.UtcNow.AddMinutes(-10)
+            ExpirationDate = GetDate().AddMinutes(-10)
         };
 
         await Fixture.Save(context, verification);
@@ -113,7 +113,7 @@ public sealed class UpdateVerificationTests
             EntityType = nameof(User),
             Used = false,
             Status = true,
-            ExpirationDate = DateTime.UtcNow.AddHours(1)
+            ExpirationDate = GetDate().AddHours(1)
         };
 
         await Fixture.Save(context, verification);
@@ -136,7 +136,7 @@ public sealed class UpdateVerificationTests
         UpdateVerification sut = CreateSut(context);
 
         string token = GenerateSafeToken32Bytes(urlSafe: true);
-        DateTime expiredAt = DateTime.UtcNow.AddHours(-1);
+        DateTime expiredAt = GetDate().AddHours(-1);
 
         Verification verification = new()
         {

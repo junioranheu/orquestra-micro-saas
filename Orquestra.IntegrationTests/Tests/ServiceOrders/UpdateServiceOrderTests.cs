@@ -10,6 +10,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.ServiceOrders;
 
@@ -155,7 +156,7 @@ public sealed class UpdateServiceOrderTests
             ClientId = clientId,
             Title = "OS Atualizada",
             Observation = "Nova observação",
-            ExecutionDate = DateTime.Today,
+            ExecutionDate = GetDate().Date.AddHours(22),
             ServiceOrderStatus = ServiceOrderStatusEnum.InProgress
         };
 

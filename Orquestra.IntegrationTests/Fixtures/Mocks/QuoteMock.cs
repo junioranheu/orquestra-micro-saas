@@ -1,5 +1,6 @@
 ﻿using Orquestra.Domain.Entities;
 using Orquestra.Domain.Enums;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Fixtures.Mocks;
 
@@ -15,11 +16,11 @@ public static class QuoteMock
             CompanyId = Guid.NewGuid(),
             Title = "Quote Teste",
             Observation = "Observação de teste",
-            ValidUntil = DateTime.UtcNow.AddDays(10),
+            ValidUntil = GetDate().AddDays(10),
             QuoteStatus = QuoteStatusEnum.Draft,
 
             CreatedBy = createdBy,
-            CreatedDate = DateTime.UtcNow,
+            CreatedDate = GetDate(),
             LastModificationBy = null,
             LastModificationDate = null,
 
@@ -33,7 +34,7 @@ public static class QuoteMock
                     UnitPrice = 50,
 
                     CreatedBy = createdBy,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = GetDate(),
                     LastModificationBy = null,
                     LastModificationDate = null
                 },
@@ -45,7 +46,7 @@ public static class QuoteMock
                     UnitPrice = 100,
 
                     CreatedBy = createdBy,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = GetDate(),
                     LastModificationBy = null,
                     LastModificationDate = null
                 }

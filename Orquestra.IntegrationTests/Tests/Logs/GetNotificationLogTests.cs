@@ -8,6 +8,7 @@ using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.IntegrationTests.Fixtures;
 using Orquestra.IntegrationTests.Fixtures.Mocks;
+using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.IntegrationTests.Tests.Logs;
 
@@ -37,7 +38,7 @@ public sealed class GetNotificationLogTests
             Endpoint = "/api/Company",
             Parameters = parametersWithCompany,
             UserId = user.UserId,
-            CreatedDate = DateTime.UtcNow.AddMinutes(-5)
+            CreatedDate = GetDate().AddMinutes(-5)
         });
 
         await Fixture.Save(context, new Log
@@ -48,7 +49,7 @@ public sealed class GetNotificationLogTests
             Endpoint = "/api/Schedule",
             Parameters = parametersWithCompany,
             UserId = user.UserId,
-            CreatedDate = DateTime.UtcNow.AddMinutes(-4)
+            CreatedDate = GetDate().AddMinutes(-4)
         });
 
         CompanyUser companyUser = new()
@@ -127,7 +128,7 @@ public sealed class GetNotificationLogTests
                 Parameters = parameters,
                 UserId = user.UserId,
                 Description = $"Log {i}",
-                CreatedDate = DateTime.UtcNow.AddMinutes(-i)
+                CreatedDate = GetDate().AddMinutes(-i)
             });
         }
 
