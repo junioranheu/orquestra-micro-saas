@@ -42,7 +42,7 @@ export default function EmpresaFinanceiro() {
 
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
-            let url = `${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`;
+            const url = `${CONSTS_SALES.getChart}?companyId=${me?.currentMainCompany?.companyId}`;
             setApiUrlRequest(url);
         }
     }, [me, modalFilterFormData])

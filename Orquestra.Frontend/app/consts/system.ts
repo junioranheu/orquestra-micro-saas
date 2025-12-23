@@ -6,7 +6,7 @@ const SYSTEM = {
     AUTHOR: '@junioranheu',
     COMPANY_CNPJ: '00.000.000/0000-00',
     COMPANY_LOCATION: 'Rua Bartholomeu do Canto, 94, São Paulo/SP • CEP 02726-090.',
-    COLOR: '#f0fcdc',
+    COLOR: '#0b996f',
     MASCOT: 'Maestro',
 
     EMAIL_SUPPORT: 'orquestra.saas@gmail.com',
@@ -37,7 +37,9 @@ const SYSTEM = {
     EMPTY_GUID: Guid.parse('00000000-0000-0000-0000-000000000000'),
     EMPTY_DATE: new Date(-62135596800000),
 
-    WARN_FILL_OBLIGATORY_FIELDS: 'Preencha todos os campos obrigatórios (*) antes de prosseguir com esta ação.'
+    WARN_FILL_OBLIGATORY_FIELDS: 'Preencha todos os campos obrigatórios (*) antes de prosseguir com esta ação.',
+
+    COMPANY_SITUATION_PENDING_PAYMENT: 1 // De acordo com o back-end (CompanySituationEnum), 1 = pendingPayment;
 };
 
 export default SYSTEM;

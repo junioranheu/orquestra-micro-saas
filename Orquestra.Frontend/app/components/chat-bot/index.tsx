@@ -59,7 +59,9 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
     async function handleSendMessage(e?: FormEvent) {
         e?.preventDefault();
 
-        if (!input.trim()) return;
+        if (!input.trim()) {
+            return;
+        }
 
         if (!API_KEY) {
             setMessages(p => [...p, { role: 'bot', text: 'Nenhuma API key encontrada 💀' }]);
@@ -71,8 +73,8 @@ export default function ChatBot({ me, showButtonAbsolute }: iProps) {
         setInput('');
         setLoading(true);
 
-        // Plano premium;
-        if (me?.currentMainCompany?.planType?.toString() !== '3') {
+        // Plano premium e ;
+        if (me?.currentMainCompany?.planType?.toString() !== '3' || me?.currentMainCompany?.companySituation?.toString() === SYSTEM.COMPANY_SITUATION_PENDING_PAYMENT.toString()) {
             setMessages(prev => [...prev, {
                 role: 'bot',
                 text: `Oi, ${handleGetFirstName(me?.userName)}!<br/><br/><a href='${ROUTES.EMPRESA_USO_E_PLANO}'>Faça um upgrade no seu plano</a> para o <b>premium</b> para usar o assistente virtual! 😸`
