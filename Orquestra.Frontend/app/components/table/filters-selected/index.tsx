@@ -157,10 +157,27 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
         return content;
     }
 
+    const allowedIdFilters = ['clientId'];
+
+    function handleShouldRenderFilter(name?: string) {
+        const normalized = name?.toLowerCase();
+        // console.log('normalized', normalized);
+
+        if (!normalized) {
+            return false;
+        }
+
+        if (allowedIdFilters.includes(normalized)) {
+            return true;
+        }
+
+        return !normalized.endsWith('id');
+    }
+
     return (
         <section className={styles.main}>
             {
-                filtersInternal?.filter(x => !x.name.includes('Id'))?.map((x: iFilter, i: number) => (
+                filtersInternal?.filter(x => handleShouldRenderFilter(x.name))?.map((x: iFilter, i: number) => (
                     <Tag
                         key={i}
                         text={`${handleWorkaroundTranslation(x.name)}: ${x.value}`}
