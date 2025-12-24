@@ -6,19 +6,24 @@ export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult, 
     const originalParams = new URLSearchParams(originalQuery ?? '');
     const filterParams = new URLSearchParams(data?.url ?? '');
 
-    // 1️⃣ Trata params iniciais;
+    // 🔒 Identifica SOMENTE o PRIMEIRO parâmetro da query;
+    const firstParamEntry = Array.from(originalParams.entries())[0];
+    const immutableFirstIdKey =
+        keepInitialIdParams &&
+            firstParamEntry &&
+            firstParamEntry[0].endsWith('Id')
+            ? firstParamEntry[0]
+            : null;
+
+    // 1️⃣ Remove tudo que não for Id (comportamento atual);
     if (keepInitialIdParams) {
-        // Mantém SOMENTE os que terminam com Id;
         for (const key of Array.from(originalParams.keys())) {
             if (!key.endsWith('Id')) {
                 originalParams.delete(key);
             }
         }
     } else {
-        // Remove tudo (comportamento antigo);
-        originalParams.forEach((_, key) => {
-            originalParams.delete(key);
-        });
+        originalParams.forEach((_, key) => originalParams.delete(key));
     }
 
     // 2️⃣ Limpa filtros vazios;
@@ -35,17 +40,17 @@ export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult, 
         }
     }
 
-    // 3️⃣ Merge filtros;
+    // 3️⃣ Merge FINAL (regra correta);
     for (const [key, value] of Array.from(filterParams.entries())) {
-        if (keepInitialIdParams && key.endsWith('Id') && originalParams.has(key)) {
-            continue; // Nunca sobrescreve Id inicial;
+        // 🚫 Só bloqueia o PRIMEIRO param se terminar com Id;
+        if (immutableFirstIdKey && key === immutableFirstIdKey) {
+            continue;
         }
 
         originalParams.set(key, value);
     }
 
     const finalQuery = originalParams.toString();
-
     return finalQuery ? `${baseUrl}?${finalQuery}` : baseUrl;
 }
 

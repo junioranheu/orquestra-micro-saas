@@ -41,17 +41,9 @@ export default function EmpresaQuotesModalFilters({
 
     function handleSubmit() {
         const normalizedFormData = handleNormalizeEmptyKeyToId(modalFilterFormData, setModalFilterFormData, 'clientId'); // Workaround bizarro para um bug bizarro...
-        console.clear();
-        console.log('normalizedFormData', normalizedFormData);
-
         const data = handleLoopFormData(normalizedFormData, 'label');
-        console.log('data', data);
-
         const url = handleNormalizeFetchUrl(apiUrlRequest, data);
-        console.log('url', url);
-
         const urlNormalized = handleRemoveDuplicateQueryParams(url);
-        console.log('urlNormalized', urlNormalized);
 
         setApiUrlRequest(urlNormalized);
         setCurrentPage(1);

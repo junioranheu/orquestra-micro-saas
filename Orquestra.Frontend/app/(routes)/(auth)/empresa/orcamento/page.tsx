@@ -73,6 +73,11 @@ export default function EmpresaOrcamento() {
             key: 'observation'
         },
         {
+            title: 'Cliente',
+            dataIndex: 'client.fullName',
+            key: 'client.fullName'
+        },
+        {
             title: 'Validade',
             dataIndex: 'validUntil',
             key: 'validUntil',
@@ -184,8 +189,6 @@ export default function EmpresaOrcamento() {
 
     return (
         <Fragment>
-            <h1>{apiUrlRequest}</h1>
-
             <TemplatePageHeader
                 title='Orçamentos registrados'
                 actions={[
