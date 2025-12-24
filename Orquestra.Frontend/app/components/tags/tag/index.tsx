@@ -22,6 +22,10 @@ export default function Tag({ text, handleRemoveFunction, fixCapitalizeStr = tru
         // Separar em antes e depois do ':';
         const [beforeColon, ...afterColonParts] = input.split(':');
 
+        if (!beforeColon) {
+            return afterColonParts.join(':').trim();
+        }
+
         // Se o beforeColon for todo maiúsculo, não altera;
         if (beforeColon === beforeColon.toUpperCase()) {
             return afterColonParts.length > 0 ? `${beforeColon}: ${afterColonParts.join(':').trim()}` : beforeColon;
