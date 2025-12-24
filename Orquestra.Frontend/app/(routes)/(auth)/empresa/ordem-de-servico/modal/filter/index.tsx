@@ -1,13 +1,17 @@
 'use client';
 import { iServiceOrder } from '@/app/api/consts/service-order';
 import Button from '@/app/components/input/button';
+import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import TagList from '@/app/components/tags/tag-list';
+import handleGetPropName from '@/app/functions/get.propName';
+import handleNormalizeEmptyKeyToId from '@/app/functions/normalize.emptyKeyToId';
 import { handleNormalizeFetchUrl, handleRemoveDuplicateQueryParams } from '@/app/functions/normalize.fetch-url';
-import { handleClearFormData, handleLoopFormData } from '@/app/functions/set.formState';
+import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
+import { Guid } from 'guid-typescript';
 import { Dispatch, SetStateAction } from 'react';
 
 interface iProps {
@@ -18,6 +22,8 @@ interface iProps {
     apiUrlRequest: string;
     setApiUrlRequest: Dispatch<SetStateAction<string>>;
     setCurrentPage: Dispatch<SetStateAction<number>>;
+    clientsDropDown: iDropdownOption<string | number | Guid>[] | undefined;
+    serviceOrderStatusEnum: iDropdownOption<string | number | Guid>[] | undefined;
 }
 
 export default function EmpresaServiceOrderModalFilters({
@@ -27,19 +33,32 @@ export default function EmpresaServiceOrderModalFilters({
     setModalFilterFormData,
     apiUrlRequest,
     setApiUrlRequest,
-    setCurrentPage
+    setCurrentPage,
+    clientsDropDown,
+    serviceOrderStatusEnum
 }: iProps) {
 
     const [isModalGrid,] = useIsModalGrid();
+    const setStatusOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.serviceOrderStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
+    const setClientIdOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.clientId ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     function handleSubmit() {
-        const data = handleLoopFormData(modalFilterFormData, 'label');
+        const normalizedFormData = handleNormalizeEmptyKeyToId(modalFilterFormData, setModalFilterFormData, 'clientId'); // Workaround bizarro para um bug bizarro...
+        const data = handleLoopFormData(normalizedFormData, 'label');
         const url = handleNormalizeFetchUrl(apiUrlRequest, data);
         const urlNormalized = handleRemoveDuplicateQueryParams(url);
 
         setApiUrlRequest(urlNormalized);
         setCurrentPage(1);
         setIsModalOpen(false);
+    }
+
+    function handleClearFilters() {
+        if (modalFilterFormData.clientId) {
+            window.location.reload();
+        }
+
+        handleClearFormData(setModalFilterFormData);
     }
 
     return (
@@ -74,14 +93,15 @@ export default function EmpresaServiceOrderModalFilters({
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Título' fieldName='title' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask type='date' title='Data de Execução' fieldName='executionDate' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                        {/* <Select title='Status' fieldName='serviceOrderStatus'  options={serviceOrderStatusEnum}  formData={modalFilterFormData} setFormData={setModalFilterFormData}/> */}
+                        <Dropdown title='Status' options={serviceOrderStatusEnum ?? []} selectedOption={serviceOrderStatusEnum?.find(x => x.value.toString() === modalFilterFormData?.serviceOrderStatus?.toString())} setSelectedOption={setStatusOption} />
+                        <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === modalFilterFormData?.clientId?.toString())} setSelectedOption={setClientIdOption} />
                     </div>
                 </main>
 
                 <footer className={styles.modalFooter}>
                     <Button
                         label='Limpar filtros'
-                        handleFunction={() => handleClearFormData(setModalFilterFormData)}
+                        handleFunction={() => handleClearFilters()}
                         styleType='transparent'
                         style={{ fontSize: '0.75rem' }}
                     />

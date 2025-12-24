@@ -1,6 +1,5 @@
 'use client';
 import EmpresaQuotesItemsEditor from '@/app/(routes)/(auth)/empresa/orcamento/quote-item';
-import { iClient } from '@/app/api/consts/client';
 import { CONSTS_QUOTE, iQuote } from '@/app/api/consts/quote';
 import { iServiceOrder } from '@/app/api/consts/service-order';
 import { Fetch } from '@/app/api/fetch';
@@ -27,16 +26,15 @@ interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
-    clients: iClient[];
+    clientsDropDown: iDropdownOption<string | number | Guid>[] | undefined;
     serviceOrder: iServiceOrder | undefined;
     companyId: Guid | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
-export default function EmpresaServiceOrderModalView({ isModalOpen, setIsModalOpen, type, clients, serviceOrder, companyId, setTrigger }: iProps) {
+export default function EmpresaServiceOrderModalView({ isModalOpen, setIsModalOpen, type, clientsDropDown, serviceOrder, companyId, setTrigger }: iProps) {
 
     const [isModalGrid,] = useIsModalGrid();
-    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);

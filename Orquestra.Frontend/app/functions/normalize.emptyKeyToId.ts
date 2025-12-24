@@ -26,7 +26,6 @@ export default function handleNormalizeEmptyKeyToId<T extends Record<string, any
         guid = emptyValue?.value?.value ?? null;
         delete result[emptyKey];
     } else if (result[targetProp]) {
-        console.log('já existisa xddddddd');
         // Mantém compatível com o formato do select;
         guid = result[targetProp]?.value?.value ?? result[targetProp];
     }

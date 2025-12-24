@@ -1,19 +1,17 @@
 'use client';
-import { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_QUOTE, iQuote, iQuoteItem, iQuotePaginated } from '@/app/api/consts/quote';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
-import { iDropdownOption } from '@/app/components/input/drop-down';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
-import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
+import { useClientsByCompanyIdDropdown } from '@/app/hooks/api/useClientsByCompanyIdDropdown';
 import useTitle from '@/app/hooks/useTitle';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaQuotesModalFilters from './modal/filter';
@@ -38,22 +36,7 @@ export default function EmpresaOrcamento() {
         }
     }, [me]);
 
-    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
-
-    useEffect(() => {
-        async function handleFetchClients() {
-            const clients = await Fetch.get({ url: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}` }) as iClientPaginated;
-
-            if (clients.count) {
-                const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients?.output ?? [], 'clientId', ['fullName', 'phone', 'email']);
-                setClientsDropDown(optionsClients);
-            }
-        }
-
-        if (me?.currentMainCompany?.companyId) {
-            handleFetchClients();
-        }
-    }, [me]);
+    const { clientsDropDown, } = useClientsByCompanyIdDropdown(me?.currentMainCompany?.companyId);
 
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 

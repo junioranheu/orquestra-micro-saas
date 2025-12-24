@@ -1,5 +1,4 @@
 'use client';
-import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_SERVICE_ORDER, iServiceOrder, iServiceOrderPaginated } from '@/app/api/consts/service-order';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
@@ -11,10 +10,10 @@ import toast from '@/app/functions/toast';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
+import { useClientsByCompanyIdDropdown } from '@/app/hooks/api/useClientsByCompanyIdDropdown';
 import useTitle from '@/app/hooks/useTitle';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaServiceOrderModalFilters from './modal/filter';
-import EmpresaServiceOrderModalView from './modal/view';
 
 export default function EmpresaOrdemDeServico() {
 
@@ -29,16 +28,13 @@ export default function EmpresaOrdemDeServico() {
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_SERVICE_ORDER.getAllByCompanyId);
     useApiRequestToSetterOnUrlChange<iServiceOrderPaginated>({ apiUrlRequest: apiUrlRequest, setter: setServiceOrders, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
 
-    const [clients, setClients] = useState<iClientPaginated>();
-    const [apiUrlRequestClients, setApiUrlRequestClients] = useState<string>(CONSTS_CLIENT.getAllByCompanyId);
-    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequestClients, setter: setClients, isSelectAll: true });
-
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
             setApiUrlRequest(`${CONSTS_SERVICE_ORDER.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}`);
-            setApiUrlRequestClients(`${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}`);
         }
     }, [me]);
+
+    const { clientsDropDown, } = useClientsByCompanyIdDropdown(me?.currentMainCompany?.companyId);
 
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 
@@ -142,6 +138,8 @@ export default function EmpresaOrdemDeServico() {
 
     return (
         <Fragment>
+            <h1>{apiUrlRequest}</h1>
+
             <TemplatePageHeader
                 title='Ordens de serviço registradas'
                 actions={[
@@ -185,17 +183,19 @@ export default function EmpresaOrdemDeServico() {
                 apiUrlRequest={apiUrlRequest}
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
+                clientsDropDown={clientsDropDown ?? []}
+                serviceOrderStatusEnum={serviceOrderStatusEnum}
             />
 
-            <EmpresaServiceOrderModalView
+            {/* <EmpresaServiceOrderModalView
                 isModalOpen={isModalViewOpen}
                 setIsModalOpen={setIsModalViewOpen}
                 type={typeModal}
-                clients={clients?.output as iClient[] ?? []}
+                clientsDropDown={clientsDropDown ?? []}
                 serviceOrder={serviceOrderClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
-            />
+            /> */}
         </Fragment>
     )
 }

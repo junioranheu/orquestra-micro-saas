@@ -120,7 +120,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
     // Translate;
     function handleWorkaroundTranslation(content: string): string {
         const dictionary: Record<string, string> = {
-            clientId: 'ID do Cliente',
+            clientId: 'Cliente',
             fullName: 'Nome Completo',
             email: 'E-mail',
             cpf: 'CPF',
@@ -144,9 +144,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             quantity: 'Quantidade',
 
             title: 'Título',
-            validUntil: 'Validade',
-
-            clienteId: 'Cliente'
+            validUntil: 'Validade'
         };
 
         if (dictionary[content]) {
@@ -167,7 +165,9 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             return false;
         }
 
-        if (allowedIdFilters.includes(normalized)) {
+        const allowedIdFiltersNormalized = allowedIdFilters.map(x => x.toLowerCase());
+
+        if (allowedIdFiltersNormalized.includes(normalized)) {
             return true;
         }
 
