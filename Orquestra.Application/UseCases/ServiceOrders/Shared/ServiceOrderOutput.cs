@@ -22,5 +22,7 @@ public sealed class ServiceOrderOutput
 
     public DateTime? ExecutionDate { get; set; }
 
-    public ServiceOrderStatusEnum ServiceOrderStatus { get; set; } 
+    public ServiceOrderStatusEnum ServiceOrderStatus { get; set; }
+
+    public DateTime? CreatedDate { get; set; }
 }

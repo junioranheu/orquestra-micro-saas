@@ -30,6 +30,8 @@ export interface iServiceOrder {
     executionDate?: Date | string | null;
 
     serviceOrderStatus?: string | null;
+
+    createdDate?: Date | null;
 }
 
 export interface iServiceOrderPaginated {

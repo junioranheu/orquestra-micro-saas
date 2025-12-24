@@ -1,14 +1,16 @@
 'use client';
-import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
+import { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_QUOTE, iQuote, iQuoteItem, iQuotePaginated } from '@/app/api/consts/quote';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
+import { iDropdownOption } from '@/app/components/input/drop-down';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import { handleToBrazilDate } from '@/app/functions/get.date.brazil';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
+import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
@@ -30,14 +32,26 @@ export default function EmpresaOrcamento() {
     const [apiUrlRequest, setApiUrlRequest] = useState<string>(CONSTS_QUOTE.getAllByCompanyId);
     useApiRequestToSetterOnUrlChange<iQuotePaginated>({ apiUrlRequest: apiUrlRequest, setter: setQuotes, hasPaginationInput: true, index: currentPage, limit: 15, trigger: trigger });
 
-    const [clients, setClients] = useState<iClientPaginated>();
-    const [apiUrlRequestClients, setApiUrlRequestClients] = useState<string>(CONSTS_CLIENT.getAllByCompanyId);
-    useApiRequestToSetterOnUrlChange<iClientPaginated>({ apiUrlRequest: apiUrlRequestClients, setter: setClients, isSelectAll: true });
-
     useEffect(() => {
         if (me && me?.currentMainCompany?.companyId) {
             setApiUrlRequest(`${CONSTS_QUOTE.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}`);
-            setApiUrlRequestClients(`${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}`);
+        }
+    }, [me]);
+
+    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
+
+    useEffect(() => {
+        async function handleFetchClients() {
+            const clients = await Fetch.get({ url: `${CONSTS_CLIENT.getAllByCompanyId}?companyId=${me?.currentMainCompany?.companyId}` }) as iClientPaginated;
+
+            if (clients.count) {
+                const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients?.output ?? [], 'clientId', ['fullName', 'phone', 'email']);
+                setClientsDropDown(optionsClients);
+            }
+        }
+
+        if (me?.currentMainCompany?.companyId) {
+            handleFetchClients();
         }
     }, [me]);
 
@@ -62,8 +76,13 @@ export default function EmpresaOrcamento() {
             title: 'Validade',
             dataIndex: 'validUntil',
             key: 'validUntil',
-            render: (value?: Date) =>
-                value ? new Date(handleToBrazilDate(value)).toLocaleDateString('pt-BR') : '-'
+            render: (value?: Date) => value ? new Date(handleToBrazilDate(value)).toLocaleDateString('pt-BR') : '-'
+        },
+        {
+            title: 'Data de criação',
+            dataIndex: 'createdDate',
+            key: 'createdDate',
+            render: (value?: Date) => value ? new Date(handleToBrazilDate(value)).toLocaleDateString('pt-BR') : '-'
         },
         {
             title: 'Status',
@@ -208,13 +227,14 @@ export default function EmpresaOrcamento() {
                 apiUrlRequest={apiUrlRequest}
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
+                clientsDropDown={clientsDropDown ?? []}
             />
 
             <EmpresaQuotesModalView
                 isModalOpen={isModalViewOpen}
                 setIsModalOpen={setIsModalViewOpen}
                 type={typeModal}
-                clients={clients?.output as iClient[] ?? []}
+                clientsDropDown={clientsDropDown ?? []}
                 quote={quoteClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}

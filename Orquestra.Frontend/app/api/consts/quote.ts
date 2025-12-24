@@ -25,6 +25,7 @@ export interface iQuote {
     validUntil?: Date | string | null;
     quoteStatus?: string;
     items?: iQuoteItem[];
+    createdDate?: Date | null;
 }
 
 export interface iQuoteItem {

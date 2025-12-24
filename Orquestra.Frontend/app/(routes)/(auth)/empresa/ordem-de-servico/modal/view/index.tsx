@@ -1,6 +1,8 @@
 'use client';
 import EmpresaQuotesItemsEditor from '@/app/(routes)/(auth)/empresa/orcamento/quote-item';
+import { iClient } from '@/app/api/consts/client';
 import { CONSTS_QUOTE, iQuote } from '@/app/api/consts/quote';
+import { iServiceOrder } from '@/app/api/consts/service-order';
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Button from '@/app/components/input/button';
@@ -15,6 +17,7 @@ import handleGetPropName from '@/app/functions/get.propName';
 import { handleNormalizeGuidField } from '@/app/functions/normalize.guid';
 import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from '@/app/functions/set.formState';
 import swal from '@/app/functions/swal';
+import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import { Guid } from 'guid-typescript';
@@ -24,19 +27,21 @@ interface iProps {
     isModalOpen: boolean;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     type: 'edit' | 'create';
-    clientsDropDown: iDropdownOption<string | number | Guid>[] | undefined;
-    quote: iQuote | undefined;
+    clients: iClient[];
+    serviceOrder: iServiceOrder | undefined;
     companyId: Guid | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
 }
 
-export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, type, clientsDropDown, quote, companyId, setTrigger }: iProps) {
+export default function EmpresaServiceOrderModalView({ isModalOpen, setIsModalOpen, type, clients, serviceOrder, companyId, setTrigger }: iProps) {
 
     const [isModalGrid,] = useIsModalGrid();
+    const [clientsDropDown, setClientsDropDown] = useState<iDropdownOption[]>();
+
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
 
-    const [formData, setFormData] = useState<iQuote>({
+    const [formData, setFormData] = useState<iServiceOrder>({
         quoteId: SYSTEM.EMPTY_GUID,
         companyId: SYSTEM.EMPTY_GUID,
         clientId: SYSTEM.EMPTY_GUID,
@@ -58,6 +63,9 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
         handleClearFormData(setFormData);
         setSaving(false);
         setEditing(true);
+
+        const optionsClients = handleTransformArrayToDropdownOptionsGuid(clients ?? [], 'clientId', ['fullName', 'phone', 'email']);
+        setClientsDropDown(optionsClients);
 
         if (type === 'create') {
             setFormData(prev => ({
@@ -82,7 +90,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
             quoteStatus: quote ? quote.quoteStatus : '',
             items: quote && quote.items ? quote.items : []
         });
-    }, [isModalOpen, type, quote, companyId, setIsModalOpen, handleClose]);
+    }, [isModalOpen, type, clients, quote, companyId, setIsModalOpen, handleClose]);
 
     const quoteStatusEnum = useApiGetEnum({ enumName: 'QuoteStatusEnum' });
 

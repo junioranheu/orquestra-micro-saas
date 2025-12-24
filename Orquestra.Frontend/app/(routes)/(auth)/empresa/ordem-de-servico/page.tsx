@@ -1,5 +1,5 @@
 'use client';
-import { CONSTS_CLIENT, iClientPaginated } from '@/app/api/consts/client';
+import { CONSTS_CLIENT, iClient, iClientPaginated } from '@/app/api/consts/client';
 import { CONSTS_SERVICE_ORDER, iServiceOrder, iServiceOrderPaginated } from '@/app/api/consts/service-order';
 import { Fetch } from '@/app/api/fetch';
 import Icon from '@/app/components/icon';
@@ -13,6 +13,8 @@ import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
+import EmpresaServiceOrderModalFilters from './modal/filter';
+import EmpresaServiceOrderModalView from './modal/view';
 
 export default function EmpresaOrdemDeServico() {
 
@@ -61,6 +63,12 @@ export default function EmpresaOrdemDeServico() {
             title: 'Data de Execução',
             dataIndex: 'executionDate',
             key: 'executionDate',
+            render: (value?: Date | string | null) => value ? new Date(value).toLocaleDateString('pt-BR') : '-'
+        },
+        {
+            title: 'Data de criação',
+            dataIndex: 'createdDate',
+            key: 'createdDate',
             render: (value?: Date | string | null) => value ? new Date(value).toLocaleDateString('pt-BR') : '-'
         },
         {
@@ -169,7 +177,7 @@ export default function EmpresaOrdemDeServico() {
                 />
             </TemplatePageHeader>
 
-            {/* <EmpresaQuotesModalFilters
+            <EmpresaServiceOrderModalFilters
                 isModalOpen={isModalFilterOpen}
                 setIsModalOpen={setIsModalFilterOpen}
                 modalFilterFormData={modalFilterFormData}
@@ -177,17 +185,17 @@ export default function EmpresaOrdemDeServico() {
                 apiUrlRequest={apiUrlRequest}
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
-            /> */}
+            />
 
-            {/* <EmpresaQuotesModalView
+            <EmpresaServiceOrderModalView
                 isModalOpen={isModalViewOpen}
                 setIsModalOpen={setIsModalViewOpen}
                 type={typeModal}
                 clients={clients?.output as iClient[] ?? []}
-                quote={serviceOrderClicked}
+                serviceOrder={serviceOrderClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
-            /> */}
+            />
         </Fragment>
     )
 }

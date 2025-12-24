@@ -69,6 +69,9 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             setFiltersInternal(result);
         }
 
+        // console.clear();
+        // console.log('modalFilterFormData', modalFilterFormData);
+
         if (apiUrlBase && modalFilterFormData) {
             handleCheckSelectedFilters();
         }
@@ -114,6 +117,7 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
         setApiUrlRequest(url);
     }
 
+    // Translate;
     function handleWorkaroundTranslation(content: string): string {
         const dictionary: Record<string, string> = {
             clientId: 'ID do Cliente',
@@ -140,7 +144,9 @@ export default function FiltersSelected({ modalFilterFormData, setModalFilterFor
             quantity: 'Quantidade',
 
             title: 'Título',
-            validUntil: 'Validade'
+            validUntil: 'Validade',
+
+            clienteId: 'Cliente'
         };
 
         if (dictionary[content]) {

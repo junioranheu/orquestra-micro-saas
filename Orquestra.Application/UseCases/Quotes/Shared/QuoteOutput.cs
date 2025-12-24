@@ -20,4 +20,6 @@ public sealed class QuoteOutput
     public DateTime? ValidUntil { get; set; }
     public QuoteStatusEnum QuoteStatus { get; set; }
     public List<QuoteItem> Items { get; set; } = [];
+
+    public DateTime? CreatedDate { get; set; }
 }

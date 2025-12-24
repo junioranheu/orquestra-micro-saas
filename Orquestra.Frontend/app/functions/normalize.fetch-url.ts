@@ -1,40 +1,52 @@
 import { iFormDataLoopResult } from './set.formState';
 
-export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult) {
-    // Separa base da query existente (se houver);
-    const [baseUrl] = url.split('?');
+export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult, keepInitialIdParams: boolean = true) {
+    const [baseUrl, originalQuery] = url.split('?');
 
-    // Pega a string de params que veio do data (pode ser '' ou undefined);
-    let dataUrl = data?.url ?? '';
+    const originalParams = new URLSearchParams(originalQuery ?? '');
+    const filterParams = new URLSearchParams(data?.url ?? '');
 
-    // Normaliza e limpa params vazios;
-    if (dataUrl) {
-        const params = new URLSearchParams(dataUrl);
-
-        for (const [key, value] of Array.from(params.entries())) {
-            const isDate = key.toLowerCase().includes('date');
-
-            // Se for campo de data;
-            if (isDate) {
-                // E for um campo de data vazio...
-                if (value === 'undefined' || value === '' || value === null) {
-                    // Simplesmente remove da URL;
-                    params.delete(key);
-                    continue;
-                }
-            }
-
-            // Campos comuns → remove se vazio;
-            if (!value || !value.trim()) {
-                params.delete(key);
+    // 1️⃣ Trata params iniciais;
+    if (keepInitialIdParams) {
+        // Mantém SOMENTE os que terminam com Id;
+        for (const key of Array.from(originalParams.keys())) {
+            if (!key.endsWith('Id')) {
+                originalParams.delete(key);
             }
         }
-
-        dataUrl = params.toString(); // '' se nada sobrar;
+    } else {
+        // Remove tudo (comportamento antigo);
+        originalParams.forEach((_, key) => {
+            originalParams.delete(key);
+        });
     }
 
-    // Se sobrou algo válido, anexa com ?, senão retorna apenas a base (sem query);
-    return dataUrl ? `${baseUrl}?${dataUrl}` : baseUrl;
+    // 2️⃣ Limpa filtros vazios;
+    for (const [key, value] of Array.from(filterParams.entries())) {
+        const isDate = key.toLowerCase().includes('date');
+
+        if (isDate && (!value || value === 'undefined')) {
+            filterParams.delete(key);
+            continue;
+        }
+
+        if (!value || !value.trim()) {
+            filterParams.delete(key);
+        }
+    }
+
+    // 3️⃣ Merge filtros;
+    for (const [key, value] of Array.from(filterParams.entries())) {
+        if (keepInitialIdParams && key.endsWith('Id') && originalParams.has(key)) {
+            continue; // Nunca sobrescreve Id inicial;
+        }
+
+        originalParams.set(key, value);
+    }
+
+    const finalQuery = originalParams.toString();
+
+    return finalQuery ? `${baseUrl}?${finalQuery}` : baseUrl;
 }
 
 export function handleRemoveDuplicateQueryParams(url: string): string {
