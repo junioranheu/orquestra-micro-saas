@@ -54,7 +54,7 @@ export function useMenuGroups({ me }: iProps): iMenuGroup[] {
                     { id: 'clientes', label: 'Clientes', description: 'Gerencie informações e histórico dos clientes.', icon: 'user-check', route: ROUTES.EMPRESA_CLIENTES, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Client] }) },
                     { id: 'acompanhamentos', label: 'Acompanhamentos', description: 'Acompanhe retornos e contatos com clientes.', icon: 'repeat', route: ROUTES.EMPRESA_ACOMPANHAMENTOS, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.CostumerFollowUp] }) },
                     { id: 'orcamentos', label: 'Orçamentos', description: 'Crie e acompanhe propostas de serviço.', icon: 'file', route: ROUTES.EMPRESA_ORCAMENTO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Quote] }) },
-                    { id: 'ordem-de-servico', label: 'Ordens de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.ServiceOrder] }), isDisabled: true },
+                    { id: 'ordem-de-servico', label: 'Ordens de serviço', description: 'Gerencie execuções e status dos serviços.', icon: 'tool', route: ROUTES.EMPRESA_ORDEM_DE_SERVICO, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.ServiceOrder] }) },
                     { id: 'estoque', label: 'Estoque', description: 'Controle produtos e materiais disponíveis.', icon: 'package', route: ROUTES.EMPRESA_ESTOQUE, hasAccess: handleCheckShowElement({ me, modulesRequired: [MODULE_ENUM.Inventory] }) },
                 ]
             },
