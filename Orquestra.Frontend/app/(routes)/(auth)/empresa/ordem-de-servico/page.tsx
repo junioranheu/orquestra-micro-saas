@@ -14,6 +14,7 @@ import { useClientsByCompanyIdDropdown } from '@/app/hooks/api/useClientsByCompa
 import useTitle from '@/app/hooks/useTitle';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import EmpresaServiceOrderModalFilters from './modal/filter';
+import EmpresaServiceOrderModalView from './modal/view';
 
 export default function EmpresaOrdemDeServico() {
 
@@ -187,7 +188,7 @@ export default function EmpresaOrdemDeServico() {
                 serviceOrderStatusEnum={serviceOrderStatusEnum}
             />
 
-            {/* <EmpresaServiceOrderModalView
+            <EmpresaServiceOrderModalView
                 isModalOpen={isModalViewOpen}
                 setIsModalOpen={setIsModalViewOpen}
                 type={typeModal}
@@ -195,7 +196,7 @@ export default function EmpresaOrdemDeServico() {
                 serviceOrder={serviceOrderClicked}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
-            /> */}
+            />
         </Fragment>
     )
 }

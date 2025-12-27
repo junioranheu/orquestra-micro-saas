@@ -2,10 +2,10 @@
 import { CONSTS_CLIENT_FOLLOW_UP, iClientFollowUp } from '@/app/api/consts/client-follow-up';
 import { iSchedule } from '@/app/api/consts/schedule';
 import { Fetch } from '@/app/api/fetch';
-import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import InputImage from '@/app/components/input/image';
 import ModalGeneric from '@/app/components/modal/generic';
+import ModalGenericFooter from '@/app/components/modal/generic/footer/footer';
 import styles from '@/app/components/modal/generic/index.module.scss';
 import TagList from '@/app/components/tags/tag-list';
 import SYSTEM from '@/app/consts/system';
@@ -17,7 +17,7 @@ import swalLoading from '@/app/functions/swal.loading';
 import { handleTransformArrayToDropdownOptionsGuid } from '@/app/functions/transform.arrayToDropdownOptions';
 import { handleConvertBase64ListToFiles } from '@/app/functions/transform.base64';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iProps {
     isModalOpen: boolean;
@@ -226,34 +226,14 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
                     </div>
                 </main>
 
-                <footer className={styles.modalFooter}>
-                    <div className={styles.buttonsRow}>
-                        <Button label='Fechar' handleFunction={() => handleClose()} styleType='transparent' />
-                    </div>
-
-                    {
-                        type === 'create' ? (
-                            <div className={styles.buttonsRow}>
-                                <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
-                            </div>
-                        ) : (
-                            <div className={styles.buttonsRow}>
-                                {
-                                    !editing ? (
-                                        <Fragment>
-                                            <Button label='Editar' handleFunction={() => setEditing(true)} />
-                                        </Fragment>
-                                    ) : (
-                                        <Fragment>
-                                            <Button label='Cancelar edição' handleFunction={() => setEditing(false)} styleType='transparent' />
-                                            <Button label={saving ? 'Salvando...' : 'Salvar'} handleFunction={() => handleSave()} isDisabled={saving} />
-                                        </Fragment>
-                                    )
-                                }
-                            </div>
-                        )
-                    }
-                </footer>
+                <ModalGenericFooter
+                    type={type}
+                    saving={saving}
+                    editing={editing}
+                    handleClose={handleClose}
+                    handleSave={handleSave}
+                    setEditing={setEditing}
+                />
             </div>
         </ModalGeneric>
     )
