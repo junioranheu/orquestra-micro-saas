@@ -72,6 +72,14 @@
                 // Gambiarra monstra para exibir tudo;
                 // height: 92%;
                 height: 95%;
+
+                max-width: 1680px;
+                width: 100%;
+                margin: auto;
+
+                &::-webkit-scrollbar {
+                    width: 0rem;
+                }
             }
         }
     }

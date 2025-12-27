@@ -1,4 +1,5 @@
 .tags {
+    // background-color: orange !important;
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
@@ -10,5 +11,9 @@
         font-weight: 600;
         color: var(--white-og);
         white-space: nowrap;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
