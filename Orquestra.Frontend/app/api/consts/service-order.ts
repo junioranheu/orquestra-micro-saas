@@ -1,4 +1,5 @@
 import { BASE } from '@/app/api/fetch';
+import { Guid } from 'guid-typescript';
 import { iClient } from './client';
 import { iCompanyOutput } from './company';
 import { iQuote } from './quote';
@@ -14,14 +15,14 @@ export const CONSTS_SERVICE_ORDER = {
 };
 
 export interface iServiceOrder {
-    serviceOrderId?: string;
-    companyId?: string;
+    serviceOrderId?: Guid;
+    companyId?: Guid;
     company?: iCompanyOutput | null;
 
-    quoteId?: string | null;
+    quoteId?: Guid | null;
     quote?: iQuote | null;
 
-    clientId?: string;
+    clientId?: Guid;
     client?: iClient | null;
 
     title?: string | null;
