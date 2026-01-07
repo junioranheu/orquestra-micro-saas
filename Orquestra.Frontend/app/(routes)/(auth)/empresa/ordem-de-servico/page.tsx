@@ -40,7 +40,7 @@ export default function EmpresaOrdemDeServico() {
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 
     const [modalFilterFormData, setModalFilterFormData] = useState<iServiceOrder>({
-        title: null, clientId: '', executionDate: null, serviceOrderStatus: null
+        title: null, clientId: undefined, executionDate: null, serviceOrderStatus: null
     });
 
     const columns = [
