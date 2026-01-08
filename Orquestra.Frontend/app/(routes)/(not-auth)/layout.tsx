@@ -1,7 +1,7 @@
 'use client';
 import Head from '@/app/(routes)/head';
 import UpNav from '@/app/components/navbar/up-nav';
-import TestEnvironmentNotice from '@/app/components/test-environment-notice';
+import TestEnvironmentBanner from '@/app/components/test-environment-notice';
 import { GlobalContextProvider } from '@/app/contexts/global.context';
 import { UserProvider } from '@/app/contexts/user.context';
 import { INTER } from '@/app/fonts/fonts';
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
                     <body className={`body ${INTER.className}`}>
                         <Toaster expand={false} closeButton={false} />
                         <UpNav showNav={false} />
-                        <TestEnvironmentNotice hideIfProd={false} />
+                        <TestEnvironmentBanner showBanner={false} />
 
                         <main>
                             {children}

@@ -37,7 +37,6 @@ export default function EmpresaServiceOrderModalFilters({
 }: iProps) {
 
     const [isModalGrid,] = useIsModalGrid();
-    const setStatusOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.serviceOrderStatus ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
     const setClientIdOption = handleSetDropdownOption(modalFilterFormData, setModalFilterFormData, handleGetPropName(modalFilterFormData, x => x.clientId ?? '')[1]) as Dispatch<SetStateAction<iDropdownOption[]>>;
 
     function handleSubmit() {
