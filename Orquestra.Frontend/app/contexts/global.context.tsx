@@ -36,7 +36,6 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [showExpandedSidebar, setShowExpandedSidebar] = useState<boolean>(true);
     const [isModalGrid, setIsModalGrid] = useState<boolean>(true);
     const [showLogsDashboard, setShowLogsDashboard] = useState<boolean>(true);
-
     const [dashboardRouteShortcut, setDashboardRouteShortcut] = useState<iDropdownOption<string> | undefined>(undefined);
 
     useEffect(() => {

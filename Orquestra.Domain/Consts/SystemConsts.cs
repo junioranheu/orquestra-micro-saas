@@ -35,7 +35,7 @@ public static class SystemConsts
 
     public static class Cookies
     {
-        public const string Auth = "auth";
+        public const string Auth = "COOKIE_AUTH_BACK";
         public const string Refresh = "auth_refreshedToken";
     }
 

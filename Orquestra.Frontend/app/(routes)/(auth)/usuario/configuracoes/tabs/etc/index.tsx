@@ -49,6 +49,7 @@ function CardSession() {
             buttonLabel='Finalizar sessão'
             buttonFunction={() => router.push(ROUTES.LOGOUT)}
             buttonIcon='log-out'
+            buttonStyle={{ backgroundColor: 'var(--red)', opacity: 0.8 }}
         />
     )
 }

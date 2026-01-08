@@ -73,7 +73,10 @@ export default function InputMask<T>({
 
             // Conta quantos dígitos a máscara permite;
             const maxDigits = (mask.match(/0/g) || []).length;
-            if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
+
+            if (digits.length > maxDigits) {
+                digits = digits.slice(0, maxDigits);
+            }
 
             // Reconstrói o valor formatado conforme a máscara;
             let formatted = '';
