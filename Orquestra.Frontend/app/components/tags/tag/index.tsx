@@ -42,7 +42,7 @@ export default function Tag({ text, handleRemoveFunction, fixCapitalizeStr = tru
             transformedBeforeColon = words.map((word, index) => index === 0 ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word.toLowerCase()).join(' ');
         }
 
-        if (afterColonParts.length > 0) {
+        if (afterColonParts?.filter(p => p?.trim())?.length > 0) {
             return `${transformedBeforeColon}: ${afterColonParts.join(':').trim()}`;
         }
 

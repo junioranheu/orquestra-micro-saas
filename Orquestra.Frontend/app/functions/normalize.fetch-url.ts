@@ -8,12 +8,7 @@ export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult, 
 
     // 🔒 Identifica SOMENTE o PRIMEIRO parâmetro da query;
     const firstParamEntry = Array.from(originalParams.entries())[0];
-    const immutableFirstIdKey =
-        keepInitialIdParams &&
-            firstParamEntry &&
-            firstParamEntry[0].endsWith('Id')
-            ? firstParamEntry[0]
-            : null;
+    const immutableFirstIdKey = keepInitialIdParams && firstParamEntry && firstParamEntry[0].endsWith('Id') ? firstParamEntry[0] : null;
 
     // 1️⃣ Remove tudo que não for Id (comportamento atual);
     if (keepInitialIdParams) {
@@ -29,8 +24,9 @@ export function handleNormalizeFetchUrl(url: string, data: iFormDataLoopResult, 
     // 2️⃣ Limpa filtros vazios;
     for (const [key, value] of Array.from(filterParams.entries())) {
         const isDate = key.toLowerCase().includes('date');
+        // console.log('value', value);
 
-        if (isDate && (!value || value === 'undefined')) {
+        if (isDate && (!value || value === 'undefined' || value === 'null' || value === undefined || value === null)) {
             filterParams.delete(key);
             continue;
         }

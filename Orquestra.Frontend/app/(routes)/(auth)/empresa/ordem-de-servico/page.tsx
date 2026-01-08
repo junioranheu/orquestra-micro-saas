@@ -40,7 +40,7 @@ export default function EmpresaOrdemDeServico() {
     const [isModalFilterOpen, setIsModalFilterOpen] = useState<boolean>(false);
 
     const [modalFilterFormData, setModalFilterFormData] = useState<iServiceOrder>({
-        title: null, clientId: undefined, executionDate: null, serviceOrderStatus: null
+        title: null, clientId: null, executionDate: null, serviceOrderStatus: null
     });
 
     const columns = [
@@ -72,22 +72,21 @@ export default function EmpresaOrdemDeServico() {
             title: 'Status',
             dataIndex: 'serviceOrderStatus',
             key: 'serviceOrderStatus',
-            render: (value?: string | null) => {
-                if (!value) {
-                    return '-';
-                }
+            render: (value: number) => {
+                const item = serviceOrderStatusEnum?.find(x => x.value === value);
+                const text = item?.label ?? '-';
 
-                if (value === 'Finished') {
+                if (value === 4) {
                     return (
                         <span style={{ color: 'var(--contrast)', fontWeight: 600 }}>
-                            Finalizado
+                            {text}
                         </span>
                     );
                 }
 
-                return value;
+                return text;
             }
-        }
+        },
     ] as iTableColumn[];
 
     const managingOptions = [
@@ -139,8 +138,6 @@ export default function EmpresaOrdemDeServico() {
 
     return (
         <Fragment>
-            <h1>{apiUrlRequest}</h1>
-
             <TemplatePageHeader
                 title='Ordens de serviço registradas'
                 actions={[
@@ -185,7 +182,6 @@ export default function EmpresaOrdemDeServico() {
                 setApiUrlRequest={setApiUrlRequest}
                 setCurrentPage={setCurrentPage}
                 clientsDropDown={clientsDropDown ?? []}
-                serviceOrderStatusEnum={serviceOrderStatusEnum}
             />
 
             <EmpresaServiceOrderModalView

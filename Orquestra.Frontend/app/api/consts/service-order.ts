@@ -22,7 +22,7 @@ export interface iServiceOrder {
     quoteId?: Guid | null;
     quote?: iQuote | null;
 
-    clientId?: Guid;
+    clientId?: Guid | null;
     client?: iClient | null;
 
     title?: string | null;

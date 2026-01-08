@@ -19,6 +19,8 @@ export default function useApiGetEnum({ enumName }: iProps): iDropdownOption[] |
     useEffect(() => {
         async function handleFetch() {
             const result = await Fetch.get({ url: `${CONSTS_UTILITY.getEnum}?name=${enumName}` }) as iDropdownOption[];
+            // console.log(result);
+
             setList(result);
         }
 

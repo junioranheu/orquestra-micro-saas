@@ -23,7 +23,6 @@ interface iProps {
     setApiUrlRequest: Dispatch<SetStateAction<string>>;
     setCurrentPage: Dispatch<SetStateAction<number>>;
     clientsDropDown: iDropdownOption<string | number | Guid>[] | undefined;
-    serviceOrderStatusEnum: iDropdownOption<string | number | Guid>[] | undefined;
 }
 
 export default function EmpresaServiceOrderModalFilters({
@@ -35,7 +34,6 @@ export default function EmpresaServiceOrderModalFilters({
     setApiUrlRequest,
     setCurrentPage,
     clientsDropDown,
-    serviceOrderStatusEnum
 }: iProps) {
 
     const [isModalGrid,] = useIsModalGrid();
@@ -93,7 +91,6 @@ export default function EmpresaServiceOrderModalFilters({
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Título' fieldName='title' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask type='date' title='Data de Execução' fieldName='executionDate' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                        <Dropdown title='Status' options={serviceOrderStatusEnum ?? []} selectedOption={serviceOrderStatusEnum?.find(x => x.value.toString() === modalFilterFormData?.serviceOrderStatus?.toString())} setSelectedOption={setStatusOption} />
                         <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === modalFilterFormData?.clientId?.toString())} setSelectedOption={setClientIdOption} />
                     </div>
                 </main>
