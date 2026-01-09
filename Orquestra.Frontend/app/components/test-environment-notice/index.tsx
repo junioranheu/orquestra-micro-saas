@@ -1,6 +1,5 @@
 'use client';
 import SYSTEM from '@/app/consts/system';
-import handleCheckIsProd from '@/app/functions/check.isProd';
 import toast from '@/app/functions/toast';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import Link from 'next/link';
@@ -13,16 +12,16 @@ interface iProps {
 
 export default function TestEnvironmentBanner({ showBanner }: iProps) {
 
+    const windowSize = useWindowSize();
     const [visible, setVisible] = useState<boolean>(true);
     const bannerRef = useRef<HTMLDivElement>(null);
     const posRef = useRef({ x: 0, y: 0, offsetX: 0, offsetY: 0 });
-    const windowSize = useWindowSize();
 
     useEffect(() => {
-        if (!handleCheckIsProd()) {
-            toast({ content: 'Você está em um ambiente de teste.', ms: 7500 });
+        if (!showBanner) {
+            toast({ content: 'Esse é um ambiente de teste! 🧪', ms: 8000 });
         }
-    }, []);
+    }, [showBanner]);
 
     function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
         const rect = bannerRef.current!.getBoundingClientRect();
@@ -54,7 +53,7 @@ export default function TestEnvironmentBanner({ showBanner }: iProps) {
         window.removeEventListener('mouseup', handleMouseUp);
     }
 
-    if (!visible || !showBanner || handleCheckIsProd() || windowSize.width < 768) {
+    if (!visible || !showBanner || windowSize.width < 768) {
         return null;
     }
 
