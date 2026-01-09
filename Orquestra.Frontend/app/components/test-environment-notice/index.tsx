@@ -19,7 +19,7 @@ export default function TestEnvironmentBanner({ showBanner }: iProps) {
 
     useEffect(() => {
         if (!showBanner) {
-            toast({ content: 'Esse é um ambiente de teste! 🧪', ms: 8000 });
+            toast({ content: 'Esse é um ambiente de teste! 🧪', ms: 8000, customPosition: 'bottom-left' });
         }
     }, [showBanner]);
 
