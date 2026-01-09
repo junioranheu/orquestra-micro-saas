@@ -10,6 +10,7 @@ import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import ROUTES from '@/app/consts/routes';
 import { handleClearFormData } from '@/app/functions/set.formState';
+import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
@@ -30,6 +31,20 @@ export default function EmpresaFinanceiro() {
 
     const me = useApiGetMe({});
     const router = useRouter();
+
+    useEffect(() => {
+        if (me && me?.currentMainCompany?.planType?.toString() !== '3') {
+            setTimeout(() => {
+                swal({
+                    content: 'Para acessar o módulo <b>financeiro</b> é necessário ter o plano <b>premium</b> ativo.',
+                    icon: 'error',
+                    confirmFunction: () => {
+                        router.push(ROUTES.EMPRESA_USO_E_PLANO);
+                    }
+                });
+            }, 1000);
+        }
+    }, [me])
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [modalFilterFormData, setModalFilterFormData] = useState<iFormDataFilter>({
@@ -163,7 +178,6 @@ export default function EmpresaFinanceiro() {
 
                 <Button
                     label='Filtrar'
-                    // styleType='transparent'
                     handleFunction={() => handleFetch()}
                     icon_feather={<Icon icon='filter' size='small' />}
                 />
