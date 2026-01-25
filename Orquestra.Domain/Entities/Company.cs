@@ -28,7 +28,7 @@ public sealed class Company: Audit
     [MaxLength(255)]
     public string? Address { get; set; } = string.Empty;
 
-    [MaxLength(5)]
+    [MaxLength(10)]
     public string? AddressNumber { get; set; } = string.Empty;
 
     [MaxLength(100)]

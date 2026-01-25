@@ -145,6 +145,12 @@ public enum CompanyTypeEnum
     [Description("Desenvolvedor de software")]
     DesenvolvedorSoftware = 47,
 
+    [Description("Manicure")]
+    Manicure = 48,
+
+    [Description("Pedicure")]
+    Pedicure = 49,
+
     [Description("Outro")]
     Outro = 99
 }
