@@ -6,14 +6,15 @@ export type iProps = {
     title: ReactNode;
     subtitle?: ReactNode;
     children: ReactNode;
+    hasBorder?: boolean;
 }
 
-export default function CardCreamWithChildren({ title, subtitle, children }: iProps) {
+export default function CardCreamWithChildren({ title, subtitle, children, hasBorder = true }: iProps) {
     return (
         <CardSimpleWithChildren style={{
             backgroundColor: 'var(--cream)',
             padding: '4rem 1rem',
-            border: '1px solid var(--gray-light)'
+            border: hasBorder ? '1px solid var(--gray-light)' : 'none'
         }}>
             <div className={styles.header}>
                 <h2 className={styles.title}>{title}</h2>

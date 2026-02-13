@@ -123,7 +123,7 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
 
     return (
         <section className={styles.pricingSection}>
-            <CardCreamWithChildren title='Planos que crescem com você' subtitle={
+            <CardCreamWithChildren title='Planos que crescem com você' hasBorder={false} subtitle={
                 <div className={styles.headerWrapper}>
                     <Tippy content={`Lembre-se que, ${messageInvoice.toLowerCase()}`} placement='right'>
                         <p className={styles.subtitle}>

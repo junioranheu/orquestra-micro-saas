@@ -1,4 +1,5 @@
 'use client';
+import ImgLoading from '@/app/assets/gif/loading-2.gif';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
@@ -346,6 +347,16 @@ export default function TableGeneric({
     const totalPages = pageSize > 0 ? Math.ceil(countTotalItems / pageSize) : 1;
     const safeTotal = totalPages * pageSize;
 
+    const [showLoadingGif, setShowLoadingGif] = useState<boolean>(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowLoadingGif(false);
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <section
             className={`${styles.main} ${(hasAltStyle && 'tableAltStyle')} ${(hasAltStyle && styles.tableAltStyle)}`}
@@ -477,10 +488,19 @@ export default function TableGeneric({
 
             <Table
                 columns={finalColumns}
-                data={paginatedData}
+                // data={paginatedData}
                 rowKey={idPropName}
                 onRow={(row) => ({ onClick: handleTableRowClick ? () => handleTableRowClick(row) : undefined })}
-                emptyText={showEmptyText ? <span className={animateClass}>Os dados ainda estão carregando ou não existem dados para exibir neste momento</span> : null}
+                emptyText={showEmptyText ?
+                    <span className={`${animateClass} ${styles.emptyText}`}>
+                        {
+                            showLoadingGif && (
+                                <Image src={ImgLoading} alt='' priority={true} unoptimized={true} />
+                            )
+                        }
+
+                        Os dados ainda estão carregando ou não existem dados para exibir neste momento
+                    </span> : null}
                 className={SYSTEM.ANIMATE}
                 rowClassName={animateClass}
             />
