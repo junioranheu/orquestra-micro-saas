@@ -185,7 +185,7 @@ export default function EmpresaQuotesModalView({ isModalOpen, setIsModalOpen, ty
 
                 <main className={styles.modalContent}>
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
-                        <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId} isObligatory={true} />
+                        <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId} isObligatory={true} showNewClientButton={true} />
                         <InputMask title='Título' fieldName='title' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask type='date' title='Válido até' fieldName='validUntil' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Status do orçamento' options={quoteStatusEnum ?? []} selectedOption={quoteStatusEnum?.find(x => x.value === formData.quoteStatus) ?? undefined} setSelectedOption={setQuoteStatusOption} isDisabled={!editing} isObligatory={true} />

@@ -331,7 +331,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                 <main className={styles.modalContent}>
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <div className={`${styles.div} ${styles.full}`}>
-                            <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId ?? Guid.EMPTY} isObligatory={true} />
+                            <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId ?? Guid.EMPTY} isObligatory={true} showNewClientButton={true} />
                         </div>
 
                         <Dropdown title='Tipo de agendamento' options={scheduleTypeEnum ?? []} selectedOption={scheduleTypeEnum?.find(x => x.value.toString() === formData.scheduleType?.toString())} setSelectedOption={setScheduleTypeOption} isDisabled={!editing} isObligatory={true} />

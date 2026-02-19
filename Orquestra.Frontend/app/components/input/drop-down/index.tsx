@@ -21,6 +21,9 @@ interface iProps {
     isSearchable?: boolean;
     isClearable?: boolean;
     isObligatory?: boolean;
+    showAction?: boolean;
+    actionLabel?: string;
+    onActionClick?: () => void;
 }
 
 export default function Dropdown({
@@ -34,7 +37,10 @@ export default function Dropdown({
     isDisabled = false,
     isSearchable = true,
     isClearable = true,
-    isObligatory = false
+    isObligatory = false,
+    showAction = false,
+    actionLabel = 'Ver mais',
+    onActionClick
 }: iProps) {
 
     const [uniqueOptions, setUniqueOptions] = useState<iDropdownOption[]>([]);
@@ -101,6 +107,14 @@ export default function Dropdown({
                 title && (
                     <span className={styles.title}>
                         <span dangerouslySetInnerHTML={{ __html: title }}></span> {isObligatory && <span className={styles.obligatory}>*</span>}
+
+                        {
+                            showAction && (
+                                <a onClick={onActionClick} className={styles.action}>
+                                    {actionLabel}
+                                </a>
+                            )
+                        }
                     </span>
                 )
             }

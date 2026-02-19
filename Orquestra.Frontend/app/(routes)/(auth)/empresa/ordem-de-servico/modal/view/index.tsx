@@ -187,7 +187,7 @@ export default function EmpresaServiceOrderModalView({ isModalOpen, setIsModalOp
 
                 <main className={styles.modalContent}>
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
-                        <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId} isObligatory={true} />
+                        <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId} isObligatory={true} showNewClientButton={true} />
                         <InputMask title='Título' fieldName='title' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask type='date' title='Data de execução' fieldName='executionDate' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Status da ordem de serviço' options={serviceOrderStatusEnum ?? []} selectedOption={serviceOrderStatusEnum?.find(x => x.value === formData.serviceOrderStatus) ?? undefined} setSelectedOption={setServiceOrderStatusOption} isDisabled={!editing} isObligatory={true} />

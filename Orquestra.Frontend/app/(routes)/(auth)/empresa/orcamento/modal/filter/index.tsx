@@ -91,7 +91,7 @@ export default function EmpresaQuotesModalFilters({
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Título' fieldName='title' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask type='date' title='Validade' fieldName='validUntil' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                        <DropDownCliente editing={true} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={modalFilterFormData.clientId} isObligatory={false} />
+                        <DropDownCliente editing={true} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={modalFilterFormData.clientId} />
                     </div>
                 </main>
 

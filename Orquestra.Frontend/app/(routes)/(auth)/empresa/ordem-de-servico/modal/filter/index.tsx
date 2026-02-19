@@ -91,7 +91,7 @@ export default function EmpresaServiceOrderModalFilters({
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Título' fieldName='title' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask type='date' title='Data de Execução' fieldName='executionDate' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                        <DropDownCliente editing={true} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={modalFilterFormData.clientId} isObligatory={false} />
+                        <DropDownCliente editing={true} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={modalFilterFormData.clientId} />
                     </div>
                 </main>
 
