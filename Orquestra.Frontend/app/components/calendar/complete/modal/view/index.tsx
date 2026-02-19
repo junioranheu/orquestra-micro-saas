@@ -7,6 +7,7 @@ import { iEvent } from '@/app/components/calendar/complete';
 import Icon from '@/app/components/icon';
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import DropDownCliente from '@/app/components/input/drop-down-custom/cliente';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
@@ -330,7 +331,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
                 <main className={styles.modalContent}>
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <div className={`${styles.div} ${styles.full}`}>
-                            <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
+                            <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId ?? Guid.EMPTY} isObligatory={true} />
                         </div>
 
                         <Dropdown title='Tipo de agendamento' options={scheduleTypeEnum ?? []} selectedOption={scheduleTypeEnum?.find(x => x.value.toString() === formData.scheduleType?.toString())} setSelectedOption={setScheduleTypeOption} isDisabled={!editing} isObligatory={true} />

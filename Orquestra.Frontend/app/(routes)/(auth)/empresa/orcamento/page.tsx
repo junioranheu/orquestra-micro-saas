@@ -95,7 +95,7 @@ export default function EmpresaOrcamento() {
             title: 'Qtd. de itens',
             dataIndex: 'items',
             key: 'items',
-            render: (items?: iQuoteItem[]) => items?.length ?? 0
+            render: (items?: iQuoteItem[]) => items?.reduce((acc, item) => acc + (item.quantity ?? 0), 0) ?? 0
         }
     ] as iTableColumn[];
 

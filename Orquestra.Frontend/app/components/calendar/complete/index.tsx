@@ -197,7 +197,7 @@ export default function CalendarComplete({ me, events, customElementHeight, comp
         slotDate.setHours(0, 0, 0, 0);
 
         if (slotDate < today) {
-            swal({ content: 'Não é possível agendar um compromisso numa data passada.', icon: 'error' });
+            swal({ content: 'Não é possível agendar um evento numa data passada.', icon: 'error' });
             return;
         }
 

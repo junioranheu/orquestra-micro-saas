@@ -3,6 +3,7 @@ import { CONSTS_SERVICE_ORDER, iServiceOrder } from '@/app/api/consts/service-or
 import { Fetch } from '@/app/api/fetch';
 import ContentLoaderText from '@/app/components/content-loader/text';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import DropDownCliente from '@/app/components/input/drop-down-custom/cliente';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import ModalGenericFooter from '@/app/components/modal/generic/footer/footer';
@@ -186,7 +187,7 @@ export default function EmpresaServiceOrderModalView({ isModalOpen, setIsModalOp
 
                 <main className={styles.modalContent}>
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
-                        <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === formData.clientId?.toString())} setSelectedOption={setClientIdOption} isDisabled={!editing} isObligatory={true} />
+                        <DropDownCliente editing={editing} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={formData.clientId} isObligatory={true} />
                         <InputMask title='Título' fieldName='title' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
                         <InputMask type='date' title='Data de execução' fieldName='executionDate' formData={formData} setFormData={setFormData} isDisabled={!editing} />
                         <Dropdown title='Status da ordem de serviço' options={serviceOrderStatusEnum ?? []} selectedOption={serviceOrderStatusEnum?.find(x => x.value === formData.serviceOrderStatus) ?? undefined} setSelectedOption={setServiceOrderStatusOption} isDisabled={!editing} isObligatory={true} />

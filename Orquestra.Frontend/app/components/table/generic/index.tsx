@@ -488,7 +488,7 @@ export default function TableGeneric({
 
             <Table
                 columns={finalColumns}
-                // data={paginatedData}
+                data={paginatedData}
                 rowKey={idPropName}
                 onRow={(row) => ({ onClick: handleTableRowClick ? () => handleTableRowClick(row) : undefined })}
                 emptyText={showEmptyText ?

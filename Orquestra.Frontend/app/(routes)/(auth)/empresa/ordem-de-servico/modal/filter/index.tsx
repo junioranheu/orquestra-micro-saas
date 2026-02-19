@@ -1,7 +1,8 @@
 'use client';
 import { iServiceOrder } from '@/app/api/consts/service-order';
 import Button from '@/app/components/input/button';
-import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import { iDropdownOption } from '@/app/components/input/drop-down';
+import DropDownCliente from '@/app/components/input/drop-down-custom/cliente';
 import InputMask from '@/app/components/input/text';
 import ModalGeneric from '@/app/components/modal/generic';
 import styles from '@/app/components/modal/generic/index.module.scss';
@@ -90,7 +91,7 @@ export default function EmpresaServiceOrderModalFilters({
                     <div className={`${isModalGrid ? styles.grid : 'modal-layout-flex'}`}>
                         <InputMask title='Título' fieldName='title' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
                         <InputMask type='date' title='Data de Execução' fieldName='executionDate' formData={modalFilterFormData} setFormData={setModalFilterFormData} />
-                        <Dropdown title='Cliente' options={clientsDropDown ?? []} selectedOption={clientsDropDown?.find(x => x.value.toString() === modalFilterFormData?.clientId?.toString())} setSelectedOption={setClientIdOption} />
+                        <DropDownCliente editing={true} clientsDropDown={clientsDropDown} setClientIdOption={setClientIdOption} clientId={modalFilterFormData.clientId} isObligatory={false} />
                     </div>
                 </main>
 

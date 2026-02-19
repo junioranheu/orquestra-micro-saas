@@ -181,7 +181,7 @@ export function CarouselLogin({ alignCaptionToRight }: iCarouselLoginProps) {
     return (
         <Carousel
             items={[
-                { image: Img1, caption: 'Agende seus compromissos em segundos' },
+                { image: Img1, caption: 'Agende seus compromissos e eventos em segundos' },
                 { image: Img2, caption: 'Seu negócio afinado como uma orquestra' },
                 { image: Img3, caption: 'Organize sua agenda sem dor de cabeça' },
                 { image: Img4, caption: 'Mais tempo pra você, menos tempo no caos' }

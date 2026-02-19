@@ -1,7 +1,7 @@
 ﻿⦁	Etc:
 Resolver o TO DO em PayCompanyInvoice;
-Na tela de Agendamento, quando o usuário clicar em uma opção, se possível, envia a hora também;
 Na tela de Agendamento, na hora de criar um novo evento, que tenha a opção de cadastrar um novo cliente na hora;
+CRUD simples pra Tipo de agendamento;
 
 ⦁	Módulo de Nota fiscal:
 Criar classe;

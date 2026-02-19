@@ -57,6 +57,11 @@ export default function EmpresaOrdemDeServico() {
             render: (value?: string | null) => value ?? '-'
         },
         {
+            title: 'Cliente',
+            dataIndex: 'client.fullName',
+            key: 'client.fullName'
+        },
+        {
             title: 'Data de Execução',
             dataIndex: 'executionDate',
             key: 'executionDate',

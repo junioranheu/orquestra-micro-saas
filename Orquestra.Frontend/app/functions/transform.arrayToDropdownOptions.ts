@@ -5,7 +5,7 @@ import { Guid } from 'guid-typescript';
 export function handleTransformArrayToDropdownOptionsGuid(data: any[], valueField: string, labelField: string | string[]): iDropdownOption<Guid>[] {
     return data?.map(item => {
         const value = Guid.parse(String(handleGetNestedValue(item, valueField)));
-        const label = Array.isArray(labelField) ? labelField.map(f => String(handleGetNestedValue(item, f) ?? '').trim()).filter(v => v.length > 0).join(' - ') : String(handleGetNestedValue(item, labelField));
+        const label = Array.isArray(labelField) ? labelField.map(f => String(handleGetNestedValue(item, f) ?? '').trim()).filter(v => v.length > 0).join(' • ') : String(handleGetNestedValue(item, labelField));
 
         return { value, label };
     });
