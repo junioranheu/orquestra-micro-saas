@@ -1,6 +1,8 @@
+import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, SetStateAction } from 'react';
+import { Dispatch, Fragment, SetStateAction, useState } from 'react';
 
 interface iProps {
     editing: boolean;
@@ -12,6 +14,12 @@ interface iProps {
 }
 
 export default function DropDownCliente({ editing, clientsDropDown, setClientIdOption, clientId, isObligatory = false, showNewClientButton = false }: iProps) {
+
+    const me = useApiGetMe({});
+
+    const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
+    const [, setTrigger] = useState<Date>(new Date());
+
     return (
         <Fragment>
             <Dropdown
@@ -21,9 +29,18 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
                 setSelectedOption={setClientIdOption}
                 isDisabled={!editing}
                 isObligatory={isObligatory}
-                showAction={true}
+                showAction={showNewClientButton}
                 actionLabel='Cadastrar novo cliente'
-                onActionClick={() => alert('xd')}
+                onActionClick={() => setIsModalViewOpen(true)}
+            />
+
+            <EmpresaClientesModalView
+                isModalOpen={isModalViewOpen}
+                setIsModalOpen={setIsModalViewOpen}
+                type='create'
+                client={undefined}
+                companyId={me?.currentMainCompany?.companyId}
+                setTrigger={setTrigger}
             />
         </Fragment>
     )
