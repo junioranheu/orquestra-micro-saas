@@ -1,8 +1,9 @@
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
+import { iClient } from '@/app/api/consts/client';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, SetStateAction, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 
 interface iProps {
     editing: boolean;
@@ -19,6 +20,13 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
 
     const [isModalViewOpen, setIsModalViewOpen] = useState<boolean>(false);
     const [, setTrigger] = useState<Date>(new Date());
+    const [userJustCreated, setUserJustCreated] = useState<iClient | undefined>(undefined);
+
+    useEffect(() => {
+        if (userJustCreated) {
+            console.log('NOVO USUÁRIOOOOOOOOOOOO', userJustCreated);
+        }
+    }, [userJustCreated]);
 
     return (
         <Fragment>
@@ -41,6 +49,7 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
                 client={undefined}
                 companyId={me?.currentMainCompany?.companyId}
                 setTrigger={setTrigger}
+                setUserJustCreated={setUserJustCreated}
             />
         </Fragment>
     )

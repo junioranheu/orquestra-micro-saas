@@ -28,9 +28,10 @@ interface iProps {
     client: iClient | undefined;
     companyId: Guid | undefined;
     setTrigger: Dispatch<SetStateAction<Date>>;
+    setUserJustCreated?: Dispatch<SetStateAction<iClient | undefined>>;
 }
 
-export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, type, client, companyId, setTrigger }: iProps) {
+export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, type, client, companyId, setTrigger, setUserJustCreated }: iProps) {
 
     const [editing, setEditing] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -91,6 +92,10 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
     }, [isModalOpen, type, client, setIsModalOpen, handleClose]);
 
     async function handleSave() {
+        if (setUserJustCreated) {
+            setUserJustCreated(undefined);
+        }
+
         if (!formData.fullName || !formData.cpf) {
             swal({ content: SYSTEM.WARN_FILL_OBLIGATORY_FIELDS, icon: 'warning' });
             return;
@@ -116,11 +121,10 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         }
 
         input.companyId = companyId;
-
         // console.log(input);
 
         if (type === 'create') {
-            const output = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as iClient;
+            const output = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as boolean;
 
             if (output) {
                 swal({
@@ -128,6 +132,10 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
                     confirmFunction: () => setTrigger(new Date()),
                     icon: 'success'
                 });
+
+                if (setUserJustCreated) {
+                    setUserJustCreated(input);
+                }
 
                 handleClose();
                 return;
@@ -144,7 +152,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         }
 
         input.clientId = client.clientId;
-        const output = await Fetch.put({ url: CONSTS_CLIENT.put, body: input }) as iClient;
+        const output = await Fetch.put({ url: CONSTS_CLIENT.put, body: input }) as boolean;
 
         if (output) {
             swal({
