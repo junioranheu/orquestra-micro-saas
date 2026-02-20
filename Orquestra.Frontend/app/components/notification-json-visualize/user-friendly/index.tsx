@@ -5,7 +5,7 @@ interface iProps {
     notification: iLogNotificationOutput;
 }
 
-export default function NotificationFriendlyVisualize({ notification }: iProps) {
+export default function NotificationJsonVisualizeUserFriendly({ notification }: iProps) {
 
     const parsed = handleParseChangedFields(notification.changedFields);
 
