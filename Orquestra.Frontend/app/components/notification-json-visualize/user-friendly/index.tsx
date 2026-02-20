@@ -10,7 +10,7 @@ export default function NotificationJsonVisualizeUserFriendly({ notification }: 
     const parsed = handleParseChangedFields(notification.changedFields);
 
     if (!parsed) {
-        return <span className={styles.empty}>Sem alterações</span>;
+        return <span>-</span>;
     }
 
     const entries = Object.entries(parsed);

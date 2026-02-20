@@ -1,4 +1,4 @@
-Se algum dia eu voltar a ter o erro 409 (conflito)
+Se algum dia voltar aparecer o erro 409 (conflito)...
 na publicação (CI/CD) do front-end na Azure, 
 basta entrar no KUDU SERVICES (do front-end na Azure),
 navegar até o SSH ou BASH (https://orquestra-web.scm.azurewebsites.net/webssh/host), 
