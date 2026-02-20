@@ -35,9 +35,9 @@ public class ClientController(
     public async Task<ActionResult> Create(ClientInput input)
     {
         Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
-        await _create.Execute(userIdAuth, input);
+        Guid clientId = await _create.Execute(userIdAuth, input);
 
-        return Ok(true);
+        return Ok(clientId);
     } 
 
     [AuthorizeFilter(modules: [ModuleEnum.Client])]

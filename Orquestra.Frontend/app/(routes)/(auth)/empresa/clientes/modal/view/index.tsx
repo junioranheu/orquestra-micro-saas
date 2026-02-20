@@ -124,9 +124,9 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         // console.log(input);
 
         if (type === 'create') {
-            const output = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as boolean;
+            const clientId = await Fetch.post({ url: CONSTS_CLIENT.post, body: input }) as Guid;
 
-            if (output) {
+            if (clientId) {
                 swal({
                     content: 'Cliente registrado com sucesso.',
                     confirmFunction: () => setTrigger(new Date()),
@@ -134,6 +134,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
                 });
 
                 if (setUserJustCreated) {
+                    input.clientId = clientId;
                     setUserJustCreated(input);
                 }
 

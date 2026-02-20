@@ -22,17 +22,43 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
     const [, setTrigger] = useState<Date>(new Date());
     const [userJustCreated, setUserJustCreated] = useState<iClient | undefined>(undefined);
 
+    const [internalOptions, setInternalOptions] = useState<iDropdownOption[]>([]);
+
     useEffect(() => {
-        if (userJustCreated) {
-            console.log('NOVO USUÁRIOOOOOOOOOOOO', userJustCreated);
+        setInternalOptions(clientsDropDown ?? []);
+    }, [clientsDropDown]);
+
+    useEffect(() => {
+        console.log('OPAAAA', userJustCreated);
+
+        if (!userJustCreated?.clientId) {
+            return;
         }
+
+        const newOption: iDropdownOption<Guid> = {
+            value: userJustCreated.clientId,
+            label: userJustCreated.fullName
+        };
+
+        console.log('OPAAAA', newOption);
+
+        setInternalOptions(prev => {
+            const alreadyExists = prev.some(x => x?.value?.toString?.() === newOption.value.toString());
+            console.log('alreadyExists', alreadyExists);
+
+            if (alreadyExists) {
+                return prev;
+            }
+
+            return [...prev, newOption];
+        });
     }, [userJustCreated]);
 
     return (
         <Fragment>
             <Dropdown
                 title='Cliente'
-                options={clientsDropDown ?? []}
+                options={internalOptions}
                 selectedOption={clientsDropDown?.find(x => x.value.toString() === clientId?.toString())}
                 setSelectedOption={setClientIdOption}
                 isDisabled={!editing}

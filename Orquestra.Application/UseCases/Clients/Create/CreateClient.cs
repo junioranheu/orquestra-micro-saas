@@ -11,12 +11,14 @@ public sealed class CreateClient(Context context, ICheckIfUserIsLinkedCompanyUse
 {
     private readonly Context _context = context;
 
-    public async Task Execute(Guid userIdAuth, ClientInput input)
+    public async Task<Guid> Execute(Guid userIdAuth, ClientInput input)
     {
         await Validate(input, userIdAuth, isCreate: true);
         var client = input.Adapt<Client>();
 
         await _context.AddAsync(client);
         await _context.SaveChangesAsync();
+
+        return client.ClientId;
     }
 }
