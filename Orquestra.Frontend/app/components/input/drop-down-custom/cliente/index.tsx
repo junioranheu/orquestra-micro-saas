@@ -1,6 +1,7 @@
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
 import { iClient } from '@/app/api/consts/client';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
+import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import { Guid } from 'guid-typescript';
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
@@ -29,8 +30,6 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
     }, [clientsDropDown]);
 
     useEffect(() => {
-        console.log('OPAAAA', userJustCreated);
-
         if (!userJustCreated?.clientId) {
             return;
         }
@@ -40,15 +39,17 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
             label: userJustCreated.fullName
         };
 
-        console.log('OPAAAA', newOption);
-
         setInternalOptions(prev => {
             const alreadyExists = prev.some(x => x?.value?.toString?.() === newOption.value.toString());
-            console.log('alreadyExists', alreadyExists);
 
             if (alreadyExists) {
                 return prev;
             }
+
+            toast({
+                content: `Cliente ${newOption.label} adicionado à lista. Recomendamos atualizar a página para sincronizar completamente todos os dados do novo cliente.`,
+                ms: 10000
+            });
 
             return [...prev, newOption];
         });
@@ -63,7 +64,7 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
                 setSelectedOption={setClientIdOption}
                 isDisabled={!editing}
                 isObligatory={isObligatory}
-                showAction={showNewClientButton}
+                showAction={showNewClientButton && editing}
                 actionLabel='Cadastrar novo cliente'
                 onActionClick={() => setIsModalViewOpen(true)}
             />

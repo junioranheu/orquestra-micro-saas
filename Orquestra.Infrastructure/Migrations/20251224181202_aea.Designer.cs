@@ -14,7 +14,7 @@ namespace Orquestra.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
     [Migration("20251224181202_aea")]
-    partial class aea
+    partial class Aea
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

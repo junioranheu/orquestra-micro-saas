@@ -5,7 +5,7 @@
 namespace Orquestra.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class aea : Migration
+    public partial class Aea : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
