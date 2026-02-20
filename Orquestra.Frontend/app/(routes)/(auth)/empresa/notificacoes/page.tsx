@@ -1,6 +1,6 @@
 'use client';
 import { CONSTS_LOG, iLogNotificationOutput, iLogNotificationOutputPaginated } from '@/app/api/consts/log';
-import NotificationJsonVisualize from '@/app/components/notification-json-visualize';
+import NotificationJsonVisualizeUserFriendly from '@/app/components/notification-json-visualize/user-friendly';
 import TableGeneric, { iTableColumn } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import useApiGetCurrentMainCompany from '@/app/hooks/api/useApiGetCurrentMainCompany';
@@ -44,7 +44,7 @@ export default function UsuarioNotificacoes() {
                 };
 
                 return (
-                    <NotificationJsonVisualize notification={notification} theme='inherit' />
+                    <NotificationJsonVisualizeUserFriendly notification={notification} />
                 );
             }
         }

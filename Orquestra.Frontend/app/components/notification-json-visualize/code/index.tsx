@@ -7,7 +7,7 @@ interface iProps {
     theme: 'dark' | 'inherit';
 }
 
-export default function NotificationJsonVisualize({ notification, theme }: iProps) {
+export default function NotificationJsonVisualizeCode({ notification, theme }: iProps) {
 
     const content = typeof notification.changedFields === 'object'
         ? JSON.stringify(notification.changedFields, null, 2)
@@ -19,8 +19,7 @@ export default function NotificationJsonVisualize({ notification, theme }: iProp
             return null;
         }
 
-        const tokenRegex =
-            /(\x22(?:\\.|[^\x22\\])*\x22)(?=\s*:)|(\x22(?:\\.|[^\x22\\])*\x22)|(\btrue\b|\bfalse\b|\bnull\b)|(-?\d+(\.\d+)?([eE][+-]?\d+)?)/g;
+        const tokenRegex = /(\x22(?:\\.|[^\x22\\])*\x22)(?=\s*:)|(\x22(?:\\.|[^\x22\\])*\x22)|(\btrue\b|\bfalse\b|\bnull\b)|(-?\d+(\.\d+)?([eE][+-]?\d+)?)/g;
 
         const nodes: React.ReactNode[] = [];
         let lastIndex = 0;

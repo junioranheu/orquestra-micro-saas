@@ -6,7 +6,7 @@ import { Fetch } from '@/app/api/fetch';
 import ArrowUpRight from '@/app/components/arrow-up-right';
 import { ContentLoaderCard } from '@/app/components/content-loader/card';
 import Icon from '@/app/components/icon';
-import NotificationJsonVisualize from '@/app/components/notification-json-visualize';
+import NotificationJsonVisualizeUserFriendly from '@/app/components/notification-json-visualize/user-friendly';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
@@ -117,15 +117,25 @@ function NotificationItem({ notification }: { notification: iLogNotificationOutp
                 <div className={styles.service}>
                     {
                         open && (
-                            <NotificationJsonVisualize notification={notification} theme='inherit' />
+                            <div style={{ marginTop: '0.3rem' }}>
+                                <NotificationJsonVisualizeUserFriendly notification={notification} />
+                            </div>
                         )
                     }
                 </div>
+
+                {
+                    !open && (
+                        <div className={styles.bottom}>
+                            {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
+                        </div>
+                    )
+                }
             </div>
 
-            <div className={styles.right}>
+            {/* <div className={styles.right}>
                 {handleFormatDate(notification.date, DATE_STYLE.DETALHADO)}
-            </div>
+            </div> */}
         </div>
     )
 }

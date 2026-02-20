@@ -1,7 +1,7 @@
 'use client';
 import { CONSTS_LOG, iLog, iLogNotificationOutput, iLogPaginated } from '@/app/api/consts/log';
 import Icon from '@/app/components/icon';
-import NotificationJsonVisualize from '@/app/components/notification-json-visualize';
+import NotificationJsonVisualizeCode from '@/app/components/notification-json-visualize/code';
 import TableGeneric, { iTableColumn, iTableExtraItems, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
 import SYSTEM from '@/app/consts/system';
@@ -77,7 +77,7 @@ export default function Logs() {
                 };
 
                 return (
-                    <NotificationJsonVisualize notification={notification} theme='inherit' />
+                    <NotificationJsonVisualizeCode notification={notification} theme='inherit' />
                 );
             }
         }

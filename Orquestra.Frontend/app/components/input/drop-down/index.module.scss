@@ -30,7 +30,11 @@
         }
 
         .action {
-            // color: orange;
+            // background-color: orange !important;
+            background-color: var(--contrast-light);
+            padding: 0.1rem 0.3rem;
+            border-radius: var(--border-radius-xs);
+
             cursor: pointer;
             margin-left: auto;
             text-decoration: none;
