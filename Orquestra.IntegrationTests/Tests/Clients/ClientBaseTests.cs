@@ -25,7 +25,7 @@ public sealed class ClientBaseTests
 
         ClientInput input = new()
         {
-            FullName = "A",
+            FullName = "A_",
             Email = "cliente@teste.com",
             CPF = "44571955880",
             Phone = "12982716322",

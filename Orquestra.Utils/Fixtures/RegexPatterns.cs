@@ -4,7 +4,7 @@ namespace Orquestra.Utils.Fixtures;
 
 public static partial class RegexPatterns
 {
-    [GeneratedRegex(@"^[\p{L}]{3,}(?:\s+(?:[\p{L}]{3,}|de|da|dos|das))*\s+[\p{L}]{3,}$", RegexOptions.IgnoreCase)]
+    [GeneratedRegex(@"^[\p{L}][\p{L}'\-\.]*(?:\s+[\p{L}][\p{L}'\-\.]*)*$", RegexOptions.IgnoreCase)]
     public static partial Regex RegexName();
 
     /// <summary>

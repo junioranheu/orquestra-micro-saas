@@ -128,7 +128,7 @@ public sealed class UpdateUserTests
     {
         // Arrange;
         Context context = Fixture.CreateContext();
-        User user = UserMock.Create("Name", "test2@example.com", UserRoleEnum.Administrator);
+        User user = UserMock.Create("Name_", "test2@example.com", UserRoleEnum.Administrator);
         await Fixture.Save(context, user);
 
         UpdateUser sut = CreateSut(context);
