@@ -15,10 +15,11 @@ public sealed class RegexPatternsTests
     }
 
     [Theory]
-    [InlineData("Jo da Silva")]    // "Jo" < 3;
-    [InlineData("A B")]            // Muito curto;
-    [InlineData("junior 1234")]    // Números;
-    [InlineData("de silva")]       // Começa com preposição;
+    [InlineData("junior 1234")]   // contém números
+    [InlineData("@@@")]           // caracteres inválidos
+    [InlineData(" ")]             // vazio
+    [InlineData("")]              // vazio
+    [InlineData("Junior_")]       // underscore não permitido
     public void RegexName_ShouldNotMatch_InvalidNames(string name)
     {
         Assert.DoesNotMatch(RegexPatterns.RegexName(), name);

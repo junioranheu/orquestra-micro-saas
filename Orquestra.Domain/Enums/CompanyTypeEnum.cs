@@ -151,6 +151,9 @@ public enum CompanyTypeEnum
     [Description("Pedicure")]
     Pedicure = 49,
 
+    [Description("Instituição religiosa")]
+    InstituicaoReligiosa = 50,
+
     [Description("Outro")]
     Outro = 99
 }

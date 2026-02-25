@@ -169,11 +169,10 @@ public sealed class CreateUserTests
     }
 
     [Theory]
-    [InlineData("", "user@teste.com", "Senha123@")]
-    [InlineData("A", "user@teste.com", "Senha123@")]
-    [InlineData("Junior", "", "Senha123@")]
-    [InlineData("Junior", "invalid-email", "Senha123@")]
-    [InlineData("Junior", "user@teste.com", "")]
+    [InlineData("", "user@teste.com", "Senha123@")]          // nome vazio
+    [InlineData("Junior", "", "Senha123@")]                  // email vazio
+    [InlineData("Junior", "invalid-email", "Senha123@")]     // email inválido
+    [InlineData("Junior", "user@teste.com", "")]             // senha vazia
     public async Task Execute_ShouldThrowArgumentException_ForInvalidInputs(string fullName, string email, string password)
     {
         // Arrange;

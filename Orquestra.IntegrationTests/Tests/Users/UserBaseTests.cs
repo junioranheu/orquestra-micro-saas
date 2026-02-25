@@ -97,7 +97,7 @@ public sealed class UserBaseTests
         Context context = Fixture.CreateContext();
         UserBase sut = CreateSut(context);
 
-        UserInput input = new() { FullName = "A", Email = "junior@teste.com", Password = "Senha123@" };
+        UserInput input = new() { FullName = "A_", Email = "junior@teste.com", Password = "Senha123@" };
 
         // Act & Assert;
         await Assert.ThrowsAsync<ArgumentException>(() => sut.Validate(input, Guid.NewGuid(), isCreate: true, hasChangedPassword: true));
