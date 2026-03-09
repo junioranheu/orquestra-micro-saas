@@ -206,7 +206,7 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
         setEditing(false);
         setSaving(true);
 
-        const data = handleLoopFormData(formData);
+        const data = handleLoopFormData({ formData });
         const input = data.json as iSchedule;
 
         //#region Normalizar props

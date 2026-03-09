@@ -117,7 +117,7 @@ export default function EmpresaClientesModalFollowUp({ isModalOpen, setIsModalOp
         setSaving(true);
 
         let hasImages = false;
-        const data = handleLoopFormData(formData);
+        const data = handleLoopFormData({ formData });
         const input = data.json as iClientFollowUp;
         const formDataInput = new FormData();
 

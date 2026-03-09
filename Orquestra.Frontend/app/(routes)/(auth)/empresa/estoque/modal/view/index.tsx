@@ -81,7 +81,7 @@ export default function EmpresaEstoqueModalView({ isModalOpen, setIsModalOpen, t
         setEditing(false);
         setSaving(true);
 
-        const data = handleLoopFormData(formData);
+        const data = handleLoopFormData({ formData });
         const input = data.json as iInventory;
         const formDataInput = new FormData();
 

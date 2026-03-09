@@ -13,7 +13,7 @@ interface iProps {
     options: iDropdownOption[];
     isMultiple?: boolean;
     selectedOption: iDropdownOption | iDropdownOption[] | null | undefined;
-    setSelectedOption?: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
+    setSelectedOption?: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption>> | Dispatch<SetStateAction<iDropdownOption[] | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
     className?: string;
     showDefaultOption0?: boolean;
     placeholder?: string;
@@ -54,15 +54,10 @@ export default function Dropdown({
     function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption>) {
         if (Array.isArray(e)) {
             // console.log('handleChange/multiple', e);
-            const ids = e.map(x => x.value);
-
-            // @ts-expect-error: o tipo genérico de setSelectedOption não aceita array aqui;
-            setSelectedOption(ids);
+            (setSelectedOption as Dispatch<SetStateAction<any>> | undefined)?.(e as iDropdownOption[]);
         } else {
             // console.log('handleChange/single', e);
-
-            // @ts-expect-error: o tipo genérico de setSelectedOption não aceita valor único aqui;
-            setSelectedOption(e);
+            (setSelectedOption as Dispatch<SetStateAction<any>> | undefined)?.((e ?? null) as iDropdownOption | null);
         }
     }
 

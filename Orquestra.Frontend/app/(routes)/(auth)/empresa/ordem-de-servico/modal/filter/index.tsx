@@ -42,7 +42,7 @@ export default function EmpresaServiceOrderModalFilters({
 
     function handleSubmit() {
         const normalizedFormData = handleNormalizeEmptyKeyToId(modalFilterFormData, setModalFilterFormData, 'clientId'); // Workaround bizarro para um bug bizarro...
-        const data = handleLoopFormData(normalizedFormData, 'label');
+        const data = handleLoopFormData({ formData: normalizedFormData, dropDownWhichValue: 'label' });
         const url = handleNormalizeFetchUrl(apiUrlRequest, data);
         const urlNormalized = handleRemoveDuplicateQueryParams(url);
 

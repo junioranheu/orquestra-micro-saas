@@ -85,7 +85,7 @@ export default function EmpresaMembrosModalEdit({
         setEditing(false);
         setSaving(true);
 
-        const data = handleLoopFormData(formData);
+        const data = handleLoopFormData({ formData });
         const input = data.json as iFormData;
 
         // Normalizar;

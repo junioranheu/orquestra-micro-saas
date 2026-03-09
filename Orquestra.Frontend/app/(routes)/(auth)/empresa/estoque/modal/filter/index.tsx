@@ -33,7 +33,7 @@ export default function EmpresaEstoqueModalFilters({
     const [isModalGrid,] = useIsModalGrid();
 
     function handleSubmit() {
-        const data = handleLoopFormData(modalFilterFormData, 'label');
+        const data = handleLoopFormData({ formData: modalFilterFormData, dropDownWhichValue: 'label' });
         const url = handleNormalizeFetchUrl(apiUrlRequest, data);
         const urlNormalized = handleRemoveDuplicateQueryParams(url);
 

@@ -27,11 +27,6 @@ export function handleSetDropdownOption<T>(formData: T, setForm: Dispatch<SetSta
 }
 
 // Helpers extras;
-// export function handleClearFormData<T>(setForm: Dispatch<SetStateAction<T>>) {
-//     // @ts-expect-error: necessário porque o tipo genérico T não garante que null é um valor permitido para todas as chaves;
-//     setForm((prevState) => ({ ...Object.keys(prevState).reduce((acc, key) => ({ ...acc, [key]: null }), {}) }));
-// }
-
 export function handleClearFormData<T>(setForm: Dispatch<SetStateAction<T>>) {
     setForm(prev => {
         const cleared = {} as T;
@@ -44,19 +39,40 @@ export function handleClearFormData<T>(setForm: Dispatch<SetStateAction<T>>) {
     });
 }
 
+export function handleClearFormDataAsync<T extends Record<string, any>>(setFormData: Dispatch<SetStateAction<T>>): Promise<T> {
+    return new Promise(resolve => {
+        setFormData(prev => {
+            const cleared = Object.keys(prev).reduce((acc, k) => {
+                return { ...acc, [k]: '' };
+            }, {} as T);
+
+            resolve(cleared);
+            return cleared;
+        });
+    });
+}
+
 export interface iFormDataLoopResult {
     json: any;
     url: string;
 }
 
-export function handleLoopFormData(formData: any, dropDownWhichValue: 'value' | 'label' = 'value', log: boolean = false, hideNull: boolean = true): iFormDataLoopResult {
+interface ihandleLoopFormDataOptions {
+    formData: any;
+    dropDownWhichValue?: 'value' | 'label';
+    log?: boolean;
+    hideNull?: boolean;
+    charToSeparateArrayDropDown?: string;
+}
+
+export function handleLoopFormData({ formData, dropDownWhichValue = 'value', log = false, hideNull = true, charToSeparateArrayDropDown = ';' }: ihandleLoopFormDataOptions): iFormDataLoopResult {
     const jsonObject: any = {};
     let urlString = '';
 
     if (typeof formData === 'object' && formData !== null) {
         if (Array.isArray(formData)) {
             for (const item of formData) {
-                const { json, url } = handleLoopFormData(item, dropDownWhichValue, log, hideNull);
+                const { json, url } = handleLoopFormData({ formData: item, dropDownWhichValue, log, hideNull, charToSeparateArrayDropDown });
                 jsonObject.push(json);
                 urlString += url;
             }
@@ -67,6 +83,22 @@ export function handleLoopFormData(formData: any, dropDownWhichValue: 'value' | 
                     // log && console.log(item);
 
                     let data = formData[key];
+
+                    if (Array.isArray(data)) {
+                        const normalizedArray = data.map(item => {
+                            if (isDropdownOption(item)) {
+                                return dropDownWhichValue === 'value' ? item.value : item.label;
+                            }
+
+                            return item;
+                        }).filter(item => item !== null && item !== undefined && item !== '');
+
+                        if (!normalizedArray.length) {
+                            continue;
+                        }
+
+                        data = normalizedArray.join(charToSeparateArrayDropDown);
+                    }
 
                     if (isDropdownOption(formData[key])) {
                         data = dropDownWhichValue === 'value' ? formData[key].value : formData[key].label;

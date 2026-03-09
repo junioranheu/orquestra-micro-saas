@@ -107,7 +107,7 @@ export default function EmpresaServiceOrderModalView({ isModalOpen, setIsModalOp
         setEditing(false);
         setSaving(true);
 
-        const data = handleLoopFormData(formData);
+        const data = handleLoopFormData({ formData });
         const input = data.json as iServiceOrder;
 
         // #region normalizar_props

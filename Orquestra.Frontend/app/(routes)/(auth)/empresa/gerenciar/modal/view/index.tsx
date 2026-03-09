@@ -133,7 +133,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         setEditing(false);
         setSaving(true);
 
-        const data = handleLoopFormData(formData);
+        const data = handleLoopFormData({ formData });
         const input = data.json as iCompanyOutput;
         // console.log(input);
 

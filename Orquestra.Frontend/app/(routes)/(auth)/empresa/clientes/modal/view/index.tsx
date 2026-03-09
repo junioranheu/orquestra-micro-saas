@@ -104,7 +104,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         setEditing(false);
         setSaving(true);
 
-        const data = handleLoopFormData(formData);
+        const data = handleLoopFormData({ formData });
         const input = data.json as iClient;
 
         if (input.cpf) {
