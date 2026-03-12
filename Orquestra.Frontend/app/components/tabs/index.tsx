@@ -1,5 +1,5 @@
 'use client';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 const EMPTY_DISABLED_INDEXES: number[] = [];
