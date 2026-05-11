@@ -1,41 +1,33 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Jobs.Base;
 using Orquestra.Infrastructure.Jobs.Base.Handlers;
 
 namespace Orquestra.Infrastructure.Jobs.Integrations.WhatsApp;
 
-public sealed class SendMessageBatchWhatsAppJob(IServiceScopeFactory scopeFactory, ILogger<SendMessageBatchWhatsAppJob> logger) : BackgroundService
+public sealed class SendMessageBatchWhatsAppJob(IServiceScopeFactory scopeFactory, ILogger<SendMessageBatchWhatsAppJob> logger) : IntervalJobBase(scopeFactory, logger)
 {
-    private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
-    private readonly ILogger _logger = logger;
-    private const int LOOP_IN_HOUR = 1;
+    protected override TimeSpan Interval => TimeSpan.FromMinutes(SystemConsts.Jobs.SendMessageBatchWhatsAppJob_IntervalMinutes);
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteJobAsync(Context context, CancellationToken ct)
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            using IServiceScope scope = _scopeFactory.CreateScope();
-            Context context = scope.ServiceProvider.GetRequiredService<Context>();
-            ISendMessageBatchWhatsAppHandler handler = scope.ServiceProvider.GetRequiredService<ISendMessageBatchWhatsAppHandler>();
+        using IServiceScope scope = _scopeFactory.CreateScope();
+        ISendMessageBatchWhatsAppHandler handler = scope.ServiceProvider.GetRequiredService<ISendMessageBatchWhatsAppHandler>();
 
-            // Início;
-            await SendMessages(context, handler, stoppingToken);
-
-            // Loop;
-            await Task.Delay(TimeSpan.FromHours(LOOP_IN_HOUR), stoppingToken);
-        }
+        await SendMessages(context, handler, ct);
     }
 
+    #region extras
     private async Task SendMessages(Context context, ISendMessageBatchWhatsAppHandler handler, CancellationToken stoppingToken)
     {
         int messagesSent = await handler.ExecuteAsync(stoppingToken);
 
         if (messagesSent > 0)
         {
-            await JobsBase.CreateLog(context, _logger, description: $"Mensagens enviadas: {messagesSent}");
+            await CreateLog(context, _logger, description: $"Mensagens enviadas: {messagesSent}");
         }
     }
+    #endregion
 }

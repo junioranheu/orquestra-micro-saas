@@ -1,3 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Performance", "CA1873:Evitar registros em log que possam ser caros", Justification = "<Pendente>", Scope = "member", Target = "~M:Orquestra.Infrastructure.Jobs.Base.JobsBase.CreateLog(Orquestra.Infrastructure.Data.Context,Microsoft.Extensions.Logging.ILogger,System.String)~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Performance", "CA1873:Evitar registros em log que possam ser caros", Justification = "<Pendente>", Scope = "member", Target = "~M:Orquestra.Infrastructure.Jobs.Base.JobsBase.RunWithScope(System.Threading.CancellationToken)~System.Threading.Tasks.Task{System.Boolean}")]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Orquestra.Domain.Consts;
 using Orquestra.Domain.Enums;
 using Orquestra.Infrastructure.Data;
 using Orquestra.Infrastructure.Jobs.Base;
@@ -9,25 +9,13 @@ using static Orquestra.Utils.Fixtures.Get;
 
 namespace Orquestra.Infrastructure.Jobs.Companies;
 
-public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<CompanyPlanJob> logger) : BackgroundService
+public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<CompanyPlanJob> logger) : IntervalJobBase(scopeFactory, logger)
 {
-    private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
-    private readonly ILogger _logger = logger;
-    private const int LOOP_IN_HOUR = 1;
+    protected override TimeSpan Interval => TimeSpan.FromMinutes(SystemConsts.Jobs.CompanyPlanJob_IntervalMinutes);
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteJobAsync(Context context, CancellationToken ct)
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            using IServiceScope scope = _scopeFactory.CreateScope();
-            Context context = scope.ServiceProvider.GetRequiredService<Context>();
-
-            // Início;
-            await CheckAndExpirePlans(context);
-
-            // Loop;
-            await Task.Delay(TimeSpan.FromHours(LOOP_IN_HOUR), stoppingToken);
-        }
+        await CheckAndExpirePlans(context);
     }
 
     #region obsolete_EF_with_hashset
@@ -50,6 +38,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
     //}
     #endregion
 
+    #region extras
     private async Task CheckAndExpirePlans(Context context)
     {
         DateTime now = GetDate();
@@ -60,7 +49,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         UPDATE ""Companies""
         SET ""CompanySituation"" = {0}      -- {0} = novo status: CompanySituationEnum.PendingPayment
         WHERE ""PlanEndDate"" <= {1}        -- {1} = now
-          AND ""CompanySituation"" != {0};   -- só empresas que ainda não estão PendingPayment
+          AND ""CompanySituation"" != {0};  -- só empresas que ainda não estão PendingPayment
         ";
 
         int companiesUpdated = await context.Database.ExecuteSqlRawAsync(
@@ -72,7 +61,7 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
         // Atualiza os invoices para CompanyInvoiceSituationEnum.Expired;
         if (companiesUpdated > 0)
         {
-            await JobsBase.CreateLog(context, _logger, description: $"Empresas atualizadas: {companiesUpdated}");
+            await CreateLog(context, _logger, description: $"Empresas atualizadas: {companiesUpdated}");
 
             int expiredValue = (int)CompanyInvoiceSituationEnum.Expired;
 
@@ -96,8 +85,9 @@ public sealed class CompanyPlanJob(IServiceScopeFactory scopeFactory, ILogger<Co
 
             if (invoicesUpdated > 0)
             {
-                await JobsBase.CreateLog(context, _logger, description: $"Faturas atualizadas: {invoicesUpdated}");
+                await CreateLog(context, _logger, description: $"Faturas atualizadas: {invoicesUpdated}");
             }
         }
     }
+    #endregion
 }

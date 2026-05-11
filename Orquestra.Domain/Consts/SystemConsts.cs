@@ -44,6 +44,13 @@ public static class SystemConsts
         public const string CacheKey_FiltersClient = "CacheKey_FiltersClient_companyId_";
     }
 
+    public static class Jobs
+    {
+        public const int CompanyPlanJob_IntervalMinutes = 60;
+        public const int ScheduleStatusJob_IntervalMinutes = 60;
+        public const int SendMessageBatchWhatsAppJob_IntervalMinutes = 60;
+    }
+
     public static class Screens
     {
         public const string Dashboard = "dashboard";
