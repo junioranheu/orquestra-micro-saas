@@ -44,7 +44,7 @@ export default function Logs() {
                     4: 'Auditoria'
                 };
 
-                return map[value] ?? '-';
+                return <span style={{ color: value === 1 ? 'var(--red)' : undefined }}>{map[value] ?? '-'}</span>;
             },
             width: '5rem'
         },
@@ -58,19 +58,19 @@ export default function Logs() {
             title: 'Endpoint',
             dataIndex: 'endpoint',
             key: 'endpoint',
-            width: '5rem'
+            width: '1rem'
         },
         {
             title: 'Descrição',
             dataIndex: 'description',
             key: 'description',
-            width: '8rem'
+            minWidth: '7.5rem'
         },
         {
             title: 'Modificações',
             dataIndex: 'changedFields',
             key: 'changedFields',
-            width: '15rem',
+            minWidth: '30rem',
             render: (value: string) => {
                 const notification: iLogNotificationOutput = {
                     changedFields: value
