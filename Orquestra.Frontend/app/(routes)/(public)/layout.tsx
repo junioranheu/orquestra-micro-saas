@@ -18,7 +18,6 @@ import { usePathname } from 'next/navigation';
 import 'nprogress/nprogress.css';
 import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'sonner';
-import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
 

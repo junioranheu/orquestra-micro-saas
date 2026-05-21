@@ -6,11 +6,11 @@ import { CONSTS_UTILITY, iPlanType, iPlanTypeOutput } from '@/app/api/consts/uti
 import { Fetch } from '@/app/api/fetch';
 import CardCreamWithChildren from '@/app/components/card/cream-with-children';
 import CardSimpleWithChildren from '@/app/components/card/simple-with-children';
+import Tippy from '@/app/components/tool-tip';
 import { handleLaunchConfetti } from '@/app/functions/effect.confetti';
 import swal from '@/app/functions/swal';
 import toast from '@/app/functions/toast';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
-import Tippy from '@tippyjs/react';
 import { Guid } from 'guid-typescript';
 import Link from 'next/link';
 import { useState } from 'react';

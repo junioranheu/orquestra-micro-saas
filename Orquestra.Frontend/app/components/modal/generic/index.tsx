@@ -1,5 +1,5 @@
+import Tippy from '@/app/components/tool-tip';
 import useKeyPress from '@/app/hooks/useKeyPress';
-import Tippy from '@tippyjs/react';
 import { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react';
 import Modal from 'react-modal';
 import styles from './index.module.scss';

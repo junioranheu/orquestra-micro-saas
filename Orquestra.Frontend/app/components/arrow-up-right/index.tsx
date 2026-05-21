@@ -1,5 +1,5 @@
 'use client';
-import Tippy from '@tippyjs/react';
+import Tippy from '@/app/components/tool-tip';
 import { useRouter } from 'next/navigation';
 
 interface iProps {

@@ -5,12 +5,12 @@ import CardSimple from '@/app/components/card/simple';
 import Icon from '@/app/components/icon';
 import TableGeneric, { iTableColumn, iTableManagingOptions } from '@/app/components/table/generic';
 import TemplatePageHeader from '@/app/components/template/template-page-header';
+import Tippy from '@/app/components/tool-tip';
 import ROUTES from '@/app/consts/routes';
 import useApiGetEnum from '@/app/hooks/api/useApiGetEnum';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import useTitle from '@/app/hooks/useTitle';
-import Tippy from '@tippyjs/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

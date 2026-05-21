@@ -1,10 +1,10 @@
 'use client';
 import { HELP_TOPICS, iAjudaTopicoItem } from '@/app/(routes)/(public)/(etc)/ajuda/page';
 import Seta from '@/app/components/svg/seta/seta';
+import Tippy from '@/app/components/tool-tip';
 import ROUTES from '@/app/consts/routes';
 import handleNormalizeUrl, { handleNormalizeHtml } from '@/app/functions/format.url';
 import useTitle from '@/app/hooks/useTitle';
-import Tippy from '@tippyjs/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';

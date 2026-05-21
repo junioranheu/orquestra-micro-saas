@@ -2,6 +2,7 @@
 import Button from '@/app/components/input/button';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import Mascot from '@/app/components/mascot';
+import Tippy from '@/app/components/tool-tip';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import handleGetPropName from '@/app/functions/get.propName';
@@ -10,7 +11,6 @@ import toast from '@/app/functions/toast';
 import { handleTransformArrayToDropdownOptionsString } from '@/app/functions/transform.arrayToDropdownOptions';
 import { useDashboardRouteShortcut, useIsModalGrid, useShowChatbot, useShowExpandedSidebar, useShowLogsDashboard } from '@/app/hooks/contexts/useGlobalContext';
 import { handleApplyTheme, THEMES } from '@/app/hooks/useTheme';
-import Tippy from '@tippyjs/react';
 import { Dispatch, Fragment, ReactNode, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';
 

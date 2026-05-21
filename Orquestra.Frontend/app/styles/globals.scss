@@ -741,29 +741,33 @@ input:-webkit-autofill {
     }
 }
 
-// Tip
-.tippy-box {
-    background-color: var(--black) !important;
-    color: var(--white) !important;
-    font-weight: 500 !important;
-    border-radius: var(--border-radius) !important;
-    padding: 0.35rem 0.5rem !important;
-    z-index: 999999999999999 !important;
+// Tool tip
+.tooltip {
+    background-color: var(--black);
+    color: var(--white);
+    font-weight: 500;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    border-radius: var(--border-radius);
+    padding: 0.6rem 0.75rem;
+    z-index: 999999999999999;
+    max-width: 20rem;
+    box-shadow: var(--shadow);
 
-    &[data-placement^='top']>.tippy-arrow::before {
-        border-top-color: var(--black) !important;
+    &[data-side='top'] {
+        transform-origin: bottom;
     }
 
-    &[data-placement^='bottom']>.tippy-arrow::before {
-        border-bottom-color: var(--black) !important;
+    &[data-side='bottom'] {
+        transform-origin: top;
     }
 
-    &[data-placement^='left']>.tippy-arrow::before {
-        border-left-color: var(--black) !important;
+    &[data-side='left'] {
+        transform-origin: right;
     }
 
-    &[data-placement^='right']>.tippy-arrow::before {
-        border-right-color: var(--black) !important;
+    &[data-side='right'] {
+        transform-origin: left;
     }
 }
 

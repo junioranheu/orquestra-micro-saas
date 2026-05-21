@@ -1,11 +1,11 @@
 import { iMe } from '@/app/api/consts/auth';
 import ChatBot from '@/app/components/chat-bot';
 import Icon from '@/app/components/icon';
+import Tippy from '@/app/components/tool-tip';
 import SYSTEM from '@/app/consts/system';
 import { PACIFICO } from '@/app/fonts/fonts';
 import { useShowChatbot, useShowExpandedSidebar } from '@/app/hooks/contexts/useGlobalContext';
 import { useMenuGroups } from '@/app/hooks/useGetMenuGroups';
-import Tippy from '@tippyjs/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';

@@ -1,6 +1,6 @@
 import ImgMaestro from '@/app/assets/gif/maestro.gif';
+import Tippy from '@/app/components/tool-tip';
 import SYSTEM from '@/app/consts/system';
-import Tippy from '@tippyjs/react';
 import Image from 'next/image';
 import { CSSProperties, ReactElement, ReactNode, useEffect, useState } from 'react';
 import styles from './index.module.scss';

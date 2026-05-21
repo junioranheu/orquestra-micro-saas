@@ -6,6 +6,7 @@ import SvgServer from '@/app/assets/svg/server.svg';
 import Icon from '@/app/components/icon';
 import { iDropdownOption } from '@/app/components/input/drop-down';
 import Splash from '@/app/components/splash';
+import Tippy from '@/app/components/tool-tip';
 import WhatsappButton from '@/app/components/whatsapp/button';
 import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
@@ -18,7 +19,6 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSet
 import useInjectTailwindCDN from '@/app/hooks/useInjectTailwindCDN';
 import useTitle from '@/app/hooks/useTitle';
 import useWindowSize from '@/app/hooks/useWindowSize';
-import Tippy from '@tippyjs/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

@@ -2,12 +2,12 @@
 import { HELP_TOPICS } from '@/app/(routes)/(public)/(etc)/ajuda/page';
 import { iMe } from '@/app/api/consts/auth';
 import ImgMaestro from '@/app/assets/png/maestro.png';
+import Tippy from '@/app/components/tool-tip';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { handleGetFirstName } from '@/app/functions/get.formatUserName';
 import { handleGetTimeGreeting } from '@/app/functions/get.greeting';
 import { useIsOpenChatbot } from '@/app/hooks/contexts/useGlobalContext';
-import Tippy from '@tippyjs/react';
 import Image from 'next/image';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss';

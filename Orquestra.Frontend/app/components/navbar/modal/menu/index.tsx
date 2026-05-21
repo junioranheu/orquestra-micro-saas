@@ -1,13 +1,13 @@
 import { iMe } from '@/app/api/consts/auth';
 import Icon from '@/app/components/icon';
 import ModalGeneric, { iModalCustomPosition } from '@/app/components/modal/generic';
+import Tippy from '@/app/components/tool-tip';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { DATE_STYLE, handleFormatDate } from '@/app/functions/format.date';
 import { handleGetFirstName, handleGetNameInitials } from '@/app/functions/get.formatUserName';
 import useUserContext from '@/app/hooks/contexts/useUserContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
-import Tippy from '@tippyjs/react';
 import feather from 'feather-icons';
 import { useRouter } from 'next/navigation';
 import { Dispatch, Fragment, JSX, SetStateAction, useEffect, useState } from 'react';

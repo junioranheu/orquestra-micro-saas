@@ -1,9 +1,9 @@
 import Icon from '@/app/components/icon';
+import Tippy from '@/app/components/tool-tip';
 import WhatsappHyperlink from '@/app/components/whatsapp/hyperlink';
 import ROUTES from '@/app/consts/routes';
 import SYSTEM from '@/app/consts/system';
 import { PACIFICO } from '@/app/fonts/fonts';
-import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import styles from './index.module.scss';
 

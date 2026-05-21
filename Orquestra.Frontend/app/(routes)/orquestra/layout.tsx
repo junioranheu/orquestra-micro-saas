@@ -6,7 +6,6 @@ import useCheckAzureServer from '@/app/hooks/api/useCheckAzureServer';
 import useStandardIntructions from '@/app/hooks/useStandardInstructions';
 import feather from 'feather-icons';
 import { ReactNode, useEffect } from 'react';
-import 'tippy.js/dist/tippy.css';
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
 
