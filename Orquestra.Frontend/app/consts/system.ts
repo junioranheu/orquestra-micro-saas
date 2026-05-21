@@ -9,6 +9,8 @@ const SYSTEM = {
     COLOR: '#0b996f',
     MASCOT: 'Maestro',
 
+    URL_BASE: process.env.NEXT_PUBLIC_APP_URL,
+
     EMAIL_SUPPORT: 'orquestra.saas@gmail.com',
     PHONE_SUPPORT: '12982716339',
     URL_GITHUB: 'https://github.com/junioranheu',
