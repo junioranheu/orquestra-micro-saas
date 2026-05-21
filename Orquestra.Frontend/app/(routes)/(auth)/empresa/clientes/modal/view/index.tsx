@@ -19,7 +19,7 @@ import { handleClearFormData, handleLoopFormData, handleSetDropdownOption } from
 import swal from '@/app/functions/swal';
 import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSetterOnUrlChange';
 import { Guid } from 'guid-typescript';
-import { Dispatch, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iProps {
     isModalOpen: boolean;
@@ -171,7 +171,7 @@ export default function EmpresaClientesModalView({ isModalOpen, setIsModalOpen, 
         return;
     }
 
-    async function handleGetCEP(e: KeyboardEvent<HTMLInputElement>) {
+    async function handleGetCEP(e: ChangeEvent<HTMLInputElement>) {
         setFormData(prev => ({ ...prev, address: '', addressNumber: '', city: '', state: '', country: '' }));
 
         const cep = e.currentTarget.value;

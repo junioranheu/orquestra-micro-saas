@@ -30,6 +30,6 @@ const ROUTES = {
     EMPRESA_ESTOQUE: '/empresa/estoque',
     EMPRESA_NOTIFICACOES: '/empresa/notificacoes',
     DASHBOARD: '/dashboard'
-};
+} as const;
 
 export default ROUTES;

@@ -1,5 +1,6 @@
+import DebounceBar from '@/app/components/input/debounce-bar';
 import Image, { StaticImageData } from 'next/image';
-import { CSSProperties, ChangeEvent, Dispatch, FocusEventHandler, KeyboardEventHandler, ReactNode, SetStateAction, cloneElement, useEffect, useState, } from 'react';
+import { CSSProperties, ChangeEvent, ChangeEventHandler, Dispatch, FocusEventHandler, KeyboardEventHandler, ReactNode, SetStateAction, cloneElement, useEffect, useState, } from 'react';
 import { IMaskInput } from 'react-imask';
 import styles from './index.module.scss';
 
@@ -24,7 +25,10 @@ interface iProps<T> {
     handleExtraValidation?: () => boolean | null;
     handleKeyDown?: KeyboardEventHandler<HTMLInputElement>;
     handleBlur?: FocusEventHandler<HTMLInputElement>;
-    handleOnChange?: KeyboardEventHandler<HTMLInputElement>;
+    handleOnChange?: ChangeEventHandler<HTMLInputElement>;
+
+    debounceSeconds?: number;
+    onDebounce?: (value: string) => void;
 }
 
 export default function InputMask<T>({
@@ -47,7 +51,10 @@ export default function InputMask<T>({
     handleExtraValidation = () => null,
     handleKeyDown = () => null,
     handleBlur = () => null,
-    handleOnChange = () => null
+    handleOnChange = () => null,
+
+    debounceSeconds,
+    onDebounce
 }: iProps<T>) {
 
     const value_formData = formData?.[fieldName] ?? '';
@@ -62,21 +69,13 @@ export default function InputMask<T>({
 
         let value = e.target.value;
 
-        // Não permitir negativo no type number;
-        if (type === 'number') {
-            value = value.replace(/-/g, '');
-        }
-
         if (mask && mask?.length > 0) {
             // Extrai apenas os dígitos;
             let digits = (value.match(/\d/g) || []).join('');
 
             // Conta quantos dígitos a máscara permite;
             const maxDigits = (mask.match(/0/g) || []).length;
-
-            if (digits.length > maxDigits) {
-                digits = digits.slice(0, maxDigits);
-            }
+            if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
 
             // Reconstrói o valor formatado conforme a máscara;
             let formatted = '';
@@ -153,7 +152,7 @@ export default function InputMask<T>({
             }
 
             <div className={`${styles.wrapper} ${(svg_component || svg_staticImageData) && styles.wrapSvg}`}>
-                {/* @ts-expect-error: svg_component é dynamic; */}
+                {/* @ts-expect-error: svg_component é dinâmico e pode não ter props compatíveis; */}
                 {svg_component && cloneElement(svg_component, svgDefaultProps)}
                 {svg_staticImageData && <Image src={svg_staticImageData} alt='' />}
 
@@ -184,6 +183,16 @@ export default function InputMask<T>({
                     }}
                 />
             </div>
+
+            {
+                debounceSeconds && onDebounce && (
+                    <DebounceBar
+                        value={value_formData?.toString() ?? ''}
+                        debounceSeconds={debounceSeconds}
+                        onDebounce={onDebounce}
+                    />
+                )
+            }
         </div>
     )
 }

@@ -786,7 +786,7 @@ public static partial class Get
     /// </returns>
     public static bool IsRunningFromXUnit()
     {
-        return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName?.StartsWith("xunit.runner", StringComparison.OrdinalIgnoreCase) == true);
+        return AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName?.Contains("xunit", StringComparison.OrdinalIgnoreCase) == true);
     }
 
     /// <summary>

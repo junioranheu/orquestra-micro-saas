@@ -24,7 +24,7 @@ import useApiRequestToSetterOnUrlChange from '@/app/hooks/api/useApiRequestToSet
 import { useIsModalGrid } from '@/app/hooks/contexts/useGlobalContext';
 import useWindowSize from '@/app/hooks/useWindowSize';
 import { Guid } from 'guid-typescript';
-import { Dispatch, Fragment, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, Fragment, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface iProps {
     isModalOpen: boolean;
@@ -204,7 +204,7 @@ export default function ModalEmpresaGerenciarView({ isModalOpen, setIsModalOpen,
         return;
     }
 
-    async function handleGetCEP(e: KeyboardEvent<HTMLInputElement>) {
+    async function handleGetCEP(e: ChangeEvent<HTMLInputElement>) {
         setFormData(prev => ({ ...prev, address: '', addressNumber: '', city: '', state: '', country: '' }));
 
         const cep = e.currentTarget.value;

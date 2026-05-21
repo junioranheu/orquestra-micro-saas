@@ -1,0 +1,26 @@
+.debounceBar {
+    position: relative;
+    width: 100%;
+    height: 2.5px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 3px;
+
+    .debounceBarFill {
+        height: 100%;
+        background: var(--main-light);
+        border-radius: 2px;
+        transition: width 0.1s linear;
+    }
+
+    .debounceBarLabel {
+        position: absolute;
+        right: 0;
+        top: 6px;
+        font-size: 0.65rem;
+        color: var(--main);
+        opacity: 0.7;
+        font-weight: 500;
+    }
+}

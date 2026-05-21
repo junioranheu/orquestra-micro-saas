@@ -20,10 +20,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mapster" Version="7.4.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.3" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+		<PackageReference Include="Mapster" Version="10.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.8" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

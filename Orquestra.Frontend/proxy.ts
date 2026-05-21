@@ -31,7 +31,7 @@ export const MODULES_PERMISSIONS: Record<string, string[]> = {
     [ROUTES.EMPRESA_ESTOQUE]: [MODULE_ENUM.Inventory.toString()]
 };
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const token = request.cookies.get(SYSTEM.COOKIE_AUTH_FRONT)?.value;
     const pathname = request.nextUrl.pathname;
 
