@@ -207,28 +207,34 @@ function Plans({ me, plans }: { me: iMe | undefined, plans: iPlanTypeOutput | un
                                         <div className={styles.perksSection}>
                                             <h4 className={styles.perksTitle}>O que está incluído:</h4>
                                             <ul className={styles.perksList}>
-                                                {plan.perks.map((perk, perkIndex) => (
-                                                    <li key={perkIndex} className={styles.perkItem}>
-                                                        <span className={styles.perkIcon}>
-                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                                <path d="M13.3333 4L6 11.3333L2.66666 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                            </svg>
-                                                        </span>
-                                                        <span className={styles.perkText}>{perk}</span>
-                                                    </li>
-                                                ))}
+                                                {
+                                                    plan.perks.map((perk, perkIndex) => (
+                                                        <li key={perkIndex} className={styles.perkItem}>
+                                                            <span className={styles.perkIcon}>
+                                                                <svg width='16' height='16' viewBox='0 0 16 16' fill='none'>
+                                                                    <path d='M13.3333 4L6 11.3333L2.66666 8' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
+                                                                </svg>
+                                                            </span>
+
+                                                            <span className={styles.perkText}>{perk}</span>
+                                                        </li>
+                                                    ))
+                                                }
                                             </ul>
                                         </div>
 
                                         <div className={styles.cardFooter}>
                                             <Link
                                                 href='#'
-                                                className={`${styles.ctaButton} ${isDisabled ? styles.disabled : ''} ${status.isCurrentPlan ? styles.current : ''}`}
+                                                className={`${styles.ctaButton} ${isDisabled ? styles.disabled : ''} ${status.isCurrentPlan ? styles.current : ''} ${status.isPaymentPendent ? styles.paymentPending : ''} `}
                                                 onClick={isDisabled ? undefined : () => handleChooseNewPlan(plan)}
                                             >
-                                                {status.isPaymentPendent && status.isCurrentPlan && (
-                                                    <span className={styles.warningIcon}>⚠</span>
-                                                )}
+                                                {
+                                                    status.isPaymentPendent && status.isCurrentPlan && (
+                                                        <span className={styles.warningIcon}>⚠</span>
+                                                    )
+                                                }
+
                                                 {buttonText}
                                             </Link>
                                         </div>

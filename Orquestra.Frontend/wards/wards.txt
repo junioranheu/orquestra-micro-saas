@@ -1,0 +1,4 @@
+remover o tippy
+atualizar os packages do back
+atualizar o front
+melhorar SEO com IA

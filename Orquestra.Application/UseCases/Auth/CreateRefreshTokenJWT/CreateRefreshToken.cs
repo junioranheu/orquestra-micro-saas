@@ -32,6 +32,9 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         // Revogue os antigos refresh tokens inválidos;
         await Update(userIdAuth, mustCheckForValidRefreshTokens: true);
 
+        // Persistir o novo refresh token no banco para que a sessão seja renovada junto com o JWT;
+        await Save(refreshToken);
+
         return (newJwtToken, cookieOptions);
     }
 
@@ -82,11 +85,11 @@ public sealed class CreateRefreshToken(Context context, IJwtTokenGenerator jwtTo
         #endregion
 
         await _context.RefreshTokens.
-        // AsNoTracking(). // Propositalmente sem AsNoTracking;
-        Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
-        ExecuteUpdateAsync(x => x.
-            SetProperty(prop => prop.RevokedDate, GetDate())
-        );
+            // AsNoTracking(). // Propositalmente sem AsNoTracking;
+            Where(x => oldRefreshTokenIds.Contains(x.RefreshTokenId)).
+            ExecuteUpdateAsync(x => x.
+                SetProperty(prop => prop.RevokedDate, GetDate())
+            );
     }
 
     #region extras

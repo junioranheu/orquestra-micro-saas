@@ -305,13 +305,19 @@
                             }
 
                             &.current {
-                                background: #e5e7eb;
-                                color: #6b7280;
+                                // background: #e5e7eb;
+                                background: var(--main);
+                                // color: #6b7280;
                                 box-shadow: none;
+                            }
+
+                            &.paymentPending {
+                                color: var(--yellow) !important;
                             }
 
                             .warningIcon {
                                 font-size: 1.125rem;
+                                color: var(--yellow);
                             }
                         }
                     }

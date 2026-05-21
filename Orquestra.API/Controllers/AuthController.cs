@@ -117,17 +117,14 @@ public class AuthController(
         return Ok(currentMainCompanySimple);
     }
 
-    [AllowAnonymous]
+    [AuthorizeFilter]
     [HttpGet("Me/Modules")]
-    public async Task<ActionResult> MeModules(Guid? userId)
+    public async Task<ActionResult> MeModules()
     {
-        if (userId is null || userId == Guid.Empty)
-        {
-            throw new UnauthorizedAccessException("O usuário da requisição é inválido.");
-        }
+        Guid userIdAuth = GetUserIdAuth(throwExceptionIfNotAuth: true);
 
         // Current main company;
-        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.GetCurrentMainCompany(userId.GetValueOrDefault());
+        (CompanyOutput? currentMainCompany, bool isUserAdm) = await _getCurrentMainCompanyUser.GetCurrentMainCompany(userIdAuth);
 
         if (isUserAdm)
         {

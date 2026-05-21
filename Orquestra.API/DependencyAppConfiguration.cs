@@ -33,6 +33,7 @@ public static class DependencyAppConfiguration
     private static void AddMiddleware(WebApplication app)
     {
         app.UseMiddleware<TokenRefreshMiddleware>(); // Esse middleware deve obrigatoriamente vir antes de AddAuth();
+        app.UseMiddleware<CsrfOriginMiddleware>(); // ITEM 2/9: Validação de Origin para proteção CSRF;
     }
 
     private static void AddSwagger(WebApplication app)

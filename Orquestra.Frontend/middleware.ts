@@ -1,8 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { CONSTS_AUTH } from './app/api/consts/auth';
+import { BASE } from './app/api/fetch';
 import ROUTES from './app/consts/routes';
 import SYSTEM from './app/consts/system';
 import { MODULE_ENUM } from './app/enums/modulesEnum';
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL_BASE || '';
 
 const PUBLIC_PATHS = [
     ROUTES.LANDING_PAGE, ROUTES.ETC_AJUDA, ROUTES.ETC_SEGURANCA,
@@ -52,8 +55,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // #4 - Checar se o usuário tem acesso à rota;
-    const hasAccess = await handleCheckUserAccess(token, pathname);
-    // console.log('hasAccess', hasAccess);
+    const hasAccess = await handleCheckUserAccess(token, pathname, request);
 
     if (!hasAccess) {
         return NextResponse.redirect(new URL(ROUTES.ERRO_403, request.url));
@@ -66,37 +68,59 @@ export const config = {
     matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
 
-async function handleCheckUserAccess(token: string, pathname: string): Promise<boolean> {
+async function handleCheckUserAccess(token: string, pathname: string, request: NextRequest): Promise<boolean> {
     try {
         // #1 - Checa quais permissões o módulo precisa;
         const mustModulePermissions = MODULES_PERMISSIONS[pathname];
-        // console.log('mustModulePermissions', mustModulePermissions);
 
         if (!mustModulePermissions) {
             return true; // Rota sem restrição explícita;
         }
 
-        // #2 - Requisição para descobrir os módulos do usuário;
-        const tokenJson = JSON.parse(token);
+        // #2 - Validar integridade do cookie antes de confiar no conteúdo;
+        let tokenJson: { userId?: string };
+
+        try {
+            tokenJson = JSON.parse(token);
+        } catch {
+            return false; // Cookie corrompido ou forjado;
+        }
+
+        // #3 - Validar que userId é um GUID válido (formato: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx);
+        const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+        if (!tokenJson.userId || !guidRegex.test(tokenJson.userId)) {
+            return false; // userId ausente ou inválido;
+        }
+
+        // #4 - Encaminhar o COOKIE_AUTH_BACK ao backend; o endpoint agora é autenticado;
+        const authBackCookie = request.cookies.get(SYSTEM.COOKIE_AUTH_BACK)?.value;
+
+        if (!authBackCookie) {
+            return false; // Sem cookie HttpOnly = não autenticado;
+        }
 
         const headers: Record<string, string> = {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Cookie': `${SYSTEM.COOKIE_AUTH_BACK}=${authBackCookie}`
         };
 
-        const res = await fetch(`${CONSTS_AUTH.meModules}?userId=${tokenJson.userId}`, { method: 'GET', headers });
+        // Middleware já roda server-side dentro do Next.js;
+        // Então a request vai direto para API para evitar problemas de dupla proxyagem no BFF;
+        const urlMeModulesNormalized = `${BACKEND_URL}${CONSTS_AUTH.meModules.replace(BASE, '')}`;
+        const res = await fetch(urlMeModulesNormalized, { method: 'GET', headers });
+        // console.log(`Resposta request [${urlMeModulesNormalized}]`, res.ok);
 
         if (!res.ok) {
             return false;
         }
 
         const userModules = await res.json();
-        // console.log('userModules', userModules, userModules?.length);
 
-        // #3 - Checagem: verificar se o usuário tem qualquer permissão necessária (especificamente);
+        // #5 - Checagem: verificar se o usuário tem qualquer permissão necessária (especificamente);
         const specificModules = mustModulePermissions.filter(role => role !== '*');
         const hasAccess = specificModules.length === 0 ? true : specificModules.some(role => userModules.includes(Number(role)));
-        // console.log('hasAccess', hasAccess);
 
         return hasAccess;
     } catch (err: unknown) {

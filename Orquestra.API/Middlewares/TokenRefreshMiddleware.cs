@@ -1,6 +1,7 @@
 ﻿using Orquestra.Application.UseCases.Auth.CreateRefreshTokenJWT;
 using Orquestra.Domain.Consts;
 using Orquestra.Infrastructure.Auth.Token;
+using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Orquestra.API.Middlewares;
@@ -10,6 +11,9 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
     private readonly RequestDelegate _next = next;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
+
+    // Lock por userId para evitar race condition quando múltiplas requests concorrentes tentam renovar o token ao mesmo tempo;
+    private static readonly ConcurrentDictionary<Guid, SemaphoreSlim> _refreshLocks = new();
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -33,9 +37,9 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
             return;
         }
 
-        (bool isExpiringSoon, _, _) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
+        (bool isExpiringSoonOrHasAlreadyExpired, _, _) = _jwtTokenGenerator.IsTokenExpiringSoonOrHasAlreadyExpired(jwtToken);
 
-        if (!isExpiringSoon)
+        if (!isExpiringSoonOrHasAlreadyExpired)
         {
             await _next(context);
             return;
@@ -51,11 +55,22 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
         }
 
         Guid userIdAuth = Guid.Parse(userIdClaim);
-        using IServiceScope scope = _scopeFactory.CreateScope();
-        ICreateRefreshToken createRefreshToken = scope.ServiceProvider.GetRequiredService<ICreateRefreshToken>();
+
+        // Adquirir lock por userId — se outra request já está renovando, prosseguir sem renovar;
+        SemaphoreSlim semaphore = _refreshLocks.GetOrAdd(userIdAuth, _ => new SemaphoreSlim(1, 1));
+
+        if (!await semaphore.WaitAsync(millisecondsTimeout: 0))
+        {
+            // Outra request já está renovando o token deste usuário, seguir com o token atual;
+            await _next(context);
+            return;
+        }
 
         try
         {
+            using IServiceScope scope = _scopeFactory.CreateScope();
+            ICreateRefreshToken createRefreshToken = scope.ServiceProvider.GetRequiredService<ICreateRefreshToken>();
+
             (string newJwtToken, CookieOptions cookieOptions) = await createRefreshToken.RefreshToken(userIdAuth);
 
             // Escreve cookie pra próxima requisição do browser com o novo refresh token;
@@ -67,6 +82,10 @@ public sealed class TokenRefreshMiddleware(RequestDelegate next, IJwtTokenGenera
         catch (Exception)
         {
             context.Response.Cookies.Delete(SystemConsts.Cookies.Auth);
+        }
+        finally
+        {
+            semaphore.Release();
         }
 
         await _next(context);

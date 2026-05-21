@@ -27,7 +27,8 @@ const HTTP = {
     DELETE: 'DELETE'
 };
 
-export const BASE = process.env.NEXT_PUBLIC_API_URL_BASE as string;
+// Requests vão pelo proxy BFF same-origin (resolve Safari/ITP e CSRF);
+export const BASE = '/api/bff';
 
 export const Fetch = {
     async get({ url, blobExportName = '', isFormData = false, setIsRequestLoading }: iFetchProps) {

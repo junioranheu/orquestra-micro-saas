@@ -30,7 +30,16 @@ export async function handleSetCookieAndLogin({ type, user, setAuth, router, set
     }
 
     setAuth(result);
-    Cookies.set(SYSTEM.COOKIE_AUTH_FRONT, JSON.stringify(result), { expires: new Date(result.refreshTokenExpirationDate), path: '/' });
+
+    // Adicionado secure e sameSite para proteger o cookie contra leak em HTTP e ataques cross-site;
+    // sameSite 'lax' (e não 'strict') para que links vindos de email/WhatsApp/Slack não forcem re-login;
+    Cookies.set(SYSTEM.COOKIE_AUTH_FRONT, JSON.stringify(result), {
+        expires: new Date(result.refreshTokenExpirationDate),
+        path: '/',
+        secure: true,
+        sameSite: 'lax'
+    });
+
     router.push(ROUTES.DASHBOARD);
 }
 
