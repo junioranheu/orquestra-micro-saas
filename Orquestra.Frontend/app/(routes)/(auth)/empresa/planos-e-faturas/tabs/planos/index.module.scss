@@ -312,7 +312,8 @@
                             }
 
                             &.paymentPending {
-                                color: var(--yellow) !important;
+                                color: var(--white-og) !important;
+                                background-color: var(--contrast) !important;
                             }
 
                             .warningIcon {
