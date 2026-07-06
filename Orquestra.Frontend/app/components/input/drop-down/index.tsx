@@ -1,5 +1,5 @@
 import { Guid } from 'guid-typescript';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, KeyboardEventHandler, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import styles from './index.module.scss';
 
@@ -24,6 +24,8 @@ interface iProps {
     showAction?: boolean;
     actionLabel?: string;
     onActionClick?: () => void;
+    handleKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+    formatOptionLabel?: (option: iDropdownOption) => ReactNode;
 }
 
 export default function Dropdown({
@@ -40,7 +42,9 @@ export default function Dropdown({
     isObligatory = false,
     showAction = false,
     actionLabel = 'Ver mais',
-    onActionClick
+    onActionClick,
+    handleKeyDown,
+    formatOptionLabel,
 }: iProps) {
 
     const [uniqueOptions, setUniqueOptions] = useState<iDropdownOption[]>([]);
@@ -83,6 +87,10 @@ export default function Dropdown({
             ...base,
             margin: 0,
             padding: 0
+        }),
+        menuPortal: (base: any) => ({
+            ...base,
+            zIndex: 9999,
         }),
         option: (base: any, { isFocused, isSelected }: any) => ({
             ...base,
@@ -127,6 +135,8 @@ export default function Dropdown({
                 noOptionsMessage={() => 'Nenhuma opção encontrada'}
                 className={`${styles.dropdown} ${className && className}`}
                 isDisabled={isDisabled}
+                onKeyDown={handleKeyDown}
+                formatOptionLabel={formatOptionLabel ? (option) => formatOptionLabel(option as iDropdownOption) : undefined}
             />
         </div>
     )
