@@ -1,6 +1,6 @@
 import { Guid } from 'guid-typescript';
 import { Dispatch, JSX, KeyboardEventHandler, ReactNode, SetStateAction, useMemo } from 'react';
-import Select, { MultiValue, SingleValue } from 'react-select';
+import Select, { MultiValue, SingleValue, StylesConfig } from 'react-select';
 import styles from './index.module.scss';
 
 export interface iDropdownOption<T = string | Guid | number> {
@@ -172,8 +172,8 @@ export default function Dropdown({
 
     const selectValue = normalizeSelectedValue(selectedOption);
 
-    const customStyle = {
-        control: (base: any) => ({
+    const customStyle: StylesConfig<iDropdownOption, boolean> = {
+        control: (base) => ({
             ...base,
             boxShadow: 'none',
             border: 'none',
@@ -181,15 +181,15 @@ export default function Dropdown({
             height: 'auto',
             flexWrap: 'wrap'
         }),
-        dropdownIndicator: (base: any) => ({
+        dropdownIndicator: (base) => ({
             ...base,
             padding: 4
         }),
-        clearIndicator: (base: any) => ({
+        clearIndicator: (base) => ({
             ...base,
             padding: 4
         }),
-        valueContainer: (base: any) => ({
+        valueContainer: (base) => ({
             ...base,
             padding: '0px 4px',
             flexWrap: 'wrap',
@@ -197,35 +197,35 @@ export default function Dropdown({
             overflow: 'hidden',
             maxHeight: '9rem'
         }),
-        input: (base: any) => ({
+        input: (base) => ({
             ...base,
             margin: 0,
             padding: 0
         }),
-        multiValue: (base: any) => ({
+        multiValue: (base) => ({
             ...base,
             maxWidth: '100%',
             flexWrap: 'wrap',
             margin: '0 2px 2px 0'
         }),
-        multiValueLabel: (base: any) => ({
+        multiValueLabel: (base) => ({
             ...base,
             whiteSpace: 'normal',
             overflowWrap: 'anywhere'
         }),
-        multiValueRemove: (base: any) => ({
+        multiValueRemove: (base) => ({
             ...base,
             alignSelf: 'center'
         }),
-        menu: (base: any) => ({
+        menu: (base) => ({
             ...base,
             zIndex: 9999
         }),
-        menuPortal: (base: any) => ({
+        menuPortal: (base) => ({
             ...base,
             zIndex: 9999
         }),
-        option: (base: any, { isFocused, isSelected }: any) => ({
+        option: (base, { isFocused, isSelected }) => ({
             ...base,
             fontSize: '0.875rem',
             backgroundColor: isFocused ? 'var(--contrast-light)' : isSelected ? 'var(--contrast)' : 'transparent',
