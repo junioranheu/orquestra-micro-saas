@@ -336,11 +336,19 @@ export default function ModalCalendarView({ isOpen, setIsModalOpen, type, me, ev
 
                         <Dropdown title='Tipo de agendamento' options={scheduleTypeEnum ?? []} selectedOption={scheduleTypeEnum?.find(x => x.value.toString() === formData.scheduleType?.toString())} setSelectedOption={setScheduleTypeOption} isDisabled={!editing} isObligatory={true} />
                         <Dropdown title='Status' options={scheduleStatusEnum ?? []} selectedOption={scheduleStatusEnum?.find(x => x.value.toString() === formData.scheduleStatus?.toString())} setSelectedOption={setScheduleStatusOption} isDisabled={!editing || (type === 'create')} isObligatory={true} />
-                        <InputMask title='Data de início' type='date' fieldName='dateStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
-                        <InputMask title='Hora de início' type='time' fieldName='timeStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
-                        <InputMask title='Data e hora de encerramento' type='date' fieldName='dateEnd' formData={formData} setFormData={setFormData} isDisabled isObligatory />
-                        <InputMask title='Hora de encerramento' type='time' fieldName='timeEnd' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory />
-                        <Dropdown title='Colaboradores da equipe' options={companyUsersDropDown ?? []} isMultiple={true} selectedOption={companyUsersDropDown?.filter(x => formData.usersIds?.some(id => id?.toString() === x.value?.toString())) || []} setSelectedOption={setCompanyUsersIdOption} isDisabled={!editing} />
+                        <InputMask title='Data de início' type='date' fieldName='dateStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Hora de início' type='time' fieldName='timeStart' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Data e hora de encerramento' type='date' fieldName='dateEnd' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+                        <InputMask title='Hora de encerramento' type='time' fieldName='timeEnd' formData={formData} setFormData={setFormData} isDisabled={!editing} isObligatory={true} />
+
+                        <Dropdown
+                            title='Colaboradores da equipe'
+                            options={companyUsersDropDown ?? []}
+                            isMultiple={true}
+                            selectedOption={formData.usersIds ?? []}
+                            setSelectedOption={setCompanyUsersIdOption}
+                            isDisabled={!editing}
+                        />
 
                         {/* <div className={styles.div}>
                             <label>É um gendamento específico a um ou mais colaboradores?</label>

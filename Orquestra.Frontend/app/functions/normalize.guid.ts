@@ -1,39 +1,68 @@
 import { Guid } from 'guid-typescript';
 
-/**
- * Normaliza um array extraindo `.value` quando presente
- * e retornando um array de Guid.
- *
- * @param field Array contendo objetos ou strings GUID
- * @returns Array de Guid válido
- *
- * @example
- * const usersIds = [
- *   { value: "0198c7f3-821a-7866-962e-4983c388a016" },
- *   "3fa85f64-5717-4562-b3fc-2c963f66afa6",
- *   null
- * ];
- * handleNormalizeGuidArrayField(usersIds);
- * // Retorna: [Guid, Guid]
- */
-export function handleNormalizeGuidArrayField(field: Guid[]): Guid[] {
-    // @ts-expect-error: Guid.value _|_;
-    const normalized = field?.map(u => u.value);
-
-    if (!normalized || !normalized?.length || normalized.every(x => x === null) || Array.isArray(normalized) && normalized.length === 1 && (normalized[0] === null || normalized[0] === undefined)) {
-        return field;
+// Extrai o valor "limpo" de um item GUID, mesmo quando ele vem dentro de um objeto com .value ou .id;
+function getGuidValue(value: unknown): unknown {
+    if (value === null || value === undefined) {
+        return null;
     }
 
-    return normalized;
+    if (typeof value === 'object') {
+        if (Array.isArray(value)) {
+            // Se vier um array, normaliza cada item recursivamente;
+            return value.map(item => getGuidValue(item));
+        }
+
+        const record = value as Record<string, unknown>;
+        // Se o objeto tiver .value, usa esse valor como fonte do GUID;
+        if (record.value !== undefined && record.value !== null) {
+            return getGuidValue(record.value);
+        }
+
+        // Se não tiver .value, tenta usar .id como fallback;
+        if (record.id !== undefined && record.id !== null) {
+            return getGuidValue(record.id);
+        }
+
+        // Se não for nenhum desses casos, devolve o próprio objeto;
+        return value;
+    }
+
+    // Para strings, numbers e outros valores simples, retorna como está;
+    return value;
 }
 
-export function handleNormalizeGuidField(field: Guid): Guid {
-    // @ts-expect-error: Guid.value _|_;
-    const normalized = field?.value;
-
-    if (!normalized || !normalized?.length) {
-        return field;
+// Normaliza um array de GUIDs, aceitando tanto arrays quanto valores únicos;
+export function handleNormalizeGuidArrayField(field: unknown): Guid[] {
+    if (field === null || field === undefined) {
+        return [];
     }
 
-    return normalized;
+    // Se vier um único valor, transforma em array com um elemento;
+    if (!Array.isArray(field)) {
+        const normalized = getGuidValue(field);
+
+        return normalized === null || normalized === undefined ? [] : [normalized as Guid];
+    }
+
+    // Se vier um array, normaliza cada item e remove valores vazios;
+    const normalized = field
+        .map(item => getGuidValue(item))
+        .filter(item => item !== null && item !== undefined);
+
+    if (!normalized.length) {
+        return [];
+    }
+
+    return normalized as Guid[];
+}
+
+// Normaliza um único campo GUID, retornando o valor simples quando possível;
+export function handleNormalizeGuidField(field: unknown): Guid {
+    if (field === null || field === undefined) {
+        return field as unknown as Guid;
+    }
+
+    const normalized = getGuidValue(field);
+
+    return (normalized === null || normalized === undefined ? field : normalized) as unknown as Guid;
 }

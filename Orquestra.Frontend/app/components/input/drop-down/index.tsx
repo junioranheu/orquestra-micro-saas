@@ -1,5 +1,5 @@
 import { Guid } from 'guid-typescript';
-import { Dispatch, JSX, KeyboardEventHandler, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, JSX, KeyboardEventHandler, ReactNode, SetStateAction, useMemo } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import styles from './index.module.scss';
 
@@ -12,8 +12,8 @@ interface iProps {
     title?: string;
     options: iDropdownOption[];
     isMultiple?: boolean;
-    selectedOption: iDropdownOption | iDropdownOption[] | null | undefined;
-    setSelectedOption?: Dispatch<SetStateAction<iDropdownOption | null>> | Dispatch<SetStateAction<iDropdownOption>> | Dispatch<SetStateAction<iDropdownOption[] | null>> | Dispatch<SetStateAction<iDropdownOption[]>>;
+    selectedOption: unknown | iDropdownOption | iDropdownOption[] | null | undefined;
+    setSelectedOption?: Dispatch<SetStateAction<any>>;
     className?: string;
     showDefaultOption0?: boolean;
     placeholder?: string;
@@ -46,26 +46,120 @@ export default function Dropdown({
     actionLabelIcon = null,
     onActionClick,
     handleKeyDown,
-    formatOptionLabel,
+    formatOptionLabel
 }: iProps) {
 
-    const [uniqueOptions, setUniqueOptions] = useState<iDropdownOption[]>([]);
-
-    useEffect(() => {
-        const uniqueOptionsArray = Array.from(new Map(options?.map(option => [option.value, option])).values()) as iDropdownOption[];
-        setUniqueOptions(uniqueOptionsArray);
-        // console.log(options, uniqueOptionsArray);
+    const uniqueOptions = useMemo(() => {
+        const uniqueOptionsArray = Array.from(new Map(options?.map(option => [getComparableValue(option.value), option])).values()) as iDropdownOption[];
+        return uniqueOptionsArray;
     }, [options]);
 
-    function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption>) {
+    function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption> | null) {
         if (Array.isArray(e)) {
-            // console.log('handleChange/multiple', e);
-            (setSelectedOption as Dispatch<SetStateAction<any>> | undefined)?.(e as iDropdownOption[]);
-        } else {
-            // console.log('handleChange/single', e);
-            (setSelectedOption as Dispatch<SetStateAction<any>> | undefined)?.((e ?? null) as iDropdownOption | null);
+            const values = e.map(option => normalizeStoredValue(option?.value ?? null));
+            (setSelectedOption as Dispatch<SetStateAction<any>> | undefined)?.(values as any);
+            return;
         }
+
+        const singleValue = e as SingleValue<iDropdownOption> | null;
+        const value = normalizeStoredValue(singleValue?.value ?? null);
+        (setSelectedOption as Dispatch<SetStateAction<any>> | undefined)?.(value as any);
     }
+
+    function normalizeStoredValue(value: unknown): unknown {
+        if (value === null || value === undefined) {
+            return null;
+        }
+
+        if (Array.isArray(value)) {
+            return value.map(item => normalizeStoredValue(item));
+        }
+
+        if (typeof value === 'object') {
+            const record = value as Record<string, unknown>;
+            if (record.value !== undefined && record.value !== null) {
+                return normalizeStoredValue(record.value);
+            }
+
+            if (record.id !== undefined && record.id !== null) {
+                return normalizeStoredValue(record.id);
+            }
+        }
+
+        return value;
+    }
+
+    function getComparableValue(value: unknown): string {
+        if (value === null || value === undefined) {
+            return '';
+        }
+
+        if (typeof value === 'object') {
+            if (Array.isArray(value)) {
+                return value.map(item => getComparableValue(item)).join('|');
+            }
+
+            const recordValue = (value as Record<string, unknown>).value;
+
+            if (recordValue !== undefined && recordValue !== null) {
+                return getComparableValue(recordValue);
+            }
+
+            const recordId = (value as Record<string, unknown>).id;
+
+            if (recordId !== undefined && recordId !== null) {
+                return getComparableValue(recordId);
+            }
+
+            return String(value);
+        }
+
+        return String(value);
+    }
+
+    function getMappedOption(value: unknown): iDropdownOption | undefined {
+        if (value === null || value === undefined) {
+            return undefined;
+        }
+
+        const comparableValue = getComparableValue(value);
+
+        if (typeof value === 'object' && value !== null && 'value' in value && 'label' in value) {
+            const option = value as iDropdownOption;
+            const matchedOption = uniqueOptions.find(candidate => getComparableValue(candidate.value) === comparableValue);
+
+            return matchedOption ?? option;
+        }
+
+        return uniqueOptions.find(candidate => getComparableValue(candidate.value) === comparableValue);
+    }
+
+    function normalizeSelectedValue(value: iProps['selectedOption']): iDropdownOption | iDropdownOption[] | null {
+        if (isMultiple) {
+            if (!Array.isArray(value)) {
+                return [];
+            }
+
+            return value.map(item => {
+                if (item === null || item === undefined) {
+                    return null;
+                }
+
+                const mappedOption = getMappedOption(item);
+                return mappedOption ?? { value: item as any, label: String(item) };
+            }).filter((item): item is iDropdownOption => Boolean(item));
+        }
+
+        if (Array.isArray(value)) {
+            return normalizeSelectedValue(value[0]) as iDropdownOption | null;
+        }
+
+        const mappedOption = getMappedOption(value);
+
+        return mappedOption ?? (value === null || value === undefined ? null : { value: value as any, label: String(value) });
+    }
+
+    const selectValue = normalizeSelectedValue(selectedOption);
 
     const customStyle = {
         control: (base: any) => ({
@@ -132,7 +226,7 @@ export default function Dropdown({
                 isClearable={isClearable}
                 isSearchable={isSearchable}
                 options={uniqueOptions}
-                value={selectedOption}
+                value={selectValue}
                 onChange={(e) => handleChange(e)}
                 isMulti={isMultiple}
                 placeholder={(placeholder ?? 'Selecione')}

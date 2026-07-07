@@ -62,17 +62,16 @@ interface ihandleLoopFormDataOptions {
     dropDownWhichValue?: 'value' | 'label';
     log?: boolean;
     hideNull?: boolean;
-    charToSeparateArrayDropDown?: string;
 }
 
-export function handleLoopFormData({ formData, dropDownWhichValue = 'value', log = false, hideNull = true, charToSeparateArrayDropDown = ';' }: ihandleLoopFormDataOptions): iFormDataLoopResult {
+export function handleLoopFormData({ formData, dropDownWhichValue = 'value', log = false, hideNull = true }: ihandleLoopFormDataOptions): iFormDataLoopResult {
     const jsonObject: any = {};
     let urlString = '';
 
     if (typeof formData === 'object' && formData !== null) {
         if (Array.isArray(formData)) {
             for (const item of formData) {
-                const { json, url } = handleLoopFormData({ formData: item, dropDownWhichValue, log, hideNull, charToSeparateArrayDropDown });
+                const { json, url } = handleLoopFormData({ formData: item, dropDownWhichValue, log, hideNull });
                 jsonObject.push(json);
                 urlString += url;
             }
@@ -97,7 +96,8 @@ export function handleLoopFormData({ formData, dropDownWhichValue = 'value', log
                             continue;
                         }
 
-                        data = normalizedArray.join(charToSeparateArrayDropDown);
+                        // Se for um array de opções de dropdown, preserva o array no payload;
+                        data = normalizedArray;
                     }
 
                     if (isDropdownOption(formData[key])) {
