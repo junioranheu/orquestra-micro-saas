@@ -54,6 +54,8 @@ export default function Dropdown({
         return uniqueOptionsArray;
     }, [options]);
 
+    // Atualiza o estado selecionado quando o usuário escolhe uma opção;
+    // Converte o valor para o formato armazenado correto, tratando seleção única e múltipla;
     function handleChange(e: SingleValue<iDropdownOption> | MultiValue<iDropdownOption> | null) {
         if (Array.isArray(e)) {
             const values = e.map(option => normalizeStoredValue(option?.value ?? null));
@@ -63,9 +65,12 @@ export default function Dropdown({
 
         const singleValue = e as SingleValue<iDropdownOption> | null;
         const value = normalizeStoredValue(singleValue?.value ?? null);
+
         (setSelectedOption as Dispatch<SetStateAction<any>> | undefined)?.(value as any);
     }
 
+    // Normaliza valores complexos antes de armazenar, 
+    // extraindo value/id de objetos ou mantendo valores primitivos;
     function normalizeStoredValue(value: unknown): unknown {
         if (value === null || value === undefined) {
             return null;
@@ -89,6 +94,8 @@ export default function Dropdown({
         return value;
     }
 
+    // Retorna uma string comparável para um valor, 
+    // usada para encontrar opções equivalentes mesmo quando o valor é objeto;
     function getComparableValue(value: unknown): string {
         if (value === null || value === undefined) {
             return '';
@@ -117,6 +124,8 @@ export default function Dropdown({
         return String(value);
     }
 
+    // Mapeia um valor selecionado para a opção correspondente da lista de opções, 
+    // para manter labels corretas;
     function getMappedOption(value: unknown): iDropdownOption | undefined {
         if (value === null || value === undefined) {
             return undefined;
@@ -134,6 +143,8 @@ export default function Dropdown({
         return uniqueOptions.find(candidate => getComparableValue(candidate.value) === comparableValue);
     }
 
+    // Converte o valor selecionado em um formato compatível com o react-select,
+    // retornando option(s) válidos com label e value;
     function normalizeSelectedValue(value: iProps['selectedOption']): iDropdownOption | iDropdownOption[] | null {
         if (isMultiple) {
             if (!Array.isArray(value)) {
@@ -165,7 +176,10 @@ export default function Dropdown({
         control: (base: any) => ({
             ...base,
             boxShadow: 'none',
-            border: 'none'
+            border: 'none',
+            minHeight: 44,
+            height: 'auto',
+            flexWrap: 'wrap'
         }),
         dropdownIndicator: (base: any) => ({
             ...base,
@@ -177,16 +191,39 @@ export default function Dropdown({
         }),
         valueContainer: (base: any) => ({
             ...base,
-            padding: '0px 6px'
+            padding: '0px 4px',
+            flexWrap: 'wrap',
+            gap: '0.125rem',
+            overflow: 'hidden',
+            maxHeight: '9rem'
         }),
         input: (base: any) => ({
             ...base,
             margin: 0,
             padding: 0
         }),
+        multiValue: (base: any) => ({
+            ...base,
+            maxWidth: '100%',
+            flexWrap: 'wrap',
+            margin: '0 2px 2px 0'
+        }),
+        multiValueLabel: (base: any) => ({
+            ...base,
+            whiteSpace: 'normal',
+            overflowWrap: 'anywhere'
+        }),
+        multiValueRemove: (base: any) => ({
+            ...base,
+            alignSelf: 'center'
+        }),
+        menu: (base: any) => ({
+            ...base,
+            zIndex: 9999
+        }),
         menuPortal: (base: any) => ({
             ...base,
-            zIndex: 9999,
+            zIndex: 9999
         }),
         option: (base: any, { isFocused, isSelected }: any) => ({
             ...base,

@@ -50,7 +50,8 @@
     .dropdown {
         font-size: 0.9rem !important;
         font-weight: 400 !important;
-        height: 2.75rem !important;
+        min-height: 2.75rem !important;
+        height: auto !important;
 
         background-color: transparent !important;
         color: var(--black) !important;

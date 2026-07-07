@@ -64,7 +64,10 @@ export default function DropdownAsync({
         control: (base: any) => ({
             ...base,
             boxShadow: 'none',
-            border: 'none'
+            border: 'none',
+            minHeight: 44,
+            height: 'auto',
+            flexWrap: 'wrap'
         }),
         dropdownIndicator: (base: any) => ({
             ...base,
@@ -76,12 +79,39 @@ export default function DropdownAsync({
         }),
         valueContainer: (base: any) => ({
             ...base,
-            padding: '0px 6px'
+            padding: '0px 4px',
+            flexWrap: 'wrap',
+            gap: '0.125rem',
+            overflow: 'hidden',
+            maxHeight: '9rem'
         }),
         input: (base: any) => ({
             ...base,
             margin: 0,
             padding: 0
+        }),
+        multiValue: (base: any) => ({
+            ...base,
+            maxWidth: '100%',
+            flexWrap: 'wrap',
+            margin: '0 2px 2px 0'
+        }),
+        multiValueLabel: (base: any) => ({
+            ...base,
+            whiteSpace: 'normal',
+            overflowWrap: 'anywhere'
+        }),
+        multiValueRemove: (base: any) => ({
+            ...base,
+            alignSelf: 'center'
+        }),
+        menu: (base: any) => ({
+            ...base,
+            zIndex: 9999
+        }),
+        menuPortal: (base: any) => ({
+            ...base,
+            zIndex: 9999,
         })
     };
 
