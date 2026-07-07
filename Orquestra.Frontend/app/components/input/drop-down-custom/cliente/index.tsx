@@ -1,5 +1,6 @@
 import EmpresaClientesModalView from '@/app/(routes)/(auth)/empresa/clientes/modal/view';
 import { iClient } from '@/app/api/consts/client';
+import Icon from '@/app/components/icon';
 import Dropdown, { iDropdownOption } from '@/app/components/input/drop-down';
 import toast from '@/app/functions/toast';
 import useApiGetMe from '@/app/hooks/api/useApiGetMe';
@@ -66,6 +67,7 @@ export default function DropDownCliente({ editing, clientsDropDown, setClientIdO
                 isObligatory={isObligatory}
                 showAction={showNewClientButton && editing}
                 actionLabel='Cadastrar novo cliente'
+                actionLabelIcon={<Icon icon='plus-circle' size='small' />}
                 onActionClick={() => setIsModalViewOpen(true)}
             />
 

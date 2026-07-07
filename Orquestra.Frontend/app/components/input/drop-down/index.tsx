@@ -1,5 +1,5 @@
 import { Guid } from 'guid-typescript';
-import { Dispatch, KeyboardEventHandler, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, JSX, KeyboardEventHandler, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import styles from './index.module.scss';
 
@@ -23,6 +23,7 @@ interface iProps {
     isObligatory?: boolean;
     showAction?: boolean;
     actionLabel?: string;
+    actionLabelIcon?: JSX.Element | null;
     onActionClick?: () => void;
     handleKeyDown?: KeyboardEventHandler<HTMLInputElement>;
     formatOptionLabel?: (option: iDropdownOption) => ReactNode;
@@ -42,6 +43,7 @@ export default function Dropdown({
     isObligatory = false,
     showAction = false,
     actionLabel = 'Ver mais',
+    actionLabelIcon = null,
     onActionClick,
     handleKeyDown,
     formatOptionLabel,
@@ -114,6 +116,10 @@ export default function Dropdown({
                         {
                             showAction && (
                                 <a onClick={onActionClick} className={styles.action}>
+                                    {
+                                        actionLabelIcon && actionLabelIcon
+                                    }
+
                                     {actionLabel}
                                 </a>
                             )

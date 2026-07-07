@@ -35,6 +35,11 @@
             padding: 0.1rem 0.3rem;
             border-radius: var(--border-radius-xs);
 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.25rem;
+
             cursor: pointer;
             margin-left: auto;
             text-decoration: none;
